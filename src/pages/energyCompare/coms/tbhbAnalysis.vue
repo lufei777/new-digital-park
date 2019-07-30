@@ -132,13 +132,15 @@
           });
           return;
         }
+        this.curPage=1
+        this.tableData={total:0}
         this.getTbhbChart()
         this.getTbhbTable()
       },
       async getTbhbChart(){
         let res = await CommonApi.getTbhbChart(this.commonParams)
         this.initChart(res)
-        
+
       },
       async getTbhbTable(){
         let tableParams = {...this.commonParams,...{
@@ -147,7 +149,10 @@
             size:10,
           }
         }
-        this.tableData= await CommonApi.getTbhbTable(tableParams)
+        let res = await CommonApi.getTbhbTable(tableParams)
+        if(res && res.total){
+          this.tableData=res
+        }
       },
       initChart(res) {
         this.myChart = echarts.init(this.$refs.myChart);

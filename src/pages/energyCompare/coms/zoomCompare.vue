@@ -97,10 +97,6 @@
              item[1]=item[1].slice(0,10)
           })
           this.tableData=res
-        }else{
-          this.tableData={
-            total:0
-          }
         }
       },
       getData(){
@@ -113,7 +109,8 @@
           });
           return;
         }
-         this.tableData=[]
+         this.curPage=1
+         this.tableData={total:0}
          this.getZoomCompareChart()
          this.getZoomCompareTable()
       },

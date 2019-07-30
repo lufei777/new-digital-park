@@ -72,8 +72,7 @@ axios.interceptors.response.use(
 
     // 非接口类 请求，直接返回
     if (!response) response = "";
-    if (!response || !response.data || !response.status) return response;
-
+    if (!response  || !response.status) return response;
     let data = response.data || "";
     let code = response.status;
     // token超时需要重新刷新token, 600测试用
