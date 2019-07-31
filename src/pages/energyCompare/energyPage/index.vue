@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="energy-index">
     <NavList />
     <router-view></router-view>
   </div>
@@ -8,7 +8,7 @@
 <script>
   import NavList from './coms/navList'
   export default {
-    name: 'HelloWorld',
+    name: 'EnergyIndex',
     components: {
       NavList
     },
@@ -24,6 +24,5 @@
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
 </style>

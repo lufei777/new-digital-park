@@ -1,16 +1,13 @@
 <template>
-  <div class="hello">
-    <NavList />
-    <router-view></router-view>
+  <div class="child1">
+    子路由2222222222222
   </div>
 </template>
 
 <script>
-  import NavList from './coms/navList'
   export default {
-    name: 'HelloWorld',
+    name: 'Child1s',
     components: {
-      NavList
     },
     data () {
       return {
@@ -24,6 +21,5 @@
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
 </style>

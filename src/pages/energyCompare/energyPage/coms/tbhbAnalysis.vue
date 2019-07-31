@@ -48,9 +48,9 @@
 <script>
   import echarts from 'echarts'
   import {mapState} from 'vuex'
-  import CommonApi from '../../../service/api/commonApi'
-  import ZoomNavigation from '../../../components/zoomNavigation/index'
-  import ConditionSelect from '../../../components/conditionSelect/index'
+  import CommonApi from '../../../../service/api/commonApi'
+  import ZoomNavigation from '../../../../components/zoomNavigation'
+  import ConditionSelect from '../../../../components/conditionSelect'
   export default {
     name:'TbhbAnalysis',
     components: {
@@ -215,7 +215,7 @@
           ],
           series
         };
-        this.myChart.setOption(option)
+        this.myChart.setOption(option,true)
       },
       handleCurrentChange(value){
         this.curPage=value

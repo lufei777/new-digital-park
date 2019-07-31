@@ -14,11 +14,11 @@
 <script>
   import echarts from 'echarts'
   import {mapState} from 'vuex'
-  import CommonApi from '../../../service/api/commonApi'
-  import ChartUtils from '../../../utils/chartUtils'
-  import ZoomNavigation from '../../../components/zoomNavigation/index'
-  import ConditionSelect from '../../../components/conditionSelect/index'
-  import DynamicTable from '../../../components/dynamicTable/index'
+  import CommonApi from '../../../../service/api/commonApi'
+  import ChartUtils from '../../../../utils/chartUtils'
+  import ZoomNavigation from '../../../../components/zoomNavigation'
+  import ConditionSelect from '../../../../components/conditionSelect'
+  import DynamicTable from '../../../../components/dynamicTable'
   export default {
     name:'ZoomCompare',
     components: {
@@ -124,7 +124,6 @@
         }else{
           xAxis = res[0].map((item)=>item.time.slice(0,10))
         }
-
         let yAxis=res[0] && res[0][0]&& res[0][0].unit
         let series=[]
         let tmp

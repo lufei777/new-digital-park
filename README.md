@@ -41,8 +41,8 @@
 │   │   ├── modules                             // vuex的分组模块
 │   │   └── store.js                            // 配置mutations
 │   ├── App.vue                                 // 页面入口文件
-│   ├── main.js                                 // 程序入口文件，加载各种公共组件
-├── routes.js                                   // 路由入口文件
+│   ├── energyMain.js                                 // 程序入口文件，加载各种公共组件
+├── index.js                                   // 路由入口文件
 ├── .babelrc                                    // babel配置文件
 ├── .postcssrc.js                               // postcss-load-config配置文件，配置自动添加样式前缀等
 ├── favicon.ico                                 // 图标

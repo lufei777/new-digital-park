@@ -1,20 +1,17 @@
 <template>
-  <div class="hello">
-    <NavList />
+  <div class="shouye3">
+    首页333333333333
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-  import NavList from './coms/navList'
   export default {
-    name: 'HelloWorld',
+    name: 'Shouye3',
     components: {
-      NavList
     },
     data () {
       return {
-        msg: 'Welcome to my basic vue demo'
       }
     },
     methods: {
@@ -23,7 +20,10 @@
     }
   }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
+  .shouye3{
+    background: blue;
+    padding:20px 0;
+    color:@white;
+  }
 </style>

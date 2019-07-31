@@ -1,6 +1,7 @@
 class chartUtils {
   //柱状图处理
   handleBarChart(dom,data){
+    console.log(data)
     let option = {
       title : {text:data.titleText},
       tooltip : {trigger: 'axis'},
@@ -21,7 +22,7 @@ class chartUtils {
       series:data.series
     };
     window.onresize = dom.resize;
-    dom.setOption(option)
+    dom.setOption(option,true)
   }
 }
 export default new chartUtils()

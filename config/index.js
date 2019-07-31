@@ -3,7 +3,7 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require('path')
-
+let distName = 'dist'
 module.exports = {
   dev: {
 
@@ -49,7 +49,8 @@ module.exports = {
     index: path.resolve(__dirname, '../dist/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    //不同文件名对应不同服务
+    assetsRoot: path.resolve(__dirname, `../${distName}`),
     assetsSubDirectory: 'static',
     assetsPublicPath: './',
 

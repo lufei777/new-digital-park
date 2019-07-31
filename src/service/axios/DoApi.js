@@ -48,7 +48,7 @@ class DoApi {
       return query.length ? query.substr(0, query.length - 1) : query
     }
     // 加上token
-    // data.accessToken = window.UserConst.accessToken
+    //  data.accessToken = window.UserConst.accessToken
     // data.userId = store.get("ClassRoomUser") && store.get("ClassRoomUser").userId
     // 增加 去缓存时间戳
     data.noCache = new Date().getTime()

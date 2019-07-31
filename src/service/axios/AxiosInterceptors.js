@@ -69,7 +69,6 @@ axios.interceptors.response.use(
       console.log("=====================seperate line=====================");
       console.log("axios from server url:", response.config.url);
     }
-
     // 非接口类 请求，直接返回
     if (!response) response = "";
     if (!response  || !response.status) return response;
