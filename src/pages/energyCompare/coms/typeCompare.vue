@@ -14,11 +14,11 @@
 <script>
   import echarts from 'echarts'
   import {mapState} from 'vuex'
-  import ChartUtils from '../../../../utils/chartUtils'
-  import CommonApi from '../../../../service/api/commonApi'
-  import ZoomNavigation from '../../../../components/zoomNavigation'
-  import ConditionSelect from '../../../../components/conditionSelect'
-  import DynamicTable from '../../../../components/dynamicTable'
+  import ChartUtils from '../../../utils/chartUtils'
+  import CommonApi from '../../../service/api/commonApi'
+  import ZoomNavigation from '../../../components/zoomNavigation'
+  import ConditionSelect from '../../../components/conditionSelect'
+  import DynamicTable from '../../../components/dynamicTable'
   export default {
     name:'TypeCompare',
     components: {

@@ -48,9 +48,9 @@
 <script>
   import echarts from 'echarts'
   import {mapState} from 'vuex'
-  import CommonApi from '../../../../service/api/commonApi'
-  import ZoomNavigation from '../../../../components/zoomNavigation'
-  import ConditionSelect from '../../../../components/conditionSelect'
+  import CommonApi from '../../../service/api/commonApi'
+  import ZoomNavigation from '../../../components/zoomNavigation'
+  import ConditionSelect from '../../../components/conditionSelect'
   export default {
     name:'TbhbAnalysis',
     components: {

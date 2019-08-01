@@ -1,5 +1,5 @@
-import EnergyIndex from '../pages/energyCompare/energyPage/index.vue'
-import EnergyCompare from '../pages/energyCompare/energyPage/energyCompare.vue'
+import EnergyIndex from '../pages/energyCompare/index.vue'
+import EnergyCompare from '../pages/energyCompare/energyCompare.vue'
 import CommonRouter from './commonRouter/index'
 export default [{
   path: '/',
