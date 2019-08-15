@@ -1,12 +1,13 @@
 <template>
-  <div class="zoom-compare flex">
+  <div class="zoom-compare">
       <div class="left-zoom-nav">
         <ZoomNavigation :floorList="floorList" :defaultChecked="defaultChecked"/>
       </div>
       <div class="right-content">
-        <ConditionSelect :isMultiple="false" :isGroup="false" />
+        <ConditionSelect :isGroup="false" />
         <div ref="myChart" class="my-chart"></div>
         <DynamicTable :tableData="tableData" :tableTip="tableTip" :curPage="curPage" />
+        <!--<ThirdPartyVideo videoUrl="videoUrl"/>-->
       </div>
   </div>
 </template>
@@ -16,15 +17,17 @@
   import {mapState} from 'vuex'
   import CommonApi from '../../../service/api/commonApi'
   import ChartUtils from '../../../utils/chartUtils'
-  import ZoomNavigation from '../../../components/zoomNavigation'
-  import ConditionSelect from '../../../components/conditionSelect'
-  import DynamicTable from '../../../components/dynamicTable'
+  import ZoomNavigation from '../../../components/zoomNavigation/index'
+  import ConditionSelect from '../../../components/conditionSelect/index'
+  import DynamicTable from '../../../components/dynamicTable/index'
+  import ThirdPartyVideo from '../../../components/thirdPartyVideo/index'
   export default {
     name:'ZoomCompare',
     components: {
       ZoomNavigation,
       ConditionSelect,
-      DynamicTable
+      DynamicTable,
+      // ThirdPartyVideo
     },
     data () {
       return {
@@ -34,7 +37,8 @@
         },
         myChart:'',
         curPage:1,
-        defaultChecked:[]
+        defaultChecked:[],
+        videoUrl:'rtsp://admin:xzl123456@192.168.1.108:554t/cam/realmonitor?channel=1&subtype=0'
       }
     },
     computed: {
@@ -47,7 +51,7 @@
         lastTime: state => state.conditionSelect.lastTime,
       }),
       floorNameList(){
-        return this.checkedFloorList.map((item)=>item.name).join('、')
+          return this.checkedFloorList.map((item)=>item.name).join('、')
       },
       ids(){
         return this.checkedFloorList.map((item)=>item.id).join(',') //楼层id
@@ -79,6 +83,9 @@
         this.floorList = tmp
         this.defaultChecked =[{id:res[0].floorId,name:res[0].floor},
                               {id:res[1].floorId,name:res[1].floor}]
+        //若放入子组件存到checkedFloorList无法及时获取
+        this.$store.commit('conditionSelect/checkedFloorList',this.defaultChecked)
+        this.handleNavCanCheck(this.defaultChecked)
       },
       async getZoomCompareChart(){
         let res =  await CommonApi.getZoomCompareChart(this.commonParams)
@@ -99,8 +106,8 @@
           this.tableData=res
         }
       },
-      getData(){
-        if(this.checkedFloorList.length==0){
+      async getData(){
+        if(this.ids==""){
           this.$message({
             message: '请先选择楼层',
             type: 'warning',
@@ -111,8 +118,8 @@
         }
          this.curPage=1
          this.tableData={total:0}
-         this.getZoomCompareChart()
-         this.getZoomCompareTable()
+         await this.getZoomCompareChart()
+         await this.getZoomCompareTable()
       },
       initChart(res){
         this.myChart = echarts.init(this.$refs.myChart);
@@ -176,7 +183,6 @@
     },
     async mounted(){
       await this.getAllFloor()
-      this.handleNavCanCheck(this.defaultChecked)
       this.getData()
     }
   }

@@ -68,11 +68,11 @@
     name:'ConditionSelect',
     components: {
     },
-    props:['isMultiple','isGroup'],
+    props:['isGroup'],
     data () {
       return {
         energyList:[],
-        dateTypeList,
+        // dateTypeList,
         curEnergy:[],
         curDateType:'月',
         dateType:'month',
@@ -86,8 +86,31 @@
       ...mapState({
         activeIndex:state => state.conditionSelect.activeIndex,
       }),
+      dateTypeList(){
+        if(this.activeIndex==2){
+          return [{
+            name:'年',
+            id:1
+          },{
+            name:'月',
+            id:2
+          }]
+        }else{
+          return [{
+            name:'年',
+            id:1
+          },{
+            name:'月',
+            id:2
+          },{
+            name:'日',
+            id:3
+          }]
+        }
+      }
     },
-    watch:{},
+    watch:{
+    },
     methods: {
       async getEnergyList(){
         let energy

@@ -1,5 +1,5 @@
 <template>
-  <div class="energy-compare-index flex">
+  <div class="energy-compare-index">
     <div class="left-menu">
       <el-menu default-active="1" class="el-menu-demo"  @select="handleSelect">
         <el-menu-item index="1">空间对比</el-menu-item>
@@ -7,7 +7,7 @@
         <el-menu-item index="3">能耗类型对比</el-menu-item>
       </el-menu>
     </div>
-    <div class="right-panel flex">
+    <div class="right-panel">
       <keep-alive>
         <component :is="componentType()"></component>
       </keep-alive>
@@ -38,13 +38,13 @@
         this.$store.commit("conditionSelect/activeIndex",key)
       },
       componentType(){
-         if(this.activeIndex==1){
-           return 'ZoomCompare'
-         }else if(this.activeIndex==2){
-           return 'TbhbAnalysis'
-         }else{
-           return 'TypeCompare'
-         }
+        if(this.activeIndex==1){
+          return 'ZoomCompare'
+        }else if(this.activeIndex==2){
+          return 'TbhbAnalysis'
+        }else{
+          return 'TypeCompare'
+        }
       },
     },
     mounted(){
@@ -54,18 +54,27 @@
 
 <style lang="less">
   .energy-compare-index{
+    margin-top: 85px;
     .left-menu{
       width:10%;
+      float: left;
+      position: fixed;
     }
     .right-panel{
       width: 90%;
+      float: right;
       .left-zoom-nav{
         width:15%;
+        float: left;
+        position: fixed;
+        height: 100%;
       }
       .right-content{
-        width:85%;
+        width:83%;
         background: #f2f2f2;
         padding:10px;
+        float: right;
+        box-sizing: border-box;
       }
     }
   }

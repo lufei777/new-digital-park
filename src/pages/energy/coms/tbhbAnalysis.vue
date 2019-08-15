@@ -1,10 +1,10 @@
 <template>
-  <div class="tbhb-analysis flex">
+  <div class="tbhb-analysis">
     <div class="left-zoom-nav">
       <ZoomNavigation :floorList="floorList" :defaultChecked="defaultChecked" />
     </div>
     <div class="right-content">
-      <ConditionSelect :isMultiple="false" :isGroup="false"/>
+      <ConditionSelect :isGroup="false"/>
       <div ref="myChart" class="my-chart"></div>
       <div class="table-box">
         <div class="flex-align-between">
@@ -14,31 +14,31 @@
             导出表格
           </el-button>
         </div>
-        <el-table :data="tableData.value"  border @header-click="sortTable">
-          <el-table-column prop="xulie" label="排名"></el-table-column>
-          <el-table-column prop="date" label="时间"></el-table-column>
-          <el-table-column prop="dqzh" label="当期综合能耗（kwh）"></el-table-column>
-          <el-table-column prop="tqzh" label="同期综合能耗（kwh）" ></el-table-column>
-          <el-table-column prop="sqzh" label="上期综合能耗（kwh）" ></el-table-column>
-          <el-table-column prop="tbzz" label="综合能耗同比增长率（%）">
+        <el-table :data="tableData.value"  border @sort-change='sortTable'>
+          <el-table-column prop="xulie" label="排名" align="right"></el-table-column>
+          <el-table-column prop="date" label="时间" align="right"></el-table-column>
+          <el-table-column prop="dqzh" label="当期综合能耗（kwh）" align="right" sortable="custom"></el-table-column>
+          <el-table-column prop="tqzh" label="同期综合能耗（kwh）" align="right" sortable="custom"></el-table-column>
+          <el-table-column prop="sqzh" label="上期综合能耗（kwh）" align="right" sortable="custom"></el-table-column>
+          <el-table-column prop="tbzz" label="综合能耗同比增长率（%）" align="right" sortable="custom">
             <template slot-scope="scope">
-              <span>{{scope.row.tbzz}}%</span>
+              <span>{{parseFloat(scope.row.tbzz).toFixed(2)}}%</span>
             </template>
           </el-table-column>
-          <el-table-column prop="hbzz" label="综合能耗环比增长率（%）">
+          <el-table-column prop="hbzz" label="综合能耗环比增长率（%）" align="right" sortable="custom">
             <template slot-scope="scope">
-              <span>{{scope.row.hbzz}}%</span>
+              <span>{{parseFloat(scope.row.hbzz).toFixed(2)}}%</span>
             </template>
           </el-table-column>
         </el-table>
-      </div>
-      <div class="page-box" v-if="tableData.total!=0">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :current-page="curPage"
-          layout="total, prev, pager, next, jumper"
-          :total="tableData.total">
-        </el-pagination>
+        <div class="page-box" v-if="tableData.total!=0">
+          <el-pagination
+            @current-change="handleCurrentChange"
+            :current-page="curPage"
+            layout="total, prev, pager, next, jumper"
+            :total="tableData.total">
+          </el-pagination>
+        </div>
       </div>
     </div>
   </div>
@@ -49,8 +49,8 @@
   import echarts from 'echarts'
   import {mapState} from 'vuex'
   import CommonApi from '../../../service/api/commonApi'
-  import ZoomNavigation from '../../../components/zoomNavigation'
-  import ConditionSelect from '../../../components/conditionSelect'
+  import ZoomNavigation from '../../../components/zoomNavigation/index'
+  import ConditionSelect from '../../../components/conditionSelect/index'
   export default {
     name:'TbhbAnalysis',
     components: {
@@ -66,7 +66,8 @@
         tableData:{
           total:0
         },
-        defaultChecked:[]
+        defaultChecked:[],
+        rank:'asc'
       }
     },
     computed: {
@@ -79,7 +80,7 @@
         lastTime: state => state.conditionSelect.tbhbLastTime,
       }),
       floorNameList() {
-        return this.checkedFloorList.map((item) => item.name).join('、')
+          return this.checkedFloorList.map((item)=>item.name).join('、')
       },
       commonParams() {
         return {
@@ -98,29 +99,10 @@
         let tmp=[res[0]]
         tmp[0].disabled=true
         res.shift()
-        res.map((item)=>{
-          item.disabled=false
-        })
         tmp[0].nodes=res
         this.floorList = tmp
         this.defaultChecked =[{id:res[0].floorId,name:res[0].floor}]
-      },
-      handleNavCanCheck(checkNode){
-        if(checkNode.length<1){
-          this.floorList[0].nodes.map((item)=>{
-            item.disabled=false
-          })
-        }else{
-          this.floorList[0].nodes.map((item)=>{
-            item.disabled=true
-            checkNode.map((check)=>{
-              if(item.floorId==(check.floorId || check.id)){
-                item.disabled=false
-              }
-            })
-          })
-          return;
-        }
+        this.$store.commit('conditionSelect/tbhbCheckedFloorList',this.defaultChecked)
       },
       getData(){
         if(this.checkedFloorList.length==0){
@@ -145,6 +127,7 @@
       async getTbhbTable(){
         let tableParams = {...this.commonParams,...{
             rankType:this.rankType,
+            rank:this.rank,
             page:this.curPage,
             size:10,
           }
@@ -215,6 +198,7 @@
           ],
           series
         };
+        window.onresize = this.myChart.resize;
         this.myChart.setOption(option,true)
       },
       handleCurrentChange(value){
@@ -222,7 +206,8 @@
         this.getTbhbTable()
       },
       sortTable(column){
-         this.rankType=column.property
+         this.rankType=column.prop
+         this.rank=column.order=='ascending'?'asc':'desc'
          this.getTbhbTable()
       },
       async handleExport(){
@@ -231,13 +216,12 @@
         for(let key in this.commonParams){
           params+=key+'='+this.commonParams[key]+'&'
         }
-        params+='rankType='+this.rankType
+        params+='rankType='+this.rankType+'&rank='+this.rank
         location.href=url+params
       }
     },
     async mounted(){
        await this.getAllFloor()
-       this.handleNavCanCheck(this.defaultChecked)
        this.getData()
     }
   }
@@ -266,8 +250,8 @@
     .export-btn{
       margin-right: 10px;
     }
-    .el-table thead th:hover{
-      cursor: pointer;
-    }
+    /*.el-table th div{*/
+      /*padding-left:0;*/
+    /*}*/
   }
 </style>

@@ -1,12 +1,14 @@
 <template>
   <div class="energy-index">
     <NavList />
-    <router-view></router-view>
+    <keep-alive>
+       <router-view></router-view>
+    </keep-alive>
   </div>
 </template>
 
 <script>
-  import NavList from './coms/navList'
+  import NavList from '../../components/navList'
   export default {
     name: 'EnergyIndex',
     components: {

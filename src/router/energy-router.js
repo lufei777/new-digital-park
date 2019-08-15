@@ -1,15 +1,20 @@
-import EnergyIndex from '../pages/energyCompare/index.vue'
-import EnergyCompare from '../pages/energyCompare/energyCompare.vue'
+import EnergyIndex from '../pages/energy/index.vue'
+import EnergyCompare from '../pages/energy/energyCompare.vue'
+import HomePage from '../pages/energy/homePage.vue'
 import CommonRouter from './commonRouter/index'
 export default [{
   path: '/',
-  redirect: 'energyIndex'
+  redirect: 'energy'
 },{
-  path: '/energyIndex',
+  path: '/energy',
   name: 'EnergyIndex',
   component: EnergyIndex,
   children:[{
-    path: '/energyIndex/compare',
+    path: '/energy/homePage',
+    name: 'HomePage',
+    component: HomePage,
+  },{
+    path: '/energy/compare',
     name: 'EnergyCompare',
     component: EnergyCompare,
   }].concat(CommonRouter)

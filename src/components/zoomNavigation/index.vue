@@ -9,6 +9,7 @@
       :default-expanded-keys="[1]"
       :default-checked-keys="defaultCheckedKey"
       @check-change="handleCheckChange"
+      @check="handleCheck"
       ref="navTree"
     >
     </el-tree>
@@ -39,36 +40,36 @@
         return this.defaultChecked.map((item)=>item.id)
       }
     },
-    watch:{
-      defaultChecked(){
+    watch:{},
+    methods: {
+      handleCheckChange(val){
+
+      },
+      handleCheck(val){
+        let tmp=[]
         if(this.activeIndex==1){
-          this.$store.commit('conditionSelect/checkedFloorList',this.defaultChecked)
-        }else if(this.activeIndex==2){
-          this.$store.commit('conditionSelect/tbhbCheckedFloorList',this.defaultChecked)
+          let checkedNode = this.$refs.navTree.getCheckedNodes()
+          this.$parent.handleNavCanCheck(checkedNode)
+          checkedNode.map((item)=>{
+            tmp.push({
+              id:item.floorId,
+              name:item.floor
+            })
+          })
+          this.$store.commit('conditionSelect/checkedFloorList',tmp)
         }else{
-          this.$store.commit('conditionSelect/typeCheckedFloorList',this.defaultChecked)
+          this.$refs.navTree.setCheckedNodes([val])
+          tmp.push({
+            id:val.floorId,
+            name:val.floor
+          })
+          if(this.activeIndex==2){
+            this.$store.commit('conditionSelect/tbhbCheckedFloorList',tmp)
+          }else{
+            this.$store.commit('conditionSelect/typeCheckedFloorList',tmp)
+          }
         }
       }
-    },
-    methods: {
-      handleCheckChange(){
-        let checkedNode = this.$refs.navTree.getCheckedNodes()
-        this.$parent.handleNavCanCheck(checkedNode)
-        let tmp=[]
-        checkedNode.map((item)=>{
-          tmp.push({
-            id:item.floorId,
-            name:item.floor
-          })
-        })
-        if(this.activeIndex==1){
-          this.$store.commit('conditionSelect/checkedFloorList',tmp)
-        }else if(this.activeIndex==2){
-          this.$store.commit('conditionSelect/tbhbCheckedFloorList',tmp)
-        }else{
-          this.$store.commit('conditionSelect/typeCheckedFloorList',tmp)
-        }
-      },
     },
     mounted(){
     }
@@ -81,8 +82,9 @@
     color:@white;
     text-align: left;
     overflow: hidden;
+    height: 100%;
    .zoom-title{
-     font-size: 18px;
+     font-size: 20px;
      font-weight: 700;
      height:40px;
      text-align: left;
@@ -96,15 +98,13 @@
       /*font-weight: 600;*/
     }
     .el-tree-node__content{
-       padding:10px 0;
+       padding:12px 0;
     }
     .el-tree-node__content:hover{
       color:#22dbfc;
-      opacity: .7;
     }
     .el-tree-node:focus>.el-tree-node__content{
       color:#22dbfc;
-      opacity: .7;
     }
   }
 </style>

@@ -1,10 +1,10 @@
 <template>
-  <div class="type-compare flex">
+  <div class="type-compare">
     <div class="left-zoom-nav">
       <ZoomNavigation :floorList="floorList" :defaultChecked="defaultChecked" />
     </div>
     <div class="right-content">
-      <ConditionSelect :isMultiple="true" :isGroup="true" />
+      <ConditionSelect :isGroup="true" />
       <div ref="myChart" class="my-chart"></div>
       <DynamicTable :tableData="tableData" :tableTip="tableTip" :curPage="curPage"/>
     </div>
@@ -16,9 +16,9 @@
   import {mapState} from 'vuex'
   import ChartUtils from '../../../utils/chartUtils'
   import CommonApi from '../../../service/api/commonApi'
-  import ZoomNavigation from '../../../components/zoomNavigation'
-  import ConditionSelect from '../../../components/conditionSelect'
-  import DynamicTable from '../../../components/dynamicTable'
+  import ZoomNavigation from '../../../components/zoomNavigation/index'
+  import ConditionSelect from '../../../components/conditionSelect/index'
+  import DynamicTable from '../../../components/dynamicTable/index'
   export default {
     name:'TypeCompare',
     components: {
@@ -59,6 +59,9 @@
       tableTip(){
         return `A3${this.energyNameList}展示排名`
       },
+      floorId(){
+          return this.checkedFloorList[0].id //楼层id
+      },
       commonParams(){
         return {
           ids:this.ids,
@@ -68,7 +71,7 @@
           startTime:this.startTime,
           lastTime:this.lastTime,
           parent:1, //代表a3
-          floorId:this.checkedFloorList[0].id
+          floorId:this.floorId
         }
       }
     },
@@ -78,12 +81,10 @@
         let tmp=[res[0]]
         tmp[0].disabled=true
         res.shift()
-        res.map((item)=>{
-          item.disabled=false
-        })
         tmp[0].nodes=res
         this.floorList = tmp
         this.defaultChecked =[{id:res[0].floorId,name:res[0].floor}]
+        this.$store.commit('conditionSelect/typeCheckedFloorList',this.defaultChecked)
       },
       async getTypeChart(){
         let res =  await CommonApi.getTypeChart(this.commonParams)
@@ -106,7 +107,7 @@
         }
       },
       getData(){
-        if(this.checkedFloorList.length==0){
+        if(!this.floorId){
           this.$message({
             message: '请先选择楼层',
             type: 'warning',
@@ -170,23 +171,6 @@
         this.curPage=value
         this.getTypeTable()
       },
-      handleNavCanCheck(checkNode){
-        if(checkNode.length<1){
-          this.floorList[0].nodes.map((item)=>{
-            item.disabled=false
-          })
-        }else{
-          this.floorList[0].nodes.map((item)=>{
-            item.disabled=true
-            checkNode.map((check)=>{
-              if(item.floorId==(check.floorId || check.id)){
-                item.disabled=false
-              }
-            })
-          })
-          return;
-        }
-      },
       async handleExport(){
         let url="http://localhost:8080/vibe-web/energyCount/energy/energy_typeBiaoExcel?"
         let params=''
@@ -198,7 +182,6 @@
     },
     async mounted(){
       await this.getAllFloor()
-      this.handleNavCanCheck(this.defaultChecked)
       this.getData()
     }
   }

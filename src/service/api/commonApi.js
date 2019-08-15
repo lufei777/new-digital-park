@@ -47,6 +47,20 @@ class CommonApi {
   @get
   getTypeTable(){}
 
+  //2019.8.13
+  //获取菜单列表
+  @url('/vibe-web/getMenus')
+  @get
+  getMenus(){}
+
+  @url("/vibe-web/user/login")
+  @get
+  login(){}
+
+  @url('/vibe-web/getSystemSettings')
+  @get
+  getSystemSetting(){}
+
 }
 
 export default new CommonApi()
