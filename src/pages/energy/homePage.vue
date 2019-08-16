@@ -102,6 +102,7 @@ export default {
   },
   mounted() {
     this.getEnergyOverView();
+    
   }
 };
 </script>
