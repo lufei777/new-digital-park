@@ -64,6 +64,10 @@ class CommonApi {
   @url('/vibe-web/statistics/monitor_states_data')
   @get
   getMonitorState(){}
+
+  @url('/vibe-web/asset/initAssetTree')
+  @get
+  getMonitorTree(){}
 }
 
 export default new CommonApi()
