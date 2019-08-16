@@ -91,7 +91,7 @@ class commonData {
           "name": "space",
           "caption": "相关性分析",
           "catalog": null,
-          "url": "/topage/statistics/monitor_pertinence",
+          "url": "/correlationAnalysis",
           "sequence": 2,
           "icon": null,
           "permisionList": ["相关分析"],
