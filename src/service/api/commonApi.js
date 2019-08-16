@@ -61,6 +61,9 @@ class CommonApi {
   @get
   getSystemSetting(){}
 
+  @url('/vibe-web/statistics/monitor_states_data')
+  @get
+  getMonitorState(){}
 }
 
 export default new CommonApi()
