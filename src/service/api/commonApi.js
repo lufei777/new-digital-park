@@ -68,6 +68,14 @@ class CommonApi {
   @url('/vibe-web/asset/initAssetTree')
   @get
   getMonitorTree(){}
+
+  @url('/vibe-web/monitor_data/monitorDataRegression')
+  @get
+  getCorrelationData(){}
+
+  @url('/vibe-web/statistics/queryAllProbe')
+  @get
+  getDefaultNode(){}
 }
 
 export default new CommonApi()

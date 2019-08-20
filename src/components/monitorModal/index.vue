@@ -37,6 +37,7 @@
           label:'text',
           children: 'children',
         },
+        curNode:{}
       }
     },
     computed:{
@@ -51,17 +52,21 @@
         this.monitorTree=res
       },
       onClickSureBtn(){
+        let val = this.curNode
+        if(this.curNode.id){
+          if(this.curSelect==1){
+            this.$store.commit('analysis/monitor1',{id:val.id,text:val.text})
+          }else{
+            this.$store.commit('analysis/monitor2',{id:val.id,text:val.text})
+          }
+        }
         this.$store.commit('analysis/showDialog',false)
       },
       onClickCancelBtn(){
         this.$store.commit('analysis/showDialog',false)
       },
       onClickTree(val){
-        if(this.curSelect==1){
-          this.$store.commit('analysis/monitor1',val.id)
-        }else{
-          this.$store.commit('analysis/monitor2',val.id)
-        }
+        this.curNode=val
       }
     },
     mounted(){

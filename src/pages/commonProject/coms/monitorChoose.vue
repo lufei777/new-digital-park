@@ -2,11 +2,18 @@
   <div class="monitor-choose">
     <div class="flex-align choose-box">
       <span class="choose-tip">时间</span>
+      <div class="block" v-if="showDateType">
+        <span class="demonstration">条件选择</span>
+        <el-select v-model="curDateType" placeholder="请选择" @change="handleDateTypeChange">
+          <el-option v-for="item in dateTypeList" :key="item.id" :label="item.name" :value="item.id">
+          </el-option>
+        </el-select>
+      </div>
       <div class="block">
         <span class="demonstration">开始时间</span>
         <el-date-picker
           v-model="startTime"
-          type="datetime"
+          :type="showDateType?pickerType:dateTime"
           placeholder="选择日期时间"
           value-format="yyyy-MM-dd HH:mm:ss"
           @change="onTimeChange(1)"
@@ -17,7 +24,7 @@
         <span class="demonstration">结束时间</span>
         <el-date-picker
           v-model="endTime"
-          type="datetime"
+          :type="showDateType?pickerType:dateTime"
           placeholder="选择日期时间"
           value-format="yyyy-MM-dd HH:mm:ss"
           @change="onTimeChange(-1)"
@@ -27,12 +34,12 @@
     </div>
     <div class="flex-align choose-box">
       <span class="choose-tip">监测器选择</span>
-      <div class="block">
-        <span>B-ALE-1-a 照明</span>
+      <div class="block flex-align">
+        <span>{{monitorText1}}</span>
         <el-button @click="onClickShowBtn(1)">请选择</el-button>
       </div>
-      <div class="block">
-        <span>B-ALE-1-a 照明</span>
+      <div class="block flex-align">
+        <span>{{monitorText2}}</span>
         <el-button @click="onClickShowBtn(2)">请选择</el-button>
       </div>
     </div>
@@ -40,20 +47,41 @@
 </template>
 
 <script>
-  import moment from 'moment'
+  import {mapState} from 'vuex'
+  import CommonApi from '../../../service/api/commonApi'
   import MonitorModal from '../../../components/monitorModal/index'
   export default {
     name: 'DeviceAnalysis',
     components: {
-      MonitorModal
+      MonitorModal,
     },
+    props:['showDateType'],
     data () {
       return {
         startTime:new Date(new Date().getTime()-5*24*60*60*1000),
         endTime:new Date(),
+        dateTypeList:[{
+            name:'年',
+            id:4
+          },{
+            name:'月',
+            id:3
+          },{
+            name:'日',
+            id:2
+        }],
+        curDateType:2,
+        pickerType:'date', //变化的 年、年月、年月日
+        dateTime:'datetime' //年月日时分秒
       }
     },
     computed:{
+      ...mapState({
+        monitorText1:state=>state.analysis.monitor1.text,
+        monitorText2:state=>state.analysis.monitor2.text
+      }),
+    },
+    watch:{
     },
     methods: {
       onClickShowBtn(flag){
@@ -61,15 +89,17 @@
         this.$store.commit('analysis/showDialog',true)
       },
       onTimeChange(flag){
-        // if(flag==1){
-        //   this.$store.commit('analysis/startTime',this.startTime)
-        // }else{
-        //   this.$store.commit('analysis/endTime',this.endTime)
-        // }
+        if(flag==1){
+          this.$store.commit('analysis/startTime',this.startTime)
+        }else{
+          this.$store.commit('analysis/endTime',this.endTime)
+        }
+      },
+      handleDateTypeChange(value){
+        this.pickerType=value==4?'year':value==3?"month":'date'
       }
     },
     mounted(){
-
     }
   }
 </script>
