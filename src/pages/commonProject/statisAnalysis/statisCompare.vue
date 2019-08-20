@@ -7,11 +7,15 @@
     <MonitorChoose :showDateType="true"/>
     <MonitorModal />
     <el-button type="primary" class='handle-btn' @click="onClickBtn">处理</el-button>
-    <div ref="myChart" class="my-chart"></div>
-    <el-table :data="tableData" height="350" stripe style="width:40%;" border>
-      <el-table-column prop="point1" :label="tableText[0]" align="right"></el-table-column>
-      <el-table-column prop="point2" :label="tableText[1]" align="right"></el-table-column>
-    </el-table>
+    <div style="clear:both"></div>
+    <div ref="myChart1" class="my-chart"></div>
+    <div ref="myChart2" class="my-chart"></div>
+    <div ref="myChart3" class="my-chart"></div>
+    <div ref="myChart4" class="my-chart"></div>
+    <!--<el-table :data="tableData" height="350" stripe style="width:40%;" border>-->
+      <!--<el-table-column prop="point1" :label="tableText[0]" align="right"></el-table-column>-->
+      <!--<el-table-column prop="point2" :label="tableText[1]" align="right"></el-table-column>-->
+    <!--</el-table>-->
   </div>
 </template>
 
@@ -31,15 +35,19 @@
       return {
         tableData:[],
         tableText:['',''],
-        myChart:''
+        myChart1:'',
+        myChart2:'',
+        myChart3:'',
+        myChart4:'',
       }
     },
     computed:{
       ...mapState({
-        startTime:state=>state.analysis.startTime,
-        endTime:state=>state.analysis.endTime,
-        monitor1:state=>state.analysis.monitor1,
-        monitor2:state=>state.analysis.monitor2,
+        startTime:state=>state.analysis.statisStartTime,
+        endTime:state=>state.analysis.statisEndTime,
+        monitor1:state=>state.analysis.statisMonitor1,
+        monitor2:state=>state.analysis.statisMonitor2,
+        filterType:state=>state.analysis.statisFilterType,
       }),
     },
     watch:{
@@ -51,155 +59,82 @@
       },
     },
     methods: {
-      async getCorrelationData(){
+      async getStatisCompareData(){
         let params={
           startTime:this.startTime,
-          endTime:this.endTime,
+          lastTime:this.endTime,
           monitorId1:this.monitor1.id,
           monitorId2:this.monitor2.id,
-          filterType:2
+          filterType:this.filterType
         }
-        let res =  await CommonApi.getCorrelationData(params)
-        let tmpArr=[]
-        res.points.map((item)=>{
-          tmpArr.push({
-            point1:item[0],
-            point2:item[1]
-          })
-        })
-        this.tableData = tmpArr
+        let res =  await CommonApi.getStatisCompareData(params)
+        // let tmpArr=[]
+        // res.points.map((item)=>{
+        //   tmpArr.push({
+        //     point1:item[0],
+        //     point2:item[1]
+        //   })
+        // })
+        // this.tableData = tmpArr
         this.initChart(res)
       },
       onClickBtn(){
-        this.getCorrelationData()
+        this.getStatisCompareData()
       },
-      initChart(result){
-        this.myChart = echarts.init(this.$refs.myChart);
-        let data = result.points;
-        let myRegression = ecStat.regression('linear', data);
-        let name1 = this.monitor1.text+' ('+ result.unit1 + ')';
-        let name2 = this.monitor2.text+' ('+ result.unit2 + ')';
-        if(myRegression.expression.indexOf("-")>0){
-          myRegression.expression = myRegression.expression.replace("+","");
-          myRegression.expression = myRegression.expression.replace("-","-  ");
-        }
-        myRegression.points.sort(function(a, b) {
-          return a[0] - b[0];
-        });
+      initChart(res){
+        // this.myChart1 = echarts.init(this.$refs.myChart1);
+        // this.myChart2 = echarts.init(this.$refs.myChart2);
+        // this.myChart3 = echarts.init(this.$refs.myChart3);
+        // this.myChart4 = echarts.init(this.$refs.myChart4);
+        let seriesList=[res.maxValues_1.concat(res.maxValues_2),
+                    res.minValues_1.concat(res.minValues_2),
+                    res.avgValues_1.concat(res.avgValues_2),
+                    res.stdValues_1.concat(res.stdValues_2)]
+           for(var i=1;i<=4;i++){
+               this['myChart'+i]=echarts.init(this.$refs['myChart'+i])
+               let legendData=[this.monitor1.text+'最大值',this.monitor2.text+'最大值']
+               let xAxisData =[this.startTime,this.endTime]
+               let data={
+                 legendData,
+                 xAxisData,
+                 seriesData:seriesList[i-1]
+               }
+               this.initEveryChart(this['myChart'+i],data)
+           }
+      },
+      initEveryChart(dom,data){
         let option = {
-          title: {
-            text: '不同传感器相关性分析',
-            left: 'center',
-            textStyle:{
-              color:'#333',
-              fontWeight:'normal',
-              fontSize:14
-            }
-          },
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-              type: 'cross'
-            },
-            textStyle:{
-              fontSize:12
-            }
-          },
-          xAxis: {
-            type: 'value',
-            scale:true,
-            splitLine: {
-              lineStyle: {
-                type: 'dashed'
+            tooltip : {
+              trigger: 'axis',
+              axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
               }
             },
-            name:name1,
-            nameLocation:'middle',
-            nameGap:30,
-            axisLabel:{
-              fontSize:12
+            legend: {
+              data:data.legendData
             },
-
-            nameTextStyle:{
-              fontSize:12
-            },
-            splitNumber: 20,
-            interval: 6
-          },
-          yAxis: {
-            type: 'value',
-            scale:true,
-            nameLocation:'middle',
-            nameGap:70,
-            nameRotate:90,
-            splitLine: {
-              lineStyle: {
-                type: 'dashed'
+            xAxis : [
+              {
+                type : 'category',
+                data :data.xAxisData
               }
-            },
-            name:name2,
-
-            nameTextStyle:{
-              fontSize:12
-            },
-            axisLabel:{
-              fontSize:12
-            },
-          },
-          series: [{
-            name: 'scatter',
-            type: 'scatter',
-            label: {
-              emphasis: {
-                show: true,
-                position: 'left',
-                textStyle: {
-                  color: '#2f4554',
-                  fontSize: 14,
-                  fontWeight:'bold'
-                }
+            ],
+            yAxis : [
+              {
+                type : 'value'
               }
-            },
-            data: data,
-            max:'max',
-            min:'min'
-          }, {
-            name: 'line',
-            type: 'line',
-            showSymbol: false,
-            smooth: true,
-            data: myRegression.points,
-            markPoint: {
-              itemStyle: {
-                normal: {
-                  color: 'transparent'
-                }
-              },
-              label: {
-                normal: {
-                  show: true,
-                  position: 'left',
-                  formatter: myRegression.expression,
-                  textStyle: {
-                    color: '#333',
-                    fontSize: 12
-                  }
-                }
-              },
-              data: [{
-                coord: myRegression.points[myRegression.points.length - 1]
-              }]
-            }
-          }]
-        };
-        window.onresize = this.myChart.resize;
-        this.myChart.setOption(option,true)
+            ],
+            series : data.seriesData
+          };
+        window.onresize = dom.resize;
+        dom.setOption(option,true)
       }
+
     },
     created(){
     },
     mounted(){
-      // setTimeout(()=>this.getCorrelationData(),500)
+      setTimeout(()=>this.getStatisCompareData(),500)
     }
   }
 </script>
@@ -228,9 +163,8 @@
       margin:20px auto;
     }
     .my-chart{
-      width: 60%;
-      height:350px;
-      clear: both;
+      width: 50%;
+      height:300px;
       float: left;
     }
     .choose-box{
