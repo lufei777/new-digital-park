@@ -76,6 +76,10 @@ class CommonApi {
   @url('/vibe-web/statistics/queryAllProbe')
   @get
   getDefaultNode(){}
+
+  @url('/vibe-web/monitor_data/monitorDataCalCompared')
+  @get
+  getStatisCompareData(){}
 }
 
 export default new CommonApi()

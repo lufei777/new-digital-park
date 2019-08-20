@@ -54,7 +54,7 @@
       async getCorrelationData(){
         let params={
             startTime:this.startTime,
-            endTime:this.endTime,
+            lastTime:this.endTime,
             monitorId1:this.monitor1.id,
             monitorId2:this.monitor2.id,
             filterType:2
