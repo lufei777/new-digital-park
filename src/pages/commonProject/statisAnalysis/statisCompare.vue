@@ -2,9 +2,9 @@
   <div class="device-analysis">
     <div class="tip flex-align">
       <span class="icon"></span>
-      <span>相关性分析</span>
+      <span>统计对比</span>
     </div>
-    <MonitorChoose :showDateType="false"/>
+    <MonitorChoose :showDateType="true"/>
     <MonitorModal />
     <el-button type="primary" class='handle-btn' @click="onClickBtn">处理</el-button>
     <div ref="myChart" class="my-chart"></div>
@@ -22,7 +22,7 @@
   import MonitorModal from '../../../components/monitorModal/index'
   import CommonApi from '../../../service/api/commonApi'
   export default {
-    name: 'DeviceAnalysis',
+    name: 'StatisCompare',
     components: {
       MonitorChoose,
       MonitorModal
@@ -53,15 +53,15 @@
     methods: {
       async getCorrelationData(){
         let params={
-            startTime:this.startTime,
-            endTime:this.endTime,
-            monitorId1:this.monitor1.id,
-            monitorId2:this.monitor2.id,
-            filterType:2
+          startTime:this.startTime,
+          endTime:this.endTime,
+          monitorId1:this.monitor1.id,
+          monitorId2:this.monitor2.id,
+          filterType:2
         }
         let res =  await CommonApi.getCorrelationData(params)
         let tmpArr=[]
-         res.points.map((item)=>{
+        res.points.map((item)=>{
           tmpArr.push({
             point1:item[0],
             point2:item[1]
@@ -71,7 +71,7 @@
         this.initChart(res)
       },
       onClickBtn(){
-         this.getCorrelationData()
+        this.getCorrelationData()
       },
       initChart(result){
         this.myChart = echarts.init(this.$refs.myChart);
@@ -199,7 +199,7 @@
     created(){
     },
     mounted(){
-      setTimeout(()=>this.getCorrelationData(),500)
+      // setTimeout(()=>this.getCorrelationData(),500)
     }
   }
 </script>
@@ -255,6 +255,9 @@
     }
     .el-table th.gutter{
       width:16px;
+    }
+    .el-select .el-input{
+      width: 80px;
     }
   }
 </style>

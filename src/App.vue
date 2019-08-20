@@ -1,14 +1,15 @@
 <template>
   <div id="app">
-    <!--<img src="../static/image/logo.png">-->
-
     <router-view/>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  created(){
+    this.$store.dispatch('analysis/setDefaultNode')
+  }
 }
 </script>
 

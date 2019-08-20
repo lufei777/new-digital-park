@@ -102,7 +102,7 @@ class commonData {
           "name": "space",
           "caption": "统计对比",
           "catalog": null,
-          "url": "/topage/statistics/classified_statistic",
+          "url": "/statisCompare",
           "sequence": 3,
           "icon": null,
           "permisionList": ["统计对比"],
