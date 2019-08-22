@@ -12,7 +12,7 @@
     <div ref="myChart2" class="my-chart"></div>
     <div ref="myChart3" class="my-chart"></div>
     <div ref="myChart4" class="my-chart"></div>
-    <el-table :data="tableData" border>
+    <el-table :data="tableData" border height="350px">
       <el-table-column prop="time" label="时间" align="right" width="100px"></el-table-column>
       <el-table-column prop="max1" :label="tableText[0]+'最大值(KWH)'" align="right"></el-table-column>
       <el-table-column prop="max2" :label="tableText[1]+'最大值(KWH)'" align="right"></el-table-column>
@@ -96,7 +96,7 @@
                        ]
            for(let i=1;i<=4;i++){
                this['myChart'+i]=echarts.init(this.$refs['myChart'+i])
-               let xAxis =[this.startTime,this.endTime]
+               let xAxis =res.xAxis
                let data={
                  titleText:'',
                  legendData:legendList[i-1],

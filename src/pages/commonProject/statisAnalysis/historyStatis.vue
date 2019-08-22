@@ -8,7 +8,7 @@
     <MonitorModal />
     <el-button type="primary" class='handle-btn' @click="onClickBtn">处理</el-button>
     <div ref="myChart" class="my-chart"></div>
-    <el-table :data="tableData" border>
+    <el-table :data="tableData" border height="350px">
       <el-table-column prop="time" label="时间" align="right" width="100px"></el-table-column>
       <el-table-column prop="max1" label="最大值(KWH)" align="right"></el-table-column>
       <el-table-column prop="min1" label="最小值(KWH)" align="right"></el-table-column>
@@ -86,7 +86,7 @@
         }]
         let legendData=['最大值','最小值','平均值','均方差']
           this.myChart=echarts.init(this.$refs.myChart)
-          let xAxis =[this.startTime,this.endTime]
+          let xAxis =res.xAxis
           let data={
             titleText:'',
             legendData,
