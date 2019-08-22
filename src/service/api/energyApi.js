@@ -6,6 +6,10 @@ class EnergyApi {
   @get
   getEnergyOverView(){}
 
+  @url('/vibe-web/energy/energy_allRank')
+  @get
+  getEneryRanking(){}
+
 }
 
 export default new EnergyApi()
