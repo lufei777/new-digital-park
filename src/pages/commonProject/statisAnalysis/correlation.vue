@@ -9,8 +9,8 @@
     <el-button type="primary" class='handle-btn' @click="onClickBtn">处理</el-button>
     <div ref="myChart" class="my-chart"></div>
     <el-table :data="tableData" height="350" stripe style="width:40%;" border>
-      <el-table-column prop="point1" :label="monitor1.text" align="right"></el-table-column>
-      <el-table-column prop="point2" :label="monitor2.text" align="right"></el-table-column>
+      <el-table-column prop="point1" :label="tableText[0]" align="right"></el-table-column>
+      <el-table-column prop="point2" :label="tableText[1]" align="right"></el-table-column>
     </el-table>
   </div>
 </template>
