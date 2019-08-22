@@ -38,7 +38,7 @@
         <span>{{monitorText1}}</span>
         <el-button @click="onClickShowBtn(1)">请选择</el-button>
       </div>
-      <div class="block flex-align">
+      <div class="block flex-align" v-if="showTwoMonitor">
         <span>{{monitorText2}}</span>
         <el-button @click="onClickShowBtn(2)">请选择</el-button>
       </div>
@@ -56,7 +56,7 @@
     components: {
       MonitorModal,
     },
-    props:['showDateType'],
+    props:['showDateType','showTwoMonitor'],
     data () {
       return {
         startTime:new Date(new Date().getTime()-5*24*60*60*1000),
@@ -81,7 +81,8 @@
       }),
       monitorText1(){
         return this.$route.path=='/correlationAnalysis'?this.$store.state.analysis.monitor1.text:
-                          this.$store.state.analysis.statisMonitor1.text
+               this.$route.path=='/statisCompare'?this.$store.state.analysis.statisMonitor1.text:
+               this.$store.state.analysis.historyMonitor.text
       },
       monitorText2(){
         return this.$route.path=='/correlationAnalysis'?this.$store.state.analysis.monitor2.text:
@@ -92,10 +93,16 @@
     },
     methods: {
       onClickShowBtn(flag){
-        this.$store.commit('analysis/curSelect',flag)
+        if(this.$route.path=='/correlationAnalysis'){
+          this.$store.commit('analysis/curSelect',flag)
+        }else if(this.$route.path=='/statisCompare'){
+          this.$store.commit('analysis/statisCurSelect',flag)
+        }
+
         this.$store.commit('analysis/showDialog',true)
       },
       onTimeChange(flag){
+        let format = this.pickerType=='year'?'YYYY':this.pickerType=="month"?'YYYY-MM':'YYYY-MM-DD'
         if(this.$route.path=='/correlationAnalysis'){
           if(flag==1){
             this.$store.commit('analysis/startTime',this.startTime)
@@ -103,11 +110,16 @@
             this.$store.commit('analysis/endTime',this.endTime)
           }
         }else if(this.$route.path=='/statisCompare'){
-          let format = this.pickerType=='year'?'YYYY':this.pickerType=="month"?'YYYY-MM':'YYYY-MM-DD'
           if(flag==1){
             this.$store.commit('analysis/statisStartTime',moment(this.startTime).format(format))
           }else{
             this.$store.commit('analysis/statisEndTime',moment(this.endTime).format(format))
+          }
+        }else{
+          if(flag==1){
+            this.$store.commit('analysis/historyStartTime',moment(this.startTime).format(format))
+          }else{
+            this.$store.commit('analysis/historyEndTime',moment(this.endTime).format(format))
           }
         }
       },
@@ -119,6 +131,10 @@
             this.$store.commit('analysis/statisFilterType',value)
             this.$store.commit('analysis/statisStartTime',moment(this.startTime).format(format))
             this.$store.commit('analysis/statisEndTime',moment(this.endTime).format(format))
+        }else if(this.$route.path=='/historyStatis'){
+           this.$store.commit('analysis/historyFilterType',value)
+           this.$store.commit('analysis/historyStartTime',moment(this.startTime).format(format))
+           this.$store.commit('analysis/historyEndTime',moment(this.endTime).format(format))
         }
       }
     },

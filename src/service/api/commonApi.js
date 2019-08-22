@@ -80,6 +80,15 @@ class CommonApi {
   @url('/vibe-web/monitor_data/monitorDataCalCompared')
   @get
   getStatisCompareData(){}
+
+  @url('/vibe-web/monitor_data/monitorDataCal')
+  @get
+  getHistoryStatisData(){}
+
+  @url('/vibe-web/statistics/getMonitorDetails')
+  @get
+  getDeviceTableData(){}
+
 }
 
 export default new CommonApi()

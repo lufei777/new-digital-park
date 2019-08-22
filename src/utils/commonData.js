@@ -113,7 +113,7 @@ class commonData {
           "name": "space",
           "caption": "往期统计",
           "catalog": null,
-          "url": "/topage/statistics/monitor_history",
+          "url": "/historyStatis",
           "sequence": 4,
           "icon": null,
           "permisionList": ["往期统计"],

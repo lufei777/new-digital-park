@@ -3,6 +3,7 @@
     <el-dialog
       title="选择监控器"
       :visible.sync="showDialog"
+      :show-close="false"
       width="30%"
     >
       <el-tree
@@ -48,7 +49,7 @@
       }),
       curSelect(){
          return this.curRoute=='/correlationAnalysis'?this.$store.state.analysis.curSelect:
-                this.$store.state.analysis.statisCurSelect
+                this.curRoute=='/statisCompare'?this.$store.state.analysis.statisCurSelect:1
       }
      },
     methods: {
@@ -65,12 +66,14 @@
             }else{
               this.$store.commit('analysis/monitor2',{id:val.id,text:val.text})
             }
-          }else if(this.curRoute='/statisCompare'){
+          }else if(this.curRoute=='/statisCompare'){
             if(this.curSelect==1){
               this.$store.commit('analysis/statisMonitor1',{id:val.id,text:val.text})
             }else{
               this.$store.commit('analysis/statisMonitor2',{id:val.id,text:val.text})
             }
+          }else{
+            this.$store.commit('analysis/historyMonitor',{id:val.id,text:val.text})
           }
         }
         this.$store.commit('analysis/showDialog',false)

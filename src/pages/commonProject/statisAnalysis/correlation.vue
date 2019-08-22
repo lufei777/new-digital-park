@@ -4,13 +4,13 @@
       <span class="icon"></span>
       <span>相关性分析</span>
     </div>
-    <MonitorChoose :showDateType="false"/>
+    <MonitorChoose :showDateType="false" :showTwoMonitor="true" />
     <MonitorModal />
     <el-button type="primary" class='handle-btn' @click="onClickBtn">处理</el-button>
     <div ref="myChart" class="my-chart"></div>
     <el-table :data="tableData" height="350" stripe style="width:40%;" border>
-      <el-table-column prop="point1" :label="tableText[0]" align="right"></el-table-column>
-      <el-table-column prop="point2" :label="tableText[1]" align="right"></el-table-column>
+      <el-table-column prop="point1" :label="monitor1.text" align="right"></el-table-column>
+      <el-table-column prop="point2" :label="monitor2.text" align="right"></el-table-column>
     </el-table>
   </div>
 </template>
@@ -30,7 +30,7 @@
     data () {
       return {
         tableData:[],
-        tableText:['',''],
+        tableText:['B-ALE-1-a 照明 (KWH)','B-AL-1-aFM 电热风幕和热风幕电机 (KWH)'],
         myChart:''
       }
     },

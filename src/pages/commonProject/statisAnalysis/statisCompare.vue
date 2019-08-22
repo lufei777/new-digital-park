@@ -1,10 +1,10 @@
 <template>
-  <div class="device-analysis">
+  <div class="statis-compare">
     <div class="tip flex-align">
       <span class="icon"></span>
       <span>统计对比</span>
     </div>
-    <MonitorChoose :showDateType="true"/>
+    <MonitorChoose :showDateType="true" :showTwoMonitor="true"/>
     <MonitorModal />
     <el-button type="primary" class='handle-btn' @click="onClickBtn">处理</el-button>
     <div style="clear:both"></div>
@@ -12,10 +12,17 @@
     <div ref="myChart2" class="my-chart"></div>
     <div ref="myChart3" class="my-chart"></div>
     <div ref="myChart4" class="my-chart"></div>
-    <!--<el-table :data="tableData" height="350" stripe style="width:40%;" border>-->
-      <!--<el-table-column prop="point1" :label="tableText[0]" align="right"></el-table-column>-->
-      <!--<el-table-column prop="point2" :label="tableText[1]" align="right"></el-table-column>-->
-    <!--</el-table>-->
+    <el-table :data="tableData" border>
+      <el-table-column prop="time" label="时间" align="right" width="100px"></el-table-column>
+      <el-table-column prop="max1" :label="tableText[0]+'最大值(KWH)'" align="right"></el-table-column>
+      <el-table-column prop="max2" :label="tableText[1]+'最大值(KWH)'" align="right"></el-table-column>
+      <el-table-column prop="min1" :label="tableText[0]+'最小值(KWH)'" align="right"></el-table-column>
+      <el-table-column prop="min2" :label="tableText[1]+'最小值(KWH)'" align="right"></el-table-column>
+      <el-table-column prop="avg1" :label="tableText[0]+'平均值(KWH)'" align="right"></el-table-column>
+      <el-table-column prop="avg2" :label="tableText[1]+'平均值(KWH)'" align="right"></el-table-column>
+      <el-table-column prop="std1" :label="tableText[0]+'均方差(KWH)'" align="right"></el-table-column>
+      <el-table-column prop="std2" :label="tableText[1]+'均方差(KWH)'" align="right"></el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -25,6 +32,7 @@
   import MonitorChoose from '../coms/monitorChoose'
   import MonitorModal from '../../../components/monitorModal/index'
   import CommonApi from '../../../service/api/commonApi'
+  import ChartUtils from '../../../utils/chartUtils'
   export default {
     name: 'StatisCompare',
     components: {
@@ -34,7 +42,7 @@
     data () {
       return {
         tableData:[],
-        tableText:['',''],
+        tableText:['B-ALE-1-a 照明','B-AL-1-aFM 电热风幕和热风幕电机'],
         myChart1:'',
         myChart2:'',
         myChart3:'',
@@ -68,68 +76,54 @@
           filterType:this.filterType
         }
         let res =  await CommonApi.getStatisCompareData(params)
-        // let tmpArr=[]
-        // res.points.map((item)=>{
-        //   tmpArr.push({
-        //     point1:item[0],
-        //     point2:item[1]
-        //   })
-        // })
-        // this.tableData = tmpArr
         this.initChart(res)
+        this.initTableData(res)
       },
       onClickBtn(){
         this.getStatisCompareData()
       },
       initChart(res){
-        // this.myChart1 = echarts.init(this.$refs.myChart1);
-        // this.myChart2 = echarts.init(this.$refs.myChart2);
-        // this.myChart3 = echarts.init(this.$refs.myChart3);
-        // this.myChart4 = echarts.init(this.$refs.myChart4);
-        let seriesList=[res.maxValues_1.concat(res.maxValues_2),
-                    res.minValues_1.concat(res.minValues_2),
-                    res.avgValues_1.concat(res.avgValues_2),
-                    res.stdValues_1.concat(res.stdValues_2)]
-           for(var i=1;i<=4;i++){
+        let seriesList=
+          [[{data:res.maxValues_1,type:'bar',name:this.monitor1.text+'最大值'},{data:res.maxValues_2,type:'bar',name:this.monitor2.text+'最大值'}],
+           [{data:res.minValues_1,type:'bar',name:this.monitor1.text+'最小值'},{data:res.minValues_2,type:'bar',name:this.monitor2.text+'最小值'}],
+           [{data:res.avgValues_1,type:'bar',name:this.monitor1.text+'平均值'},{data:res.avgValues_2,type:'bar',name:this.monitor2.text+'平均值'}],
+           [{data:res.stdValues_1,type:'bar',name:this.monitor1.text+'均方差'},{data:res.stdValues_2,type:'bar',name:this.monitor2.text+'均方差'}]
+          ]
+        let legendList=[[this.monitor1.text+'最大值',this.monitor2.text+'最大值'],
+                        [this.monitor1.text+'最小值',this.monitor2.text+'最小值'],
+                        [this.monitor1.text+'平均值',this.monitor2.text+'平均值'],
+                        [this.monitor1.text+'均方差',this.monitor2.text+'均方差'],
+                       ]
+           for(let i=1;i<=4;i++){
                this['myChart'+i]=echarts.init(this.$refs['myChart'+i])
-               let legendData=[this.monitor1.text+'最大值',this.monitor2.text+'最大值']
-               let xAxisData =[this.startTime,this.endTime]
+               let xAxis =[this.startTime,this.endTime]
                let data={
-                 legendData,
-                 xAxisData,
-                 seriesData:seriesList[i-1]
+                 titleText:'',
+                 legendData:legendList[i-1],
+                 xAxis,
+                 series:seriesList[i-1],
+                 yAxis:res.unit1
                }
-               this.initEveryChart(this['myChart'+i],data)
+               ChartUtils.handleBarChart(this['myChart'+i],data)
            }
       },
-      initEveryChart(dom,data){
-        let option = {
-            tooltip : {
-              trigger: 'axis',
-              axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-              }
-            },
-            legend: {
-              data:data.legendData
-            },
-            xAxis : [
-              {
-                type : 'category',
-                data :data.xAxisData
-              }
-            ],
-            yAxis : [
-              {
-                type : 'value'
-              }
-            ],
-            series : data.seriesData
-          };
-        window.onresize = dom.resize;
-        dom.setOption(option,true)
+      initTableData(res){
+           let tmp=[]
+          res.xAxis.map((item,index)=>{
+             tmp.push({
+              time:item,
+              max1:res.maxValues_1[index],
+              max2:res.maxValues_2[index],
+              min1:res.minValues_1[index],
+              min2:res.minValues_2[index],
+              avg1:res.avgValues_1[index],
+              avg2:res.avgValues_2[index],
+              std1:res.stdValues_1[index],
+              std2:res.stdValues_2[index]
+            })
+          })
+        this.tableData=tmp
       }
-
     },
     created(){
     },
@@ -140,7 +134,7 @@
 </script>
 
 <style lang="less">
-  .device-analysis{
+  .statis-compare{
     margin-top: 85px;
     padding:0 20px;
     .tip{
@@ -183,15 +177,14 @@
       margin:10px;
       float: right;
     }
-    .el-table{
-      /*clear: both;*/
-      float: right;
-    }
     .el-table th.gutter{
       width:16px;
     }
     .el-select .el-input{
       width: 80px;
+    }
+    .el-table th div{
+      padding-left: 0;
     }
   }
 </style>

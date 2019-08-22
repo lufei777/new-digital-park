@@ -1,6 +1,7 @@
 import DeviceAnalysis from '../../pages/commonProject/statisAnalysis/device'
 import CorrelationAnalysis from '../../pages/commonProject/statisAnalysis/correlation'
 import StatisCompare from '../../pages/commonProject/statisAnalysis/statisCompare'
+import HistoryStatis from '../../pages/commonProject/statisAnalysis/historyStatis'
 export default [{
   path:'/deviceAnalysis',
   name:'DeviceAnalysis',
@@ -13,4 +14,8 @@ export default [{
   path:'/statisCompare',
   name:'StatisCompare',
   component:StatisCompare
+},{
+  path:'/historyStatis',
+  name:'HistoryStatis',
+  component:HistoryStatis
 }]
