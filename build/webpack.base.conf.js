@@ -68,10 +68,28 @@ module.exports = {
         }
       },
       {
+        test: /\.less/,
+        use: [{
+            loader: "style-loader"
+          },{
+            loader: "css-loader",
+          },{
+            loader: "less-loader",
+            options: {
+              "modifyVars":{},
+              javascriptEnabled: true,
+            }
+          }
+        ],
+        exclude: /common\.less/
+      },{
         test: /\.less$/,
-        loader: "style-loader!css-loader!less-loader",
-      }
-    ]
+        loader: "file-loader",
+        options: {
+          name: "[name].[ext]"    // 默认的话 会将name hash掉
+        },
+        include: /common\.less/
+      }]
   },
   node: {
     // prevent webpack from injecting useless setImmediate polyfill because Vue
