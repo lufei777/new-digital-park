@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <!--<div class="color-list">-->
-      <!--<el-tag :color="item.color" v-for="(item,index) in colorList"-->
-              <!--:key="index"-->
-              <!--@click="onChangeThemeColor(item)"-->
-      <!--&gt;</el-tag>-->
-    <!--</div>-->
+    <div class="color-list">
+      <el-tag :color="item.color" v-for="(item,index) in colorList"
+              :key="index"
+              @click="onChangeThemeColor(item,index)"
+      ></el-tag>
+    </div>
     <router-view/>
   </div>
 </template>
@@ -31,7 +31,7 @@ export default {
         }, {
           key: '极客蓝', color: '#2F54EB',
         }, {
-          key: '酱紫', color: '#722ED1',
+          key: '默认', color: '#013b4e',
         }]
     }
   },
@@ -44,13 +44,12 @@ export default {
     // };
   },
   methods:{
-    onChangeThemeColor(item){
-      updateTheme(item.color)
+    onChangeThemeColor(item,index){
+      document.body.style.setProperty('--mainBg',item.color)
     }
   }
 }
 </script>
-
 <style lang="less">
 @import url('./less/index.less');
 #app {
@@ -60,8 +59,15 @@ export default {
 .color-list{
   overflow: hidden;
   margin:100px 0 0 30px;
+  position: fixed;
+  right:20px;
+  top:100px;
+  z-index:999;
   .el-tag{
     padding:0 15px;
   }
+}
+:root{
+  --mainBg:#013b4e;
 }
 </style>

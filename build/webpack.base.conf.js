@@ -74,21 +74,9 @@ module.exports = {
           },{
             loader: "css-loader",
           },{
-            loader: "less-loader",
-            options: {
-              "modifyVars":{},
-              javascriptEnabled: true,
-            }
+            loader: "less-loader"
           }
-        ],
-        exclude: /common\.less/
-      },{
-        test: /\.less$/,
-        loader: "file-loader",
-        options: {
-          name: "[name].[ext]"    // 默认的话 会将name hash掉
-        },
-        include: /common\.less/
+        ]
       }]
   },
   node: {

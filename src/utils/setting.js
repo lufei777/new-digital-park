@@ -1,9 +1,16 @@
+import { message } from 'ant-design-vue/es';
 import axios from 'axios'
 let lessNodesAppended;
 // const updateTheme = primaryColor => {
+//   // Don't compile less in production!
+//   /* if (process.env.NODE_ENV === 'production') {
+//     return;
+//   } */
+//   // Determine if the component is remounted
 //   if (!primaryColor) {
 //     return;
 //   }
+//   const hideMessage = message.loading('正在编译主题！', 0);
 //   function buildIt() {
 //     if (!window.less) {
 //       return;
@@ -14,10 +21,12 @@ let lessNodesAppended;
 //           '@mainBg': primaryColor,
 //         })
 //         .then(() => {
-//           console.log(1)
+//           debugger
+//           hideMessage();
 //         })
-//         .catch((err) => {
-//           console.log(2,err)
+//         .catch(() => {
+//           message.error('Failed to update theme');
+//           hideMessage();
 //         });
 //     }, 200);
 //   }
@@ -27,11 +36,11 @@ let lessNodesAppended;
 //     const lessConfigNode = document.createElement('script');
 //     const lessScriptNode = document.createElement('script');
 //     lessStyleNode.setAttribute('rel', 'stylesheet/less');
-//     lessStyleNode.setAttribute('href', '/common.less');
+//     lessStyleNode.setAttribute('href', '../../static/common.less');
 //     lessConfigNode.innerHTML = `
 //       window.less = {
 //         async: true,
-//         env: 'development',
+//         env: 'production',
 //         javascriptEnabled: true
 //       };
 //     `;
@@ -55,16 +64,16 @@ const updateTheme=color=> {
   const changeColor = () => {
     let less = require('less');
     less.modifyVars({
-     '@mainBg':color
+     "@mainBg":color
     }).then(() => {
         console.log('修改成功');
     });
   };
-  const lessUrl = 'https://cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js';
+  const lessUrl = 'https://gw.alipayobjects.com/os/lib/less.js/3.8.1/less.min.js';
   if (lessLoaded) {
     changeColor();
   } else {
-    less = {
+    window.less = {
       async: true,
       env: "development"
     };

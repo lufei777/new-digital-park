@@ -104,7 +104,11 @@
         this.menuData.children[index].clickFlag=1
         this.menuData.children[index].showChild=1
         if(this.menuData.children[index].children.length){
+          this.menuData.children[index].children.map((item)=>{
+            item.clickFlag=-1
+          })
           this.menuData.children[index].children[0].bgFlag=1
+          this.menuData.children[index].children[0].clickFlag=1
         }
         this.$router.push(this.menuData.children[index].url)
         Cookies.set('activeNav',{fatherIndex:index,childIndex:0})
