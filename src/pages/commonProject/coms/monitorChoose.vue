@@ -36,11 +36,11 @@
       <span class="choose-tip">监测器选择</span>
       <div class="block flex-align">
         <span>{{monitorText1}}</span>
-        <el-button @click="onClickShowBtn(1)">请选择</el-button>
+        <el-button @click="onClickShowBtn(1)" type="primary">请选择</el-button>
       </div>
       <div class="block flex-align" v-if="showTwoMonitor">
         <span>{{monitorText2}}</span>
-        <el-button @click="onClickShowBtn(2)">请选择</el-button>
+        <el-button @click="onClickShowBtn(2)" type="primary">请选择</el-button>
       </div>
     </div>
   </div>

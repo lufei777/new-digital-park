@@ -27,7 +27,17 @@ const state = {
     id:'',
     name:''
   }],
+  timeSelectType:'2',
+  timeRadioType:0,
+  timeStartTime:moment(new Date(new Date().getTime()-30*24*60*60*1000)).format('YYYY-MM'),
+  timeLastTime:'',
+  timeCheckedFloorList:[],
+  timeEnergy:[{
+    id:'',
+    name:''
+  }],
   activeIndex:1,
+  curModule:1 //代表能耗展示模块
 }
 
 const mutations={
@@ -88,6 +98,27 @@ const mutations={
   typeCheckedFloorList(state,data){
     state.typeCheckedFloorList=data
   },
+  timeEnergy(state,data){
+    state.timeEnergy=data
+  },
+  timeSelectType(state,data){
+    state.timeSelectType=data
+  },
+  timeRadioType(state,data){
+    state.timeRadioType=data
+  },
+  timeStartTime(state,data){
+    state.timeStartTime=data
+  },
+  timeLastTime(state,data){
+    state.timeLastTime=data
+  },
+  timeCheckedFloorList(state,data){
+    state.timeCheckedFloorList=data
+  },
+  curModule(state,data){
+    state.curModule=data
+  }
 }
 
 export default {

@@ -35,10 +35,11 @@
     computed: {
       ...mapState({
         activeIndex:state => state.conditionSelect.activeIndex,
+        curModule:state => state.conditionSelect.curModule,
       }),
       defaultCheckedKey(){
         return this.defaultChecked.map((item)=>item.id)
-      }
+      },
     },
     watch:{},
     methods: {
@@ -47,7 +48,7 @@
       },
       handleCheck(val){
         let tmp=[]
-        if(this.activeIndex==1){
+        if(this.activeIndex==1 && this.curModule!=1){
           let checkedNode = this.$refs.navTree.getCheckedNodes()
           this.$parent.handleNavCanCheck(checkedNode)
           checkedNode.map((item)=>{
