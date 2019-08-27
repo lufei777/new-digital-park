@@ -281,7 +281,7 @@ export default {
       this.createCharts(res);
     },
     async rankingList() {
-      let res = await EnergyApi.getEneryRanking({
+      let res = await EnergyApi.getEnergyRanking({
         redioType: 0,
         startTime: 2019,
         selectType: 1,

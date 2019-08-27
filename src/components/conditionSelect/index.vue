@@ -1,6 +1,6 @@
 <template>
   <div class="condition-select flex-align-between">
-     <div class="item-group">
+     <div class="item-group" v-if="showEnergy">
         <span>能源：</span>
         <el-select v-if="!isGroup" v-model="curEnergy" placeholder="请选择" @change="handleEnergyChange" >
            <el-option v-for="item in energyList" :key="item.id" :label="item.name" :value="item.id">
@@ -68,7 +68,7 @@
     name:'ConditionSelect',
     components: {
     },
-    props:['isGroup'],
+    props:['isGroup','showEnergy'],
     data () {
       return {
         energyList:[],
@@ -85,17 +85,18 @@
     computed: {
       ...mapState({
         activeIndex:state => state.conditionSelect.activeIndex,
+        curModule:state => state.conditionSelect.curModule
       }),
       dateTypeList(){
-        if(this.activeIndex==2){
-          return [{
-            name:'年',
-            id:1
-          },{
-            name:'月',
-            id:2
-          }]
-        }else{
+        // if(this.activeIndex==2){
+        //   return [{
+        //     name:'年',
+        //     id:1
+        //   },{
+        //     name:'月',
+        //     id:2
+        //   }]
+        // }else{
           return [{
             name:'年',
             id:1
@@ -106,7 +107,7 @@
             name:'日',
             id:3
           }]
-        }
+        // }
       }
     },
     watch:{
@@ -127,12 +128,24 @@
           energy=[res[0].energyType[0],res[0].energyType[1]]
         }else{
           let tmp=[]
-          res.map((item)=>{
-            tmp.push(item)
-            item.energyType.map((val)=>{
-              tmp.push(val)
-            })
-          })
+           if(this.curModule==1){
+             res.map((item)=>{
+               tmp.push(item)
+               item.energyType.map((val)=>{
+                 tmp.push(val)
+               })
+             })
+           }else if(this.curModule==2){
+             res.map((item)=>{
+               item.energyType.map((val)=>{
+                 tmp.push(val)
+               })
+             })
+           }else if(this.curModule==3){
+             res.map((item)=>{
+               tmp.push(item)
+             })
+           }
           this.energyList = tmp
           this.curEnergy=tmp[0].id
             energy=[{

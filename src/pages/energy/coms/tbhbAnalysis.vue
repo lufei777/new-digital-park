@@ -4,8 +4,12 @@
       <ZoomNavigation :floorList="floorList" :defaultChecked="defaultChecked" />
     </div>
     <div class="right-content">
-      <ConditionSelect :isGroup="false"/>
-      <div ref="myChart" class="my-chart"></div>
+      <ConditionSelect :isGroup="false" :showEnergy="true"/>
+      <div ref="myChart" :class="curModule==3?'hide':'my-chart'"></div>
+      <div class="flex-align-around" v-if="curModule==3">
+        <div ref="myChart1" class="my-chart category-chart"></div>
+        <div ref="myChart2" class="my-chart category-chart"></div>
+      </div>
       <div class="table-box">
         <div class="flex-align-between">
           <h3 class="table-tip">A3{{energy[0].name}}明细展示排名</h3>
@@ -14,31 +18,7 @@
             导出表格
           </el-button>
         </div>
-        <el-table :data="tableData.value"  border @sort-change='sortTable'>
-          <el-table-column prop="xulie" label="排名" align="right"></el-table-column>
-          <el-table-column prop="date" label="时间" align="right"></el-table-column>
-          <el-table-column prop="dqzh" label="当期综合能耗（kwh）" align="right" sortable="custom"></el-table-column>
-          <el-table-column prop="tqzh" label="同期综合能耗（kwh）" align="right" sortable="custom"></el-table-column>
-          <el-table-column prop="sqzh" label="上期综合能耗（kwh）" align="right" sortable="custom"></el-table-column>
-          <el-table-column prop="tbzz" label="综合能耗同比增长率（%）" align="right" sortable="custom">
-            <template slot-scope="scope">
-              <span>{{parseFloat(scope.row.tbzz).toFixed(2)}}%</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="hbzz" label="综合能耗环比增长率（%）" align="right" sortable="custom">
-            <template slot-scope="scope">
-              <span>{{parseFloat(scope.row.hbzz).toFixed(2)}}%</span>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="page-box" v-if="tableData.total!=0">
-          <el-pagination
-            @current-change="handleCurrentChange"
-            :current-page="curPage"
-            layout="total, prev, pager, next, jumper"
-            :total="tableData.total">
-          </el-pagination>
-        </div>
+        <CommonTable :tableObj="tableData" :curPage="curPage"/>
       </div>
     </div>
   </div>
@@ -49,13 +29,17 @@
   import echarts from 'echarts'
   import {mapState} from 'vuex'
   import CommonApi from '../../../service/api/commonApi'
+  import EnergyApi from '../../../service/api/energyApi'
   import ZoomNavigation from '../../../components/zoomNavigation/index'
   import ConditionSelect from '../../../components/conditionSelect/index'
+  import ChartUtils from '../../../utils/chartUtils'
+  import CommonTable from '../../../components/commonTable/index'
   export default {
     name:'TbhbAnalysis',
     components: {
       ZoomNavigation,
-      ConditionSelect
+      ConditionSelect,
+      CommonTable
     },
     data () {
       return {
@@ -67,7 +51,10 @@
           total:0
         },
         defaultChecked:[],
-        rank:'asc'
+        rank:'asc',
+        seq:0,
+        myChart1:'',
+        myChart2:''
       }
     },
     computed: {
@@ -78,6 +65,7 @@
         radioType: state => state.conditionSelect.tbhbRadioType,
         startTime: state => state.conditionSelect.tbhbStartTime,
         lastTime: state => state.conditionSelect.tbhbLastTime,
+        curModule:state => state.conditionSelect.curModule
       }),
       floorNameList() {
           return this.checkedFloorList.map((item)=>item.name).join('、')
@@ -89,7 +77,8 @@
           selectType: this.selectType,
           redioType: this.radioType,
           startTime: this.startTime,
-          lastTime: this.lastTime
+          lastTime: this.lastTime,
+          floor:this.checkedFloorList[0].id //能耗展示字段名是floor
         }
       }
     },
@@ -116,8 +105,16 @@
         }
         this.curPage=1
         this.tableData={total:0}
-        this.getTbhbChart()
-        this.getTbhbTable()
+        if(this.curModule==1){
+          this.getTbhbChart()
+          this.getTbhbTable()
+        }else if(this.curModule==2){
+          this.getTimeEnergyChart()
+          this.getTimeEnergyTable()
+        }else if(this.curModule==3){
+          this.getCategoryEnergyChart()
+          this.getCategoryEnergyTable()
+        }
       },
       async getTbhbChart(){
         let res = await CommonApi.getTbhbChart(this.commonParams)
@@ -134,6 +131,13 @@
         }
         let res = await CommonApi.getTbhbTable(tableParams)
         if(res && res.total){
+          res.labelList = ['排名','时间','当期综合能耗(kwh)','同期综合能耗(kwh)',
+            '上期综合能耗(kwh)','综合能耗同比增长率(%)','综合能耗环比增长率(%)']
+          res.propList=[{prop:'xulie',sort:false},{prop:'date',sort:false},
+                        {prop:'dqzh',sort:'custom'},{prop:'tqzh',sort:'custom'},
+                        {prop:'tbzz',sort:'custom'},{prop:'hbzz',sort:'custom'},
+          ]
+          res.dataList=res.value
           this.tableData=res
         }
       },
@@ -203,21 +207,145 @@
       },
       handleCurrentChange(value){
         this.curPage=value
-        this.getTbhbTable()
+        if(this.curModule==1){
+          this.getTbhbTable()
+        }else{
+          this.getTimeEnergyTable()
+        }
       },
       sortTable(column){
-         this.rankType=column.prop
+         this.seq = column.prop == 'shijian' ? 0 : 1
          this.rank=column.order=='ascending'?'asc':'desc'
-         this.getTbhbTable()
+        if(this.curModule==1){
+          this.getTbhbTable()
+        }else{
+          this.getTimeEnergyTable()
+          this.getCategoryEnergyTable()
+        }
       },
       async handleExport(){
-        let url="http://localhost:8080/vibe-web/energyCount/energy/energy_comseqExcel?"
+        let url
+        if(this.curModule==1){
+          url = "http://localhost:8080/vibe-web/energyCount/energy/energy_comseqExcel?"
+        }else if(this.curModule==2){
+          url = "http://localhost:8080/vibe-web/energyCount/energy/energy_fenshiBiaoExcel?"
+        }else if(this.curModule==3){
+          url = "http://localhost:8080/vibe-web/energyCount/energy/energy_fenshiBiaoExcel?"
+        }
         let params=''
         for(let key in this.commonParams){
           params+=key+'='+this.commonParams[key]+'&'
         }
-        params+='rankType='+this.rankType+'&rank='+this.rank
+        params+='rankType='+this.rankType+'&rank='+this.rank+'&seq='+this.seq
         location.href=url+params
+      },
+      async getTimeEnergyChart(){
+        let res = await EnergyApi.getTimeEnergyChart(this.commonParams)
+        this.initTimeEnergyChart(res)
+      },
+      async getTimeEnergyTable(){
+        let tableParams = {...this.commonParams,...{
+            seq:this.seq,
+            rank:this.rank,
+            page:this.curPage,
+            size:10,
+          }
+        }
+        let res = await EnergyApi.getTimeEnergyTable(tableParams)
+        if(res && res.total){
+          res.labelList=[{name:'排名',prop:'xuhao', sort:false},
+                        {name:'时间',prop:'shijian',sort:'custom'},
+                        {name:this.energy[0].name,prop:'yongdianlaing',sort:'custom'}]
+          res.dataList=res.list
+          this.tableData=res
+        }
+      },
+      initTimeEnergyChart(res){
+        this.myChart = echarts.init(this.$refs.myChart);
+        let titleText =`${this.startTime}${this.energy[0].name}柱状图`
+        let legendData = []
+        let xAxis
+        if(this.selectType==3 && this.radioType==0){
+          xAxis = res.map((item)=>item.time.slice(0,16))
+        }else{
+          xAxis = res.map((item)=>item.time.slice(0,10))
+        }
+        let yAxis=res[0] && res[0].unit
+        let series=[]
+          series.push({
+            name:this.energy[0].name,
+            type:'bar',
+            data:res.map((item)=>item.value)
+        })
+        let data={
+          titleText,
+          legendData,
+          xAxis,
+          yAxis,
+          series
+        }
+        ChartUtils.handleBarChart(this.myChart,data)
+      },
+      async getCategoryEnergyChart(){
+        let res = await EnergyApi.getCategoryEnergyChart(this.commonParams)
+        this.initCategoryChart(res)
+        this.initCategoryPieChart(res)
+      },
+      async getCategoryEnergyTable(){
+        let tableParams = {...this.commonParams,...{
+            page:this.curPage,
+            size:10,
+          }
+        }
+        let res = await EnergyApi.getCategoryEnergyTable(tableParams)
+        if(res && res.total){
+          res.labelList=[{name:'排名',prop:'xulie', sort:false},
+                         {name:'能耗类型',prop:'name',sort:false},
+                         {name:'数值',prop:'value',sort:false},
+                         {name:'占比',prop:'zhanbi',sort:false}]
+          res.dataList=res.value
+          this.tableData=res
+        }
+      },
+      initCategoryChart(res){
+        let myChart1 = echarts.init(this.$refs.myChart1);
+        let titleText =`用${this.energy[0].name}分项能耗统计`
+        let legendData = []
+        let xAxis = res.map((item)=>item.name)
+        let yAxis=res[0] && res[0].unit
+        let series=[]
+        series.push({
+          type:'bar',
+          data:res.map((item)=>item.value)
+        })
+        let data={
+          titleText,
+          legendData,
+          xAxis,
+          yAxis,
+          series
+        }
+        ChartUtils.handleBarChart(myChart1,data)
+
+
+      },
+      initCategoryPieChart(res){
+        let myChart2 = echarts.init(this.$refs.myChart2);
+        let titleText =`用${this.energy[0].name}分项能耗占比分析`
+        let legendData = res.map((item)=>item.name)
+        let series=[]
+        res.map((item)=>{
+          series.push({
+            name:item.name,
+            value:item.value
+          })
+        })
+        let data={
+          titleText,
+          legendData,
+          series
+        }
+        ChartUtils.handlePieChart(myChart2,data)
       }
     },
     async mounted(){
@@ -249,6 +377,17 @@
     }
     .export-btn{
       margin-right: 10px;
+    }
+    .category-chart{
+      width:48%;
+    }
+    .table-box{
+      clear: both;
+    }
+    .hide{
+      height:0;
+      padding:0;
+      border:none;
     }
     /*.el-table th div{*/
       /*padding-left:0;*/

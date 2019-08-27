@@ -48,7 +48,7 @@
       },
       handleCheck(val){
         let tmp=[]
-        if(this.activeIndex==1 && this.curModule!=1){
+        if(this.activeIndex==1){
           let checkedNode = this.$refs.navTree.getCheckedNodes()
           this.$parent.handleNavCanCheck(checkedNode)
           checkedNode.map((item)=>{
@@ -66,8 +66,10 @@
           })
           if(this.activeIndex==2){
             this.$store.commit('conditionSelect/tbhbCheckedFloorList',tmp)
-          }else{
+          }else if(this.activeIndex==3){
             this.$store.commit('conditionSelect/typeCheckedFloorList',tmp)
+          }else if(this.activeIndex==4){
+            this.$store.commit('conditionSelect/timeCheckedFloorList',tmp)
           }
         }
       }

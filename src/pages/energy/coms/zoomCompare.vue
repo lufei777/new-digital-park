@@ -4,7 +4,7 @@
         <ZoomNavigation :floorList="floorList" :defaultChecked="defaultChecked"/>
       </div>
       <div class="right-content">
-        <ConditionSelect :isGroup="false" />
+        <ConditionSelect :isGroup="false" :showEnergy="true"/>
         <div ref="myChart" class="my-chart"></div>
         <DynamicTable :tableData="tableData" :tableTip="tableTip" :curPage="curPage" />
         <!--<ThirdPartyVideo videoUrl="videoUrl"/>-->
