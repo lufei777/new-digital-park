@@ -9,7 +9,8 @@
     </div>
     <div class="right-panel">
       <keep-alive>
-        <component :is="componentType()"></component>
+        <component :is="componentType()">
+        </component>
       </keep-alive>
     </div>
   </div>

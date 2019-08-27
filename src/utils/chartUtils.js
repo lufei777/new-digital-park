@@ -73,5 +73,34 @@ class chartUtils {
     window.onresize = dom.resize;
     dom.setOption(option, true)
   }
+
+  handlePieChart(dom,data){
+    let option = {
+      title : {
+        text: data.titleText,
+        x:'center'
+      },
+      tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left',
+        data: data.legendData
+      },
+      series : [
+        {
+          name: '',
+          type: 'pie',
+          radius : '55%',
+          center: ['50%', '60%'],
+          data:data.series,
+        }
+      ]
+    };
+    window.onresize = dom.resize;
+    dom.setOption(option, true)
+  }
 }
 export default new chartUtils()

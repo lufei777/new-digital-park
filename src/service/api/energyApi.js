@@ -8,7 +8,23 @@ class EnergyApi {
 
   @url('/vibe-web/energy/energy_allRank')
   @get
-  getEneryRanking(){}
+  getEnergyRanking(){}
+
+  @url('/vibe-web/energyCount/energy/energy_fenshiTu')
+  @get
+  getTimeEnergyChart(){}
+
+  @url('/vibe-web/energyCount/energy/energy_fenshiBiao')
+  @get
+  getTimeEnergyTable(){}
+
+  @url('/vibe-web/energyCount/energy/energy_fenxiangTu')
+  @get
+  getCategoryEnergyChart(){}
+
+  @url('/vibe-web/energyCount/energy/energy_fenxiangBiao')
+  @get
+  getCategoryEnergyTable(){}
 
 }
 

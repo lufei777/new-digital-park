@@ -62,6 +62,19 @@
         let activeNav =Cookies.get('activeNav') && JSON.parse(Cookies.get('activeNav'))
         console.log(activeNav)
         if(activeNav){
+          if(activeNav.fatherName=="能耗展示"){
+            this.$store.commit('conditionSelect/activeIndex',2)
+            if(activeNav.childIndex==0){
+              this.$store.commit('conditionSelect/curModule',2)
+            }else if(activeNav.childIndex==1){
+              this.$store.commit('conditionSelect/curModule',3)
+            }else{
+              this.$store.commit('conditionSelect/activeIndex',1)
+            }
+          }else if(activeNav.fatherName=="统计分析"){
+            this.$store.commit('conditionSelect/activeIndex',1)
+            this.$store.commit('conditionSelect/curModule',1)
+          }
           let tmp=res.children[activeNav.fatherIndex]
               tmp.clickFlag=1
               tmp.showChild=1
@@ -95,34 +108,48 @@
       changeBg(item,flag){
         item.bgFlag=flag
       },
-      clickChangeBg(index){
-        this.menuData.children.map((item)=>{
+      clickChangeBg(index){ //点击父标题时
+        let tmp = this.menuData.children
+        tmp.map((item)=>{
           item.clickFlag=-1
           item.bgFlag=-1
           item.showChild=-1
         })
-        this.menuData.children[index].clickFlag=1
-        this.menuData.children[index].showChild=1
-        if(this.menuData.children[index].children.length){
-          this.menuData.children[index].children.map((item)=>{
+        tmp[index].clickFlag=1
+        tmp[index].showChild=1
+        if(tmp[index].children.length){
+          tmp[index].children.map((item)=>{
             item.clickFlag=-1
           })
-          this.menuData.children[index].children[0].bgFlag=1
-          this.menuData.children[index].children[0].clickFlag=1
+          tmp[index].children[0].clickFlag=1
         }
-        this.$router.push(this.menuData.children[index].url)
-        Cookies.set('activeNav',{fatherIndex:index,childIndex:0})
+        if(tmp[index].caption=="能耗展示"){
+          this.$store.commit('conditionSelect/activeIndex',2)
+          this.$store.commit('conditionSelect/curModule',2)
+        }else if(tmp[index].caption=="统计分析"){
+          this.$store.commit('conditionSelect/activeIndex',1)
+          this.$store.commit('conditionSelect/curModule',1)
+        }
+        Cookies.set('activeNav',{fatherIndex:index,childIndex:0,fatherName:tmp[index].caption})
+
+        this.$router.push(tmp[index].url)
       },
-      clickChangeChild(index,i){
-        this.menuData.children.map((item)=>{
+      clickChangeChild(index,i){  //点击子标题时
+        let tmp = this.menuData.children
+        tmp.map((item)=>{
             item.children.map((child)=>{
               child.clickFlag=-1
               child.bgFlag=-1
             })
         })
-        this.menuData.children[index].children[i].clickFlag=1
-        this.$router.push(this.menuData.children[index].children[i].url)
-        Cookies.set('activeNav',{fatherIndex:index,childIndex:i})
+        tmp[index].children[i].clickFlag=1
+        if(tmp[index].children[i].caption=="分时能耗"){
+          this.$store.commit('conditionSelect/curModule',2)
+        }else if(tmp[index].children[i].caption=="分项能耗"){
+          this.$store.commit('conditionSelect/curModule',3)
+        }
+        Cookies.set('activeNav',{fatherIndex:index,childIndex:i,fatherName:tmp[index].caption})
+        this.$router.push(tmp[index].children[i].url)
       }
     },
     async mounted(){

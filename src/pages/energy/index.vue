@@ -1,9 +1,7 @@
 <template>
   <div class="energy-index">
     <NavList />
-    <keep-alive>
-       <router-view></router-view>
-    </keep-alive>
+    <router-view></router-view>
   </div>
 </template>
 
