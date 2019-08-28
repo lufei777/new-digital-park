@@ -126,8 +126,8 @@
     </div>
 
     <div class="pieCharts flex-align-between">
-      <div ref="pieChart1" class="pieChart box"></div>
-      <div ref="pieChart2" class="pieChart box"></div>
+      <div class="pieChart box"><div ref="pieChart1" class="chart-inner"></div></div>
+      <div  class="pieChart box"><div ref="pieChart2" class="chart-inner"></div></div>
       <!-- <div class="pieChart box"></div> -->
     </div>
 
@@ -136,89 +136,7 @@
       <span>能耗排名列表</span>
     </div>
     <div class="tabulation">
-      <div class="box_title">2019年A3能耗排名展示(按综合能耗排名)</div>
-      <el-table :data="tableData" border @sort-change="sortTable">
-        <el-table-column prop="xulie" label="排名" align="right"></el-table-column>
-        <el-table-column prop="floor" label="建筑楼层" align="right">
-          <template slot-scope="scope">
-            <span>{{scope.row.floor?scope.row.floor:'--'}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="elecAndWaterSum" label="综合耗能" align="right" sortable="custom">
-          <template slot-scope="scope">
-            <span>{{scope.row.elecAndWaterSum?scope.row.elecAndWaterSum:'--'}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="elecSum" label="总用电量" align="right" sortable="custom">
-          <template slot-scope="scope">
-            <span>{{scope.row.elecSum?scope.row.elecSum:'--'}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="zmElec" label="照明用电" align="right" sortable="custom">
-          <template slot-scope="scope">
-            <span>{{scope.row.zmElec?scope.row.zmElec:'--'}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="ktElec" label="空调用电" align="right" sortable="custom">
-          <template slot-scope="scope">
-            <span>{{scope.row.ktElec?scope.row.ktElec:'--'}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="tsElec" label="特殊用电" align="right" sortable="custom">
-          <template slot-scope="scope">
-            <span>{{scope.row.tsElec?scope.row.tsElec:'--'}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="zhElec" label="综合用电" align="right" sortable="custom">
-          <template slot-scope="scope">
-            <span>{{scope.row.zhElec?scope.row.zhElec:'--'}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="dlElec" label="动力用电" align="right" sortable="custom">
-          <template slot-scope="scope">
-            <span>{{scope.row.dlElec?scope.row.dlElec:'--'}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="waterSum" label="总用水量" align="right" sortable="custom">
-          <template slot-scope="scope">
-            <span>{{scope.row.waterSum?scope.row.waterSum:'--'}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="shWater" label="生活用水" align="right" sortable="custom">
-          <template slot-scope="scope">
-            <span>{{scope.row.shWater?scope.row.shWater:'--'}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="wsWater" label="生活污水" align="right" sortable="custom">
-          <template slot-scope="scope">
-            <span>{{scope.row.wsWater?scope.row.wsWater:'--'}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="ktWater" label="空调用水" align="right" sortable="custom">
-          <template slot-scope="scope">
-            <span>{{scope.row.ktWater?scope.row.ktWater:'--'}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="xfWater" label="消防用水" align="right" sortable="custom">
-          <template slot-scope="scope">
-            <span>{{scope.row.xfWater?scope.row.xfWater:'--'}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="qtWater" label="其他用水" align="right" sortable="custom">
-          <template slot-scope="scope">
-            <span>{{scope.row.qtWater?scope.row.qtWater:'--'}}</span>
-          </template>
-        </el-table-column>
-      </el-table>
-      <!-- :page-sizes="[100, 200, 300, 400]" -->
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-size="10"
-        layout="total, prev, pager, next, jumper"
-        :total="total"
-      ></el-pagination>
+      <CommonTable :tableObj="tableData" :curPage="currentPage"/>
     </div>
   </div>
 </template>
@@ -228,9 +146,12 @@ import echarts from "echarts";
 import EnergyApi from "../../service/api/energyApi";
 import CommonApi from "../../service/api/commonApi";
 import ChartUtils from "../../utils/chartUtils";
+import CommonTable from '../../components/commonTable/index'
 export default {
   name: "HomePage",
-  components: {},
+  components: {
+    CommonTable
+  },
   data() {
     return {
       energyOverview: {},
@@ -292,7 +213,26 @@ export default {
       });
       if (res && res.total) {
         this.total = res.total;
-        this.tableData = res.value;
+        res.labelList=[
+          {name:'排名', prop:'xulie', sort:false},
+        {name: '建筑楼层', prop:'floor', sort:false},
+        {name:'综合耗能',prop:'elecAndWaterSum',sort:'custom'},
+        {name:'总用电量',prop:'elecSum',sort:'custom'},
+        {name:'照明用电',prop:'zmElec',sort:'custom'},
+        {name:'空调用电',prop:'zmElec',sort:'custom'},
+        {name:'特殊用电',prop:'tsElec',sort:'custom'},
+        {name:'其他用电',prop:'tsElec',sort:'custom'},
+        {name:'动力用电',prop:'dlElec',sort:'custom'},
+        {name:'总用水量',prop:'waterSum',sort:'custom'},
+        {name:'生活用水',prop:'shWater',sort:'custom'},
+        {name:'生活污水',prop:'wsWater',sort:'custom'},
+        {name:'空调用水',prop:'ktWater',sort:'custom'},
+        {name:'消防用水',prop:'xfWater',sort:'custom'},
+        {name:'其他用水',prop:'qtWater',sort:'custom'}]
+        res.dataList=res.value
+        res.tableTip='A3能耗展示排名'
+        res.hideExportBtn=true
+        this.tableData=res
       }
       
     },
@@ -304,96 +244,100 @@ export default {
       let resData = res.value;
       let myChart = echarts.init(this.$refs.myChart);
       let xAxis = resData.map(item => item.date);
-      let tqzh = {
-        name: "2018",
-        type: "bar",
-        data: resData.map(item => item.tqzh),
-        itemStyle: {
-          normal: {
-            color: "rgb(136,108,255)", //圈圈的颜色
-            label: {
-              show: true,
-              position: "top"
-            }
-          }
-        }
-      };
-      let dqzh = {
-        name: "2019",
-        type: "bar",
-        data: resData.map(item => item.dqzh),
-        itemStyle: {
-          normal: {
-            color: "rgb(77,124,254)", //圈圈的颜色
-            label: {
-              show: true,
-              position: "top"
-            }
-          }
-        }
-      };
-      let tbzz = {
-        name: "综合能耗同比增长率",
-        type: "line",
-        data: resData.map(item => item.tbzz),
-        itemStyle: {
-          normal: {
-            color: "#FF9900", //圈圈的颜色
-            label: {
-              show: false,
-              position: "top"
-            }
-          }
-        }
-      };
-      let hbzz = {
-        name: "综合能耗环比增长率",
-        type: "line",
-        data: resData.map(item => item.hbzz),
-        itemStyle: {
-          normal: {
-            color: "#5AD15B", //圈圈的颜色
-            label: {
-              show: false,
-              position: "top",
-              formatter: "{c} %"
-            }
-          }
-        }
-      };
-      let series = [tqzh, dqzh, tbzz, hbzz];
-      let option = {
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "cross",
-            crossStyle: {
-              color: "#999"
+      let legendData=['2018', '2019', '综合能耗同比增长率', '综合能耗环比增长率']
+      let series= [
+        {
+          name: "2018",
+          type: "bar",
+          data: resData.map(item => item.tqzh),
+          itemStyle: {
+            normal: {
+              color: "rgb(136,108,255)", //圈圈的颜色
+              label: {
+                show: true,
+                position: "top"
+              }
             }
           }
         },
-        legend: {
-          data: ["2018", "2019", "综合能耗同比增长率", "综合能耗环比增长率"]
+        {
+          name: "2019",
+          type: "bar",
+          data: resData.map(item => item.dqzh),
+          itemStyle: {
+            normal: {
+              color: "rgb(77,124,254)", //圈圈的颜色
+              label: {
+                show: true,
+                position: "top"
+              }
+            }
+          }
         },
-        xAxis: [
+        {
+          name: "综合能耗同比增长率",
+          type: "line",
+          data: resData.map(item => item.tbzz),
+          yAxisIndex: 1,
+          itemStyle: {
+            normal: {
+              color: "#FF9900", //圈圈的颜色
+              label: {
+                show: false,
+                position: "top"
+              }
+            }
+          }
+        },
+        {
+          name: '综合能耗环比增长率',
+          type: 'line',
+          yAxisIndex: 1,
+          data: resData.map(item => item.hbzz),
+          itemStyle: {
+            normal: {
+              color: '#5AD15B', //圈圈的颜色
+              // lineStyle:{
+              //     color:'#FF9900'  //线的颜色
+              // }
+              label: {
+                show: true,
+                position: 'top',
+                formatter: '{c} %'
+              }
+            }
+          }
+        }
+      ]
+      let data={
+        legendData,
+        xAxis,
+        series,
+        showSecondY:true
+      }
+      let option={
+        yAxis: [{
+          type: 'value',
+          name: '能耗(kwh)',
+          axisLabel: {
+            formatter: '{value} kwh'
+          }
+        },
           {
-            type: "category",
-            data: xAxis,
-            axisPointer: {
-              type: "shadow"
+            show: true,
+            type: 'value',
+            name: '增长率',
+            min: -100,
+            max: 100,
+            axisLabel: {
+              formatter: '{value} %'
             }
           }
         ],
-        yAxis: [
-          {
-            type: "value",
-            name: res.unit,
-          }
-        ],
-        series
-      };
-      window.onresize = myChart.resize;
-      myChart.setOption(option, true);
+      }
+
+       ChartUtils.handleBarChart(myChart,data)
+        myChart.setOption(option)
     },
     piechart1(res) {
       let myPieChart = echarts.init(this.$refs.pieChart1);
@@ -407,21 +351,15 @@ export default {
         };
         dataList.push(itemObj);
       });
-      let series = {
-        name: "当年分项用电占比",
-        data: dataList
-      };
+      let seriesData =dataList
+      let titleText = "当年分项用电占比"
       let data = {
         legendData,
-        series
+        seriesData,
+        titleText,
       };
       window.onresize = myPieChart.resize;
-      ChartUtils.PieChart(myPieChart, data);
-    },
-    handleSizeChange(val) {
-      // console.log(`每页 ${val} 条`);
-      // this.rankingList(val)
-      // this.size = val
+      ChartUtils.hollowPieChart(myPieChart, data);
     },
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -544,15 +482,18 @@ export default {
   .pieCharts {
     width: 100%;
     height: 435px;
-    background: #fff;
+    /*background: #fff;*/
     box-sizing: border-box;
     margin-bottom: 15px;
     .pieChart {
-      width: 49.5%;
+      width: 49%;
       height: 100%;
       // background: transparent;
       border-radius: 6px;
       box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.1);
+      /*padding:10px;*/
+      box-sizing: border-box;
+      background-color:@white;
     }
   }
   // 能耗排名
@@ -572,6 +513,9 @@ export default {
       float: right;
       margin-top: 15px;
     }
+  }
+  .chart-inner{
+    height: 100%;
   }
 }
 </style>

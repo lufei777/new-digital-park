@@ -128,6 +128,7 @@
           {name:'消防用水',prop:'xfWater',sort:'custom'},
           {name:'其他用水',prop:'qtWater',sort:'custom'}]
         res.dataList=res.value
+        res.tableTip='A3能耗展示排名'
         this.tableData=res
       },
       sortTable(column){
@@ -179,6 +180,7 @@
     }
     .rank-tip{
       font-size: 24px;
+      margin:5px 0;
     }
     .rank-value{
       font-size: 50px;

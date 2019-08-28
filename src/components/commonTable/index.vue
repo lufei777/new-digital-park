@@ -1,5 +1,12 @@
 <template>
   <div>
+        <div class="flex-align-between" v-if="tableObj.tableTip">
+          <h3 class="table-tip">{{tableObj.tableTip}}</h3>
+          <el-button v-if='tableObj.total!=0&&!tableObj.hideExportBtn' type="primary"
+                     class="export-btn" @click="handleExport">
+            导出表格
+          </el-button>
+         </div>
         <el-table  :data="tableObj.dataList" border  @sort-change='sortTable'>
           <el-table-column v-for="(item,index) in tableObj.labelList"
                            :prop="item.prop"
@@ -41,7 +48,7 @@
         this.$parent.sortTable(column)
       },
       formatSpecialCol(row, column,cellValue){
-        // console.log(row,column,cellValue)
+         // console.log(row,column,cellValue)
         if(column.property=='tbzz'){
           return parseFloat(row.tbzz).toFixed(2)+"%"
         }else if(column.property=='hbzz'){
@@ -51,6 +58,9 @@
         }else{
           return cellValue
         }
+      },
+      handleExport(){
+        this.$parent.handleExport()
       }
     },
     async mounted(){
@@ -59,5 +69,8 @@
 </script>
 
 <style lang="less">
-
+  .page-box{
+    float: right;
+    margin:20px;
+  }
 </style>
