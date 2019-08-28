@@ -17,6 +17,7 @@
           placeholder="选择日期时间"
           value-format="yyyy-MM-dd HH:mm:ss"
           @change="onTimeChange(1)"
+          :clearable="false"
         >
         </el-date-picker>
       </div>
@@ -28,6 +29,7 @@
           placeholder="选择日期时间"
           value-format="yyyy-MM-dd HH:mm:ss"
           @change="onTimeChange(-1)"
+          :clearable="false"
         >
         </el-date-picker>
       </div>
@@ -80,62 +82,38 @@
       ...mapState({
       }),
       monitorText1(){
-        return this.$route.path=='/correlationAnalysis'?this.$store.state.analysis.monitor1.text:
-               this.$route.path=='/statisCompare'?this.$store.state.analysis.statisMonitor1.text:
-               this.$store.state.analysis.historyMonitor.text
+        return this.$store.state.analysis.monitor1.text
       },
       monitorText2(){
-        return this.$route.path=='/correlationAnalysis'?this.$store.state.analysis.monitor2.text:
-          this.$store.state.analysis.statisMonitor2.text
+        return this.$store.state.analysis.monitor2.text
       },
     },
     watch:{
     },
     methods: {
       onClickShowBtn(flag){
-        if(this.$route.path=='/correlationAnalysis'){
-          this.$store.commit('analysis/curSelect',flag)
-        }else if(this.$route.path=='/statisCompare'){
-          this.$store.commit('analysis/statisCurSelect',flag)
-        }
-
+        this.$store.commit('analysis/curSelect',flag)
         this.$store.commit('analysis/showDialog',true)
       },
       onTimeChange(flag){
-        let format = this.pickerType=='year'?'YYYY':this.pickerType=="month"?'YYYY-MM':'YYYY-MM-DD'
-        if(this.$route.path=='/correlationAnalysis'){
-          if(flag==1){
-            this.$store.commit('analysis/startTime',this.startTime)
-          }else{
-            this.$store.commit('analysis/endTime',this.endTime)
-          }
-        }else if(this.$route.path=='/statisCompare'){
-          if(flag==1){
-            this.$store.commit('analysis/statisStartTime',moment(this.startTime).format(format))
-          }else{
-            this.$store.commit('analysis/statisEndTime',moment(this.endTime).format(format))
-          }
+        let format
+        if(!this.showDateType){
+          format='YYYY-MM-DD HH:mm:ss'
         }else{
-          if(flag==1){
-            this.$store.commit('analysis/historyStartTime',moment(this.startTime).format(format))
-          }else{
-            this.$store.commit('analysis/historyEndTime',moment(this.endTime).format(format))
-          }
+          format = this.pickerType=='year'?'YYYY':this.pickerType=="month"?'YYYY-MM':'YYYY-MM-DD'
+        }
+        if(flag==1){
+          this.$store.commit('analysis/startTime',moment(this.startTime).format(format))
+        }else{
+          this.$store.commit('analysis/endTime',moment(this.endTime).format(format))
         }
       },
       handleDateTypeChange(value){
         this.pickerType=value==4?'year':value==3?"month":'date'
         let format=value==4?'YYYY':value==3?'YYYY-MM':'YYYY-MM-DD'
-        console.log(this.startTime,format)
-         if(this.$route.path=='/statisCompare'){
-            this.$store.commit('analysis/statisFilterType',value)
-            this.$store.commit('analysis/statisStartTime',moment(this.startTime).format(format))
-            this.$store.commit('analysis/statisEndTime',moment(this.endTime).format(format))
-        }else if(this.$route.path=='/historyStatis'){
-           this.$store.commit('analysis/historyFilterType',value)
-           this.$store.commit('analysis/historyStartTime',moment(this.startTime).format(format))
-           this.$store.commit('analysis/historyEndTime',moment(this.endTime).format(format))
-        }
+        this.$store.commit('analysis/filterType',value)
+        this.$store.commit('analysis/startTime',moment(this.startTime).format(format))
+        this.$store.commit('analysis/endTime',moment(this.endTime).format(format))
       }
     },
     mounted(){

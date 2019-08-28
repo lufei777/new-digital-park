@@ -40,10 +40,10 @@
     },
     computed:{
       ...mapState({
-        startTime:state=>state.analysis.historyStartTime,
-        endTime:state=>state.analysis.historyEndTime,
-        monitor:state=>state.analysis.historyMonitor,
-        filterType:state=>state.analysis.historyFilterType
+        startTime:state=>state.analysis.startTime,
+        endTime:state=>state.analysis.endTime,
+        monitor:state=>state.analysis.monitor1,
+        filterType:state=>state.analysis.filterType
       }),
     },
     watch:{

@@ -66,14 +66,17 @@
             this.$store.commit('conditionSelect/activeIndex',2)
             if(activeNav.childIndex==0){
               this.$store.commit('conditionSelect/curModule',2)
+              this.$store.commit('conditionSelect/tbhbEnergy',[{id:44,name:'空调用电'}])
             }else if(activeNav.childIndex==1){
               this.$store.commit('conditionSelect/curModule',3)
+              this.$store.commit('conditionSelect/tbhbEnergy',[{id:34,name:'电'}])
             }else{
               this.$store.commit('conditionSelect/activeIndex',1)
             }
           }else if(activeNav.fatherName=="统计分析"){
             this.$store.commit('conditionSelect/activeIndex',1)
             this.$store.commit('conditionSelect/curModule',1)
+            this.$store.commit('conditionSelect/tbhbEnergy',[{id:34,name:'电'}])
           }
           let tmp=res.children[activeNav.fatherIndex]
               tmp.clickFlag=1

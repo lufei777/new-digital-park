@@ -51,11 +51,11 @@
     },
     computed:{
       ...mapState({
-        startTime:state=>state.analysis.statisStartTime,
-        endTime:state=>state.analysis.statisEndTime,
-        monitor1:state=>state.analysis.statisMonitor1,
-        monitor2:state=>state.analysis.statisMonitor2,
-        filterType:state=>state.analysis.statisFilterType,
+        startTime:state=>state.analysis.startTime,
+        endTime:state=>state.analysis.endTime,
+        monitor1:state=>state.analysis.monitor1,
+        monitor2:state=>state.analysis.monitor2,
+        filterType:state=>state.analysis.filterType,
       }),
     },
     watch:{
