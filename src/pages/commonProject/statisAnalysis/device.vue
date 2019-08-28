@@ -23,6 +23,7 @@
 <script>
   import echarts from 'echarts'
   import CommonApi from '../../../service/api/commonApi'
+  import ChartUtils from '../../../utils/chartUtils'
   export default {
     name: 'DeviceAnalysis',
     components: {
@@ -39,44 +40,31 @@
     methods: {
       async getMonitorState(){
         let res = await CommonApi.getMonitorState()
-        let	option = {
-          title: {
-            text: '传感器状态统计',
-            x:'center',
-            textStyle:{
-              color:'#333',
-              fontWeight:'600',
-              fontSize:18
-            }
-          },
-          tooltip: {
-            trigger: 'item',
-            formatter: "{a} <br/>{b}: {c} ({d}%)",
-            textStyle:{fontSize:12}
-          },
-          color:['dimGrey', 'green', 'orange', 'red'],
-          legend: {
-            orient: 'vertical',
-            x: 'left',
-            data:['不可用','正常','警告','错误']
-          },
-          series: [
-            {
-              type:'pie',
-              radius: ['50%', '65%'],
-              avoidLabelOverlap: false,
-              label:false,
-              name:'监控器状态',
-              data:res.values
-            }
-          ]
-        };
         this.myChart = echarts.init(this.$refs.myChart);
-        window.onresize = this.myChart.resize;
-        this.myChart.setOption(option,true)
+        let titleText = '传感器状态统计'
+        let legendData = ['不可用','正常','警告','错误']
+        let seriesData=res.values
+        let seriesName="监控器状态"
+        let	option = {
+               title:{
+                 x:'center'
+               },
+               legend: {
+                left: 'left',
+                top:50
+               },
+              color:['dimGrey', 'green', 'orange', 'red'],
+        };
+        let data={
+          titleText,
+          legendData,
+          seriesData,
+          seriesName
+        }
+        ChartUtils.hollowPieChart(this.myChart,data)
+        this.myChart.setOption(option)
         let that = this
         this.myChart.on('click',function(val){
-          console.log(val)
           that.chartIndex=val.dataIndex
           that.getTableData(val.dataIndex)
         })

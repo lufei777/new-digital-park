@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import { updateTheme} from './utils/setting'
 export default {
   name: 'App',
   data(){

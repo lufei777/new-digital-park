@@ -15,10 +15,10 @@ class commonData {
         "name": "space",
         "caption": "首页",
         "catalog": null,
-        "url": "/energy/homepage",
+        "url": "/energy/homePage",
         "sequence": 1,
         "icon": null,
-      "permisionList": ["首页"],
+        "permisionList": ["首页"],
         "children": []
       }, {
         "id": 2,

@@ -11,13 +11,6 @@
         <div ref="myChart2" class="my-chart category-chart"></div>
       </div>
       <div class="table-box">
-        <div class="flex-align-between">
-          <h3 class="table-tip">A3{{energy[0].name}}明细展示排名</h3>
-          <el-button v-if='tableData.total!=0' type="primary"
-                     class="export-btn" @click="handleExport">
-            导出表格
-          </el-button>
-        </div>
         <CommonTable :tableObj="tableData" :curPage="curPage"/>
       </div>
     </div>
@@ -26,7 +19,6 @@
 </template>
 
 <script>
-  import echarts from 'echarts'
   import {mapState} from 'vuex'
   import CommonApi from '../../../service/api/commonApi'
   import EnergyApi from '../../../service/api/energyApi'
@@ -80,6 +72,16 @@
           lastTime: this.lastTime,
           floor:this.checkedFloorList[0].id //能耗展示字段名是floor
         }
+      },
+      tableTip(){
+        if(this.curModule==1){
+          return `A3${this.energy[0].name}明细展示排名`
+        }else if(this.curModule==2){
+          let lastTime = this.lastTime?'至'+this.lastTime:''
+          return `${this.startTime}${lastTime}${this.energy[0].name}排名`
+        }else if(this.curModule==3){
+          return `用${this.energy[0].name}分项能耗展示排名`
+        }
       }
     },
     methods: {
@@ -131,13 +133,14 @@
         }
         let res = await CommonApi.getTbhbTable(tableParams)
         if(res && res.total){
-          res.labelList = ['排名','时间','当期综合能耗(kwh)','同期综合能耗(kwh)',
-            '上期综合能耗(kwh)','综合能耗同比增长率(%)','综合能耗环比增长率(%)']
-          res.propList=[{prop:'xulie',sort:false},{prop:'date',sort:false},
-                        {prop:'dqzh',sort:'custom'},{prop:'tqzh',sort:'custom'},
-                        {prop:'tbzz',sort:'custom'},{prop:'hbzz',sort:'custom'},
-          ]
+          res.labelList=[{name:'排名',prop:'xulie',sort:false},
+                        {name:'当期综合能耗(kwh)',prop:'date',sort:false},
+                        {name:'同期综合能耗(kwh)',prop:'dqzh',sort:'custom'},
+                        {name:'上期综合能耗(kwh)',prop:'tqzh',sort:'custom'},
+                        {name:'综合能耗同比增长率(%)',prop:'tbzz',sort:'custom'},
+                        {name:'综合能耗环比增长率(%)',prop:'hbzz',sort:'custom'}]
           res.dataList=res.value
+          res.tableTip=this.tableTip
           this.tableData=res
         }
       },
@@ -171,39 +174,17 @@
           data
         }
         let series=[dqzh,tqzh,tbzz,hbzz]
-        let option = {
-          title : {text:`A3${this.energy[0].name}同比环比柱状折线图`},
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-              type: 'cross',
-              crossStyle: {
-                color: '#999'
-              }
-            }
-          },
-          legend: {
-            data:['当期综合能耗','同期综合能耗','综合能耗同比增长率','综合能耗环比增长率']
-          },
-          xAxis: [
-            {
-              type: 'category',
-              data:xAxis,
-              axisPointer: {
-                type: 'shadow'
-              }
-            }
-          ],
-          yAxis: [
-            {
-              type: 'value',
-              name: res.unit,
-            },
-          ],
+        let titleText=`A3${this.energy[0].name}同比环比柱状折线图`
+        let legendData=['当期综合能耗','同期综合能耗','综合能耗同比增长率','综合能耗环比增长率']
+        let yAxis =res.unit
+        let data2={
+          titleText,
+          legendData,
+          xAxis,
+          yAxis,
           series
-        };
-        window.onresize = this.myChart.resize;
-        this.myChart.setOption(option,true)
+        }
+          ChartUtils.handleBarChart(this.myChart,data2)
       },
       handleCurrentChange(value){
         this.curPage=value
@@ -257,6 +238,7 @@
                         {name:'时间',prop:'shijian',sort:'custom'},
                         {name:this.energy[0].name,prop:'yongdianlaing',sort:'custom'}]
           res.dataList=res.list
+          res.tableTip=this.tableTip
           this.tableData=res
         }
       },
@@ -304,6 +286,7 @@
                          {name:'数值',prop:'value',sort:false},
                          {name:'占比',prop:'zhanbi',sort:false}]
           res.dataList=res.value
+          res.tableTip=this.tableTip
           this.tableData=res
         }
       },
@@ -363,17 +346,13 @@
       border:1px solid #ccc;
       margin-top: 30px;
       padding:5px;
-      background: @white;
+      background: @white !important;
       overflow: hidden;
     }
     .my-chart{
       width: 100%;
       height:450px;
       padding-top:20px;
-    }
-    .page-box{
-      float: right;
-      margin:20px;
     }
     .export-btn{
       margin-right: 10px;

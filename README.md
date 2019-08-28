@@ -49,5 +49,29 @@
 ├── index.html                                  // 首页入口文件，你可以添加一些 meta 信息或统计代码等
 ├── package.json                                // 项目配置文件
 └── README.md                                   // 项目的说明文档，markdown 格式
- 
+
+一、CommonTable组件---通用表格+分页。需要对数据进行封装。
+1.传递参数curPage,tableObj。tableObj包括：
+  1）labelList对象---prop:属性，name:名称，sort：是否排序，false不排序，'custom'排序。
+  2）dataList对象 
+  3）tableTip 表格提示性文字 不传则不显示
+  4）hideExportBtn 是否显示导出按钮 默认不传即显示
+2.需要格式化某些列，可以在组件的formatSpecialCol方法中编写逻辑
+
+二、chartUtils封装 
+(基础charts封装，当无法满足需求时，可自己再在自己的页面重新定义特殊化option，与封装组件相同处不必重复写)
+
+I.handleBarchar柱状图/柱状折线图：
+1.传递参数dom，data。data包括
+  1）titleText：可选
+  2）legendData：可选
+  3）xAxis 横坐标
+  4）yAxis y轴对应的name属性
+  5）series 数据
+  6）showSecondY：是否显示第二个y轴，默认不传即不显示
+  
+II.hollowPieChart空心饼图：
+ ...大致同上
+  1）seriesName
+  2）seriesData 
 ```
