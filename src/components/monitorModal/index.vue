@@ -47,10 +47,6 @@
         showDialog:state=>state.analysis.showDialog,
         curSelect:state=>state.analysis.curSelect
       }),
-      curSelect(){
-         return this.curRoute=='/correlationAnalysis'?this.$store.state.analysis.curSelect:
-                this.curRoute=='/statisCompare'?this.$store.state.analysis.statisCurSelect:1
-      }
      },
     methods: {
       async getMonitorTree(){
@@ -60,20 +56,10 @@
       onClickSureBtn(){
         let val = this.curNode
         if(this.curNode.id){
-          if(this.curRoute=='/correlationAnalysis'){
-            if(this.curSelect==1){
-              this.$store.commit('analysis/monitor1',{id:val.id,text:val.text})
-            }else{
-              this.$store.commit('analysis/monitor2',{id:val.id,text:val.text})
-            }
-          }else if(this.curRoute=='/statisCompare'){
-            if(this.curSelect==1){
-              this.$store.commit('analysis/statisMonitor1',{id:val.id,text:val.text})
-            }else{
-              this.$store.commit('analysis/statisMonitor2',{id:val.id,text:val.text})
-            }
+          if(this.curSelect==1){
+            this.$store.commit('analysis/monitor1',{id:val.id,text:val.text})
           }else{
-            this.$store.commit('analysis/historyMonitor',{id:val.id,text:val.text})
+            this.$store.commit('analysis/monitor2',{id:val.id,text:val.text})
           }
         }
         this.$store.commit('analysis/showDialog',false)
