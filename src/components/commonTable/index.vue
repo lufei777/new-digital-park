@@ -1,12 +1,12 @@
 <template>
   <div>
-        <div class="flex-align-between" v-if="tableObj.tableTip">
-          <h3 class="table-tip">{{tableObj.tableTip}}</h3>
-          <el-button v-if='tableObj.total!=0&&!tableObj.hideExportBtn' type="primary"
+        <div>
+          <h3 class="table-tip" v-if="tableObj.tableTip">{{tableObj.tableTip}}</h3>
+          <el-button v-if='tableObj.total && tableObj.total!=0&&!tableObj.hideExportBtn' type="primary"
                      class="export-btn" @click="handleExport">
             导出表格
           </el-button>
-         </div>
+        </div>
         <el-table  :data="tableObj.dataList" border  @sort-change='sortTable'>
           <el-table-column v-for="(item,index) in tableObj.labelList"
                            :prop="item.prop"
@@ -14,11 +14,20 @@
                            :key="index"
                            :sortable="item.sort"
                            :formatter="formatSpecialCol"
+                           :type="item.type"
                            align="right"
           >
           </el-table-column>
+          <el-table-column v-if="tableObj.showOpertor" fixed="right" label="操作" width="120"  align="right">
+            <template slot-scope="scope">
+              <el-button size="small" type="text"
+               @click.native.prevent="deleteRow(scope.$index, tableObj.dataList)" >
+                移除
+              </el-button>
+            </template>
+          </el-table-column>
         </el-table>
-        <div class="page-box" v-if="tableObj.total!=0">
+        <div class="page-box" v-if="tableObj.total && tableObj.total!=0">
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page="curPage"
@@ -72,5 +81,12 @@
   .page-box{
     float: right;
     margin:20px;
+  }
+  .table-tip{
+    float: left;
+  }
+  .export-btn{
+    float: right;
+    margin: 10px 0;
   }
 </style>

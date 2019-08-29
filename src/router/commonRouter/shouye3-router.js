@@ -2,6 +2,8 @@ import DeviceAnalysis from '../../pages/commonProject/statisAnalysis/device'
 import CorrelationAnalysis from '../../pages/commonProject/statisAnalysis/correlation'
 import StatisCompare from '../../pages/commonProject/statisAnalysis/statisCompare'
 import HistoryStatis from '../../pages/commonProject/statisAnalysis/historyStatis'
+import ManMadeCollectList from '../../pages/commonProject/collect/manMadeCollectList'
+import AutoCollectList from '../../pages/commonProject/collect/autoCollectList'
 export default [{
   path:'/deviceAnalysis',
   name:'DeviceAnalysis',
@@ -18,4 +20,12 @@ export default [{
   path:'/historyStatis',
   name:'HistoryStatis',
   component:HistoryStatis
+},{
+  path:'/manMadeCollect',
+  name:'ManMadeCollectList',
+  component:ManMadeCollectList
+},{
+  path:'/autoCollect',
+  name:'AutoCollectList',
+  component:AutoCollectList
 }]

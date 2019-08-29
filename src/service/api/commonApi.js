@@ -89,6 +89,14 @@ class CommonApi {
   @get
   getDeviceTableData(){}
 
+  @url('/vibe-web/findHandInput')
+  @get
+  getManMadeCollectList(){}
+
+  @url('/vibe-web/energyCount/energy/getBaseRepresentationNumber')
+  @get
+  getAutoCollectList(){}
+
 }
 
 export default new CommonApi()

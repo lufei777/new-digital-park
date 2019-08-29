@@ -52,7 +52,7 @@
 
 一、CommonTable组件---通用表格+分页。需要对数据进行封装。
 1.传递参数curPage,tableObj。tableObj包括：
-  1）labelList对象---prop:属性，name:名称，sort：是否排序，false不排序，'custom'排序。
+  1）labelList对象---prop:属性，name:名称，sort：是否排序，'不传/false'不排序，'custom'排序。
   2）dataList对象 
   3）tableTip 表格提示性文字 不传则不显示
   4）hideExportBtn 是否显示导出按钮 默认不传即显示
