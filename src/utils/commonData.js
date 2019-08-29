@@ -268,7 +268,7 @@ class commonData {
         "name": "space",
         "caption": "设备表记",
         "catalog": null,
-        "url": "html/deviceMeter/deviceMeter_index.html",
+        "url": "/deviceRecord",
         "sequence": 5,
         "icon": null,
         "permisionList": ["设备表记查看", "设备表导入"],
