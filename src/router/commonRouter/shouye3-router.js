@@ -4,6 +4,7 @@ import StatisCompare from '../../pages/commonProject/statisAnalysis/statisCompar
 import HistoryStatis from '../../pages/commonProject/statisAnalysis/historyStatis'
 import ManMadeCollectList from '../../pages/commonProject/collect/manMadeCollectList'
 import AutoCollectList from '../../pages/commonProject/collect/autoCollectList'
+import DeviceRecord from '../../pages/commonProject/deviceRecord/index'
 export default [{
   path:'/deviceAnalysis',
   name:'DeviceAnalysis',
@@ -28,4 +29,8 @@ export default [{
   path:'/autoCollect',
   name:'AutoCollectList',
   component:AutoCollectList
+},{
+  path:'/deviceRecord',
+  name:'DeviceRecord',
+  component:DeviceRecord
 }]
