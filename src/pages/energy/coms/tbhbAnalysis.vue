@@ -235,7 +235,7 @@
         }
         let res = await EnergyApi.getTimeEnergyTable(tableParams)
         if(res && res.total){
-          res.labelList=[{name:'排名',prop:'xuhao', sort:false},
+          res.labelList=[{name:'排名',prop:'xuhao'},
                         {name:'时间',prop:'shijian',sort:'custom'},
                         {name:this.energy[0].name,prop:'yongdianlaing',sort:'custom'}]
           res.dataList=res.list
@@ -282,10 +282,10 @@
         }
         let res = await EnergyApi.getCategoryEnergyTable(tableParams)
         if(res && res.total){
-          res.labelList=[{name:'排名',prop:'xulie', sort:false},
-                         {name:'能耗类型',prop:'name',sort:false},
-                         {name:'数值',prop:'value',sort:false},
-                         {name:'占比',prop:'zhanbi',sort:false}]
+          res.labelList=[{name:'排名',prop:'xulie'},
+                         {name:'能耗类型',prop:'name'},
+                         {name:'数值',prop:'value'},
+                         {name:'占比',prop:'zhanbi'}]
           res.dataList=res.value
           res.tableTip=this.tableTip
           this.tableData=res

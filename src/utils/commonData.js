@@ -235,11 +235,33 @@ class commonData {
         "name": "space",
         "caption": "人工采集",
         "catalog": null,
-        "url": "/html/energyms/handle_list.html",
+        "url": "/manMadeCollect",
         "sequence": 4,
         "icon": null,
         "permisionList": ["人工采集"],
-        "children": []
+        "children": [{
+          "id": 71,
+          "parent": 7,
+          "name": "space",
+          "caption": "人工采集列表",
+          "catalog": null,
+          "url": "/manMadeCollect",
+          "sequence": 1,
+          "icon": null,
+          "permisionList": ["空间报表查看"],
+          "children": []
+        }, {
+          "id": 72,
+          "parent": 7,
+          "name": "space",
+          "caption": "自动采集列表",
+          "catalog": null,
+          "url": "/autoCollect",
+          "sequence": 2,
+          "icon": null,
+          "permisionList": ["分项报表查看"],
+          "children": []
+        }]
       }, {
         "id": 6,
         "parent": 1,
