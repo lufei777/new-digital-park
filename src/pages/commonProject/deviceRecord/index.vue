@@ -14,7 +14,12 @@
       >
       </el-tree>
     </div>
-    <div class="right-content"></div>
+    <div class="right-content">
+      <div class="tip flex-align">
+        <span class="icon"></span>
+        <span>设备表记</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -64,7 +69,6 @@
     }
     .right-content{
       width:83%;
-      background: #f2f2f2;
       padding:10px;
       float: right;
       box-sizing: border-box;
@@ -86,6 +90,21 @@
     .el-select{
       width:120px;
       margin:0 0 20px 25%;
+    }
+    .tip{
+      height: 66px;
+      border-bottom: 1px solid #eaeaea;
+      .icon {
+        width: 2px;
+        height: 24px;
+        background: #01465c;
+        border-radius: 2px;
+        margin-right: 10px;
+      }
+      span{
+        font-size: 24px;
+        color:#01465c;
+      }
     }
   }
 </style>
