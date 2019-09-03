@@ -125,7 +125,6 @@
       },
       onClickItemTree(val){
         this.parentMeter=val.id
-        this.getMeterTable()
       },
       handleCurrentChange(val){
         this.curPage=val
@@ -136,12 +135,40 @@
         this.getMeterTable()
       },
       rowClick(row,col){
-        console.log(row,col)
         this.curTableData=row
       },
       editRow(data){
         this.curTableData=data
         this.showEdit=true
+      },
+      deleteRow(data){
+        this.$confirm('确定要删除吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          // this.$message({
+          //   type: 'success',
+          //   message: '删除成功!'
+          // });
+          this.sureDelete(data)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除',
+          });
+        });
+      },
+      async sureDelete(data){
+         await CommonApi.deleteMeter({
+          id:data.id,
+          isdeleteAll:1
+        })
+        this.$message({
+              type: 'success',
+              message: '删除成功!'
+         });
+         this.getMeterTable()
       }
     },
     async mounted(){
@@ -167,6 +194,20 @@
         width:120px;
         margin:0 0 20px 25%;
       }
+      .el-tree{
+        background: var(--mainBg);
+        font-size: 16px;
+      }
+      .el-tree-node__content{
+        color:@white;
+        padding:5px 0;
+      }
+      .el-tree-node__content:hover{
+        color:#22dbfc;
+      }
+      .el-tree-node:focus>.el-tree-node__content{
+        color:#22dbfc;
+      }
     }
     .right-content{
       width:83%;
@@ -175,20 +216,7 @@
       box-sizing: border-box;
       background: #eaeff3;
     }
-    .el-tree{
-      background: var(--mainBg);
-      font-size: 16px;
-    }
-    .el-tree-node__content{
-        color:@white;
-        padding:5px 0;
-    }
-    .el-tree-node__content:hover{
-      color:#22dbfc;
-    }
-    .el-tree-node:focus>.el-tree-node__content{
-      color:#22dbfc;
-    }
+
     .tip{
       height: 66px;
       border-bottom: 1px solid #eaeaea;

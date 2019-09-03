@@ -83,6 +83,9 @@
       editRow(index,dataList){
         console.log(index,dataList)
         this.$parent.editRow(dataList[0])
+      },
+      deleteRow(index,dataList){
+        this.$parent.deleteRow(dataList[0])
       }
     },
     async mounted(){
