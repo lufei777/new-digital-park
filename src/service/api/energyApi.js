@@ -25,7 +25,14 @@ class EnergyApi {
   @url('/vibe-web/energyCount/energy/energy_fenxiangBiao')
   @get
   getCategoryEnergyTable(){}
+  
+  @url('/vibe-web/energyCount/energy/elec')
+  @get
+  getEnergySavingElec(){}
 
+  @url('/vibe-web/energyCount/energy/night')
+  @get
+  getEnergySavingNight(){}
 }
 
 export default new EnergyApi()

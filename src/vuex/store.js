@@ -4,12 +4,14 @@ import Vuex from 'vuex'
 import test from './modules/test'
 import conditionSelect from './modules/conditionSelect'
 import analysis from './modules/analysis'
+import energySavingSelect from './modules/energySavingSelect'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules:{
     test,
     conditionSelect,
-    analysis
+    analysis,
+    energySavingSelect
   }
 })
