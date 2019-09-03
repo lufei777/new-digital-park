@@ -108,6 +108,22 @@ class CommonApi {
   @url("/vibe-web/energy/queryMeter")
   @get
   getItemMeterDetail(){}
+
+  @url("/vibe-web/getItemsTree")
+  @get
+  getEnergyListAll(){}
+
+  @url("/vibe-web/asset/initAssetAllTree")
+  @get
+  getAssetAllTree(){}
+
+  @url("/vibe-web/energy/updateMeter")
+  @get
+  updateMeter(){}
+
+  @url('/vibe-web/energy/deleteMeter')
+  @get
+  deleteMeter(){}
 }
 
 export default new CommonApi()
