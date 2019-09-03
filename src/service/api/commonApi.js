@@ -97,6 +97,13 @@ class CommonApi {
   @get
   getAutoCollectList(){}
 
+  @url('/vibe-web/energy/meter_tree')
+  @get
+  getMeterTree(){}
+
+  @url("/vibe-web/energy/queryMeterList")
+  @get
+  getMeterTable(){}
 }
 
 export default new CommonApi()

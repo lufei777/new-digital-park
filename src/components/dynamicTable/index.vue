@@ -8,7 +8,7 @@
       </el-button>
     </div>
     <div v-if="tableData.total!=0">
-      <table width="100%"  class="dynamic-table">
+      <table   class="dynamic-table">
         <thead>
         <th v-for="(item,index) in tableData.title" :key="index">
           {{item}}
