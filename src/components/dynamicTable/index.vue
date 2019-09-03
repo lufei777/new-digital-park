@@ -21,7 +21,7 @@
           </thead>
           <tbody>
           <tr v-for="(item,index) in tableData.value" :key="index">
-            <td v-for="(val,i) in item" :key="i" :class="val>parseInt(item[1])?'styleRed':''">{{val}}</td>
+            <td v-for="(val,i) in item" :key="i" :class="val>parseInt(item[1])&&styleLabel?'styleRed':''">{{val}}</td>
           </tr>
           </tbody>
         </table>
@@ -45,7 +45,7 @@
     name:'DynamicTable',
     components: {
     },
-    props:['tableTip','tableData','curPage','hideExportBtn'],
+    props:['tableTip','tableData','curPage','hideExportBtn','styleLabel'],
     data () {
       return {
       }

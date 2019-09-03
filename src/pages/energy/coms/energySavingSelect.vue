@@ -1,6 +1,6 @@
 <template>
   <div class="energy-saving-select">
-    <div class="flex condition-box">
+    <div class="flex-align-between condition-box">
       <div class="block">
         <span class="demonstration">建筑群：</span>
         <el-select v-model="energyA3" placeholder="请选择">
@@ -55,7 +55,7 @@
         <span>注:红色字体为超标</span>
         <em>{{tabTitle}}</em>
       </div>
-      <DynamicTable :tableData="tableData" :hideExportBtn="true" :curPage="currentPage" />
+      <DynamicTable :tableData="tableData" :hideExportBtn="true" :styleLabel="true" :curPage="currentPage" />
     </div>
   </div>
 </template>
@@ -173,14 +173,23 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
+
 .energy-saving-select {
   margin-top: 80px;
   padding: 0 20px;
   background: #fff;
   .condition-box {
+    width: 100%;
     padding: 30px 0;
     .block {
-      padding: 0px 20px;
+      // padding: 0px 20px;
+      // flex-shrink: 0;
+      .el-select {
+        width: 140px!important;
+      }
+    }
+    .el-button {
+       margin-left: -50px;
     }
   }
   .tabulation .tab-title {
