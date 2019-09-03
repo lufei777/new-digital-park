@@ -65,7 +65,7 @@
         </table>
       </div>
     </div>
-    <EditMeter v-if="showEdit" :curTableData="curTableData"></EditMeter>
+    <EditMeter v-if="showEdit" :curMeterId="curTableData.id"></EditMeter>
   </div>
 </template>
 
@@ -163,6 +163,10 @@
       overflow: auto;
       background: var(--mainBg);
       padding: 10px 0;
+      .el-select{
+        width:120px;
+        margin:0 0 20px 25%;
+      }
     }
     .right-content{
       width:83%;
@@ -184,10 +188,6 @@
     }
     .el-tree-node:focus>.el-tree-node__content{
       color:#22dbfc;
-    }
-    .el-select{
-      width:120px;
-      margin:0 0 20px 25%;
     }
     .tip{
       height: 66px;

@@ -196,7 +196,7 @@ export default {
       font-size: 20px;
     }
   }
-  .table-box {
+   .dynamic-table-box .table-box {
     border-radius: 0;
     border: none;
     margin-top: 0px;
