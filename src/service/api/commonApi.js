@@ -101,6 +101,9 @@ class CommonApi {
   @get
   getMeterTree(){}
 
+  @url("/vibe-web/energy/queryMeterList")
+  @get
+  getMeterTable(){}
 }
 
 export default new CommonApi()

@@ -7,7 +7,7 @@
             导出表格
           </el-button>
         </div>
-        <el-table  :data="tableObj.dataList" border  @sort-change='sortTable'>
+        <el-table  :data="tableObj.dataList" border  @sort-change='sortTable' @row-click="rowClick">
           <el-table-column v-for="(item,index) in tableObj.labelList"
                            :prop="item.prop"
                            :label="item.name"
@@ -21,8 +21,12 @@
           <el-table-column v-if="tableObj.showOpertor" fixed="right" label="操作" width="120"  align="right">
             <template slot-scope="scope">
               <el-button size="small" type="text"
-               @click.native.prevent="deleteRow(scope.$index, tableObj.dataList)" >
-                移除
+               @click.native.prevent="editRow(scope.$index, tableObj.dataList)" >
+                修改
+              </el-button>
+              <el-button size="small" type="text"
+                         @click.native.prevent="deleteRow(scope.$index, tableObj.dataList)" >
+                删除
               </el-button>
             </template>
           </el-table-column>
@@ -64,12 +68,21 @@
           return parseFloat(row.hbzz).toFixed(2)+"%"
         }else if(cellValue==null){
           return '--'
+        }else if(column.property=='meterType'){
+            return row.meterType==0?'实表':'虚表'
         }else{
           return cellValue
         }
       },
       handleExport(){
         this.$parent.handleExport()
+      },
+      rowClick(row,col){
+        this.$parent.rowClick && this.$parent.rowClick(row,col)
+      },
+      editRow(index,dataList){
+        console.log(index,dataList)
+        this.$parent.editRow(dataList[0])
       }
     },
     async mounted(){
