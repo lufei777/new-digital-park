@@ -2,7 +2,7 @@
   <div class="table-box">
     <div class="flex-align-between">
       <h3 class="table-tip">{{tableTip}}</h3>
-      <el-button v-if='tableData.total!=0' type="primary"
+      <el-button v-if='tableData.total!=0 &&!hideExportBtn' type="primary"
                  class="export-btn" @click="handleExport">
         导出表格
       </el-button>
@@ -20,7 +20,7 @@
         </thead>
         <tbody>
         <tr v-for="(item,index) in tableData.value" :key="index">
-          <td v-for="(val,i) in item" :key="i">{{val}}</td>
+          <td v-for="(val,i) in item" :key="i" :class="val>item[1]?'styleRed':''">{{val}}</td>
         </tr>
         </tbody>
       </table>
@@ -43,7 +43,7 @@
     name:'DynamicTable',
     components: {
     },
-    props:['tableTip','tableData','curPage'],
+    props:['tableTip','tableData','curPage','hideExportBtn'],
     data () {
       return {
       }
@@ -127,6 +127,9 @@
         text-align: right;
         padding-right: 10px;
         box-sizing: border-box;
+      }
+      .styleRed {
+        color: red
       }
     }
     .page-box{
