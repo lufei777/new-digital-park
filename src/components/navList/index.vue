@@ -77,6 +77,12 @@
             this.$store.commit('conditionSelect/activeIndex',1)
             this.$store.commit('conditionSelect/curModule',1)
             this.$store.commit('conditionSelect/tbhbEnergy',[{id:34,name:'电'}])
+          }else if(activeNav.fatherName=="节能诊断"){
+           if(activeNav.childIndex == 0 || activeNav.childIndex == 1) {
+             this.$store.commit('energySavingSelect/energySaveFlag',1)
+           } else{
+              this.$store.commit('energySavingSelect/energySaveFlag',2)
+           }
           }
           let tmp=res.children[activeNav.fatherIndex]
               tmp.clickFlag=1
@@ -132,6 +138,8 @@
         }else if(tmp[index].caption=="统计分析"){
           this.$store.commit('conditionSelect/activeIndex',1)
           this.$store.commit('conditionSelect/curModule',1)
+        }else if(tmp[index].caption=="节能诊断"){
+          this.$store.commit('energySavingSelect/energySaveFlag',1)
         }
         Cookies.set('activeNav',{fatherIndex:index,childIndex:0,fatherName:tmp[index].caption})
 
@@ -150,6 +158,14 @@
           this.$store.commit('conditionSelect/curModule',2)
         }else if(tmp[index].children[i].caption=="分项能耗"){
           this.$store.commit('conditionSelect/curModule',3)
+        }else if(tmp[index].children[i].caption=="水量异常突增诊断"){
+          this.$store.commit('energySavingSelect/energySaveFlag',1)
+        }else if(tmp[index].children[i].caption=="夜间用水跑冒滴漏诊断"){
+          this.$store.commit('energySavingSelect/energySaveFlag',1)
+        }else if(tmp[index].children[i].caption=="用电量异常突增诊断"){
+          this.$store.commit('energySavingSelect/energySaveFlag',2)
+        }else if(tmp[index].children[i].caption=="夜间用电浪费诊断"){
+          this.$store.commit('energySavingSelect/energySaveFlag',2)
         }
         Cookies.set('activeNav',{fatherIndex:index,childIndex:i,fatherName:tmp[index].caption})
         this.$router.push(tmp[index].children[i].url)
