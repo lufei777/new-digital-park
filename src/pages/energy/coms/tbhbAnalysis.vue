@@ -234,14 +234,18 @@
           }
         }
         let res = await EnergyApi.getTimeEnergyTable(tableParams)
-        if(res && res.total){
-          res.labelList=[{name:'排名',prop:'xuhao'},
-                        {name:'时间',prop:'shijian',sort:'custom'},
-                        {name:this.energy[0].name,prop:'yongdianlaing',sort:'custom'}]
-          res.dataList=res.list
-          res.tableTip=this.tableTip
-          this.tableData=res
+        if(!res|| !res.total){
+          res={
+            list:[],
+            total:[]
+          }
         }
+        res.labelList=[{name:'排名',prop:'xuhao'},
+                      {name:'时间',prop:'shijian',sort:'custom'},
+                      {name:this.energy[0].name,prop:'yongdianlaing',sort:'custom'}]
+        res.dataList=res.list
+        res.tableTip=this.tableTip
+        this.tableData=res
       },
       initTimeEnergyChart(res){
         this.myChart = echarts.init(this.$refs.myChart);
@@ -281,15 +285,19 @@
           }
         }
         let res = await EnergyApi.getCategoryEnergyTable(tableParams)
-        if(res && res.total){
-          res.labelList=[{name:'排名',prop:'xulie'},
-                         {name:'能耗类型',prop:'name'},
-                         {name:'数值',prop:'value'},
-                         {name:'占比',prop:'zhanbi'}]
-          res.dataList=res.value
-          res.tableTip=this.tableTip
-          this.tableData=res
+        if(!res || !res.total){
+          res={
+            value:[],
+            total:0
+          }
         }
+        res.labelList=[{name:'排名',prop:'xulie'},
+                      {name:'能耗类型',prop:'name'},
+                      {name:'数值',prop:'value'},
+                      {name:'占比',prop:'zhanbi'}]
+        res.dataList=res.value
+        res.tableTip=this.tableTip
+        this.tableData=res
       },
       initCategoryChart(res){
         let myChart1 = echarts.init(this.$refs.myChart1);

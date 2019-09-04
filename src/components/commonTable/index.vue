@@ -7,7 +7,11 @@
             导出表格
           </el-button>
         </div>
-        <el-table  :data="tableObj.dataList" border  @sort-change='sortTable' @row-click="rowClick">
+        <el-table  :data="tableObj.dataList" border
+                   @sort-change='sortTable'
+                   @row-click="rowClick"
+                   @selection-change="handleSelectionChange"
+        >
           <el-table-column v-for="(item,index) in tableObj.labelList"
                            :prop="item.prop"
                            :label="item.name"
@@ -81,11 +85,13 @@
         this.$parent.rowClick && this.$parent.rowClick(row,col)
       },
       editRow(index,dataList){
-        console.log(index,dataList)
         this.$parent.editRow(dataList[0])
       },
       deleteRow(index,dataList){
         this.$parent.deleteRow(dataList[0])
+      },
+      handleSelectionChange(val){
+        this.$parent.handleSelectionChange(val)
       }
     },
     async mounted(){
