@@ -15,7 +15,7 @@
       >
       </el-tree>
     </div>
-    <div class="right-content" v-if="!showEdit">
+    <div class="right-content" v-if="!showEdit && !showAdd">
       <div class="tip flex-align">
         <span class="icon"></span>
         <span>设备表计</span>
@@ -46,8 +46,8 @@
         <CommonTable :tableObj="tableData" :curPage="1"/>
       </div>
       <div class="operator-box">
-        <el-button type="primary" icon="el-icon-delete">删除记录</el-button>
-        <el-button type="primary" icon="el-icon-plus">添加记录</el-button>
+        <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除记录</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
       </div>
       <div class="tip flex-align">
         <span class="icon"></span>
@@ -60,24 +60,28 @@
           <tr><th>工程名称</th><td>{{curTableData.name}}</td></tr>
           <tr><th>表名称</th><td>{{curTableData.caption}}</td></tr>
           <tr><th>表类型</th><td>{{curTableData.meterType==0?'实表':'虚表'}}</td></tr>
-          <tr><th>分享类别</th><td>{{curTableData.itemizeCaption}}</td></tr>
+          <tr><th>分项类别</th><td>{{curTableData.itemizeCaption}}</td></tr>
           </tbody>
         </table>
       </div>
     </div>
-    <EditMeter v-if="showEdit" :curMeterId="curTableData.id"></EditMeter>
+    <EditMeter v-if="showEdit" :curMeterId="curTableData.id" :isEdit="isEdit"/>
+    <AddMeter  v-if="showAdd" />
   </div>
 </template>
 
 <script>
+  import axios from 'axios';
   import CommonApi from '../../../service/api/commonApi'
   import CommonTable from '../../../components/commonTable'
   import EditMeter from './editMeter'
+  import AddMeter from './addMeter'
   export default {
     name: 'DeviceRecord',
     components: {
       CommonTable,
-      EditMeter
+      EditMeter,
+      AddMeter
     },
     data () {
       return {
@@ -93,7 +97,11 @@
         curPage:1,
         tableData:{},
         curTableData:{},
-        showEdit:false
+        showEdit:false,
+        isdeleteAll:1,
+        deleteId:'',
+        showAdd:false,
+        isEdit:false
       }
     },
     methods: {
@@ -106,7 +114,7 @@
       async getMeterTable(){
         let res = await CommonApi.getMeterTable({
           catalogId:this.curEnergy,
-           parentMeter:this.parentMeter,
+          parentMeter:this.parentMeter,
           meterTypes:this.meterTypes,
           caption:this.meterName,
           page:this.curPage,
@@ -122,6 +130,7 @@
         res.hideExportBtn=true
         res.showOpertor=true
         this.tableData=res
+        this.curTableData=res.rows[0]
       },
       onClickItemTree(val){
         this.parentMeter=val.id
@@ -134,24 +143,72 @@
         this.curPage=1
         this.getMeterTable()
       },
-      rowClick(row,col){
+      rowClick(row){
         this.curTableData=row
       },
       editRow(data){
         this.curTableData=data
         this.showEdit=true
+        this.isEdit=true
       },
       deleteRow(data){
+        this.isdeleteAll=1
+        this.deleteId=data.id
+        this.deleteTip()
+      },
+      async sureDelete(){
+         await CommonApi.deleteMeter({
+          id:this.deleteId,
+          isdeleteAll:this.isdeleteAll
+        })
+        // axios({
+        //   method: 'get',
+        //   url:'http://192.168.1.10:80/vibe-web/energy/deleteMeter?id='+this.deleteId+'&isdeleteAll=1',
+        //   crossDomain:true,
+        //   xhrFields:{
+        //     withCredentials:true,
+        //   },
+        //   success:function(res){
+        //     console.log('lalalalal',res)
+        //   }
+        // })
+        //  axios({
+        //    method: 'get',
+        //    url:'http://192.168.1.10:80/vibe-web/getMenus',
+        //    crossDomain:true,
+        //    xhrFields:{
+        //      withCredentials:true,
+        //    },
+        //    success:function(res){
+        //      console.log('lalalalal',res)
+        //    }
+        //  })
+        this.$message({
+              type: 'success',
+              message: '删除成功!'
+         });
+         this.getMeterTable()
+      },
+      handleSelectionChange(val){
+        this.isdeleteAll=2
+        let tmp=val.map((item)=>item.id)
+        this.deleteId=tmp
+      },
+      deleteTip(){
+        if(!this.deleteId){
+          this.$message({
+            type: 'warning',
+            message: '请先选择节点！',
+            duration:1000
+          });
+          return;
+        }
         this.$confirm('确定要删除吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          // this.$message({
-          //   type: 'success',
-          //   message: '删除成功!'
-          // });
-          this.sureDelete(data)
+          this.sureDelete()
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -159,16 +216,9 @@
           });
         });
       },
-      async sureDelete(data){
-         await CommonApi.deleteMeter({
-          id:data.id,
-          isdeleteAll:1
-        })
-        this.$message({
-              type: 'success',
-              message: '删除成功!'
-         });
-         this.getMeterTable()
+      onClickAddBtn(){
+        this.showAdd=true
+        this.isEdit=false
       }
     },
     async mounted(){
@@ -181,7 +231,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
   .device-record{
-    margin-top: 45px;
+    margin-top: 50px;
     .left-zoom-nav{
       width:17%;
       float: left;

@@ -23,7 +23,7 @@ var axios = axiosOrigin.create(config);
 axios.defaults.headers.get["Content-Type"] =
   "application/x-www-form-urlencoded";
 axios.defaults.headers.post["Content-Type"] = "application/json";
-
+axios.defaults.withCredentials=true;
 axios.interceptors.request.use(
   function(config) {
     // 在发送请求之前做某事

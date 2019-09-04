@@ -28,6 +28,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   import CommonApi from '../../service/api/commonApi'
   import CommonData from '../../utils/commonData'
   export default {
@@ -101,9 +102,20 @@
         this.menuData = res
       },
       async login(){
-        let res = await CommonApi.login({
-          login_id:'admin',
-          password:'123456'
+        // let res = await CommonApi.login({
+        //   login_id:'admin',
+        //   password:'123456'
+        // })
+        axios({
+          method: 'get',
+          url:'http://192.168.1.10:80/vibe-web/login/admin/123456',
+          crossDomain:true,
+          xhrFields:{
+            withCredentials:true,
+          },
+          success:function(res){
+            console.log('lalalalal',res)
+          }
         })
       },
       async getSystemSetting(){
@@ -172,7 +184,7 @@
       }
     },
     async mounted(){
-      // await this.login()
+      await this.login()
        this.getMenus()
        this.getSystemSetting()
     }

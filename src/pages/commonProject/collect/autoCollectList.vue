@@ -71,15 +71,19 @@
           size:10
         }
         let res = await CommonApi.getAutoCollectList(params)
-        if(res&&res.total){
-          res.labelList=[{name:'序号',prop:'xulie'},
-            {name:'时间',prop:'time'},
-            {name:'表名称',prop:'name'},
-            {name:'数值',prop:'value'},
-            {name:'所属空间',prop:'caption'}]
-          res.dataList=res.value
-          this.tableData=res
+        if(!res || !res.total){
+          res={
+            value:[],
+            total:0
+          }
         }
+        res.labelList=[{name:'序号',prop:'xulie'},
+                       {name:'时间',prop:'time'},
+                       {name:'表名称',prop:'name'},
+                       {name:'数值',prop:'value'},
+                       {name:'所属空间',prop:'caption'}]
+        res.dataList=res.value
+        this.tableData=res
       },
       handleCurrentChange(val){
         this.curPage=val

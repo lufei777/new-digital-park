@@ -53,14 +53,12 @@
 <script>
   import CommonApi from '../../../service/api/commonApi'
   import ZoomModal from '../../../components/zoomModal/index'
-
-
   export default {
     name: 'EditMeter',
     components: {
       ZoomModal
     },
-    props:['curMeterId'],
+    props:['curMeterId','isEdit'],
     data () {
       let timeValidate=function(rule,value,callback){
          let reg=/^[0-9]*[h|m|s]$/
@@ -141,11 +139,16 @@
       },
       goBack(){
         this.$parent.showEdit=false
+        if(!this.isEdit){
+          this.$parent.showAdd=true
+        }
       }
     },
      mounted(){
       this.getEnergyListAll()
-      this.getItemMeterDetail()
+       if(this.isEdit){
+         this.getItemMeterDetail()
+       }
     }
   }
 </script>

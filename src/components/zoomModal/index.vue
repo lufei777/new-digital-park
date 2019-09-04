@@ -70,7 +70,7 @@
         this.curNode=val
       },
       loadNode(node, resolve) {
-        console.log(node,resolve)
+        // console.log(node,resolve)
         if (node.level === 0) {
           return resolve(this.zoomTree);
         }
