@@ -15,7 +15,7 @@
       >
       </el-tree>
     </div>
-    <div class="right-content" v-if="!showEdit && !showAdd">
+    <div class="right-content" v-if="!showEdit && !showAdd && !showImport">
       <div class="tip flex-align">
         <span class="icon"></span>
         <span>设备表计</span>
@@ -40,7 +40,7 @@
            <el-button type="primary" icon="el-icon-search"
                       class="search-btn" @click="onClickSearchBtn">搜索</el-button>
          </div>
-         <el-button type="primary" class="import-btn">导入</el-button>
+         <el-button type="primary" class="import-btn" @click="onClickImportBtn">导入</el-button>
       </div>
       <div class="table-box">
         <CommonTable :tableObj="tableData" :curPage="1"/>
@@ -67,6 +67,7 @@
     </div>
     <EditMeter v-if="showEdit" :curMeterId="curTableData.id" :isEdit="isEdit"/>
     <AddMeter  v-if="showAdd" />
+    <ImportMeter v-if="showImport"/>
   </div>
 </template>
 
@@ -76,12 +77,14 @@
   import CommonTable from '../../../components/commonTable'
   import EditMeter from './editMeter'
   import AddMeter from './addMeter'
+  import ImportMeter from './importMeter'
   export default {
     name: 'DeviceRecord',
     components: {
       CommonTable,
       EditMeter,
-      AddMeter
+      AddMeter,
+      ImportMeter
     },
     data () {
       return {
@@ -101,7 +104,8 @@
         isdeleteAll:1,
         deleteId:'',
         showAdd:false,
-        isEdit:false
+        isEdit:false,
+        showImport:false
       }
     },
     methods: {
@@ -161,28 +165,6 @@
           id:this.deleteId,
           isdeleteAll:this.isdeleteAll
         })
-        // axios({
-        //   method: 'get',
-        //   url:'http://192.168.1.10:80/vibe-web/energy/deleteMeter?id='+this.deleteId+'&isdeleteAll=1',
-        //   crossDomain:true,
-        //   xhrFields:{
-        //     withCredentials:true,
-        //   },
-        //   success:function(res){
-        //     console.log('lalalalal',res)
-        //   }
-        // })
-        //  axios({
-        //    method: 'get',
-        //    url:'http://192.168.1.10:80/vibe-web/getMenus',
-        //    crossDomain:true,
-        //    xhrFields:{
-        //      withCredentials:true,
-        //    },
-        //    success:function(res){
-        //      console.log('lalalalal',res)
-        //    }
-        //  })
         this.$message({
               type: 'success',
               message: '删除成功!'
@@ -219,9 +201,13 @@
       onClickAddBtn(){
         this.showAdd=true
         this.isEdit=false
+      },
+      onClickImportBtn(){
+        this.showImport=true
       }
     },
     async mounted(){
+      await CommonApi.getMenus()
       await this.getMeterTree()
       this.getMeterTable()
     }
