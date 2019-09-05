@@ -207,7 +207,7 @@
       }
     },
     async mounted(){
-      await CommonApi.getMenus()
+      // await CommonApi.getMenus()
       await this.getMeterTree()
       this.getMeterTable()
     }

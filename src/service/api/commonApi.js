@@ -128,6 +128,10 @@ class CommonApi {
   @url('/vibe-web/asset/assetTypeList')
   @get
   getAssetTypeList(){}
+
+  @url('vibe-web/logList')
+  @get
+  getLogList(){}
 }
 
 export default new CommonApi()

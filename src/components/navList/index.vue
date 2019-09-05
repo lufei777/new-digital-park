@@ -19,16 +19,20 @@
       </div>
     </div>
     <div class="operator-box">
-      <i class="fa fa-bell-o"></i>
-      <i class="fa fa-question-circle-o"></i>
-      <i class="fa fa-user-o"></i>
-      <span>admin</span>
+      <div class="fa fa-bell-o" title="报警信息"></div>
+      <div class="fa fa-question-circle-o" title="帮助"></div>
+      <div @mouseenter="showLogout(1)"  @mouseleave="showLogout(-1)" class="login-out-box">
+        <span>
+           <i class="fa fa-user-o" ></i>
+           <span>admin</span>
+        </span>
+        <span v-show="showOut" class="login-out" @click="sureLogOut">退出</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-  import axios from 'axios'
   import CommonApi from '../../service/api/commonApi'
   import CommonData from '../../utils/commonData'
   export default {
@@ -39,6 +43,7 @@
       return {
         menuData:{},
         sysTitle:{},
+        showOut:false
       }
     },
     computed:{
@@ -101,14 +106,7 @@
         }
         this.menuData = res
       },
-      login(){
-        axios.get('http://192.168.1.10:80/vibe-web/login/admin/123456').then((res)=>{
-          let tmp =res.data.setCookie.split(";")[0].split("=")[1]
-          Cookies.set('JSESSIONID',tmp)
-        }).catch((err)=>{
-          console.log(2,err)
-        })
-      },
+
       async getSystemSetting(){
         let res = await CommonApi.getSystemSetting()
         res.map((item)=>{
@@ -172,10 +170,16 @@
         }
         Cookies.set('activeNav',{fatherIndex:index,childIndex:i,fatherName:tmp[index].caption})
         this.$router.push(tmp[index].children[i].url)
+      },
+      showLogout(flag){
+         this.showOut=flag==1?true:false
+      },
+      sureLogOut(){
+        Cookies.clear()
+        // this.$router.push('/login')
       }
     },
     async mounted(){
-      await this.login()
       this.getMenus()
       this.getSystemSetting()
     }
@@ -222,11 +226,30 @@
       flex-shrink: 0;
       color:@navFontColor;
       font-size: 20px;
-      i{
-        margin: 0 2.5px;
+      height: 100%;
+      /*line-height: 50px;*/
+      div{
+        height: 100%;
+        float: left;
+        line-height: 50px;
+        margin: 0 5px;
       }
       &:hover{
         cursor: pointer;
+      }
+      .login-out-box{
+        position: relative;
+      }
+      .login-out{
+        position: absolute;
+        bottom:-50px;
+        left:0;
+        width:100%;
+        background: #e9edf6;
+        color:#005773;
+        text-align: center;
+        font-size: 14px;
+        z-index:99;
       }
     }
   }

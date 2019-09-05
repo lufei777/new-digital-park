@@ -1,6 +1,6 @@
 import EnergyIndex from '../pages/energy/index.vue'
-import EnergyCompare from '../pages/energy/energyCompare.vue'
-import HomePage from '../pages/energy/homePage.vue'
+import EnergyCompare from '../pages/energy/energyComare/energyCompare.vue'
+import HomePage from '../pages/energy/home/homePage.vue'
 import TimeEnergy from '../pages/energy/energyShow/timeEnergy.vue'
 import CategoryEnergy from '../pages/energy/energyShow/categoryEnergy.vue'
 import RankEnergy from '../pages/energy/energyShow/rankEnergy.vue'
@@ -8,10 +8,15 @@ import WaterDiffer from '../pages/energy/energySaving/waterDiffer.vue'
 import NightWater from '../pages/energy/energySaving/nightWater.vue'
 import ElecDiffer from '../pages/energy/energySaving/elecDiffer.vue'
 import NightElec from '../pages/energy/energySaving/nightElec.vue'
+import EnergyLogin from '../pages/energy/login/index.vue'
 import CommonRouter from './commonRouter/index'
 export default [{
   path: '/',
-  redirect: 'energy'
+  redirect: '/login'
+},{
+  path:'/login',
+  name:'EnergyLogin',
+  component:EnergyLogin
 },{
   path: '/energy',
   name: 'EnergyIndex',

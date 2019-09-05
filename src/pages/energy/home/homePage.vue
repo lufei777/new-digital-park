@@ -143,10 +143,10 @@
 
 <script>
 import echarts from "echarts";
-import EnergyApi from "../../service/api/energyApi";
-import CommonApi from "../../service/api/commonApi";
-import ChartUtils from "../../utils/chartUtils";
-import CommonTable from '../../components/commonTable/index'
+import EnergyApi from "../../../service/api/energyApi";
+import CommonApi from "../../../service/api/commonApi";
+import ChartUtils from "../../../utils/chartUtils";
+import CommonTable from '../../../components/commonTable'
 export default {
   name: "HomePage",
   components: {

@@ -19,9 +19,9 @@
 
 <script>
 
-  import ZoomCompare from './coms/zoomCompare'
-  import TbhbAnalysis from './coms/tbhbAnalysis'
-  import TypeCompare from './coms/typeCompare'
+  import ZoomCompare from '../coms/zoomCompare'
+  import TbhbAnalysis from '../coms/tbhbAnalysis'
+  import TypeCompare from '../coms/typeCompare'
   export default {
     components: {
       ZoomCompare,
