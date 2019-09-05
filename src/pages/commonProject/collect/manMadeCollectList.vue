@@ -80,7 +80,7 @@
           }
         }
         res.labelList=[{name:'',prop:'',type:'selection'},
-          {name:'检测器名称',prop:'monitorStr'},
+          {name:'监测器名称',prop:'monitorStr'},
           {name:'录入时间',prop:'lookTime'},
           {name:'用户名',prop:''},
           {name:'表值',prop:'value'}]

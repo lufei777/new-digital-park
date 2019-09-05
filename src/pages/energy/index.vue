@@ -1,5 +1,6 @@
 <template>
   <div class="energy-index">
+    <Theme />
     <NavList />
     <router-view></router-view>
   </div>
@@ -7,14 +8,15 @@
 
 <script>
   import NavList from '../../components/navList'
+  import Theme from '../../components/theme'
   export default {
     name: 'EnergyIndex',
     components: {
-      NavList
+      NavList,
+      Theme
     },
     data () {
       return {
-        msg: 'Welcome to my basic vue demo'
       }
     },
     methods: {

@@ -5,6 +5,8 @@ import HistoryStatis from '../../pages/commonProject/statisAnalysis/historyStati
 import ManMadeCollectList from '../../pages/commonProject/collect/manMadeCollectList'
 import AutoCollectList from '../../pages/commonProject/collect/autoCollectList'
 import DeviceRecord from '../../pages/commonProject/deviceRecord/index'
+import UserManage from '../../pages/commonProject/SystemManage/userManage'
+import OperatorLog from '../../pages/commonProject/SystemManage/operatorLog'
 export default [{
   path:'/deviceAnalysis',
   name:'DeviceAnalysis',
@@ -33,4 +35,12 @@ export default [{
   path:'/deviceRecord',
   name:'DeviceRecord',
   component:DeviceRecord
+},{
+    path:'/userManage',
+    name:'UserManage',
+    component:UserManage
+},{
+  path:'/operatorLog',
+  name:'OperatorLog',
+  component:OperatorLog
 }]

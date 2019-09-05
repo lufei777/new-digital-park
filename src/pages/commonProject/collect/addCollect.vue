@@ -39,7 +39,6 @@
         <el-button @click="goBack" class="go-back">返回</el-button>
       </el-form-item>
     </el-form>
-    <ZoomModal :showDialog="showDialog"/>
   </div>
 </template>
 

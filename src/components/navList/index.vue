@@ -1,34 +1,38 @@
 <template>
-    <div class="father-nav flex-align-around">
-      <div class="sys-title">{{sysTitle}}</div>
-      <div class="father-nav-list flex-align-around">
-        <div v-for="(item,index) in menuData.children" :key="index" class="father-item"
-             @mouseenter="changeBg(item,1)" @mouseleave="changeBg(item,-1)"
-             @click="clickChangeBg(index)"
-             :class="(item.bgFlag==-1 && item.clickFlag!=1)?'':'activeBg'"
-        >
-          <span>{{item.caption}}</span>
-          <div class="child-nav-list" v-if="item.children && item.children.length && item.showChild==1">
-            <div v-for="(child,i) in item.children" :key="i" class="child-item"
-                 @mouseenter="changeBg(child,1)" @mouseleave="changeBg(child,-1)"
-                 @click.stop="clickChangeChild(index,i)"
-                 :class="(child.bgFlag==-1 && child.clickFlag!=1)?'':'activeChild'">
-              {{child.caption}}
-            </div>
+  <div class="father-nav flex-align-around">
+    <div class="sys-title">{{sysTitle}}</div>
+    <div class="father-nav-list flex-align-around">
+      <div v-for="(item,index) in menuData.children" :key="index" class="father-item"
+           @mouseenter="changeBg(item,1)" @mouseleave="changeBg(item,-1)"
+           @click="clickChangeBg(index)"
+           :class="(item.bgFlag==-1 && item.clickFlag!=1)?'':'activeBg'"
+      >
+        <span>{{item.caption}}</span>
+        <div class="child-nav-list" v-if="item.children && item.children.length && item.showChild==1">
+          <div v-for="(child,i) in item.children" :key="i" class="child-item"
+               @mouseenter="changeBg(child,1)" @mouseleave="changeBg(child,-1)"
+               @click.stop="clickChangeChild(index,i)"
+               :class="(child.bgFlag==-1 && child.clickFlag!=1)?'':'activeChild'">
+            {{child.caption}}
           </div>
         </div>
       </div>
-      <div class="operator-box">
-        <i class="fa fa-bell-o"></i>
-        <i class="fa fa-question-circle-o"></i>
-        <i class="fa fa-user-o"></i>
-        <span>admin</span>
+    </div>
+    <div class="operator-box">
+      <div class="fa fa-bell-o" title="报警信息"></div>
+      <div class="fa fa-question-circle-o" title="帮助"></div>
+      <div @mouseenter="showLogout(1)"  @mouseleave="showLogout(-1)" class="login-out-box">
+        <span>
+           <i class="fa fa-user-o" ></i>
+           <span>admin</span>
+        </span>
+        <span v-show="showOut" class="login-out" @click="sureLogOut">退出</span>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
-  import axios from 'axios'
   import CommonApi from '../../service/api/commonApi'
   import CommonData from '../../utils/commonData'
   export default {
@@ -39,6 +43,7 @@
       return {
         menuData:{},
         sysTitle:{},
+        showOut:false
       }
     },
     computed:{
@@ -52,13 +57,13 @@
         // let res = await CommonApi.getMenus()
         let res = CommonData.menuData
         res.children.map((item)=>{
-           item.bgFlag=-1 //鼠标移入移出背景
-           item.clickFlag=-1 //鼠标点击背景
-           item.showChild=-1 //是否显示子菜单
-           item.children.map((child)=>{
-              child.bgFlag=-1
-              child.clickFlag=-1
-           })
+          item.bgFlag=-1 //鼠标移入移出背景
+          item.clickFlag=-1 //鼠标点击背景
+          item.showChild=-1 //是否显示子菜单
+          item.children.map((child)=>{
+            child.bgFlag=-1
+            child.clickFlag=-1
+          })
         })
         let activeNav =Cookies.get('activeNav') && JSON.parse(Cookies.get('activeNav'))
         console.log(activeNav)
@@ -79,15 +84,15 @@
             this.$store.commit('conditionSelect/curModule',1)
             this.$store.commit('conditionSelect/tbhbEnergy',[{id:34,name:'电'}])
           }else if(activeNav.fatherName=="节能诊断"){
-           if(activeNav.childIndex == 0 || activeNav.childIndex == 1) {
-             this.$store.commit('energySavingSelect/energySaveFlag',1)
-           } else{
+            if(activeNav.childIndex == 0 || activeNav.childIndex == 1) {
+              this.$store.commit('energySavingSelect/energySaveFlag',1)
+            } else{
               this.$store.commit('energySavingSelect/energySaveFlag',2)
-           }
+            }
           }
           let tmp=res.children[activeNav.fatherIndex]
-              tmp.clickFlag=1
-              tmp.showChild=1
+          tmp.clickFlag=1
+          tmp.showChild=1
           if(tmp.children.length){
             tmp.children[activeNav.childIndex].clickFlag=1
             this.$router.push(tmp.children[activeNav.childIndex].url)
@@ -101,23 +106,7 @@
         }
         this.menuData = res
       },
-      async login(){
-        // let res = await CommonApi.login({
-        //   login_id:'admin',
-        //   password:'123456'
-        // })
-        axios({
-          method: 'get',
-          url:'http://192.168.1.10:80/vibe-web/login/admin/123456',
-          crossDomain:true,
-          xhrFields:{
-            withCredentials:true,
-          },
-          success:function(res){
-            console.log('lalalalal',res)
-          }
-        })
-      },
+
       async getSystemSetting(){
         let res = await CommonApi.getSystemSetting()
         res.map((item)=>{
@@ -160,10 +149,10 @@
       clickChangeChild(index,i){  //点击子标题时
         let tmp = this.menuData.children
         tmp.map((item)=>{
-            item.children.map((child)=>{
-              child.clickFlag=-1
-              child.bgFlag=-1
-            })
+          item.children.map((child)=>{
+            child.clickFlag=-1
+            child.bgFlag=-1
+          })
         })
         tmp[index].children[i].clickFlag=1
         if(tmp[index].children[i].caption=="分时能耗"){
@@ -181,12 +170,18 @@
         }
         Cookies.set('activeNav',{fatherIndex:index,childIndex:i,fatherName:tmp[index].caption})
         this.$router.push(tmp[index].children[i].url)
+      },
+      showLogout(flag){
+         this.showOut=flag==1?true:false
+      },
+      sureLogOut(){
+        Cookies.clear()
+        // this.$router.push('/login')
       }
     },
     async mounted(){
-      await this.login()
-       this.getMenus()
-       this.getSystemSetting()
+      this.getMenus()
+      this.getSystemSetting()
     }
   }
 </script>
@@ -231,11 +226,30 @@
       flex-shrink: 0;
       color:@navFontColor;
       font-size: 20px;
-      i{
-        margin: 0 2.5px;
+      height: 100%;
+      /*line-height: 50px;*/
+      div{
+        height: 100%;
+        float: left;
+        line-height: 50px;
+        margin: 0 5px;
       }
       &:hover{
         cursor: pointer;
+      }
+      .login-out-box{
+        position: relative;
+      }
+      .login-out{
+        position: absolute;
+        bottom:-50px;
+        left:0;
+        width:100%;
+        background: #e9edf6;
+        color:#005773;
+        text-align: center;
+        font-size: 14px;
+        z-index:99;
       }
     }
   }
