@@ -132,6 +132,34 @@ class CommonApi {
   @url('vibe-web/logList')
   @get
   getLogList(){}
+
+  @url('/vibe-web/dept/treeAllData')
+  @get
+  getUserTree(){}
+
+  @url('/vibe-web/user/userList')
+  @get
+  getUserList(){}
+
+  @url('/vibe-web/user/deleteUser')
+  @get
+  deleteUser(){}
+
+  @url('/vibe-web/user/toUserEdit')
+  @get
+  getItemUser(){}
+
+  @url('/vibe-web/role/roleList')
+  @get
+  getRoleList(){}
+
+  @url('/vibe-web/user/userAdd')
+  @get
+  addUser(){}
+
+  @url('/vibe-web/dept/deptList')
+  @get
+  getDepartmentList(){}
 }
 
 export default new CommonApi()

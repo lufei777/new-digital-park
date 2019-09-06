@@ -47,7 +47,7 @@
     margin:100px 0 0 30px;
     position: fixed;
     right:20px;
-    top:100px;
+    top:150px;
     z-index:999;
     .el-tag{
       padding:0 15px;
