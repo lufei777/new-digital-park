@@ -116,14 +116,15 @@
         })
       },
       async getMeterTable(){
-        let res = await CommonApi.getMeterTable({
+        let params={
           catalogId:this.curEnergy,
           parentMeter:this.parentMeter,
           meterTypes:this.meterTypes,
           caption:this.meterName,
           page:this.curPage,
           size:10
-        })
+        }
+        let res = await CommonApi.getMeterTable(params)
         res.labelList=[{name:'',prop:'',type:'selection'},
           {name:'编号',prop:'id'},
           {name:'工程名称',prop:'name'},
@@ -134,10 +135,13 @@
         res.hideExportBtn=true
         res.showOpertor=true
         this.tableData=res
-        this.curTableData=res.rows[0]
+        this.curTableData=res.rows
       },
       onClickItemTree(val){
         this.parentMeter=val.id
+        this.showAdd=false
+        this.showEdit=false
+        this.getMeterTable()
       },
       handleCurrentChange(val){
         this.curPage=val

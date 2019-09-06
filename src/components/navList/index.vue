@@ -175,8 +175,8 @@
          this.showOut=flag==1?true:false
       },
       sureLogOut(){
-        Cookies.clear()
-        // this.$router.push('/login')
+        // Cookies.clear()
+        this.$router.push('/login')
       }
     },
     async mounted(){

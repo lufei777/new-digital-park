@@ -85,10 +85,10 @@
         this.$parent.rowClick && this.$parent.rowClick(row,col)
       },
       editRow(index,dataList){
-        this.$parent.editRow(dataList[0])
+        this.$parent.editRow(dataList[index])
       },
       deleteRow(index,dataList){
-        this.$parent.deleteRow(dataList[0])
+        this.$parent.deleteRow(dataList[index])
       },
       handleSelectionChange(val){
         this.$parent.handleSelectionChange(val)

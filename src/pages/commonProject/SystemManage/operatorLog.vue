@@ -35,7 +35,7 @@
         >
         </el-date-picker>
       </div>
-      <el-button type="primary" icon="el-icon-search" @click="getLogList">搜索</el-button>
+      <el-button type="primary" icon="el-icon-search" @click="onClickSearchBtn">搜索</el-button>
       <el-button type="primary" icon="el-icon-refresh" @click="onClickRefreshBtn">刷新</el-button>
     </div>
     <CommonTable :tableObj="logList" :curPage="1"/>
@@ -94,6 +94,10 @@
         this.operatingContent=''
         this.startTime=''
         this.endTime=''
+        this.getLogList()
+      },
+      onClickSearchBtn(){
+        this.curPage=1
         this.getLogList()
       }
     },
