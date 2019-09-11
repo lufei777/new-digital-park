@@ -12,7 +12,7 @@
                    @row-click="rowClick"
                    @selection-change="handleSelectionChange"
         >
-          <el-table-column v-for="(item,index) in tableObj.labelList"
+          <af-table-column v-for="(item,index) in tableObj.labelList"
                            :prop="item.prop"
                            :label="item.name"
                            :key="index"
@@ -21,7 +21,7 @@
                            :type="item.type"
                            align="right"
           >
-          </el-table-column>
+          </af-table-column>
           <el-table-column v-if="tableObj.showOpertor" fixed="right" label="操作" width="120"  align="right">
             <template slot-scope="scope">
               <el-button size="small" type="text"
@@ -34,6 +34,22 @@
               </el-button>
             </template>
           </el-table-column>
+          <!--<el-table-column v-if="tableObj.showRoleOperator" fixed="right" label="操作" width="120"  align="right">-->
+            <!--<template slot-scope="scope">-->
+              <!--<el-button size="small" type="text"-->
+                         <!--@click.native.prevent="editRow(scope.$index, tableObj.dataList)" >-->
+                <!--编辑-->
+              <!--</el-button>-->
+              <!--<el-button size="small" type="text"-->
+                         <!--@click.native.prevent="editRow(scope.$index, tableObj.dataList)" >-->
+                <!--编辑权限-->
+              <!--</el-button>-->
+              <!--<el-button size="small" type="text"-->
+                         <!--@click.native.prevent="deleteRow(scope.$index, tableObj.dataList)" >-->
+                <!--删除-->
+              <!--</el-button>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
         </el-table>
         <div class="page-box" v-if="tableObj.total && tableObj.total!=0">
           <el-pagination

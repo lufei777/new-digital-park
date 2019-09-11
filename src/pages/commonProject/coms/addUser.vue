@@ -2,7 +2,7 @@
   <div class="add-user">
     <div class="tip flex-align">
       <span class="icon"></span>
-      <span>编辑用户</span>
+      <span>{{tipText}}</span>
     </div>
     <el-form ref="userForm" :rules="rules" :model="userForm" label-position="right" label-width="120px" >
       <el-form-item label="用户名" prop="login_id">
@@ -17,7 +17,7 @@
       <el-form-item label="确认密码" prop="re_password">
         <el-input v-model="userForm.re_password" type="password"></el-input>
       </el-form-item>
-      <el-form-item label="手机号" prop="phone" v-if="!isEdit">
+      <el-form-item label="手机号" prop="phone">
         <el-input v-model="userForm.phone"></el-input>
       </el-form-item>
       <el-form-item label="Email" prop="mail">
@@ -80,11 +80,12 @@
           login_id:'',
           name:'',
           password:'',
-          rePassword:"",
+          re_password:"",
           mail:'',
           phone:'',
           department:'',
           rid:'',
+          id:''
         },
         rules: {
           login_id:[{ required: true, message: '请输入用户名', trigger: 'blur' },
@@ -93,7 +94,7 @@
                 { min: 4, message: '至少输入4个字符', trigger: 'blur' }],
           password:[{ required: true, message: '请输入密码', trigger: 'blur' },
                     { min: 5, message: '至少输入5个字符', trigger: 'blur' }],
-          rePassword:[{ required: true, message: '请输入密码', trigger: 'blur' },
+          re_password:[{ required: true, message: '请输入密码', trigger: 'blur' },
                       { min: 5, message: '至少输入5个字符', trigger: 'blur' },
                       { validator: checkRePwd, trigger: 'blur' }],
           phone:[{ required: true, message: '请输入手机号', trigger: 'blur' },
@@ -106,6 +107,9 @@
       }
     },
     computed:{
+      tipText(){
+        return this.isEdit?'编辑用户':'添加用户'
+      }
     },
     watch:{
     },
@@ -115,6 +119,7 @@
           id:this.curUserId
         })
         this.userForm={
+          id:this.curUserId,
           login_id:res.login_id,
           name:res.name,
           password:res.password,
@@ -141,10 +146,15 @@
          });
       },
       async addUser(){
-        let res = await CommonApi.addUser(this.userForm)
+        let res
+        if(this.isEdit){
+           res = await CommonApi.editUser(this.userForm)
+        }else{
+           res = await CommonApi.addUser(this.userForm)
+        }
           this.$message({
             type: 'success',
-            message: '添加成功!',
+            message: this.isEdit?'修改成功！':'添加成功！',
             duration:1000
           });
           this.$parent.showAdd=false
@@ -162,7 +172,7 @@
     mounted(){
        this.getRoleList()
        this.getDepartmentList()
-      if(this.isEdit){
+       if(this.isEdit){
         this.getItemUser()
       }
     }

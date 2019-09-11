@@ -53,7 +53,7 @@
         <span class="icon"></span>
         <span>列表详情</span>
       </div>
-      <div class="meter-detail-table">
+      <div class="item-row-detail-table">
         <table>
           <tbody>
           <tr><th>编号</th><td>{{curTableData.id}}</td></tr>
@@ -211,7 +211,6 @@
       }
     },
     async mounted(){
-      // await CommonApi.getMenus()
       await this.getMeterTree()
       this.getMeterTable()
     }
@@ -220,6 +219,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
+  @import '../less/dataDetailRow.less';
   .device-record{
     margin-top: 50px;
     .left-zoom-nav{
@@ -315,29 +315,7 @@
       margin-bottom: 20px;
       padding: 10px;
     }
-    .meter-detail-table{
-      background: @white;
-      overflow: hidden;
-      padding:20px;
-      table{
-        text-align: left;
-        width:70%;
-        border-spacing: 0;
-      }
-      th{
-        background: var(--mainBg);
-        color:@white;
-        font-weight: normal;
-        padding:10px 0;
-        width:200px;
-        text-indent: 5px;
-      }
-      td{
-        border-top:1px solid var(--mainBg);
-        border-right:1px solid var(--mainBg);
-        padding:10px 0;
-        text-indent: 20px;
-      }
+    .item-row-detail-table{
       tr:nth-child(5) td{
         border-bottom:1px solid var(--mainBg);
       }
