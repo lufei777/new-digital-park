@@ -15,9 +15,12 @@ import App from '../App'
 
 Vue.use(ElementUI)
 Vue.use(VueRouter)
+import AFTableColumn from 'af-table-column'
+Vue.use(AFTableColumn)
 
 import Cookies from 'js-cookie'
 window.Cookies = Cookies
+
 import moment from 'moment'
 Vue.prototype.$moment = moment;//赋值使用
 moment.locale('zh-cn');//需要汉化

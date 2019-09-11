@@ -7,6 +7,8 @@ import AutoCollectList from '../../pages/commonProject/collect/autoCollectList'
 import DeviceRecord from '../../pages/commonProject/deviceRecord/index'
 import UserManage from '../../pages/commonProject/SystemManage/userManage'
 import OperatorLog from '../../pages/commonProject/SystemManage/operatorLog'
+import RoleManage from '../../pages/commonProject/SystemManage/roleManage'
+import DepartmentManage from '../../pages/commonProject/SystemManage/departmentManage'
 export default [{
   path:'/deviceAnalysis',
   name:'DeviceAnalysis',
@@ -43,4 +45,12 @@ export default [{
   path:'/operatorLog',
   name:'OperatorLog',
   component:OperatorLog
+},{
+  path:'/roleManage',
+  name:'RoleManage',
+  component:RoleManage
+},{
+  path:'/departmentManage',
+  name:'DepartmentManage',
+  component:DepartmentManage
 }]

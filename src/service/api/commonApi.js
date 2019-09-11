@@ -160,6 +160,23 @@ class CommonApi {
   @url('/vibe-web/dept/deptList')
   @get
   getDepartmentList(){}
+
+  @url('/vibe-web/user/userEdit')
+  @get
+  editUser(){}
+
+  @url('/vibe-web/role/roleList')
+  @get
+  getRoleList(){}
+
+  @url('/vibe-web/role/deleteRole')
+  @get
+  deleteRole(){}
+
+  @url('/vibe-web/dept/queryDeptList')
+  @get
+  queryDeptList(){}
 }
 
 export default new CommonApi()
+

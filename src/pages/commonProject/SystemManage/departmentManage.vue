@@ -13,44 +13,27 @@
     <div class="right-content" v-if="!showAdd">
         <div class="tip flex-align">
           <span class="icon"></span>
-          <span>员工列表</span>
+          <span>机构列表</span>
         </div>
         <div class="choose-box flex-align">
           <div class="block flex-align-center">
             <span>编号</span>
-            <el-input v-model="id" />
+            <el-input v-model="did" />
           </div>
           <div class="block flex-align-center">
-            <span>用户名</span>
-            <el-input v-model="login_id" />
+            <span>机构简称</span>
+            <el-input v-model="name" />
           </div>
-            <div class="block flex-align-center">
-              <span>E-mail</span>
-              <el-input v-model="mail" />
-            </div>
-            <div class="block flex-align-center">
-              <span>电话号码</span>
-              <el-input v-model="phone" />
-            </div>
-            <el-button type="primary" icon="el-icon-search" @click="onClickSearchBtn">搜索</el-button>
-            <el-button type="primary"  @click="onClickExportBtn">导出</el-button>
+          <div class="block flex-align-center">
+            <span>机构全称</span>
+            <el-input v-model="abbr" />
+          </div>
+          <el-button type="primary" icon="el-icon-search" @click="onClickSearchBtn">搜索</el-button>
       </div>
-      <CommonTable :tableObj="tableData" :curPage="1"/>
+      <CommonTable :tableObj="departList" :curPage="1"/>
       <div class="operator-box">
-        <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除用户</el-button>
-        <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加用户</el-button>
-      </div>
-      <div class="item-row-detail-table">
-        <table>
-          <tbody>
-          <tr><th>用户名</th><td>{{curUser.login_id}}</td></tr>
-          <tr><th>姓名</th><td>{{curUser.name}}</td></tr>
-          <tr><th>电话号码</th><td>{{curUser.phone}}</td></tr>
-          <tr><th>Email</th><td>{{curUser.mail}}</td></tr>
-          <tr><th>所在部门</th><td>{{curUser.departmentText}}</td></tr>
-          <tr><th>分配角色名称</th><td>{{curUser.roleText}}</td></tr>
-          </tbody>
-        </table>
+        <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除机构</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加机构</el-button>
       </div>
     </div>
     <AddUser v-if="showAdd" :curUserId='curUser.id' :isEdit="isEdit"/>
@@ -74,17 +57,13 @@
           label:'text',
           children: 'nodes',
         },
-        id:'',
-        login_id:'',
-        mail:'',
-        phone:'',
-        tableData:{},
-        curPage:1,
+        parent:0,
+        departList:{},
         showAdd:false,
-        curUser:{},
-        isEdit:false,
-        department:1,
-        roleList:{}
+        did:'',
+        name:'',
+        abbr:'',
+        curPage:1
       }
     },
     methods: {
@@ -94,18 +73,12 @@
       },
       onClickItemTree(val){
         this.showAdd=false
-        this.department=val.id
-        this.getUserList()
+        this.parent=val.id
+        this.queryDeptList()
       },
-      async getUserList(){
-        let res = await CommonApi.getUserList({
-          id:this.id,
-          login_id:this.login_id,
-          mail:this.mail,
-          phone:this.phone,
-          department:this.department,
-          page:this.curPage,
-          size:10
+      async queryDeptList(){
+        let res  = await CommonApi.queryDeptList({
+          parent:this.parent
         })
         if(!res || !res.total){
           res={
@@ -113,41 +86,18 @@
             total:0
           }
         }
-        res.rows.map((item)=>{
-          this.treeList.map((tree)=>{
-            if(item.department==tree.id){
-              item.departmentText=tree.text
-            }
-          })
-           this.roleList.rows.map((role)=>{
-             if(item.department==role.id){
-               item.roleText=role.name
-             }
-           })
-        })
         res.labelList=[{name:'',prop:'',type:'selection'},
-                        {name:'编号',prop:'id'},
-                       {name:'用户名',prop:'login_id'},
-                       {name:'姓名',prop:'name'},
-                       {name:'E-mail',prop:'mail'},
-                       {name:'电话号码',prop:'phone'}]
+          {name:'编号',prop:'did'},
+          {name:'机构简称',prop:'name'},
+          {name:'机构全称',prop:'abbr'}]
         res.dataList=res.rows
         res.hideExportBtn=true
         res.showOpertor=true
-        this.tableData=res
-        if(res.rows.length){
-          this.curUser=res.rows[0]
-        }else{
-          this.curUser={}
-        }
+        this.departList=res
       },
       onClickSearchBtn(){
         this.curPage=1
         this.getUserList()
-      },
-      onClickExportBtn(){
-        let url = `${window.gateway}/vibe-web/user/report?type=xlsx&id=${this.id}&login_id=${this.login_id}&mail=${this.mail}&phone=${this.phone}`;
-        location.href = url
       },
       deleteRow(data){
         this.deleteId=data.id
@@ -201,14 +151,10 @@
       rowClick(row){
         this.curUser=row
       },
-      async getRoleList(){
-        this.roleList = await CommonApi.getRoleList()
-      }
     },
     async mounted(){
       await this.getUserTree()
-      await this.getRoleList()
-      this.getUserList()
+      await this.queryDeptList()
     }
   }
 </script>
