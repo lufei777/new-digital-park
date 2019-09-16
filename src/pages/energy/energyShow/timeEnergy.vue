@@ -20,6 +20,9 @@
     methods: {
     },
     mounted(){
+    },
+    created(){
+      this.$store.commit("conditionSelect/tbhbEnergy",[{id:44,name:'空调用电'}])
     }
   }
 </script>

@@ -1,14 +1,16 @@
 <template>
-  <div class="father-nav flex-align-around">
+  <div class="father-nav flex-align-around" :style="{backgroundImage:'url('+fatherBg+')'}">
     <div class="sys-title">{{sysTitle}}</div>
     <div class="father-nav-list flex-align-around">
       <div v-for="(item,index) in menuData.children" :key="index" class="father-item"
            @mouseenter="changeBg(item,1)" @mouseleave="changeBg(item,-1)"
            @click="clickChangeBg(index)"
-           :class="(item.bgFlag==-1 && item.clickFlag!=1)?'':'activeBg'"
+
+           :style="activeBg(item)"
       >
         <span>{{item.caption}}</span>
-        <div class="child-nav-list" v-if="item.children && item.children.length && item.showChild==1">
+        <div class="child-nav-list" :style="{backgroundImage:'url('+childBg+')'}"
+             v-if="item.children && item.children.length && item.showChild==1">
           <div v-for="(child,i) in item.children" :key="i" class="child-item"
                @mouseenter="changeBg(child,1)" @mouseleave="changeBg(child,-1)"
                @click.stop="clickChangeChild(index,i)"
@@ -35,6 +37,9 @@
 <script>
   import CommonApi from '../../service/api/commonApi'
   import CommonData from '../../utils/commonData'
+  import nav1 from '../../../static/image/nav1.png'
+  import nav2 from '../../../static/image/nav2.png'
+  import hover_bg from '../../../static/image/nav_hover.png'
   export default {
     name: 'navList',
     components: {
@@ -43,7 +48,10 @@
       return {
         menuData:{},
         sysTitle:{},
-        showOut:false
+        showOut:false,
+        fatherBg:nav1,
+        childBg:nav2,
+        hover_bg:hover_bg
       }
     },
     computed:{
@@ -177,9 +185,20 @@
       sureLogOut(){
         // Cookies.clear()
         this.$router.push('/login')
+      },
+      activeBg(item){
+        if(item.bgFlag==-1 && item.clickFlag!=1){
+          return {}
+        }else{
+          return {
+            backgroundImage:'url('+this.hover_bg+')',
+            backgroundPosition: '0 0',
+            backgroundSize: '100% 100%'
+          }
+        }
       }
     },
-    async mounted(){
+    mounted(){
       this.getMenus()
       this.getSystemSetting()
     }
@@ -188,7 +207,7 @@
 
 <style lang="less">
   .father-nav{
-    background: url("../../../static/image/nav1.png");
+    /*background: url("../../../static/image/nav1.png");*/
     width:100%;
     height: 50px;
     padding: 0 20px;
@@ -217,7 +236,7 @@
         line-height: 50px;
       }
       .activeBg{
-        background-image: url("../../../static/image/nav_hover.png");
+        /*background-image: var(--hover_bg);*/
         background-position: 0 0;
         background-size: 100% 100%;
       }
@@ -254,7 +273,7 @@
     }
   }
   .child-nav-list{
-    background: url('../../../static/image/nav2.png');
+    /*background: url('../../../static/image/nav2.png');*/
     height: 35px;
     width: 100%;
     position: absolute;

@@ -125,6 +125,12 @@
           size:10
         }
         let res = await CommonApi.getMeterTable(params)
+        if(!res || !res.total){
+          res={
+            rows:[],
+            total:0
+          }
+        }
         res.labelList=[{name:'',prop:'',type:'selection'},
           {name:'编号',prop:'id'},
           {name:'工程名称',prop:'name'},
@@ -135,7 +141,7 @@
         res.hideExportBtn=true
         res.showOpertor=true
         this.tableData=res
-        this.curTableData=res.rows
+        if(res.total) this.curTableData=res.rows[0]
       },
       onClickItemTree(val){
         this.parentMeter=val.id

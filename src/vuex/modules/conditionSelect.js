@@ -7,8 +7,8 @@ const state = {
   lastTime:'',
   checkedFloorList:[],
   energy:[{
-    id:'',
-    name:''
+    id:'34',
+    name:'电'
   }],
   tbhbSelectType:'2',
   tbhbRadioType:0,
@@ -25,8 +25,11 @@ const state = {
   typeLastTime:'',
   typeCheckedFloorList:[],
   typeEnergy:[{
-    id:'',
-    name:''
+    id:'44',
+    name:'空调用电'
+  },{
+    id:'45',
+    name:'照明用电'
   }],
   activeIndex:1,
   curModule:1 //1代表统计分析模块的同比环比分析，2能耗展示模块的分时能耗、3分项能耗

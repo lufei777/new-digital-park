@@ -18,6 +18,9 @@
     methods: {
     },
     mounted(){
+    },
+    created(){
+      this.$store.commit("conditionSelect/tbhbEnergy",[{id:34,name:'电'}])
     }
   }
 </script>

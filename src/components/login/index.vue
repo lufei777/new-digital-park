@@ -1,5 +1,5 @@
 <template>
-  <div class="login-wrapper flex-align-center">
+  <div class="login-wrapper flex-align-center" :style="{background:'url('+loginBg+')'}">
     <div class="login-inner flex">
       <img src="../../../static/image/login_info.jpg" alt="">
       <div class="login-box">
@@ -13,6 +13,7 @@
 
 <script>
   import axios from 'axios'
+  import loginBg from '../../../static/image/login_bg.jpg'
   export default {
     name: 'CommonLogin',
     components: {
@@ -21,7 +22,8 @@
     data () {
       return {
         name:'',
-        pwd:''
+        pwd:'',
+        loginBg:loginBg
       }
     },
     methods: {
@@ -60,7 +62,7 @@
   .login-wrapper{
     width:100%;
     height:100%;
-    background: url("../../../static/image/login_bg.jpg");
+    /*background: url("../../../static/image/login_bg.jpg");*/
     .login-inner{
       width:1200px;
       align-items: center;

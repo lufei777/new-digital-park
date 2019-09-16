@@ -3,15 +3,15 @@
 import Vue from 'vue'
 
 import Vuex from 'vuex'
-import store from '../vuex/store'
+import store from './vuex/store'
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
 import VueRouter from 'vue-router'
-import routes from '../router/energy-router'
+import routes from './router/index'
 
-import App from '../App'
+import App from './App'
 
 Vue.use(ElementUI)
 Vue.use(VueRouter)
@@ -28,7 +28,7 @@ moment.locale('zh-cn');//需要汉化
 
 
 let router = new VueRouter({
-    routes
+  routes
 })
 
 Vue.config.productionTip = false

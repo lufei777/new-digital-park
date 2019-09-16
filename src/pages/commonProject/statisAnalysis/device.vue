@@ -99,6 +99,7 @@
   .device-analysis{
     margin-top: 85px;
     padding:0 20px;
+    overflow: hidden;
     .tip{
       height: 66px;
       border-bottom: 1px solid #eaeaea;
