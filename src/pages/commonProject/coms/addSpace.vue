@@ -1,0 +1,150 @@
+<template>
+  <div class="add-space">
+    <div class="tip flex-align">
+      <span class="icon"></span>
+      <span>{{tipText}}</span>
+    </div>
+    <el-form ref="spaceForm" :rules="rules" :model="spaceForm" label-position="right" label-width="120px" >
+      <el-form-item label="名称" prop="caption">
+        <el-input v-model="spaceForm.caption"></el-input>
+      </el-form-item>
+      <el-form-item label="工程用名" prop="name">
+        <el-input v-model="spaceForm.name"></el-input>
+      </el-form-item>
+      <el-form-item label="描述" prop="memo">
+        <el-input v-model="spaceForm.memo" type="textarea" rows="4" :maxlength="255"></el-input>
+        <span class="memo-length-tip">{{this.spaceForm.memo.length}}/255</span>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="submitForm('spaceForm')">确定</el-button>
+        <el-button @click="goBack" class="go-back">返回</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
+</template>
+
+<script>
+  import CommonApi from '../../../service/api/commonApi'
+  export default {
+    name: 'AddUser',
+    components: {
+    },
+    props:['curSpaceId','isEdit'],
+    data () {
+      return {
+        spaceForm:{
+          caption:'',
+          name:'',
+          memo:'',
+          kind:'SPACE',
+          typeName:'3DSpace',
+          parentId:0  //目前写死，建议设计改进
+        },
+        rules: {
+          caption:[{ required: true, message: '请输入空间名称', trigger: 'blur' }],
+          name:[{ required: true, message: '请输入空间工程用名', trigger: 'blur' }],
+        },
+        roleList:[],
+        showDialog:false,
+        departmentList:[]
+      }
+    },
+    computed:{
+      tipText(){
+        return this.isEdit?'编辑空间':'添加空间'
+      }
+    },
+    watch:{
+    },
+    methods: {
+      async getItemUser(){
+        let res =await CommonApi.getItemUser({
+          id:this.curUserId
+        })
+        this.userForm={
+          id:this.curUserId,
+          login_id:res.login_id,
+          name:res.name,
+          password:res.password,
+          re_password:res.password,
+          mail:res.mail,
+          phone:res.phone,
+          department:res.department,
+          rid:res.rlist[0].id,
+        }
+      },
+      async getRoleList(){
+        let res  = await CommonApi.getRoleList()
+        this.roleList=res.rows
+        this.userForm.rid=res.rows[0] && res.rows[0].id
+      },
+      submitForm(formName){
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.addSpace()
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      async addSpace(){
+        let res
+        if(this.isEdit){
+          res = await CommonApi.editUser(this.spaceForm)
+        }else{
+          res = await CommonApi.addSpace(this.spaceForm)
+        }
+        this.$message({
+          type: 'success',
+          message: this.isEdit?'修改成功！':'添加成功！',
+          duration:1000
+        });
+        this.$parent.showAdd=false
+        this.$parent.getSpaceList()
+      },
+      goBack(){
+        this.$parent.showAdd=false
+      },
+      async getDepartmentList(){
+        let res = await CommonApi.getDepartmentList()
+        this.departmentList=res
+        this.userForm.department=res[0] && res[0].id
+      }
+    },
+    mounted(){
+     if(this.isEdit){
+        this.getItemUser()
+      }
+    }
+  }
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="less">
+  .add-space{
+    width:83%;
+    padding:10px;
+    float: right;
+    box-sizing: border-box;
+    background: @white;
+    .el-form{
+      width:50%;
+      margin:30px auto;
+    }
+    .el-input{
+      width:60%;
+    }
+    .go-back{
+      background: #ecf5ff;
+      color:#3a8ee6;
+      border-color:#c6e2ff;
+    }
+    .el-input{
+      width:280px;
+    }
+    .memo-length-tip{
+      float: right;
+    }
+  }
+</style>

@@ -176,6 +176,14 @@ class CommonApi {
   @url('/vibe-web/dept/queryDeptList')
   @get
   queryDeptList(){}
+
+  @url('/vibe-web/space/spaceList')
+  @get
+  getSpaceList(){}
+
+  @url('/vibe-web/asset/assetAdd')
+  @post
+  addSpace(){}
 }
 
 export default new CommonApi()

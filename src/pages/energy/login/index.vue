@@ -19,4 +19,7 @@
 </script>
 
 <style lang="less">
+  .energy-index{
+    height: 100%;
+  }
 </style>

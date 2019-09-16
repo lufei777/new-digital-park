@@ -355,7 +355,7 @@ class commonData {
           "name": "space",
           "caption": "空间管理",
           "catalog": null,
-          "url": "/html/space/space_index.html",
+          "url": "/spaceManage",
           "sequence": 4,
           "icon": null,
           "permisionList": ["空间查看", "空间添加", "空间修改", "空间删除"],
