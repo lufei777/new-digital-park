@@ -16,7 +16,7 @@ let resetLoading = function() {
 
 var config = {};
 
-config.baseURL ='/api'
+// config.baseURL ='/api'
 
 var axios = axiosOrigin.create(config);
 
