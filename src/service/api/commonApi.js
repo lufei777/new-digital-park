@@ -182,8 +182,12 @@ class CommonApi {
   getSpaceList(){}
 
   @url('/vibe-web/asset/assetAdd')
-  @post
+  @get
   addSpace(){}
+
+  @url('/vibe-web/asset/deleteAsset')
+  @get
+  deleteSpace(){}
 }
 
 export default new CommonApi()

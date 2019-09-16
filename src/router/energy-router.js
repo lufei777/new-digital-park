@@ -9,7 +9,11 @@ import NightWater from '../pages/energy/energySaving/nightWater.vue'
 import ElecDiffer from '../pages/energy/energySaving/elecDiffer.vue'
 import NightElec from '../pages/energy/energySaving/nightElec.vue'
 import EnergyLogin from '../pages/energy/login/index.vue'
-import CommonRouter from './commonRouter/index'
+
+import StatisAnalysis from './commonRouter/statisAnalysis'
+import SystemManage from './commonRouter/systemManage'
+import DeviceRecord from './commonRouter/deviceRecord'
+import Collect from './commonRouter/collect'
 export default [{
   path: '/',
   redirect: '/login'
@@ -57,5 +61,6 @@ export default [{
     path: '/energy/nightElec',
     name: 'NightElec',
     component: NightElec,
-  }].concat(CommonRouter)
+  }].concat(StatisAnalysis).concat(SystemManage)
+    .concat(DeviceRecord).concat(Collect)
 }]

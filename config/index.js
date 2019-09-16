@@ -50,7 +50,7 @@ module.exports = {
 
     // Paths
     //不同文件名对应不同服务
-    assetsRoot: path.resolve(__dirname, `../${distName}`),
+    assetsRoot: path.resolve(__dirname, `../dist`),
     assetsSubDirectory: 'static',
     assetsPublicPath: './',
 
