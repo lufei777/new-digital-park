@@ -1,5 +1,5 @@
 <template>
-  <div class="device-analysis">
+  <div class="correlation">
     <div class="tip flex-align">
       <span class="icon"></span>
       <span>相关性分析</span>
@@ -205,7 +205,7 @@
 </script>
 
 <style lang="less">
-  .device-analysis{
+  .correlation{
     margin-top: 85px;
     padding:0 20px;
     .tip{
@@ -226,6 +226,7 @@
     .chart-box{
       width:80%;
       margin:20px auto;
+      overflow:hidden;
     }
     .my-chart{
       width: 60%;
