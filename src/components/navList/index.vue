@@ -199,7 +199,7 @@
         }
       },
       alarmWebSocket(){
-        let wsUrl=`${window.websocketUrl}/vibe-web/websocket`
+        let wsUrl=`${window.websocketBaseUrl}/vibe-web/websocket`
         this.ws = new WebSocket(wsUrl);//这里面的this都指向vue
         this.ws.onopen = this.websocketOpen;
         this.ws.onmessage = this.websocketOnMessage;

@@ -151,7 +151,7 @@ export default {
       }
     },
     async exportList() {
-      let url = `${window.gateway}/vibe-web/energyCount/energy/elec/export?`;
+      let url = `/api/vibe-web/energyCount/energy/elec/export?`;
       let params = "";
       for (let key in this.commonParams) {
         params += key + "=" + this.commonParams[key] + "&";
