@@ -118,6 +118,7 @@
     .chart-box{
       width:80%;
       margin:20px auto;
+      overflow: hidden;
     }
     .my-chart{
       height:500px;
