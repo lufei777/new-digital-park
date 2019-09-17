@@ -14,6 +14,7 @@ import StatisAnalysis from './commonRouter/statisAnalysis'
 import SystemManage from './commonRouter/systemManage'
 import DeviceRecord from './commonRouter/deviceRecord'
 import Collect from './commonRouter/collect'
+import DataReport from './commonRouter/dataReport'
 export default [{
   path: '/',
   redirect: '/login'
@@ -63,4 +64,5 @@ export default [{
     component: NightElec,
   }].concat(StatisAnalysis).concat(SystemManage)
     .concat(DeviceRecord).concat(Collect)
+    .concat(DataReport)
 }]

@@ -57,26 +57,17 @@
     watch:{
     },
     methods: {
-      async getItemUser(){
-        let res =await CommonApi.getItemUser({
-          id:this.curUserId
+      async getItemSpaceDetail(){
+        let res =await CommonApi.getItemSpaceDetail({
+          id:this.curSpaceId,
+          kind:'SPACE'
         })
-        this.userForm={
-          id:this.curUserId,
-          login_id:res.login_id,
+        this.spaceForm={
+          id:this.curSpaceId,
+          caption:res.caption,
           name:res.name,
-          password:res.password,
-          re_password:res.password,
-          mail:res.mail,
-          phone:res.phone,
-          department:res.department,
-          rid:res.rlist[0].id,
+          memo:res.memo
         }
-      },
-      async getRoleList(){
-        let res  = await CommonApi.getRoleList()
-        this.roleList=res.rows
-        this.userForm.rid=res.rows[0] && res.rows[0].id
       },
       submitForm(formName){
         this.$refs[formName].validate((valid) => {
@@ -91,7 +82,7 @@
       async addSpace(){
         let res
         if(this.isEdit){
-          res = await CommonApi.editUser(this.spaceForm)
+          res = await CommonApi.editSpace(this.spaceForm)
         }else{
           res = await CommonApi.addSpace(this.spaceForm)
         }
@@ -106,21 +97,15 @@
       goBack(){
         this.$parent.showAdd=false
       },
-      async getDepartmentList(){
-        let res = await CommonApi.getDepartmentList()
-        this.departmentList=res
-        this.userForm.department=res[0] && res[0].id
-      }
     },
     mounted(){
      if(this.isEdit){
-        this.getItemUser()
+        this.getItemSpaceDetail()
       }
     }
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
   .add-space{
     width:83%;

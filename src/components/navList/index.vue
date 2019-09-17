@@ -51,7 +51,8 @@
         showOut:false,
         fatherBg:nav1,
         childBg:nav2,
-        hover_bg:hover_bg
+        hover_bg:hover_bg,
+        ws:''
       }
     },
     computed:{
@@ -196,11 +197,34 @@
             backgroundSize: '100% 100%'
           }
         }
+      },
+      alarmWebSocket(){
+        let wsUrl=`${window.websocketUrl}/vibe-web/websocket`
+        this.ws = new WebSocket(wsUrl);//这里面的this都指向vue
+        this.ws.onopen = this.websocketOpen;
+        this.ws.onmessage = this.websocketOnMessage;
+        this.ws.onclose = this.websocketClose;
+        this.ws.onerror = this.websocketError;
+      },
+      websocketOpen(){
+        this.ws.send('alarm');
+        console.log('websocket连接成功，alarm已发送');
+      },
+      websocketOnMessage(data){
+        console.log(111,data)
+      },
+      websocketClose(){
+        console.log("websocket连接已断开！");
+        this.ws.close();
+      },
+      websocketError(){
+        console.log("WebSocket连接失败");
       }
     },
-    mounted(){
+    async mounted(){
       this.getMenus()
-      this.getSystemSetting()
+      await this.getSystemSetting()
+      this.alarmWebSocket()
     }
   }
 </script>
