@@ -188,6 +188,18 @@ class CommonApi {
   @url('/vibe-web/asset/deleteAsset')
   @get
   deleteSpace(){}
+
+  @url('/vibe-web/asset/toAssetEdit')
+  @get
+  getItemSpaceDetail(){}
+
+  @url('/vibe-web/asset/assetEdit')
+  @get
+  editSpace(){}
+
+  @url('/vibe-web/energy/preview')
+  @get
+  previewReportData(){}
 }
 
 export default new CommonApi()

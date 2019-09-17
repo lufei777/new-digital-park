@@ -133,7 +133,7 @@
         this.deleteTip()
       },
       async sureDelete(){
-        await CommonApi.deleteUser({
+        await CommonApi.deleteSpace({
           ids:this.deleteId,
         })
         this.$message({
