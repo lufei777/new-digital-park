@@ -22,6 +22,7 @@
     methods: {
     },
     mounted(){
+      document.title='能源管理'
     }
   }
 </script>

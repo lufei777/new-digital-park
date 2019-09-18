@@ -200,6 +200,14 @@ class CommonApi {
   @url('/vibe-web/energy/preview')
   @get
   previewReportData(){}
+
+  @url('/oaApi/asset/list')
+  @get
+  getAssetList(){}
+
+  @url('/oaApi/login')
+  @get
+  login(){}
 }
 
 export default new CommonApi()

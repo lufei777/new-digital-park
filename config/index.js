@@ -10,24 +10,31 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': {
+      '/vibe-web': {
         target:'http://192.168.1.87:8080',//后端接口地址
-        changeOrigin: true,//是否允许跨越
-        pathRewrite: {
-          '^/api': '',//重写,
-        }
-      }
+        // changeOrigin: true,//是否允许跨越
+        // pathRewrite: {
+        //   '^/api': '',//重写,
+        // }
+      },
+      '/oaApi': {
+        target:'http://192.168.1.69:8002',//后端接口地址
+        // changeOrigin: true,//是否允许跨越
+        // pathRewrite: {
+        //   '^/oaApi': '',//重写,
+        // }
+      },
     },
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
+    host: '0.0.0.0', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 
-    
+
     /**
      * Source Maps
      */
