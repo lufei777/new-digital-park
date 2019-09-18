@@ -108,7 +108,7 @@
         this.tableData = await CommonApi.previewReportData(this.commonParams)
       },
       onClickExportBtn(){
-        let url=`${window.gateway}/vibe-web/energy/export?`
+        let url=`/api/vibe-web/energy/export?`
         let params=''
         for(let key in this.commonParams){
           params+=key+'='+this.commonParams[key]+'&'

@@ -172,7 +172,7 @@
         this.getTypeTable()
       },
       async handleExport(){
-        let url=`${window.gateway}/vibe-web/energyCount/energy/energy_typeBiaoExcel?`
+        let url=`/api/vibe-web/energyCount/energy/energy_typeBiaoExcel?`
         let params=''
         for(let key in this.commonParams){
           params+=key+'='+this.commonParams[key]+'&'

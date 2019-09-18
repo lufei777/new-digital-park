@@ -173,7 +173,7 @@
         }
       },
       async handleExport(){
-        let url=`${window.gateway}/vibe-web/energyCount/energy/energy_speceExcle?`
+        let url=`/api/vibe-web/energyCount/energy/energy_speceExcle?`
         let params=''
         for(let key in this.commonParams){
           params+=key+'='+this.commonParams[key]+'&'

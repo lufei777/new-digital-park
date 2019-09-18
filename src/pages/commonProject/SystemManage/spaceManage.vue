@@ -124,10 +124,6 @@
         this.curPage=1
         this.getSpaceList()
       },
-      onClickExportBtn(){
-        let url = `${window.gateway}/vibe-web/user/report?type=xlsx&id=${this.id}&login_id=${this.login_id}&mail=${this.mail}&phone=${this.phone}`;
-        location.href = url
-      },
       deleteRow(data){
         this.deleteId=data.id
         this.deleteTip()
