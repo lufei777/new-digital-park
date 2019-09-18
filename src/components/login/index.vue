@@ -36,7 +36,7 @@
             });
             return;
           }
-          axios.get(`/api/vibe-web/login/${this.name}/${this.pwd}`).then((res)=>{
+          axios.get(`${window.gateway}/vibe-web/login/${this.name}/${this.pwd}`).then((res)=>{
             let tmp =res.data.setCookie.split(";")[0].split("=")[1]
             Cookies.set('JSESSIONID',tmp)
             this.$router.push(this.url)

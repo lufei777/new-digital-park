@@ -1,3 +1,5 @@
 import EnergyRouter from './energy-router'
 
-export default EnergyRouter
+import DigitalParkRouter from './digital-park-router'
+
+export default DigitalParkRouter
