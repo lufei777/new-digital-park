@@ -76,53 +76,27 @@ axios.interceptors.response.use(
     // 非接口类 请求，直接返回
     if (!response) response = "";
     if (!response  || !response.status) return response;
-    let data = response.data || "";
-    let code = response.status;
+    let data = response.data
     // token超时需要重新刷新token, 600测试用
     // token超时直接退出
-    if (code == 301) {
-      try {
-        // if (!!Cookies) Cookies.clearAll();
-        window.location.href = "/";
-      } catch (error) {
-        console.log(response, error);
-      }
-      // if(!!Cookies) {
-      //   axios.get(serverUrl+"/sso/oauth2/refresh?accessToken=" + Cookies.get("accessToken") + "&refreshToken=" +  Cookies.get("refreshToken")).then(function(res){
-      //     console.log("res:", res)
-
-      //     axios.get(response.config.url).then((resData) => {
-      //       //更新token
-      //     })
-      //   })
-
-      // }
-    }
-
-    if (code == "OK" || code == 200) {
+    //  console.log('datadata',data,data.successful)
+    if (data.successful) {
       if (process.server) {
         // 服务端打印日志
         console.log("response:", JSON.stringify(data));
       }
       if (data == undefined) return "";
-      return data;
+      return data.data;
     } else {
-      console.log("axios加载失败:", response.data);
+      return data
     }
-    return response;
   },
   function(error) {
     // Do something with response erro
     try {
       let redirect = error.response.headers["X-SSO-Redirect"] || error.response.headers["x-sso-redirect"];
       if(error.response && error.response.status == 401 && redirect){
-        if(sessionStorage.token){
-          sessionStorage.removeItem("token");
-          sessionStorage.removeItem("logined")
-          axios.get("/oaApi/logout");
-        }else{
           window.location = redirect;
-        }
       }
       resetLoading();
       return Promise.reject(error);

@@ -34,6 +34,7 @@
               </el-button>
             </template>
           </el-table-column>
+          <slot name="special-operator"></slot>
           <!--<el-table-column v-if="tableObj.showRoleOperator" fixed="right" label="操作" width="120"  align="right">-->
             <!--<template slot-scope="scope">-->
               <!--<el-button size="small" type="text"-->
@@ -122,6 +123,7 @@
   }
   .table-tip{
     float: left;
+    margin-top: 15px;
   }
   .export-btn{
     float: right;

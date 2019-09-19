@@ -1,5 +1,7 @@
-import AssetMaintenance from '../../pages/commonProject/assetManage/assetMaintenance'
 import AssetManage from '../../pages/commonProject/assetManage/index'
+import AssetMaintenance from '../../pages/commonProject/assetManage/assetMaintenance'
+import AssetGroup from '../../pages/commonProject/assetManage/assetGroup'
+import AssetType from '../../pages/commonProject/assetManage/assetType'
 export default [{
   path:'/assetManage',
   name: 'AssetManage',
@@ -9,5 +11,13 @@ export default [{
     path: '/assetMaintenance',
     name: 'AssetMaintenance',
     component: AssetMaintenance,
+  }, {
+    path: '/assetGroup',
+    name: 'AssetGroup',
+    component: AssetGroup,
+  },{
+    path: '/assetType',
+    name: 'AssetType',
+    component: AssetType,
   }]
 }]
