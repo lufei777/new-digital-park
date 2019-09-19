@@ -208,6 +208,14 @@ class CommonApi {
   @url('/oaApi/login')
   @get
   login(){}
+
+  @url('/oaApi/asset/findAllAssetType')
+  @get
+  getAssetTypeList(){}
+
+  @url('/oaApi/asset/detail')
+  @get
+  getAssetDetail(){}
 }
 
 export default new CommonApi()

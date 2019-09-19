@@ -5,6 +5,7 @@ import test from './modules/test'
 import conditionSelect from './modules/conditionSelect'
 import analysis from './modules/analysis'
 import energySavingSelect from './modules/energySavingSelect'
+import assetManage from './modules/assetManage'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -12,6 +13,7 @@ export default new Vuex.Store({
     test,
     conditionSelect,
     analysis,
-    energySavingSelect
+    energySavingSelect,
+    assetManage
   }
 })

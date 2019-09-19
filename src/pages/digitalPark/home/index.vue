@@ -74,6 +74,7 @@
 <style lang="less">
   .home-page{
     height: 100%;
+    font-size: 12px;
     .carousel-img{
       width:100%;
       height:550px;

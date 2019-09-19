@@ -359,7 +359,7 @@
       overflow: hidden;
     }
     .my-chart{
-      width: 100%;
+      /*width: 100%;*/
       height:450px;
       padding-top:20px;
     }

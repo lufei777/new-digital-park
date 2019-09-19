@@ -197,7 +197,7 @@
      margin-top: 30px;
      background: @white;
      overflow: hidden;
-     width: 100%;
+     /*width: 100%;*/
      height:450px;
      padding:20px 5px 5px 5px;
    }
