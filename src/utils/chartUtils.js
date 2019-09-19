@@ -25,6 +25,9 @@ class chartUtils {
       legend: {
         data: data.legendData
       },
+      tooltip:{
+        trigger: 'axis'
+      },
       calculable: true,
       xAxis: [{
         type: 'category',

@@ -129,6 +129,7 @@
           {name:'其他用水',prop:'qtWater',sort:'custom'}]
         res.dataList=res.value
         res.tableTip='A3能耗展示排名'
+        res.hideExportBtn=true
         this.tableData=res
       },
       sortTable(column){
