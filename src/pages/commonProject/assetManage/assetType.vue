@@ -1,23 +1,32 @@
 <template>
   <div class="asset-type">
-    <el-button type="primary"  @click="onClickAddBtn">新建</el-button>
-    <!--<addAssetType :showAdd="showAdd" :isEdit="isEdit"/>-->
+    <div class="flex-row-reverse operator-box">
+      <el-button type="primary"  @click="showDeleteTip">批量删除</el-button>
+      <el-button type="primary"  @click="onClickAddBtn">新建</el-button>
+    </div>
+    <addAssetType :showAdd="showAdd" :isEdit="isEdit" :editId="curTypeId"/>
+    <CommonTable :tableObj="assetTypeData" :curPage="1" />
   </div>
 </template>
 
 <script>
-  import AddAssetGroup from '../coms/addAssetType'
+  import AddAssetType from '../coms/addAssetType'
+  import CommonTable from '../../../components/commonTable/index'
   import CommonApi from '../../../service/api/commonApi'
+  import CommonFun from '../../../utils/commonFun'
   export default {
     name: 'AssetType',
     components: {
-      AddAssetGroup
+      AddAssetType,
+      CommonTable
     },
     data () {
       return {
         showAdd:false,
         isEdit:false,
-        assetTypeData:{}
+        assetTypeData:{},
+        curPage:1,
+        curTypeId:''
       }
     },
     methods:{
@@ -26,11 +35,43 @@
         this.isEdit=false
       },
       async getAssetTypeList(){
-        let res = await CommonApi.getAssetTypeList()
-        res.labelList=[{name:'名称',prop:'name'},
-          {name:'描述',prop:'remark'},
-          {name:'类型编码',prop:'id'}]
-
+        let res = await CommonApi.getAssetTypeList({
+          pageNum:this.curPage,
+          size:10
+        })
+        res.labelList=[{name:'',prop:'',type:'selection'},
+          {name:'名称',prop:'name'},
+          {name:'描述',prop:'description'},
+          {name:'类型编码',prop:'code'}]
+        res.dataList = res.list
+        res.showOpertor=true
+        this.assetTypeData=res
+      },
+      deleteRow(row){
+        this.curTypeId=row.id
+        this.showDeleteTip()
+      },
+      editRow(row){
+        this.curTypeId=row.id
+        this.isEdit=true
+        this.showAdd=true
+      },
+      showDeleteTip(){
+        CommonFun.deleteTip(this,this.curTypeId,'请至少选择一个资产类型！',this.sureDelete)
+      },
+      async sureDelete(){
+        await CommonApi.deleteAssetType({
+           assetTypeId:this.curTypeId
+       })
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+        this.getAssetTypeList()
+      },
+      handleSelectionChange(val){
+        let tmp=val.map((item)=>item.id)
+        this.curTypeId=tmp.join(",")
       }
     },
     mounted(){
@@ -42,5 +83,11 @@
 <style lang="less">
   .asset-type{
     height: 100%;
+    .operator-box{
+      padding:20px;
+      .el-button{
+        margin:0 10px;
+      }
+    }
   }
 </style>
