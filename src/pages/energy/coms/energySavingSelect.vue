@@ -48,7 +48,7 @@
         ></el-date-picker>
       </div>
       <el-button type="primary" @click="getList">查询</el-button>
-      <el-button type="primary" @click="exportList">导出</el-button>
+      <el-button type="primary" @click="exportList" v-if="tableData.total && tableData.total!=0">导出</el-button>
     </div>
     <div class="tabulation">
       <div class="tab-title flex-align-between">
@@ -189,7 +189,8 @@ export default {
       }
     }
     .el-button {
-       margin-left: -50px;
+      //  margin-left: -40px;
+      width: 5%;
     }
   }
   .tabulation .tab-title {
