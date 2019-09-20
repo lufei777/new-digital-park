@@ -37,7 +37,7 @@
       </div>
       <el-button type="primary" @click="getAutoCollectList">确定</el-button>
     </div>
-    <CommonTable  :tableObj="tableData" :curPage="curPage"/>
+    <CommonTable  :tableObj="tableData" :curPage="curPage" :showExportBtn="true"/>
   </div>
 </template>
 
