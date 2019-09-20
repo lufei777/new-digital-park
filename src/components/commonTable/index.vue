@@ -2,7 +2,7 @@
   <div>
         <div>
           <h3 class="table-tip" v-if="tableObj.tableTip">{{tableObj.tableTip}}</h3>
-          <el-button v-if='tableObj.total && tableObj.total!=0&&!tableObj.hideExportBtn' type="primary"
+          <el-button v-if='tableObj.total && tableObj.total!=0&&tableObj.showExportBtn' type="primary"
                      class="export-btn" @click="handleExport">
             导出表格
           </el-button>
