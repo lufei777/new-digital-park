@@ -9,7 +9,7 @@
         </div>
         <el-table  :data="tableObj.dataList" border
                    @sort-change='sortTable'
-                   @row-click="rowClick"
+                   @row-click.self="rowClick"
                    @selection-change="handleSelectionChange"
         >
           <af-table-column v-for="(item,index) in tableObj.labelList"
@@ -22,7 +22,7 @@
                            align="right"
           >
           </af-table-column>
-          <af-table-column v-if="tableObj.showOpertor" fixed="right" label="操作" width="120"  align="right">
+          <el-table-column v-if="tableObj.showOpertor" fixed="right" label="操作" width="120"  align="right">
             <template slot-scope="scope">
               <el-button size="small" type="text"
                @click.native.prevent="editRow(scope.$index, tableObj.dataList)" >
@@ -33,7 +33,7 @@
                 删除
               </el-button>
             </template>
-          </af-table-column>
+          </el-table-column>
           <slot name="special-operator"></slot>
         </el-table>
         <div class="page-box" v-if="tableObj.total && tableObj.total!=0">
