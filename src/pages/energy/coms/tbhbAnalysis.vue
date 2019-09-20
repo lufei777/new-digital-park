@@ -11,7 +11,7 @@
         <div ref="myChart2" class="my-chart category-chart"></div>
       </div>
       <div class="table-box">
-        <CommonTable :tableObj="tableData" :curPage="curPage"/>
+        <CommonTable :tableObj="tableData" :curPage="curPage" :showExportBtn="true"/>
       </div>
     </div>
   </div>

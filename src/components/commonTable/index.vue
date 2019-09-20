@@ -2,7 +2,7 @@
   <div>
         <div>
           <h3 class="table-tip" v-if="tableObj.tableTip">{{tableObj.tableTip}}</h3>
-          <el-button v-if='tableObj.total && tableObj.total!=0&&tableObj.showExportBtn' type="primary"
+          <el-button v-if='tableObj.total && tableObj.total!=0&&showExportBtn' type="primary"
                      class="export-btn" @click="handleExport">
             导出表格
           </el-button>
@@ -50,7 +50,7 @@
 <script>
   export default {
     name:'CommonTable',
-    props:['tableObj','curPage'],
+    props:['tableObj','curPage','showExportBtn'],
     components: {
     },
     data () {
