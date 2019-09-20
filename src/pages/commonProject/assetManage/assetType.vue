@@ -27,9 +27,10 @@
       },
       async getAssetTypeList(){
         let res = await CommonApi.getAssetTypeList()
-        res.labelList=[{name:'编号',prop:'coding'},
-          {name:'名称',prop:'name'},
-          {name:'资产组',prop:'groupName'}]
+        res.labelList=[{name:'名称',prop:'name'},
+          {name:'描述',prop:'remark'},
+          {name:'类型编码',prop:'id'}]
+
       }
     },
     mounted(){

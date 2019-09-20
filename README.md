@@ -55,7 +55,7 @@
   1）labelList对象---prop:属性，name:名称，sort：是否排序，'不传/false'不排序，'custom'排序。
   2）dataList对象 
   3）tableTip 表格提示性文字 不传则不显示
-  4）hideExportBtn 是否显示导出按钮 默认不传即显示
+  4）showExportBtn 是否显示导出按钮 默认不传即不显示
 2.需要格式化某些列，可以在组件的formatSpecialCol方法中编写逻辑
 
 二、chartUtils封装 
