@@ -232,6 +232,14 @@ class CommonApi {
   @url('/oaApi/assetType/delete')
   @get
   deleteAssetType(){}
+
+  @url('/oaApi/assetGroup/tree')
+  @get
+  getAssetGroupTree(){}
+
+  @url('/oaApi/assetGroup/selectById')
+  @get
+  selectAssetGroupById(){}
 }
 
 export default new CommonApi()
