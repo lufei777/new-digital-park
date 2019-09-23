@@ -138,10 +138,9 @@
     },
     methods: {
       submitForm(form){
-        this.$parent.showAdd=false
       },
       goBack(){
-        this.$parent.showAdd=false
+        this.$router.replace('/assetMaintenance')
       },
       async getAssetDetail(){
         await CommonApi.getAssetDetail({
@@ -150,7 +149,9 @@
       }
     },
     mounted(){
-      this.getAssetDetail()
+      if(this.isEdit){
+        this.getAssetDetail()
+      }
     }
   }
 </script>

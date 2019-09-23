@@ -39,16 +39,19 @@
         </el-table-column>
       </template>
     </CommonTable>
+    <ChooseAssetType :showAdd="showAdd"/>
   </div>
 </template>
 
 <script>
   import CommonApi from '../../../service/api/commonApi'
   import CommonTable from '../../../components/commonTable/index'
+  import ChooseAssetType from '../coms/assetTypeModal'
   export default {
     name: 'AssetMaintenance',
     components: {
-      CommonTable
+      CommonTable,
+      ChooseAssetType
     },
     data () {
       return {
@@ -57,7 +60,8 @@
         groupName:'',
         assetData:{},
         curPage:1,
-        showMore:false
+        showMore:false,
+        showAdd:false
       }
     },
     methods:{
@@ -90,7 +94,7 @@
         // this.curTypeId=tmp.join(",")
       },
       onClickAddBtn(){
-        this.$router.push('/addAsset')
+        this.showAdd = true
       },
       rowClick(row){
         this.$router.push(`/addAsset?id=${row.id}`)
