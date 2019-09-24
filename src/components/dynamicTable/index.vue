@@ -21,7 +21,7 @@
           </thead>
           <tbody>
           <tr v-for="(item,index) in tableData.value" :key="index">
-            <td v-for="(val,i) in item" :key="i" :class="val>parseInt(item[1])&&styleLabel?'styleRed':''">{{val}}</td>
+            <td v-for="(val,i) in item" :key="i" :class="val>parseFloat(item[1])&&styleLabel?'styleRed':''">{{val}}</td>
           </tr>
           </tbody>
         </table>

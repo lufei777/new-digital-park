@@ -18,8 +18,6 @@ import EnergySavingSelect from '../coms/energySavingSelect'
     computed:{
     },
     methods: {
-     
-      
     },
     mounted(){
     }
