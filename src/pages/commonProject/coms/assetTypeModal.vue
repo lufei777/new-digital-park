@@ -58,7 +58,7 @@
            return;
          }
          this.$parent.showAdd=false
-         this.$router.push('/addAsset')
+         this.$router.push(`/addAsset?typeId=${this.selectType}`)
       }
     },
     mounted(){

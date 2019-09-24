@@ -240,6 +240,18 @@ class CommonApi {
   @url('/oaApi/assetGroup/selectById')
   @get
   selectAssetGroupById(){}
+
+  @url('/oaApi/assetTypeAttribute/getAttrsById')
+  @get
+  getAttributeByType(){}
+
+  @url('/oaApi/provider/selectAll')
+  @get
+  getProviderList(){}
+
+  @url('/oaApi/asset/save')
+  @post
+  addAsset(){}
 }
 
 export default new CommonApi()

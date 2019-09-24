@@ -1,95 +1,83 @@
 <template>
   <div class="add-asset">
-    <!--<el-dialog :title="tipText" :visible.sync="showAdd" width="30%" :show-close="false">-->
       <el-form ref="assetAddForm" :rules="rules" :model="assetAddForm" :inline="true"
-               label-position="right" label-width="100px">
-        <div class="form-inner-tip">基本信息:</div>
+               label-position="right" label-width="120px">
         <el-col>
-          <el-form-item label="名称" prop="name" class="el-col-12">
-            <el-input v-model="assetAddForm.name"></el-input>
+        <el-form-item label="名称" prop="name" class="el-col-12">
+          <el-input v-model="assetAddForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="编号" prop="coding" >
+          <el-input v-model="assetAddForm.coding"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col>
+        <el-form-item label="单位" prop="unit" class="el-col-12">
+          <el-input v-model="assetAddForm.unit"></el-input>
+        </el-form-item>
+        <el-form-item label="品牌" prop="brand" >
+          <el-input v-model="assetAddForm.brand"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col>
+        <el-form-item label="供应商" prop="providerId" class="el-col-12">
+          <el-select v-model="assetAddForm.providerId" placeholder="请选择" @change="onProviderChange">
+            <el-option v-for="item in providerList" :key="item.id" :label="item.name" :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="资产组" prop="groupName" >
+          <el-input v-model="assetAddForm.groupName" @focus="onShowGroup(1)"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col>
+        <el-form-item label="价格" prop="price" class="el-col-12">
+          <el-input v-model="assetAddForm.price"></el-input>
+        </el-form-item>
+        <el-form-item label="所在部门" prop="departmentId" >
+          <el-input v-model="assetAddForm.departmentId"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col>
+        <el-form-item label="当前保管人" prop="currentCustodian" class="el-col-12">
+          <el-input v-model="assetAddForm.currentCustodian"></el-input>
+        </el-form-item>
+        <el-form-item label="前期保管人" prop="previousCustodian" >
+          <el-input v-model="assetAddForm.previousCustodian"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col v-for="(item,index) in assetAddForm.ownAttrList" :key="index">
+        <el-form-item v-for="(child,i) in item" :key="i"
+                      :label="child.attrName"
+                      :prop="'ownAttrList.'+index+'.'+i+'.'+child.attrName"
+                      :class="i%2==0?'el-col-12':''"
+                      :rules="{
+                        required:child.required,message:'请输入'+child.attrName,trigger: 'blur'
+                      }"
+        >
+          <el-input v-model="child[child.attrName]"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col>
+        <el-form-item label="备注" prop="remark" class="el-col-24 remark-el-form">
+          <el-input v-model="assetAddForm.remark" type="textarea" :rows="4"></el-input>
+        </el-form-item>
+      </el-col>
+        <el-button type='primary' @click="addCustomAttr">自定义</el-button>
+        <el-col v-for="(item,index) in assetAddForm.customAttrList" :key="item.key">
+          <el-form-item label="属性名称" class="el-col-12"
+                        :prop="'customAttrList.'+index+'.attr'"
+                        :rules="{
+                          required:true,message:'请输入属性名称',trigger: 'blur'
+                        }">
+            <el-input v-model="item.attr" ></el-input>
           </el-form-item>
-          <el-form-item label="图片" prop="picture" >
-            <el-input v-model="assetAddForm.picture"></el-input>
+          <el-form-item label="属性值" :prop="'customAttrList.'+index+'.value'"
+                        :rules="{
+                          required:true,message:'请输入属性值',trigger: 'blur'
+                        }">
+            <el-input v-model="item.value"></el-input>
           </el-form-item>
         </el-col>
-        <el-col>
-          <el-form-item label="资产组" prop="groupId" class="el-col-12">
-            <el-input v-model="assetAddForm.groupId"></el-input>
-          </el-form-item>
-          <el-form-item label="资产类型" prop="groupId">
-            <el-input v-model="assetAddForm.groupId"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col>
-          <el-form-item label="规格型号" prop="groupId" class="el-col-12">
-            <el-input v-model="assetAddForm.groupId"></el-input>
-          </el-form-item>
-          <el-form-item label="制造厂商" prop="groupId">
-            <el-input v-model="assetAddForm.groupId"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col>
-          <el-form-item label="等级" prop="groupId" class="el-col-12">
-            <el-input v-model="assetAddForm.groupId"></el-input>
-          </el-form-item>
-          <el-form-item label="属性" prop="groupId">
-            <el-input v-model="assetAddForm.groupId"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col>
-          <el-form-item label="计量单位" prop="groupId" class="el-col-12">
-            <el-input v-model="assetAddForm.groupId"></el-input>
-          </el-form-item>
-        </el-col>
-        <div class="form-inner-tip">管理信息:</div>
-        <el-col>
-          <el-form-item label="管理员" prop="groupId" class="el-col-12">
-            <el-input v-model="assetAddForm.groupId"></el-input>
-          </el-form-item>
-          <el-form-item label="所属部门" prop="groupId">
-            <el-input v-model="assetAddForm.groupId"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col>
-          <el-form-item label="单独核算" prop="groupId" class="el-col-12">
-            <el-checkbox v-model="assetAddForm.checked"></el-checkbox>
-          </el-form-item>
-          <el-form-item label="供应商" prop="groupId">
-            <el-input v-model="assetAddForm.groupId"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col>
-          <el-form-item label="替代" prop="groupId" class="el-col-12">
-            <el-input v-model="assetAddForm.groupId"></el-input>
-          </el-form-item>
-          <el-form-item label="版本" prop="groupId">
-            <el-input v-model="assetAddForm.groupId"></el-input>
-          </el-form-item>
-        </el-col>
-        <div class="form-inner-tip">采购信息:</div>
-        <el-col>
-          <el-form-item label="币种" prop="groupId" class="el-col-12">
-            <el-input v-model="assetAddForm.groupId"></el-input>
-          </el-form-item>
-          <el-form-item label="价格" prop="groupId">
-            <el-input v-model="assetAddForm.groupId"></el-input>
-          </el-form-item>
-        </el-col>
-        <div class="form-inner-tip">折旧信息:</div>
-        <el-col>
-          <el-form-item label="折旧年限" prop="groupId" class="el-col-12">
-            <el-input v-model="assetAddForm.groupId"></el-input>
-          </el-form-item>
-          <el-form-item label="残值率" prop="groupId">
-            <el-input v-model="assetAddForm.groupId"></el-input>
-          </el-form-item>
-        </el-col>
-        <div class="form-inner-tip">其他信息:</div>
-        <!--<el-col>-->
-          <el-form-item label="备注" prop="groupId" class="el-col-12">
-            <el-input v-model="assetAddForm.groupId" type="textarea"></el-input>
-          </el-form-item>
-        <!--</el-col>-->
         <el-col>
           <div class="operator-box">
             <el-button @click="goBack" class="go-back">取消</el-button>
@@ -97,7 +85,20 @@
           </div>
         </el-col>
       </el-form>
-    <!--</el-dialog>-->
+     <el-dialog title="选择资产组" :visible.sync="showGroup" width="30%" :show-close="false">
+      <el-tree
+        :data="groupTree"
+        :props="treeProps"
+        node-key="id"
+        @node-click="handleTreeClick"
+        :highlight-current="true"
+      >
+      </el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="onShowGroup(-1)">取 消</el-button>
+        <el-button type="primary" @click="onSureGroupName">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -107,51 +108,202 @@
     name: 'AddAsset',
     components: {
     },
-    props:['showAdd','isEdit'],
+    props:[],
     data () {
       return {
         assetAddForm:{
           name:'',
-          picture:'',
+          brand:'',
+          providerId:'',
+          providerName:'',
+          groupId:'',
           groupName:'',
-          checked:''
+          coding:'',
+          unit:'',
+          currentCustodian:'',
+          previousCustodian:'',
+          departmentId:'',
+          price:'',
+          remark:'',
+          ownAttrList:[],
+          customAttrList:[],
         },
         rules:{
-        }
+          name:[{required:true,message:'请输入资产名称',trigger: 'blur' }],
+          groupName:[{required:true,message:'请选择资产组',trigger: 'blur' }]
+        },
+        providerList:[],
+        groupTree:{},
+        treeProps:{
+          label:'name',
+          children: 'childNode',
+        },
+        showGroup:false,
       }
     },
     computed:{
-      tipText(){
-        return this.isEdit?'编辑资产组':'新增资产组'
-      },
       assetId(){
-        return this.$route.query.id
+        return this.$route.query.assetId
+      },
+      typeId(){
+        return this.$route.query.typeId
       }
     },
     watch:{
-      assetId(){
-        console.log(1)
-        if(this.assetId){
-          this.getAssetDetail()
-        }
-      }
     },
     methods: {
       submitForm(form){
+        this.$refs[form].validate((valid) => {
+          if (valid) {
+            this.addAsset()
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+
       },
       goBack(){
         this.$router.replace('/assetMaintenance')
       },
       async getAssetDetail(){
-        await CommonApi.getAssetDetail({
+        let res = await CommonApi.getAssetDetail({
           assetId:this.assetId
         })
+        this.assetAddForm={...res,...{
+            ownAttrList:[],
+            customAttrList:[],
+        }}
+
+        let ownAttrList =res.assetAttributeValueList
+        ownAttrList.map((item)=>{
+          item[item.attrName]=item.attrValue
+        })
+        console.log('ownList',ownAttrList)
+        let arr=[]
+        for(let i=0;i<ownAttrList.length;i++){
+          let tmp=[]
+          tmp.push(ownAttrList[i])
+          if(ownAttrList[i+1]) tmp.push(ownAttrList[i+1])
+          arr.push(tmp)
+          ownAttrList.shift()
+          // res.shift()
+        }
+        console.log('detail-arr',arr)
+        this.assetAddForm.ownAttrList=arr
+      },
+      async getAttributeByType(){
+        let res = await CommonApi.getAttributeByType({
+          typeId:this.typeId
+        })
+        res.map((item)=>{
+         item[item.attrName]=''
+        })
+        let arr=[]
+        for(let i=0;i<res.length;i++){
+          let tmp=[]
+          tmp.push(res[i])
+          if(res[i+1]) tmp.push(res[i+1])
+          arr.push(tmp)
+          res.shift()
+          // res.shift()
+        }
+        console.log(arr)
+        this.assetAddForm.ownAttrList=arr
+      },
+      async getProviderList(){
+         this.providerList = await CommonApi.getProviderList()
+         // this.providerList.push({
+         //   id:2,
+         //   name:'test'
+         // })
+         this.assetAddForm.providerId=this.providerList[0].id
+         this.assetAddForm.providerName=this.providerList[0].name
+      },
+      async getAssetGroupTree(){
+        let res = await CommonApi.getAssetGroupTree()
+        this.groupTree = res
+        this.assetAddForm.groupId=res[0].id
+        this.assetAddForm.groupName=res[0].name
+      },
+      onShowGroup(flag){
+        this.showGroup=flag==1?true:false
+      },
+      addCustomAttr(){
+        console.log(1)
+        // this.assetAddForm.customAttrList.push({
+        //   value: '',
+        //   key: Date.now()
+        // });
+        this.assetAddForm.customAttrList.push({
+           attr:'',
+           value:'',
+           key:Date.now()
+        })
+      },
+      onSureGroupName(){
+        this.showGroup=false
+      },
+      handleTreeClick(val){
+        this.assetAddForm.groupId=val.id
+        this.assetAddForm.groupName=val.name
+      },
+      async addAsset(){
+        let tmp=[]
+        for(let key in this.assetAddForm){
+          if(key != 'groupName' && key != 'ownAttrList' && key != 'customAttrList'){
+            tmp.push({
+              'attrName':key,
+              'attrValue':this.assetAddForm[key]
+            })
+          }else if(key == 'ownAttrList'){
+            this.assetAddForm.ownAttrList.map((item)=>{
+              item.map((child)=>{
+                tmp.push({
+                  'attrName':child.attrName,
+                  'attrValue':child[child.attrName]
+                })
+              })
+            })
+          }else if(key == 'customAttrList'){
+            this.assetAddForm.customAttrList.map((item)=>{
+              tmp.push({
+                'attrName':item.attr,
+                'attrValue':item.value
+              })
+            })
+          }
+        }
+        tmp.push({
+          'attrName':'typeId',
+          'attrValue':this.typeId
+        })
+        console.log("tmp",tmp)
+        await CommonApi.addAsset(tmp)
+        this.$message({
+          type:'success',
+          message:'添加成功,正在跳转...'
+        })
+        setTimeout(()=>{
+          this.$router.replace('/assetMaintenance')
+        },1000)
+      },
+      onProviderChange(val){
+        let obj = this.providerList.find((item)=>{
+          return item.id==val
+        })
+        this.assetAddForm.providerName=obj.name
       }
     },
     mounted(){
-      if(this.isEdit){
-        this.getAssetDetail()
-      }
+       this.getProviderList()
+       this.getAssetGroupTree()
+       if(this.assetId){
+         this.getAssetDetail()
+       }
+       if(this.typeId){
+         this.getAttributeByType()
+       }
     }
   }
 </script>
@@ -170,6 +322,9 @@
     }
     .go-back{
       margin-left:30%;
+    }
+    .remark-el-form .el-form-item__content{
+      width:80%;
     }
   }
 </style>

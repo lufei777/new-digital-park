@@ -78,7 +78,10 @@
           {name:'编号',prop:'coding'},
           {name:'名称',prop:'name'},
           {name:'资产组',prop:'groupName'},
-          {name:'管理员',prop:'currentCustodian'},
+          {name:'供应商',prop:'providerName'},
+          {name:'资产类型',prop:'typeName'},
+          {name:'部门',prop:'departmentName'},
+          {name:'当前保管人',prop:'currentCustodian'},
           {name:'规格型号',prop:'specification'}]
         res.hideExportBtn=true
         res.dataList=res.list
@@ -97,7 +100,8 @@
         this.showAdd = true
       },
       rowClick(row){
-        this.$router.push(`/addAsset?id=${row.id}`)
+        this.isEdit=true
+        this.$router.push(`/addAsset?assetId=${row.id}&typeId=${row.typeId}`)
       },
       onClickMore(){
         this.showMore=!this.showMore
