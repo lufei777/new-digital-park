@@ -11,7 +11,7 @@
       </div>
       <div class="block flex-align-center">
         <span>资产组</span>
-        <el-input v-model="groupName" @focus="onShowGroup(1)"/>
+        <el-input v-model="groupName" @focus="onShowGroup"/>
       </div>
       <el-button type="primary"  @click="onClickSearchBtn">搜索</el-button>
       <el-button type="primary"  @click="onClickResetBtn">重置</el-button>
@@ -39,22 +39,22 @@
         </el-table-column>
       </template>
     </CommonTable>
-    <ChooseAssetType :showAdd="showAdd"/>
-    <AssetGroupModal :showGroup="showGroup" :sureCallback="onSureGroupName" :cancel-callback="onShowGroup"/>
+    <TreeModal :showTree="showTree" :treeList="treeList"
+               :cancelCallback="hideTreeModal" :sureCallback="onClickTreeModalSureBtn"
+               :tip="modalTip"
+    />
   </div>
 </template>
 
 <script>
-  import CommonApi from '../../../service/api/commonApi'
+  import AssetManageApi from '../../../service/api/assetManageApi'
   import CommonTable from '../../../components/commonTable/index'
-  import ChooseAssetType from '../coms/assetTypeModal'
-  import AssetGroupModal from '../coms/assetGroupModal'
+  import TreeModal from '../coms/treeModal'
   export default {
     name: 'AssetMaintenance',
     components: {
       CommonTable,
-      ChooseAssetType,
-      AssetGroupModal
+      TreeModal,
     },
     data () {
       return {
@@ -64,15 +64,18 @@
         assetData:{},
         curPage:1,
         showMore:false,
-        showAdd:false,
-        showGroup:false
+        showTree:false,
+        showGroup:false,
+        treeList:[],
+        modalTip:'',
+        modalFlag:1//treeModal 代表所有树形弹框 1代表是资产类型 2代表是资产组
       }
     },
     methods:{
       async getAssetList(){
         //status(资产状态)：1-闲置，2-在用，3-报修，4-报废
 
-        let res = await CommonApi.getAssetList({
+        let res = await AssetManageApi.getAssetList({
           coding:this.coding,
           name:this.name,
           groupName:this.groupName,
@@ -94,13 +97,22 @@
         this.curPage=1
         this.getAssetList()
       },
-      onClickResetBtn(){},
+      onClickResetBtn(){
+        this.curPage=1
+        this.groupName=''
+        this.coding=''
+        this.name=''
+        this.getAssetList()
+      },
       handleSelectionChange(val){
         let tmp=val.map((item)=>item.id)
         // this.curTypeId=tmp.join(",")
       },
       onClickAddBtn(){
-        this.showAdd = true
+        this.getAssetTypeList()
+        this.modalTip="选择资产类型"
+        this.showTree = true
+        this.modalFlag=1
       },
       rowClick(row){
         this.isEdit=true
@@ -109,13 +121,40 @@
       onClickMore(){
         this.showMore=!this.showMore
       },
-      onShowGroup(flag){
-        this.showGroup=flag==1?true:false
+      onShowGroup(){
+        this.getAssetGroupTree()
+        this.showTree=true
+        this.modalTip="选择资产组"
+        this.modalFlag=2
       },
-      onSureGroupName(val){
-        this.showGroup=false
-        this.groupName=val.name
+      async getAssetTypeList(){
+        let res = await AssetManageApi.getAssetTypeTree()
+        this.treeList =res
       },
+      hideTreeModal(){
+        this.showTree=false
+      },
+      onClickTreeModalSureBtn(val){
+        this.showTree=false
+        if(this.modalFlag==1){
+          if(!val.id){
+            this.$message({
+              message:'请先选择资产类型！',
+              type: 'warning',
+              duration:1000
+            });
+            return;
+          }
+          this.$router.push(`/addAsset?typeId=${val.id}`)
+        }else{
+          this.groupName=val.name
+        }
+      },
+      async getAssetGroupTree(){
+        let res = await AssetManageApi.getAssetGroupTree()
+        this.treeList = res
+      },
+
     },
     mounted(){
       this.getAssetList()

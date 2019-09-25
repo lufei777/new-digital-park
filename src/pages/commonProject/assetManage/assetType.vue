@@ -1,10 +1,11 @@
 <template>
   <div class="asset-type">
     <div class="left-type-tree">
-      <div class="type-title">资产类型</div>
+      <!--<div class="type-title">资产类型</div>-->
       <CustomTree :treeList="typeTree" :addNodeCallback="addNode"
                   :delNodeCallback="deleteAssetType"
                   :editCallback="editAssetType"
+                  :clickNodeCallback="onClickNode"
       />
     </div>
     <div class="right-content">
@@ -16,7 +17,7 @@
 <script>
   import AddAssetType from '../coms/addAssetType'
   import CommonTable from '../../../components/commonTable/index'
-  import CommonApi from '../../../service/api/commonApi'
+  import AssetManageApi from '../../../service/api/assetManageApi'
   import CommonFun from '../../../utils/commonFun'
   import CustomTree from '../../../components/customTree/slotTree'
   export default {
@@ -37,6 +38,7 @@
           label:'name',
           children: 'childNode',
         },
+        ownAttrList:[]
       }
     },
     methods:{
@@ -45,7 +47,7 @@
         this.isEdit=false
       },
       async getAssetTypeList(){
-        let res = await CommonApi.getAssetTypeList()
+        let res = await AssetManageApi.getAssetTypeTree()
         this.typeTree=res
       },
       deleteRow(row){
@@ -61,7 +63,7 @@
         CommonFun.deleteTip(this,this.curTypeId,'请至少选择一个资产类型！',this.sureDelete)
       },
       async sureDelete(){
-        await CommonApi.deleteAssetType({
+        await AssetManageApi.deleteAssetType({
            assetTypeId:this.curTypeId
        })
         this.$message({
@@ -95,18 +97,23 @@
         })
       },
       async addAssetType(obj){
-        await CommonApi.addAssetType(obj)
+        await AssetManageApi.addAssetType(obj)
         // this.getAssetTypeList()
       },
       async deleteAssetType(data){
-        await CommonApi.deleteAssetType({
+        await AssetManageApi.deleteAssetType({
           ids:data.id
         })
         this.$message.success("删除成功！")
         // this.getAssetTypeList()
       },
       async editAssetType(data){
-         await CommonApi.editAssetType(data)
+         await AssetManageApi.editAssetType(data)
+      },
+      async onClickNode(val){
+          let res = await AssetManageApi.getAttributeByType({
+            typeId:val.id
+          })
       }
     },
     mounted(){
@@ -127,9 +134,9 @@
     .custom-tree{
       .el-tree{
         background:#3a8ee6;
-        font-size: 16px;
+        font-size: 14px;
         color:@white;
-        /*font-weight: 600;*/
+        padding-bottom: 20px;
       }
       .el-tree-node__content{
         padding:12px 0;

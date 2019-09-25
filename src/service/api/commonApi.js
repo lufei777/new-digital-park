@@ -201,69 +201,6 @@ class CommonApi {
   @get
   previewReportData(){}
 
-  @url('/oaApi/asset/list')
-  @get
-  getAssetList(){}
-
-  @url('/oaApi/login')
-  @get
-  login(){}
-
-  @url('/oaApi/assetType/tree')
-  @get
-  getAssetTypeList(){}
-
-  @url('/oaApi/asset/detail')
-  @get
-  getAssetDetail(){}
-
-  @url('/oaApi/assetType/selectById')
-  @get
-  getAssetTypeDetail(){}
-
-  @url('/oaApi/assetType/save')
-  @post
-  addAssetType(){}
-
-  @url('/oaApi/assetType/update')
-  @get
-  updateAssetType(){}
-
-  @url('/oaApi/assetType/delete')
-  @get
-  deleteAssetType(){}
-
-  @url('/oaApi/assetGroup/tree')
-  @get
-  getAssetGroupTree(){}
-
-  @url('/oaApi/assetGroup/selectById')
-  @get
-  selectAssetGroupById(){}
-
-  @url('/oaApi/assetTypeAttribute/getAttrsById')
-  @get
-  getAttributeByType(){}
-
-  @url('/oaApi/provider/selectAll')
-  @get
-  getProviderList(){}
-
-  @url('/oaApi/asset/save')
-  @post
-  addAsset(){}
-
-  @url('/oaApi/assetType/save')
-  @post
-  addAssetType(){}
-
-  @url('/oaApi/assetType/delete')
-  @get
-  deleteAssetType(){}
-
-  @url('/oaApi/assetType/update')
-  @get
-  editAssetType(){}
 }
 
 export default new CommonApi()

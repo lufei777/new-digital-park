@@ -23,7 +23,7 @@
 </template>
 
 <script>
-  import CommonApi from '../../../service/api/commonApi'
+  import AssetManageApi from '../../../service/api/assetManageApi'
   export default {
     name: 'AddAssetType',
     components: {
@@ -73,10 +73,10 @@
       async addAssetType(){
         let message=''
         if(!this.isEdit){
-          await CommonApi.addAssetType(this.assetTypeForm)
+          await AssetManageApi.addAssetType(this.assetTypeForm)
           message='添加成功！'
         }else{
-          await CommonApi.updateAssetType(this.assetTypeForm)
+          await AssetManageApi.updateAssetType(this.assetTypeForm)
           message='修改成功！'
         }
         this.$message({
@@ -89,7 +89,7 @@
         this.$parent.getAssetTypeList()
       },
       async getAssetTypeDetail(){
-        let res = await CommonApi.getAssetTypeDetail({
+        let res = await AssetManageApi.getAssetTypeDetail({
           assetTypeId:this.editId
         })
         this.assetTypeForm=res[0]
