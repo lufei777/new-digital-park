@@ -2,9 +2,8 @@
  @component elementUI@2.7.2 Tree 组件二次开发
  -->
 <template>
-	<div v-loading="isLoading" class="comp-tree">
-		<el-button class="comp-tr-top" 
-			type="primary" 
+	<div v-loading="isLoading" class="custom-tree">
+		<el-button class="comp-tr-top"
 			size="small" 
 			@click="handleAddTop">添加顶级节点</el-button>
 		<!-- tree -->
@@ -12,7 +11,7 @@
 			:data="treeList"
 			:props="defaultProps"
 			:expand-on-click-node="false"
-			highlight-current
+
 			:node-key="NODE_KEY">
 				<div class="comp-tr-node" slot-scope="{ node, data }">
 					<!-- 编辑状态 -->
@@ -38,7 +37,7 @@
 							<el-button icon="el-icon-plus" 
 								size="mini"
 
-								type="primary"
+
 								@click="handleAdd(node, data)"></el-button>
 
 							<!-- 编辑 -->
@@ -51,7 +50,7 @@
 							<!-- 删除 -->
 							<el-button icon="el-icon-delete" 
 								size="mini"
-							
+
 								type="danger"
 								@click="handleDelete(node, data)"></el-button>
 						</span>
@@ -104,6 +103,7 @@ export default{
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
+        this.$refs.SlotTree.remove(data)
         this.delNodeCallback && this.delNodeCallback(data)
       }).catch(() => {})
     },
@@ -170,12 +170,9 @@ export default{
 
 	/* common end */
 
-	.comp-tree{
+	.custom-tree{
 		width: 100%;
-		max-width: 700px;
-		max-height: 80vh;
-		padding: 2em;
-		overflow: auto;
+		height: 100%;
 		// 顶部按钮
 		.comp-tr-top{
 			width: 100px;

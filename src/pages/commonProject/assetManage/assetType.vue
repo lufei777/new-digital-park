@@ -2,14 +2,6 @@
   <div class="asset-type">
     <div class="left-type-tree">
       <div class="type-title">资产类型</div>
-      <!--<el-tree-->
-        <!--:data="typeTree"-->
-        <!--:props="treeProps"-->
-        <!--node-key="id"-->
-        <!--@check="handleTreeCheck"-->
-        <!--ref="assetTypeTree"-->
-      <!--&gt;-->
-      <!--</el-tree>-->
       <CustomTree :treeList="typeTree" :addNodeCallback="addNode"
                   :delNodeCallback="deleteAssetType"
                   :editCallback="editAssetType"
@@ -84,6 +76,7 @@
       },
       addNode(id,obj){
         if(!id){ //默认传空即添加根节点
+          this.typeTree.push(obj)
           this.addAssetType(obj)
         }else{
           this.findNode(this.typeTree,id,obj)
@@ -93,6 +86,7 @@
       findNode(tree,id,obj){
         tree.map((item)=>{
           if(item.id==id){
+             item.childNode.push(obj)
              this.addAssetType(obj)
              return;
           }else if(item.childNode.length){
@@ -102,14 +96,14 @@
       },
       async addAssetType(obj){
         await CommonApi.addAssetType(obj)
-        this.getAssetTypeList()
+        // this.getAssetTypeList()
       },
       async deleteAssetType(data){
         await CommonApi.deleteAssetType({
           ids:data.id
         })
         this.$message.success("删除成功！")
-        this.getAssetTypeList()
+        // this.getAssetTypeList()
       },
       async editAssetType(data){
          await CommonApi.editAssetType(data)
@@ -127,6 +121,27 @@
     .left-type-tree{
       float: left;
       width:25%;
+      color:@white;
+      background: #3a8ee6;
+    }
+    .custom-tree{
+      .el-tree{
+        background:#3a8ee6;
+        font-size: 16px;
+        color:@white;
+        /*font-weight: 600;*/
+      }
+      .el-tree-node__content{
+        padding:12px 0;
+      }
+      .el-tree-node__content:hover{
+        color:@white;
+        background: #3a8ee6;
+      }
+      .el-tree-node:focus>.el-tree-node__content{
+        color:#3a8ee6;
+        background: @white;
+      }
     }
   }
 </style>
