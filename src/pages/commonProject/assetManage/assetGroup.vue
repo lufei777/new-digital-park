@@ -31,7 +31,7 @@
 
 <script>
   import AddAssetGroup from '../coms/addAssetGroup'
-  import CommonApi from '../../../service/api/commonApi'
+  import AssetManageApi from '../../../service/api/assetManageApi'
   export default {
     name: 'AssetGroup',
     components: {
@@ -56,13 +56,13 @@
         this.isEdit=false
       },
       async getAssetGroupTree(){
-        let res = await CommonApi.getAssetGroupTree()
+        let res = await AssetManageApi.getAssetGroupTree()
         this.groupTree=res
         this.curGroupId='group-2368946ab299465099fcbf62690d5e6e' //res[0].id
         this.selectAssetGroupById()
       },
       async selectAssetGroupById(){
-         await CommonApi.selectAssetGroupById({
+         await AssetManageApi.selectAssetGroupById({
            assetGroupId:this.curGroupId
          })
       },

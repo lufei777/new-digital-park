@@ -11,8 +11,8 @@
 			:data="treeList"
 			:props="defaultProps"
 			:expand-on-click-node="false"
-
-			:node-key="NODE_KEY">
+			:node-key="NODE_KEY"
+      @node-click="onClickNode">
 				<div class="comp-tr-node" slot-scope="{ node, data }">
 					<!-- 编辑状态 -->
 					<template v-if="node.isEdit">
@@ -64,7 +64,7 @@
 
 export default{
 	name: 'component-tree',
-  props:['treeList','addNodeCallback','delNodeCallback','editCallback'],
+  props:['treeList','addNodeCallback','delNodeCallback','editCallback','clickNodeCallback'],
 	data(){
 		return {
 			isLoading: false,// 是否加载
@@ -155,7 +155,10 @@ export default{
 			let obj = JSON.parse(JSON.stringify(this.initParam));// copy参数
 			obj[this.NODE_KEY] = --this.startId;// 节点id：逐次递减id
       this.addNodeCallback && this.addNodeCallback('',obj)
-		}
+		},
+    onClickNode(val){
+		  this.clickNodeCallback && this.clickNodeCallback(val)
+    }
 	}
 }
 </script>
@@ -175,8 +178,7 @@ export default{
 		height: 100%;
 		// 顶部按钮
 		.comp-tr-top{
-			width: 100px;
-			margin-bottom: 2em;
+			margin:20px;
 		}
 		// 自定义节点
 		.comp-tr-node{

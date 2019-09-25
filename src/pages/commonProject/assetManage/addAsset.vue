@@ -26,7 +26,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="资产组" prop="groupName" >
-          <el-input v-model="assetAddForm.groupName" @focus="onShowGroup(1)"></el-input>
+          <el-input v-model="assetAddForm.groupName" @focus="onShowGroup"></el-input>
         </el-form-item>
       </el-col>
       <el-col>
@@ -85,18 +85,20 @@
           </div>
         </el-col>
       </el-form>
-    <AssetGroupModal :showGroup="showGroup" :sureCallback="onSureGroupName" :cancelCallback="onShowGroup"
+    <TreeModal :showTree="showTree" :treeList="treeList"
+               :cancelCallback="hideTreeModal" :sureCallback="onClickTreeModalSureBtn"
+               :tip="modalTip"
     />
   </div>
 </template>
 
 <script>
-  import CommonApi from '../../../service/api/commonApi'
-  import AssetGroupModal from '../coms/assetGroupModal'
+  import AssetManageApi from '../../../service/api/assetManageApi'
+  import TreeModal from '../coms/treeModal'
   export default {
     name: 'AddAsset',
     components: {
-      AssetGroupModal
+      TreeModal
     },
     props:[],
     data () {
@@ -123,7 +125,9 @@
           groupName:[{required:true,message:'请选择资产组',trigger: 'blur' }]
         },
         providerList:[],
-        showGroup:false,
+        showTree:false,
+        modalTip:'',
+        treeList:''
       }
     },
     computed:{
@@ -146,13 +150,15 @@
             return false;
           }
         });
-
       },
       goBack(){
-        this.$router.replace('/assetMaintenance')
+        this.$router.push('/assetMaintenance')
+      },
+      hideTreeModal(){
+        this.showTree=false
       },
       async getAssetDetail(){
-        let res = await CommonApi.getAssetDetail({
+        let res = await AssetManageApi.getAssetDetail({
           assetId:this.assetId
         })
         this.assetAddForm={...res,...{
@@ -178,7 +184,7 @@
         this.assetAddForm.ownAttrList=arr
       },
       async getAttributeByType(){
-        let res = await CommonApi.getAttributeByType({
+        let res = await AssetManageApi.getAttributeByType({
           typeId:this.typeId
         })
         res.map((item)=>{
@@ -197,7 +203,7 @@
         this.assetAddForm.ownAttrList=arr
       },
       async getProviderList(){
-         this.providerList = await CommonApi.getProviderList()
+         this.providerList = await AssetManageApi.getProviderList()
          // this.providerList.push({
          //   id:2,
          //   name:'test'
@@ -206,26 +212,24 @@
          this.assetAddForm.providerName=this.providerList[0].name
       },
       async getAssetGroupTree(){
-        let res = await CommonApi.getAssetGroupTree()
+        let res = await AssetManageApi.getAssetGroupTree()
         this.assetAddForm.groupId=res[0].id
         this.assetAddForm.groupName=res[0].name
+        this.treeList=res
       },
-      onShowGroup(flag){
-        this.showGroup=flag==1?true:false
+      onShowGroup(){
+        this.showTree=true
+        this.modalTip='选择资产组'
       },
       addCustomAttr(){
-        // this.assetAddForm.customAttrList.push({
-        //   value: '',
-        //   key: Date.now()
-        // });
         this.assetAddForm.customAttrList.push({
            attr:'',
            value:'',
            key:Date.now()
         })
       },
-      onSureGroupName(val){
-        this.showGroup=false
+      onClickTreeModalSureBtn(val){
+        this.showTree=false
         this.assetAddForm.groupId=val.id
         this.assetAddForm.groupName=val.name
       },
@@ -260,7 +264,7 @@
           'attrValue':this.typeId
         })
         console.log("tmp",tmp)
-        await CommonApi.addAsset(tmp)
+        await AssetManageApi.addAsset(tmp)
         this.$message({
           type:'success',
           message:'添加成功,正在跳转...'
@@ -274,7 +278,7 @@
           return item.id==val
         })
         this.assetAddForm.providerName=obj.name
-      }
+      },
     },
     mounted(){
        this.getProviderList()
