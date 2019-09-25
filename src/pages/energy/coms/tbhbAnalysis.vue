@@ -207,12 +207,12 @@
       async handleExport(){
         let url
         if(this.curModule==1){
-          url = `${window.gateway}/vibe-web/energyCount/energy/energy_comseqExcel?`
+          url = `/vibe-web/energyCount/energy/energy_comseqExcel?`
           console.log(url)
         }else if(this.curModule==2){
-          url = `${window.gateway}/vibe-web/energyCount/energy/energy_fenshiBiaoExcel?`
+          url = `/vibe-web/energyCount/energy/energy_fenshiBiaoExcel?`
         }else if(this.curModule==3){
-          url = `${window.gateway}/vibe-web/energyCount/energy/energy_fenxiangBiaoExcel?`
+          url = `/vibe-web/energyCount/energy/energy_fenxiangBiaoExcel?`
         }
         let params=''
         for(let key in this.commonParams){

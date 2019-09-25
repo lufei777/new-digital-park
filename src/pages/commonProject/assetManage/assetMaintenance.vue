@@ -11,7 +11,7 @@
       </div>
       <div class="block flex-align-center">
         <span>资产组</span>
-        <el-input v-model="groupName" />
+        <el-input v-model="groupName" @focus="onShowGroup(1)"/>
       </div>
       <el-button type="primary"  @click="onClickSearchBtn">搜索</el-button>
       <el-button type="primary"  @click="onClickResetBtn">重置</el-button>
@@ -40,6 +40,7 @@
       </template>
     </CommonTable>
     <ChooseAssetType :showAdd="showAdd"/>
+    <AssetGroupModal :showGroup="showGroup" :sureCallback="onSureGroupName" :cancel-callback="onShowGroup"/>
   </div>
 </template>
 
@@ -47,11 +48,13 @@
   import CommonApi from '../../../service/api/commonApi'
   import CommonTable from '../../../components/commonTable/index'
   import ChooseAssetType from '../coms/assetTypeModal'
+  import AssetGroupModal from '../coms/assetGroupModal'
   export default {
     name: 'AssetMaintenance',
     components: {
       CommonTable,
-      ChooseAssetType
+      ChooseAssetType,
+      AssetGroupModal
     },
     data () {
       return {
@@ -61,7 +64,8 @@
         assetData:{},
         curPage:1,
         showMore:false,
-        showAdd:false
+        showAdd:false,
+        showGroup:false
       }
     },
     methods:{
@@ -80,7 +84,6 @@
           {name:'资产组',prop:'groupName'},
           {name:'供应商',prop:'providerName'},
           {name:'资产类型',prop:'typeName'},
-          {name:'部门',prop:'departmentName'},
           {name:'当前保管人',prop:'currentCustodian'},
           {name:'规格型号',prop:'specification'}]
         res.hideExportBtn=true
@@ -89,7 +92,7 @@
       },
       onClickSearchBtn(){
         this.curPage=1
-      this.getAssetList()
+        this.getAssetList()
       },
       onClickResetBtn(){},
       handleSelectionChange(val){
@@ -105,7 +108,14 @@
       },
       onClickMore(){
         this.showMore=!this.showMore
-      }
+      },
+      onShowGroup(flag){
+        this.showGroup=flag==1?true:false
+      },
+      onSureGroupName(val){
+        this.showGroup=false
+        this.groupName=val.name
+      },
     },
     mounted(){
       this.getAssetList()
