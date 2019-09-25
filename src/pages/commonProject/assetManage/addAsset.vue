@@ -85,28 +85,18 @@
           </div>
         </el-col>
       </el-form>
-     <el-dialog title="选择资产组" :visible.sync="showGroup" width="30%" :show-close="false">
-      <el-tree
-        :data="groupTree"
-        :props="treeProps"
-        node-key="id"
-        @node-click="handleTreeClick"
-        :highlight-current="true"
-      >
-      </el-tree>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="onShowGroup(-1)">取 消</el-button>
-        <el-button type="primary" @click="onSureGroupName">确定</el-button>
-      </span>
-    </el-dialog>
+    <AssetGroupModal :showGroup="showGroup" :sureCallback="onSureGroupName" :cancelCallback="onShowGroup"
+    />
   </div>
 </template>
 
 <script>
   import CommonApi from '../../../service/api/commonApi'
+  import AssetGroupModal from '../coms/assetGroupModal'
   export default {
     name: 'AddAsset',
     components: {
+      AssetGroupModal
     },
     props:[],
     data () {
@@ -133,11 +123,6 @@
           groupName:[{required:true,message:'请选择资产组',trigger: 'blur' }]
         },
         providerList:[],
-        groupTree:{},
-        treeProps:{
-          label:'name',
-          children: 'childNode',
-        },
         showGroup:false,
       }
     },
@@ -222,7 +207,6 @@
       },
       async getAssetGroupTree(){
         let res = await CommonApi.getAssetGroupTree()
-        this.groupTree = res
         this.assetAddForm.groupId=res[0].id
         this.assetAddForm.groupName=res[0].name
       },
@@ -230,7 +214,6 @@
         this.showGroup=flag==1?true:false
       },
       addCustomAttr(){
-        console.log(1)
         // this.assetAddForm.customAttrList.push({
         //   value: '',
         //   key: Date.now()
@@ -241,10 +224,8 @@
            key:Date.now()
         })
       },
-      onSureGroupName(){
+      onSureGroupName(val){
         this.showGroup=false
-      },
-      handleTreeClick(val){
         this.assetAddForm.groupId=val.id
         this.assetAddForm.groupName=val.name
       },

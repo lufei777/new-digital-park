@@ -85,8 +85,8 @@
         this.showDialog=true
       },
       onClickExportBtn(){
-        // let url=`http://localhost:8080/vibe-web/export?state=state&index=${this.chartIndex}`
-        // location.href=url
+        let url=`/vibe-web/statistics/getMonitorDetailsExport?filter=state&index=${this.chartIndex}`
+        location.href=url
       }
     },
     mounted(){

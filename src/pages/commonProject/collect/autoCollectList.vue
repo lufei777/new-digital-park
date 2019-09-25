@@ -90,7 +90,7 @@
         this.getAutoCollectList()
       },
       handleExport(){
-        let sendUrl =window.gateway+'/vibe-web/energyCount/energy/getBaseRepresentationNumberExcel?catalog='
+        let sendUrl ='/vibe-web/energyCount/energy/getBaseRepresentationNumberExcel?catalog='
           +this.curEnergy+'&startTime='+this.startTime+'&endTime='+this.endTime+'&page='+this.curPage+'&size=10'
         location.href=sendUrl
       }

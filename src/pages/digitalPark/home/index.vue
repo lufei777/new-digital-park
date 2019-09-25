@@ -18,6 +18,7 @@
         <el-input  placeholder="搜索" />
       </div>
     </div>
+
     <el-carousel height="550px" :interval="2000">
       <el-carousel-item >
         <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo1.png" alt="">
@@ -26,25 +27,36 @@
         <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo2.png" alt="">
       </el-carousel-item>
     </el-carousel>
+
     <div class="home-center">
+
       <div class="item-module">
-        <h3 class="module-title">我们的产品</h3>
-        <ul class="flex-align-around production-list">
+        <div class="flex-align-between module-title">
+          <h3>我们的产品</h3>
+          <span class="hover-pointer" @click="onShowMoreProduct">更多</span>
+        </div>
+        <ul class="flex-align-around production-list" :style="showMoreProduct?'':{height:'56px'}">
           <li v-for="(item,index) in productList"
               :key="index"
               @click="onClickItemProduct(item)"
           ><span>{{item.name}}</span></li>
         </ul>
       </div>
-      <div class="item-module flex-column flex-align-center">
-        <h3 class="module-title">我们的产品</h3>
-        <ul>
-          <li><span></span>能源管理</li>
-          <li><span></span>资产管理</li>
-          <li><span></span>档案管理</li>
-          <li>综合安防</li>
-          <li>通行管理</li>
-        </ul>
+
+      <div class="item-module">
+        <div class="flex-align-between module-title">
+          <h3>信息发布</h3>
+          <span class="hover-pointer" @click="onShowMoreProduct">更多</span>
+        </div>
+        <div class="module-border">
+          <el-tabs style="height: 200px;" type="border-card" tabPosition="top">
+            <el-tab-pane label="员工活动">员工活动</el-tab-pane>
+            <el-tab-pane label="党建工作">党建工作</el-tab-pane>
+            <el-tab-pane label="规章制度">规章制度</el-tab-pane>
+            <el-tab-pane label="通知公告">通止规</el-tab-pane>
+            <el-tab-pane label="时事要闻">通止规</el-tab-pane>
+          </el-tabs>
+        </div>
       </div>
     </div>
   </div>
@@ -58,7 +70,8 @@
     },
     data () {
       return {
-        productList:CommonData.productList
+        productList:CommonData.productList,
+        showMoreProduct:false
       }
     },
     methods:{
@@ -66,6 +79,9 @@
         if(item.url){
           window.open(item.url)
         }
+      },
+      onShowMoreProduct(){
+        this.showMoreProduct=!this.showMoreProduct
       }
     }
   }
@@ -124,18 +140,19 @@
       margin:0 auto;
     }
     .item-module{
-      background: pink;
+      /*background: pink;*/
       margin:20px 0;
       padding:20px 0;
     }
     .module-title{
-      padding:30px;
-      font-size: 16px;
-      width:100%;
-      text-align: center;
+      padding:10px 0;
+      h3{
+        font-size: 16px;
+      }
     }
     .production-list{
       flex-wrap: wrap;
+      overflow: hidden;
       li{
         width:16%;
         text-align: center;
@@ -144,6 +161,10 @@
       span:hover{
         cursor: pointer;
       }
+    }
+    .module-border{
+      padding:20px;
+      border:1px solid #ccc;
     }
   }
 </style>

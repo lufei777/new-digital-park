@@ -17,7 +17,7 @@ import Collect from './commonRouter/collect'
 import DataReport from './commonRouter/dataReport'
 export default [{
   path: '/',
-  redirect: '/energy'
+  redirect: '/login'
 },{
   path:'/login',
   name:'EnergyLogin',

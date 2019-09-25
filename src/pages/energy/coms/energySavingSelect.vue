@@ -153,9 +153,9 @@ export default {
     async exportList() {
       let url;
       if (activeNav.childIndex == 0 || activeNav.childIndex == 2) {
-        url = `${window.gateway}/vibe-web/energyCount/energy/elec/export?`;
+        url = `/vibe-web/energyCount/energy/elec/export?`;
       } else {
-        url = `${window.gateway}/vibe-web/energyCount/energy/night/export?`;
+        url = `/vibe-web/energyCount/energy/night/export?`;
       }
       let params = "";
       for (let key in this.commonParams) {

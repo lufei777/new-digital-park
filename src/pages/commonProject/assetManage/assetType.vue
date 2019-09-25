@@ -1,11 +1,23 @@
 <template>
   <div class="asset-type">
-    <div class="flex-row-reverse operator-box">
-      <el-button type="primary"  @click="showDeleteTip">批量删除</el-button>
-      <el-button type="primary"  @click="onClickAddBtn">新建</el-button>
+    <div class="left-type-tree">
+      <div class="type-title">资产类型</div>
+      <!--<el-tree-->
+        <!--:data="typeTree"-->
+        <!--:props="treeProps"-->
+        <!--node-key="id"-->
+        <!--@check="handleTreeCheck"-->
+        <!--ref="assetTypeTree"-->
+      <!--&gt;-->
+      <!--</el-tree>-->
+      <CustomTree :treeList="typeTree" :addNodeCallback="addNode"
+                  :delNodeCallback="deleteAssetType"
+                  :editCallback="editAssetType"
+      />
     </div>
-    <addAssetType :showAdd="showAdd" :isEdit="isEdit" :editId="curTypeId"/>
-    <CommonTable :tableObj="assetTypeData" :curPage="1" />
+    <div class="right-content">
+      <span>属性列表</span>
+    </div>
   </div>
 </template>
 
@@ -14,19 +26,25 @@
   import CommonTable from '../../../components/commonTable/index'
   import CommonApi from '../../../service/api/commonApi'
   import CommonFun from '../../../utils/commonFun'
+  import CustomTree from '../../../components/customTree/slotTree'
   export default {
     name: 'AssetType',
     components: {
       AddAssetType,
-      CommonTable
+      CommonTable,
+      CustomTree
     },
     data () {
       return {
         showAdd:false,
         isEdit:false,
-        assetTypeData:{},
         curPage:1,
-        curTypeId:''
+        curTypeId:'',
+        typeTree:[],
+        treeProps:{
+          label:'name',
+          children: 'childNode',
+        },
       }
     },
     methods:{
@@ -35,17 +53,8 @@
         this.isEdit=false
       },
       async getAssetTypeList(){
-        let res = await CommonApi.getAssetTypeList({
-          pageNum:this.curPage,
-          size:10
-        })
-        res.labelList=[{name:'',prop:'',type:'selection'},
-          {name:'名称',prop:'name'},
-          {name:'描述',prop:'description'},
-          {name:'类型编码',prop:'code'}]
-        res.dataList = res.list
-        res.showOpertor=true
-        this.assetTypeData=res
+        let res = await CommonApi.getAssetTypeList()
+        this.typeTree=res
       },
       deleteRow(row){
         this.curTypeId=row.id
@@ -72,6 +81,38 @@
       handleSelectionChange(val){
         let tmp=val.map((item)=>item.id)
         this.curTypeId=tmp.join(",")
+      },
+      addNode(id,obj){
+        if(!id){ //默认传空即添加根节点
+          this.addAssetType(obj)
+        }else{
+          this.findNode(this.typeTree,id,obj)
+        }
+
+      },
+      findNode(tree,id,obj){
+        tree.map((item)=>{
+          if(item.id==id){
+             this.addAssetType(obj)
+             return;
+          }else if(item.childNode.length){
+            this.findNode(item.childNode,id,obj)
+          }
+        })
+      },
+      async addAssetType(obj){
+        await CommonApi.addAssetType(obj)
+        this.getAssetTypeList()
+      },
+      async deleteAssetType(data){
+        await CommonApi.deleteAssetType({
+          ids:data.id
+        })
+        this.$message.success("删除成功！")
+        this.getAssetTypeList()
+      },
+      async editAssetType(data){
+         await CommonApi.editAssetType(data)
       }
     },
     mounted(){
@@ -83,11 +124,9 @@
 <style lang="less">
   .asset-type{
     height: 100%;
-    .operator-box{
-      padding:20px;
-      .el-button{
-        margin:0 10px;
-      }
+    .left-type-tree{
+      float: left;
+      width:25%;
     }
   }
 </style>

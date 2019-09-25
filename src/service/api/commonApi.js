@@ -209,7 +209,7 @@ class CommonApi {
   @get
   login(){}
 
-  @url('/oaApi/assetType/list')
+  @url('/oaApi/assetType/tree')
   @get
   getAssetTypeList(){}
 
@@ -252,6 +252,18 @@ class CommonApi {
   @url('/oaApi/asset/save')
   @post
   addAsset(){}
+
+  @url('/oaApi/assetType/save')
+  @post
+  addAssetType(){}
+
+  @url('/oaApi/assetType/delete')
+  @get
+  deleteAssetType(){}
+
+  @url('/oaApi/assetType/update')
+  @get
+  editAssetType(){}
 }
 
 export default new CommonApi()
