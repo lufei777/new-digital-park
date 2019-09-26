@@ -58,6 +58,7 @@
   4）showExportBtn 是否显示导出按钮 默认不传即不显示
 2.需要格式化某些列，可以在组件的formatSpecialCol方法中编写逻辑
 
+
 二、chartUtils封装 
 (基础charts封装，当无法满足需求时，可自己再在自己的页面重新定义特殊化option，与封装组件相同处不必重复写)
 

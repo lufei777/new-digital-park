@@ -68,7 +68,11 @@
         showGroup:false,
         treeList:[],
         modalTip:'',
-        modalFlag:1//treeModal 代表所有树形弹框 1代表是资产类型 2代表是资产组
+        modalFlag:1,//treeModal 代表所有树形弹框 1代表是资产类型 2代表是资产组
+        groupTree:[],
+        typeTree:[],
+        orderType:'1',
+        orderBy:'create_time'
       }
     },
     methods:{
@@ -79,11 +83,14 @@
           coding:this.coding,
           name:this.name,
           groupName:this.groupName,
-          pageNum:this.curPage
+          orderType:this.orderType, //0降序1升序
+          orderBy:this.orderBy,
+          pageNum:this.curPage,
+          pageSize:10
         })
         res.labelList=[{name:'',prop:'',type:'selection'},
-          {name:'编号',prop:'coding'},
-          {name:'名称',prop:'name'},
+          {name:'编号',prop:'coding',sort:'custom'},
+          {name:'名称',prop:'name',sort:'custom'},
           {name:'资产组',prop:'groupName'},
           {name:'供应商',prop:'providerName'},
           {name:'资产类型',prop:'typeName'},
@@ -102,6 +109,8 @@
         this.groupName=''
         this.coding=''
         this.name=''
+        this.orderType=1,
+        this.orderBy='create_time'
         this.getAssetList()
       },
       handleSelectionChange(val){
@@ -109,7 +118,7 @@
         // this.curTypeId=tmp.join(",")
       },
       onClickAddBtn(){
-        this.getAssetTypeList()
+        this.treeList=this.typeTree
         this.modalTip="选择资产类型"
         this.showTree = true
         this.modalFlag=1
@@ -122,14 +131,14 @@
         this.showMore=!this.showMore
       },
       onShowGroup(){
-        this.getAssetGroupTree()
+        this.treeList=this.groupTree
         this.showTree=true
         this.modalTip="选择资产组"
         this.modalFlag=2
       },
       async getAssetTypeList(){
         let res = await AssetManageApi.getAssetTypeTree()
-        this.treeList =res
+        this.typeTree =res
       },
       hideTreeModal(){
         this.showTree=false
@@ -152,12 +161,23 @@
       },
       async getAssetGroupTree(){
         let res = await AssetManageApi.getAssetGroupTree()
-        this.treeList = res
+        this.groupTree = res
       },
-
+      handleCurrentChange(val){
+        this.curPage=val
+        this.getAssetList()
+      },
+      sortTable(column){
+        console.log(column)
+        this.orderBy=column.prop
+        this.orderType=column.order=='ascending'?1:0
+        this.getAssetList()
+      }
     },
     mounted(){
       this.getAssetList()
+      this.getAssetTypeList()
+      this.getAssetGroupTree()
     }
   }
 </script>

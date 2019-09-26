@@ -71,7 +71,7 @@
           return parseFloat(row.tbzz).toFixed(2)+"%"
         }else if(column.property=='hbzz'){
           return parseFloat(row.hbzz).toFixed(2)+"%"
-        }else if(cellValue==null){
+        }else if(cellValue==null || cellValue==''){
           return '--'
         }else if(column.property=='meterType'){
             return row.meterType==0?'实表':'虚表'

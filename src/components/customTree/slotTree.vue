@@ -142,6 +142,7 @@ export default{
 			let obj = JSON.parse(JSON.stringify(this.initParam));// copy参数
 			obj.pid = _data[this.NODE_KEY];// 父id
 			obj[this.NODE_KEY] = --this.startId;// 节点id：逐次递减id
+      obj.level=_node.level+1
 			// 新增数据
 
       this.addNodeCallback && this.addNodeCallback(_data.id,obj)
@@ -154,6 +155,7 @@ export default{
 		handleAddTop(){// 添加顶部节点
 			let obj = JSON.parse(JSON.stringify(this.initParam));// copy参数
 			obj[this.NODE_KEY] = --this.startId;// 节点id：逐次递减id
+      obj.level=0
       this.addNodeCallback && this.addNodeCallback('',obj)
 		},
     onClickNode(val){
