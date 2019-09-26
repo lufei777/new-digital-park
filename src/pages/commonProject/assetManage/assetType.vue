@@ -9,7 +9,14 @@
       />
     </div>
     <div class="right-content">
-      <span>属性列表</span>
+      <div class="flex-align-between type-operator-box">
+        <span class="attr-table-tip">属性列表</span>
+        <div>
+          <el-button type="primary">批量删除</el-button>
+          <el-button type="primary">新建</el-button>
+        </div>
+      </div>
+      <CommonTable :table-obj="attrTableData" :cur-page="1"/>
     </div>
   </div>
 </template>
@@ -31,14 +38,14 @@
       return {
         showAdd:false,
         isEdit:false,
-        curPage:1,
+        // curPage:1,
         curTypeId:'',
         typeTree:[],
         treeProps:{
           label:'name',
           children: 'childNode',
         },
-        ownAttrList:[]
+        attrTableData:{}
       }
     },
     methods:{
@@ -114,6 +121,18 @@
           let res = await AssetManageApi.getAttributeByType({
             typeId:val.id
           })
+          //后台没有做分页
+         res.map((item)=>{
+           item.requiredText=item.required?'是':'否'
+         })
+         let obj={}
+         obj.labelList=[{name:'',prop:'',type:'selection'},
+           {name:'属性名',prop:'attrName'},
+           {name:'描述',prop:'description'},
+           {name:'是否必填',prop:'requiredText'}]
+         obj.dataList=res
+         obj.showOpertor=true
+         this.attrTableData=obj
       }
     },
     mounted(){
@@ -130,6 +149,18 @@
       width:25%;
       color:@white;
       background: #3a8ee6;
+    }
+    .right-content{
+      float: right;
+      width: 75%;
+      padding:0 20px;
+      box-sizing: border-box;
+    }
+    .type-operator-box{
+      padding-bottom:20px;
+    }
+    .attr-table-tip{
+      font-weight: bold;
     }
     .custom-tree{
       .el-tree{

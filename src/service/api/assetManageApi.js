@@ -69,6 +69,10 @@ class CommonApi {
   @url('/oaApi/dept/tree')
   @get
   getDepartmentTree(){}
+
+  @url('/oaApi/asset/updateById')
+  @post
+  editAsset(){}
 }
 
 export default new CommonApi()
