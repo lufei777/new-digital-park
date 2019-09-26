@@ -5,7 +5,8 @@
       <CustomTree :treeList="typeTree" :addNodeCallback="addNode"
                   :delNodeCallback="deleteAssetType"
                   :editCallback="editAssetType"
-                  :clickNodeCallback="onClickNode"
+                  :clickNodeCallback="clickNode"
+                  :defaultExpandedKey="defaultExpandedKey"
       />
     </div>
     <div class="right-content">
@@ -13,16 +14,17 @@
         <span class="attr-table-tip">属性列表</span>
         <div>
           <el-button type="primary">批量删除</el-button>
-          <el-button type="primary">新建</el-button>
+          <el-button type="primary" @click="onAddTypeAttr">新建</el-button>
         </div>
       </div>
       <CommonTable :table-obj="attrTableData" :cur-page="1"/>
     </div>
+    <AddAssetTypeAttr :showAdd="showAdd" :is-edit="isEdit" :curType="curType" :curAttr="curAttr"/>
   </div>
 </template>
 
 <script>
-  import AddAssetType from '../coms/addAssetType'
+  import AddAssetTypeAttr from '../coms/addAssetTypeAttr'
   import CommonTable from '../../../components/commonTable/index'
   import AssetManageApi from '../../../service/api/assetManageApi'
   import CommonFun from '../../../utils/commonFun'
@@ -30,7 +32,7 @@
   export default {
     name: 'AssetType',
     components: {
-      AddAssetType,
+      AddAssetTypeAttr,
       CommonTable,
       CustomTree
     },
@@ -39,13 +41,16 @@
         showAdd:false,
         isEdit:false,
         // curPage:1,
-        curTypeId:'',
+        curType:'',
         typeTree:[],
         treeProps:{
           label:'name',
           children: 'childNode',
         },
-        attrTableData:{}
+        attrTableData:{},
+        curAttr:'',
+        defaultExpandedKey:[],
+        delAttrIds:''
       }
     },
     methods:{
@@ -56,32 +61,34 @@
       async getAssetTypeList(){
         let res = await AssetManageApi.getAssetTypeTree()
         this.typeTree=res
+        this.defaultExpandedKey=[res[0].id]
+        this.curType=res[0]
       },
       deleteRow(row){
-        this.curTypeId=row.id
+        this.delAttrIds=row.id
         this.showDeleteTip()
       },
       editRow(row){
-        this.curTypeId=row.id
+        this.curAttr=row
         this.isEdit=true
         this.showAdd=true
       },
       showDeleteTip(){
-        CommonFun.deleteTip(this,this.curTypeId,'请至少选择一个资产类型！',this.sureDelete)
+        CommonFun.deleteTip(this,this.curAttr,'请至少选择一个资产类型！',this.sureDelete)
       },
       async sureDelete(){
-        await AssetManageApi.deleteAssetType({
-           assetTypeId:this.curTypeId
+        await AssetManageApi.delAssetTypeAttr({
+           ids:this.delAttrIds
        })
         this.$message({
           type: 'success',
           message: '删除成功!'
         })
-        this.getAssetTypeList()
+        this.getAttributeByType()
       },
       handleSelectionChange(val){
         let tmp=val.map((item)=>item.id)
-        this.curTypeId=tmp.join(",")
+        this.delAttrIds=tmp.join(",")
       },
       addNode(id,obj){
         if(!id){ //默认传空即添加根节点
@@ -90,7 +97,6 @@
         }else{
           this.findNode(this.typeTree,id,obj)
         }
-
       },
       findNode(tree,id,obj){
         tree.map((item)=>{
@@ -105,25 +111,27 @@
       },
       async addAssetType(obj){
         await AssetManageApi.addAssetType(obj)
-        // this.getAssetTypeList()
       },
       async deleteAssetType(data){
         await AssetManageApi.deleteAssetType({
           ids:data.id
         })
         this.$message.success("删除成功！")
-        // this.getAssetTypeList()
       },
       async editAssetType(data){
          await AssetManageApi.editAssetType(data)
       },
-      async onClickNode(val){
+      clickNode(val){
+        this.curType=val
+        this.getAttributeByType()
+      },
+      async getAttributeByType(){
           let res = await AssetManageApi.getAttributeByType({
-            typeId:val.id
+            typeId:this.curType.id
           })
           //后台没有做分页
          res.map((item)=>{
-           item.requiredText=item.required?'是':'否'
+           item.requiredText=item.required=='1'?'是':'否'
          })
          let obj={}
          obj.labelList=[{name:'',prop:'',type:'selection'},
@@ -133,6 +141,9 @@
          obj.dataList=res
          obj.showOpertor=true
          this.attrTableData=obj
+      },
+      onAddTypeAttr(){
+        this.showAdd=true
       }
     },
     mounted(){
