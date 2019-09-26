@@ -22,18 +22,7 @@ class CommonApi {
   @get
   getAssetTypeDetail(){}
 
-  @url('/oaApi/assetType/save')
-  @post
-  addAssetType(){}
-
-  @url('/oaApi/assetType/update')
-  @get
-  updateAssetType(){}
-
-  @url('/oaApi/assetType/delete')
-  @get
-  deleteAssetType(){}
-
+  // 资产组
   @url('/oaApi/assetGroup/tree')
   @get
   getAssetGroupTree(){}
@@ -41,6 +30,20 @@ class CommonApi {
   @url('/oaApi/assetGroup/selectById')
   @get
   selectAssetGroupById(){}
+
+  @url('/oaApi/assetGroup/save')
+  @post
+  addAssetGroup(){}
+
+  @url('/oaApi/assetGroup/delete')
+  @get
+  deleteAssetGroup(){}
+
+  @url('/oaApi/assetGroup/update')
+  @get
+  updateAssetGroup(){}
+
+
 
   @url('/oaApi/assetTypeAttribute/getAttrsById')
   @get
