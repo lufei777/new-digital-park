@@ -8,6 +8,7 @@
         @node-click="handleTreeClick"
         ref="treeList"
         :highlight-current="true"
+        :close-on-click-modal="false"
       >
       </el-tree>
       <span slot="footer" class="dialog-footer">
