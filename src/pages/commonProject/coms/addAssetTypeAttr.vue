@@ -1,21 +1,21 @@
 <template>
   <div class="add-asset-type">
     <el-dialog :title="tipText" :visible.sync="showAdd" width="30%" :show-close="false">
-      <el-form ref="assetTypeForm" :rules="rules" :model="assetTypeForm" label-position="right" label-width="100px" >
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="assetTypeForm.name"></el-input>
+      <el-form ref="typeAttrForm" :rules="rules" :model="typeAttrForm" label-position="right" label-width="100px" >
+        <el-form-item label="名称" prop="attrName">
+          <el-input v-model="typeAttrForm.attrName"></el-input>
         </el-form-item>
-        <el-form-item label="描述" prop="code">
-          <el-input v-model="assetTypeForm.description" type="textarea" rows="4" ></el-input>
-          <!--<span class="memo-length-tip">{{this.assetGroupForm.mark.length}}/255</span>-->
+        <el-form-item label="是否必填" prop="required">
+          <el-radio v-model="typeAttrForm.required" label="1">是</el-radio>
+          <el-radio v-model="typeAttrForm.required" label="0">否</el-radio>
         </el-form-item>
-        <el-form-item label="类型编码" prop="code">
-          <el-input v-model="assetTypeForm.code"></el-input>
+        <el-form-item label="描述" prop="description">
+          <el-input v-model="typeAttrForm.description" type="textarea" rows="4" ></el-input>
           <!--<span class="memo-length-tip">{{this.assetGroupForm.mark.length}}/255</span>-->
         </el-form-item>
         <div class="flex-align-center operator-box">
           <el-button @click="goBack" class="go-back">取消</el-button>
-          <el-button type="primary" @click="submitForm('assetTypeForm')">确定</el-button>
+          <el-button type="primary" @click="submitForm('typeAttrForm')">确定</el-button>
         </div>
       </el-form>
     </el-dialog>
@@ -25,36 +25,41 @@
 <script>
   import AssetManageApi from '../../../service/api/assetManageApi'
   export default {
-    name: 'AddAssetType',
+    name: 'AddAssetTypeAttr',
     components: {
     },
-    props:['showAdd','isEdit','editId'],
+    props:['showAdd','isEdit','editId','curType','curAttr'],
     data () {
       return {
-        assetTypeForm:{
-          name:'',
+        typeAttrForm:{
+          attrName:'',
           description:'',
-          code:''
+          required:'1'
         },
         rules:{
-          name:[{ required: true, message: '请输入名称', trigger: 'blur' }],
+          attrName:[{ required: true, message: '请输入名称', trigger: 'blur' }],
         }
       }
     },
     computed:{
       tipText(){
-        return this.isEdit?'编辑资产类型':'新增资产类型'
+        return this.isEdit?'编辑类型属性':'新增类型属性'
       }
     },
     watch: {
-      editId() {
-        if (this.editId) {
-          this.getAssetTypeDetail()
+      curAttr() {
+        if (this.curAttr) {
+          this.typeAttrForm = {
+            id:this.curAttr.id,
+            attrName: this.curAttr.attrName,
+            description:this.curAttr.description,
+            required: this.curAttr.required,
+          }
         } else {
-          this.assetTypeForm = {
-            name: '',
+          this.typeAttrForm = {
+            attrName: '',
             description: '',
-            code: ''
+            required: '',
           }
         }
       },
@@ -63,20 +68,21 @@
       submitForm(form){
         this.$refs[form].validate((valid) => {
           if (valid) {
-            this.addAssetType()
+            this.addAssetTypeAttr()
           } else {
             console.log('error submit!!');
             return false;
           }
         });
       },
-      async addAssetType(){
+      async addAssetTypeAttr(){
         let message=''
+        let params={...{typeId:this.curType.id},...this.typeAttrForm}
         if(!this.isEdit){
-          await AssetManageApi.addAssetType(this.assetTypeForm)
+          await AssetManageApi.addTypeAttr(params)
           message='添加成功！'
         }else{
-          await AssetManageApi.updateAssetType(this.assetTypeForm)
+          await AssetManageApi.editTypeAttr(params)
           message='修改成功！'
         }
         this.$message({
@@ -85,8 +91,7 @@
           duration:1000
         });
         this.$parent.showAdd=false
-        this.$parent.curTypeId=''
-        this.$parent.getAssetTypeList()
+        this.$parent.getAttributeByType()
       },
       async getAssetTypeDetail(){
         let res = await AssetManageApi.getAssetTypeDetail({
@@ -96,7 +101,6 @@
       },
       goBack(){
         this.$parent.showAdd=false
-        this.$parent.curTypeId=''
       }
     },
     mounted(){

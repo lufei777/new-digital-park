@@ -76,6 +76,18 @@ class CommonApi {
   @url('/oaApi/asset/updateById')
   @post
   editAsset(){}
+
+  @url('/oaApi/assetTypeAttribute/save')
+  @post
+  addTypeAttr(){}
+
+  @url('/oaApi/assetTypeAttribute/delete')
+  @get
+  delAssetTypeAttr(){}
+
+  @url('/oaApi/assetTypeAttribute/update')
+  @get
+  editTypeAttr(){}
 }
 
 export default new CommonApi()

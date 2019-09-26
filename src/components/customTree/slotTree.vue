@@ -12,6 +12,7 @@
 			:props="defaultProps"
 			:expand-on-click-node="false"
 			:node-key="NODE_KEY"
+      :default-expanded-keys="defaultExpandedKey"
       @node-click="onClickNode">
 				<div class="comp-tr-node" slot-scope="{ node, data }">
 					<!-- 编辑状态 -->
@@ -64,7 +65,8 @@
 
 export default{
 	name: 'component-tree',
-  props:['treeList','addNodeCallback','delNodeCallback','editCallback','clickNodeCallback'],
+  props:['treeList','addNodeCallback','delNodeCallback','editCallback',
+    'clickNodeCallback','defaultExpandedKey'],
 	data(){
 		return {
 			isLoading: false,// 是否加载
