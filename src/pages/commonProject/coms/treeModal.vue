@@ -22,7 +22,20 @@
 export default {
   name: "TreeModal",
   components: {},
-  props: ["showTree", "treeList", "cancelCallback", "sureCallback", "tip"],
+  // props: ["showTree", "treeList", "cancelCallback", "sureCallback", "tip"],
+  props: {
+    showTree: Boolean,
+    treeList: Array,
+    cancelCallback: {
+      type: Function,
+      required: true
+    },
+    sureCallback: {
+      type: Function,
+      required: true
+    },
+    tip: String
+  },
   data() {
     return {
       typeList: [],
