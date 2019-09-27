@@ -10,6 +10,8 @@
   </div>
 </template>
 
+
+
 <script>
   import AddAssetGroup from '../coms/addAssetGroup'
   import AssetManageApi from '../../../service/api/assetManageApi'
