@@ -13,8 +13,8 @@
       <div class="flex-align-between type-operator-box">
         <span class="attr-table-tip">属性列表</span>
         <div>
-          <el-button type="primary" @click="showDeleteTip">批量删除</el-button>
           <el-button type="primary" @click="onAddTypeAttr">新建</el-button>
+          <el-button type="primary" @click="showDeleteTip">批量删除</el-button>
         </div>
       </div>
       <CommonTable :table-obj="attrTableData" :cur-page="1"/>

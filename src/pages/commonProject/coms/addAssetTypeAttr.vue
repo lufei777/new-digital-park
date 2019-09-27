@@ -1,6 +1,6 @@
 <template>
   <div class="add-asset-type">
-    <el-dialog :title="tipText" :visible.sync="showAdd"
+    <el-dialog :title="tipText" :visible.sync="showAddModal"
                width="30%" :show-close="false"
                @close="resetForm"
     >
@@ -48,6 +48,14 @@
       tipText(){
         return this.isEdit?'编辑类型属性':'新增类型属性'
       },
+      showAddModal:{
+        get(){
+          return this.showAdd
+        },
+        set(){
+          this.goBack()
+        }
+      }
     },
     watch: {
       isEdit() {
@@ -66,6 +74,7 @@
           }
         }
       },
+
     },
     methods: {
       submitForm(form){
