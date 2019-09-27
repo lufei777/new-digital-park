@@ -71,7 +71,7 @@
         modalFlag:1,//treeModal 代表所有树形弹框 1代表是资产类型 2代表是资产组
         groupTree:[],
         typeTree:[],
-        orderType:'1',
+        orderType:'0',
         orderBy:'create_time'
       }
     },

@@ -18,7 +18,7 @@ module.exports = {
         // }
       },
       '/oaApi': {
-        target:'http://192.168.1.208:8002',//后端接口地址
+        target:'http://192.168.1.110:8002',//后端接口地址
         // changeOrigin: true,//是否允许跨越
         // pathRewrite: {
         //   '^/oaApi': '',//重写,
@@ -31,6 +31,8 @@ module.exports = {
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
+
+
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 

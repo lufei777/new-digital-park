@@ -128,7 +128,7 @@
         providerList:[],
         showTree:false,
         modalTip:'',
-        treeList:'',
+        treeList:[],
         groupTree:[],
         deptTree:[],
         modalFlag:1 //1代表部门 2代表资产组
