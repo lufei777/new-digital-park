@@ -10,8 +10,6 @@
   </div>
 </template>
 
-
-
 <script>
   import AddAssetGroup from '../coms/addAssetGroup'
   import AssetManageApi from '../../../service/api/assetManageApi'
@@ -117,9 +115,9 @@
       background: #3a8ee6;
     }
     .el-tree-node:focus>.el-tree-node__content{
-      color:@white;
-      background: #3a8ee6;
-    }
+        color:#3a8ee6;
+        background: @white;
+      }
   }
 </style>
 
