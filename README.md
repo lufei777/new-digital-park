@@ -49,17 +49,41 @@
 ├── index.html                                  // 首页入口文件，你可以添加一些 meta 信息或统计代码等
 ├── package.json                                // 项目配置文件
 └── README.md                                   // 项目的说明文档，markdown 格式
+```
 
-一、CommonTable组件---通用表格+分页。需要对数据进行封装。
+注：下面封装的组件、方法都是有局限性的，只适用于项目中很通用的部分，自知很多是需要完善的，不要跟我杠。
+    不要轻易改动，因为可能会涉及到之前使用的地方。
+    若觉得实在不好用，可以重新封装，以后就用新的，旧的有时间慢慢改。
+    
+   
+一、公共组件封装
+一）.CommonTable组件---通用表格+分页。支持修改，删除，多选，排序，导出。
+    需要对数据进行封装。
 1.传递参数curPage,tableObj。tableObj包括：
   1）labelList对象---prop:属性，name:名称，sort：是否排序，'不传/false'不排序，'custom'排序。
   2）dataList对象 
-  3）tableTip 表格提示性文字 不传则不显示
+  3）tableTip 表格提示性文字 不传则不显示()
   4）showExportBtn 是否显示导出按钮 默认不传即不显示
-2.需要格式化某些列，可以在组件的formatSpecialCol方法中编写逻辑
+  5）showOpertor 是否显示基本的操作（修改/删除）默认不传即不显示
+2.“操作”列需要自定义的，showOpertor不传，使用插槽传入自定义部分。
+2.需要特殊的格式化某些列，可以在组件的formatSpecialCol方法中编写逻辑，例如无数据表格显示“--”
+3.！！！事件绑定比较局限，没有使用回调等方法。（后面封装的组件已经逐渐改成使用回调）
+  ！！！规定父组件：
+  1）修改某一行事件名称必须叫editRow
+  2）删除某一行事件名称必须叫deleteRow
+  3）点击某一行事件名称必须叫rowClick
+  4）多选事件名称必须叫handleSelectionChange
+  5）导出事件名称必须叫handleExport
+  
+二）.customTree组件---可增删改的树形控件
+    参数说明：
+  1）treeList  数据
+  2）addNodeCallback/delNodeCallback/editCallback/clickNodeCallback------添加/删除/编辑/点击 节点回调
+  3）defaultExpandedKey 默认展开的节点
 
+二、commonFun公共方法封装
 
-二、chartUtils封装 
+三、chartUtils封装 
 (基础charts封装，当无法满足需求时，可自己再在自己的页面重新定义特殊化option，与封装组件相同处不必重复写)
 
 I.handleBarchar柱状图/柱状折线图：
@@ -75,4 +99,5 @@ II.hollowPieChart空心饼图：
  ...大致同上
   1）seriesName
   2）seriesData 
-```
+
+

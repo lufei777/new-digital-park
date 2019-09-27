@@ -18,6 +18,7 @@
     </div>
     <div class="operator-box">
       <el-button type="primary">EXCEL导入</el-button>
+      <el-button type="primary" @click="showDeleteTip">批量删除</el-button>
       <el-button type="primary" @click="onClickAddBtn">新建</el-button>
     </div>
     <CommonTable :tableObj="assetData" :curPage="1">
@@ -49,6 +50,7 @@
 <script>
   import AssetManageApi from '../../../service/api/assetManageApi'
   import CommonTable from '../../../components/commonTable/index'
+  import CommonFun from '../../../utils/commonFun'
   import TreeModal from '../coms/treeModal'
   export default {
     name: 'AssetMaintenance',
@@ -72,7 +74,8 @@
         groupTree:[],
         typeTree:[],
         orderType:'0',
-        orderBy:'create_time'
+        orderBy:'create_time',
+        delAssetIds:''
       }
     },
     methods:{
@@ -112,10 +115,6 @@
         this.orderType=1,
         this.orderBy='create_time'
         this.getAssetList()
-      },
-      handleSelectionChange(val){
-        let tmp=val.map((item)=>item.id)
-        // this.curTypeId=tmp.join(",")
       },
       onClickAddBtn(){
         this.treeList=this.typeTree
@@ -172,6 +171,27 @@
         this.orderBy=column.prop
         this.orderType=column.order=='ascending'?1:0
         this.getAssetList()
+      },
+      showDeleteTip(){
+        CommonFun.deleteTip(this,this.delAssetIds,'请至少选择一条资产！',this.sureDelete)
+      },
+      async sureDelete(){
+        console.log(this.delAssetIds)
+        // await AssetManageApi.delAssetTypeAttr({
+        //   ids:this.delAssetIds
+        // })
+        // this.$message({
+        //   type: 'success',
+        //   message: '删除成功!'
+        // })
+        // this.getAssetList()
+      },
+      deleteRow(val) {
+
+      },
+      handleSelectionChange(val){
+        let tmp=val.map((item)=>item.id)
+        this.delAssetIds=tmp
       }
     },
     mounted(){
