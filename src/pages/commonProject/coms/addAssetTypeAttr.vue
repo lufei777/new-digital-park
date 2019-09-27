@@ -1,6 +1,9 @@
 <template>
   <div class="add-asset-type">
-    <el-dialog :title="tipText" :visible.sync="showAdd" width="30%" :show-close="false">
+    <el-dialog :title="tipText" :visible.sync="showAdd"
+               width="30%" :show-close="false"
+               @close="resetForm"
+    >
       <el-form ref="typeAttrForm" :rules="rules" :model="typeAttrForm" label-position="right" label-width="100px" >
         <el-form-item label="名称" prop="attrName">
           <el-input v-model="typeAttrForm.attrName"></el-input>
@@ -44,22 +47,22 @@
     computed:{
       tipText(){
         return this.isEdit?'编辑类型属性':'新增类型属性'
-      }
+      },
     },
     watch: {
-      curAttr() {
-        if (this.curAttr) {
+      isEdit() {
+        if (this.isEdit) {
           this.typeAttrForm = {
             id:this.curAttr.id,
             attrName: this.curAttr.attrName,
             description:this.curAttr.description,
             required: this.curAttr.required,
           }
-        } else {
-          this.typeAttrForm = {
-            attrName: '',
-            description: '',
-            required: '',
+        }else{
+          this.typeAttrForm={
+            attrName:'',
+            description:'',
+            required:'1'
           }
         }
       },
@@ -101,6 +104,10 @@
       },
       goBack(){
         this.$parent.showAdd=false
+      },
+      resetForm(){
+        this.$parent.isEdit=false,
+        this.$parent.curAttr=''
       }
     },
     mounted(){

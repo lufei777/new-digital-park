@@ -13,7 +13,7 @@
       <div class="flex-align-between type-operator-box">
         <span class="attr-table-tip">属性列表</span>
         <div>
-          <el-button type="primary">批量删除</el-button>
+          <el-button type="primary" @click="showDeleteTip">批量删除</el-button>
           <el-button type="primary" @click="onAddTypeAttr">新建</el-button>
         </div>
       </div>
@@ -63,6 +63,7 @@
         this.typeTree=res
         this.defaultExpandedKey=[res[0].id]
         this.curType=res[0]
+        this.getAttributeByType()
       },
       deleteRow(row){
         this.delAttrIds=row.id
@@ -74,7 +75,7 @@
         this.showAdd=true
       },
       showDeleteTip(){
-        CommonFun.deleteTip(this,this.curAttr,'请至少选择一个资产类型！',this.sureDelete)
+        CommonFun.deleteTip(this,this.delAttrIds,'请至少选择一个资产类型属性！',this.sureDelete)
       },
       async sureDelete(){
         await AssetManageApi.delAssetTypeAttr({
@@ -143,6 +144,7 @@
          this.attrTableData=obj
       },
       onAddTypeAttr(){
+        this.isEdit=false
         this.showAdd=true
       }
     },

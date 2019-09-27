@@ -39,21 +39,21 @@
 								size="mini"
 
 
-								@click="handleAdd(node, data)"></el-button>
+								@click.stop="handleAdd(node, data)"></el-button>
 
 							<!-- 编辑 -->
 							<el-button icon="el-icon-edit" 
 								size="mini"
 
 								type="info"
-								@click="handleEdit(node, data)"></el-button>
+								@click.stop="handleEdit(node, data)"></el-button>
 
 							<!-- 删除 -->
 							<el-button icon="el-icon-delete" 
 								size="mini"
 
 								type="danger"
-								@click="handleDelete(node, data)"></el-button>
+								@click.stop="handleDelete(node, data)"></el-button>
 						</span>
 					</template>
 				</div>
