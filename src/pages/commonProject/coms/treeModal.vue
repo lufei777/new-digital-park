@@ -1,6 +1,6 @@
 <template>
   <div class="choose-asset-type">
-    <el-dialog :title="tip" :visible.sync="showTree" width="30%" :show-close="false">
+    <el-dialog :title="tip" :visible.sync="childShowTree" width="30%" :show-close="false">
       <el-tree
         :data="treeList"
         :props="treeProps"
@@ -9,8 +9,7 @@
         ref="treeList"
         :highlight-current="true"
         :close-on-click-modal="false"
-      >
-      </el-tree>
+      ></el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button @click="goBack">取 消</el-button>
         <el-button type="primary" @click="onClickSureBtn">确定</el-button>
@@ -20,40 +19,47 @@
 </template>
 
 <script>
-  export default {
-    name: 'TreeModal',
-    components: {
-    },
-    props:['showTree','treeList','cancelCallback','sureCallback','tip'],
-    data () {
-      return {
-        typeList:[],
-        treeProps:{
-          label:'name',
-          children:'childNode'
-        },
-        curSelect:''
-      }
-    },
-    computed:{
-    },
-    methods: {
-      handleTreeClick(val){
-         this.curSelect=val
+export default {
+  name: "TreeModal",
+  components: {},
+  props: ["showTree", "treeList", "cancelCallback", "sureCallback", "tip"],
+  data() {
+    return {
+      typeList: [],
+      treeProps: {
+        label: "name",
+        children: "childNode"
       },
-      goBack(){
-        this.cancelCallback&& this.cancelCallback()
-      },
-      onClickSureBtn(){
-         this.sureCallback && this.sureCallback(this.curSelect)
-      }
+      curSelect: ""
+    };
+  },
+  computed: {},
+  methods: {
+    handleTreeClick(val) {
+      this.curSelect = val;
     },
-    mounted(){
+    goBack() {
+      this.cancelCallback && this.cancelCallback();
+    },
+    onClickSureBtn() {
+      this.sureCallback && this.sureCallback(this.curSelect);
+    }
+  },
+  mounted() {},
+  computed: {
+    childShowTree: {
+      get() {
+        return this.showTree;
+      },
+      set() {
+        this.goBack();
+      }
     }
   }
+};
 </script>
 
 <style lang="less">
-  .choose-asset-type{
-  }
+.choose-asset-type {
+}
 </style>
