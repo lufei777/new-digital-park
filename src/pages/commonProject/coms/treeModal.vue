@@ -22,7 +22,6 @@
 export default {
   name: "TreeModal",
   components: {},
-  // props: ["showTree", "treeList", "cancelCallback", "sureCallback", "tip"],
   props: {
     showTree: Boolean,
     treeList: Array,
