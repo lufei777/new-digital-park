@@ -12,7 +12,7 @@
       <div class="block flex-align-center">
         <span>资产组</span>
         <el-input v-model="groupName" @focus="onShowGroup"/>
-      </div>
+      </div> 
       <el-button type="primary"  @click="onClickSearchBtn">搜索</el-button>
       <el-button type="primary"  @click="onClickResetBtn">重置</el-button>
     </div>
