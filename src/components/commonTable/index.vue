@@ -23,9 +23,9 @@
           >
           </af-table-column>
           <el-table-column v-if="tableObj.showOperator" fixed="right" label="操作" width="120"  align="right">
-            <template slot-scope="scope">
+            <template v-slot="myScope">
               <el-button size="small" type="text"
-               @click.native.prevent="editRow(scope.$index, tableObj.dataList)" >
+               @click.native.prevent="editRow(myScope.$index, tableObj.dataList)" >
                 修改
               </el-button>
               <el-button size="small" type="text"

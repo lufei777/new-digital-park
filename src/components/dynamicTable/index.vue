@@ -9,22 +9,24 @@
         </el-button>
       </div>
       <div v-if="tableData.total!=0">
-        <table width="100%" class="dynamic-table">
-          <thead>
-          <th v-for="(item,index) in tableData.title" :key="index">
-            {{item}}
-            <!--<span class="caret-wrapper">-->
-            <!--<i class="sort-caret ascending"></i>-->
-            <!--<i class="sort-caret descending"></i>-->
-            <!--</span>-->
-          </th>
-          </thead>
-          <tbody>
-          <tr v-for="(item,index) in tableData.value" :key="index">
-            <td v-for="(val,i) in item" :key="i" :class="val>parseFloat(item[1])&&styleLabel?'styleRed':''">{{val}}</td>
-          </tr>
-          </tbody>
-        </table>
+        <div style="overflow-x:auto">
+          <table width="100%" class="dynamic-table">
+            <thead>
+            <th v-for="(item,index) in tableData.title" :key="index">
+              {{item}}
+              <!--<span class="caret-wrapper">-->
+              <!--<i class="sort-caret ascending"></i>-->
+              <!--<i class="sort-caret descending"></i>-->
+              <!--</span>-->
+            </th>
+            </thead>
+            <tbody>
+            <tr v-for="(item,index) in tableData.value" :key="index">
+              <td v-for="(val,i) in item" :key="i" :class="val>parseFloat(item[1])&&styleLabel?'styleRed':''">{{val}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
         <div class="page-box">
           <!--<span>共&nbsp;{{tableData.total}}&nbsp;条</span>-->
           <el-pagination
@@ -149,8 +151,11 @@
         border:1px solid @tableBorder;
       }
       .export-btn{
-        margin-right: 10px;
+        margin: 10px 10px 10px 0;
       }
+    }
+    .table-tip{
+      margin-top:15px;
     }
   }
 
