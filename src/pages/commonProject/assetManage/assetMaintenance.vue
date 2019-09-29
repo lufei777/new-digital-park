@@ -17,8 +17,8 @@
       <el-button type="primary" @click="onClickResetBtn">重置</el-button>
     </div>
     <div class="operator-box">
-      <el-button type="primary" @click="showDeleteTip">批量删除</el-button>
       <el-button type="primary" @click="onClickImportExcel">EXCEL导入</el-button>
+      <el-button type="primary" @click="showDeleteTip">批量删除</el-button>
       <el-button type="primary" @click="onClickAddBtn">新建</el-button>
     </div>
     <CommonTable :tableObj="assetData" :curPage="1">
