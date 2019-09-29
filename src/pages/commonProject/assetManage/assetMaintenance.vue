@@ -55,7 +55,7 @@
     />
 
     <CommonDialog class="upload-excel" :dialogConfig="excelDialogObj">
-      <template slot-scope="scope">
+      <template slot-scope="slotConfig">
         <el-row>
           <el-col :span="12">
             <el-row class="select-excel-template" type="flex" text-align="center">
@@ -65,7 +65,7 @@
                 </div>
               </el-col>
               <el-col :span="10">
-                <el-link type="primary" :href="scope.slotConfig.templateUrl">下载模板</el-link>
+                <el-link type="primary" :href="slotConfig.templateUrl">下载模板</el-link>
               </el-col>
             </el-row>
             <el-row>
@@ -77,7 +77,7 @@
           </el-col>
 
           <el-col :span="12">
-            <CommonUpload :uploadConfig="scope.slotConfig" />
+            <CommonUpload :uploadConfig="slotConfig" />
           </el-col>
         </el-row>
       </template>

@@ -5,7 +5,7 @@
       :visible.sync="dialogConfig.shown"
       width="30%"
     >
-      <slot :slotConfig="dialogConfig.slotConfig"></slot>
+      <slot v-bind="dialogConfig.slotConfig"></slot>
 
       <!-- <div slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
