@@ -25,10 +25,13 @@
       <template v-slot:special-operator>
         <el-table-column  fixed="right" label="操作" align="right" width="120">
           <template slot-scope="scope">
-            <el-button type="text" size="small" v-if="scope.row.status==1">变更</el-button>
-            <el-button type="text" size="small">调拨</el-button>
-            <el-button type="text" size="small" icon="el-icon-more" @click.stop.self="onClickMore(scope.$index)" class="more-btn">
-              <div v-show="scope.row.showMore" class="more-operator-box">
+            <el-button type="text" size="small" v-if="scope.row.status==1">入库</el-button>
+            <el-button type="text" size="small">领用</el-button>
+            <el-button type="text" size="small" icon="el-icon-more" @click.stop="onClickMore" class="more-btn">
+              <div v-show="showMore" class="more-operator-box">
+                <el-button type="text" size="small">变更</el-button>
+                <el-button type="text" size="small">借用</el-button>
+                <el-button type="text" size="small">归还</el-button>
                 <el-button type="text" size="small">报修</el-button>
                 <el-button type="text" size="small">报废</el-button>
               </div>
@@ -88,9 +91,6 @@
           pageNum:this.curPage,
           pageSize:10
         })
-        res.list.map((item)=>{
-          item.showMore=false
-        })
         res.labelList=[{name:'',prop:'',type:'selection'},
           {name:'编号',prop:'coding',sort:'custom'},
           {name:'名称',prop:'name',sort:'custom'},
@@ -126,8 +126,8 @@
         this.isEdit=true
         this.$router.push(`/addAsset?assetId=${row.id}&typeId=${row.typeId}`)
       },
-      onClickMore(index){
-        this.assetData.dataList[index].showMore=!this.assetData.dataList[index].showMore
+      onClickMore(){
+        this.showMore=!this.showMore
       },
       onShowGroup(){
         this.treeList=this.groupTree
@@ -237,17 +237,11 @@
     .more-operator-box{
       position: absolute;
       top:20px;
-      left:-10px;
+      left:-20px;
       z-index:99;
-      background:@white;
-      border-radius: 2px;
-      box-shadow: 0px 0px 2px #888888;;
+      background: #ccc;
       .el-button{
         display: block;
-        padding:5px;
-      }
-      .el-button+.el-button{
-        margin:0;
       }
     }
     .cell{
