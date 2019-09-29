@@ -64,19 +64,22 @@
       </el-col>
         <el-button type='primary' @click="addCustomAttr">自定义</el-button>
         <el-col v-for="(item,index) in assetAddForm.customAttrList" :key="item.key">
-          <el-form-item label="属性名称" class="el-col-12"
+          <el-form-item label="属性名称" class="el-col-my"
                         :prop="'customAttrList.'+index+'.attrName'"
                         :rules="{
                           required:true,message:'请输入属性名称',trigger: 'blur'
                         }">
             <el-input v-model="item.attrName" ></el-input>
           </el-form-item>
-          <el-form-item label="属性值" :prop="'customAttrList.'+index+'.attrValue'"
+          <el-form-item label="属性值" class="el-col-my"
+                        :prop="'customAttrList.'+index+'.attrValue'"
                         :rules="{
                           required:true,message:'请输入属性值',trigger: 'blur'
                         }">
-            <el-input v-model="item.attrValue"></el-input>
+            <el-input v-model="item.attrValue" class="mgr10"></el-input>
           </el-form-item>
+          <i class="el-icon-delete del-custom-btn hover-pointer"
+             @click="onClickDelCustomBtn(index)"></i>
         </el-col>
         <el-col>
           <div class="operator-box">
@@ -328,6 +331,9 @@
         this.modalTip = '选择部门'
         this.modalFlag = 1
         this.showTree = true
+      },
+      onClickDelCustomBtn(index){
+        this.assetAddForm.customAttrList.splice(index,1)
       }
     },
     mounted(){
@@ -349,7 +355,7 @@
     padding-bottom:20px;
     overflow: auto;
     .el-form{
-      width:50%;
+      width:60%;
       margin:0 auto;
     }
     .form-inner-tip{
@@ -359,8 +365,19 @@
     .go-back{
       margin-left:30%;
     }
+    .el-col-my{
+      width:42%;
+      text-align: right;
+    }
+    .del-custom-btn{
+      color:red;
+      margin-top:10px;
+    }
+    .mgr10{
+      margin-right: 10px;
+    }
     .remark-el-form .el-form-item__content{
-      width:80%;
+      width:70%;
     }
   }
 </style>

@@ -2,6 +2,7 @@ import axiosOrigin from "axios";
 // import { Loading } from 'element-ui'
 // 服务端不需loading
 const Loading = require("element-ui").Loading;
+const Message = require("element-ui").Message
 
 let loadingInstance = "";
 let loadingCount = 0;
@@ -73,9 +74,6 @@ axios.interceptors.response.use(
       console.log("=====================seperate line=====================");
       console.log("axios from server url:", response.config.url);
     }
-    // 非接口类 请求，直接返回
-    if (!response) response = "";
-    if (!response  || !response.status) return response;
     let data = response.data
     // token超时需要重新刷新token, 600测试用
     // token超时直接退出
@@ -87,8 +85,15 @@ axios.interceptors.response.use(
       }
       if (data == undefined) return "";
       return data.data;
-    } else {
-      return data
+    } else if(!data.successful && data.code){
+      console.log(data)
+      Message({
+        message: data.errorMessage,
+        type: 'error'
+      });
+
+    }else{
+      return data   //兼容旧接口
     }
   },
   function(error) {
