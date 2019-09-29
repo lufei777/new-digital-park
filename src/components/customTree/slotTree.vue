@@ -33,7 +33,7 @@
 						</span>
 						
 						<!-- 按钮 -->
-						<span class="comp-tr-node--btns">
+						<span :class="[data[NODE_KEY].status==5?'':'comp-tr-node--btns']">
 							<!-- 新增 -->
 							<el-button icon="el-icon-plus" 
 								size="mini"
