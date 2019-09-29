@@ -86,7 +86,7 @@
           {name:'表值',prop:'value'}]
         res.dataList=res.data
         res.hideExportBtn=true
-        res.showOpertor=true
+        res.showOperator=true
         this.tableData=res
       },
       onClickAddBtn(){

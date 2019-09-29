@@ -22,7 +22,7 @@
                            align="right"
           >
           </af-table-column>
-          <el-table-column v-if="tableObj.showOpertor" fixed="right" label="操作" width="120"  align="right">
+          <el-table-column v-if="tableObj.showOperator" fixed="right" label="操作" width="120"  align="right">
             <template slot-scope="scope">
               <el-button size="small" type="text"
                @click.native.prevent="editRow(scope.$index, tableObj.dataList)" >

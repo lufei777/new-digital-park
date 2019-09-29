@@ -133,7 +133,7 @@
                        {name:'电话号码',prop:'phone'}]
         res.dataList=res.rows
         res.hideExportBtn=true
-        res.showOpertor=true
+        res.showOperator=true
         this.tableData=res
         if(res.rows.length){
           this.curUser=res.rows[0]

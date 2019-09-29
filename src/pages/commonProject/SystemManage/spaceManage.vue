@@ -112,7 +112,7 @@
                        {name:'描述',prop:'memo'}]
         res.dataList=res.rows
         res.hideExportBtn=true
-        res.showOpertor=true
+        res.showOperator=true
         this.tableData=res
         if(res.rows.length){
           this.curSpace=res.rows[0]
