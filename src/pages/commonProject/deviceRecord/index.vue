@@ -139,7 +139,7 @@
           {name:'分项类别',prop:'itemizeCaption'}]
         res.dataList=res.rows
         res.hideExportBtn=true
-        res.showOpertor=true
+        res.showOperator=true
         this.tableData=res
         if(res.total) this.curTableData=res.rows[0]
       },

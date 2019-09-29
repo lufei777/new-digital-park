@@ -92,7 +92,7 @@
           {name:'机构全称',prop:'abbr'}]
         res.dataList=res.rows
         res.hideExportBtn=true
-        res.showOpertor=true
+        res.showOperator=true
         this.departList=res
       },
       onClickSearchBtn(){

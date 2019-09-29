@@ -36,7 +36,7 @@
 
 <script>
   import CommonApi from '../../service/api/commonApi'
-  import CommonData from '../../utils/commonData'
+  import CommonFun from '../../utils/commonFun'
   import nav1 from '../../../static/image/nav1.png'
   import nav2 from '../../../static/image/nav2.png'
   import hover_bg from '../../../static/image/nav_hover.png'
@@ -64,7 +64,7 @@
       },
       async getMenus(){
         // let res = await CommonApi.getMenus()
-        let res = CommonData.menuData
+        let res = CommonFun.menuData
         res.children.map((item)=>{
           item.bgFlag=-1 //鼠标移入移出背景
           item.clickFlag=-1 //鼠标点击背景

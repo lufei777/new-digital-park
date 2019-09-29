@@ -51,42 +51,63 @@
 └── README.md                                   // 项目的说明文档，markdown 格式
 ```
 
-注：下面封装的组件、方法都是有局限性的，只适用于项目中很通用的部分，自知很多是需要完善的，不要跟我杠。
-    不要轻易改动，因为可能会涉及到之前使用的地方。
+注：下面封装的组件、方法都是有局限性的，只适用于项目中很通用的部分，自知很多是需要完善的。
+    ，但会涉及到之前使用的地方，不要轻易改动。
     若觉得实在不好用，可以重新封装，以后就用新的，旧的有时间慢慢改。
     
    
 一、公共组件封装
-一）.CommonTable组件---通用表格+分页。支持修改，删除，多选，排序，导出。
+
+一）CommonTable组件---通用表格+分页。支持修改，删除，多选，排序，导出。
     需要对数据进行封装。
 1.传递参数curPage,tableObj。tableObj包括：
   1）labelList对象---prop:属性，name:名称，sort：是否排序，'不传/false'不排序，'custom'排序。
   2）dataList对象 
   3）tableTip 表格提示性文字 不传则不显示()
   4）showExportBtn 是否显示导出按钮 默认不传即不显示
-  5）showOpertor 是否显示基本的操作（修改/删除）默认不传即不显示
-2.“操作”列需要自定义的，showOpertor不传，使用插槽传入自定义部分。
+  5）showOperator 是否显示基本的操作（修改/删除）默认不传即不显示
+2.“操作”列需要自定义的，showOperator不传，使用插槽传入自定义部分。
 2.需要特殊的格式化某些列，可以在组件的formatSpecialCol方法中编写逻辑，例如无数据表格显示“--”
 3.！！！事件绑定比较局限，没有使用回调等方法。（后面封装的组件已经逐渐改成使用回调）
-  ！！！规定父组件：
+  ！！！因此规定父组件：
   1）修改某一行事件名称必须叫editRow
   2）删除某一行事件名称必须叫deleteRow
   3）点击某一行事件名称必须叫rowClick
   4）多选事件名称必须叫handleSelectionChange
   5）导出事件名称必须叫handleExport
   
-二）.customTree组件---可增删改的树形控件
+二）customTree组件---可增删改的树形控件
     参数说明：
   1）treeList  数据
   2）addNodeCallback/delNodeCallback/editCallback/clickNodeCallback------添加/删除/编辑/点击 节点回调
   3）defaultExpandedKey 默认展开的节点
+  
+三）login组件---老系统中所有的登录都是一样的，重构时可使用此组件。
+    参数说明：
+  1）url --- 成功后跳转到的页面路由
+  
+四）treeModal---树形弹框
+    参数说明
+  1）tip---提示信息
+  2）showTree ---弹框的关闭显示控制
+  3）cancelCallback---点击取消时的回调
+  3）sureCallback ---点击确定时的回调
 
-二、commonFun公共方法封装
+二、commonFun公共方法/数据封装  （有些为测试数据，不再此说明，用完可删）
+
+一）deleteTip 删除提示函数 
+    参数说明
+  1）that   -->this
+  2）deleteId -->要删除的id
+  3）msgTip 没有传id时的提示信息
+  4）callBack 确定删除的回调
+  
+  
 
 三、chartUtils封装 
 (基础charts封装，当无法满足需求时，可自己再在自己的页面重新定义特殊化option，与封装组件相同处不必重复写)
 
-I.handleBarchar柱状图/柱状折线图：
+一）handleBarchart柱状图/柱状折线图：
 1.传递参数dom，data。data包括
   1）titleText：可选
   2）legendData：可选
@@ -95,7 +116,7 @@ I.handleBarchar柱状图/柱状折线图：
   5）series 数据
   6）showSecondY：是否显示第二个y轴，默认不传即不显示
   
-II.hollowPieChart空心饼图：
+二）hollowPieChart空心饼图：
  ...大致同上
   1）seriesName
   2）seriesData 

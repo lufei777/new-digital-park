@@ -140,7 +140,7 @@
            {name:'描述',prop:'description'},
            {name:'是否必填',prop:'requiredText'}]
          obj.dataList=res
-         obj.showOpertor=true
+         obj.showOperator=true
          this.attrTableData=obj
       },
       onAddTypeAttr(){

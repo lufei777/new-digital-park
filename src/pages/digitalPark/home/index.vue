@@ -63,14 +63,14 @@
 </template>
 
 <script>
-  import CommonData from '../../../utils/commonData'
+  import CommonFun from '../../../utils/commonFun'
   export default {
     name: 'DigitalHomePage',
     components: {
     },
     data () {
       return {
-        productList:CommonData.productList,
+        productList:CommonFun.productList,
         showMoreProduct:false
       }
     },

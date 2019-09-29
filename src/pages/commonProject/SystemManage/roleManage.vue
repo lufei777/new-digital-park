@@ -78,7 +78,7 @@
         })
         res.dataList=res.rows
         res.hideExportBtn=true
-        res.showOpertor=true
+        res.showOperator=true
         this.roleList=res
         if(res.rows.length){
           this.curRole=res.rows[0]
