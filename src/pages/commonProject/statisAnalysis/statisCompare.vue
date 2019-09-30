@@ -129,6 +129,12 @@
     },
     mounted(){
       setTimeout(()=>this.getStatisCompareData(),500)
+    },
+    beforeDestroy(){
+      let obj = echarts.getInstanceByDom(this.$refs.myChart1)
+      if (obj) {
+        echarts.dispose(obj)
+      }
     }
   }
 </script>

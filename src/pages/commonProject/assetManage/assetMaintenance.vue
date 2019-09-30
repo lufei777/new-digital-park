@@ -19,6 +19,8 @@
     <div class="operator-box">
       <el-button type="primary" @click="onClickImportExcel">EXCEL导入</el-button>
       <el-button type="primary" @click="showDeleteTip">批量删除</el-button>
+
+      <el-button type="primary" @click="onMultiEdit">批量编辑</el-button>
       <el-button type="primary" @click="onClickAddBtn">新建</el-button>
     </div>
     <CommonTable :tableObj="assetData" :curPage="1">
@@ -109,8 +111,7 @@ export default {
       typeTree: [],
       orderType: "0",
       orderBy: "create_time",
-      //excel导入
-      excelDialogObj: {
+      excelDialogObj: {//excel导入
         title: "excel导入",
         classList: [],
         shown: false,
@@ -125,7 +126,8 @@ export default {
           onSuccess: this.excelUploadSuccess,
           onError: this.excelUploadError
         }
-      }
+      },
+      curAssetIds:''
     };
   },
   methods: {
@@ -142,6 +144,7 @@ export default {
         })
         res.list.map((item)=>{
           item.showMore=false
+          item.statusText = item.status==1?'闲置':item.status==2?'在用':item.status==3?'报修':'报废'
         })
         res.labelList=[{name:'',prop:'',type:'selection'},
           {name:'编号',prop:'coding',sort:'custom'},
@@ -150,7 +153,8 @@ export default {
           {name:'供应商',prop:'providerName'},
           {name:'资产类型',prop:'typeName'},
           {name:'当前保管人',prop:'currentCustodian'},
-          {name:'规格型号',prop:'specification'}]
+          {name:'规格型号',prop:'specification'},
+          {name:'状态',prop:'statusText'}]
         res.hideExportBtn=true
         res.dataList=res.list
         this.assetData=res
@@ -226,15 +230,10 @@ export default {
       this.getAssetList();
     },
     showDeleteTip() {
-      CommonFun.deleteTip(
-        this,
-        this.delAssetIds,
-        "请至少选择一条资产！",
-        this.sureDelete
-      );
+      CommonFun.deleteTip(this, this.curAssetIds, "请至少选择一条资产！", this.sureDelete);
     },
     async sureDelete() {
-      console.log(this.delAssetIds);
+      console.log(this.curAssetIds);
       // await AssetManageApi.delAssetTypeAttr({
       //   ids:this.delAssetIds
       // })
@@ -247,7 +246,7 @@ export default {
     deleteRow(val) {},
     handleSelectionChange(val) {
       let tmp = val.map(item => item.id);
-      this.delAssetIds = tmp;
+      this.curAssetIds = tmp;
     },
     //excel导入
     onClickImportExcel() {
@@ -263,6 +262,18 @@ export default {
         title: "上传失败",
         message: `${file.name}上传失败`
       });
+    },
+    onMultiEdit(){
+      if(!this.curAssetIds){
+        this.$message({
+          type:'warning',
+          message:'请至少选择一条资产！',
+          duration:800
+        })
+      }else{
+        let tmp=this.curAssetIds.join(',')
+        this.$router.push(`/addAsset?assetIds=${tmp}`)
+      }
     }
   },
   mounted() {

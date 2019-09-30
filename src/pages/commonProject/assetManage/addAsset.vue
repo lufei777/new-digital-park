@@ -160,7 +160,10 @@
         return this.$route.query.typeId
       },
       status(){
-        return this.$route.query.status
+        return this.$route.query.status  //为5不显示数量
+      },
+      assetIds(){ //批量编辑
+        return this.$route.query.assetIds && this.$route.query.assetIds.split(',')
       }
     },
     watch:{
@@ -184,7 +187,7 @@
       },
       async getAssetDetail(){
         let res = await AssetManageApi.getAssetDetail({
-          assetId:this.assetId
+          assetId:this.assetId || this.assetIds[0]
         })
         this.assetAddForm={  //不可直接res赋值
           name:res.name,
@@ -204,29 +207,30 @@
           ownAttrList:[],
           customAttrList:[],
         }
-
-        let ownAttrList =res.assetAttributeValueList.filter((item)=>{
-          return item.isTypeAttr==1
-        })
-        let customAttrList = res.assetAttributeValueList.filter((item)=>{
-           return !item.isTypeAttr
-        })
-        ownAttrList.map((item)=>{
-          item[item.attrName]=item.attrValue
-        })
-        console.log('ownList',ownAttrList)
-        let arr=[]
-        for(let i=0;i<ownAttrList.length;i++){
-          let tmp=[]
-          tmp.push(ownAttrList[i])
-          if(ownAttrList[i+1]) tmp.push(ownAttrList[i+1])
-          arr.push(tmp)
-          ownAttrList.shift()
-          // res.shift()
+        if(!this.assetIds){
+          let ownAttrList =res.assetAttributeValueList.filter((item)=>{
+            return item.attrId!=null
+          })
+          let customAttrList = res.assetAttributeValueList.filter((item)=>{
+            return !item.attrId
+          })
+          ownAttrList.map((item)=>{
+            item[item.attrName]=item.attrValue
+          })
+          console.log('ownList',ownAttrList)
+          let arr=[]
+          for(let i=0;i<ownAttrList.length;i++){
+            let tmp=[]
+            tmp.push(ownAttrList[i])
+            if(ownAttrList[i+1]) tmp.push(ownAttrList[i+1])
+            arr.push(tmp)
+            ownAttrList.shift()
+            // res.shift()
+          }
+          console.log('detail-arr',arr)
+          this.assetAddForm.ownAttrList=arr
+          this.assetAddForm.customAttrList=customAttrList
         }
-        console.log('detail-arr',arr)
-        this.assetAddForm.ownAttrList=arr
-        this.assetAddForm.customAttrList=customAttrList
       },
       async getAttributeByType(){
         let res = await AssetManageApi.getAttributeByType({
@@ -294,7 +298,8 @@
               item.map((child)=>{
                 tmp.push({
                   'attrName':child.attrName,
-                  'attrValue':child[child.attrName]
+                  'attrValue':child[child.attrName],
+                  attrId:child.id
                 })
               })
             })
@@ -358,7 +363,7 @@
        this.getProviderList()
        this.getAssetGroupTree()
        this.getDepartmentTree()
-       if(this.assetId){
+       if(this.assetId || this.assetIds){
          this.getAssetDetail()
        }
        if(this.typeId){
