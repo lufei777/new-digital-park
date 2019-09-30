@@ -25,19 +25,12 @@
       <template v-slot:special-operator>
         <el-table-column fixed="right" label="操作" align="right" width="120">
           <template slot-scope="scope">
-            <el-button type="text" size="small" v-if="scope.row.status==1">入库</el-button>
-            <el-button type="text" size="small">领用</el-button>
-            <el-button
-              type="text"
-              size="small"
-              icon="el-icon-more"
-              @click.stop="onClickMore"
-              class="more-btn"
-            >
-              <div v-show="showMore" class="more-operator-box">
-                <el-button type="text" size="small">变更</el-button>
-                <el-button type="text" size="small">借用</el-button>
-                <el-button type="text" size="small">归还</el-button>
+            <el-button type="text" size="small" v-if="scope.row.status==1">变更</el-button>
+            <el-button type="text" size="small">调拨</el-button>
+            <el-button type="text" size="small" icon="el-icon-more"
+                       @click.stop.self="onClickMore(scope.$index)"
+                       class="more-btn">
+              <div v-show="scope.row.showMore" class="more-operator-box">
                 <el-button type="text" size="small">报修</el-button>
                 <el-button type="text" size="small">报废</el-button>
               </div>
@@ -107,7 +100,6 @@ export default {
       groupName: "",
       assetData: {},
       curPage: 1,
-      showMore: false,
       showTree: false,
       showGroup: false,
       treeList: [],
@@ -139,83 +131,85 @@ export default {
   methods: {
     async getAssetList() {
       //status(资产状态)：1-闲置，2-在用，3-报修，4-报废
-
-      let res = await AssetManageApi.getAssetList({
-        coding: this.coding,
-        name: this.name,
-        groupName: this.groupName,
-        orderType: this.orderType, //0降序1升序
-        orderBy: this.orderBy,
-        pageNum: this.curPage,
-        pageSize: 10
-      });
-      res.labelList = [
-        { name: "", prop: "", type: "selection" },
-        { name: "编号", prop: "coding", sort: "custom" },
-        { name: "名称", prop: "name", sort: "custom" },
-        { name: "资产组", prop: "groupName" },
-        { name: "供应商", prop: "providerName" },
-        { name: "资产类型", prop: "typeName" },
-        { name: "当前保管人", prop: "currentCustodian" },
-        { name: "规格型号", prop: "specification" }
-      ];
-      res.hideExportBtn = true;
-      res.dataList = res.list;
-      this.assetData = res;
-    },
-    onClickSearchBtn() {
-      this.curPage = 1;
-      this.getAssetList();
-    },
-    onClickResetBtn() {
-      this.curPage = 1;
-      this.groupName = "";
-      this.coding = "";
-      this.name = "";
-      (this.orderType = 1), (this.orderBy = "create_time");
-      this.getAssetList();
-    },
-    onClickAddBtn() {
-      this.treeList = this.typeTree;
-      this.modalTip = "选择资产类型";
-      this.showTree = true;
-      this.modalFlag = 1;
-    },
-    rowClick(row) {
-      this.isEdit = true;
-      this.$router.push(`/addAsset?assetId=${row.id}&typeId=${row.typeId}`);
-    },
-    onClickMore() {
-      this.showMore = !this.showMore;
-    },
-    onShowGroup() {
-      this.treeList = this.groupTree;
-      this.showTree = true;
-      this.modalTip = "选择资产组";
-      this.modalFlag = 2;
-    },
-    async getAssetTypeList() {
-      let res = await AssetManageApi.getAssetTypeTree();
-      this.typeTree = res;
-    },
-    hideTreeModal() {
-      this.showTree = false;
-    },
-    onClickTreeModalSureBtn(val) {
-      this.showTree = false;
-      if (this.modalFlag == 1) {
-        if (!val.id) {
-          this.$message({
-            message: "请先选择资产类型！",
-            type: "warning",
-            duration: 1000
-          });
-          return;
+        let res = await AssetManageApi.getAssetList({
+          coding:this.coding,
+          name:this.name,
+          groupName:this.groupName,
+          orderType:this.orderType, //0降序1升序
+          orderBy:this.orderBy,
+          pageNum:this.curPage,
+          pageSize:10
+        })
+        res.list.map((item)=>{
+          item.showMore=false
+        })
+        res.labelList=[{name:'',prop:'',type:'selection'},
+          {name:'编号',prop:'coding',sort:'custom'},
+          {name:'名称',prop:'name',sort:'custom'},
+          {name:'资产组',prop:'groupName'},
+          {name:'供应商',prop:'providerName'},
+          {name:'资产类型',prop:'typeName'},
+          {name:'当前保管人',prop:'currentCustodian'},
+          {name:'规格型号',prop:'specification'}]
+        res.hideExportBtn=true
+        res.dataList=res.list
+        this.assetData=res
+      },
+      onClickSearchBtn(){
+        this.curPage=1
+        this.getAssetList()
+      },
+      onClickResetBtn(){
+        this.curPage=1
+        this.groupName=''
+        this.coding=''
+        this.name=''
+        this.orderType=1,
+        this.orderBy='create_time'
+        this.getAssetList()
+      },
+      onClickAddBtn(){
+        this.treeList=this.typeTree
+        this.modalTip="选择资产类型"
+        this.showTree = true
+        this.modalFlag=1
+      },
+      rowClick(row){
+        this.isEdit=true
+        this.$router.push(`/addAsset?assetId=${row.id}&typeId=${row.typeId}`)
+      },
+      onClickMore(index){
+        console.log(index)
+        this.assetData.dataList[index].showMore=!this.assetData.dataList[index].showMore
+      },
+      onShowGroup(){
+        this.treeList=this.groupTree
+        this.showTree=true
+        this.modalTip="选择资产组"
+        this.modalFlag=2
+      },
+      async getAssetTypeList(){
+        let res = await AssetManageApi.getAssetTypeTree()
+        this.typeTree =res
+      },
+      hideTreeModal(){
+        this.showTree=false
+      },
+      onClickTreeModalSureBtn(val){
+        this.showTree=false
+        if(this.modalFlag==1){
+          if(!val.id){
+            this.$message({
+              message:'请先选择资产类型！',
+              type: 'warning',
+              duration:1000
+            });
+            return;
+          }
+          this.$router.push(`/addAsset?typeId=${val.id}&status=${val.status}`)
+        }else {
+          this.groupName = val.name
         }
-        this.$router.push(`/addAsset?typeId=${val.id}`);
-      } else {
-        this.groupName = val.name;
-      }
     },
     async getAssetGroupTree() {
       let res = await AssetManageApi.getAssetGroupTree();
@@ -324,6 +318,12 @@ export default {
   .cell {
     overflow: visible;
   }
+  .more-operator-box{
+    .el-button{
+      margin:0;
+      padding:10px;
+    }
+  }
 }
 .upload-excel {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
@@ -332,6 +332,12 @@ export default {
     margin-bottom: 20px;
     div:last-child {
       line-height: 2;
+    }
+    .more-operator-box{
+      .el-button{
+        margin:0;
+        padding:10px;
+      }
     }
   }
   .el-upload,

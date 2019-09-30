@@ -45,13 +45,18 @@
           <el-input v-model="assetAddForm.previousCustodian"></el-input>
         </el-form-item>
       </el-col>
+      <el-col>
+        <el-form-item label="数量" prop="quantity" class="el-col-12" v-if='status==5'>
+          <el-input v-model="assetAddForm.quantity"></el-input>
+        </el-form-item>
+      </el-col>
       <el-col v-for="(item,index) in assetAddForm.ownAttrList" :key="index">
         <el-form-item v-for="(child,i) in item" :key="i"
                       :label="child.attrName"
                       :prop="'ownAttrList.'+index+'.'+i+'.'+child.attrName"
                       :class="i%2==0?'el-col-12':''"
                       :rules="{
-                        required:child.required,message:'请输入'+child.attrName,trigger: 'blur'
+                        required:child.required=='1',message:'请输入'+child.attrName,trigger: 'blur'
                       }"
         >
           <el-input v-model="child[child.attrName]"></el-input>
@@ -105,6 +110,13 @@
     },
     props:[],
     data () {
+      let checkQuantity= (rule, value, callback) => {
+        if (value <1) {
+          callback(new Error('数量最小为1'));
+        } else {
+          callback();
+        }
+      };
       return {
         assetAddForm:{
           name:'',
@@ -121,12 +133,15 @@
           departmentName:'',
           price:'',
           remark:'',
+          quantity:'1',
           ownAttrList:[],
           customAttrList:[],
         },
         rules:{
           name:[{required:true,message:'请输入资产名称',trigger: 'blur' }],
-          groupName:[{required:true,message:'请选择资产组',trigger: 'blur' }]
+          groupName:[{required:true,message:'请选择资产组',trigger: 'blur' }],
+          quantity:[{required:true,message:'请输入数量',trigger: 'blur' },
+                    {validator:checkQuantity, trigger: 'blur' }],
         },
         providerList:[],
         showTree:false,
@@ -143,6 +158,9 @@
       },
       typeId(){
         return this.$route.query.typeId
+      },
+      status(){
+        return this.$route.query.status
       }
     },
     watch:{
