@@ -29,7 +29,7 @@
                 修改
               </el-button>
               <el-button size="small" type="text"
-                         @click.native.prevent="deleteRow(scope.$index, tableObj.dataList)" >
+                         @click.native.prevent="deleteRow(myScope.$index, tableObj.dataList)" >
                 删除
               </el-button>
             </template>

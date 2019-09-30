@@ -25,13 +25,10 @@
       <template v-slot:special-operator>
         <el-table-column  fixed="right" label="操作" align="right" width="120">
           <template slot-scope="scope">
-            <el-button type="text" size="small" v-if="scope.row.status==1">入库</el-button>
-            <el-button type="text" size="small">领用</el-button>
-            <el-button type="text" size="small" icon="el-icon-more" @click.stop="onClickMore" class="more-btn">
-              <div v-show="showMore" class="more-operator-box">
-                <el-button type="text" size="small">变更</el-button>
-                <el-button type="text" size="small">借用</el-button>
-                <el-button type="text" size="small">归还</el-button>
+            <el-button type="text" size="small" v-if="scope.row.status==1">变更</el-button>
+            <el-button type="text" size="small">调拨</el-button>
+            <el-button type="text" size="small" icon="el-icon-more" @click.stop.self="onClickMore(scope.$index)" class="more-btn">
+              <div v-show="scope.row.showMore" class="more-operator-box">
                 <el-button type="text" size="small">报修</el-button>
                 <el-button type="text" size="small">报废</el-button>
               </div>
@@ -65,7 +62,6 @@
         groupName:'',
         assetData:{},
         curPage:1,
-        showMore:false,
         showTree:false,
         showGroup:false,
         treeList:[],
@@ -90,6 +86,9 @@
           orderBy:this.orderBy,
           pageNum:this.curPage,
           pageSize:10
+        })
+        res.list.map((item)=>{
+          item.showMore=false
         })
         res.labelList=[{name:'',prop:'',type:'selection'},
           {name:'编号',prop:'coding',sort:'custom'},
@@ -126,8 +125,8 @@
         this.isEdit=true
         this.$router.push(`/addAsset?assetId=${row.id}&typeId=${row.typeId}`)
       },
-      onClickMore(){
-        this.showMore=!this.showMore
+      onClickMore(index){
+        this.assetData.dataList[index].showMore=!this.assetData.dataList[index].showMore
       },
       onShowGroup(){
         this.treeList=this.groupTree
@@ -153,7 +152,7 @@
             });
             return;
           }
-          this.$router.push(`/addAsset?typeId=${val.id}`)
+          this.$router.push(`/addAsset?typeId=${val.id}&status=${val.status}`)
         }else{
           this.groupName=val.name
         }
@@ -246,6 +245,12 @@
     }
     .cell{
       overflow: visible;
+    }
+    .more-operator-box{
+      .el-button{
+        margin:0;
+        padding:10px;
+      }
     }
   }
 </style>

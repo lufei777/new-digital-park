@@ -2,7 +2,7 @@
   <div class="asset-group">
     <div class="left-group-tree">
       <div class="group-title">资产组</div>
-      <CustomTree  :treeList="typeTree" :addNodeCallback='addNode'
+      <CustomTree  :treeList="groupTree" :addNodeCallback='addNode'
                   :delNodeCallback="deleteAssetGroup"
                   :editCallback="updateAssetGroup"
                   />
@@ -22,7 +22,7 @@
       return {
         showAdd:false,
         isEdit:false,
-        typeTree:[],
+        groupTree:[],
         treeProps:{
           label:'name',
           children: 'childNode',
@@ -39,7 +39,7 @@
       },
       async getAssetGroupTree(){
         let res = await AssetManageApi.getAssetGroupTree()
-        this.typeTree=res
+        this.groupTree=res
         // this.curGroupId='group-2368946ab299465099fcbf62690d5e6e' //res[0].id
         // this.selectAssetGroupById()
       },
@@ -50,25 +50,25 @@
       // },
       addNode(id,obj) {
         if(!id){
-          this.typeTree.push(obj)
           this.addAssetGroup(obj)
         }else{
-          this.findNode(this.typeTree,id,obj)
+          this.findNode(this.groupTree,id,obj)
         }
       },
       findNode(tree,id,obj){
         tree.map((item)=>{
           if(item.id==id){
-             item.childNode.push(obj)
-             this.addAssetGroup(obj)
+             this.addAssetGroup(obj,item)
              return;
           }else if(item.childNode.length){
             this.findNode(item.childNode,id,obj)
           }
         })
       },
-      async addAssetGroup(obj){
-        await AssetManageApi.addAssetGroup(obj)
+      async addAssetGroup(obj,item){
+        let res = await AssetManageApi.addAssetGroup(obj)
+        obj.id=res
+        item?item.childNode.push(obj):this.groupTree.push(obj)
       },
       async deleteAssetGroup(data){
         await AssetManageApi.deleteAssetGroup({

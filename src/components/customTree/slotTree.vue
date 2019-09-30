@@ -33,7 +33,7 @@
 						</span>
 						
 						<!-- 按钮 -->
-						<span :class="[data[NODE_KEY].status==5?'':'comp-tr-node--btns']">
+						<span :class="[data.status==5?'hide-comp-tr-node--btns':'comp-tr-node--btns']">
 							<!-- 新增 -->
 							<el-button icon="el-icon-plus" 
 								size="mini"
@@ -146,7 +146,7 @@ export default{
 			obj[this.NODE_KEY] = --this.startId;// 节点id：逐次递减id
       obj.level=_node.level+1
 			// 新增数据
-
+      // _data.childNode.push(obj)
       this.addNodeCallback && this.addNodeCallback(_data.id,obj)
 
 			// 展开节点
@@ -174,6 +174,9 @@ export default{
 	.show-btns{
 		opacity: 1;
 	}
+  .hide-btns{
+    opacity: 0;
+  }
 
 	/* common end */
 
@@ -215,6 +218,15 @@ export default{
 				.comp-tr-node--btns{
 					 .show-btns;
 				}
+        .hide-comp-tr-node--btns{  //status为5的类型只可添加不可删除修改
+          .el-button:nth-child(2),.el-button:nth-child(3){
+            display: none;
+          }
+          .el-button:nth-child(1){
+            display: inline-block;
+            transform: scale(0.8);// 缩小按钮
+          }
+        }
 			}
 		}
 		// 悬浮显示按钮
@@ -223,7 +235,22 @@ export default{
 				.comp-tr-node--btns{
 					.show-btns;
 				}
+        .hide-comp-tr-node--btns{
+          .el-button:nth-child(2),.el-button:nth-child(3){
+            display: none;
+          }
+          .el-button:nth-child(1){
+            display: inline-block;
+            transform: scale(0.8);// 缩小按钮
+          }
+        }
 			}
+      .hide-comp-tr-node--btns{
+        .el-button{
+          display: none;
+        }
+      }
 		}
+
 	}
 </style>

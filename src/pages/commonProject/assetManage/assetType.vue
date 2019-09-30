@@ -91,27 +91,28 @@
         let tmp=val.map((item)=>item.id)
         this.delAttrIds=tmp.join(",")
       },
-      addNode(id,obj){
+      async addNode(id,obj){
         if(!id){ //默认传空即添加根节点
-          this.typeTree.push(obj)
-          this.addAssetType(obj)
+          await this.addAssetType(obj)
         }else{
           this.findNode(this.typeTree,id,obj)
         }
       },
       findNode(tree,id,obj){
-        tree.map((item)=>{
+         tree.map((item)=>{
           if(item.id==id){
-             item.childNode.push(obj)
-             this.addAssetType(obj)
+             this.addAssetType(obj,item)
              return;
           }else if(item.childNode.length){
             this.findNode(item.childNode,id,obj)
           }
         })
       },
-      async addAssetType(obj){
-        await AssetManageApi.addAssetType(obj)
+      async addAssetType(obj,item){
+        console.log(item)
+        let res = await AssetManageApi.addAssetType(obj)
+        obj.id=res
+        item?item.childNode.push(obj):this.typeTree.push(obj)
       },
       async deleteAssetType(data){
         await AssetManageApi.deleteAssetType({
