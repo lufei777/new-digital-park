@@ -43,6 +43,7 @@
 </template>
 
 <script>
+  import moment from 'moment'
   import CommonApi from '../../../service/api/commonApi'
   import CommonTable from '../../../components/commonTable/index'
   export default {
@@ -62,14 +63,17 @@
     },
     methods: {
       async getLogList(){
-        let res =await CommonApi.getLogList({
+        let endTime=this.endTime?this.endTime:moment(new Date()).format('YYYY-MM-DD hh:mm:ss')
+        let params={
           loginName:this.loginName,
           operatingContent:this.operatingContent,
           startTime:this.startTime,
-          endTime:this.endTime,
+          endTime,
           rows:10,
           page:this.curPage
-        })
+        }
+        console.log("params",params)
+        let res =await CommonApi.getLogList(params)
         if(!res || !res.total){
           res={
             rows:[],

@@ -21,7 +21,7 @@ export default {
 <style lang="less">
 @import url('./less/index.less');
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'MicrosoftYaHei', Helvetica, Arial, sans-serif;
   color: #606266;
 }
 </style>
