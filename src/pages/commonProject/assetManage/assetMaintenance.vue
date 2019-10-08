@@ -30,11 +30,12 @@
             <el-button type="text" size="small" v-if="scope.row.status==1">变更</el-button>
             <el-button type="text" size="small">调拨</el-button>
             <el-button type="text" size="small" icon="el-icon-more"
-                       @click.stop.self="onClickMore(scope.$index)"
+                       @click.stop="onClickMore(scope.$index)"
                        class="more-btn">
               <div v-show="scope.row.showMore" class="more-operator-box">
                 <el-button type="text" size="small">报修</el-button>
                 <el-button type="text" size="small">报废</el-button>
+                <el-button type="text" size="small" @click.stop="deleteRow(scope.row)">删除</el-button>
               </div>
             </el-button>
           </template>
@@ -234,18 +235,22 @@ export default {
     },
     async sureDelete() {
       console.log(this.curAssetIds);
-      // await AssetManageApi.delAssetTypeAttr({
-      //   ids:this.delAssetIds
-      // })
-      // this.$message({
-      //   type: 'success',
-      //   message: '删除成功!'
-      // })
-      // this.getAssetList()
+      await AssetManageApi.delAsset({
+        assetId:this.curAssetIds
+      })
+      this.$message({
+        type: 'success',
+        message: '删除成功!'
+      })
+      this.getAssetList()
     },
-    deleteRow(val) {},
+    deleteRow(val) {
+      this.curAssetIds=val.id
+      console.log("val",this.curAssetIds)
+      this.sureDelete()
+    },
     handleSelectionChange(val) {
-      let tmp = val.map(item => item.id);
+      let tmp = val.map(item => item.id).join(",");
       this.curAssetIds = tmp;
     },
     //excel导入
@@ -271,8 +276,7 @@ export default {
           duration:800
         })
       }else{
-        let tmp=this.curAssetIds.join(',')
-        this.$router.push(`/addAsset?assetIds=${tmp}`)
+        this.$router.push(`/addAsset?assetIds=${this.curAssetIds}`)
       }
     }
   },

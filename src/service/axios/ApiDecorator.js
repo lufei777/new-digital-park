@@ -28,8 +28,15 @@ function post(target, name, descriptor) {
   });
 }
 
+function del(target, name, descriptor) {
+  return send(target, name, descriptor, function (args) {
+    return axios.delete(descriptor.url + '?' +  DoApi.jsonUrlFormat(args));
+  });
+}
+
 export {
   get,
   url,
   post,
+  del
 }
