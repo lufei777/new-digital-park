@@ -91,7 +91,7 @@ axios.interceptors.response.use(
         message: data.errorMessage,
         type: 'error'
       });
-
+      return ;
     }else{
       return data   //兼容旧接口
     }

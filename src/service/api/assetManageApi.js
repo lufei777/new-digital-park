@@ -1,4 +1,4 @@
-import {get, post, url} from '../axios/ApiDecorator'
+import {get, post, url,del} from '../axios/ApiDecorator'
 
 class CommonApi {
 
@@ -88,6 +88,10 @@ class CommonApi {
   @url('/oaApi/assetTypeAttribute/update')
   @get
   editTypeAttr(){}
+
+  @url('/oaApi/asset/deleteById')
+  @del
+  delAsset(){}
 }
 
 export default new CommonApi()
