@@ -418,5 +418,21 @@ class commonFun {
     {id:16,name:'资产管理'},
     {id:17,name:'能源管理'},
     {id:18,name:'资产管理'}]
+
+  navList = [{
+    id:'1',name:'首页',children:[]
+  },{
+    id:'2',name:'运维',children:[{
+      id:'3',name:'综合安防',children:[]
+    },{
+      id:'4',name:'应急指挥',children:[]
+    }]
+  },{
+    id:'5',name:'经营',children:[]
+  },{
+    id:'6',name:'服务',children:[]
+  },{
+    id:'7',name:'办公',children:[]
+  }]
 }
 export default new commonFun()

@@ -1,22 +1,32 @@
 <template>
   <div class="home-page">
     <div class="home-header">
-      <div class="header-nav-left">
-        <h3 class="title">cizing数字园区</h3>
-        <ul class="flex">
-          <li>首页</li>
-          <li>运维</li>
-          <li>经营</li>
-          <li>服务</li>
-          <li>办公</li>
-          <li>基础功能</li>
-        </ul>
+      <div class="home-header-inner flex-align-between">
+        <div class="header-nav-left">
+          <h3 class="title">cizing数字园区</h3>
+        </div>
+        <el-input class="search-input">
+           <el-button slot="append" icon="el-icon-search" class="search-icon">搜索</el-button>
+        </el-input>
+        <div class="header-nav-right flex-align">
+          <el-breadcrumb separator="|">
+            <el-breadcrumb-item>消息(1)</el-breadcrumb-item>
+            <el-breadcrumb-item>EN</el-breadcrumb-item>
+            <el-breadcrumb-item>换肤</el-breadcrumb-item>
+            <el-breadcrumb-item>admin</el-breadcrumb-item>
+          </el-breadcrumb>
+        </div>
+
       </div>
-      <div class="header-nav-right flex-align">
-        <span class="hover-pointer">登录</span>
-        <img class='skin-img hover-pointer' src="../../../../static/image/digitalPark/skin.png" alt="">
-        <el-input  placeholder="搜索" />
-      </div>
+      <ul class="flex nav-list">
+        <li v-for="(item,index) in navList">
+          <span>{{item.name}}</span>
+          <i class="el-icon-arrow-down" v-if="item.children.length"></i>
+          <ul v-if="item.children.length && item.showChild">
+            <li v-for="(child,i) in item.children">{{child.name}}</li>
+          </ul>
+        </li>
+      </ul>
     </div>
 
     <el-carousel height="550px" :interval="2000">
@@ -71,7 +81,8 @@
     data () {
       return {
         productList:CommonFun.productList,
-        showMoreProduct:false
+        showMoreProduct:false,
+        navList:[]
       }
     },
     methods:{
@@ -82,7 +93,22 @@
       },
       onShowMoreProduct(){
         this.showMoreProduct=!this.showMoreProduct
+      },
+      getNavList(){
+        let res = CommonFun.navList
+        res.map((item)=>{
+          item.showChild=false
+          if(item.children.length){
+            item.children.map((child)=>{
+              item.showChild=false
+            })
+          }
+        })
+        this.navList=res
       }
+    },
+    mounted(){
+      this.getNavList()
     }
   }
 </script>
@@ -96,21 +122,36 @@
       height:550px;
     }
     .home-header{
-      width:1400px;
-      padding:20px;
-      background:rgba(255,255,255,.875);
+      width:100%;
+      padding-top:20px;
+      height: 110px;
+      background: @white;
       position: fixed;
       z-index: 99;
       left:0;
       right:0;
-      margin:auto;
+      /*margin:auto;*/
      }
+    .nav-list{
+      width:1200px;
+      margin:0 auto;
+      padding-top: 20px;
+      li{
+        margin-right: 40px;
+        font-size: 16px;
+      }
+    }
+    .home-header-inner{
+      width:1200px;
+      margin:0 auto;
+      text-align: center;
+    }
     .header-nav-left{
-      width:60%;
+      /*width:60%;*/
       float: left;
       .title{
-        margin-bottom: 20px;
-        font-size: 20px;
+        font-size: 30px;
+        color:#002063;
       }
       li{
         margin-right:20px;
@@ -119,14 +160,34 @@
         }
       }
     }
+    .search-input{
+      width:400px;
+      font-size: 12px;
+      margin:0 auto;
+      input{
+       border-top-left-radius: 20px;
+       border-bottom-left-radius: 20px;
+        width:320px;
+      }
+      .el-input-group__append{
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        width:60px;
+        padding:0 10px;
+        background: #002063;
+        border:none;
+        color:@white;
+        /*font-size: 12px;*/
+      }
+    }
     .header-nav-right{
-      width:40%;
+      /*width:40%;*/
       float: right;
       flex-direction: row-reverse;
-      .el-input{
-        width:200px;
-        input{
-          border-radius: 50px;
+      .el-breadcrumb__inner{
+        padding: 0 10px;
+        &:hover{
+          cursor: pointer;
         }
       }
     }
