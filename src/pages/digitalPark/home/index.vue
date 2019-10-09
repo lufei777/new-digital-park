@@ -1,5 +1,5 @@
 <template>
-  <div class="home-page">
+  <div class="park-home-page">
     <div class="home-header">
       <div class="home-header-inner flex-align-between">
         <div class="header-nav-left">
@@ -45,14 +45,14 @@
           <h3>我们的产品</h3>
           <span class="hover-pointer" @click="onShowMoreProduct">更多</span>
         </div>
-        <ul class="flex-align-around production-list" :style="showMoreProduct?'':{height:'56px'}">
+        <ul class="flex-align-around production-list" :style="showMoreProduct?'':{height:'120px'}">
           <li v-for="(item,index) in productList"
               :key="index"
               @click="onClickItemProduct(item)"
+              :style="getItemBg(item)"
           ><span>{{item.name}}</span></li>
         </ul>
       </div>
-
       <div class="item-module">
         <div class="flex-align-between module-title">
           <h3>信息发布</h3>
@@ -105,6 +105,11 @@
           }
         })
         this.navList=res
+      },
+      getItemBg(item){
+        return {
+          backgroundImage:'url('+require('../../../../static/image/digitalPark/'+item.bgUrl)+')'
+        }
       }
     },
     mounted(){
@@ -114,7 +119,7 @@
 </script>
 
 <style lang="less">
-  .home-page{
+  .park-home-page{
     height: 100%;
     font-size: 12px;
     .carousel-img{
@@ -151,7 +156,7 @@
       float: left;
       .title{
         font-size: 30px;
-        color:#002063;
+        color:@parkMainTextColor;
       }
       li{
         margin-right:20px;
@@ -174,7 +179,7 @@
         border-bottom-right-radius: 20px;
         width:60px;
         padding:0 10px;
-        background: #002063;
+        background: @parkMainTextColor;
         border:none;
         color:@white;
         /*font-size: 12px;*/
@@ -197,7 +202,7 @@
       margin:0 25px;
     }
     .home-center{
-      width:1400px;
+      width:1200px;
       margin:0 auto;
     }
     .item-module{
@@ -216,8 +221,15 @@
       overflow: hidden;
       li{
         width:16%;
-        text-align: center;
+        height:80px;
         padding:20px 0;
+        color:@white;
+        font-size: 26px;
+        text-align: center;
+        line-height: 80px;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        margin-bottom:10px;
       }
       span:hover{
         cursor: pointer;

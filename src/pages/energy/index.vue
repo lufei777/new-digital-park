@@ -21,6 +21,9 @@
     },
     methods: {
     },
+    created(){
+      this.$store.dispatch('analysis/setDefaultNode')
+    },
     mounted(){
       document.title='能源管理'
     }
