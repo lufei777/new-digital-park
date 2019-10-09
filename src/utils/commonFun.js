@@ -423,12 +423,24 @@ class commonFun {
     id:'1',name:'首页',children:[]
   },{
     id:'2',name:'运维',children:[{
-      id:'3',name:'综合安防',children:[]
+      id:'3',name:'综合安防',children:[{
+        id:'16',name:'threeDemo1',children:[]
+      },{
+        id:'17',name:'threeDemo2',children:[]
+      }]
     },{
-      id:'4',name:'应急指挥',children:[]
+      id:'4',name:'应急指挥',children:[{
+        id:'18',name:'threeDemo3',children:[]
+      },{
+        id:'19',name:'threeDemo4',children:[]
+      }]
     }]
   },{
-    id:'5',name:'经营',children:[]
+    id:'5',name:'经营',children:[{
+      id:'13',name:'测试1',children:[]
+    },{
+      id:'14',name:'测试2',children:[]
+    }]
   },{
     id:'6',name:'服务',children:[]
   },{

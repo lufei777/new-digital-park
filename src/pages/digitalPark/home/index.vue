@@ -19,11 +19,17 @@
 
       </div>
       <ul class="flex nav-list">
-        <li v-for="(item,index) in navList">
-          <span>{{item.name}}</span>
+        <li v-for="(item,index) in navList" :key="index" @click="item.children.length && navListClick(item)" class="nav-list-text">
+          <span> {{item.name}} </span>
           <i class="el-icon-arrow-down" v-if="item.children.length"></i>
-          <ul v-if="item.children.length && item.showChild">
-            <li v-for="(child,i) in item.children">{{child.name}}</li>
+          <ul v-if="item.children.length && item.showChild" class="nav-list-content">
+            <li v-for="(child,i) in item.children" :key="i" @click.stop="child.children.length && childNavListClick(child)" class="two-menu">
+              {{child.name}}
+              <i class="el-icon-arrow-right" v-if="child.children.length"></i>
+              <ul v-if="child.children.length && child.showChild" class="three-menu">
+                <li v-for="(three,p) in child.children" :key="p">{{three.name}}</li>
+              </ul>
+            </li>
           </ul>
         </li>
       </ul>
@@ -96,16 +102,30 @@
       },
       getNavList(){
         let res = CommonFun.navList
+        console.log('res',res)
         res.map((item)=>{
           item.showChild=false
           if(item.children.length){
             item.children.map((child)=>{
+              console.log('lallala',child)
               item.showChild=false
+              child.showChild = false
+              if(child.children.length) {
+                child.children.map((three)=>{
+                  child.showChild = false
+                })
+              }
             })
           }
         })
         this.navList=res
-      }
+      },
+      navListClick(item) {
+        item.showChild = true
+      },
+      childNavListClick(child) {
+        child.showChild = true
+      },
     },
     mounted(){
       this.getNavList()
@@ -136,9 +156,27 @@
       width:1200px;
       margin:0 auto;
       padding-top: 20px;
-      li{
-        margin-right: 40px;
+      .nav-list-text{
+        margin-right: 48px;
         font-size: 16px;
+      }
+      .nav-list-content {
+        position: absolute;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-top: 10px;
+        background: #fff;
+        padding: 2px 10px 10px 10px;
+        .two-menu {
+          margin: 10px 0;
+        } 
+        .three-menu {
+          float: right;
+          // background: orange;
+          li {
+            padding: 0 15px 10px 15px;
+          }
+        }
       }
     }
     .home-header-inner{
