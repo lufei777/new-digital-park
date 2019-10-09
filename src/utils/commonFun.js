@@ -400,24 +400,24 @@ class commonFun {
   }
 
   productList=[
-    {id:1,name:'能源管理',url:'/#/energy'},
-    {id:2,name:'资产管理',url:'/#/assetManage'},
-    {id:3,name:'能源管理'},
-    {id:4,name:'通行管理'},
-    {id:5,name:'经营管理'},
-    {id:6,name:'综合安防'},
-    {id:7,name:'应急指挥'},
-    {id:8,name:'资产管理'},
-    {id:9,name:'能源管理'},
-    {id:10,name:'资产管理'},
-    {id:11,name:'能源管理'},
-    {id:22,name:'资产管理'},
-    {id:13,name:'能源管理'},
-    {id:14,name:'资产管理'},
-    {id:15,name:'能源管理'},
-    {id:16,name:'资产管理'},
-    {id:17,name:'能源管理'},
-    {id:18,name:'资产管理'}]
+    {id:1,name:'能源管理',url:'/#/energy',bgUrl:'nygl.png'},
+    {id:2,name:'资产管理',url:'/#/assetManage',bgUrl:'zcgl.png'},
+    {id:3,name:'能源管理',bgUrl:'nygl.png'},
+    {id:4,name:'通行管理',bgUrl:'nygl.png'},
+    {id:5,name:'经营管理',bgUrl:'nygl.png'},
+    {id:6,name:'综合安防',bgUrl:'nygl.png'},
+    {id:7,name:'应急指挥',bgUrl:'nygl.png'},
+    {id:8,name:'资产管理',bgUrl:'nygl.png'},
+    {id:9,name:'能源管理',bgUrl:'nygl.png'},
+    {id:10,name:'资产管理',bgUrl:'nygl.png'},
+    {id:11,name:'能源管理',bgUrl:'nygl.png'},
+    {id:22,name:'资产管理',bgUrl:'nygl.png'},
+    {id:13,name:'能源管理',bgUrl:'nygl.png'},
+    {id:14,name:'资产管理',bgUrl:'nygl.png'},
+    {id:15,name:'能源管理',bgUrl:'nygl.png'},
+    {id:16,name:'资产管理',bgUrl:'nygl.png'},
+    {id:17,name:'能源管理',bgUrl:'nygl.png'},
+    {id:18,name:'资产管理',bgUrl:'nygl.png'}]
 
   navList = [{
     id:'1',name:'首页',children:[]

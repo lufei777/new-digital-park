@@ -285,7 +285,35 @@
           this.assetAddForm.departmentName=val.name
         }
       },
-      async addAsset(){
+       addAsset(){
+         if(this.assetIds){
+            this.multiEditAsset()
+          }else{
+           this.addSingleAsset()
+         }
+      },
+      onProviderChange(val){
+        let obj = this.providerList.find((item)=>{
+          return item.id==val
+        })
+        this.assetAddForm.providerName=obj.name
+      },
+      async getDepartmentTree(){
+        let res = await AssetManageApi.getDepartmentTree()
+        this.assetAddForm.departmentId = res[0].id
+        this.assetAddForm.departmentName = res[0].name
+        this.deptTree = res
+      },
+      onShowDept(){
+        this.treeList = this.deptTree
+        this.modalTip = '选择部门'
+        this.modalFlag = 1
+        this.showTree = true
+      },
+      onClickDelCustomBtn(index){
+        this.assetAddForm.customAttrList.splice(index,1)
+      },
+      async addSingleAsset(){
         let tmp=[]
         for(let key in this.assetAddForm){
           if(key != 'groupName' && key != 'ownAttrList' && key != 'customAttrList' && key != 'departmentName'){
@@ -337,26 +365,21 @@
         //   this.$router.replace('/assetMaintenance')
         // },1000)
       },
-      onProviderChange(val){
-        let obj = this.providerList.find((item)=>{
-          return item.id==val
+      async multiEditAsset(){
+        let tmp=[]
+        this.assetIds.map((item)=>{
+          let obj={...{id:item},...this.assetAddForm}
+          console.log(obj)
+          tmp.push(obj)
         })
-        this.assetAddForm.providerName=obj.name
-      },
-      async getDepartmentTree(){
-        let res = await AssetManageApi.getDepartmentTree()
-        this.assetAddForm.departmentId = res[0].id
-        this.assetAddForm.departmentName = res[0].name
-        this.deptTree = res
-      },
-      onShowDept(){
-        this.treeList = this.deptTree
-        this.modalTip = '选择部门'
-        this.modalFlag = 1
-        this.showTree = true
-      },
-      onClickDelCustomBtn(index){
-        this.assetAddForm.customAttrList.splice(index,1)
+        await AssetManageApi.multiEditAsset(tmp)
+        this.$message({
+          type:'success',
+          message:'批量编辑成功，正在跳转...'
+        })
+        setTimeout(()=>{
+          this.$router.replace('/assetMaintenance')
+        },1000)
       }
     },
     mounted(){
