@@ -9,12 +9,17 @@
            <el-button slot="append" icon="el-icon-search" class="search-icon">搜索</el-button>
         </el-input>
         <div class="header-nav-right flex-align">
-          <el-breadcrumb separator="|">
-            <el-breadcrumb-item>消息(1)</el-breadcrumb-item>
-            <el-breadcrumb-item>EN</el-breadcrumb-item>
-            <el-breadcrumb-item>换肤</el-breadcrumb-item>
-            <el-breadcrumb-item>admin</el-breadcrumb-item>
-          </el-breadcrumb>
+            <span class="nav-right-item"><span>消息(1)</span><i>|</i></span>
+            <span class="nav-right-item"><span>EN</span><i>|</i></span>
+            <span class="nav-right-item"><span>换肤</span><i>|</i></span>
+            <span class="nav-right-item"><span>admin</span><i>|</i></span>
+            <span class="nav-right-item">
+              <!--<span>切换模式</span>-->
+               <el-select v-model="modelValue" placeholder="切换模式" @change="onClickChangeModel">
+                  <el-option label="瀑布流" value="1"></el-option>
+                  <el-option label="仪表盘" value="2"></el-option>
+                </el-select>
+            </span>
         </div>
 
       </div>
@@ -39,11 +44,10 @@
     </el-carousel>
 
     <div class="home-center">
-
       <div class="item-module">
         <div class="flex-align-between module-title">
           <h3>我们的产品</h3>
-          <span class="hover-pointer" @click="onShowMoreProduct">更多</span>
+          <span class="hover-pointer more-btn" @click="onShowMoreProduct">更多</span>
         </div>
         <ul class="flex-align-around production-list" :style="showMoreProduct?'':{height:'120px'}">
           <li v-for="(item,index) in productList"
@@ -82,7 +86,8 @@
       return {
         productList:CommonFun.productList,
         showMoreProduct:false,
-        navList:[]
+        navList:[],
+        modelValue:"1"
       }
     },
     methods:{
@@ -110,6 +115,14 @@
         return {
           backgroundImage:'url('+require('../../../../static/image/digitalPark/'+item.bgUrl)+')'
         }
+      },
+      onClickChangeModel(val){
+        if(val==1){
+          this.$router.replace('/digitalPark/homePage')
+        }else{
+          this.$router.replace('/digitalPark/dashboardHomePage')
+        }
+
       }
     },
     mounted(){
@@ -121,7 +134,7 @@
 <style lang="less">
   .park-home-page{
     height: 100%;
-    font-size: 12px;
+    font-size: 14px;
     .carousel-img{
       width:100%;
       height:550px;
@@ -152,7 +165,6 @@
       text-align: center;
     }
     .header-nav-left{
-      /*width:60%;*/
       float: left;
       .title{
         font-size: 30px;
@@ -167,7 +179,7 @@
     }
     .search-input{
       width:400px;
-      font-size: 12px;
+      font-size: 14px;
       margin:0 auto;
       input{
        border-top-left-radius: 20px;
@@ -182,18 +194,28 @@
         background: @parkMainTextColor;
         border:none;
         color:@white;
-        /*font-size: 12px;*/
       }
     }
     .header-nav-right{
-      /*width:40%;*/
       float: right;
-      flex-direction: row-reverse;
-      .el-breadcrumb__inner{
-        padding: 0 10px;
+    }
+    .nav-right-item{
+      span{
+        padding: 0 20px;
         &:hover{
           cursor: pointer;
         }
+      }
+      .el-select{
+        width:90px;
+      }
+      .el-input__inner{
+        border:none;
+        padding-right: 5px;
+        /*width:85px;*/
+      }
+      .el-input__suffix,.el-input__suffix-inner{
+        padding: 0;
       }
     }
     .skin-img{
@@ -211,9 +233,12 @@
       padding:20px 0;
     }
     .module-title{
-      padding:10px 0;
+      padding:10px 5px;
       h3{
-        font-size: 16px;
+        font-size: 22px;
+      }
+      .more-btn{
+        font-size: 14px;
       }
     }
     .production-list{
@@ -238,6 +263,9 @@
     .module-border{
       padding:20px;
       border:1px solid #ccc;
+    }
+    .el-carousel__container{
+      margin-top:130px;
     }
   }
 </style>
