@@ -34,9 +34,16 @@ function del(target, name, descriptor) {
   });
 }
 
+function put(target, name, descriptor) {
+  return send(target, name, descriptor, function (args) {
+    return axios.put(descriptor.url + '?' + DoApi.jsonUrlFormat({}), DoApi.doJson(args));
+  });
+}
+
 export {
   get,
   url,
   post,
-  del
+  del,
+  put
 }
