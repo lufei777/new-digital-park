@@ -131,6 +131,19 @@
       childNavListClick(child) {
         child.showChild = true
       },
+      getItemBg(item){
+        return {
+          backgroundImage:'url('+require('../../../../static/image/digitalPark/'+item.bgUrl)+')'
+        }
+      },
+      onClickChangeModel(val){
+        if(val==1){
+          this.$router.replace('/digitalPark/homePage')
+        }else{
+          this.$router.replace('/digitalPark/dashboardHomePage')
+        }
+
+      }
     },
     mounted(){
       this.getNavList()
