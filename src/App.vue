@@ -22,5 +22,6 @@ export default {
 #app {
   font-family: 'MicrosoftYaHei', Helvetica, Arial, sans-serif;
   color: #606266;
+  height:100%;
 }
 </style>
