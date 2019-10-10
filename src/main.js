@@ -25,7 +25,8 @@ import moment from 'moment'
 Vue.prototype.$moment = moment;//赋值使用
 moment.locale('zh-cn');//需要汉化
 
-
+import VueDND from 'awe-dnd'
+Vue.use(VueDND)
 
 let router = new VueRouter({
   routes

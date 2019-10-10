@@ -19,6 +19,12 @@
       return {
       }
     },
+    watch:{
+      $route(to, from) {
+        this.$store.dispatch('conditionSelect/resetStates')  //重置vuex
+        this.$store.dispatch('analysis/resetStates')  //重置vuex
+      },
+    },
     methods: {
     },
     created(){
