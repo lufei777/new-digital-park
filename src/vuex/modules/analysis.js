@@ -22,8 +22,10 @@ const actions={
     commit('showDialog', false)
     commit('startTime', moment(new Date(new Date().getTime()-5*24*60*60*1000)).format('YYYY-MM-DD HH:mm:ss'))
     commit('endTime',moment().format('YYYY-MM-DD HH:mm:ss'))
-    commit('monitor1', {id:monitor.monitorIds[0],text:monitor.captions[0]})
-    commit('monitor2', {id:monitor.monitorIds[1],text:monitor.captions[1]})
+    if(monitor.monitorIds){
+      commit('monitor1', {id:monitor.monitorIds[0],text:monitor.captions[0]})
+      commit('monitor2', {id:monitor.monitorIds[1],text:monitor.captions[1]})
+    }
     commit('curSelect',1)
     commit('filterType', 2)
   }
