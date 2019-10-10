@@ -10,11 +10,22 @@ const state = {
   filterType:2,
 }
 
+let monitor={}
 const actions={
   async setDefaultNode({commit}){
     let res = await CommonApi.getDefaultNode()
+    monitor=res
     commit('monitor1', {id:res.monitorIds[0],text:res.captions[0]})
     commit('monitor2', {id:res.monitorIds[1],text:res.captions[1]})
+  },
+  resetStates({commit}){
+    commit('showDialog', false)
+    commit('startTime', moment(new Date(new Date().getTime()-5*24*60*60*1000)).format('YYYY-MM-DD HH:mm:ss'))
+    commit('endTime',moment().format('YYYY-MM-DD HH:mm:ss'))
+    commit('monitor1', {id:monitor.monitorIds[0],text:monitor.captions[0]})
+    commit('monitor2', {id:monitor.monitorIds[1],text:monitor.captions[1]})
+    commit('curSelect',1)
+    commit('filterType', 2)
   }
 }
 
@@ -41,6 +52,7 @@ const mutations={
     state.filterType=data
   }
 }
+
 
 export default {
   namespaced: true,

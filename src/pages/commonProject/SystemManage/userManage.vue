@@ -223,10 +223,10 @@
       position: fixed;
       height: 100%;
       overflow: auto;
-      background: var(--mainBg);
+      background: @mainBg;
       padding: 10px 0;
       .el-tree{
-        background: var(--mainBg);
+        background: @mainBg;
         font-size: 16px;
       }
       .el-tree-node__content{
@@ -286,7 +286,7 @@
     }
     .item-row-detail-table{
       tr:nth-child(6) td{
-        border-bottom:1px solid var(--mainBg);
+        border-bottom:1px solid @mainBg;
       }
     }
   }

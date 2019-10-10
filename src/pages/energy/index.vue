@@ -1,6 +1,6 @@
 <template>
   <div class="energy-index">
-    <Theme />
+    <!--<Theme />-->
     <NavList />
     <router-view></router-view>
   </div>

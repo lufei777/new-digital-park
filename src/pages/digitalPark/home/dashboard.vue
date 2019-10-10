@@ -16,7 +16,7 @@
                  :options="{draggable:'.item-drag-product'}"
                  group="product"
                  class="draggable-box">
-        <div v-for="i in productList2" :key="i" class="item-drag-product">{{i}}</div>
+        <div v-for="i in productList2" :key="i" :class="['item-drag-product',i==6?'undraggable':'']">{{i}}</div>
       </draggable>
     </div>
   </div>
@@ -32,7 +32,7 @@
     data () {
       return {
         productList1:[1,2,3],
-        productList2:[4,5]
+        productList2:[4,5,6]
       }
     },
     methods:{

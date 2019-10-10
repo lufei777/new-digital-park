@@ -1,6 +1,6 @@
 <template>
   <div class="time-energy">
-    <TbhbAnalysis />
+    <TbhbAnalysis/>
   </div>
 </template>
 

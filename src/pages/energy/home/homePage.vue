@@ -189,6 +189,7 @@ export default {
         selectType: 1
       });
       this.piechart1(this.energyOverview);
+      this.piechart2(this.energyOverview)
     },
     async getEnergyEcharts() {
       let res = await CommonApi.getTbhbChart({
@@ -353,6 +354,38 @@ export default {
       });
       let seriesData =dataList
       let titleText = "当年分项用电占比"
+      let data = {
+        legendData,
+        seriesData,
+        titleText,
+      };
+      window.onresize = myPieChart.resize;
+      ChartUtils.hollowPieChart(myPieChart, data);
+    },
+    piechart2(res){
+      let myPieChart = echarts.init(this.$refs.pieChart2);
+      let legendData = ['生活用水','消防用水','空调用水','其他用水'];
+      let dataList = [{
+        name:'生活用水',
+        value:1989555
+      },{ name:'消防用水',
+        value:1172323
+       },{
+        name:'空调用水',
+        value:100242,
+       },{
+        name:'其他用水',
+        value:353431
+      }];
+      // res.elecList.map(item => {
+      //   var itemObj = {
+      //     value: item.value,
+      //     name: item.name
+      //   };
+      //   dataList.push(itemObj);
+      // });
+      let seriesData =dataList
+      let titleText = "当年分项用水占比"
       let data = {
         legendData,
         seriesData,

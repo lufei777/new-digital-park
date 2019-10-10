@@ -1,5 +1,5 @@
 <template>
-  <div class="father-nav flex-align-around" :style="{backgroundImage:'url('+fatherBg+')'}">
+  <div class="father-nav flex-align-around">
     <div class="sys-title">{{sysTitle}}</div>
     <div class="father-nav-list flex-align-around">
       <div v-for="(item,index) in menuData.children" :key="index" class="father-item"
@@ -9,7 +9,7 @@
            :style="activeBg(item)"
       >
         <span>{{item.caption}}</span>
-        <div class="child-nav-list" :style="{backgroundImage:'url('+childBg+')'}"
+        <div class="child-nav-list"
              v-if="item.children && item.children.length && item.showChild==1">
           <div v-for="(child,i) in item.children" :key="i" class="child-item"
                @mouseenter="changeBg(child,1)" @mouseleave="changeBg(child,-1)"
@@ -168,6 +168,8 @@
           this.$store.commit('conditionSelect/curModule',2)
         }else if(tmp[index].children[i].caption=="分项能耗"){
           this.$store.commit('conditionSelect/curModule',3)
+        }else if(tmp[index].children[i].caption=="能耗排名"){
+          this.$store.commit('conditionSelect/activeIndex',1)
         }else if(tmp[index].children[i].caption=="水量异常突增诊断"){
           this.$store.commit('energySavingSelect/energySaveFlag',1)
         }else if(tmp[index].children[i].caption=="夜间用水跑冒滴漏诊断"){
@@ -224,13 +226,14 @@
     async mounted(){
       this.getMenus()
       await this.getSystemSetting()
-      this.alarmWebSocket()
+      // this.alarmWebSocket()
     }
   }
 </script>
 
 <style lang="less">
   .father-nav{
+    /*:style="{backgroundImage:'url('+fatherBg+')'}"*/
     /*background: url("../../../static/image/nav1.png");*/
     width:100%;
     height: 50px;
@@ -240,6 +243,7 @@
     top:0;
     z-index: 99;
     box-sizing: border-box;
+    background: #012030;
     .sys-title{
       flex-shrink: 0;
       font-size: 24px;
@@ -298,12 +302,14 @@
   }
   .child-nav-list{
     /*background: url('../../../static/image/nav2.png');*/
+    /*:style="{backgroundImage:'url('+childBg+')'}"*/
     height: 35px;
     width: 100%;
     position: absolute;
     left:0;
     display: flex;
     justify-content: center;
+    background: #005773;
     .child-item{
       float: left;
       line-height: 35px;

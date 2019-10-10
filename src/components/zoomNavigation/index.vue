@@ -82,7 +82,7 @@
 <style lang="less">
   .zoom-navigation{
   /*  background: @mainBg;*/
-    background: var(--mainBg);
+    background: @mainBg;
     color:@white;
     text-align: left;
     overflow: hidden;
@@ -96,7 +96,7 @@
      margin: 20px 0 0 20px;
    }
     .el-tree{
-      background: var(--mainBg);
+      background: @mainBg;
       font-size: 16px;
       color:@white;
       /*font-weight: 600;*/

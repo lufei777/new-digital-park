@@ -15,6 +15,8 @@ import SystemManage from './commonRouter/systemManage'
 import DeviceRecord from './commonRouter/deviceRecord'
 import Collect from './commonRouter/collect'
 import DataReport from './commonRouter/dataReport'
+import ElecAnalysis from '../pages/energy/energySaving/helloWorld.vue'
+
 export default [{
   path: '/',
   redirect: '/login'
@@ -62,6 +64,10 @@ export default [{
     path: '/energy/nightElec',
     name: 'NightElec',
     component: NightElec,
+  },{
+    path: '/energy/elecAnalysis',
+    name: 'ElecAnalysis',
+    component: ElecAnalysis,
   }].concat(StatisAnalysis).concat(SystemManage)
     .concat(DeviceRecord).concat(Collect)
     .concat(DataReport)

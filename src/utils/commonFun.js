@@ -247,7 +247,7 @@ class commonFun {
         "name": "space",
         "caption": "电流向及线损分析",
         "catalog": null,
-        "url": "/html/unauthorized.html",
+        "url": "/energy/elecAnalysis",
         "sequence": 5,
         "icon": null,
         "permisionList": ["电流向及线损分析"],

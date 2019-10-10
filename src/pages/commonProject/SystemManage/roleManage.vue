@@ -205,7 +205,7 @@
     }
     .item-row-detail-table{
       tr:nth-child(4) td{
-        border-bottom:1px solid var(--mainBg);
+        border-bottom:1px solid @mainBg;
       }
     }
     .role-detail{

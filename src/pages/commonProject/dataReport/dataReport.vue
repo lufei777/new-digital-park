@@ -45,6 +45,7 @@
 </template>
 
 <script>
+  import moment from 'moment'
   import CommonApi from '../../../service/api/commonApi'
   let dateTypeList=[{
       name:'年',
@@ -75,8 +76,8 @@
         curDateType:'monthly',
         dateTypeList:dateTypeList,
         pickerType:'month',
-        startTime:new Date(new Date().getTime()-30*24*60*60*1000),
-        endTime:new Date(),
+        startTime:moment(new Date(new Date().getTime()-30*24*60*60*1000)).format('YYYY-MM'),
+        endTime:moment(new Date()).format('YYYY-MM'),
         energyList:energyList,
         curEnergy:'electricity',
         tableData:''
@@ -117,7 +118,7 @@
       }
     },
     mounted(){
-       // this.getEnergyListAll()
+       this.onClickLookBtn()
     }
   }
 </script>
