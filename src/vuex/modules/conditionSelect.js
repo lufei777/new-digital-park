@@ -16,8 +16,8 @@ const state = {
   tbhbLastTime:'',
   tbhbCheckedFloorList:[],
   tbhbEnergy:[{
-    id:'',
-    name:''
+    id:'34',
+    name:'电'
   }],
   typeSelectType:'2',
   typeRadioType:0,
@@ -98,8 +98,26 @@ const mutations={
   }
 }
 
+const actions={
+   resetStates({commit}){
+    commit('selectType', 2)
+    commit('radioType', 0)
+    commit('startTime', moment(new Date(new Date().getTime()-30*24*60*60*1000)).format('YYYY-MM'))
+    commit('lastTime', '')
+    commit('checkedFloorList',[])
+    commit('energy',[{id:'34', name:'电'}])
+    commit('tbhbSelectType', 2)
+    commit('tbhbRadioType', 0)
+    commit('tbhbStartTime', moment(new Date(new Date().getTime()-30*24*60*60*1000)).format('YYYY-MM'))
+    commit('tbhbLastTime', '')
+    commit('tbhbCheckedFloorList',[])
+    commit('tbhbEnergy', [{id:'', name:''}])
+  }
+}
+
 export default {
   namespaced: true,
   state,
-  mutations
+  mutations,
+  actions
 }

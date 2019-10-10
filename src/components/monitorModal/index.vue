@@ -2,7 +2,7 @@
   <div class="monitor-modal">
     <el-dialog
       title="选择监控器"
-      :visible.sync="showDialog"
+      :visible.sync="showModal"
       :show-close="false"
       width="30%"
     >
@@ -47,6 +47,14 @@
         showDialog:state=>state.analysis.showDialog,
         curSelect:state=>state.analysis.curSelect
       }),
+      showModal:{
+        get(){
+          return this.showDialog
+        },
+        set(){
+          this.$store.commit('analysis/showDialog',false)
+        }
+      }
      },
     methods: {
       async getMonitorTree(){

@@ -29,6 +29,7 @@ class chartUtils {
         trigger: 'axis'
       },
       calculable: true,
+      color:['#4094ff','#013b4e','#FAAD14','#F5222D'],
       xAxis: [{
         type: 'category',
         data: data.xAxis

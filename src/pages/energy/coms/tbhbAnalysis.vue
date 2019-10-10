@@ -46,7 +46,7 @@
         rank:'asc',
         seq:0,
         myChart1:'',
-        myChart2:''
+        myChart2:'',
       }
     },
     computed: {
@@ -149,6 +149,8 @@
         let xAxis
         if(this.selectType==3 && this.radioType==0){
           xAxis = res.value.map((item)=>item.date.slice(0,16))
+        }else if(this.selectType==2 && this.radioType==1){
+          xAxis = res.value.map((item)=>item.date.slice(0,7))
         }else{
           xAxis = res.value.map((item)=>item.date.slice(0,10))
         }
@@ -184,7 +186,7 @@
           yAxis,
           series
         }
-          ChartUtils.handleBarChart(this.myChart,data2)
+        ChartUtils.handleBarChart(this.myChart,data2)
       },
       handleCurrentChange(value){
         this.curPage=value
@@ -318,8 +320,6 @@
           series
         }
         ChartUtils.handleBarChart(myChart1,data)
-
-
       },
       initCategoryPieChart(res){
         let myChart2 = echarts.init(this.$refs.myChart2);
@@ -338,7 +338,7 @@
           series
         }
         ChartUtils.handlePieChart(myChart2,data)
-      }
+      },
     },
     async mounted(){
        await this.getAllFloor()

@@ -15,6 +15,12 @@
       return {
       }
     },
+    $route(to, from) {
+      // 路由改变发起重置
+      debugger
+      console.log(to,from)
+      this.$store.dispatch('conditionSelect/resetStates')
+    },
     computed: {
     },
     methods: {

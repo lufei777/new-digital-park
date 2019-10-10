@@ -74,7 +74,7 @@
         energyList:[],
         // dateTypeList,
         curEnergy:[],
-        curDateType:'月',
+        curDateType:2,
         dateType:'month',
         radio:'0',
         startTime:new Date(new Date().getTime()-30*24*60*60*1000),
