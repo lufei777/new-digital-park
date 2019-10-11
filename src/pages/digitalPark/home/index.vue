@@ -84,13 +84,14 @@
 
 <script>
   import CommonFun from '../../../utils/commonFun'
+  import DigitalParkApi from '../../../service/api/digitalParkApi'
   export default {
     name: 'DigitalHomePage',
     components: {
     },
     data () {
       return {
-        productList:CommonFun.productList,
+        productList:[],
         showMoreProduct:false,
         navList:[],
         modelValue:"1"
@@ -132,8 +133,9 @@
         child.showChild = true
       },
       getItemBg(item){
+        console.log('../../../../static/image/digitalPark/'+item.id+'.png')
         return {
-          backgroundImage:'url('+require('../../../../static/image/digitalPark/'+item.bgUrl)+')'
+          backgroundImage:'url('+require('../../../../static/image/digitalPark/'+item.id+'.png')+')'
         }
       },
       onClickChangeModel(val){
@@ -142,11 +144,21 @@
         }else{
           this.$router.replace('/digitalPark/dashboardHomePage')
         }
-
+      },
+      async getMenuList(){
+          let res = await DigitalParkApi.getMenuList()
+          let tmp=[]
+          res[0].childNode.map((item)=>{
+            item.childNode.map((child)=>{
+              tmp.push(child)
+            })
+          })
+        this.productList=tmp.slice(0,6)
       }
     },
     mounted(){
       this.getNavList()
+      this.getMenuList()
     }
   }
 </script>
