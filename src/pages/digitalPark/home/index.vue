@@ -8,20 +8,7 @@
         <el-input class="search-input">
            <el-button slot="append" icon="el-icon-search" class="search-icon">搜索</el-button>
         </el-input>
-        <div class="header-nav-right flex-align">
-            <span class="nav-right-item"><span>消息(1)</span><i>|</i></span>
-            <span class="nav-right-item"><span>EN</span><i>|</i></span>
-            <span class="nav-right-item"><span>换肤</span><i>|</i></span>
-            <span class="nav-right-item"><span>admin</span><i>|</i></span>
-            <span class="nav-right-item">
-              <!--<span>切换模式</span>-->
-               <el-select v-model="modelValue" placeholder="切换模式" @change="onClickChangeModel">
-                  <el-option label="瀑布流" value="1"></el-option>
-                  <el-option label="仪表盘" value="2"></el-option>
-                </el-select>
-            </span>
-        </div>
-
+        <NavOperator />
       </div>
       <ul class="flex nav-list">
         <li v-for="(item,index) in navList" :key="index" @click="item.children.length && navListClick(item)" class="nav-list-text">
@@ -85,9 +72,11 @@
 <script>
   import CommonFun from '../../../utils/commonFun'
   import DigitalParkApi from '../../../service/api/digitalParkApi'
+  import NavOperator from '../coms/navOperator'
   export default {
     name: 'DigitalHomePage',
     components: {
+      NavOperator
     },
     data () {
       return {
@@ -99,9 +88,9 @@
     },
     methods:{
       onClickItemProduct(item){
-        if(item.url){
-          window.open(item.url)
-        }
+        // if(item.url){
+          window.open('/#/energy')
+        // }
       },
       onShowMoreProduct(){
         this.showMoreProduct=!this.showMoreProduct
@@ -133,7 +122,6 @@
         child.showChild = true
       },
       getItemBg(item){
-        console.log('../../../../static/image/digitalPark/'+item.id+'.png')
         return {
           backgroundImage:'url('+require('../../../../static/image/digitalPark/'+item.id+'.png')+')'
         }
@@ -153,7 +141,7 @@
               tmp.push(child)
             })
           })
-        this.productList=tmp.slice(0,6)
+        this.productList=tmp.slice(0,20)
       }
     },
     mounted(){
@@ -210,12 +198,11 @@
       }
     }
     .home-header-inner{
-      width:1200px;
+      width:80%;
       margin:0 auto;
       text-align: center;
     }
     .header-nav-left{
-      float: left;
       .title{
         font-size: 30px;
         color:@parkMainTextColor;
@@ -231,6 +218,7 @@
       width:400px;
       font-size: 14px;
       margin:0 auto;
+      flex-shrink: 1;
       input{
        border-top-left-radius: 20px;
        border-bottom-left-radius: 20px;
@@ -246,27 +234,8 @@
         color:@white;
       }
     }
-    .header-nav-right{
-      float: right;
-    }
-    .nav-right-item{
-      span{
-        padding: 0 20px;
-        &:hover{
-          cursor: pointer;
-        }
-      }
-      .el-select{
-        width:90px;
-      }
-      .el-input__inner{
-        border:none;
-        padding-right: 5px;
-        /*width:85px;*/
-      }
-      .el-input__suffix,.el-input__suffix-inner{
-        padding: 0;
-      }
+    .digital-nav-operator{
+      flex-shrink: 0;
     }
     .skin-img{
       width:20px;
@@ -274,7 +243,7 @@
       margin:0 25px;
     }
     .home-center{
-      width:1200px;
+      width:80%;
       margin:0 auto;
     }
     .item-module{
@@ -309,6 +278,12 @@
       span:hover{
         cursor: pointer;
       }
+    }
+    .production-list:after{
+      content: '';
+      width: 66%;
+      /*flex: auto;*/
+      /*border:1px solid transparent;*/
     }
     .module-border{
       padding:20px;
