@@ -36,7 +36,7 @@ export default {
     //列操作下拉方法
     handleCommand(command, currentMenu) {
       //下拉回调执行
-      command(currentMenu.$attrs);
+      command(currentMenu.$attrs.carryData);
     }
   }
 };
