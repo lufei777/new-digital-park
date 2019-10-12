@@ -42,6 +42,9 @@
         </el-table-column>
       </template>
     </CommonTable>
+
+    <Table :ref="assetsTableConfig.ref" :tableConfig="assetsTableConfig"/>
+
     <TreeModal
       :showTree="showTree"
       :treeList="treeList"
@@ -82,6 +85,7 @@
 </template>
 
 <script>
+import Table from "@/components/Table"
 import CommonDialog from "../coms/commonDialog";
 import CommonUpload from "../coms/commonUpload";
 import AssetManageApi from "../../../service/api/assetManageApi";
@@ -94,9 +98,11 @@ export default {
     CommonTable,
     TreeModal,
     CommonDialog,
-    CommonUpload
+    CommonUpload,
+    Table
   },
   data() {
+    var _this = this;
     return {
       coding: "",
       name: "",
@@ -128,7 +134,158 @@ export default {
           onError: this.excelUploadError
         }
       },
-      curAssetIds:''
+      curAssetIds:'',
+      //资产管理表格
+      assetsTableConfig: {
+        ref: "assetsTable",
+        serverMode: {
+          url: AssetManageApi.getAssetList
+        },
+        columnConfig: [
+          {
+            prop: "coding",
+            label: "编号",
+            width: 80,
+            sortable: "custom"
+          },
+          {
+            prop: "name",
+            label: "名称",
+            // width: 150,
+            sortable: "custom"
+          },
+          {
+            prop: "groupName",
+            label: "资产组"
+            // width: 80
+          },
+          {
+            prop: "providerName",
+            label: "供应商",
+            width: 80
+          },
+          {
+            prop: "typeName",
+            label: "资产类型",
+            width: 100,
+            formatter: function(row, column) {
+              return row[column.property] ? row[column.property] : "--";
+            }
+          },
+          {
+            prop: "currentCustodian",
+            label: "当前保管人",
+            formatter: function(row, column) {
+              return row[column.property] ? row[column.property] : "--";
+            }
+            // width: 100
+          },
+          {
+            prop: "specification",
+            label: "规格型号",
+            width: 80,
+            formatter: function(row, column) {
+              return row[column.property] ? row[column.property].trim() : "--";
+            }
+          },
+          {
+            prop: "status",
+            label: "状态",
+            width: 80,
+            formatter: function(row, column) {
+              switch (row[column.property]) {
+                case 1:
+                  return "闲置";
+                  break;
+                case 2:
+                  return "在用";
+                  break;
+                case 3:
+                  return "报修";
+                  break;
+                default:
+                  return "报废";
+                  break;
+              }
+            }
+          }
+        ],
+        uiConfig: {
+          height: "500px", //高度
+          selection: true, //是否多选
+          searchable: ["coding", "name", "groupName", "currentCustodian"],
+          pagination: {
+            //是否分页，分页是否自定义
+            layout: "total,->,  sizes, prev, pager, next, jumper",
+            pageSizes: [10, 20, 50]
+          }
+        },
+        btnConfig: {
+          prop: "operation",
+          label: "列操作",
+          fixed: "right",
+          width: 150,
+          btns: [
+            {
+              type: "basic",
+              label: "变更",
+              handler: function(row) {
+                _this.tableEdit(row);
+              }
+            },
+            {
+              type: "basic",
+              label: "调拨",
+              handler: function(row) {
+                _this.tableDel(row);
+              }
+            },
+            {
+              type: "dropDown",
+              icon: "el-icon-more",
+              showMore: false,
+              menus: [
+                {
+                  label: "报修",
+                  handler: function(row) {
+                    console.log("报修", row);
+                  }
+                },
+                {
+                  label: "报废",
+                  handler: function(row) {
+                    console.log("报废", row);
+                  }
+                },
+                {
+                  label: "删除",
+                  handler: function(row) {
+                    console.log("删除", row);
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        tableMethods: {
+          rowClick: _this.assetsRowClick,
+          rowDblclick: _this.assetsRowDbClick,
+          sortChange: function(sortObj, $table) {
+            //这里返回请求后的排序数组 return []
+            AssetManageApi.getAssetList({
+              coding: "",
+              name: "",
+              groupName: "",
+              orderType: sortObj.order === "ascending" ? 1 : 0, //0降序1升序
+              orderBy: "create_time",
+              pageNum: this.curPage,
+              pageSize: 10
+            }).then(res => {
+              $table.setTableData(res.list);
+            });
+          }
+        }
+      }
     };
   },
   methods: {
