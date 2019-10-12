@@ -94,6 +94,104 @@
   3）cancelCallback---点击取消时的回调
   3）sureCallback ---点击确定时的回调
 
+五）、自定义表格Table组件封装
+  - 数据说明
+  ```javaScript
+  tableConfig:{
+      ref:String,
+      
+      //以下两个参数二选一
+      data:Array, -> 表格需要展示的数据
+      serverMode:{    -> 服务端模式，数据、分页从服务端请求
+          url:String || Function -> (String表明请求的链接，Function返回一个Promise对象的方法),
+          data:Object, -> 请求时要发送的数据
+          type:String -> (get or post)
+      },
+      //以上两个参数二选一
+      
+      columnConfig:[
+          {
+              prop:String -> 该列字段名
+              label:String -> 该列显示的标题
+              fixed:String -> (left, right，详情为ElementUI规范)
+              sortable:Boolean || "custom" -> (Boolean表明是否可排序，custom表明自定义排序)
+              hide:Boolean -> 该列是否隐藏
+              formatter:function(row,column){
+                  row -> 该行全部数据
+                  column -> 该列属性
+                  return String||Number; -> 要显示的
+              },
+              width:Number -> 显示的宽度
+          }
+      ],
+      btnConfig:{ -> 列操作
+          prop:"operation",
+          label:String -> 要显示的列名
+          fixed:"right"
+          width:Number
+          btns:[
+              {
+                  type:String -> (basic基础按钮，只有点击事件。dropdown -> 下拉按钮),
+                  label:String -> 要显示的名字
+                  handler:function(row){}
+              },{
+                  type:"dropDown",
+                  label
+                  handler
+                  icon:String -> 显示的图标
+                  showMore:Boolean -> 是否显示下拉箭头
+                  menus:[
+                      {
+                          label:String,
+                          handler:function(scope){
+                              scope row
+                                    column
+                                    _self -> 表格，可调用刷新方法
+                          }
+                      }
+                  ]
+              }
+          ]
+      },
+      tableMethods:{
+          rowClick:Function
+          rowDblClick:Function -> 看清楚方法名
+          sortChange:function(sortObj,$table){  -> 自定义排序时调用方法
+              $table -> 可调用设置数据方法
+              return Array
+          }
+      }
+      
+  }
+  ```
+  -  功能说明
+    - 本地数据渲染表格
+    - 服务端数据渲染表格
+    - 自定义分页
+        - 可自定义分页布局，包括不限于，分页页数，全部数量显示，跳转等
+    - 自定义排序
+        - 可使用方法返回数据自定义排序
+    - 自定义操作
+        - 基本按钮，删除等
+        - 特殊按钮，目前只有下拉
+    - 自定义单选、多选
+    - 自定义索引
+        - 开启索引必须开启多选，不然会出现莫名的bug，elementUI的锅
+    - 检索、可自定义检索字段
+    - 自定义方法
+        - 行单击
+        - 行双击
+          - 以下待实现
+        - 单元格单击
+        - 列标题单击，右击
+        - 
+      - 待实现功能
+        - 列筛选
+        - 多级表头
+        - 自定义模板
+        - 表格内树
+        - 表尾合计
+
 二、commonFun公共方法/数据封装  （有些为测试数据，不再此说明，用完可删）
 
 一）deleteTip 删除提示函数 
