@@ -3,10 +3,10 @@
     <div class="home-header">
       <div class="home-header-inner flex-align-between">
         <div class="header-nav-left">
-          <h3 class="title">cizing数字园区</h3>
+          <h3 class="title">{{$t('homeHeader.title')}}</h3>
         </div>
         <el-input class="search-input">
-           <el-button slot="append" icon="el-icon-search" class="search-icon">搜索</el-button>
+           <el-button slot="append" icon="el-icon-search" class="search-icon">{{$t('homeHeader.searchText')}}</el-button>
         </el-input>
         <NavOperator />
       </div>
@@ -133,20 +133,14 @@
           this.$router.replace('/digitalPark/dashboardHomePage')
         }
       },
-      async getMenuList(){
-          let res = await DigitalParkApi.getMenuList()
-          let tmp=[]
-          res[0].childNode.map((item)=>{
-            item.childNode.map((child)=>{
-              tmp.push(child)
-            })
-          })
-        this.productList=tmp.slice(0,20)
+      async getProductList(){
+          let res = await DigitalParkApi.getProductList()
+          this.productList=res
       }
     },
     mounted(){
       this.getNavList()
-      this.getMenuList()
+      this.getProductList()
     }
   }
 </script>
