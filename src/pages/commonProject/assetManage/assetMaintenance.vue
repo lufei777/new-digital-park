@@ -43,7 +43,21 @@
       </template>
     </CommonTable>
 
-    <Table :ref="assetsTableConfig.ref" :tableConfig="assetsTableConfig"/>
+    <Table :ref="assetsTableConfig.ref" :tableConfig="assetsTableConfig">
+      <template slot="custom-top" slot-scope="customTopObj">
+        <div>
+          <el-button-group>
+            <template v-for="col in customTopObj.columnConfig">
+              <el-button
+                :key="col.prop"
+                :type="col.hide ?'danger': 'primary'"
+                @click="switchHide(col)"
+              >{{col.label}}</el-button>
+            </template>
+          </el-button-group>
+        </div>
+      </template>
+    </Table>
 
     <TreeModal
       :showTree="showTree"
@@ -289,6 +303,15 @@ export default {
     };
   },
   methods: {
+    switchHide(col) {
+      let tableRefs = this.$refs;
+      if (col.hide) {
+        this.$set(col, "hide", !col.hide);
+      } else {
+        this.$set(col, "hide", true);
+      }
+      tableRefs[this.assetsTableConfig.ref].doLayout();
+    },
     async getAssetList() {
       //status(资产状态)：1-闲置，2-在用，3-报修，4-报废
         let res = await AssetManageApi.getAssetList({
