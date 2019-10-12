@@ -15,6 +15,7 @@ import App from './App'
 
 Vue.use(ElementUI)
 Vue.use(VueRouter)
+
 import AFTableColumn from 'af-table-column'
 Vue.use(AFTableColumn)
 
@@ -28,8 +29,21 @@ moment.locale('zh-cn');//需要汉化
 import VueDND from 'awe-dnd'
 Vue.use(VueDND)
 
+import VueI18n from 'vue-i18n'
+import LangENUS from './utils/lang/en-us.js'
+import LangZHCN from './utils/lang/zh-cn.js'
+Vue.use(VueI18n)
+
 let router = new VueRouter({
   routes
+})
+
+const i18n = new VueI18n({
+  locale: 'zh-cn',
+  messages: {
+    'en-us': LangENUS,
+    'zh-cn': LangZHCN
+  }
 })
 
 Vue.config.productionTip = false
@@ -38,6 +52,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  i18n,
   Vuex,
   store,
   components: { App },

@@ -112,8 +112,9 @@
     mounted(){
       setTimeout(()=>{
         this.showHeader=false
+        this.controlHeader()
       },3000)
-      this.controlHeader()
+
       this.scrollNews()
     }
   }
@@ -145,8 +146,10 @@
       height:30%;
       margin-bottom: 3%;
       background: @white;
-      font-size: 20px;
+      font-size: 30px;
       font-weight: bold;
+      text-align: center;
+      /*line-height: 30%;*/
     }
     .dashboard-header{
       width:100%;
