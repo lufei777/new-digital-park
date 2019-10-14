@@ -21,7 +21,12 @@
                  class="draggable-box1"
                  @change="onChange"
       >
-        <div v-for="i in productList1" :key="i.text" class="item-drag-product">{{i.text}}</div>
+        <ItemProModule v-for="(item,index) in productList1"
+                       class="item-drag-product"
+                       :key="item.id"
+                       :moduleData="item"
+        />
+        <!--<div v-for="i in productList1" :key="i.text" class="item-drag-product">{{i.text}}</div>-->
       </draggable>
     </div>
 
@@ -34,7 +39,11 @@
                  class="draggable-box2"
                  @change="onChange2"
               >
-        <div v-for="i in productList2" :key="i.text" :class="['item-drag-product',i.text==6?'undraggable':'']">{{i.text}}</div>
+        <ItemProModule v-for="(item,index) in productList2"
+                        class="item-drag-product"
+                        :key="item.id"
+                        :moduleData="item"
+         />
       </draggable>
       </div>
   </div>
@@ -43,11 +52,14 @@
 <script>
   import draggable from 'vuedraggable'
   import NavOperator from '../coms/navOperator'
+  import DigitalParkApi from '../../../service/api/digitalParkApi'
+  import ItemProModule from '../coms/itemProModule'
   export default {
     name: 'DashBoardHomePage',
     components: {
       draggable,
-      NavOperator
+      NavOperator,
+      ItemProModule
     },
     computed: {
       top() {
@@ -56,8 +68,8 @@
     },
     data() {
         return {
-          productList1: [{text: '1'}, {text: '2'}, {text: '3'}],
-          productList2: [{text: '4'}, {text: '5'}, {text: '6'}],
+          productList1: [],
+          productList2: [],
           changeObj: {},
           showHeader: true,
           newsList: [{id: 1, time: '2019-10-10 10:10:10', text: '消息消息消息1111111'},
@@ -105,17 +117,23 @@
           }, 1500);
         },
         stopNews() {
-          console.log(111)
           clearInterval(this.newsTimer);
         },
+        async getModulesByType(){
+          let res = await DigitalParkApi.getModulesByType({
+            type:1
+          })
+          this.productList1 =res.slice(0,3)
+          this.productList2 =res.slice(3,5)
+        }
     },
     mounted(){
       setTimeout(()=>{
         this.showHeader=false
         this.controlHeader()
       },3000)
-
       this.scrollNews()
+      this.getModulesByType()
     }
   }
 </script>
@@ -146,7 +164,7 @@
       height:30%;
       margin-bottom: 3%;
       background: @white;
-      font-size: 50px;
+      font-size: 16px;
       font-weight: bold;
       text-align: center;
       /*line-height: 30%;*/
