@@ -146,7 +146,7 @@
       height:30%;
       margin-bottom: 3%;
       background: @white;
-      font-size: 30px;
+      font-size: 50px;
       font-weight: bold;
       text-align: center;
       /*line-height: 30%;*/
