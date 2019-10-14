@@ -273,8 +273,16 @@ export default {
                 },
                 {
                   label: "删除",
-                  handler: function(row) {
-                    console.log("删除", row);
+                  handler: function(scope) {
+                    AssetManageApi.delAsset({
+                      assetId:scope.row.id
+                    }).then(res=>{
+                      scope._self.refreshTable();
+                      _this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                      })
+                    })
                   }
                 }
               ]
@@ -311,6 +319,13 @@ export default {
         this.$set(col, "hide", true);
       }
       tableRefs[this.assetsTableConfig.ref].doLayout();
+    },
+    assetsRowClick(row,column,e){
+
+    },
+    assetsRowDbClick(row,column,e){
+      this.isEdit=true
+      this.$router.push(`/addAsset?assetId=${row.id}&typeId=${row.typeId}`)
     },
     async getAssetList() {
       //status(资产状态)：1-闲置，2-在用，3-报修，4-报废
