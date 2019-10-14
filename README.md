@@ -150,6 +150,21 @@
               width:Number -> 显示的宽度
           }
       ],
+      uiConfig:{
+          height:Number || String -> 表格高度(400 or 400px)
+          selection:Boolean -> 是否多选
+          searchable:Array -> ["name","sex"]需要筛选字段的prop
+          pagination:Boolea || Object -> (Boolean是否开启分页,Object{
+              layout:"total,->,sizes,prev"等，elementUI官方格式
+              pageSizes:Number[] -> 每页显示个数选择器的选项设置
+          })
+          showIndex:Boolean || Object -> (是否显示索引,Object{
+              //自定义索引
+              handler:function(index){
+                  return index + 1;
+              }
+          })
+      },
       btnConfig:{ -> 列操作
           prop:"operation",
           label:String -> 要显示的列名
