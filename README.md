@@ -219,13 +219,16 @@
             - getTableShowData():Array 获取表格当前显示数据
             - setTableData(Array) 设置表格数据，如果是本地，则设置表格全部数据，如果是服务端，则设置当前显示数据，如分页
             - refreshTable() 刷新表格
-   - 引入组件后，<Table :ref="tableConfig.ref" :tableConfig="tableConfig">
-                    <template solt="custom-top" slot-scope="scopeObj">
-                        //这里是自定义表格上部，可以是按钮，input框等
-                        //scopeObj里有，columnConfig 列配置,allData 表格全部数据,tableShowData 表格目前显示数据
-                        //如果需要再返回数据，请和刘晓航协商
-                    </template>
-                </Table>
+   - 引入组件后
+   ```javaScript
+   <Table :ref="tableConfig.ref" :tableConfig="tableConfig">
+        <template solt="custom-top" slot-scope="scopeObj">
+            //这里是自定义表格上部，可以是按钮，input框等
+            //scopeObj里有，columnConfig 列配置,allData 表格全部数据,tableShowData 表格目前显示数据
+            //如果需要再返回数据，请和刘晓航协商
+        </template>
+    </Table>
+   ```
 二、commonFun公共方法/数据封装  （有些为测试数据，不再此说明，用完可删）
 
 一）deleteTip 删除提示函数 
