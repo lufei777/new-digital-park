@@ -12,7 +12,7 @@
           </ul>
         </div>
 
-        <NavOperator />
+        <NavOperator :moduleType.sync="moduleType" />
       </div>
     <!--</transition>-->
     <div class="dashboard-content-panel">
@@ -88,7 +88,8 @@
             {id: 3, time: '2019-10-12 10:12:12', text: '消息消息消息3333333'}],
           newsTimer: '',
           curNewsIndex: 0,
-          fixedProList:''
+          fixedProList:'',
+          moduleType:"1"
         }
       },
       methods: {
@@ -180,7 +181,6 @@
       margin: 1% 0;
       background: @white;
       font-size: 16px;
-      font-weight: bold;
       text-align: center;
       padding:10px;
       box-sizing: border-box;

@@ -11,9 +11,9 @@
           <i>|</i>
       </span>
       <span class="nav-right-item model-box">
-         <el-select v-model="modelValue" placeholder="切换模式" @change="onClickChangeModel">
-            <el-option label="瀑布流" value="1"></el-option>
-            <el-option label="仪表盘" value="2"></el-option>
+         <el-select v-model="moduleType" placeholder="切换模式" @change="onClickChangeModel">
+            <el-option label="瀑布流" value="2"></el-option>
+            <el-option label="仪表盘" value="1"></el-option>
          </el-select>
       </span>
   </div>
@@ -24,18 +24,21 @@
     name: 'DigitalNavOperator',
     components: {
     },
+    props:['moduleType'],
     data () {
       return {
-        modelValue:'1',
         langValue:'zh-cn'
       }
     },
+    computed:{
+    },
     methods: {
       onClickChangeModel(val){
+        console.log(val)
         if(val==1){
-          this.$router.replace('/digitalPark/homePage')
-        }else{
           this.$router.replace('/digitalPark/dashboardHomePage')
+        }else{
+          this.$router.replace('/digitalPark/homePage')
         }
       },
       onClickChangeLang(val){

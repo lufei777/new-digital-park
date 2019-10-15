@@ -1,6 +1,7 @@
 <template>
-  <div class="energy-electricity-proportion">
+  <div class="energy-electricity-proportion flex-wrap-align-center">
     <div ref="myChart" class="my-chart"></div>
+    <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
@@ -11,6 +12,7 @@
     name: 'EnergyElectricityProportion',
     components: {
     },
+    props:['moduleItem'],
     data () {
       return {
       }
@@ -38,22 +40,22 @@
           dataList.push(itemObj);
         });
         let seriesData =dataList
-        let titleText = "当年分项用电占比"
+        let titleText = this.moduleItem.moduleName
         let data = {
           legendData,
           seriesData,
-          titleText,
+          // titleText,
         };
         window.onresize = myChart.resize;
         ChartUtils.hollowPieChart(myChart, data);
 
-        let option={
-           title:{
-             left:'center',
-             bottom:'-20px'
-           }
-        }
-        myChart.setOption(option)
+        // let option={
+        //    // title:{
+        //    //   left:'center',
+        //    //   bottom:'-20px'
+        //    // }
+        // }
+        // myChart.setOption(option)
       },
 
     },
@@ -65,5 +67,9 @@
 
 <style lang="less">
   .energy-electricity-proportion{
+    .my-chart{
+      height:90%;
+      margin:0 auto;
+    }
   }
 </style>

@@ -1,14 +1,17 @@
 <template>
-  <div class="energy-proportion-analysis">
-    <el-select v-model="energy" placeholder="请选择" @change="energyChange" size="mini">
-      <el-option
-        v-for="item in energyList"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      ></el-option>
-    </el-select>
+  <div class="energy-proportion-analysis flex-wrap-align-center">
+    <div class="select-box">
+      <el-select v-model="energy" placeholder="请选择" @change="energyChange" size="mini">
+        <el-option
+          v-for="item in energyList"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+    </div>
     <div ref="myChart" class="my-chart"></div>
+    <div class="child-module-name">{{this.moduleItem.moduleName}}</div>
   </div>
 </template>
 
@@ -19,6 +22,7 @@
     name: 'EnergyProportionAnalysis',
     components: {
     },
+    props:['moduleItem'],
     data () {
       return {
         energy:34,
@@ -91,6 +95,7 @@
           series,
           showSecondY:true
         }
+        ChartUtils.handleBarChart(myChart,data2)
         let option={
           yAxis: [{
             type: 'value',
@@ -110,10 +115,11 @@
               }
             }
           ],
-          // barGap:'1%',
-          // barWidth:10,
+          grid:{
+            y:50,
+            y2:30
+          }
         }
-        ChartUtils.handleBarChart(myChart,data2)
         myChart.setOption(option)
       },
       energyChange(){
@@ -130,9 +136,22 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
   .energy-proportion-analysis{
+    .select-box{
+      width:100%;
+      flex-shrink: 0;
+    }
     .el-select{
       float: right;
       width:100px;
+    }
+    .my-chart{
+      height:80%;
+      flex-shrink: 1;
+      margin:0;
+    }
+    .child-module-name{
+      flex-shrink: 0;
+      height:20px;
     }
   }
 </style>
