@@ -130,18 +130,9 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
   .energy-proportion-analysis{
-    height:90%;
     .el-select{
       float: right;
       width:100px;
-    }
-    .my-chart{
-      margin:0 auto;
-      height:90%;
-      /*width:90%;*/
-      width:95%;
-      clear: both;
-      /*height:100px;*/
     }
   }
 </style>

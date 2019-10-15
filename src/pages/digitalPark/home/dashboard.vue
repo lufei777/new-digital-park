@@ -26,8 +26,8 @@
                          class="item-drag-product"
                          :key="item.id"
                          :moduleData="item"
+                         :type="1"
           />
-          <!--<div v-for="i in productList1" :key="i.text" class="item-drag-product">{{i.text}}</div>-->
         </draggable>
       </div>
 
@@ -44,6 +44,7 @@
                        class="item-drag-product"
                        :key="item.id"
                        :moduleData="item"
+                       :type="1"
         />
         <div class="fixed-prod-module">
              <span>产品入口</span>
@@ -181,7 +182,6 @@
       font-size: 16px;
       font-weight: bold;
       text-align: center;
-      /*line-height: 30%;*/
       padding:10px;
       box-sizing: border-box;
     }
