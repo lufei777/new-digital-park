@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-park-home-page">
-    <transition name="el-zoom-in-top">
+    <!--<transition name="el-zoom-in-top">-->
       <div class="dashboard-header flex-align-between" v-show="showHeader">
         <div class="digital-title">cizing数字园区</div>
         <div class="news-box">
@@ -14,38 +14,48 @@
 
         <NavOperator />
       </div>
-    </transition>
-    <div class="dashboard-left">
-      <draggable :list="productList1"
-                 :options="{group:'product',draggable:'.item-drag-product',sort:true}"
-                 class="draggable-box1"
-                 @change="onChange"
-      >
-        <ItemProModule v-for="(item,index) in productList1"
+    <!--</transition>-->
+    <div class="dashboard-content-panel">
+      <div class="dashboard-left">
+        <draggable :list="proModuleList1"
+                   :options="{group:'product',draggable:'.item-drag-product',sort:true}"
+                   class="draggable-box1"
+                   @change="onChange"
+        >
+          <ItemProModule v-for="(item,index) in proModuleList1"
+                         class="item-drag-product"
+                         :key="item.id"
+                         :moduleData="item"
+          />
+          <!--<div v-for="i in productList1" :key="i.text" class="item-drag-product">{{i.text}}</div>-->
+        </draggable>
+      </div>
+
+      <div class="dashboard-center">
+
+      </div>
+      <div class="dashboard-right">
+        <draggable :list="proModuleList2"
+                   :options="{group:'product',draggable:'.item-drag-product',filter:'.undraggable',sort:true}"
+                   class="draggable-box2"
+                   @change="onChange2"
+        >
+        <ItemProModule v-for="(item,index) in proModuleList2"
                        class="item-drag-product"
                        :key="item.id"
                        :moduleData="item"
         />
-        <!--<div v-for="i in productList1" :key="i.text" class="item-drag-product">{{i.text}}</div>-->
-      </draggable>
-    </div>
-
-    <div class="dashboard-center">
-
-    </div>
-    <div class="dashboard-right">
-      <draggable :list="productList2"
-                 :options="{group:'product',draggable:'.item-drag-product',filter:'.undraggable',sort:true}"
-                 class="draggable-box2"
-                 @change="onChange2"
-              >
-        <ItemProModule v-for="(item,index) in productList2"
-                        class="item-drag-product"
-                        :key="item.id"
-                        :moduleData="item"
-         />
-      </draggable>
+        <div class="fixed-prod-module">
+             <span>产品入口</span>
+             <div class="flex-align-between flex-wrap product-list">
+               <div v-for="(item) in fixedProList" :key="item.id"
+                    class="fixed-pro-item flex-align-center hover-pointer">{{item.name}}</div>
+             </div>
+        </div>
+        </draggable>
       </div>
+    </div>
+
   </div>
 </template>
 
@@ -68,35 +78,34 @@
     },
     data() {
         return {
-          productList1: [],
-          productList2: [],
+          proModuleList1: [],
+          proModuleList2: [],
           changeObj: {},
           showHeader: true,
           newsList: [{id: 1, time: '2019-10-10 10:10:10', text: '消息消息消息1111111'},
             {id: 1, time: '2019-10-11 10:11:11', text: '消息消息消息2222222'},
             {id: 3, time: '2019-10-12 10:12:12', text: '消息消息消息3333333'}],
           newsTimer: '',
-          curNewsIndex: 0
+          curNewsIndex: 0,
+          fixedProList:''
         }
       },
       methods: {
         onChange: function (evt) {
           console.log('change1', evt)
           if (evt.removed) {
-            this.productList1.splice(evt.removed.oldIndex, 0, this.changeObj)
+            this.proModuleList1.splice(evt.removed.oldIndex, 0, this.changeObj)
           } else if (evt.added) {
-            this.changeObj = this.productList1.splice(evt.added.newIndex + 1, 1)[0]
+            this.changeObj = this.proModuleList1.splice(evt.added.newIndex + 1, 1)[0]
           }
-          // console.log(this.productList1,this.productList2)
         },
         onChange2: function (evt) {
           console.log('change2', evt)
           if (evt.removed) {
-            this.productList2.splice(evt.removed.oldIndex, 0, this.changeObj)
-          } else if (evt.added) {
-            this.changeObj = this.productList2.splice(evt.added.newIndex + 1, 1)[0]
+            this.proModuleList2.splice(evt.removed.oldIndex, 0, this.changeObj)
+          } else if (evt.added){
+            this.changeObj = this.proModuleList2.splice(evt.added.newIndex + 1, 1)[0]
           }
-          // console.log(this.productList1,this.productList2)
         },
         controlHeader() {
           $("body").mousemove((e) => {
@@ -123,61 +132,69 @@
           let res = await DigitalParkApi.getModulesByType({
             type:1
           })
-          this.productList1 =res.slice(0,3)
-          this.productList2 =res.slice(3,5)
+          this.proModuleList1 =res.slice(0,3)
+          this.proModuleList2 =res.slice(3,5)
+        },
+        async getProductList(){
+          let res = await DigitalParkApi.getProductList()
+          this.fixedProList=res
         }
     },
     mounted(){
-      setTimeout(()=>{
-        this.showHeader=false
-        this.controlHeader()
-      },3000)
+      // setTimeout(()=>{
+      //   this.showHeader=false
+      //   this.controlHeader()
+      // },3000)
       this.scrollNews()
       this.getModulesByType()
+      this.getProductList()
     }
   }
 </script>
 
 <style lang="less">
   .dashboard-park-home-page{
-    display: flex;
+    /*display: flex;*/
     height:100%;
     overflow: hidden;
     .dashboard-left{
-      width:25%;
+      width:30%;
       background: pink;
       height:100%;
     }
     .dashboard-center{
-      width:50%;
+      width:40%;
       background: green;
     }
     .dashboard-right{
-      width:25%;
+      width:30%;
       background: pink;
     }
     .draggable-box1,.draggable-box2{
       height:100%;
     }
-    .item-drag-product{
+    .item-drag-product,.fixed-prod-module{
       width:100%;
-      height:30%;
-      margin-bottom: 3%;
+      height:31%;
+      margin: 1% 0;
       background: @white;
       font-size: 16px;
       font-weight: bold;
       text-align: center;
       /*line-height: 30%;*/
+      padding:10px;
+      box-sizing: border-box;
     }
     .dashboard-header{
       width:100%;
       padding:0 20px;
       box-sizing: border-box;
-      position: fixed;
+      /*position: fixed;*/
       height:50px;
-      z-index:99;
+      /*z-index:99;*/
       background: @white;
       overflow: hidden;
+      border-bottom:1px solid #ccc;
     }
     .news-box{
       height:50px;
@@ -194,6 +211,24 @@
       font-weight: bold;
       color:@parkMainTextColor;
     }
-
+    .dashboard-content-panel{
+      display: flex;
+      height: 100%;
+    }
+    .fixed-prod-module{
+      align-items: center;
+      &:after{
+        width:68%;
+        content:''
+      }
+    }
+    .product-list{
+      height:90%;
+    }
+    .fixed-pro-item{
+      width:16%;
+      height:30%;
+      flex-shrink: 0;
+    }
   }
 </style>
