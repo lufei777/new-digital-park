@@ -8,7 +8,7 @@
         <el-input class="search-input">
            <el-button slot="append" icon="el-icon-search" class="search-icon">{{$t('homeHeader.searchText')}}</el-button>
         </el-input>
-        <NavOperator />
+        <NavOperator :moduleType.sync="moduleType" />
       </div>
       <!-- <ul class="flex nav-list">
         <li v-for="(item,index) in navList" :key="index" @click="item.children.length && navListClick(item)" class="nav-list-text">
@@ -38,7 +38,7 @@
     </el-carousel>
 
     <div class="home-center">
-      <div class="item-module">
+      <div class="product-module">
         <div class="flex-align-between module-title">
           <h3>我们的产品</h3>
           <span class="hover-pointer more-btn" @click="onShowMoreProduct">更多</span>
@@ -51,6 +51,18 @@
           ><span>{{item.name}}</span></li>
         </ul>
       </div>
+      <draggable :list="proModuleList"
+                 :options="{draggable:'.item-module',sort:true}"
+                  class="draggable-box"
+                  @change="onDragChange"
+      >
+        <ItemProModule v-for="(item,index) in proModuleList"
+                       class="item-module"
+                       :key="item.id"
+                       :moduleData="item"
+                       :type="2"
+        />
+      </draggable>
       <div class="item-module">
         <div class="flex-align-between module-title">
           <h3>信息发布</h3>
@@ -75,11 +87,15 @@
   import CommonFun from '../../../utils/commonFun'
   import DigitalParkApi from '../../../service/api/digitalParkApi'
   import NavOperator from '../coms/navOperator'
+  import draggable from 'vuedraggable'
+  import ItemProModule from '../coms/itemProModule'
   export default {
     name: 'DigitalHomePage',
     components: {
       NavOperator,
-      Sidebar
+      Sidebar,
+      draggable,
+      ItemProModule
     },
     data () {
       return {
@@ -88,6 +104,8 @@
         navList:[],
         modelValue:"1",
         menuList:[],
+        proModuleList:[],
+        moduleType:"2"
       }
     },
     methods:{
@@ -141,11 +159,21 @@
       async getProductList(){
           let res = await DigitalParkApi.getProductList()
           this.productList=res
+      },
+      async getModulesByType(){
+        let res = await DigitalParkApi.getModulesByType({
+          type:2
+        })
+        this.proModuleList =res
+      },
+      onDragChange(){
+
       }
     },
     mounted(){
       this.getNavList()
       this.getProductList()
+      this.getModulesByType()
     }
   }
 </script>
@@ -247,11 +275,14 @@
     }
     .item-module{
       /*background: pink;*/
-      margin:20px 0;
+      margin:30px 0;
       padding:20px 0;
+      height:400px;
+      font-size: 16px;
     }
     .module-title{
-      padding:10px 5px;
+      padding:10px 0;
+      width:100%;
       h3{
         font-size: 22px;
       }
@@ -290,6 +321,9 @@
     }
     .el-carousel__container{
       margin-top:130px;
+    }
+    .product-module{
+      margin-top: 20px;
     }
   }
 </style>

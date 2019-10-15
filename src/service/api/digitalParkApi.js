@@ -10,6 +10,10 @@ class DigitalParkApi {
   @get
   getMenu(){}
 
+  @url('/oaApi/userModuleRel/modulesByType')
+  @get
+  getModulesByType(){}
+
 }
 
 export default new DigitalParkApi()
