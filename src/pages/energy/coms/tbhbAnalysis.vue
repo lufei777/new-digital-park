@@ -167,13 +167,16 @@
         let tbzz={
           name:'综合能耗同比增长率',
           type:'line',
+          yAxisIndex: 1,
           data:res.value.map((item)=>item.tbzz)
         }
         let data=res.value.map((item)=>item.hbzz)
         let hbzz={
           name:'综合能耗环比增长率',
           type:'line',
-          data
+          yAxisIndex: 1,
+          data,
+          formatter: '{c} %'
         }
         let series=[dqzh,tqzh,tbzz,hbzz]
         let titleText=`A3${this.energy[0].name}同比环比柱状折线图`
@@ -184,9 +187,31 @@
           legendData,
           xAxis,
           yAxis,
-          series
+          series,
+          showSecondY:true
+        }
+        let option={
+          yAxis: [{
+            type: 'value',
+            name: '能耗(kwh)',
+            axisLabel: {
+              formatter: '{value} kwh'
+            }
+          },
+            {
+              show: true,
+              type: 'value',
+              name: '增长率',
+              min: -100,
+              max: 100,
+              axisLabel: {
+                formatter: '{value} %'
+              }
+            }
+          ],
         }
         ChartUtils.handleBarChart(this.myChart,data2)
+        this.myChart.setOption(option)
       },
       handleCurrentChange(value){
         this.curPage=value
