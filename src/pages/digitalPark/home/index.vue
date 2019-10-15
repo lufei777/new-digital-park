@@ -10,7 +10,7 @@
         </el-input>
         <NavOperator />
       </div>
-      <ul class="flex nav-list">
+      <!-- <ul class="flex nav-list">
         <li v-for="(item,index) in navList" :key="index" @click="item.children.length && navListClick(item)" class="nav-list-text">
           <span> {{item.name}} </span>
           <i class="el-icon-arrow-down" v-if="item.children.length"></i>
@@ -24,7 +24,8 @@
             </li>
           </ul>
         </li>
-      </ul>
+      </ul> -->
+      <Sidebar  :menuList="menuList"/>
     </div>
 
     <el-carousel height="550px" :interval="2000">
@@ -70,20 +71,23 @@
 </template>
 
 <script>
+  import  Sidebar from '../coms/SideBar.vue'
   import CommonFun from '../../../utils/commonFun'
   import DigitalParkApi from '../../../service/api/digitalParkApi'
   import NavOperator from '../coms/navOperator'
   export default {
     name: 'DigitalHomePage',
     components: {
-      NavOperator
+      NavOperator,
+      Sidebar
     },
     data () {
       return {
         productList:[],
         showMoreProduct:false,
         navList:[],
-        modelValue:"1"
+        modelValue:"1",
+        menuList:[],
       }
     },
     methods:{
@@ -114,6 +118,7 @@
           }
         })
         this.navList=res
+        this.menuList =res
       },
       navListClick(item) {
         item.showChild = true
