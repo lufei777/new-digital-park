@@ -8,7 +8,7 @@
         <el-input class="search-input">
            <el-button slot="append" icon="el-icon-search" class="search-icon">{{$t('homeHeader.searchText')}}</el-button>
         </el-input>
-        <NavOperator />
+        <NavOperator :moduleType.sync="moduleType" />
       </div>
       <ul class="flex nav-list">
         <li v-for="(item,index) in navList" :key="index" @click="item.children.length && navListClick(item)" class="nav-list-text">
@@ -99,8 +99,8 @@
         productList:[],
         showMoreProduct:false,
         navList:[],
-        modelValue:"1",
-        proModuleList:[]
+        proModuleList:[],
+        moduleType:"2"
       }
     },
     methods:{
@@ -272,6 +272,7 @@
       margin:30px 0;
       padding:20px 0;
       height:400px;
+      font-size: 16px;
     }
     .module-title{
       padding:10px 0;

@@ -4,12 +4,13 @@
       <h3>{{moduleData.menuName}}</h3>
       <span class="more-btn hover-pointer">更多</span>
     </div>
-    <span v-if="type==1">{{moduleData.menuName}}</span>
+    <span v-if="type==1" class="single-module-name">{{moduleData.menuName}}</span>
     <div :class="type==2?'component-box com-width-border':'component-box'">
       <component v-for="(item,index) in moduleData.moduleList"
                  :key="index"
                  :is="item.componentName"
                  :class="moduleData.moduleList.length==2?'two-component':'item-component'"
+                 :moduleItem="item"
       />
     </div>
   </div>
@@ -27,6 +28,7 @@
     },
     data () {
       return {
+        
       }
     },
     methods: {
@@ -48,7 +50,7 @@
       flex-shrink: 1;
     }
     .item-component{
-      height:100%;
+      height:97%;
       width:100%;
     }
     .two-component{
@@ -58,14 +60,15 @@
     }
     .my-chart{
       margin:auto;
-      height:95%;
       width:95%;
-      clear: both;
     }
     .com-width-border{
       border:1px solid #ccc;
       padding:10px;
       box-sizing: border-box;
+    }
+    .single-module-name{
+      font-weight: bold;
     }
   }
 </style>
