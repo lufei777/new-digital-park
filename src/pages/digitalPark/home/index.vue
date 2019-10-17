@@ -56,7 +56,7 @@
                   class="draggable-box"
                   @change="onDragChange"
       >
-        <ItemProModule v-for="(item,index) in proModuleList"
+        <ItemProModule v-for="(item) in proModuleList"
                        class="item-module"
                        :key="item.id"
                        :moduleData="item"
@@ -119,12 +119,10 @@
       },
       getNavList(){
         let res = CommonFun.navList
-        console.log('res',res)
         res.map((item)=>{
           item.showChild=false
           if(item.children.length){
             item.children.map((child)=>{
-              console.log('lallala',child)
               item.showChild=false
               child.showChild = false
               if(child.children.length) {
@@ -136,7 +134,11 @@
           }
         })
         this.navList=res
-        this.menuList =res
+        // this.menuList =res
+      },
+      async getMenuTree() {
+        let res = await DigitalParkApi.getMenuTree()
+        this.menuList =res[0].childNode
       },
       navListClick(item) {
         item.showChild = true
@@ -172,6 +174,7 @@
     },
     mounted(){
       this.getNavList()
+      this.getMenuTree()
       this.getProductList()
       this.getModulesByType()
     }
