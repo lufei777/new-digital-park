@@ -19,12 +19,18 @@
 <script>
   import energyProportionAnalysis from './energyProportionAnalysis'
   import energyElectricityProportion from './energyElectricityProportion'
+  import operateIncome from './operateIncome'
+  import buildingStatusProportion from './buildingStatusProportion'
+  import assetTypeProportion from './assetTypeProportion'
   export default {
     name: 'ItemProModule',
     props:['moduleData','type'],
     components: {
       energyProportionAnalysis,
-      energyElectricityProportion
+      energyElectricityProportion,
+      operateIncome,
+      buildingStatusProportion,
+      assetTypeProportion
     },
     data () {
       return {
@@ -68,7 +74,13 @@
       box-sizing: border-box;
     }
     .single-module-name{
+      width: 157px;
+      height: 27px;
+      background:rgba(29,133,188,1);
       font-weight: bold;
+      // position: absolute;
+      // top: 15px;
+      margin-top: -25px;
     }
   }
 </style>
