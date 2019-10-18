@@ -91,6 +91,7 @@ class chartUtils {
 
   //实心饼图
   handlePieChart(dom,data){
+    console.log('lallalalalla',data)
     let option = {
       title : {
         text: data.titleText,
@@ -102,10 +103,11 @@ class chartUtils {
       },
       legend: {
         orient: 'vertical',
-        left: 'left',
+        left: data.legend,
         top:50,
         data: data.legendData
       },
+      color: data.color?data.color:['#4DA1FF', '#83D587', '#FFCE33', '#FF7B8C'],
       series : [
         {
           name: data.seriesName?data.seriesName:'',
