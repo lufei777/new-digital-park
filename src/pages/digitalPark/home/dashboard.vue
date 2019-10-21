@@ -28,6 +28,7 @@
                          :key="item.id"
                          :moduleData="item"
                          :type="1"
+                         :style="bgStyle"
           />
         </draggable>
       </div>
@@ -37,7 +38,7 @@
       </div>
       <div class="dashboard-right">
         <draggable :list="proModuleList2"
-                   :options="{group:'product',draggable:'.item-drag-product',filter:'.undraggable',sort:true}"
+                   :options="{group:'product',draggable:'.item-drag-product',sort:true}"
                    class="draggable-box2"
                    @change="onChange2"
         >
@@ -46,8 +47,9 @@
                        :key="item.id"
                        :moduleData="item"
                        :type="1"
+                       :style="bgStyle"
         />
-        <div class="fixed-prod-module">
+        <div class="fixed-prod-module" :style="bgStyle">
              <span>产品入口</span>
              <div class="flex-align-between flex-wrap product-list">
                <div v-for="(item) in fixedProList" :key="item.id"
@@ -77,6 +79,11 @@
       top() {
         return -this.curNewsIndex * 50 + 'px';
       },
+      bgStyle(){
+        return {
+          backgroundImage:'url('+require('../../../../static/image/digitalPark/module_bg.png')+')'
+        }
+      }
     },
     data() {
         return {
@@ -159,48 +166,44 @@
   .dashboard-park-home-page{
     background: url('../../../../static/image/digitalPark/home.png') no-repeat;
     color: @white;
-    /*display: flex;*/
+    display: flex;
+    flex-direction: column;
     height:100%;
     overflow: hidden;
     .dashboard-left{
-      width:30%;
-      // background: pink;
+      width:25%;
       height:100%;
       color: @white;
     }
     .dashboard-center{
-      width:40%;
+      width:50%;
       // background: green;
     }
     .dashboard-right{
-      width:30%;
+      width:25%;
       // background: pink;
     }
     .draggable-box1,.draggable-box2{
       height:100%;
     }
     .item-drag-product,.fixed-prod-module{
-      width:100%;
+      /*width:100%;*/
       height:31%;
-      margin: 3% 0;
-      // background: @white;
+      margin-bottom:2%;
       font-size: 16px;
       text-align: center;
-      padding:10px;
-      box-sizing: border-box;
-      border:1px solid #ccc;
-      border-radius: 15px;
+      padding:0 10px 10px 10px;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
     }
     .dashboard-header{
       width:100%;
       padding:0 20px;
       box-sizing: border-box;
-      /*position: fixed;*/
       height:50px;
-      /*z-index:99;*/
-      // background: @white;
       overflow: hidden;
-      border-bottom:1px solid #ccc;
+      /*border-bottom:1px solid #ccc;*/
+      background: rgba(255,255,255,.1);
     }
     .news-box{
       height:50px;
@@ -215,11 +218,13 @@
     .digital-title{
       font-size: 30px;
       font-weight: bold;
-      color:@parkMainTextColor;
+      color:@white;
     }
     .dashboard-content-panel{
       display: flex;
-      height: 100%;
+      flex-grow: 1;
+      padding:10px;
+      box-sizing: border-box;
     }
     .fixed-prod-module{
       align-items: center;

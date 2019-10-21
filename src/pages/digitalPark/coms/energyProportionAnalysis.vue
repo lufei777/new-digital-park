@@ -101,24 +101,35 @@
             type: 'value',
             name: '能耗(kwh)',
             axisLabel: {
-              // formatter: '{value} kwh'
+              textStyle: {
+                color: '#fff'
+              }
             }
-          },
-            {
+          },{
               show: true,
               type: 'value',
               name: '增长率',
               min: -100,
               max: 100,
               axisLabel: {
-                formatter: '{value} %'
+                formatter: '{value} %',
+                textStyle: {
+                  color: '#fff'
+                }
               }
             }
           ],
           grid:{
             y:50,
             y2:30
-          }
+          },
+          xAxis:[{
+              axisLabel: {
+                textStyle: {
+                  color: '#fff'
+                }
+              }
+            }]
         }
         myChart.setOption(option)
       },
@@ -143,15 +154,14 @@
     .el-select{
       float: right;
       width:100px;
+      margin-right: 10px;
     }
     .my-chart{
-      height:80%;
-      flex-shrink: 1;
-      margin:0;
+      /*flex-grow: 1;*/
     }
     .child-module-name{
-      flex-shrink: 0;
-      height:20px;
+      /*flex-shrink: 0;*/
+      /*height:20px;*/
     }
   }
 </style>

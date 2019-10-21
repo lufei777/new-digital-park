@@ -68,8 +68,8 @@
 <style lang="less">
   .energy-electricity-proportion{
     .my-chart{
-      height:90%;
-      margin:0 auto;
+      /*height:90%;*/
+      /*margin:0 auto;*/
     }
   }
 </style>
