@@ -1,5 +1,6 @@
 <template>
   <div class="dashboard-park-home-page">
+    <!-- <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo1.png" alt=""> -->
     <!--<transition name="el-zoom-in-top">-->
       <div class="dashboard-header flex-align-between" v-show="showHeader">
         <div class="digital-title">cizing数字园区</div>
@@ -156,21 +157,24 @@
 
 <style lang="less">
   .dashboard-park-home-page{
+    background: url('../../../../static/image/digitalPark/home.png') no-repeat;
+    color: @white;
     /*display: flex;*/
     height:100%;
     overflow: hidden;
     .dashboard-left{
       width:30%;
-      background: pink;
+      // background: pink;
       height:100%;
+      color: @white;
     }
     .dashboard-center{
       width:40%;
-      background: green;
+      // background: green;
     }
     .dashboard-right{
       width:30%;
-      background: pink;
+      // background: pink;
     }
     .draggable-box1,.draggable-box2{
       height:100%;
@@ -178,12 +182,14 @@
     .item-drag-product,.fixed-prod-module{
       width:100%;
       height:31%;
-      margin: 1% 0;
-      background: @white;
+      margin: 3% 0;
+      // background: @white;
       font-size: 16px;
       text-align: center;
       padding:10px;
       box-sizing: border-box;
+      border:1px solid #ccc;
+      border-radius: 15px;
     }
     .dashboard-header{
       width:100%;
@@ -192,7 +198,7 @@
       /*position: fixed;*/
       height:50px;
       /*z-index:99;*/
-      background: @white;
+      // background: @white;
       overflow: hidden;
       border-bottom:1px solid #ccc;
     }

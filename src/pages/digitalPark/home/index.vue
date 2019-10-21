@@ -10,7 +10,7 @@
         </el-input>
         <NavOperator :moduleType.sync="moduleType" />
       </div>
-      <ul class="flex nav-list">
+      <!-- <ul class="flex nav-list">
         <li v-for="(item,index) in navList" :key="index" @click="item.children.length && navListClick(item)" class="nav-list-text">
           <span> {{item.name}} </span>
           <i class="el-icon-arrow-down" v-if="item.children.length"></i>
@@ -24,7 +24,8 @@
             </li>
           </ul>
         </li>
-      </ul>
+      </ul> -->
+      <Sidebar  :menuList="menuList"/>
     </div>
 
     <el-carousel height="550px" :interval="2000">
@@ -55,7 +56,7 @@
                   class="draggable-box"
                   @change="onDragChange"
       >
-        <ItemProModule v-for="(item,index) in proModuleList"
+        <ItemProModule v-for="(item) in proModuleList"
                        class="item-module"
                        :key="item.id"
                        :moduleData="item"
@@ -82,6 +83,7 @@
 </template>
 
 <script>
+  import  Sidebar from '../coms/SideBar.vue'
   import CommonFun from '../../../utils/commonFun'
   import DigitalParkApi from '../../../service/api/digitalParkApi'
   import NavOperator from '../coms/navOperator'
@@ -91,6 +93,7 @@
     name: 'DigitalHomePage',
     components: {
       NavOperator,
+      Sidebar,
       draggable,
       ItemProModule
     },
@@ -99,6 +102,8 @@
         productList:[],
         showMoreProduct:false,
         navList:[],
+        modelValue:"1",
+        menuList:[],
         proModuleList:[],
         moduleType:"2"
       }
@@ -114,12 +119,10 @@
       },
       getNavList(){
         let res = CommonFun.navList
-        console.log('res',res)
         res.map((item)=>{
           item.showChild=false
           if(item.children.length){
             item.children.map((child)=>{
-              console.log('lallala',child)
               item.showChild=false
               child.showChild = false
               if(child.children.length) {
@@ -131,6 +134,11 @@
           }
         })
         this.navList=res
+        // this.menuList =res
+      },
+      async getMenuTree() {
+        let res = await DigitalParkApi.getMenuTree()
+        this.menuList =res[0].childNode
       },
       navListClick(item) {
         item.showChild = true
@@ -166,6 +174,7 @@
     },
     mounted(){
       this.getNavList()
+      this.getMenuTree()
       this.getProductList()
       this.getModulesByType()
     }
