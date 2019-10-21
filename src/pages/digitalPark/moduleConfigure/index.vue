@@ -58,7 +58,6 @@
       },
       onClickFullScreenBtn(){
         this.isFull=!this.isFull
-        // window.resize()
       }
     },
     mounted(){
