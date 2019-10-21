@@ -3,7 +3,6 @@
     <!-- <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo1.png" alt=""> -->
     <!--<transition name="el-zoom-in-top">-->
       <div class="dashboard-header flex-align-between" v-show="showHeader">
-        <div class="digital-title">cizing数字园区</div>
         <div class="news-box">
           <ul class="news-list hover-pointer" :style="{top}" @mouseenter="stopNews" @mouseleave="scrollNews">
             <li v-for="(item,index) in newsList" :key="index" class="news-item">
@@ -12,7 +11,7 @@
             </li>
           </ul>
         </div>
-
+        <div class="digital-title" :style="titleBg">cizing数字园区</div>
         <NavOperator :moduleType.sync="moduleType" />
       </div>
     <!--</transition>-->
@@ -28,7 +27,7 @@
                          :key="item.id"
                          :moduleData="item"
                          :type="1"
-                         :style="bgStyle"
+                         :style="moduleBg"
           />
         </draggable>
       </div>
@@ -47,13 +46,15 @@
                        :key="item.id"
                        :moduleData="item"
                        :type="1"
-                       :style="bgStyle"
+                       :style="moduleBg"
         />
-        <div class="fixed-prod-module" :style="bgStyle">
+        <div class="fixed-prod-module" :style="moduleBg">
              <span>产品入口</span>
-             <div class="flex-align-between flex-wrap product-list">
+             <div class="flex-wrap-align-center product-list">
                <div v-for="(item) in fixedProList" :key="item.id"
-                    class="fixed-pro-item flex-align-center hover-pointer">{{item.name}}</div>
+                    class="fixed-pro-item flex-align-center hover-pointer"
+                    :style="tagBg"
+                    >{{item.name}}</div>
              </div>
         </div>
         </draggable>
@@ -79,9 +80,19 @@
       top() {
         return -this.curNewsIndex * 50 + 'px';
       },
-      bgStyle(){
+      moduleBg(){
         return {
           backgroundImage:'url('+require('../../../../static/image/digitalPark/module_bg.png')+')'
+        }
+      },
+      titleBg(){
+        return {
+          backgroundImage:'url('+require('../../../../static/image/digitalPark/title_bg.png')+')'
+        }
+      },
+      tagBg(){
+        return {
+          backgroundImage:'url('+require('../../../../static/image/digitalPark/tag_large_bg.png')+')'
         }
       }
     },
@@ -200,13 +211,13 @@
       width:100%;
       padding:0 20px;
       box-sizing: border-box;
-      height:50px;
+      height:60px;
       overflow: hidden;
-      /*border-bottom:1px solid #ccc;*/
       background: rgba(255,255,255,.1);
     }
     .news-box{
       height:50px;
+      color:#FF7A00;
     }
     .news-list{
       position: relative;
@@ -219,6 +230,10 @@
       font-size: 30px;
       font-weight: bold;
       color:@white;
+      height: 60px;
+      padding:0 180px;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
     }
     .dashboard-content-panel{
       display: flex;
@@ -226,20 +241,20 @@
       padding:10px;
       box-sizing: border-box;
     }
-    .fixed-prod-module{
-      align-items: center;
-      &:after{
-        width:68%;
-        content:''
-      }
-    }
     .product-list{
       height:90%;
+      &:after{
+      width:40%;
+      content:''
+      }
     }
     .fixed-pro-item{
-      width:16%;
-      height:30%;
+      width:20%;
+      /*height:30%;*/
+      padding:10px 0;
       flex-shrink: 0;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
     }
   }
 </style>

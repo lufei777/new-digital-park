@@ -1,5 +1,5 @@
 <template>
-  <div class="energy-electricity-proportion flex-wrap-align-center">
+  <div class="energy-electricity-proportion">
     <div ref="myChart1" class="my-chart"></div>
     <div>{{moduleItem.moduleName}}</div>
   </div>

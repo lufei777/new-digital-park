@@ -11,6 +11,7 @@
                  :is="item.componentName"
                  :class="moduleData.moduleList.length==2?'two-component':'item-component'"
                  :moduleItem="item"
+                 class="flex-colum-center"
       />
     </div>
   </div>
@@ -78,7 +79,6 @@
       box-sizing: border-box;
     }
     .single-module-name{
-      font-weight: bold;
       margin-bottom: 10px;
     }
   }

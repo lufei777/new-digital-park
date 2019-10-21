@@ -11,7 +11,7 @@
                     :key="index"
                     :is="item.componentName"
                     :moduleItem="item"
-                    class="item-content"
+                    class="item-content flex-colum-center"
          />
        </div>
        <div class="preview-panel">
@@ -93,11 +93,11 @@
     }
     .my-chart{
       width:100%;
-      height:100%;
+      flex-grow: 1;
     }
     .preview-panel{
       width:90%;
-      margin:20px 10px;
+      margin:40px 10px 20px 10px;
       box-sizing: border-box;
       flex-grow: 1;
     }

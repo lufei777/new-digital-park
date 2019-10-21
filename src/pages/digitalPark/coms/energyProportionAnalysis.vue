@@ -1,5 +1,5 @@
 <template>
-  <div class="energy-proportion-analysis flex-wrap-align-center">
+  <div class="energy-proportion-analysis">
     <div class="select-box">
       <el-select v-model="energy" placeholder="请选择" @change="energyChange" size="mini">
         <el-option
@@ -102,8 +102,11 @@
             name: '能耗(kwh)',
             axisLabel: {
               textStyle: {
-                color: '#fff'
+                color: '#4F89B2'
               }
+            },
+            axisLine:{
+                show:false
             }
           },{
               show: true,
@@ -114,8 +117,11 @@
               axisLabel: {
                 formatter: '{value} %',
                 textStyle: {
-                  color: '#fff'
+                  color: '#4F89B2'
                 }
+              },
+              axisLine:{
+                show:false
               }
             }
           ],
@@ -126,10 +132,18 @@
           xAxis:[{
               axisLabel: {
                 textStyle: {
-                  color: '#fff'
-                }
+                  color: '#4F89B2'
+                },
+              },
+            axisLine:{
+              lineStyle:{
+                color: '#4F89B2'
               }
-            }]
+            }
+            }],
+          series:[{
+            barWidth: "40%",
+          }]
         }
         myChart.setOption(option)
       },
