@@ -231,6 +231,7 @@
       font-weight: bold;
       color:@white;
       height: 60px;
+      line-height: 60px;
       padding:0 180px;
       background-repeat: no-repeat;
       background-size: 100% 100%;
@@ -250,7 +251,7 @@
     }
     .fixed-pro-item{
       width:20%;
-      /*height:30%;*/
+      font-size: 12px;
       padding:10px 0;
       flex-shrink: 0;
       background-repeat: no-repeat;

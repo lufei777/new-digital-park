@@ -49,13 +49,14 @@
         window.onresize = myChart.resize;
         ChartUtils.hollowPieChart(myChart, data);
 
-        // let option={
-        //    // title:{
-        //    //   left:'center',
-        //    //   bottom:'-20px'
-        //    // }
-        // }
-        // myChart.setOption(option)
+        let option={
+           legend:{
+             textStyle:{
+               color:'#8FD3FA'
+             }
+           }
+        }
+        myChart.setOption(option)
       },
 
     },

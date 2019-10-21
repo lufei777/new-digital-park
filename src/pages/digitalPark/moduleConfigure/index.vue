@@ -1,12 +1,12 @@
 <template>
   <div class="module-configure">
-    <div class="left-module-list">
+    <div :class="isFull?'hide':'left-module-list'">
       <div v-for="item in proModuleList"
            :key="item.id"
            @click="onClickItemProModule(item)">{{item.name}}</div>
     </div>
-    <div class="right-module-content">
-       <div class="module-content-list">
+    <div :class="isFull?'full-right-module-content':'right-module-content'">
+       <div class="module-content-list" v-show="!isFull">
          <component v-for="(item,index) in contentList"
                     :key="index"
                     :is="item.componentName"
@@ -14,8 +14,9 @@
                     class="item-content flex-colum-center"
          />
        </div>
-       <div class="preview-panel">
+       <div :class="isFull?'full-preview-panel':'preview-panel'">
          <Dashboard />
+         <el-button class="large-btn" @click="onClickFullScreenBtn">全屏</el-button>
        </div>
     </div>
   </div>
@@ -42,7 +43,8 @@
     data () {
       return {
         proModuleList:[],
-        contentList:[]
+        contentList:[],
+        isFull:false
       }
     },
     methods: {
@@ -53,6 +55,10 @@
       },
       onClickItemProModule(item){
         this.contentList=item.moduleList
+      },
+      onClickFullScreenBtn(){
+        this.isFull=!this.isFull
+        // window.resize()
       }
     },
     mounted(){
@@ -100,6 +106,24 @@
       margin:40px 10px 20px 10px;
       box-sizing: border-box;
       flex-grow: 1;
+      position: relative;
+    }
+    .large-btn{
+      position: absolute;
+      right:-100px;
+      top:10px;
+    }
+    .hide{
+      display: none;
+      width:0;
+    }
+    .full-right-module-content{
+      width:100%;
+      height: 100%;
+    }
+    .full-preview-panel{
+      width:95%;
+      height:100%;
     }
   }
 </style>

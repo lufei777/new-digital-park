@@ -107,6 +107,9 @@
             },
             axisLine:{
                 show:false
+            },
+            nameTextStyle:{
+              color: '#4F89B2'
             }
           },{
               show: true,
@@ -122,12 +125,17 @@
               },
               axisLine:{
                 show:false
+              },
+              nameTextStyle:{
+                color: '#4F89B2'
               }
             }
           ],
           grid:{
             y:50,
-            y2:30
+            y2:30,
+            x:70,
+            x2:50
           },
           xAxis:[{
               axisLabel: {
@@ -143,7 +151,7 @@
             }],
           series:[{
             barWidth: "40%",
-          }]
+          }],
         }
         myChart.setOption(option)
       },
