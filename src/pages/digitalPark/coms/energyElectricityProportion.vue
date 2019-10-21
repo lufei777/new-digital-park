@@ -1,6 +1,6 @@
 <template>
   <div class="energy-electricity-proportion flex-wrap-align-center">
-    <div ref="myChart" class="my-chart"></div>
+    <div ref="myChart1" class="my-chart"></div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -28,7 +28,7 @@
         this.initChart(res)
       },
       initChart(res) {
-        let myChart = echarts.init(this.$refs.myChart);
+        let myChart = echarts.init(this.$refs.myChart1);
         let legendData = [];
         let dataList = [];
         res.elecList.map(item => {

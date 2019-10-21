@@ -2,7 +2,14 @@
   <div class="digital-nav-operator flex-align">
       <span class="nav-right-item"><span>{{$t('homeHeader.news')}}</span><i>|</i></span>
       <span class="nav-right-item"><span>{{$t('homeHeader.skin')}}</span><i>|</i></span>
-      <span class="nav-right-item"><span>admin</span><i>|</i></span>
+      <!--<span class="nav-right-item"><span>admin</span><i>|</i></span>-->
+      <span class="nav-right-item">
+          <el-select v-model="userValue" placeholder="admin" @change="onClickUserConfigure">
+              <el-option label="模块管理" value="1"></el-option>
+              <el-option label="退出" value="2"></el-option>
+           </el-select>
+          <i>|</i>
+      </span>
       <span class="nav-right-item lang-box">
           <el-select v-model="langValue" placeholder="切换语言" @change="onClickChangeLang">
               <el-option label="中文" value="zh-cn"></el-option>
@@ -27,7 +34,8 @@
     props:['moduleType'],
     data () {
       return {
-        langValue:'zh-cn'
+        langValue:'zh-cn',
+        userValue:''
       }
     },
     computed:{
@@ -43,6 +51,11 @@
       },
       onClickChangeLang(val){
         this.$i18n.locale = val
+      },
+      onClickUserConfigure(val){
+        if(val==1){
+          this.$router.push('/digitalPark/moduleConfigure')
+        }
       }
     },
     mounted(){

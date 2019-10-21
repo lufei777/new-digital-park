@@ -17,6 +17,10 @@ class DigitalParkApi {
   @url('/oaApi/menu/tree')
   @get
   getMenuTree(){}
+
+  @url("/oaApi/menu/productModules")
+  @get
+  getProModules(){}
 }
 
 export default new DigitalParkApi()
