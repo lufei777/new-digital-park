@@ -34,7 +34,7 @@
     },
     data () {
       return {
-        
+
       }
     },
     methods: {
