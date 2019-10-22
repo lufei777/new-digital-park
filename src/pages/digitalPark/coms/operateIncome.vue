@@ -36,7 +36,6 @@ export default {
   methods: {
      async getIncomeList() {
          let res = await CommonFun.incomeList
-         console.log('133',res)
          this.initChart(res)
       },
       initChart(res) {

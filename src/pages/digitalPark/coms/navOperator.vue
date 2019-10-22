@@ -42,7 +42,6 @@
     },
     methods: {
       onClickChangeModel(val){
-        console.log(val)
         if(val==1){
           this.$router.replace('/digitalPark/dashboardHomePage')
         }else{

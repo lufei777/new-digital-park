@@ -1,7 +1,5 @@
 <template>
   <div class="dashboard-park-home-page">
-    <!-- <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo1.png" alt=""> -->
-    <!--<transition name="el-zoom-in-top">-->
       <div class="dashboard-header flex-align-between" v-show="showHeader">
         <div class="news-box">
           <ul class="news-list hover-pointer" :style="{top}" @mouseenter="stopNews" @mouseleave="scrollNews">
@@ -14,13 +12,12 @@
         <div class="digital-title" :style="titleBg">cizing数字园区</div>
         <NavOperator :moduleType.sync="moduleType" />
       </div>
-    <!--</transition>-->
     <div class="dashboard-content-panel">
       <div class="dashboard-left">
         <draggable :list="proModuleList1"
-                   :options="{group:'product',draggable:'.item-drag-product',sort:true}"
-                   class="draggable-box1"
-                   @change="onChange"
+                   class="draggable-box"
+                   @change="onLeftChange"
+                   v-bind="getOptions()"
         >
           <ItemProModule v-for="(item,index) in proModuleList1"
                          class="item-drag-product"
@@ -37,9 +34,9 @@
       </div>
       <div class="dashboard-right">
         <draggable :list="proModuleList2"
-                   :options="{group:'product',draggable:'.item-drag-product',sort:true}"
-                   class="draggable-box2"
-                   @change="onChange2"
+                   v-bind="getOptions()"
+                   class="draggable-box"
+                   @change="onRightChange"
         >
         <ItemProModule v-for="(item,index) in proModuleList2"
                        class="item-drag-product"
@@ -112,7 +109,7 @@
         }
       },
       methods: {
-        onChange: function (evt) {
+        onLeftChange: function (evt) {
           console.log('change1', evt)
           if (evt.removed) {
             this.proModuleList1.splice(evt.removed.oldIndex, 0, this.changeObj)
@@ -120,7 +117,7 @@
             this.changeObj = this.proModuleList1.splice(evt.added.newIndex + 1, 1)[0]
           }
         },
-        onChange2: function (evt) {
+        onRightChange: function (evt) {
           console.log('change2', evt)
           if (evt.removed) {
             this.proModuleList2.splice(evt.removed.oldIndex, 0, this.changeObj)
@@ -159,6 +156,9 @@
         async getProductList(){
           let res = await DigitalParkApi.getProductList()
           this.fixedProList=res
+        },
+        getOptions(){
+          return {draggable:'.item-drag-product',sort:true,group:"product"}
         }
     },
     mounted(){
@@ -194,7 +194,7 @@
       width:25%;
       // background: pink;
     }
-    .draggable-box1,.draggable-box2{
+    .draggable-box{
       height:100%;
     }
     .item-drag-product,.fixed-prod-module{

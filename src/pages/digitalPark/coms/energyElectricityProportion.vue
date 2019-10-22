@@ -1,6 +1,6 @@
 <template>
   <div class="energy-electricity-proportion">
-    <div ref="myChart1" class="my-chart"></div>
+    <div ref="myChart1" class="my-chart" id="myChart"></div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -46,7 +46,7 @@
           seriesData,
           // titleText,
         };
-        window.onresize = myChart.resize;
+        // window.onresize = myChart.resize;
         ChartUtils.hollowPieChart(myChart, data);
 
         let option={
