@@ -37,7 +37,10 @@ class chartUtils {
       yAxis: yAxis,
       series: data.series
     };
-    window.onresize = dom.resize;
+    // window.onresize = dom.resize;
+    window.addEventListener("resize", () => {
+      dom.resize();
+    })
     dom.setOption(option, true)
   }
 
@@ -77,7 +80,7 @@ class chartUtils {
           emphasis: {
             show: true,
             textStyle: {
-              fontSize: '30',
+              fontSize: '20',
               fontWeight: 'bold'
             }
           }
@@ -85,13 +88,15 @@ class chartUtils {
         data: data.seriesData
       }]
     };
-    window.onresize = dom.resize;
+    // window.onresize = dom.resize;
+    window.addEventListener("resize", () => {
+      dom.resize();
+    })
     dom.setOption(option, true)
   }
 
   //实心饼图
   handlePieChart(dom,data){
-    console.log('lallalalalla',data)
     let option = {
       title : {
         text: data.titleText,
@@ -118,8 +123,12 @@ class chartUtils {
         }
       ]
     };
-    window.onresize = dom.resize;
+    // window.onresize = dom.resize;
+    window.addEventListener("resize", () => {
+      dom.resize();
+    })
     dom.setOption(option, true)
+
   }
 }
 export default new chartUtils()

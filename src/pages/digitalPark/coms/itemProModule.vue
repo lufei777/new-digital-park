@@ -11,6 +11,7 @@
                  :is="item.componentName"
                  :class="moduleData.moduleList.length==2?'two-component':'item-component'"
                  :moduleItem="item"
+                 class="flex-colum-center"
       />
     </div>
   </div>
@@ -51,13 +52,16 @@
      align-items: center;
      flex-direction: column;
     .component-box{
-      height:100%;
+      /*height:100%;*/
       width:100%;
-      flex-shrink: 1;
+      flex-grow: 1;
     }
     .item-component{
-      height:97%;
+      height:100%;
       width:100%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
     }
     .two-component{
       height:100%;
@@ -67,6 +71,7 @@
     .my-chart{
       margin:auto;
       width:95%;
+      flex-grow: 1;
     }
     .com-width-border{
       border:1px solid #ccc;
@@ -74,13 +79,7 @@
       box-sizing: border-box;
     }
     .single-module-name{
-      width: 157px;
-      height: 27px;
-      background:rgba(29,133,188,1);
-      font-weight: bold;
-      // position: absolute;
-      // top: 15px;
-      margin-top: -25px;
+      margin-bottom: 10px;
     }
   }
 </style>

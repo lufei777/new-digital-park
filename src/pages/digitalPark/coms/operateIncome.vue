@@ -1,10 +1,13 @@
 <template>
   <div class="operate-income">
-    <el-button>年报</el-button>
-    <el-button>月报</el-button>
-    <el-select v-model="income" placeholder="请选择">
-      <el-option v-for="item in incomeLabel" :key="item.value" :label="item.label" :value="item.value"></el-option>
-    </el-select>
+    <div>
+      <el-button size="mini">年报</el-button>
+      <el-button size="mini">月报</el-button>
+      <el-select v-model="income" placeholder="请选择" size="mini">
+        <el-option v-for="item in incomeLabel" :key="item.value" :label="item.label" :value="item.value"></el-option>
+      </el-select>
+    </div>
+
     <div ref="myChart" class="my-chart"></div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
@@ -33,7 +36,6 @@ export default {
   methods: {
      async getIncomeList() {
          let res = await CommonFun.incomeList
-         console.log('133',res)
          this.initChart(res)
       },
       initChart(res) {

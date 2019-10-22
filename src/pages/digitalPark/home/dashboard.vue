@@ -1,9 +1,6 @@
 <template>
   <div class="dashboard-park-home-page">
-    <!-- <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo1.png" alt=""> -->
-    <!--<transition name="el-zoom-in-top">-->
       <div class="dashboard-header flex-align-between" v-show="showHeader">
-        <div class="digital-title">cizing数字园区</div>
         <div class="news-box">
           <ul class="news-list hover-pointer" :style="{top}" @mouseenter="stopNews" @mouseleave="scrollNews">
             <li v-for="(item,index) in newsList" :key="index" class="news-item">
@@ -12,22 +9,22 @@
             </li>
           </ul>
         </div>
-
+        <div class="digital-title" :style="titleBg">cizing数字园区</div>
         <NavOperator :moduleType.sync="moduleType" />
       </div>
-    <!--</transition>-->
     <div class="dashboard-content-panel">
       <div class="dashboard-left">
         <draggable :list="proModuleList1"
-                   :options="{group:'product',draggable:'.item-drag-product',sort:true}"
-                   class="draggable-box1"
-                   @change="onChange"
+                   class="draggable-box"
+                   @change="onLeftChange"
+                   v-bind="getOptions()"
         >
           <ItemProModule v-for="(item,index) in proModuleList1"
                          class="item-drag-product"
                          :key="item.id"
                          :moduleData="item"
                          :type="1"
+                         :style="moduleBg"
           />
         </draggable>
       </div>
@@ -37,21 +34,24 @@
       </div>
       <div class="dashboard-right">
         <draggable :list="proModuleList2"
-                   :options="{group:'product',draggable:'.item-drag-product',filter:'.undraggable',sort:true}"
-                   class="draggable-box2"
-                   @change="onChange2"
+                   v-bind="getOptions()"
+                   class="draggable-box"
+                   @change="onRightChange"
         >
         <ItemProModule v-for="(item,index) in proModuleList2"
                        class="item-drag-product"
                        :key="item.id"
                        :moduleData="item"
                        :type="1"
+                       :style="moduleBg"
         />
-        <div class="fixed-prod-module">
+        <div class="fixed-prod-module" :style="moduleBg">
              <span>产品入口</span>
-             <div class="flex-align-between flex-wrap product-list">
+             <div class="flex-wrap-align-center product-list">
                <div v-for="(item) in fixedProList" :key="item.id"
-                    class="fixed-pro-item flex-align-center hover-pointer">{{item.name}}</div>
+                    class="fixed-pro-item flex-align-center hover-pointer"
+                    :style="tagBg"
+                    >{{item.name}}</div>
              </div>
         </div>
         </draggable>
@@ -77,6 +77,21 @@
       top() {
         return -this.curNewsIndex * 50 + 'px';
       },
+      moduleBg(){
+        return {
+          backgroundImage:'url('+require('../../../../static/image/digitalPark/module_bg.png')+')'
+        }
+      },
+      titleBg(){
+        return {
+          backgroundImage:'url('+require('../../../../static/image/digitalPark/title_bg.png')+')'
+        }
+      },
+      tagBg(){
+        return {
+          backgroundImage:'url('+require('../../../../static/image/digitalPark/tag_large_bg.png')+')'
+        }
+      }
     },
     data() {
         return {
@@ -94,7 +109,7 @@
         }
       },
       methods: {
-        onChange: function (evt) {
+        onLeftChange: function (evt) {
           console.log('change1', evt)
           if (evt.removed) {
             this.proModuleList1.splice(evt.removed.oldIndex, 0, this.changeObj)
@@ -102,7 +117,7 @@
             this.changeObj = this.proModuleList1.splice(evt.added.newIndex + 1, 1)[0]
           }
         },
-        onChange2: function (evt) {
+        onRightChange: function (evt) {
           console.log('change2', evt)
           if (evt.removed) {
             this.proModuleList2.splice(evt.removed.oldIndex, 0, this.changeObj)
@@ -141,6 +156,9 @@
         async getProductList(){
           let res = await DigitalParkApi.getProductList()
           this.fixedProList=res
+        },
+        getOptions(){
+          return {draggable:'.item-drag-product',sort:true,group:"product"}
         }
     },
     mounted(){
@@ -159,51 +177,47 @@
   .dashboard-park-home-page{
     background: url('../../../../static/image/digitalPark/home.png') no-repeat;
     color: @white;
-    /*display: flex;*/
+    display: flex;
+    flex-direction: column;
     height:100%;
     overflow: hidden;
     .dashboard-left{
-      width:30%;
-      // background: pink;
+      width:25%;
       height:100%;
       color: @white;
     }
     .dashboard-center{
-      width:40%;
+      width:50%;
       // background: green;
     }
     .dashboard-right{
-      width:30%;
+      width:25%;
       // background: pink;
     }
-    .draggable-box1,.draggable-box2{
+    .draggable-box{
       height:100%;
     }
     .item-drag-product,.fixed-prod-module{
-      width:100%;
+      /*width:100%;*/
       height:31%;
-      margin: 3% 0;
-      // background: @white;
+      margin-bottom:2%;
       font-size: 16px;
       text-align: center;
-      padding:10px;
-      box-sizing: border-box;
-      border:1px solid #ccc;
-      border-radius: 15px;
+      padding:0 10px 10px 10px;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
     }
     .dashboard-header{
       width:100%;
       padding:0 20px;
       box-sizing: border-box;
-      /*position: fixed;*/
-      height:50px;
-      /*z-index:99;*/
-      // background: @white;
+      height:60px;
       overflow: hidden;
-      border-bottom:1px solid #ccc;
+      background: rgba(255,255,255,.1);
     }
     .news-box{
       height:50px;
+      color:#FF7A00;
     }
     .news-list{
       position: relative;
@@ -215,26 +229,33 @@
     .digital-title{
       font-size: 30px;
       font-weight: bold;
-      color:@parkMainTextColor;
+      color:@white;
+      height: 60px;
+      line-height: 60px;
+      padding:0 180px;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
     }
     .dashboard-content-panel{
       display: flex;
-      height: 100%;
-    }
-    .fixed-prod-module{
-      align-items: center;
-      &:after{
-        width:68%;
-        content:''
-      }
+      flex-grow: 1;
+      padding:10px;
+      box-sizing: border-box;
     }
     .product-list{
       height:90%;
+      &:after{
+      width:40%;
+      content:''
+      }
     }
     .fixed-pro-item{
-      width:16%;
-      height:30%;
+      width:20%;
+      font-size: 12px;
+      padding:10px 0;
       flex-shrink: 0;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
     }
   }
 </style>

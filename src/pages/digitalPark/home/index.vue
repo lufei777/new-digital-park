@@ -110,9 +110,9 @@
     },
     methods:{
       onClickItemProduct(item){
-        // if(item.url){
-          window.open('/#/energy')
-        // }
+        if(item.routeAddress){
+          window.open(item.routeAddress)
+        }
       },
       onShowMoreProduct(){
         this.showMoreProduct=!this.showMoreProduct

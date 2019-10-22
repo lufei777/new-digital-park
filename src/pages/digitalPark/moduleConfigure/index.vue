@@ -1,21 +1,34 @@
 <template>
   <div class="module-configure">
-    <div class="left-module-list">
+    <div :class="isFull?'hide':'left-module-list'">
       <div v-for="item in proModuleList"
            :key="item.id"
            @click="onClickItemProModule(item)">{{item.name}}</div>
     </div>
-    <div class="right-module-content">
-       <div class="module-content-list">
-         <component v-for="(item,index) in contentList"
-                    :key="index"
-                    :is="item.componentName"
-                    :moduleItem="item"
-                    class="item-content"
-         />
+    <div :class="isFull?'full-right-module-content':'right-module-content'">
+       <div class="module-content-list" v-show="!isFull">
+         <!--<component v-for="(item,index) in contentList"-->
+                    <!--:key="index"-->
+                    <!--:is="item.componentName"-->
+                    <!--:moduleItem="item"-->
+                    <!--class="item-content flex-colum-center"-->
+         <!--/>-->
+         <draggable :list="contentList"
+                    :options="{group:'product',draggable:'.item-content',sort:true}"
+                    @change="onDragChange"
+                    class="content-drag-box"
+         >
+           <component v-for="(item,index) in contentList"
+                      :key="index"
+                      :is="item.componentName"
+                      :moduleItem="item"
+                      class="item-content flex-colum-center"
+           />
+         </draggable>
        </div>
-       <div class="preview-panel">
+       <div :class="isFull?'full-preview-panel':'preview-panel'" >
          <Dashboard />
+         <el-button class="large-btn" @click="onClickFullScreenBtn">全屏</el-button>
        </div>
     </div>
   </div>
@@ -29,6 +42,8 @@
   import buildingStatusProportion from '../coms/buildingStatusProportion'
   import assetTypeProportion from '../coms/assetTypeProportion'
   import Dashboard from '../home/dashboard'
+  import elementResizeDetectorMaker from 'element-resize-detector'
+  import draggable from 'vuedraggable'
   export default {
     name: 'ModuleConfigure',
     components: {
@@ -37,25 +52,41 @@
       operateIncome,
       buildingStatusProportion,
       assetTypeProportion,
-      Dashboard
+      Dashboard,
+      draggable,
     },
-    data () {
+    data() {
       return {
-        proModuleList:[],
-        contentList:[]
+        proModuleList: [],
+        contentList: [],
+        isFull: false
       }
     },
     methods: {
-      async getProModules(){
+      async getProModules() {
         let res = await DigitalParkApi.getProModules()
-        this.proModuleList=res
-        this.contentList=res[0].moduleList
+        this.proModuleList = res
+        this.contentList = res[0].moduleList
       },
-      onClickItemProModule(item){
-        this.contentList=item.moduleList
+      onClickItemProModule(item) {
+        this.contentList = item.moduleList
+      },
+      onClickFullScreenBtn() {
+        this.isFull = !this.isFull
+        // let erd = elementResizeDetectorMaker()
+        // let that = this
+        // console.log($(".item-product-coms").length)
+        // erd.listenTo($(".item-product-coms"), function () {
+        //   that.$nextTick(function () {
+        //     echarts.init($(".my-chart")[2]).resize()
+        //   })
+        // })
+      },
+      onDragChange(){
+
       }
     },
-    mounted(){
+    mounted() {
       this.getProModules()
     }
   }
@@ -93,13 +124,34 @@
     }
     .my-chart{
       width:100%;
-      height:100%;
+      flex-grow: 1;
     }
     .preview-panel{
       width:90%;
-      margin:20px 10px;
+      margin:40px 10px 20px 10px;
       box-sizing: border-box;
       flex-grow: 1;
+      position: relative;
+    }
+    .large-btn{
+      position: absolute;
+      right:-100px;
+      top:10px;
+    }
+    .hide{
+      display: none;
+      width:0;
+    }
+    .full-right-module-content{
+      width:100%;
+      height: 100%;
+    }
+    .full-preview-panel{
+      width:95%;
+      height:100%;
+    }
+    .content-drag-box{
+      height:100%;
     }
   }
 </style>

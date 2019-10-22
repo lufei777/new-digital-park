@@ -1,6 +1,6 @@
 <template>
-  <div class="energy-electricity-proportion flex-wrap-align-center">
-    <div ref="myChart1" class="my-chart"></div>
+  <div class="energy-electricity-proportion">
+    <div ref="myChart1" class="my-chart" id="myChart"></div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -46,16 +46,17 @@
           seriesData,
           // titleText,
         };
-        window.onresize = myChart.resize;
+        // window.onresize = myChart.resize;
         ChartUtils.hollowPieChart(myChart, data);
 
-        // let option={
-        //    // title:{
-        //    //   left:'center',
-        //    //   bottom:'-20px'
-        //    // }
-        // }
-        // myChart.setOption(option)
+        let option={
+           legend:{
+             textStyle:{
+               color:'#8FD3FA'
+             }
+           }
+        }
+        myChart.setOption(option)
       },
 
     },
@@ -68,8 +69,8 @@
 <style lang="less">
   .energy-electricity-proportion{
     .my-chart{
-      height:90%;
-      margin:0 auto;
+      /*height:90%;*/
+      /*margin:0 auto;*/
     }
   }
 </style>
