@@ -14,7 +14,7 @@
                     <!--class="item-content flex-colum-center"-->
          <!--/>-->
          <draggable :list="contentList"
-                    :options="{group:'product',draggable:'.item-content',sort:true}"
+                    v-bind="getOptions()"
                     @change="onDragChange"
                     class="content-drag-box"
          >
@@ -22,12 +22,12 @@
                       :key="index"
                       :is="item.componentName"
                       :moduleItem="item"
-                      class="item-content flex-colum-center"
+                      :class="['item-content','flex-colum-center',item.dragFlag?'item-drag-product':'']"
            />
          </draggable>
        </div>
        <div :class="isFull?'full-preview-panel':'preview-panel'" >
-         <Dashboard />
+         <Dashboard v-if="type==1" :curProModule="curProModule" :hideHeader="true"/>
          <el-button class="large-btn" @click="onClickFullScreenBtn">全屏</el-button>
        </div>
     </div>
@@ -44,6 +44,7 @@
   import Dashboard from '../home/dashboard'
   import elementResizeDetectorMaker from 'element-resize-detector'
   import draggable from 'vuedraggable'
+  import energyConsumptionRanking from '../coms/energyConsumptionRanking'
   export default {
     name: 'ModuleConfigure',
     components: {
@@ -54,22 +55,46 @@
       assetTypeProportion,
       Dashboard,
       draggable,
+      energyConsumptionRanking
     },
     data() {
       return {
         proModuleList: [],
         contentList: [],
-        isFull: false
+        isFull: false,
+        curProModule:{},
+        userProModuleList:[]
+      }
+    },
+    computed:{
+      type(){
+        return this.$route.query.type
       }
     },
     methods: {
       async getProModules() {
         let res = await DigitalParkApi.getProModules()
+        res.map((item)=>{
+          item.moduleList.map((module)=>{
+            module.dragFlag=true
+            this.userProModuleList.map((userItem)=>{
+              userItem.moduleList.map((userModule)=>{
+                 if(module.id==userModule.id){
+                   // debugger
+                   module.dragFlag=false
+                 }
+              })
+            })
+          })
+        })
+        console.log(res)
         this.proModuleList = res
         this.contentList = res[0].moduleList
       },
-      onClickItemProModule(item) {
+      onClickItemProModule(item,index) {
         this.contentList = item.moduleList
+        this.curProModule=item
+        // this.curModule=index
       },
       onClickFullScreenBtn() {
         this.isFull = !this.isFull
@@ -84,9 +109,19 @@
       },
       onDragChange(){
 
-      }
+      },
+      getOptions(){
+        return {group:{name:'product',pull:'clone'},draggable:'.item-drag-product'}
+      },
+      async getModulesByType(){
+        let res = await DigitalParkApi.getModulesByType({
+          type:this.type
+        })
+        this.userProModuleList=res
+      },
     },
-    mounted() {
+    async mounted() {
+      await this.getModulesByType()
       this.getProModules()
     }
   }

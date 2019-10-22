@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-park-home-page">
-      <div class="dashboard-header flex-align-between" v-show="showHeader">
+      <div class="dashboard-header flex-align-between" v-show="!hideHeader">
         <div class="news-box">
           <ul class="news-list hover-pointer" :style="{top}" @mouseenter="stopNews" @mouseleave="scrollNews">
             <li v-for="(item,index) in newsList" :key="index" class="news-item">
@@ -15,9 +15,11 @@
     <div class="dashboard-content-panel">
       <div class="dashboard-left">
         <draggable :list="proModuleList1"
-                   class="draggable-box"
+                   class="draggable-box1"
                    @change="onLeftChange"
                    v-bind="getOptions()"
+                   @start="onLeftStart"
+                   :move="onLeftMove"
         >
           <ItemProModule v-for="(item,index) in proModuleList1"
                          class="item-drag-product"
@@ -35,8 +37,9 @@
       <div class="dashboard-right">
         <draggable :list="proModuleList2"
                    v-bind="getOptions()"
-                   class="draggable-box"
+                   class="draggable-box2"
                    @change="onRightChange"
+                   :move="onRightMove"
         >
         <ItemProModule v-for="(item,index) in proModuleList2"
                        class="item-drag-product"
@@ -68,6 +71,7 @@
   import ItemProModule from '../coms/itemProModule'
   export default {
     name: 'DashBoardHomePage',
+    props:['curProModule','hideHeader'],
     components: {
       draggable,
       NavOperator,
@@ -98,7 +102,6 @@
           proModuleList1: [],
           proModuleList2: [],
           changeObj: {},
-          showHeader: true,
           newsList: [{id: 1, time: '2019-10-10 10:10:10', text: '消息消息消息1111111'},
             {id: 1, time: '2019-10-11 10:11:11', text: '消息消息消息2222222'},
             {id: 3, time: '2019-10-12 10:12:12', text: '消息消息消息3333333'}],
@@ -109,13 +112,15 @@
         }
       },
       methods: {
-        onLeftChange: function (evt) {
+        async onLeftChange (evt) {
           console.log('change1', evt)
           if (evt.removed) {
             this.proModuleList1.splice(evt.removed.oldIndex, 0, this.changeObj)
           } else if (evt.added) {
             this.changeObj = this.proModuleList1.splice(evt.added.newIndex + 1, 1)[0]
           }
+          this.updateProModule(evt.added,this.proModuleList1)
+
         },
         onRightChange: function (evt) {
           console.log('change2', evt)
@@ -124,6 +129,7 @@
           } else if (evt.added){
             this.changeObj = this.proModuleList2.splice(evt.added.newIndex + 1, 1)[0]
           }
+          this.updateProModule(evt.added,this.proModuleList2)
         },
         controlHeader() {
           $("body").mousemove((e) => {
@@ -159,6 +165,44 @@
         },
         getOptions(){
           return {draggable:'.item-drag-product',sort:true,group:"product"}
+        },
+        onLeftStart(evt){
+          // console.log("start",evt)
+        },
+        onLeftMove(evt){
+          // console.log('move',evt)
+          // console.log(evt.draggedContext.element.position-1,evt.relatedContext.element.position-1,
+          //   this.proModuleList2[evt.relatedContext.element.position-1-3])
+          // if(evt.to.className=="draggable-box2"){
+          //   this.proModuleList1.splice(evt.draggedContext.element.position-1,0,
+          //     this.proModuleList2[evt.relatedContext.element.position-1-3])
+          // }
+        },
+        onRightMove(evt){
+          // console.log('move2',evt)
+        },
+        async updateProModule(data,list){
+          if(this.curProModule){
+            console.log(1111111111)
+            this.curProModule.moduleList.map((item)=>{
+              if(item.id==data.element.id){
+                console.log(item)
+                let obj={
+                  // menuId:item.menuId,
+                  menuName:item.menuName,
+                  type:1,
+                  moduleList:[item],
+                }
+                console.log(obj)
+                list[data.newIndex]=obj
+                console.log(list)
+              }
+            })
+            // console.log(this.proModuleList1)
+
+          }
+          await DigitalParkApi.updateUserProModules([...this.proModuleList1,...this.proModuleList2])
+          // this.getModulesByType()
         }
     },
     mounted(){
@@ -181,20 +225,15 @@
     flex-direction: column;
     height:100%;
     overflow: hidden;
-    .dashboard-left{
-      width:25%;
+    .dashboard-left,.dashboard-right{
+      width:22%;
       height:100%;
       color: @white;
     }
     .dashboard-center{
-      width:50%;
-      // background: green;
+      width:56%;
     }
-    .dashboard-right{
-      width:25%;
-      // background: pink;
-    }
-    .draggable-box{
+    .draggable-box1,.draggable-box2{
       height:100%;
     }
     .item-drag-product,.fixed-prod-module{

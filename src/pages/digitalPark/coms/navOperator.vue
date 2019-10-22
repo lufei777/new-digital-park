@@ -53,7 +53,7 @@
       },
       onClickUserConfigure(val){
         if(val==1){
-          this.$router.push('/digitalPark/moduleConfigure')
+          this.$router.push(`/digitalPark/moduleConfigure?type=${this.moduleType}`)
         }
       }
     },
