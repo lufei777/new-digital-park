@@ -90,22 +90,25 @@
       },
       onClickFullScreenBtn() {
         this.isFull = !this.isFull
-        // let erd = elementResizeDetectorMaker()
-        // let that = this
-        // console.log($(".item-product-coms").length)
-        // erd.listenTo($(".item-product-coms"), function () {
-        //   that.$nextTick(function () {
-        //     echarts.init($(".my-chart")[2]).resize()
-        //   })
-        // })
+        let erd = elementResizeDetectorMaker()
+        let that = this
+        console.log($(".item-product-coms").length)
+        erd.listenTo(document.getElementById("operate-income"), function () {
+          console.log("changed")
+          that.$nextTick(function () {
+            echarts.init($(".my-chart")[0]).resize()
+          })
+        })
       },
       onDragChange(){
 
       },
       getOptions(){
-        return {group:{name:'product',pull:'clone'},
+        return {
+          group:{name:'product',pull:'clone'},
           draggable:'.item-drag-product',
-          disabled:!this.contentListDragFlag}
+          disabled:!this.contentListDragFlag
+        }
       },
       async getModulesByType(){
         let res = await DigitalParkApi.getModulesByType({
@@ -115,10 +118,7 @@
         this.userProModuleList=res
       },
       setItemDragFlag(userList,res=this.proModuleList){
-         // console.log("lalal",userList)
-
         res.map((item)=>{
-
           item.moduleList.map((module)=>{
             module.dragFlag=true
             userList.map((userItem)=>{

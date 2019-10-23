@@ -52,11 +52,15 @@
         <div class="fixed-prod-module" :style="moduleBg">
              <span>{{$t('proEntry')}}</span>
              <div class="flex-wrap-align-center product-list">
-               <div v-for="(item) in fixedProList" :key="item.id"
-                    class="fixed-pro-item flex-align-center hover-pointer"
-                    :style="tagBg"
-                    >{{item.name}}</div>
+               <el-tooltip v-for="(item) in fixedProList" :key="item.id"
+                           effect="dark" :content="item.name" placement="top-end">
+                 <div class="fixed-pro-item hover-pointer"
+                      :style="tagBg"
+                      @click="onClickItemFixPro(item)"
+                 >{{item.name}}</div>
+               </el-tooltip>
              </div>
+
         </div>
         </draggable>
       </div>
@@ -108,7 +112,7 @@
             {id: 3, time: '2019-10-12 10:12:12', text: '消息消息消息3333333'}],
           newsTimer: '',
           curNewsIndex: 0,
-          fixedProList:'',
+          fixedProList:[],
           moduleType:"1"
         }
       },
@@ -116,7 +120,7 @@
         async onLeftChange (evt) {
           console.log('change1', evt)
           if(evt.moved && !this.curProModule){ //只要有curProModule就代表是配置页，因为此处是仪表盘首页拖动而非配置页
-            this.sureUpdateUserProModules([...this.proModuleList1,...this.proModuleList2])
+            this.sureUpdateUserProModules()
           }else if (evt.removed) {
             //removed情况为仪表盘内部两组互相拖拽时才会发生，而且顺序是组2先added，组1才removed（反之亦然）
             //因此内部拖拽需要等removed的这一组执行完，才可以调用updateProModule
@@ -142,7 +146,7 @@
         onRightChange: function (evt) {
           console.log('change2', evt)
           if(evt.moved && !this.curProModule){ //代表是仪表盘首页拖动而非配置页
-            this.sureUpdateUserProModules([...this.proModuleList1,...this.proModuleList2])
+            this.sureUpdateUserProModules()
           }if (evt.removed) {
             this.proModuleList2.splice(evt.removed.oldIndex, 0, this.changeObj)
             this.updateProModule()
@@ -193,7 +197,9 @@
           this.proModuleList2 =res.slice(3,5)
         },
         async getProductList(){
-          let res = await DigitalParkApi.getProductList()
+          let res = await DigitalParkApi.getProductList({
+            language:Cookies.get('lang')
+          })
           this.fixedProList=res
         },
         getOptions(){
@@ -244,7 +250,7 @@
 
           }
           if(!this.curProModule){
-            this.sureUpdateUserProModules([...this.proModuleList1,...this.proModuleList2])
+            this.sureUpdateUserProModules()
           }
           // this.getModulesByType()
         },
@@ -253,8 +259,13 @@
         },
         handleLangChange(){
           this.getModulesByType()
+          this.getProductList()
+        },
+        onClickItemFixPro(item){
+          if(item.routeAddress){
+            window.open(item.routeAddress)
+          }
         }
-
     },
     mounted(){
       // setTimeout(()=>{
@@ -346,6 +357,9 @@
       flex-shrink: 0;
       background-repeat: no-repeat;
       background-size: 100% 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 </style>
