@@ -9,7 +9,7 @@
             </li>
           </ul>
         </div>
-        <div class="digital-title" :style="titleBg">cizing数字园区</div>
+        <div class="digital-title" :style="titleBg">{{$t('homeHeader.title')}}</div>
         <NavOperator :moduleType.sync="moduleType" />
       </div>
     <div class="dashboard-content-panel">
@@ -20,6 +20,7 @@
                    v-bind="getOptions()"
                    @start="onLeftStart"
                    :move="onLeftMove"
+                   @end="onLeftEnd"
         >
           <ItemProModule v-for="(item,index) in proModuleList1"
                          class="item-drag-product"
@@ -49,7 +50,7 @@
                        :style="moduleBg"
         />
         <div class="fixed-prod-module" :style="moduleBg">
-             <span>产品入口</span>
+             <span>{{$t('proEntry')}}</span>
              <div class="flex-wrap-align-center product-list">
                <div v-for="(item) in fixedProList" :key="item.id"
                     class="fixed-pro-item flex-align-center hover-pointer"
@@ -114,22 +115,53 @@
       methods: {
         async onLeftChange (evt) {
           console.log('change1', evt)
-          if (evt.removed) {
+          if(evt.moved && !this.curProModule){ //只要有curProModule就代表是配置页，因为此处是仪表盘首页拖动而非配置页
+            this.sureUpdateUserProModules([...this.proModuleList1,...this.proModuleList2])
+          }else if (evt.removed) {
+            //removed情况为仪表盘内部两组互相拖拽时才会发生，而且顺序是组2先added，组1才removed（反之亦然）
+            //因此内部拖拽需要等removed的这一组执行完，才可以调用updateProModule
             this.proModuleList1.splice(evt.removed.oldIndex, 0, this.changeObj)
+            this.updateProModule()
           } else if (evt.added) {
+            if(evt.added.newIndex>2){
+              let obj={
+                // menuId:item.menuId,
+                menuName:evt.added.element.menuName,
+                type:1,
+                moduleList:[evt.added.element],
+              }
+              this.proModuleList1.splice(evt.added.newIndex -1,1,obj).slice(0,3)
+              return;
+            }
             this.changeObj = this.proModuleList1.splice(evt.added.newIndex + 1, 1)[0]
+            if(!evt.added.element.moduleList){
+              this.updateProModule(evt.added,this.proModuleList1)
+            }
           }
-          this.updateProModule(evt.added,this.proModuleList1)
-
         },
         onRightChange: function (evt) {
           console.log('change2', evt)
-          if (evt.removed) {
+          if(evt.moved && !this.curProModule){ //代表是仪表盘首页拖动而非配置页
+            this.sureUpdateUserProModules([...this.proModuleList1,...this.proModuleList2])
+          }if (evt.removed) {
             this.proModuleList2.splice(evt.removed.oldIndex, 0, this.changeObj)
+            this.updateProModule()
           } else if (evt.added){
+            if(evt.added.newIndex>2){
+              let obj={
+                // menuId:item.menuId,
+                menuName:evt.added.element.menuName,
+                type:1,
+                moduleList:[evt.added.element],
+              }
+              this.proModuleList1.splice(evt.added.newIndex -1,1,obj).slice(0,3)
+              return;
+            }
             this.changeObj = this.proModuleList2.splice(evt.added.newIndex + 1, 1)[0]
+            if(!evt.added.element.moduleList){
+              this.updateProModule(evt.added,this.proModuleList2)
+            }
           }
-          this.updateProModule(evt.added,this.proModuleList2)
         },
         controlHeader() {
           $("body").mousemove((e) => {
@@ -154,7 +186,8 @@
         },
         async getModulesByType(){
           let res = await DigitalParkApi.getModulesByType({
-            type:1
+            type:1,
+            language:Cookies.get('lang')
           })
           this.proModuleList1 =res.slice(0,3)
           this.proModuleList2 =res.slice(3,5)
@@ -168,6 +201,8 @@
         },
         onLeftStart(evt){
           // console.log("start",evt)
+          this.$parent.setContentListDragFlag &&
+          this.$parent.setContentListDragFlag(false)
         },
         onLeftMove(evt){
           // console.log('move',evt)
@@ -178,32 +213,48 @@
           //     this.proModuleList2[evt.relatedContext.element.position-1-3])
           // }
         },
+        onLeftEnd(){
+          this.$parent.setContentListDragFlag &&
+          this.$parent.setContentListDragFlag(true)
+        },
         onRightMove(evt){
           // console.log('move2',evt)
         },
-        async updateProModule(data,list){
-          if(this.curProModule){
-            console.log(1111111111)
+        updateProModule(data,list){
+          // console.log('data',data)
+          if(this.curProModule && data && !data.element.moduleList){
+            console.log(1)
             this.curProModule.moduleList.map((item)=>{
               if(item.id==data.element.id){
-                console.log(item)
+                // console.log(item)
                 let obj={
                   // menuId:item.menuId,
                   menuName:item.menuName,
                   type:1,
                   moduleList:[item],
                 }
-                console.log(obj)
+                // console.log(obj)
                 list[data.newIndex]=obj
-                console.log(list)
+                console.log('list',this.proModuleList1,this.proModuleList2)
+                this.$parent.setItemDragFlag &&
+                this.$parent.setItemDragFlag([...this.proModuleList1,...this.proModuleList2])
               }
             })
             // console.log(this.proModuleList1)
 
           }
-          await DigitalParkApi.updateUserProModules([...this.proModuleList1,...this.proModuleList2])
+          if(!this.curProModule){
+            this.sureUpdateUserProModules([...this.proModuleList1,...this.proModuleList2])
+          }
           // this.getModulesByType()
+        },
+        async sureUpdateUserProModules(){
+          await DigitalParkApi.updateUserProModules([...this.proModuleList1,...this.proModuleList2])
+        },
+        handleLangChange(){
+          this.getModulesByType()
         }
+
     },
     mounted(){
       // setTimeout(()=>{

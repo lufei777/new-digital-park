@@ -30,19 +30,18 @@ import VueDND from 'awe-dnd'
 Vue.use(VueDND)
 
 import VueI18n from 'vue-i18n'
-import LangENUS from './utils/lang/en-us.js'
-import LangZHCN from './utils/lang/zh-cn.js'
+import LangEN from './utils/lang/en.js'
+import LangZH from './utils/lang/zh.js'
 Vue.use(VueI18n)
-
 let router = new VueRouter({
   routes
 })
 
 const i18n = new VueI18n({
-  locale: 'zh-cn',
+  locale: Cookies.get('lang'),
   messages: {
-    'en-us': LangENUS,
-    'zh-cn': LangZHCN
+    'en': LangEN,
+    'zh': LangZH
   }
 })
 

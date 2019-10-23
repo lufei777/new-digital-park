@@ -7,12 +7,6 @@
     </div>
     <div :class="isFull?'full-right-module-content':'right-module-content'">
        <div class="module-content-list" v-show="!isFull">
-         <!--<component v-for="(item,index) in contentList"-->
-                    <!--:key="index"-->
-                    <!--:is="item.componentName"-->
-                    <!--:moduleItem="item"-->
-                    <!--class="item-content flex-colum-center"-->
-         <!--/>-->
          <draggable :list="contentList"
                     v-bind="getOptions()"
                     @change="onDragChange"
@@ -27,8 +21,9 @@
          </draggable>
        </div>
        <div :class="isFull?'full-preview-panel':'preview-panel'" >
-         <Dashboard v-if="type==1" :curProModule="curProModule" :hideHeader="true"/>
+         <Dashboard v-if="type==1" :curProModule="curProModule" :hideHeader="true" ref="dashboard"/>
          <el-button class="large-btn" @click="onClickFullScreenBtn">全屏</el-button>
+         <el-button class="sure-btn" @click="onClickSureBtn">确定</el-button>
        </div>
     </div>
   </div>
@@ -45,6 +40,10 @@
   import elementResizeDetectorMaker from 'element-resize-detector'
   import draggable from 'vuedraggable'
   import energyConsumptionRanking from '../coms/energyConsumptionRanking'
+  import buildingEarlyWarningAlarm from '../coms/buildingEarlyWarningAlarm'
+  import operateExpenditure from '../coms/operateExpenditure'
+  import assetGrowthStatistics from '../coms/assetGrowthStatistics'
+
   export default {
     name: 'ModuleConfigure',
     components: {
@@ -55,7 +54,10 @@
       assetTypeProportion,
       Dashboard,
       draggable,
-      energyConsumptionRanking
+      energyConsumptionRanking,
+      buildingEarlyWarningAlarm,
+      operateExpenditure,
+      assetGrowthStatistics
     },
     data() {
       return {
@@ -63,7 +65,8 @@
         contentList: [],
         isFull: false,
         curProModule:{},
-        userProModuleList:[]
+        userProModuleList:[],
+        contentListDragFlag:true
       }
     },
     computed:{
@@ -73,23 +76,12 @@
     },
     methods: {
       async getProModules() {
-        let res = await DigitalParkApi.getProModules()
-        res.map((item)=>{
-          item.moduleList.map((module)=>{
-            module.dragFlag=true
-            this.userProModuleList.map((userItem)=>{
-              userItem.moduleList.map((userModule)=>{
-                 if(module.id==userModule.id){
-                   // debugger
-                   module.dragFlag=false
-                 }
-              })
-            })
-          })
+        let res = await DigitalParkApi.getProModules({
+          language:Cookies.get('lang')
         })
-        console.log(res)
-        this.proModuleList = res
-        this.contentList = res[0].moduleList
+        let tmp = this.setItemDragFlag(this.userProModuleList,res)
+        this.proModuleList = tmp
+        this.contentList = tmp[0].moduleList
       },
       onClickItemProModule(item,index) {
         this.contentList = item.moduleList
@@ -111,14 +103,41 @@
 
       },
       getOptions(){
-        return {group:{name:'product',pull:'clone'},draggable:'.item-drag-product'}
+        return {group:{name:'product',pull:'clone'},
+          draggable:'.item-drag-product',
+          disabled:!this.contentListDragFlag}
       },
       async getModulesByType(){
         let res = await DigitalParkApi.getModulesByType({
-          type:this.type
+          type:this.type,
+          language:Cookies.get('lang')
         })
         this.userProModuleList=res
       },
+      setItemDragFlag(userList,res=this.proModuleList){
+         // console.log("lalal",userList)
+
+        res.map((item)=>{
+
+          item.moduleList.map((module)=>{
+            module.dragFlag=true
+            userList.map((userItem)=>{
+              userItem.moduleList.map((userModule)=>{
+                if(module.id==userModule.id){
+                  module.dragFlag=false
+                }
+              })
+            })
+          })
+        })
+        return res
+      },
+      setContentListDragFlag(val){
+        this.contentListDragFlag=val
+      },
+      onClickSureBtn(){
+       this.$refs.dashboard.sureUpdateUserProModules()
+      }
     },
     async mounted() {
       await this.getModulesByType()
@@ -187,6 +206,11 @@
     }
     .content-drag-box{
       height:100%;
+    }
+    .sure-btn{
+      position: absolute;
+      right:-100px;
+      top:50px;
     }
   }
 </style>
