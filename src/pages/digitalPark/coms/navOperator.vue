@@ -5,15 +5,15 @@
       <!--<span class="nav-right-item"><span>admin</span><i>|</i></span>-->
       <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
           <el-select v-model="langValue" placeholder="切换语言" @change="onClickChangeLang">
-              <el-option label="中文" value="zh-cn"></el-option>
-              <el-option label="English" value="en-us"></el-option>
+              <el-option label="中文" value="zh"></el-option>
+              <el-option label="English" value="en"></el-option>
            </el-select>
           <i>|</i>
       </span>
       <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
          <el-select v-model="moduleType" placeholder="切换模式" @change="onClickChangeModel">
-            <el-option label="瀑布流" value="2"></el-option>
-            <el-option label="仪表盘" value="1"></el-option>
+            <el-option :label="$t('homeHeader.waterfall')" value="2"></el-option>
+            <el-option :label="$t('homeHeader.dashboard')" value="1"></el-option>
          </el-select>
           <i>|</i>
       </span>
@@ -34,7 +34,7 @@
     props:['moduleType'],
     data () {
       return {
-        langValue:'zh-cn',
+        langValue:Cookies.get('lang'),
         userValue:''
       }
     },
@@ -50,6 +50,8 @@
       },
       onClickChangeLang(val){
         this.$i18n.locale = val
+        Cookies.set('lang',val)
+        this.$parent.handleLangChange && this.$parent.handleLangChange()
       },
       onClickUserConfigure(val){
         if(val==1){
@@ -68,7 +70,9 @@
     font-size: 16px;
     .nav-right-item{
       span{
-        padding: 0 20px;
+        width:90px;
+        display: inline-block;
+        text-align: center;
         &:hover{
           cursor: pointer;
         }
@@ -77,14 +81,17 @@
         border:none;
         padding-right: 5px;
         background: none;
-        /*color:@white;*/
+        text-align: center;
         font-size: 16px;
       }
       .el-input__suffix,.el-input__suffix-inner{
         padding: 0;
       }
       .el-select{
-        width:90px;
+        width:120px;
+      }
+      .el-input__suffix{
+         right:-40px;
       }
     }
     .dashboard-nav{
@@ -92,16 +99,5 @@
         color:@white;
       }
     }
-    /*.lang-box{*/
-      /*.el-select{*/
-        /*min-width:75px;*/
-        /*max-width:85px;*/
-      /*}*/
-    /*}*/
-    /*.model-box{*/
-      /*.el-select{*/
-        /*width:85px;*/
-      /*}*/
-    /*}*/
   }
 </style>
