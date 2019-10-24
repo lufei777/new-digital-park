@@ -110,7 +110,10 @@ class chartUtils {
         orient: 'vertical',
         left: data.legend,
         top:50,
-        data: data.legendData
+        data: data.legendData,
+        textStyle:{
+          color:data.textStyleColor?data.textStyleColor:''
+        }
       },
       color: data.color?data.color:['#4DA1FF', '#83D587', '#FFCE33', '#FF7B8C'],
       series : [

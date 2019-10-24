@@ -1,6 +1,6 @@
 <template>
   <div class="building-status-proportion">
-    <div ref="pieCharts" class="pie-charts"></div>
+    <div ref="pieCharts" class="my-chart"></div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -25,7 +25,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
 .building-status-proportion {
-  .pie-charts {
+  .my-chart {
     height: 95%;
   }
 }

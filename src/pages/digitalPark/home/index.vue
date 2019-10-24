@@ -10,21 +10,6 @@
         </el-input>
         <NavOperator :moduleType.sync="moduleType" />
       </div>
-      <!-- <ul class="flex nav-list">
-        <li v-for="(item,index) in navList" :key="index" @click="item.children.length && navListClick(item)" class="nav-list-text">
-          <span> {{item.name}} </span>
-          <i class="el-icon-arrow-down" v-if="item.children.length"></i>
-          <ul v-if="item.children.length && item.showChild" class="nav-list-content">
-            <li v-for="(child,i) in item.children" :key="i" @click.stop="child.children.length && childNavListClick(child)" class="two-menu">
-              {{child.name}}
-              <i class="el-icon-arrow-right" v-if="child.children.length"></i>
-              <ul v-if="child.children.length && child.showChild" class="three-menu">
-                <li v-for="(three,p) in child.children" :key="p">{{three.name}}</li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-      </ul> -->
       <Sidebar  :menuList="menuList"/>
     </div>
 
@@ -101,7 +86,6 @@
       return {
         productList:[],
         showMoreProduct:false,
-        navList:[],
         modelValue:"1",
         menuList:[],
         proModuleList:[],
@@ -117,36 +101,11 @@
       onShowMoreProduct(){
         this.showMoreProduct=!this.showMoreProduct
       },
-      getNavList(){
-        let res = CommonFun.navList
-        res.map((item)=>{
-          item.showChild=false
-          if(item.children.length){
-            item.children.map((child)=>{
-              item.showChild=false
-              child.showChild = false
-              if(child.children.length) {
-                child.children.map((three)=>{
-                  child.showChild = false
-                })
-              }
-            })
-          }
-        })
-        this.navList=res
-        // this.menuList =res
-      },
       async getMenuTree() {
         let res = await DigitalParkApi.getMenuTree({
           language:Cookies.get('lang')
         })
         this.menuList =res[0].childNode
-      },
-      navListClick(item) {
-        item.showChild = true
-      },
-      childNavListClick(child) {
-        child.showChild = true
       },
       getItemBg(item){
         return {
@@ -183,7 +142,6 @@
       }
     },
     mounted(){
-      this.getNavList()
       this.getMenuTree()
       this.getProductList()
       this.getModulesByType()
