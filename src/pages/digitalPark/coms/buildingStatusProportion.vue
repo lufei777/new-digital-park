@@ -25,6 +25,7 @@ export default {
       let legendData = [];
       let legend = "right";
       let color = ["#F7B87F", "#B6A2DE", "#56C7C9", "#5AB1EF"];
+      let textStyleColor = '#8FD3FA'
       //FCB441
       let dataList = [];
       res.map(item => {
@@ -40,7 +41,8 @@ export default {
         legendData,
         series,
         legend,
-        color
+        color,
+        textStyleColor
       };
       window.onresize = myPieChart.resize;
       ChartUtils.handlePieChart(myPieChart, data);

@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-park-home-page">
+  <div class="dashboard-park-home-page" :style="homePageBg">
       <div class="dashboard-header flex-align-between" v-show="showHeader">
         <div class="news-box">
           <ul class="news-list hover-pointer" :style="{top}" @mouseenter="stopNews" @mouseleave="scrollNews">
@@ -76,6 +76,11 @@
     computed: {
       top() {
         return -this.curNewsIndex * 50 + 'px';
+      },
+      homePageBg(){
+        return {
+          backgroundImage:'url('+require('../../../../static/image/digitalPark/home.png')+')'
+        }
       },
       moduleBg(){
         return {
@@ -175,7 +180,6 @@
 
 <style lang="less">
   .dashboard-park-home-page{
-    background: url('../../../../static/image/digitalPark/home.png') no-repeat;
     color: @white;
     display: flex;
     flex-direction: column;
