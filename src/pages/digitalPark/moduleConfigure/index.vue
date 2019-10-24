@@ -1,30 +1,45 @@
 <template>
-  <div class="module-configure">
-    <div :class="isFull?'hide':'left-module-list'">
-      <div v-for="item in proModuleList"
-           :key="item.id"
-           @click="onClickItemProModule(item)">{{item.name}}</div>
+  <div class="module-configure flex-column">
+    <div>
+      <div class="set-tip">模式设置</div>
+      <div class="module-change">
+        <el-button @click="onClickModuleBtn('2')" :style="type==2?moduleBtnBg:defaultBtn" >{{$t('homeHeader.waterfall')}}</el-button>
+        <el-button @click="onClickModuleBtn('1')" :style="type==1?moduleBtnBg:defaultBtn" >{{$t('homeHeader.dashboard')}}</el-button>
+      </div>
     </div>
-    <div :class="isFull?'full-right-module-content':'right-module-content'">
-       <div class="module-content-list" v-show="!isFull">
-         <draggable :list="contentList"
-                    v-bind="getOptions()"
-                    @change="onDragChange"
-                    class="content-drag-box"
-         >
-           <component v-for="(item,index) in contentList"
-                      :key="index"
-                      :is="item.componentName"
-                      :moduleItem="item"
-                      :class="['item-content','flex-colum-center',item.dragFlag?'item-drag-product':'']"
-           />
-         </draggable>
-       </div>
-       <div :class="isFull?'full-preview-panel':'preview-panel'" >
-         <Dashboard v-if="type==1" :curProModule="curProModule" :hideHeader="true" ref="dashboard"/>
-         <el-button class="large-btn" @click="onClickFullScreenBtn">全屏</el-button>
-         <el-button class="sure-btn" @click="onClickSureBtn">确定</el-button>
-       </div>
+    <div class="main-container">
+      <div :class="isFull?'hide':'left-module-list'">
+        <div v-for="item in proModuleList"
+             :key="item.id"
+             :class="['item-left-pro','hover-pointer',item.activeFlag?'active-pro':'']"
+             @click="onClickItemProModule(item)">{{item.name}}</div>
+      </div>
+      <div class="module-content-list" v-show="!isFull">
+        <draggable :list="contentList"
+                   v-bind="getOptions()"
+                   @change="onDragChange"
+                   class="content-drag-box"
+        >
+          <component v-for="(item,index) in contentList"
+                     :key="index"
+                     :is="item.componentName"
+                     :moduleItem="item"
+                     :class="['item-content','flex-colum-center',item.dragFlag?'item-drag-product':'']"
+                     :style="contentBg"
+          />
+        </draggable>
+      </div>
+      <div :class="isFull?'full-right-module-content':'right-module-content'">
+        <div :class="isFull?'full-preview-panel':'preview-panel'" >
+          <Dashboard v-if="type==1" :curProModule="curProModule" :hideHeader="true" ref="dashboard"/>
+        </div>
+        <div class="operator-box">
+          <el-button  @click="onClickSureBtn" :style="moduleBtnBg">确认</el-button>
+          <el-button  @click="onClickGoBackBtn" :style="moduleBtnBg">取消</el-button>
+          <el-button  @click="onClickFullScreenBtn" :style="moduleBtnBg">预览</el-button>
+        </div>
+
+      </div>
     </div>
   </div>
 </template>
@@ -72,6 +87,23 @@
     computed:{
       type(){
         return this.$route.query.type
+      },
+      moduleBtnBg(){
+        return {
+           backgroundImage:'url('+require('../../../../static/image/digitalPark/module_btn_bg.png')+')',
+           color:'#fff'
+        }
+      },
+      defaultBtn(){
+        return {
+          border:'1px solid #0257FF',
+          color:'#0257FF'
+        }
+      },
+      contentBg(){
+        return {
+          // backgroundImage:'url('+require('../../../../static/image/digitalPark/content_bg.png')+')',
+        }
       }
     },
     methods: {
@@ -86,6 +118,10 @@
       onClickItemProModule(item,index) {
         this.contentList = item.moduleList
         this.curProModule=item
+        this.proModuleList.map((item)=>{
+          item.activeFlag=false
+        })
+        item.activeFlag=true
         // this.curModule=index
       },
       onClickFullScreenBtn() {
@@ -93,12 +129,12 @@
         let erd = elementResizeDetectorMaker()
         let that = this
         console.log($(".item-product-coms").length)
-        erd.listenTo(document.getElementById("operate-income"), function () {
-          console.log("changed")
-          that.$nextTick(function () {
-            echarts.init($(".my-chart")[0]).resize()
-          })
-        })
+        // erd.listenTo($(".item-product-coms"), function () {
+        //   console.log("changed")
+        //   that.$nextTick(function () {
+        //     echarts.init($(".my-chart")[0]).resize()
+        //   })
+        // })
       },
       onDragChange(){
 
@@ -118,7 +154,13 @@
         this.userProModuleList=res
       },
       setItemDragFlag(userList,res=this.proModuleList){
-        res.map((item)=>{
+        res.map((item,index)=>{
+          if(index==0){
+            item.activeFlag=true
+          }else{
+            item.activeFlag=false
+          }
+
           item.moduleList.map((module)=>{
             module.dragFlag=true
             userList.map((userItem)=>{
@@ -137,6 +179,12 @@
       },
       onClickSureBtn(){
        this.$refs.dashboard.sureUpdateUserProModules()
+      },
+      onClickModuleBtn(val){
+        this.$router.replace(`/digitalPark/moduleConfigure?type=${val}`)
+      },
+      onClickGoBackBtn(){
+        this.$router.replace(`/digitalPark/moduleConfigure?type=${val}`)
       }
     },
     async mounted() {
@@ -150,47 +198,65 @@
   .module-configure{
     height: 100%;
     .left-module-list{
-      width:15%;
+      width:8%;
+      height: 100%;
       float: left;
-      background: pink;
+      background: #11163A;
+      text-align: center;
+      padding:10px 0;
+      /*margin-left:10px;*/
+      box-sizing: border-box;
+    }
+    .item-left-pro{
+      padding:12px 0;
+      color:#ddeeff;
+    }
+    .active-pro{
+      background:rgba(2,87,255,1);
+    }
+    .module-content-list{
+      width:20%;
+      height:100%;
+      overflow: auto;
+      float: left;
+      padding:10px;
+      box-sizing: border-box;
+      box-shadow:0 2px 8px 0 rgba(0, 0, 0, 0.15);
+      border-radius:2px;
     }
     .right-module-content{
-      width: 85%;
-      float: right;
-      background: #ccc;
+      width: 70%;
+      float: left;
       height: 100%;
       display: flex;
       flex-direction: column;
-      /*justify-content: center;*/
+      box-shadow:0 2px 8px 0 rgba(0, 0, 0, 0.15);
+      border-radius:2px;
+      box-sizing: border-box;
+      /*margin:0 10px;*/
     }
-    .module-content-list{
-      height:250px;
-      width:100%;
+    .content-drag-box{
+      height: 100%;
     }
     .item-content{
-      height:100%;
-      float: left;
-      width:24%;
-      background: @white;
-      border:1px solid #000;
-      margin:10px 0.5%;
+      height:30%;
+      width:100%;
       padding:5px;
+      box-sizing: border-box;
+      margin-bottom:20px;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      border:1px solid #d0d3dc;
     }
     .my-chart{
       width:100%;
       flex-grow: 1;
     }
     .preview-panel{
-      width:90%;
-      margin:40px 10px 20px 10px;
+      width:98%;
+      height:85%;
+      margin:10px auto;
       box-sizing: border-box;
-      flex-grow: 1;
-      position: relative;
-    }
-    .large-btn{
-      position: absolute;
-      right:-100px;
-      top:10px;
     }
     .hide{
       display: none;
@@ -201,16 +267,33 @@
       height: 100%;
     }
     .full-preview-panel{
-      width:95%;
+      width:100%;
       height:100%;
     }
-    .content-drag-box{
-      height:100%;
+    .set-tip{
+      height: 56px;
+      width:100%;
+      background: #0D1B27;
+      color:#eeddff;
+      text-align: center;
+      line-height: 56px;
+      font-size: 24px;
+      font-weight: bold;
     }
-    .sure-btn{
-      position: absolute;
-      right:-100px;
-      top:50px;
+    .module-change{
+      width: 98%;
+      margin-left:1px;
+      padding:10px;
+      top:56px;
+      box-sizing: border-box;
+    }
+    .main-container{
+      flex-grow: 1;
+      width:98%;
+      margin-left: 1%;
+    }
+    .operator-box{
+      text-align: center;
     }
   }
 </style>
