@@ -1,7 +1,7 @@
 <template>
   <div class="operate-income">
     <div>
-      <el-button size="mini">年报</el-button>
+      <el-button size="mini" :style="Bg">年报</el-button>
       <el-button size="mini">月报</el-button>
       <el-select v-model="income" placeholder="请选择" size="mini">
         <el-option v-for="item in incomeLabel" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -43,6 +43,7 @@ export default {
         let legendData = [];
         let legend = 'right';
         let color = ['#418CF0', '#FCB441', '#E0400A', '#056492']
+        let textStyleColor = '#8FD3FA'
         //FCB441
         let dataList = [];
         res.map(item => {
@@ -58,9 +59,10 @@ export default {
           legendData,
           series,
           legend,
-          color
+          color,
+          textStyleColor
         };
-        window.onresize = myChart.resize;
+        // window.onresize = myChart.resize;
         ChartUtils.handlePieChart(myChart, data);
 
         // let option={
@@ -71,6 +73,11 @@ export default {
         // }
         // myChart.setOption(option)
       },
+      Bg(){
+          return{
+            backgroundImage:'url('+require('../../../../static/image/digitalPark/module_bg.png')+')'
+          }
+        }
   },
   mounted() {
       this.getIncomeList()
@@ -81,7 +88,15 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
 .my-chart{
-      height:70%;
+      // height:70%;
     //   margin:0 auto;
     }
+.operate-income {
+  .el-button {
+     border:none;
+    //  background: none;
+     background:url('../../../../static/image/digitalPark/tag_bg.png') no-repeat center;
+     background-size:100% 100%;
+  }
+}
 </style>
