@@ -2,7 +2,7 @@
   <div class="item-product-coms">
     <div v-if="type==2" class="flex-align-between module-title">
       <h3>{{moduleData.menuName}}</h3>
-      <span class="more-btn hover-pointer">更多</span>
+      <span class="more-btn hover-pointer">{{$t('more')}}</span>
     </div>
     <span v-if="type==1" class="single-module-name">{{moduleData.menuName}}</span>
     <div :class="type==2?'component-box com-width-border':'component-box'">
@@ -23,6 +23,10 @@
   import operateIncome from './operateIncome'
   import buildingStatusProportion from './buildingStatusProportion'
   import assetTypeProportion from './assetTypeProportion'
+  import energyConsumptionRanking from '../coms/energyConsumptionRanking'
+  import buildingEarlyWarningAlarm from '../coms/buildingEarlyWarningAlarm'
+  import operateExpenditure from '../coms/operateExpenditure'
+  import assetGrowthStatistics from '../coms/assetGrowthStatistics'
   export default {
     name: 'ItemProModule',
     props:['moduleData','type'],
@@ -31,7 +35,11 @@
       energyElectricityProportion,
       operateIncome,
       buildingStatusProportion,
-      assetTypeProportion
+      assetTypeProportion,
+      energyConsumptionRanking,
+      buildingEarlyWarningAlarm,
+      operateExpenditure,
+      assetGrowthStatistics
     },
     data () {
       return {

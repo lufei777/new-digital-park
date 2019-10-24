@@ -7,14 +7,8 @@
     </div>
     <div :class="isFull?'full-right-module-content':'right-module-content'">
        <div class="module-content-list" v-show="!isFull">
-         <!--<component v-for="(item,index) in contentList"-->
-                    <!--:key="index"-->
-                    <!--:is="item.componentName"-->
-                    <!--:moduleItem="item"-->
-                    <!--class="item-content flex-colum-center"-->
-         <!--/>-->
          <draggable :list="contentList"
-                    :options="{group:'product',draggable:'.item-content',sort:true}"
+                    v-bind="getOptions()"
                     @change="onDragChange"
                     class="content-drag-box"
          >
@@ -22,13 +16,14 @@
                       :key="index"
                       :is="item.componentName"
                       :moduleItem="item"
-                      class="item-content flex-colum-center"
+                      :class="['item-content','flex-colum-center',item.dragFlag?'item-drag-product':'']"
            />
          </draggable>
        </div>
        <div :class="isFull?'full-preview-panel':'preview-panel'" >
-         <Dashboard />
+         <Dashboard v-if="type==1" :curProModule="curProModule" :hideHeader="true" ref="dashboard"/>
          <el-button class="large-btn" @click="onClickFullScreenBtn">全屏</el-button>
+         <el-button class="sure-btn" @click="onClickSureBtn">确定</el-button>
        </div>
     </div>
   </div>
@@ -44,6 +39,11 @@
   import Dashboard from '../home/dashboard'
   import elementResizeDetectorMaker from 'element-resize-detector'
   import draggable from 'vuedraggable'
+  import energyConsumptionRanking from '../coms/energyConsumptionRanking'
+  import buildingEarlyWarningAlarm from '../coms/buildingEarlyWarningAlarm'
+  import operateExpenditure from '../coms/operateExpenditure'
+  import assetGrowthStatistics from '../coms/assetGrowthStatistics'
+
   export default {
     name: 'ModuleConfigure',
     components: {
@@ -54,39 +54,93 @@
       assetTypeProportion,
       Dashboard,
       draggable,
+      energyConsumptionRanking,
+      buildingEarlyWarningAlarm,
+      operateExpenditure,
+      assetGrowthStatistics
     },
     data() {
       return {
         proModuleList: [],
         contentList: [],
-        isFull: false
+        isFull: false,
+        curProModule:{},
+        userProModuleList:[],
+        contentListDragFlag:true
+      }
+    },
+    computed:{
+      type(){
+        return this.$route.query.type
       }
     },
     methods: {
       async getProModules() {
-        let res = await DigitalParkApi.getProModules()
-        this.proModuleList = res
-        this.contentList = res[0].moduleList
+        let res = await DigitalParkApi.getProModules({
+          language:Cookies.get('lang')
+        })
+        let tmp = this.setItemDragFlag(this.userProModuleList,res)
+        this.proModuleList = tmp
+        this.contentList = tmp[0].moduleList
       },
-      onClickItemProModule(item) {
+      onClickItemProModule(item,index) {
         this.contentList = item.moduleList
+        this.curProModule=item
+        // this.curModule=index
       },
       onClickFullScreenBtn() {
         this.isFull = !this.isFull
-        // let erd = elementResizeDetectorMaker()
-        // let that = this
-        // console.log($(".item-product-coms").length)
-        // erd.listenTo($(".item-product-coms"), function () {
-        //   that.$nextTick(function () {
-        //     echarts.init($(".my-chart")[2]).resize()
-        //   })
-        // })
+        let erd = elementResizeDetectorMaker()
+        let that = this
+        console.log($(".item-product-coms").length)
+        erd.listenTo(document.getElementById("operate-income"), function () {
+          console.log("changed")
+          that.$nextTick(function () {
+            echarts.init($(".my-chart")[0]).resize()
+          })
+        })
       },
       onDragChange(){
 
+      },
+      getOptions(){
+        return {
+          group:{name:'product',pull:'clone'},
+          draggable:'.item-drag-product',
+          disabled:!this.contentListDragFlag
+        }
+      },
+      async getModulesByType(){
+        let res = await DigitalParkApi.getModulesByType({
+          type:this.type,
+          language:Cookies.get('lang')
+        })
+        this.userProModuleList=res
+      },
+      setItemDragFlag(userList,res=this.proModuleList){
+        res.map((item)=>{
+          item.moduleList.map((module)=>{
+            module.dragFlag=true
+            userList.map((userItem)=>{
+              userItem.moduleList.map((userModule)=>{
+                if(module.id==userModule.id){
+                  module.dragFlag=false
+                }
+              })
+            })
+          })
+        })
+        return res
+      },
+      setContentListDragFlag(val){
+        this.contentListDragFlag=val
+      },
+      onClickSureBtn(){
+       this.$refs.dashboard.sureUpdateUserProModules()
       }
     },
-    mounted() {
+    async mounted() {
+      await this.getModulesByType()
       this.getProModules()
     }
   }
@@ -152,6 +206,11 @@
     }
     .content-drag-box{
       height:100%;
+    }
+    .sure-btn{
+      position: absolute;
+      right:-100px;
+      top:50px;
     }
   }
 </style>

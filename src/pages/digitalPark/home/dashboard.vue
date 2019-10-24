@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-park-home-page" :style="homePageBg">
-      <div class="dashboard-header flex-align-between" v-show="showHeader">
+      <div class="dashboard-header flex-align-between" v-show="!hideHeader">
         <div class="news-box">
           <ul class="news-list hover-pointer" :style="{top}" @mouseenter="stopNews" @mouseleave="scrollNews">
             <li v-for="(item,index) in newsList" :key="index" class="news-item">
@@ -9,15 +9,18 @@
             </li>
           </ul>
         </div>
-        <div class="digital-title" :style="titleBg">cizing数字园区</div>
+        <div class="digital-title" :style="titleBg">{{$t('homeHeader.title')}}</div>
         <NavOperator :moduleType.sync="moduleType" />
       </div>
     <div class="dashboard-content-panel">
       <div class="dashboard-left">
         <draggable :list="proModuleList1"
-                   class="draggable-box"
+                   class="draggable-box1"
                    @change="onLeftChange"
                    v-bind="getOptions()"
+                   @start="onLeftStart"
+                   :move="onLeftMove"
+                   @end="onLeftEnd"
         >
           <ItemProModule v-for="(item,index) in proModuleList1"
                          class="item-drag-product"
@@ -35,8 +38,9 @@
       <div class="dashboard-right">
         <draggable :list="proModuleList2"
                    v-bind="getOptions()"
-                   class="draggable-box"
+                   class="draggable-box2"
                    @change="onRightChange"
+                   :move="onRightMove"
         >
         <ItemProModule v-for="(item,index) in proModuleList2"
                        class="item-drag-product"
@@ -46,13 +50,17 @@
                        :style="moduleBg"
         />
         <div class="fixed-prod-module" :style="moduleBg">
-             <span>产品入口</span>
+             <span>{{$t('proEntry')}}</span>
              <div class="flex-wrap-align-center product-list">
-               <div v-for="(item) in fixedProList" :key="item.id"
-                    class="fixed-pro-item flex-align-center hover-pointer"
-                    :style="tagBg"
-                    >{{item.name}}</div>
+               <el-tooltip v-for="(item) in fixedProList" :key="item.id"
+                           effect="dark" :content="item.name" placement="top-end">
+                 <div class="fixed-pro-item hover-pointer"
+                      :style="tagBg"
+                      @click="onClickItemFixPro(item)"
+                 >{{item.name}}</div>
+               </el-tooltip>
              </div>
+
         </div>
         </draggable>
       </div>
@@ -68,6 +76,7 @@
   import ItemProModule from '../coms/itemProModule'
   export default {
     name: 'DashBoardHomePage',
+    props:['curProModule','hideHeader'],
     components: {
       draggable,
       NavOperator,
@@ -103,31 +112,64 @@
           proModuleList1: [],
           proModuleList2: [],
           changeObj: {},
-          showHeader: true,
           newsList: [{id: 1, time: '2019-10-10 10:10:10', text: '消息消息消息1111111'},
             {id: 1, time: '2019-10-11 10:11:11', text: '消息消息消息2222222'},
             {id: 3, time: '2019-10-12 10:12:12', text: '消息消息消息3333333'}],
           newsTimer: '',
           curNewsIndex: 0,
-          fixedProList:'',
+          fixedProList:[],
           moduleType:"1"
         }
       },
       methods: {
-        onLeftChange: function (evt) {
+        async onLeftChange (evt) {
           console.log('change1', evt)
-          if (evt.removed) {
+          if(evt.moved && !this.curProModule){ //只要有curProModule就代表是配置页，因为此处是仪表盘首页拖动而非配置页
+            this.sureUpdateUserProModules()
+          }else if (evt.removed) {
+            //removed情况为仪表盘内部两组互相拖拽时才会发生，而且顺序是组2先added，组1才removed（反之亦然）
+            //因此内部拖拽需要等removed的这一组执行完，才可以调用updateProModule
             this.proModuleList1.splice(evt.removed.oldIndex, 0, this.changeObj)
+            this.updateProModule()
           } else if (evt.added) {
+            if(evt.added.newIndex>2){
+              let obj={
+                // menuId:item.menuId,
+                menuName:evt.added.element.menuName,
+                type:1,
+                moduleList:[evt.added.element],
+              }
+              this.proModuleList1.splice(evt.added.newIndex -1,1,obj).slice(0,3)
+              return;
+            }
             this.changeObj = this.proModuleList1.splice(evt.added.newIndex + 1, 1)[0]
+            if(!evt.added.element.moduleList){
+              this.updateProModule(evt.added,this.proModuleList1)
+            }
           }
         },
         onRightChange: function (evt) {
           console.log('change2', evt)
-          if (evt.removed) {
+          if(evt.moved && !this.curProModule){ //代表是仪表盘首页拖动而非配置页
+            this.sureUpdateUserProModules()
+          }if (evt.removed) {
             this.proModuleList2.splice(evt.removed.oldIndex, 0, this.changeObj)
+            this.updateProModule()
           } else if (evt.added){
+            if(evt.added.newIndex>2){
+              let obj={
+                // menuId:item.menuId,
+                menuName:evt.added.element.menuName,
+                type:1,
+                moduleList:[evt.added.element],
+              }
+              this.proModuleList1.splice(evt.added.newIndex -1,1,obj).slice(0,3)
+              return;
+            }
             this.changeObj = this.proModuleList2.splice(evt.added.newIndex + 1, 1)[0]
+            if(!evt.added.element.moduleList){
+              this.updateProModule(evt.added,this.proModuleList2)
+            }
           }
         },
         controlHeader() {
@@ -153,17 +195,81 @@
         },
         async getModulesByType(){
           let res = await DigitalParkApi.getModulesByType({
-            type:1
+            type:1,
+            language:Cookies.get('lang')
           })
           this.proModuleList1 =res.slice(0,3)
           this.proModuleList2 =res.slice(3,5)
         },
         async getProductList(){
-          let res = await DigitalParkApi.getProductList()
+          let res = await DigitalParkApi.getProductList({
+            language:Cookies.get('lang')
+          })
           this.fixedProList=res
         },
         getOptions(){
           return {draggable:'.item-drag-product',sort:true,group:"product"}
+        },
+        onLeftStart(evt){
+          // console.log("start",evt)
+          this.$parent.setContentListDragFlag &&
+          this.$parent.setContentListDragFlag(false)
+        },
+        onLeftMove(evt){
+          // console.log('move',evt)
+          // console.log(evt.draggedContext.element.position-1,evt.relatedContext.element.position-1,
+          //   this.proModuleList2[evt.relatedContext.element.position-1-3])
+          // if(evt.to.className=="draggable-box2"){
+          //   this.proModuleList1.splice(evt.draggedContext.element.position-1,0,
+          //     this.proModuleList2[evt.relatedContext.element.position-1-3])
+          // }
+        },
+        onLeftEnd(){
+          this.$parent.setContentListDragFlag &&
+          this.$parent.setContentListDragFlag(true)
+        },
+        onRightMove(evt){
+          // console.log('move2',evt)
+        },
+        updateProModule(data,list){
+          // console.log('data',data)
+          if(this.curProModule && data && !data.element.moduleList){
+            console.log(1)
+            this.curProModule.moduleList.map((item)=>{
+              if(item.id==data.element.id){
+                // console.log(item)
+                let obj={
+                  // menuId:item.menuId,
+                  menuName:item.menuName,
+                  type:1,
+                  moduleList:[item],
+                }
+                // console.log(obj)
+                list[data.newIndex]=obj
+                console.log('list',this.proModuleList1,this.proModuleList2)
+                this.$parent.setItemDragFlag &&
+                this.$parent.setItemDragFlag([...this.proModuleList1,...this.proModuleList2])
+              }
+            })
+            // console.log(this.proModuleList1)
+
+          }
+          if(!this.curProModule){
+            this.sureUpdateUserProModules()
+          }
+          // this.getModulesByType()
+        },
+        async sureUpdateUserProModules(){
+          await DigitalParkApi.updateUserProModules([...this.proModuleList1,...this.proModuleList2])
+        },
+        handleLangChange(){
+          this.getModulesByType()
+          this.getProductList()
+        },
+        onClickItemFixPro(item){
+          if(item.routeAddress){
+            window.open(item.routeAddress)
+          }
         }
     },
     mounted(){
@@ -185,20 +291,15 @@
     flex-direction: column;
     height:100%;
     overflow: hidden;
-    .dashboard-left{
-      width:25%;
+    .dashboard-left,.dashboard-right{
+      width:22%;
       height:100%;
       color: @white;
     }
     .dashboard-center{
-      width:50%;
-      // background: green;
+      width:56%;
     }
-    .dashboard-right{
-      width:25%;
-      // background: pink;
-    }
-    .draggable-box{
+    .draggable-box1,.draggable-box2{
       height:100%;
     }
     .item-drag-product,.fixed-prod-module{
@@ -260,6 +361,9 @@
       flex-shrink: 0;
       background-repeat: no-repeat;
       background-size: 100% 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 </style>

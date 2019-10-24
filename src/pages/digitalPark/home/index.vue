@@ -102,7 +102,9 @@
         this.showMoreProduct=!this.showMoreProduct
       },
       async getMenuTree() {
-        let res = await DigitalParkApi.getMenuTree()
+        let res = await DigitalParkApi.getMenuTree({
+          language:Cookies.get('lang')
+        })
         this.menuList =res[0].childNode
       },
       getItemBg(item){
@@ -118,17 +120,25 @@
         }
       },
       async getProductList(){
-          let res = await DigitalParkApi.getProductList()
+          let res = await DigitalParkApi.getProductList({
+            language: Cookies.get('lang')
+          })
           this.productList=res
       },
       async getModulesByType(){
         let res = await DigitalParkApi.getModulesByType({
-          type:2
+          type:2,
+          language:Cookies.get('lang')
         })
         this.proModuleList =res
       },
       onDragChange(){
 
+      },
+      handleLangChange(){
+        this.getMenuTree()
+        this.getProductList()
+        this.getModulesByType()
       }
     },
     mounted(){

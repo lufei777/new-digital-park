@@ -21,6 +21,10 @@ class DigitalParkApi {
   @url("/oaApi/menu/productModules")
   @get
   getProModules(){}
+
+  @url('/oaApi/userModuleRel/update')
+  @put
+  updateUserProModules(){}
 }
 
 export default new DigitalParkApi()
