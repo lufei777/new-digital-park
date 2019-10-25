@@ -45,6 +45,10 @@ const i18n = new VueI18n({
   }
 })
 
+if(!Cookies.get('lang')){
+  Cookies.set('lang','zh')
+}
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
