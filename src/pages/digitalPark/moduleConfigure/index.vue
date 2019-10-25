@@ -32,11 +32,12 @@
       <div :class="isFull?'full-right-module-content':'right-module-content'">
         <div :class="isFull?'full-preview-panel':'preview-panel'" >
           <Dashboard v-if="type==1" :curProModule="curProModule" :hideHeader="true" ref="dashboard"/>
+          <HomePage v-if="type==2" :hideHeader="true"></HomePage>
         </div>
         <div class="operator-box">
-          <el-button  @click="onClickSureBtn" :style="moduleBtnBg">确认</el-button>
-          <el-button  @click="onClickGoBackBtn" :style="moduleBtnBg">取消</el-button>
-          <el-button  @click="onClickFullScreenBtn" :style="moduleBtnBg">预览</el-button>
+          <el-button  @click="onClickSureBtn" :style="defaultBtn">确认</el-button>
+          <el-button  @click="onClickGoBackBtn" :style="defaultBtn">取消</el-button>
+          <el-button  @click="onClickFullScreenBtn" :style="defaultBtn">预览</el-button>
         </div>
 
       </div>
@@ -58,6 +59,7 @@
   import buildingEarlyWarningAlarm from '../coms/buildingEarlyWarningAlarm'
   import operateExpenditure from '../coms/operateExpenditure'
   import assetGrowthStatistics from '../coms/assetGrowthStatistics'
+  import HomePage from '../home/index'
 
   export default {
     name: 'ModuleConfigure',
@@ -72,7 +74,8 @@
       energyConsumptionRanking,
       buildingEarlyWarningAlarm,
       operateExpenditure,
-      assetGrowthStatistics
+      assetGrowthStatistics,
+      HomePage
     },
     data() {
       return {
@@ -91,7 +94,9 @@
       moduleBtnBg(){
         return {
            backgroundImage:'url('+require('../../../../static/image/digitalPark/module_btn_bg.png')+')',
-           color:'#fff'
+           color:'#fff',
+           'background-repeat':'no-repeat',
+           'background-size':'100% 100%'
         }
       },
       defaultBtn(){
@@ -177,15 +182,22 @@
       setContentListDragFlag(val){
         this.contentListDragFlag=val
       },
-      onClickSureBtn(){
-       this.$refs.dashboard.sureUpdateUserProModules()
+     async onClickSureBtn(){
+      await  this.$refs.dashboard.sureUpdateUserProModules()
+        setTimeout(()=>{
+          if(this.type==1){
+            this.$router.push(`/digitalPark/dashboardHomePage`)
+          }else{
+            this.$router.push(`/digitalPark/homePage`)
+          }
+        },1000)
       },
       onClickModuleBtn(val){
         this.$router.replace(`/digitalPark/moduleConfigure?type=${val}`)
       },
       onClickGoBackBtn(){
-        this.$router.replace(`/digitalPark/moduleConfigure?type=${val}`)
-      }
+        this.$router.go(-1)
+      },
     },
     async mounted() {
       await this.getModulesByType()
@@ -197,6 +209,7 @@
 <style lang="less">
   .module-configure{
     height: 100%;
+    overflow: hidden;
     .left-module-list{
       width:8%;
       height: 100%;
@@ -257,6 +270,7 @@
       height:85%;
       margin:10px auto;
       box-sizing: border-box;
+      overflow: auto;
     }
     .hide{
       display: none;
@@ -294,6 +308,10 @@
     }
     .operator-box{
       text-align: center;
+      .el-button{
+        margin: 0 40px;
+        width:84px;
+      }
     }
   }
 </style>

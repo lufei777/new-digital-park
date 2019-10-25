@@ -1,6 +1,6 @@
 <template>
   <div class="park-home-page">
-    <div class="home-header">
+    <div class="home-header" v-if="!hideHeader">
       <div class="home-header-inner flex-align-between">
         <div class="header-nav-left">
           <h3 class="title">{{$t('homeHeader.title')}}</h3>
@@ -76,6 +76,7 @@
   import ItemProModule from '../coms/itemProModule'
   export default {
     name: 'DigitalHomePage',
+    props:['hideHeader'],
     components: {
       NavOperator,
       Sidebar,

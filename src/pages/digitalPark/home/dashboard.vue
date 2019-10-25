@@ -33,7 +33,8 @@
       </div>
 
       <div class="dashboard-center">
-
+        <div class="carousel-box"></div>
+        <iframe src="../../../../static/HomePage/index.html" frameborder="0" class="unity-frame"></iframe>
       </div>
       <div class="dashboard-right">
         <draggable :list="proModuleList2"
@@ -41,6 +42,7 @@
                    class="draggable-box2"
                    @change="onRightChange"
                    :move="onRightMove"
+                   @start="onRightStart"
         >
         <ItemProModule v-for="(item,index) in proModuleList2"
                        class="item-drag-product"
@@ -231,6 +233,10 @@
         onRightMove(evt){
           // console.log('move2',evt)
         },
+        onRightStart(){
+          this.$parent.setContentListDragFlag &&
+          this.$parent.setContentListDragFlag(false)
+        },
         updateProModule(data,list){
           // console.log('data',data)
           if(this.curProModule && data && !data.element.moduleList){
@@ -364,6 +370,16 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+    }
+    .carousel-box{
+      width:95%;
+      height:28%;
+      margin:0 auto 2% auto;
+      border:1px solid #ccc;
+    }
+    .unity-frame{
+      width:100%;
+      height:70%;
     }
   }
 </style>
