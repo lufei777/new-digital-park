@@ -1,13 +1,13 @@
 <template>
   <div class="module-configure flex-column">
-    <div>
+    <div v-show="!isFull">
       <div class="set-tip">模式设置</div>
       <div class="module-change">
         <el-button @click="onClickModuleBtn('2')" :style="type==2?moduleBtnBg:defaultBtn" >{{$t('homeHeader.waterfall')}}</el-button>
         <el-button @click="onClickModuleBtn('1')" :style="type==1?moduleBtnBg:defaultBtn" >{{$t('homeHeader.dashboard')}}</el-button>
       </div>
     </div>
-    <div class="main-container">
+    <div :class="isFull?'full-main-container':'main-container'">
       <div :class="isFull?'hide':'left-module-list'">
         <div v-for="item in proModuleList"
              :key="item.id"
@@ -39,8 +39,15 @@
           <el-button  @click="onClickGoBackBtn" :style="defaultBtn">取消</el-button>
           <el-button  @click="onClickFullScreenBtn" :style="defaultBtn">预览</el-button>
         </div>
-
       </div>
+    </div>
+    <div v-show='isFull && showEsc'
+         class="esc-full-btn hover-pointer"
+         :style="escFullBtnBg"
+         @click="onClickEscBtn"
+    >
+      <img src="../../../../static/image/digitalPark/esc_btn.png" alt="">
+      <span>退出全屏</span>
     </div>
   </div>
 </template>
@@ -84,7 +91,8 @@
         isFull: false,
         curProModule:{},
         userProModuleList:[],
-        contentListDragFlag:true
+        contentListDragFlag:true,
+        showEsc:false
       }
     },
     computed:{
@@ -109,6 +117,11 @@
         return {
           // backgroundImage:'url('+require('../../../../static/image/digitalPark/content_bg.png')+')',
         }
+      },
+      escFullBtnBg(){
+        return {
+          backgroundImage:'url('+require('../../../../static/image/digitalPark/full_btn_bg.png')+')',
+        }
       }
     },
     methods: {
@@ -116,6 +129,7 @@
         let res = await DigitalParkApi.getProModules({
           language:Cookies.get('lang')
         })
+        res[0].activeFlag=true
         let tmp = this.setItemDragFlag(this.userProModuleList,res)
         this.proModuleList = tmp
         this.contentList = tmp[0].moduleList
@@ -133,13 +147,11 @@
         this.isFull = !this.isFull
         let erd = elementResizeDetectorMaker()
         let that = this
-        console.log($(".item-product-coms").length)
-        // erd.listenTo($(".item-product-coms"), function () {
-        //   console.log("changed")
-        //   that.$nextTick(function () {
-        //     echarts.init($(".my-chart")[0]).resize()
-        //   })
-        // })
+        erd.listenTo($(".item-product-coms").eq(0), function () {
+          that.$nextTick(function () {
+            $(window).resize()
+          })
+        })
       },
       onDragChange(){
 
@@ -159,13 +171,7 @@
         this.userProModuleList=res
       },
       setItemDragFlag(userList,res=this.proModuleList){
-        res.map((item,index)=>{
-          if(index==0){
-            item.activeFlag=true
-          }else{
-            item.activeFlag=false
-          }
-
+        res.map((item)=>{
           item.moduleList.map((module)=>{
             module.dragFlag=true
             userList.map((userItem)=>{
@@ -184,13 +190,13 @@
       },
      async onClickSureBtn(){
       await  this.$refs.dashboard.sureUpdateUserProModules()
-        setTimeout(()=>{
+        // setTimeout(()=>{
           if(this.type==1){
             this.$router.push(`/digitalPark/dashboardHomePage`)
           }else{
             this.$router.push(`/digitalPark/homePage`)
           }
-        },1000)
+        // },1000)
       },
       onClickModuleBtn(val){
         this.$router.replace(`/digitalPark/moduleConfigure?type=${val}`)
@@ -198,16 +204,30 @@
       onClickGoBackBtn(){
         this.$router.go(-1)
       },
+      controlHeader() {
+        $("body").mousemove((e) => {
+          if(e.clientY<50){
+            this.showEsc=true
+          }else{
+            this.showEsc=false
+          }
+        })
+      },
+      onClickEscBtn(){
+        this.isFull=false
+      }
     },
     async mounted() {
       await this.getModulesByType()
       this.getProModules()
+      this.controlHeader()
     }
   }
 </script>
 
 <style lang="less">
   .module-configure{
+    position: relative;
     height: 100%;
     overflow: hidden;
     .left-module-list{
@@ -305,6 +325,12 @@
       flex-grow: 1;
       width:98%;
       margin-left: 1%;
+      overflow: hidden;
+    }
+    .full-main-container{
+      flex-grow: 1;
+      width:100%;
+      overflow: auto;
     }
     .operator-box{
       text-align: center;
@@ -312,6 +338,18 @@
         margin: 0 40px;
         width:84px;
       }
+    }
+    .esc-full-btn{
+      width:93px;
+      height:30px;
+      line-height: 30px;
+      text-align: center;
+      color:#f2f2f2;
+      position: absolute;
+      top:0;
+      right:0;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
     }
   }
 </style>

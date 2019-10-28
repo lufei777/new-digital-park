@@ -1,6 +1,6 @@
 <template>
   <div class="building-status-proportion">
-    <div ref="pieCharts" class="my-chart"></div>
+    <div ref="pieCharts" class="my-chart" id="building-status-proportion-chart"></div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -44,8 +44,11 @@ export default {
         color,
         textStyleColor
       };
-      window.onresize = myPieChart.resize;
-      ChartUtils.handlePieChart(myPieChart, data);
+      // $(window).resize(function(){
+      //   myPieChart.resize()
+      // }) ;
+      let resizeBox=$("#energy-electricity-proportion-chart").parents('.item-product-coms')
+      ChartUtils.handlePieChart(myPieChart, data,resizeBox);
     }
   },
   mounted() {

@@ -8,7 +8,7 @@
       </el-select>
     </div>
 
-    <div ref="myChart" class="my-chart"></div>
+    <div ref="myChart" class="my-chart" id="operate-income-chart"></div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -63,7 +63,8 @@ export default {
           textStyleColor
         };
         // window.onresize = myChart.resize;
-        ChartUtils.handlePieChart(myChart, data);
+        let resizeBox=$("#operate-income-chart").parents('.item-product-coms')
+        ChartUtils.handlePieChart(myChart, data,resizeBox);
 
         // let option={
         //    // title:{

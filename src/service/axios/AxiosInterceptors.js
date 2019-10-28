@@ -88,7 +88,7 @@ axios.interceptors.response.use(
     } else if(!data.successful && data.code){
       console.log(data)
       Message({
-        message: data.errorMessage,
+        message: data.message,
         type: 'error'
       });
       return ;

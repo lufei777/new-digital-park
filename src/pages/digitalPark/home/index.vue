@@ -46,6 +46,7 @@
                        :key="item.id"
                        :moduleData="item"
                        :type="2"
+                       :proModuleList="proModuleList"
         />
       </draggable>
       <div class="item-module">

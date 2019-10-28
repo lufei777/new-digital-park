@@ -5,7 +5,7 @@
       <span class="more-btn hover-pointer">{{$t('more')}}</span>
     </div>
     <span v-if="type==1" class="single-module-name">{{moduleData.menuName}}</span>
-    <div :class="type==2?'component-box com-width-border':'component-box'">
+    <div v-if='type==1' class="component-box">
       <component v-for="(item,index) in moduleData.moduleList"
                  :key="index"
                  :is="item.componentName"
@@ -14,6 +14,23 @@
                  class="flex-colum-center"
       />
     </div>
+    <draggable v-if="type==2"
+               class="component-box com-width-border"
+               v-bind="getOptions()"
+               :list="moduleData.moduleList"
+               @start="onStart"
+               :move="onMove"
+               @end="onEnd"
+               @change="onChange"
+    >
+        <component v-for="(item,index) in moduleData.moduleList"
+                   :key="index"
+                   :is="item.componentName"
+                   :class="moduleData.moduleList.length==2?'two-component':'item-component'"
+                   :moduleItem="item"
+                   class="flex-colum-center item-drag-product"
+        />
+    </draggable>
   </div>
 </template>
 
@@ -27,9 +44,10 @@
   import buildingEarlyWarningAlarm from '../coms/buildingEarlyWarningAlarm'
   import operateExpenditure from '../coms/operateExpenditure'
   import assetGrowthStatistics from '../coms/assetGrowthStatistics'
+  import draggable from 'vuedraggable'
   export default {
     name: 'ItemProModule',
-    props:['moduleData','type'],
+    props:['moduleData','type','proModuleList'],
     components: {
       energyProportionAnalysis,
       energyElectricityProportion,
@@ -39,15 +57,40 @@
       energyConsumptionRanking,
       buildingEarlyWarningAlarm,
       operateExpenditure,
-      assetGrowthStatistics
+      assetGrowthStatistics,
+      draggable,
     },
     data () {
       return {
-
+        contentListDragFlag:true
       }
     },
     methods: {
-
+      getOptions(){
+        return {
+          group:{name:'product'},
+          draggable:'.item-drag-product',
+          disabled:!this.contentListDragFlag
+        }
+      },
+      onStart(evt){},
+      onMove(evt){},
+      onEnd(evt){},
+       onChange (evt) {
+        console.log('change1', evt)
+        if (evt.added) {
+          // let obj={
+          //   menuName:evt.added.element.menuName,
+          //   type:1,
+          //   moduleList:[evt.added.element],
+          // }
+          console.log('lalalal')
+          this.moduleData.moduleList.splice(evt.added.newIndex-1,1)
+          // this.$parent.setItemDragFlag &&
+          // this.$parent.setItemDragFlag(this.proModuleList)
+          console.log(this.moduleData.moduleList,this.proModuleList)
+        }
+      },
     },
     mounted(){
     }

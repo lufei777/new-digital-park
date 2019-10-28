@@ -10,7 +10,7 @@
         ></el-option>
       </el-select>
     </div>
-    <div ref="myChart" class="my-chart"></div>
+    <div ref="myChart" class="my-chart" id="energy-proportion-analysis-chart"></div>
     <div class="child-module-name">{{this.moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -95,7 +95,9 @@
           series,
           showSecondY:true
         }
-        ChartUtils.handleBarChart(myChart,data2)
+        let resizeBox=$("#energy-proportion-analysis-chart").parents('.item-product-coms')
+        ChartUtils.handleBarChart(myChart,data2,resizeBox)
+
         let option={
           yAxis: [{
             type: 'value',
@@ -153,6 +155,9 @@
             barWidth: "40%",
           }],
         }
+       // $(window).resize(function(){
+       //   myChart.resize()
+       // })
         myChart.setOption(option)
       },
       energyChange(){
