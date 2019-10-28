@@ -462,7 +462,14 @@ export default {
       return this.currentRowData;
     },
     getTableData() {
-      return this.tableData;
+      if (this.isServerMode) {
+        return this.tableShowData;
+      } else {
+        return this.tableData;
+      }
+    },
+    getTableShowData() {
+      return this.tableShowData;
     },
     //set
     setCurrentRowData(row) {
