@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dropdown @command="handleCommand">
-      <span @click="dropDown.handler(carryData)" class="el-dropdown-link">
+      <span @click="dropDown.handler && dropDown.handler(carryData)" class="el-dropdown-link">
         <i v-if="dropDown.icon" :class="dropDown.icon"></i>
         {{dropDown.label}}
         <i
