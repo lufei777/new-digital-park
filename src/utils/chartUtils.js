@@ -1,6 +1,7 @@
+import elementResizeDetectorMaker from 'element-resize-detector'
 class chartUtils {
   //柱状图处理
-  handleBarChart(dom,data){
+  handleBarChart(dom,data,resizeBox){
       let yAxis
       if(!data.showSecondY){  //是否隐藏第二个y轴，默认不传及隐藏
         yAxis=[{
@@ -38,14 +39,23 @@ class chartUtils {
       series: data.series
     };
     // window.onresize = dom.resize;
-    window.addEventListener("resize", () => {
-      dom.resize();
+    // window.addEventListener("resize", () => {
+    //   dom.resize();
+    // })
+    // if(resizeBox){
+    //   let erd = elementResizeDetectorMaker()
+    //   erd.listenTo(resizeBox, function () {
+    //     dom.resize();
+    //   })
+    // }
+    $(window).resize(function(){
+      dom.resize()
     })
     dom.setOption(option, true)
   }
 
   //空心饼图
-  hollowPieChart(dom, data) {
+  hollowPieChart(dom, data,resizeBox) {
     let option = {
       title: {
         text: data.titleText,
@@ -89,14 +99,20 @@ class chartUtils {
       }]
     };
     // window.onresize = dom.resize;
-    window.addEventListener("resize", () => {
-      dom.resize();
-    })
+    // $(window).resize(function(){
+    //   dom.resize()
+    // })
+    // if(resizeBox){
+    //   let erd = elementResizeDetectorMaker()
+    //   erd.listenTo(resizeBox, function () {
+    //     dom.resize();
+    //   })
+    // }
     dom.setOption(option, true)
   }
 
   //实心饼图
-  handlePieChart(dom,data){
+  handlePieChart(dom,data,resizeBox){
     let option = {
       title : {
         text: data.titleText,
@@ -127,9 +143,18 @@ class chartUtils {
       ]
     };
     // window.onresize = dom.resize;
-    window.addEventListener("resize", () => {
-      dom.resize();
+    // window.addEventListener("resize", () => {
+    //   dom.resize();
+    // })
+    $(window).resize(function(){
+      dom.resize()
     })
+    // if(resizeBox){
+    //   let erd = elementResizeDetectorMaker()
+    //   erd.listenTo(resizeBox, function () {
+    //     dom.resize();
+    //   })
+    // }
     dom.setOption(option, true)
 
   }

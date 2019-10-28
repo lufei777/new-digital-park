@@ -34,7 +34,7 @@
 
       <div class="dashboard-center">
         <div class="carousel-box"></div>
-        <iframe src="../../../../static/HomePage/index.html" frameborder="0" class="unity-frame"></iframe>
+        <!--<iframe src="../../../../static/HomePage/index.html" frameborder="0" class="unity-frame"></iframe>-->
       </div>
       <div class="dashboard-right">
         <draggable :list="proModuleList2"
@@ -240,17 +240,13 @@
         updateProModule(data,list){
           // console.log('data',data)
           if(this.curProModule && data && !data.element.moduleList){
-            console.log(1)
             this.curProModule.moduleList.map((item)=>{
               if(item.id==data.element.id){
-                // console.log(item)
                 let obj={
-                  // menuId:item.menuId,
                   menuName:item.menuName,
                   type:1,
                   moduleList:[item],
                 }
-                // console.log(obj)
                 list[data.newIndex]=obj
                 console.log('list',this.proModuleList1,this.proModuleList2)
                 this.$parent.setItemDragFlag &&
