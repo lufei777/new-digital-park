@@ -1,6 +1,6 @@
 <template>
   <div class="park-home-page">
-    <div class="home-header">
+    <div class="home-header" v-if="!hideHeader">
       <div class="home-header-inner flex-align-between">
         <div class="header-nav-left">
           <h3 class="title">{{$t('homeHeader.title')}}</h3>
@@ -8,23 +8,9 @@
         <el-input class="search-input">
            <el-button slot="append" icon="el-icon-search" class="search-icon">{{$t('homeHeader.searchText')}}</el-button>
         </el-input>
-        <NavOperator />
+        <NavOperator :moduleType.sync="moduleType" />
       </div>
-      <ul class="flex nav-list">
-        <li v-for="(item,index) in navList" :key="index" @click="item.children.length && navListClick(item)" class="nav-list-text">
-          <span> {{item.name}} </span>
-          <i class="el-icon-arrow-down" v-if="item.children.length"></i>
-          <ul v-if="item.children.length && item.showChild" class="nav-list-content">
-            <li v-for="(child,i) in item.children" :key="i" @click.stop="child.children.length && childNavListClick(child)" class="two-menu">
-              {{child.name}}
-              <i class="el-icon-arrow-right" v-if="child.children.length"></i>
-              <ul v-if="child.children.length && child.showChild" class="three-menu">
-                <li v-for="(three,p) in child.children" :key="p">{{three.name}}</li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-      </ul>
+      <Sidebar  :menuList="menuList"/>
     </div>
 
     <el-carousel height="550px" :interval="2000">
@@ -37,7 +23,7 @@
     </el-carousel>
 
     <div class="home-center">
-      <div class="item-module">
+      <div class="product-module">
         <div class="flex-align-between module-title">
           <h3>我们的产品</h3>
           <span class="hover-pointer more-btn" @click="onShowMoreProduct">更多</span>
@@ -50,6 +36,18 @@
           ><span>{{item.name}}</span></li>
         </ul>
       </div>
+      <draggable :list="proModuleList"
+                 :options="{draggable:'.item-module',sort:true}"
+                  class="draggable-box"
+                  @change="onDragChange"
+      >
+        <ItemProModule v-for="(item) in proModuleList"
+                       class="item-module"
+                       :key="item.id"
+                       :moduleData="item"
+                       :type="2"
+        />
+      </draggable>
       <div class="item-module">
         <div class="flex-align-between module-title">
           <h3>信息发布</h3>
@@ -70,56 +68,45 @@
 </template>
 
 <script>
+  import  Sidebar from '../coms/SideBar.vue'
   import CommonFun from '../../../utils/commonFun'
   import DigitalParkApi from '../../../service/api/digitalParkApi'
   import NavOperator from '../coms/navOperator'
+  import draggable from 'vuedraggable'
+  import ItemProModule from '../coms/itemProModule'
   export default {
     name: 'DigitalHomePage',
+    props:['hideHeader'],
     components: {
-      NavOperator
+      NavOperator,
+      Sidebar,
+      draggable,
+      ItemProModule
     },
     data () {
       return {
         productList:[],
         showMoreProduct:false,
-        navList:[],
-        modelValue:"1"
+        modelValue:"1",
+        menuList:[],
+        proModuleList:[],
+        moduleType:"2"
       }
     },
     methods:{
       onClickItemProduct(item){
-        // if(item.url){
-          window.open('/#/energy')
-        // }
+        if(item.routeAddress){
+          window.open(item.routeAddress)
+        }
       },
       onShowMoreProduct(){
         this.showMoreProduct=!this.showMoreProduct
       },
-      getNavList(){
-        let res = CommonFun.navList
-        console.log('res',res)
-        res.map((item)=>{
-          item.showChild=false
-          if(item.children.length){
-            item.children.map((child)=>{
-              console.log('lallala',child)
-              item.showChild=false
-              child.showChild = false
-              if(child.children.length) {
-                child.children.map((three)=>{
-                  child.showChild = false
-                })
-              }
-            })
-          }
+      async getMenuTree() {
+        let res = await DigitalParkApi.getMenuTree({
+          language:Cookies.get('lang')
         })
-        this.navList=res
-      },
-      navListClick(item) {
-        item.showChild = true
-      },
-      childNavListClick(child) {
-        child.showChild = true
+        this.menuList =res[0].childNode
       },
       getItemBg(item){
         return {
@@ -134,13 +121,31 @@
         }
       },
       async getProductList(){
-          let res = await DigitalParkApi.getProductList()
+          let res = await DigitalParkApi.getProductList({
+            language: Cookies.get('lang')
+          })
           this.productList=res
+      },
+      async getModulesByType(){
+        let res = await DigitalParkApi.getModulesByType({
+          type:2,
+          language:Cookies.get('lang')
+        })
+        this.proModuleList =res
+      },
+      onDragChange(){
+
+      },
+      handleLangChange(){
+        this.getMenuTree()
+        this.getProductList()
+        this.getModulesByType()
       }
     },
     mounted(){
-      this.getNavList()
+      this.getMenuTree()
       this.getProductList()
+      this.getModulesByType()
     }
   }
 </script>
@@ -242,11 +247,14 @@
     }
     .item-module{
       /*background: pink;*/
-      margin:20px 0;
+      margin:30px 0;
       padding:20px 0;
+      height:400px;
+      font-size: 16px;
     }
     .module-title{
-      padding:10px 5px;
+      padding:10px 0;
+      width:100%;
       h3{
         font-size: 22px;
       }
@@ -285,6 +293,9 @@
     }
     .el-carousel__container{
       margin-top:130px;
+    }
+    .product-module{
+      margin-top: 20px;
     }
   }
 </style>

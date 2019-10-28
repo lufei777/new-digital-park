@@ -9,12 +9,10 @@ let obj = {
     skin: '换肤',
     searchText:'搜索',
     title:'cizing数字园区',
-    // menu:[],
-    getMenu:async function(){
-      this.menu =await DigitalParkApi.getMenu()
-    }
+    waterfall:'瀑布流',
+    dashboard:'仪表盘'
   },
+  proEntry:'产品入口',
+  more:"更多"
 }
-obj.homeHeader.getMenu()
-console.log(obj)
 export default obj

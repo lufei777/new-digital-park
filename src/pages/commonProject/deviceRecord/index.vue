@@ -9,7 +9,6 @@
         :data="meterList"
         :props="treeProps"
         node-key="id"
-        :default-expanded-keys="[2525]"
         ref="navTree"
         @node-click="onClickItemTree"
       >
@@ -143,7 +142,8 @@
         this.tableData=res
         if(res.total) this.curTableData=res.rows[0]
       },
-      onClickItemTree(val){
+      onClickItemTree(val,val2){
+        if(val2.level==1) return;
         this.parentMeter=val.id
         this.showAdd=false
         this.showEdit=false

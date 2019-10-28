@@ -37,7 +37,10 @@ class chartUtils {
       yAxis: yAxis,
       series: data.series
     };
-    window.onresize = dom.resize;
+    // window.onresize = dom.resize;
+    window.addEventListener("resize", () => {
+      dom.resize();
+    })
     dom.setOption(option, true)
   }
 
@@ -77,7 +80,7 @@ class chartUtils {
           emphasis: {
             show: true,
             textStyle: {
-              fontSize: '30',
+              fontSize: '20',
               fontWeight: 'bold'
             }
           }
@@ -85,7 +88,10 @@ class chartUtils {
         data: data.seriesData
       }]
     };
-    window.onresize = dom.resize;
+    // window.onresize = dom.resize;
+    window.addEventListener("resize", () => {
+      dom.resize();
+    })
     dom.setOption(option, true)
   }
 
@@ -102,10 +108,14 @@ class chartUtils {
       },
       legend: {
         orient: 'vertical',
-        left: 'left',
+        left: data.legend,
         top:50,
-        data: data.legendData
+        data: data.legendData,
+        textStyle:{
+          color:data.textStyleColor?data.textStyleColor:''
+        }
       },
+      color: data.color?data.color:['#4DA1FF', '#83D587', '#FFCE33', '#FF7B8C'],
       series : [
         {
           name: data.seriesName?data.seriesName:'',
@@ -116,8 +126,12 @@ class chartUtils {
         }
       ]
     };
-    window.onresize = dom.resize;
+    // window.onresize = dom.resize;
+    window.addEventListener("resize", () => {
+      dom.resize();
+    })
     dom.setOption(option, true)
+
   }
 }
 export default new chartUtils()
