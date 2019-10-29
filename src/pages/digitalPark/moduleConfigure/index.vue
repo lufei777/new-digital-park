@@ -18,7 +18,9 @@
         <draggable :list="contentList"
                    v-bind="getOptions()"
                    @change="onDragChange"
+                   @start="onDragStart"
                    class="content-drag-box"
+
         >
           <component v-for="(item,index) in contentList"
                      :key="index"
@@ -26,13 +28,14 @@
                      :moduleItem="item"
                      :class="['item-content','flex-colum-center',item.dragFlag?'item-drag-product':'']"
                      :style="contentBg"
+                     :id="item.pid"
           />
         </draggable>
       </div>
       <div :class="isFull?'full-right-module-content':'right-module-content'">
         <div :class="isFull?'full-preview-panel':'preview-panel'" >
           <Dashboard v-if="type==1" :curProModule="curProModule" :hideHeader="true" ref="dashboard"/>
-          <HomePage v-if="type==2" :hideHeader="true"></HomePage>
+          <HomePage v-if="type==2" :hideHeader="true" ref="homePage"></HomePage>
         </div>
         <div class="operator-box">
           <el-button  @click="onClickSureBtn" :style="defaultBtn">确认</el-button>
@@ -124,9 +127,9 @@
           item.activeFlag=false
         })
         item.activeFlag=true
-        let t = $('#' + item.id).offset() && $('#' + item.id).offset().top;
-        console.log(t,$(".park-home-page"))
-        $('.park-home-page').scrollTop(t);
+        // let t = $('#' + item.id).offset() && $('#' + item.id).offset().top;
+        // console.log(t,$(".park-home-page"))
+        // $('.park-home-page').scrollTop(t);
       },
       onClickFullScreenBtn() {
         this.isFull = !this.isFull
@@ -200,6 +203,9 @@
       },
       onClickEscBtn(){
         this.isFull=false
+      },
+      onDragStart(evt){
+        // this.$ref.homePage.
       }
     },
     async mounted() {

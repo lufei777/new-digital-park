@@ -77,7 +77,7 @@
         return {
           group:{name:'product'},
           draggable:'.drag-component',
-          disabled:!this.moduleData.innerDragFlag
+          disabled:!this.moduleData.moduleDragFlag
         }
       },
       onStart(evt){
@@ -86,7 +86,7 @@
         // console.log(id)
         this.userProModuleList.map((item)=>{
           if(id!=item.id){ //模块内容只能在该模块移动，不可移到别的模块
-            item.innerDragFlag=false
+            item.moduleDragFlag=false
           }
         })
       },
@@ -95,7 +95,7 @@
       },
       onEnd(evt){
         this.userProModuleList.map((item)=>{
-            item.innerDragFlag=true
+            item.moduleDragFlag=true
         })
       },
       onChange (evt) {
