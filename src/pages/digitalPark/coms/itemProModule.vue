@@ -14,81 +14,102 @@
                  class="flex-colum-center"
       />
     </div>
-    <draggable v-if="type==2"
-               class="component-box com-width-border"
-               v-bind="getOptions()"
-               :list="moduleData.moduleList"
-               @start="onStart"
-               :move="onMove"
-               @end="onEnd"
-               @change="onChange"
-    >
-        <component v-for="(item,index) in moduleData.moduleList"
-                   :key="index"
-                   :is="item.componentName"
-                   :class="moduleData.moduleList.length==2?'two-component':'item-component'"
-                   :moduleItem="item"
-                   class="flex-colum-center item-drag-product"
+    <!--<div v-if="type==2" style="width:100%;" class="component-box com-width-border">-->
+        <!--<draggable-->
+                   <!--v-bind="getOptions()"-->
+                   <!--:list="moduleData.moduleList"-->
+                   <!--@start="onStart"-->
+                   <!--:move="onMove"-->
+                   <!--@end="onEnd"-->
+                   <!--@change="onChange"-->
+                   <!--v-for="(item,index) in moduleData.moduleList"-->
+                   <!--:key="index"-->
+                   <!--class="two-component"-->
+        <!--&gt;-->
+          <!--<component-->
+            <!--class="flex-colum-center drag-component"-->
+            <!--style="height: 100%;"-->
+            <!--:is="item.componentName"-->
+            <!--:moduleItem="item"-->
+          <!--/>-->
+        <!--</draggable>-->
+    <!--</div>-->
+     <draggable
+       v-if="type==2"
+        v-bind="getOptions()"
+        :list="moduleData.moduleList"
+        @start="onStart"
+        :move="onMove"
+        @end="onEnd"
+        @change="onChange"
+        class="component-box com-width-border"
+        :id="moduleData.id"
+      >
+        <component
+          v-for="(item,index) in moduleData.moduleList"
+          :key="index"
+          class="flex-colum-center drag-component two-component "
+          style="height: 100%;"
+          :is="item.componentName"
+          :moduleItem="item"
         />
-    </draggable>
+      </draggable>
   </div>
 </template>
 
 <script>
-  import energyProportionAnalysis from './energyProportionAnalysis'
-  import energyElectricityProportion from './energyElectricityProportion'
-  import operateIncome from './operateIncome'
-  import buildingStatusProportion from './buildingStatusProportion'
-  import assetTypeProportion from './assetTypeProportion'
-  import energyConsumptionRanking from '../coms/energyConsumptionRanking'
-  import buildingEarlyWarningAlarm from '../coms/buildingEarlyWarningAlarm'
-  import operateExpenditure from '../coms/operateExpenditure'
-  import assetGrowthStatistics from '../coms/assetGrowthStatistics'
   import draggable from 'vuedraggable'
+  import CommonFun from '../../../utils/commonFun'
   export default {
     name: 'ItemProModule',
-    props:['moduleData','type','proModuleList'],
+    props:['moduleData','type','userProModuleList'],
     components: {
-      energyProportionAnalysis,
-      energyElectricityProportion,
-      operateIncome,
-      buildingStatusProportion,
-      assetTypeProportion,
-      energyConsumptionRanking,
-      buildingEarlyWarningAlarm,
-      operateExpenditure,
-      assetGrowthStatistics,
-      draggable,
+      ...CommonFun.exportComs,
+      draggable
     },
     data () {
       return {
-        contentListDragFlag:true
+        // contentListDragFlag:true
       }
     },
     methods: {
       getOptions(){
         return {
           group:{name:'product'},
-          draggable:'.item-drag-product',
-          disabled:!this.contentListDragFlag
+          draggable:'.drag-component',
+          disabled:!this.moduleData.innerDragFlag
         }
       },
-      onStart(evt){},
-      onMove(evt){},
-      onEnd(evt){},
-       onChange (evt) {
+      onStart(evt){
+        // console.log('start',evt)
+        let id=evt.srcElement.id
+        // console.log(id)
+        this.userProModuleList.map((item)=>{
+          if(id!=item.id){ //模块内容只能在该模块移动，不可移到别的模块
+            item.innerDragFlag=false
+          }
+        })
+      },
+      onMove(evt){
+
+      },
+      onEnd(evt){
+        this.userProModuleList.map((item)=>{
+            item.innerDragFlag=true
+        })
+      },
+      onChange (evt) {
         console.log('change1', evt)
         if (evt.added) {
-          // let obj={
-          //   menuName:evt.added.element.menuName,
-          //   type:1,
-          //   moduleList:[evt.added.element],
-          // }
-          console.log('lalalal')
           this.moduleData.moduleList.splice(evt.added.newIndex-1,1)
-          // this.$parent.setItemDragFlag &&
-          // this.$parent.setItemDragFlag(this.proModuleList)
-          console.log(this.moduleData.moduleList,this.proModuleList)
+          this.$router.replace({
+            path: this.$route.path,
+            query: {...this.$route.query,...{
+                updateProList:true
+              }
+            }
+          })
+          this.$store.commit('digitalPark/userProModuleList',this.userProModuleList)
         }
       },
     },

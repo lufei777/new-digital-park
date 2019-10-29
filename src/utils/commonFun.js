@@ -1,4 +1,36 @@
+import energyProportionAnalysis from '../pages/digitalPark/coms/energyProportionAnalysis'
+import energyElectricityProportion from '../pages/digitalPark/coms/energyElectricityProportion'
+import operateIncome from '../pages/digitalPark/coms/operateIncome'
+import buildingStatusProportion from '../pages/digitalPark/coms/buildingStatusProportion'
+import assetTypeProportion from '../pages/digitalPark/coms/assetTypeProportion'
+import energyConsumptionRanking from '../pages/digitalPark/coms/energyConsumptionRanking'
+import buildingEarlyWarningAlarm from '../pages/digitalPark/coms/buildingEarlyWarningAlarm'
+import operateExpenditure from '../pages/digitalPark/coms/operateExpenditure'
+import assetGrowthStatistics from '../pages/digitalPark/coms/assetGrowthStatistics'
+import taskRanking from '../pages/digitalPark/coms/taskRanking'
+import attendanceDetail from '../pages/digitalPark/coms/attendanceDetail'
+import taskPersonTask from '../pages/digitalPark/coms/taskPersonTask'
+import TestModuleOne from '../pages/digitalPark/coms/TestModuleOne'
+import TestModuleTwo from '../pages/digitalPark/coms/TestModuleTwo'
+import TestModuleThree from '../pages/digitalPark/coms/TestModuleThree'
 class commonFun {
+  exportComs={
+    energyProportionAnalysis,
+    energyElectricityProportion,
+    operateIncome,
+    buildingStatusProportion,
+    assetTypeProportion,
+    energyConsumptionRanking,
+    buildingEarlyWarningAlarm,
+    operateExpenditure,
+    assetGrowthStatistics,
+    taskRanking,
+    attendanceDetail,
+    taskPersonTask,
+    TestModuleOne,
+    TestModuleTwo,
+    TestModuleThree
+  }
   //this,删除的id,没有id时的提示信息，点击确定的回调函数
   deleteTip(that, deleteId, msgTip, callBack) {
     if (!deleteId) {
