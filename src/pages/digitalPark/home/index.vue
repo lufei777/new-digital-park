@@ -36,17 +36,18 @@
           ><span>{{item.name}}</span></li>
         </ul>
       </div>
-      <draggable :list="proModuleList"
-                 :options="{draggable:'.item-module',sort:true}"
+      <draggable :list="userProModuleList"
+                  v-bind="getOptions()"
                   class="draggable-box"
                   @change="onDragChange"
       >
-        <ItemProModule v-for="(item) in proModuleList"
+        <ItemProModule v-for="(item) in userProModuleList"
                        class="item-module"
                        :key="item.id"
                        :moduleData="item"
                        :type="2"
-                       :proModuleList="proModuleList"
+                       :userProModuleList="userProModuleList"
+                       :id="item.menuId"
         />
       </draggable>
       <div class="item-module">
@@ -75,6 +76,7 @@
   import NavOperator from '../coms/navOperator'
   import draggable from 'vuedraggable'
   import ItemProModule from '../coms/itemProModule'
+  import mapState from 'vuex'
   export default {
     name: 'DigitalHomePage',
     props:['hideHeader'],
@@ -90,8 +92,25 @@
         showMoreProduct:false,
         modelValue:"1",
         menuList:[],
-        proModuleList:[],
+        userProModuleList:[],
         moduleType:"2"
+      }
+    },
+    computed:{
+      updateFlag(){
+        return this.$route.query.updateProList
+      },
+      // ...mapState({
+      //   userProModuleList:state=>state.digitalPark.userProModuleList
+      // })
+    },
+    watch:{
+      updateFlag(){
+        debugger
+        console.log( this.$parent.setItemDragFlag)
+        this.$parent.setItemDragFlag &&
+        this.$parent.setItemDragFlag(this.userProModuleList)
+        // this.$route
       }
     },
     methods:{
@@ -132,7 +151,10 @@
           type:2,
           language:Cookies.get('lang')
         })
-        this.proModuleList =res
+        res.map((item)=>{
+           item.innerDragFlag=true
+        })
+        this.userProModuleList =res
       },
       onDragChange(){
 
@@ -141,6 +163,14 @@
         this.getMenuTree()
         this.getProductList()
         this.getModulesByType()
+      },
+      setItemDragFlag(userList){
+        debugger
+        this.$parent.setItemDragFlag &&
+        this.$parent.setItemDragFlag(userList)
+      },
+      getOptions(){
+        return {draggable:'.item-module',sort:true}
       }
     },
     mounted(){

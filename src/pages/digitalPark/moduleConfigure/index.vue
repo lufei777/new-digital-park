@@ -9,7 +9,7 @@
     </div>
     <div :class="isFull?'full-main-container':'main-container'">
       <div :class="isFull?'hide':'left-module-list'">
-        <div v-for="item in proModuleList"
+          <div v-for="item in proModuleList"
              :key="item.id"
              :class="['item-left-pro','hover-pointer',item.activeFlag?'active-pro':'']"
              @click="onClickItemProModule(item)">{{item.name}}</div>
@@ -54,35 +54,18 @@
 
 <script>
   import DigitalParkApi from '../../../service/api/digitalParkApi'
-  import energyProportionAnalysis from '../coms/energyProportionAnalysis'
-  import energyElectricityProportion from '../coms/energyElectricityProportion'
-  import operateIncome from '../coms/operateIncome'
-  import buildingStatusProportion from '../coms/buildingStatusProportion'
-  import assetTypeProportion from '../coms/assetTypeProportion'
-  import Dashboard from '../home/dashboard'
   import elementResizeDetectorMaker from 'element-resize-detector'
   import draggable from 'vuedraggable'
-  import energyConsumptionRanking from '../coms/energyConsumptionRanking'
-  import buildingEarlyWarningAlarm from '../coms/buildingEarlyWarningAlarm'
-  import operateExpenditure from '../coms/operateExpenditure'
-  import assetGrowthStatistics from '../coms/assetGrowthStatistics'
   import HomePage from '../home/index'
-
+  import Dashboard from '../home/dashboard'
+  import CommonFun from '../../../utils/commonFun'
   export default {
     name: 'ModuleConfigure',
     components: {
-      energyProportionAnalysis,
-      energyElectricityProportion,
-      operateIncome,
-      buildingStatusProportion,
-      assetTypeProportion,
+      ...CommonFun.exportComs,
       Dashboard,
       draggable,
-      energyConsumptionRanking,
-      buildingEarlyWarningAlarm,
-      operateExpenditure,
-      assetGrowthStatistics,
-      HomePage
+      HomePage,
     },
     data() {
       return {
@@ -141,7 +124,9 @@
           item.activeFlag=false
         })
         item.activeFlag=true
-        // this.curModule=index
+        let t = $('#' + item.id).offset() && $('#' + item.id).offset().top;
+        console.log(t,$(".park-home-page"))
+        $('.park-home-page').scrollTop(t);
       },
       onClickFullScreenBtn() {
         this.isFull = !this.isFull
@@ -241,6 +226,7 @@
       box-sizing: border-box;
     }
     .item-left-pro{
+      display: block;
       padding:12px 0;
       color:#ddeeff;
     }
