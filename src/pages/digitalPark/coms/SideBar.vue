@@ -2,6 +2,7 @@
   <div class="sidebar-container">
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
+        router
         :default-active="activeIndex2"
         mode="horizontal"
         class="el-menu-demo"
@@ -28,6 +29,9 @@ export default {
       required: false
     }
   },
+  mounted() {
+    console.log(this.menuList);
+  },
   data() {
     return {
       activeIndex2: "1"
@@ -45,7 +49,15 @@ export default {
 .el-submenu__title {
   font-size: 16px;
 }
+.el-menu-demo{
+  border-bottom: none !important;
+}
 .sidebar-container .is-active {
   border-bottom: 2px solid red;
+}
+.sidebar-container {
+  width: 80%;
+  margin: 0 auto;
+  padding-top: 10px;
 }
 </style>
