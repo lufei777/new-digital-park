@@ -42,7 +42,7 @@
                   @change="onDragChange"
       >
         <ItemProModule v-for="(item) in userProModuleList"
-                       class="item-module"
+                       :class="item.moduleDragFlag?'drag-item item-module':'item-module'"
                        :key="item.id"
                        :moduleData="item"
                        :type="2"
@@ -76,7 +76,6 @@
   import NavOperator from '../coms/navOperator'
   import draggable from 'vuedraggable'
   import ItemProModule from '../coms/itemProModule'
-  import mapState from 'vuex'
   export default {
     name: 'DigitalHomePage',
     props:['hideHeader'],
@@ -152,7 +151,7 @@
           language:Cookies.get('lang')
         })
         res.map((item)=>{
-           item.innerDragFlag=true
+           item.moduleDragFlag=true
         })
         this.userProModuleList =res
       },
@@ -164,13 +163,11 @@
         this.getProductList()
         this.getModulesByType()
       },
-      setItemDragFlag(userList){
-        debugger
-        this.$parent.setItemDragFlag &&
-        this.$parent.setItemDragFlag(userList)
-      },
       getOptions(){
-        return {draggable:'.item-module',sort:true}
+        return {draggable:'.drag-item',sort:true}
+      },
+      setItemModuleDragFlag(){
+
       }
     },
     mounted(){
