@@ -1,13 +1,13 @@
 <template>
-  <div v-if="item.childNode" >
+  <div class="menu-item" v-if="item.childNode">
     <template v-if="item.childNode.length == 0">
-        <el-menu-item :index="item.id">
-          <!-- <i class="el-icon-menu"></i> -->
-          {{item.name}}
-        </el-menu-item>
+      <el-menu-item :index="item.id">
+        <!-- <i class="el-icon-menu"></i> -->
+        {{item.name}}
+      </el-menu-item>
     </template>
 
-    <el-submenu v-else :index="item.id" >
+    <el-submenu v-else :index="item.id">
       <template slot="title">
         <!-- <i class="el-icon-menu"></i> -->
         {{item.name}}
@@ -17,7 +17,9 @@
         <sidebar-item
           v-if="child.childNode&&child.childNode.length>0"
           :item="child"
-          :key="child.id"/>
+          :key="child.id"
+          class="nest-menu"
+        />
         <el-menu-item v-else :key="child.id" :index="child.id">
           <!-- <i class="el-icon-location"></i> -->
           {{child.name}}
@@ -28,17 +30,30 @@
 </template>
 
 <script>
-
 export default {
-  name: 'SidebarItem',
+  name: "SidebarItem",
   props: {
     item: {
       type: Object,
       required: true
     }
   }
-}
+};
 </script>
 <style lang="less">
-// 
+.menu-item {
+  float: left;
+}
+.nest-menu {
+  float: none;
+  .el-submenu__icon-arrow {
+    position: absolute !important;
+  }
+}
+.el-menu--horizontal .el-submenu__icon-arrow {
+  position: static;
+  vertical-align: middle;
+  margin-left: 8px;
+  margin-top: -3px;
+}
 </style>
