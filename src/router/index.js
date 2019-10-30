@@ -19,9 +19,8 @@ let EnergyRouters = flattenDeep([EnergyRouter, Collect, DataReport, DeviceRecord
 // 数字园区
 let DigitalRouters = flattenDeep([DigitalParkRouter, AssetManage, EnergyRouters]);
 
-const routes = flattenDeep([DigitalRouters]);
-
+// const routes = flattenDeep([DigitalRouters]);
 Vue.use(Router)
 export default new Router({
-    routes
+    "routes": DigitalRouters
 })
