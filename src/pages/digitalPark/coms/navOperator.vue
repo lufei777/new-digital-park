@@ -7,15 +7,13 @@
           <el-select v-model="langValue" placeholder="切换语言" @change="onClickChangeLang">
               <el-option label="中文" value="zh"></el-option>
               <el-option label="English" value="en"></el-option>
-           </el-select>
-          <i>|</i>
+           </el-select><i>|</i>
       </span>
       <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
          <el-select v-model="moduleType" placeholder="切换模式" @change="onClickChangeModel">
             <el-option :label="$t('homeHeader.waterfall')" value="2"></el-option>
             <el-option :label="$t('homeHeader.dashboard')" value="1"></el-option>
-         </el-select>
-          <i>|</i>
+         </el-select><i>|</i>
       </span>
      <span class="nav-right-item">
           <el-select v-model="userValue" placeholder="admin" @change="onClickUserConfigure">
@@ -69,6 +67,7 @@
   .digital-nav-operator{
     font-size: 16px;
     .nav-right-item{
+      
       span{
         width:90px;
         display: inline-block;
@@ -79,7 +78,7 @@
       }
       .el-input__inner{
         border:none;
-        padding-right: 5px;
+        // padding-right: 5px;
         background: none;
         text-align: center;
         font-size: 16px;
@@ -91,7 +90,7 @@
         width:120px;
       }
       .el-input__suffix{
-         right:-40px;
+         right:-15px;
       }
     }
     .dashboard-nav{
