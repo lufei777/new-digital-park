@@ -87,7 +87,7 @@ axios.interceptors.response.use(
       // 错误提示
       console.error(data);
       Message({
-        message: data.message,
+        message: data.message || data.errorMessage,
         type: 'error'
       });
       return;
