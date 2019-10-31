@@ -8,7 +8,7 @@ let obj = {
     news: '消息',
     skin: '换肤',
     searchText:'搜索',
-    title:'cizing数字园区',
+    title:'数字园区',
     waterfall:'瀑布流',
     dashboard:'仪表盘'
   },

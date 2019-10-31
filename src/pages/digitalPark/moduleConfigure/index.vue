@@ -210,10 +210,10 @@
         this.isFull=false
       },
       onDragStart(evt){
-        this.$refs.homePage.setItemModuleDragFlag('start')
+        if(this.type==2) this.$refs.homePage.setItemModuleDragFlag('start')
       },
       onDragEnd(){
-        this.$refs.homePage.setItemModuleDragFlag('end')
+        if(this.type==2) this.$refs.homePage.setItemModuleDragFlag('end')
       }
     },
     async mounted() {

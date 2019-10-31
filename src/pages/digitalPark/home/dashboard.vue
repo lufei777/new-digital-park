@@ -9,8 +9,12 @@
             </li>
           </ul>
         </div>
-        <div class="digital-title" :style="titleBg">{{$t('homeHeader.title')}}</div>
-        <NavOperator :moduleType.sync="moduleType" />
+        <div class="digital-title">
+          <div class="digital-title-text" :style="titleBg">{{$t('homeHeader.title')}}</div>
+        </div>
+        <div class='dashboard-nav-operator'>
+          <NavOperator  :moduleType.sync="moduleType" />
+        </div>
       </div>
     <div class="dashboard-content-panel">
       <div class="dashboard-left">
@@ -33,8 +37,8 @@
       </div>
 
       <div class="dashboard-center">
-        <div class="carousel-box"></div>
-        <!--<iframe src="../../../../static/HomePage/index.html" frameborder="0" class="unity-frame"></iframe>-->
+        <!--<div class="carousel-box"></div>-->
+        <iframe src="../../../../static/HomePage/index.html" frameborder="0" class="unity-frame"></iframe>
       </div>
       <div class="dashboard-right">
         <draggable :list="proModuleList2"
@@ -274,6 +278,8 @@
         onClickItemFixPro(item){
           if(item.routeAddress){
             window.open(item.routeAddress)
+          }else{
+            window.open('/#/digitalPark/defaultPage')
           }
         }
     },
@@ -342,7 +348,14 @@
       color:@white;
       height: 60px;
       line-height: 60px;
-      padding:0 180px;
+      text-align: center;
+      /*padding:0 180px;*/
+
+    }
+    .digital-title-text{
+      width:80%;
+      margin:0 auto;
+      /*text-align: center;*/
       background-repeat: no-repeat;
       background-size: 100% 100%;
     }
@@ -378,7 +391,14 @@
     }
     .unity-frame{
       width:100%;
-      height:70%;
+      height:100%;
+    }
+    .news-box,.digital-title,.dashboard-nav-operator{
+      flex: 1;
+    }
+    .dashboard-nav-operator .digital-nav-operator{
+      width:90%;
+      float: right;
     }
   }
 </style>
