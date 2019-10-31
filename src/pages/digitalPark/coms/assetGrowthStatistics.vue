@@ -1,6 +1,6 @@
 <template>
   <div class="asset-growth-statistics">
-    <div ref="pieCharts" class="my-chart"></div>
+    <div ref="myChart" class="my-chart"></div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -16,8 +16,29 @@ export default {
     return {};
   },
   methods: {
+    initChart(){
+      let myChart = echarts.init(this.$refs.myChart);
+      let option = {
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [{
+          data: [820, 932, 901, 934, 1290, 1330, 1320],
+          type: 'line',
+          areaStyle: {}
+        }]
+      };
+
+      myChart.setOption(option)
+    }
   },
   mounted() {
+    this.initChart()
   }
 };
 </script>

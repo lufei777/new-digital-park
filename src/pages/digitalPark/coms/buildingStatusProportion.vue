@@ -1,6 +1,6 @@
 <template>
   <div class="building-status-proportion">
-    <div ref="pieCharts" class="my-chart" id="building-status-proportion-chart"></div>
+    <div ref="myChart" class="my-chart" id="building-status-proportion-chart"></div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -16,12 +16,12 @@ export default {
     return {};
   },
   methods: {
-    async getDeviceStatusList() {
-      let res = await CommonFun.deviceStatusList;
+     getDeviceStatusList() {
+      let res =  CommonFun.deviceStatusList;
       this.createPieCharts(res);
     },
     createPieCharts(res) {
-      let myPieChart = echarts.init(this.$refs.pieCharts);
+      let myPieChart = echarts.init(this.$refs.myChart);
       let legendData = [];
       let legend = "right";
       let color = ["#F7B87F", "#B6A2DE", "#56C7C9", "#5AB1EF"];
@@ -48,7 +48,7 @@ export default {
       //   myPieChart.resize()
       // }) ;
       let resizeBox=$("#energy-electricity-proportion-chart").parents('.item-product-coms')
-      ChartUtils.handlePieChart(myPieChart, data,resizeBox);
+      ChartUtils.handlePieChart(myPieChart, data);
     }
   },
   mounted() {

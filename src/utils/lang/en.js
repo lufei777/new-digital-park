@@ -4,7 +4,7 @@ module.exports = {
     news: 'News(1)',
     skin: 'Skin',
     searchText:'Search',
-    title:'Cizing Digital Park',
+    title:'Digital Park',
     waterfall:'Waterfall',
     dashboard:'Dashboard'
   },

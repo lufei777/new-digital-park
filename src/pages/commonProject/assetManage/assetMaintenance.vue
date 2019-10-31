@@ -43,21 +43,21 @@
       </template>
     </CommonTable>
 
-    <Table :ref="assetsTableConfig.ref" :tableConfig="assetsTableConfig">
-      <template slot="custom-top" slot-scope="customTopObj">
-        <div>
-          <el-button-group>
-            <template v-for="col in customTopObj.columnConfig">
-              <el-button
-                :key="col.prop"
-                :type="col.hide ?'danger': 'primary'"
-                @click="switchHide(col)"
-              >{{col.label}}</el-button>
-            </template>
-          </el-button-group>
-        </div>
-      </template>
-    </Table>
+    <!--<Table :ref="assetsTableConfig.ref" :tableConfig="assetsTableConfig">-->
+      <!--<template slot="custom-top" slot-scope="customTopObj">-->
+        <!--<div>-->
+          <!--<el-button-group>-->
+            <!--<template v-for="col in customTopObj.columnConfig">-->
+              <!--<el-button-->
+                <!--:key="col.prop"-->
+                <!--:type="col.hide ?'danger': 'primary'"-->
+                <!--@click="switchHide(col)"-->
+              <!--&gt;{{col.label}}</el-button>-->
+            <!--</template>-->
+          <!--</el-button-group>-->
+        <!--</div>-->
+      <!--</template>-->
+    <!--</Table>-->
 
     <TreeModal
       :showTree="showTree"
