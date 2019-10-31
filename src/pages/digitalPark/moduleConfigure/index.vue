@@ -38,7 +38,7 @@
           <Dashboard v-if="type==1" :curProModule="curProModule" :hideHeader="true" ref="dashboard"/>
           <HomePage v-if="type==2" :curProModule="curProModule" :hideHeader="true" ref="homePage"></HomePage>
         </div>
-        <div class="operator-box">
+        <div class="operator-box" v-if="!isFull">
           <el-button  @click="onClickSureBtn" :style="defaultBtn">确认</el-button>
           <el-button  @click="onClickGoBackBtn" :style="defaultBtn">取消</el-button>
           <el-button  @click="onClickFullScreenBtn" :style="defaultBtn">预览</el-button>
