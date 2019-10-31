@@ -1,5 +1,5 @@
 <template>
-  <div class="park-home-page">
+  <div class="park-home-page" v-loading="loading">
     <div class="home-header" v-if="!hideHeader">
       <div class="home-header-inner flex-align-between">
         <div class="header-nav-left">
@@ -40,6 +40,7 @@
                   v-bind="getOptions()"
                   class="draggable-box"
                   @change="onDragChange"
+
       >
         <ItemProModule v-for="(item) in userProModuleList"
                        :class="item.moduleDragFlag?'drag-item item-module':'item-module'"
@@ -78,7 +79,7 @@
   import ItemProModule from '../coms/itemProModule'
   export default {
     name: 'DigitalHomePage',
-    props:['hideHeader'],
+    props:['hideHeader','curProModule'],
     components: {
       NavOperator,
       Sidebar,
@@ -92,7 +93,8 @@
         modelValue:"1",
         menuList:[],
         userProModuleList:[],
-        moduleType:"2"
+        moduleType:"2",
+        loading:true
       }
     },
     computed:{
@@ -105,10 +107,8 @@
     },
     watch:{
       updateFlag(){
-        debugger
-        console.log( this.$parent.setItemDragFlag)
         this.$parent.setItemDragFlag &&
-        this.$parent.setItemDragFlag(this.userProModuleList)
+        this.$parent.setItemDragFlag(this.userProModuleList) // 拖进来替换完设置左侧已有的不能拖动
         // this.$route
       }
     },
@@ -154,9 +154,22 @@
            item.moduleDragFlag=true
         })
         this.userProModuleList =res
+        this.loading=false
       },
-      onDragChange(){
-
+      onDragChange(evt){
+         console.log('out-moudle-change',evt)
+         if(evt.added){
+           let obj={
+             // menuId:item.menuId,
+             menuName:evt.added.element.menuName,
+             type:2,
+             moduleList:[evt.added.element],
+           }
+           this.userProModuleList.splice(evt.added.newIndex -1,1,obj)
+           console.log(this.userProModuleList.splice(evt.added.newIndex -1,1,obj))
+           this.$parent.setItemDragFlag &&
+           this.$parent.setItemDragFlag(this.userProModuleList) // 拖进
+         }
       },
       handleLangChange(){
         this.getMenuTree()
@@ -164,10 +177,26 @@
         this.getModulesByType()
       },
       getOptions(){
-        return {draggable:'.drag-item',sort:true}
+        return {draggable:'.drag-item',group:'product'}
       },
-      setItemModuleDragFlag(){
+      setItemModuleDragFlag(flag){
+        if(flag=='start'){
+          this.userProModuleList.map((item)=>{
+            if(item.menuId!=this.curProModule.id){
+              item.moduleDragFlag=false
+            }
+          })
+          let obj=this.userProModuleList.find((item)=>{
+              return item.menuId==this.curProModule.id
+          })
+          if(!obj){
 
+          }
+        }else{
+          this.userProModuleList.map((item)=>{
+              item.moduleDragFlag=true
+          })
+        }
       }
     },
     mounted(){

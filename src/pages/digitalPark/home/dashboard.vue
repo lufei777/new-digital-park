@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-park-home-page" :style="homePageBg">
+  <div class="dashboard-park-home-page" :style="homePageBg" v-loading="loading">
       <div class="dashboard-header flex-align-between" v-show="!hideHeader">
         <div class="news-box">
           <ul class="news-list hover-pointer" :style="{top}" @mouseenter="stopNews" @mouseleave="scrollNews">
@@ -120,7 +120,8 @@
           newsTimer: '',
           curNewsIndex: 0,
           fixedProList:[],
-          moduleType:"1"
+          moduleType:"1",
+          loading:true
         }
       },
       methods: {
@@ -202,6 +203,7 @@
           })
           this.proModuleList1 =res.slice(0,3)
           this.proModuleList2 =res.slice(3,5)
+          this.loading=false
         },
         async getProductList(){
           let res = await DigitalParkApi.getProductList({
@@ -247,6 +249,7 @@
                   type:1,
                   moduleList:[item],
                 }
+                // console.log(obj)
                 list[data.newIndex]=obj
                 console.log('list',this.proModuleList1,this.proModuleList2)
                 this.$parent.setItemDragFlag &&
