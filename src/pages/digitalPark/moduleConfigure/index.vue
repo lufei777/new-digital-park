@@ -1,5 +1,5 @@
 <template>
-  <div class="module-configure flex-column">
+  <div class="module-configure flex-column" v-loading="loading">
     <div v-show="!isFull">
       <div class="set-tip">模式设置</div>
       <div class="module-change">
@@ -19,6 +19,7 @@
                    v-bind="getOptions()"
                    @change="onDragChange"
                    @start="onDragStart"
+                   @end="onDragEnd"
                    class="content-drag-box"
 
         >
@@ -35,7 +36,7 @@
       <div :class="isFull?'full-right-module-content':'right-module-content'">
         <div :class="isFull?'full-preview-panel':'preview-panel'" >
           <Dashboard v-if="type==1" :curProModule="curProModule" :hideHeader="true" ref="dashboard"/>
-          <HomePage v-if="type==2" :hideHeader="true" ref="homePage"></HomePage>
+          <HomePage v-if="type==2" :curProModule="curProModule" :hideHeader="true" ref="homePage"></HomePage>
         </div>
         <div class="operator-box">
           <el-button  @click="onClickSureBtn" :style="defaultBtn">确认</el-button>
@@ -78,7 +79,8 @@
         curProModule:{},
         userProModuleList:[],
         contentListDragFlag:true,
-        showEsc:false
+        showEsc:false,
+        loading:true
       }
     },
     computed:{
@@ -115,9 +117,11 @@
         let res = await DigitalParkApi.getProModules({
           language:Cookies.get('lang')
         })
+        this.loading=false
         res[0].activeFlag=true
         let tmp = this.setItemDragFlag(this.userProModuleList,res)
         this.proModuleList = tmp
+        this.curProModule=tmp[0]
         this.contentList = tmp[0].moduleList
       },
       onClickItemProModule(item,index) {
@@ -127,9 +131,10 @@
           item.activeFlag=false
         })
         item.activeFlag=true
-        // let t = $('#' + item.id).offset() && $('#' + item.id).offset().top;
-        // console.log(t,$(".park-home-page"))
+        let t = $('#' + item.id).offset() && $('#' + item.id).offset().top;
+        // console.log(t,$(".park-home-page").offset().top )
         // $('.park-home-page').scrollTop(t);
+        // console.log(t,$(".park-home-page").offset().top )
       },
       onClickFullScreenBtn() {
         this.isFull = !this.isFull
@@ -205,7 +210,10 @@
         this.isFull=false
       },
       onDragStart(evt){
-        // this.$ref.homePage.
+        this.$refs.homePage.setItemModuleDragFlag('start')
+      },
+      onDragEnd(){
+        this.$refs.homePage.setItemModuleDragFlag('end')
       }
     },
     async mounted() {

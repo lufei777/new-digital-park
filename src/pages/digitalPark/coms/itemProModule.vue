@@ -9,9 +9,8 @@
       <component v-for="(item,index) in moduleData.moduleList"
                  :key="index"
                  :is="item.componentName"
-                 :class="moduleData.moduleList.length==2?'two-component':'item-component'"
                  :moduleItem="item"
-                 class="flex-colum-center"
+                 class="item-component flex-colum-center"
       />
     </div>
     <!--<div v-if="type==2" style="width:100%;" class="component-box com-width-border">-->
@@ -99,8 +98,8 @@
         })
       },
       onChange (evt) {
-        console.log('change1', evt)
         if (evt.added) {
+          console.log('22222')
           this.moduleData.moduleList.splice(evt.added.newIndex-1,1)
           this.$router.replace({
             path: this.$route.path,
@@ -109,7 +108,6 @@
               }
             }
           })
-          this.$store.commit('digitalPark/userProModuleList',this.userProModuleList)
         }
       },
     },
