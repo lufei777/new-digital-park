@@ -38,7 +38,13 @@
 
       <div class="dashboard-center">
         <!--<div class="carousel-box"></div>-->
-        <iframe src="../../../../static/HomePage/index.html" frameborder="0" class="unity-frame"></iframe>
+        <img v-if="pageFlag==2" src="../../../../static/image/digitalPark/unity_priview.png"
+             class="unity_priview"
+             alt="">
+        <!--<iframe v-if="pageFlag==1"-->
+                <!--src="../../../../static/HomePage/index.html"-->
+                <!--frameborder="0"-->
+                <!--class="unity-frame"></iframe>-->
       </div>
       <div class="dashboard-right">
         <draggable :list="proModuleList2"
@@ -111,6 +117,10 @@
         return {
           backgroundImage:'url('+require('../../../../static/image/digitalPark/tag_large_bg.png')+')'
         }
+      },
+      pageFlag(){
+        console.log(this.$route.path)
+        return  this.$route.path=='/digitalPark/dashboardHomePage'?1:2
       }
     },
     data() {
@@ -399,6 +409,10 @@
     .dashboard-nav-operator .digital-nav-operator{
       width:90%;
       float: right;
+    }
+    .unity_priview{
+      width:100%;
+      height:100%;
     }
   }
 </style>

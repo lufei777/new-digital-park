@@ -99,9 +99,9 @@ class chartUtils {
       }]
     };
     // window.onresize = dom.resize;
-    // $(window).resize(function(){
-    //   dom.resize()
-    // })
+    $(window).resize(function(){
+      dom.resize()
+    })
     // if(resizeBox){
     //   let erd = elementResizeDetectorMaker()
     //   erd.listenTo(resizeBox, function () {

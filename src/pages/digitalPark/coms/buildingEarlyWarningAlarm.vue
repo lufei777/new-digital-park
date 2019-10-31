@@ -105,6 +105,9 @@ export default {
           }
         ]
       };
+      $(window).resize(function(){
+        myChart.resize()
+      })
       myChart.setOption(option)
     }
   },
