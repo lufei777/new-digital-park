@@ -1,14 +1,8 @@
 <template>
   <div class="asset-manage">
-    <a v-for="(item,index) in menuList" :key="index" @click="onClickNav(item)">{{item.name}}</a>
-    <div class="left-nav">
-      <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
-        <el-radio-button :label="false">展开</el-radio-button>
-        <el-radio-button :label="true">收起</el-radio-button>
-      </el-radio-group>
+    <!--<div class="left-nav">-->
       <el-menu default-active="1-4-1"
-               @open="handleOpen"
-               @close="handleClose"
+               :class="isCollapse?'my-el-menu2':'my-el-menu'"
                :collapse="isCollapse"
                background-color="#394562"
                text-color="#B7BAC4"
@@ -30,8 +24,14 @@
           <el-menu-item index="1-2">资产类型设置</el-menu-item>
         </el-submenu>
       </el-menu>
-    </div>
+    <!--</div>-->
     <div class="right-content">
+        <div class="asset-bread-crumb">
+          <i class="el-icon-location"
+             style="font-size: 30px;line-height: 70px;"
+             @click="onClickCollapseBtn"
+          ></i>
+        </div>
         <router-view></router-view>
     </div>
   </div>
@@ -80,7 +80,13 @@
         // }
         this.$router.push(item.path)
       },
-      handleOpen(){}
+      handleOpen(){},
+      onClickCollapseBtn(){
+        this.isCollapse=!this.isCollapse
+        // if(this.isCollapse){
+        //   $(".my-el-menu").('width')
+        // }
+      }
     },
     mounted(){
       document.title='资产管理'
@@ -92,20 +98,34 @@
 <style lang="less">
   .asset-manage{
     height: 100%;
-    padding:0 20px;
-    .left-nav{
+    .my-el-menu{
       float: left;
-      width:20%;
       height:100%;
-      /*background-color:#394562 ;*/
-      .el-menu{
-        height:100%;
-      }
+      width:15%;
     }
+    .my-el-menu2{
+      float: left;
+      height:100%;
+    }
+    /*.el-menu{*/
+      /*height:100%;*/
+    /*}*/
     .right-content{
-      float: right;
-      width:80%;
+      max-width: 100%;
+      height:100%;
+      overflow: auto;
     }
+    .asset-bread-crumb{
+      /*width:100%;*/
+      height:70px;
+      border:1px solid #ccc;
+    }
+    /*.el-submenu__icon-arrow{*/
+      /*right:0;*/
+    /*}*/
+    /*.el-submenu{*/
+      /*padding:0 20px;*/
+    /*}*/
     /*.el-breadcrumb{*/
       /*padding:20px 0;*/
     /*}*/
