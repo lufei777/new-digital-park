@@ -1,6 +1,6 @@
 <template>
   <div class="test-module-one">
-    <div ref="myChart"  class="my-chart" id="attendance-detail-chart"></div>
+    <div ref="myChart"  class="my-chart" id="test-module-one-chart"></div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -10,7 +10,7 @@ import CommonFun from "../../../utils/commonFun";
 import ChartUtils from "../../../utils/chartUtils";
 import EnergyApi from "../../../service/api/energyApi";
 export default {
-  name: "TestModuleOne.vue",
+  name: "TestModuleOne",
   components: {},
   props: ["moduleItem"],
   data() {
@@ -27,6 +27,7 @@ export default {
       this.initChart(res)
     },
     initChart(res) {
+      //document.getElementById('test-module-one-chart')this.$refs.myChart
       let myChart = echarts.init(this.$refs.myChart);
       let legendData = [];
       let dataList = [];

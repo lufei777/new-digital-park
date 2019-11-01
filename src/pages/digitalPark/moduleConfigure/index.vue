@@ -164,6 +164,7 @@
         this.userProModuleList=res
       },
       setItemDragFlag(userList,res=this.proModuleList){
+
         res.map((item)=>{
           item.moduleList.map((module)=>{
             module.dragFlag=true
@@ -182,13 +183,20 @@
         this.contentListDragFlag=val
       },
      async onClickSureBtn(){
-      await  this.$refs.dashboard.sureUpdateUserProModules()
+        if(this.type==1){
+          await this.$refs.dashboard.sureUpdateUserProModules()
+          // this.$router.push(`/digitalPark/dashboardHomePage`)
+        }else{
+          await this.$refs.homePage.sureUpdateUserProModules()
+          // this.$router.push(`/digitalPark/homePage`)
+        }
+
         // setTimeout(()=>{
-          if(this.type==1){
-            this.$router.push(`/digitalPark/dashboardHomePage`)
-          }else{
-            this.$router.push(`/digitalPark/homePage`)
-          }
+        //   if(this.type==1){
+        //     this.$router.push(`/digitalPark/dashboardHomePage`)
+        //   }else{
+        //     this.$router.push(`/digitalPark/homePage`)
+        //   }
         // },1000)
       },
       onClickModuleBtn(val){
@@ -210,7 +218,9 @@
         this.isFull=false
       },
       onDragStart(evt){
-        if(this.type==2) this.$refs.homePage.setItemModuleDragFlag('start')
+        if(this.type==2) {
+          this.$refs.homePage.setItemModuleDragFlag('start')
+        }
       },
       onDragEnd(){
         if(this.type==2) this.$refs.homePage.setItemModuleDragFlag('end')

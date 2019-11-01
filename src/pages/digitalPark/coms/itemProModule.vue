@@ -47,7 +47,7 @@
         <component
           v-for="(item,index) in moduleData.moduleList"
           :key="index"
-          class="flex-colum-center drag-component two-component "
+          :class="['flex-colum-center','drag-component',moduleData.moduleList.length==2?'two-component':'item-component']"
           style="height: 100%;"
           :is="item.componentName"
           :moduleItem="item"
@@ -82,9 +82,17 @@
       onStart(evt){
         // console.log('start',evt)
         let id=evt.srcElement.id
-        // console.log(id)
-        this.userProModuleList.map((item)=>{
-          if(id!=item.id){ //模块内容只能在该模块移动，不可移到别的模块
+        console.log(id)
+        this.$router.replace({   //设置不可往其他块拖（整个块）
+          path: this.$route.path,
+          query: {...this.$route.query,...{
+              updateDragFlag:false
+            }
+          }
+        })
+        this.userProModuleList.map((item)=>{//设置不可往其他块内容拖（块内容）
+          if(id!=item.id){
+            // debugger
             item.moduleDragFlag=false
           }
         })
@@ -93,18 +101,32 @@
 
       },
       onEnd(evt){
+        this.$router.replace({   //设置不可往其他块拖（整个块）
+          path: this.$route.path,
+          query: {...this.$route.query,...{
+              updateDragFlag:true
+            }
+          }
+        })
         this.userProModuleList.map((item)=>{
             item.moduleDragFlag=true
         })
       },
       onChange (evt) {
+        console.log("itempromodule",evt)
         if (evt.added) {
-          console.log('22222')
-          this.moduleData.moduleList.splice(evt.added.newIndex-1,1)
+          // let obj={
+          //   moduleId:this.moduleData.id,
+          //   index:evt.added.newIndex-1
+          // }
+          // this.moduleData.moduleList.splice(evt.added.newIndex-1,1)
+          // console.log(evt, this.moduleData.moduleList)
           this.$router.replace({
             path: this.$route.path,
             query: {...this.$route.query,...{
-                updateProList:true
+                updateProList:true,
+                moduleId:evt.added.element.pid,
+                index:evt.added.newIndex-1
               }
             }
           })

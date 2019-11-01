@@ -1,6 +1,6 @@
 <template>
   <div class="energy-electricity-proportion">
-    <div ref="myChart1" class="my-chart" id="energy-electricity-proportion-chart"></div>
+    <div ref="myChart" class="my-chart" id="energy-electricity-proportion-chart"></div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -28,7 +28,8 @@
         this.initChart(res)
       },
       initChart(res) {
-        let myChart = echarts.init(this.$refs.myChart1);
+        //document.getElementById('energy-electricity-proportion-chart')this.$refs.myChart
+        let myChart = echarts.init(this.$refs.myChart);
         let legendData = [];
         let dataList = [];
         res.elecList.map(item => {
@@ -48,7 +49,7 @@
         };
         // window.onresize = myChart.resize;
         // console.log(myChart)
-        let resizeBox=$("#energy-electricity-proportion-chart").parents('.item-product-coms')
+        // let resizeBox=$("#energy-electricity-proportion-chart").parents('.item-product-coms')
         ChartUtils.hollowPieChart(myChart,data);
 
         let option={
