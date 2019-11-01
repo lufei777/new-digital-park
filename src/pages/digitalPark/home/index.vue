@@ -94,22 +94,32 @@
         menuList:[],
         userProModuleList:[],
         moduleType:"2",
-        loading:true
+        loading:true,
+        dragFlag:true
       }
     },
     computed:{
-      updateFlag(){
-        return this.$route.query.updateProList
-      },
-      // ...mapState({
-      //   userProModuleList:state=>state.digitalPark.userProModuleList
-      // })
     },
     watch:{
-      updateFlag(){
-        this.$parent.setItemDragFlag &&
-        this.$parent.setItemDragFlag(this.userProModuleList) // 拖进来替换完设置左侧已有的不能拖动
-        // this.$route
+      $route(){
+         if(this.$route.query.updateProList){ // 拖进来替换完设置左侧已有的不能拖动
+           this.$parent.setItemDragFlag &&
+           this.$parent.setItemDragFlag(this.userProModuleList)
+           let index=0
+           this.userProModuleList.map((item)=>{
+             if(item.menuId==this.$route.query.moduleId){
+                if(this.$route.query.index!=-1){
+                  index=this.$route.query.index
+                }else if(this.$route.query.index==-1 && item.moduleList.length!=1){
+                  index=1
+                }
+                console.log(item)
+                item.moduleList.splice(index,1)
+             }
+           })
+           console.log('lalala',this.userProModuleList)
+         }
+         this.dragFlag=Boolean(this.$route.query.updateDragFlag) //设置右侧非同组不可拖动
       }
     },
     methods:{
@@ -160,17 +170,18 @@
       },
       onDragChange(evt){
          console.log('out-moudle-change',evt)
-         if(evt.added){
-           let obj={
+         if(evt.added) {
+           let obj = {
              // menuId:item.menuId,
-             menuName:evt.added.element.menuName,
-             type:2,
-             moduleList:[evt.added.element],
+             menuName: evt.added.element.menuName,
+             type: 2,
+             moduleList: [evt.added.element],
            }
-           this.userProModuleList.splice(evt.added.newIndex -1,1,obj)
-           console.log(this.userProModuleList.splice(evt.added.newIndex -1,1,obj))
+           this.userProModuleList.splice(evt.added.newIndex,1,obj)
+           this.userProModuleList.splice(evt.added.newIndex-1,1)
+           // console.log('2',this.userProModuleList)
            this.$parent.setItemDragFlag &&
-           this.$parent.setItemDragFlag(this.userProModuleList) // 拖进
+           this.$parent.setItemDragFlag(this.userProModuleList)
          }
       },
       handleLangChange(){
@@ -179,26 +190,29 @@
         this.getModulesByType()
       },
       getOptions(){
-        return {draggable:'.drag-item',group:'product'}
+        return {draggable:'.drag-item',group:'product',disabled:!this.dragFlag}
       },
       setItemModuleDragFlag(flag){
         if(flag=='start'){
+          let obj=this.userProModuleList.find((item)=>{
+            return item.menuId==this.curProModule.id
+          })
+          if(obj){  //整个userList不可拖动
+            this.dragFlag=false
+          }
           this.userProModuleList.map((item)=>{
             if(item.menuId!=this.curProModule.id){
-              item.moduleDragFlag=false
+              item.moduleDragFlag=false   //模块内容不可拖动
             }
           })
-          let obj=this.userProModuleList.find((item)=>{
-              return item.menuId==this.curProModule.id
-          })
-          if(!obj){
-
-          }
         }else{
           this.userProModuleList.map((item)=>{
               item.moduleDragFlag=true
           })
         }
+      },
+      async sureUpdateUserProModules(){
+        await DigitalParkApi.updateUserProModules(this.userProModuleList)
       }
     },
     mounted(){
