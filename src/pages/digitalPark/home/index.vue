@@ -166,7 +166,7 @@
          console.log('out-moudle-change',evt)
          if(evt.added) {
            let obj = {
-             // menuId:item.menuId,
+             menuId:evt.added.element.pid,
              menuName: evt.added.element.menuName,
              type: 2,
              moduleList: [evt.added.element],
