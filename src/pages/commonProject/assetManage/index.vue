@@ -61,7 +61,9 @@
     data () {
       return {
         menuList:menuList,
-        isCollapse:false
+        isCollapse:false,
+        dataList:['1','2','3','4'],
+        activeName:'1'
         // assetBreadcrumb:[{name:'资产管理',path:'/assetManage'}]
       }
     },

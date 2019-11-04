@@ -80,7 +80,7 @@
         userProModuleList:[],
         contentListDragFlag:true,
         showEsc:false,
-        loading:true
+        loading:true,
       }
     },
     computed:{
@@ -131,10 +131,12 @@
           item.activeFlag=false
         })
         item.activeFlag=true
-        let t = $('#' + item.id).offset() && $('#' + item.id).offset().top;
-        // console.log(t,$(".park-home-page").offset().top )
-        // $('.park-home-page').scrollTop(t);
-        // console.log(t,$(".park-home-page").offset().top )
+        if($('#' + item.id).length){
+          let mainContainer = $('.preview-panel')
+          mainContainer.animate({
+            scrollTop:$('#' + item.id).offset().top-mainContainer.offset().top +mainContainer.scrollTop()
+          }, 500);
+        }
       },
       onClickFullScreenBtn() {
         this.isFull = !this.isFull

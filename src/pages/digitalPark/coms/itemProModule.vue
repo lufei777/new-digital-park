@@ -47,7 +47,7 @@
         <component
           v-for="(item,index) in moduleData.moduleList"
           :key="index"
-          :class="['flex-colum-center','drag-component',moduleData.moduleList.length==2?'two-component':'item-component']"
+          :class="['flex-colum-center','drag-component',moduleData.moduleList.length>1?'two-component':'item-component']"
           style="height: 100%;"
           :is="item.componentName"
           :moduleItem="item"
@@ -80,7 +80,7 @@
         }
       },
       onStart(evt){
-        // console.log('start',evt)
+        console.log('start',evt)
         let id=evt.srcElement.id
         console.log(id)
         this.$router.replace({   //设置不可往其他块拖（整个块）
@@ -92,8 +92,9 @@
         })
         this.userProModuleList.map((item)=>{//设置不可往其他块内容拖（块内容）
           if(id!=item.id){
-            // debugger
             item.moduleDragFlag=false
+          }else{
+            item.moduleDragFlag=true
           }
         })
       },
@@ -101,6 +102,7 @@
 
       },
       onEnd(evt){
+        console.log('end',evt)
         this.$router.replace({   //设置不可往其他块拖（整个块）
           path: this.$route.path,
           query: {...this.$route.query,...{
@@ -111,29 +113,12 @@
         this.userProModuleList.map((item)=>{
             item.moduleDragFlag=true
         })
+        console.log(this.userProModuleList)
       },
       onChange (evt) {
-        console.log("itempromodule",evt)
+        console.log("itempromodule",evt,this.moduleData)
         if (evt.added) {
           console.log(this.moduleData.moduleList)
-          // let obj={
-          //   moduleId:this.moduleData.id,
-          //   index:evt.added.newIndex-1
-          // }
-          // this.moduleData.moduleList.splice(evt.added.newIndex-1,1)
-          // console.log(evt, this.moduleData.moduleList)
-          // let index=0
-          // this.userProModuleList.map((item)=>{
-          //   if(item.menuId==this.$route.query.moduleId){
-          //     if(this.$route.query.index!=-1){
-          //       index=this.$route.query.index
-          //     }else if(this.$route.query.index==-1 && item.moduleList.length!=1){
-          //       index=1
-          //     }
-          //     console.log(item)
-          //     item.moduleList.splice(index,1)
-          //   }
-          // })
           let index=evt.added.newIndex-1
           if(this.moduleData.moduleList.length==3){
             if(evt.added.newIndex==0){
@@ -156,6 +141,9 @@
             }
           })
         }
+        // if (evt.moved) {
+          // this.moduleData.moduleDragFlag=true
+        // }
       },
     },
     mounted(){
