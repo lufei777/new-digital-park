@@ -164,7 +164,6 @@
         this.userProModuleList=res
       },
       setItemDragFlag(userList,res=this.proModuleList){
-
         res.map((item)=>{
           item.moduleList.map((module)=>{
             module.dragFlag=true
@@ -200,7 +199,7 @@
         // },1000)
       },
       onClickModuleBtn(val){
-        this.$router.replace(`/digitalPark/moduleConfigure?type=${val}`)
+        this.$router.push(`/digitalPark/moduleConfigure?type=${val}`)
       },
       onClickGoBackBtn(){
         this.$router.go(-1)

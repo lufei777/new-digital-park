@@ -105,19 +105,13 @@
          if(this.$route.query.updateProList){ // 拖进来替换完设置左侧已有的不能拖动
            this.$parent.setItemDragFlag &&
            this.$parent.setItemDragFlag(this.userProModuleList)
-           let index=0
-           this.userProModuleList.map((item)=>{
-             if(item.menuId==this.$route.query.moduleId){
-                if(this.$route.query.index!=-1){
-                  index=this.$route.query.index
-                }else if(this.$route.query.index==-1 && item.moduleList.length!=1){
-                  index=1
-                }
-                console.log(item)
-                item.moduleList.splice(index,1)
+           this.$router.replace({
+             path: this.$route.path,
+             query: {...this.$route.query,...{
+                 updateProList:false,
+               }
              }
            })
-           console.log('lalala',this.userProModuleList)
          }
          this.dragFlag=Boolean(this.$route.query.updateDragFlag) //设置右侧非同组不可拖动
       }

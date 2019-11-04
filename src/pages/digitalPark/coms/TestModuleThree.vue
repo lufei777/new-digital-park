@@ -1,6 +1,6 @@
 <template>
-  <div class="test-module-one">
-    <div ref="myChart"  class="my-chart" id="test-module-one-chart"></div>
+  <div class="test-module-three">
+    <div ref="myChart"  class="my-chart" id="test-module-three-chart"></div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -27,8 +27,8 @@ export default {
       this.initChart(res)
     },
     initChart(res) {
-      //document.getElementById('test-module-one-chart')this.$refs.myChart
-      let myChart = echarts.init(this.$refs.myChart);
+      //document.getElementById('test-module-three-chart')this.$refs.myChart
+      let myChart = echarts.init(this.$refs.myChart || document.getElementById('test-module-three-chart'));
       let legendData = [];
       let dataList = [];
       res.elecList.map(item => {
