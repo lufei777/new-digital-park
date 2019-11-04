@@ -1,6 +1,6 @@
 <template>
   <div class="test-module-one">
-    <div ref="pieCharts"  class="my-chart" id="attendance-detail-chart"></div>
+    <div ref="myChart"  class="my-chart" id="test-module-one-chart"></div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -21,7 +21,8 @@ export default {
       this.createPieCharts(res);
     },
     createPieCharts(res) {
-      let myPieChart = echarts.init(this.$refs.pieCharts);
+      //this.$refs.pieCharts
+      let myPieChart = echarts.init(this.$refs.myChart || document.getElementById('test-module-one-chart'));
       let legendData = [];
       let legend = "right";
       let color = ["#F7B87F", "#B6A2DE", "#56C7C9", "#5AB1EF"];

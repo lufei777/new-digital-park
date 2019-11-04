@@ -29,7 +29,7 @@
       },
       initChart(res) {
         //document.getElementById('energy-electricity-proportion-chart')this.$refs.myChart
-        let myChart = echarts.init(this.$refs.myChart);
+        let myChart = echarts.init(this.$refs.myChart || document.getElementById('energy-electricity-proportion-chart'));
         let legendData = [];
         let dataList = [];
         res.elecList.map(item => {

@@ -115,18 +115,43 @@
       onChange (evt) {
         console.log("itempromodule",evt)
         if (evt.added) {
+          console.log(this.moduleData.moduleList)
           // let obj={
           //   moduleId:this.moduleData.id,
           //   index:evt.added.newIndex-1
           // }
           // this.moduleData.moduleList.splice(evt.added.newIndex-1,1)
           // console.log(evt, this.moduleData.moduleList)
+          // let index=0
+          // this.userProModuleList.map((item)=>{
+          //   if(item.menuId==this.$route.query.moduleId){
+          //     if(this.$route.query.index!=-1){
+          //       index=this.$route.query.index
+          //     }else if(this.$route.query.index==-1 && item.moduleList.length!=1){
+          //       index=1
+          //     }
+          //     console.log(item)
+          //     item.moduleList.splice(index,1)
+          //   }
+          // })
+          let index=evt.added.newIndex-1
+          if(this.moduleData.moduleList.length==3){
+            if(evt.added.newIndex==0){
+              index = 1
+            }
+            this.moduleData.moduleList.splice(index, 1)
+          }
+          // if(evt.added.newIndex==0 && this.moduleData.moduleList.length!=1) {
+          //   index = 1
+          //
+          // }
+          console.log( this.moduleData.moduleList)
           this.$router.replace({
             path: this.$route.path,
             query: {...this.$route.query,...{
                 updateProList:true,
-                moduleId:evt.added.element.pid,
-                index:evt.added.newIndex-1
+                // moduleId:evt.added.element.pid,
+                // index:evt.added.newIndex-1
               }
             }
           })
