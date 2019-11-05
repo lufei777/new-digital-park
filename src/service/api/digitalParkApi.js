@@ -25,6 +25,10 @@ class DigitalParkApi {
   @url('/oaApi/userModuleRel/update')
   @put
   updateUserProModules(){}
+
+  @url('/oaApi/user/logout')
+  @get
+  logOut(){}
 }
 
 export default new DigitalParkApi()

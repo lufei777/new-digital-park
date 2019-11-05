@@ -10,7 +10,7 @@
            </el-select><i>|</i>
       </span>
       <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
-         <el-select v-model="moduleType" placeholder="切换模式" @change="onClickChangeModel">
+         <el-select v-model="myModuleType" placeholder="切换模式" @change="onClickChangeModel">
             <el-option :label="$t('homeHeader.waterfall')" value="2"></el-option>
             <el-option :label="$t('homeHeader.dashboard')" value="1"></el-option>
          </el-select><i>|</i>
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+  import DigitalParkApi from '../../../service/api/digitalParkApi'
   export default {
     name: 'DigitalNavOperator',
     components: {
@@ -37,9 +38,18 @@
       }
     },
     computed:{
+      myModuleType:{
+        set(){
+          this.onClickChangeModel()
+        },
+        get(){
+          return this.moduleType
+        }
+      }
     },
     methods: {
       onClickChangeModel(val){
+        // this.$parent.changeModel(val)
         if(val==1){
           this.$router.replace('/digitalPark/dashboardHomePage')
         }else{
@@ -51,9 +61,13 @@
         Cookies.set('lang',val)
         this.$parent.handleLangChange && this.$parent.handleLangChange()
       },
-      onClickUserConfigure(val){
+      async onClickUserConfigure(val){
         if(val==1){
           this.$router.push(`/digitalPark/moduleConfigure?type=${this.moduleType}`)
+        }else{
+          sessionStorage.removeItem('token')
+          window.location.href='/digitalPark/homePage'
+          await DigitalParkApi.logOut()
         }
       }
     },
