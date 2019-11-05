@@ -33,14 +33,14 @@ var axios = axiosOrigin.create(config);
 
 axios.defaults.headers.get["Content-Type"] = "application/x-www-form-urlencoded";
 axios.defaults.headers.post["Content-Type"] = "application/json";
-
+// axios.get('/oaApi/user/login').then().catch()
 axios.interceptors.request.use(
   function (config) {
     if (sessionStorage.token) {
       config.headers['X-SSO-Token'] = sessionStorage.token;
     }
     config.headers['X-Requested-With'] = 'XMLHttpRequest';
-    config.headers['X-Requested-InPage'] = window.location.href;
+    config.headers['X-Requested-InPage'] = window.location.href ;
     /* try {
       loadingInstance = Loading.service({});
       loadingCount++;
@@ -96,7 +96,6 @@ axios.interceptors.response.use(
     }
   },
   function (error) {
-    // Do something with response erro
     try {
       let redirect = error.response.headers["X-SSO-Redirect"] || error.response.headers["x-sso-redirect"];
       if (error.response && error.response.status == 401 && redirect) {

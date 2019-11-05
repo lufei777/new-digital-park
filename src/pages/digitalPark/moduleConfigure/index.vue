@@ -204,7 +204,12 @@
         this.$router.push(`/digitalPark/moduleConfigure?type=${val}`)
       },
       onClickGoBackBtn(){
-        this.$router.go(-1)
+        if(this.type==1){
+          this.$router.push(`/digitalPark/dashboardHomePage`)
+        }else{
+          this.$router.push(`/digitalPark/homePage`)
+        }
+
       },
       controlHeader() {
         $("body").mousemove((e) => {

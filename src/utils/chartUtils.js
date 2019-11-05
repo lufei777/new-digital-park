@@ -27,7 +27,8 @@ class chartUtils {
         data: data.legendData
       },
       tooltip:{
-        trigger: 'axis'
+        trigger: 'axis',
+        showDelay:300
       },
       calculable: true,
       color:['#4094ff','#013b4e','#FAAD14','#F5222D'],
@@ -69,7 +70,8 @@ class chartUtils {
       },
       tooltip: {
         trigger: 'item',
-        formatter: "{a} <br/>{b}: {c} ({d}%)"
+        formatter: "{a} <br/>{b}: {c} ({d}%)",
+        showDelay:300
       },
       legend: {
         orient: 'vertical',
@@ -120,7 +122,8 @@ class chartUtils {
       },
       tooltip : {
         trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
+        formatter: "{a} <br/>{b} : {c} ({d}%)",
+        showDelay:300
       },
       legend: {
         orient: 'vertical',

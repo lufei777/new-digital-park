@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import axois from '../service/axios/AxiosInterceptors'
 import { flattenDeep } from '../utils/czUtils'
 
 // 公共路由
@@ -21,6 +22,14 @@ let DigitalRouters = flattenDeep([DigitalParkRouter, AssetManage, EnergyRouters]
 
 // const routes = flattenDeep([DigitalRouters]);
 Vue.use(Router)
-export default new Router({
-    "routes": DigitalRouters
+const router = new Router({
+  "routes": DigitalRouters
 })
+
+router.beforeEach((to, from, next) => {
+  // console.log(to,from)
+  axois.get('/oaApi/user/login').then(()=>{
+    next()
+  }).catch(()=>{})
+})
+export default router

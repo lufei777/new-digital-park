@@ -156,7 +156,10 @@
                 type:1,
                 moduleList:[evt.added.element],
               }
-              this.proModuleList1.splice(evt.added.newIndex -1,1,obj).slice(0,3)
+              this.proModuleList1.splice(evt.added.newIndex-1,1,obj)
+              this.proModuleList1.splice(evt.added.newIndex,1)
+              this.$parent.setItemDragFlag &&
+              this.$parent.setItemDragFlag([...this.proModuleList1,...this.proModuleList2])
               return;
             }
             this.changeObj = this.proModuleList1.splice(evt.added.newIndex + 1, 1)[0]
@@ -173,14 +176,17 @@
             this.proModuleList2.splice(evt.removed.oldIndex, 0, this.changeObj)
             this.updateProModule()
           } else if (evt.added){
-            if(evt.added.newIndex>2){
+            if(evt.added.newIndex==3){
               let obj={
                 // menuId:item.menuId,
                 menuName:evt.added.element.menuName,
                 type:1,
                 moduleList:[evt.added.element],
               }
-              this.proModuleList1.splice(evt.added.newIndex -1,1,obj).slice(0,3)
+              this.proModuleList2.splice(evt.added.newIndex-2,1,obj)
+              this.proModuleList2.splice(evt.added.newIndex-1,1)
+              this.$parent.setItemDragFlag &&
+              this.$parent.setItemDragFlag([...this.proModuleList1,...this.proModuleList2])
               return;
             }
             this.changeObj = this.proModuleList2.splice(evt.added.newIndex + 1, 1)[0]
@@ -301,6 +307,7 @@
       this.scrollNews()
       this.getModulesByType()
       this.getProductList()
+
     }
   }
 </script>
