@@ -1,6 +1,6 @@
 <template>
   <div class="operate-income">
-    <div>
+    <div class="select-box">
       <el-button size="mini" :style="Bg">年报</el-button>
       <el-button size="mini">月报</el-button>
       <el-select v-model="income" placeholder="请选择" size="mini">
@@ -88,16 +88,21 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-.my-chart{
-      // height:70%;
-    //   margin:0 auto;
-    }
 .operate-income {
   .el-button {
      border:none;
     //  background: none;
      background:url('../../../../static/image/digitalPark/tag_bg.png') no-repeat center;
      background-size:100% 100%;
+  }
+  .select-box{
+    width:100%;
+    padding:0 10px;
+    box-sizing: border-box;
+  }
+  .el-select{
+    width:90px;
+    float: right;
   }
 }
 </style>

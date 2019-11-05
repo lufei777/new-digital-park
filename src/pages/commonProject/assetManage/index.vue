@@ -6,8 +6,11 @@
                :collapse="isCollapse"
                background-color="#394562"
                text-color="#B7BAC4"
+               @open="handleOpen"
+               @close="handleClose"
+               @select="handleSelect"
       >
-        <el-menu-item index="1">
+        <el-menu-item index="">
           <i class="el-icon-menu"></i>
           <span slot="title">首页</span>
         </el-menu-item>
@@ -15,22 +18,28 @@
           <i class="el-icon-menu"></i>
           <span slot="title">我的资产</span>
         </el-menu-item>
-        <el-submenu index="3">
+        <el-submenu index="/assetMaintenance">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span>资产信息维护</span>
           </template>
-          <el-menu-item index="1-1">资产组设置</el-menu-item>
-          <el-menu-item index="1-2">资产类型设置</el-menu-item>
+          <el-menu-item index="/assetGroup">资产组设置</el-menu-item>
+          <el-menu-item index="/assetType">资产类型设置</el-menu-item>
         </el-submenu>
       </el-menu>
     <!--</div>-->
     <div class="right-content">
-        <div class="asset-bread-crumb">
+        <div class="asset-bread-crumb flex-align">
           <i class="el-icon-location"
              style="font-size: 30px;line-height: 70px;"
              @click="onClickCollapseBtn"
           ></i>
+          <el-breadcrumb separator="/">
+            <el-breadcrumb-item v-for="(item,index) in assetBreadcrumb"
+                                :key="index"
+                                :to="item.path">{{item.name}}
+            </el-breadcrumb-item>
+          </el-breadcrumb>
         </div>
         <router-view></router-view>
     </div>
@@ -62,9 +71,7 @@
       return {
         menuList:menuList,
         isCollapse:false,
-        dataList:['1','2','3','4'],
-        activeName:'1'
-        // assetBreadcrumb:[{name:'资产管理',path:'/assetManage'}]
+        // assetBreadcrumb:[{name:'资产信息维护',path:'/assetMaintenance'}]
       }
     },
     methods:{
@@ -82,12 +89,20 @@
         // }
         this.$router.push(item.path)
       },
-      handleOpen(){},
+      handleOpen(key){
+          this.$router.push(key)
+      },
+      handleClose(key){
+        this.$router.push(key)
+      },
       onClickCollapseBtn(){
         this.isCollapse=!this.isCollapse
-        // if(this.isCollapse){
-        //   $(".my-el-menu").('width')
-        // }
+      },
+      handleSelect(index,indexPath){
+        console.log(index,indexPath)
+        if(index && index!=2){
+          this.$router.push(index)
+        }
       }
     },
     mounted(){
@@ -104,6 +119,7 @@
       float: left;
       height:100%;
       width:15%;
+
     }
     .my-el-menu2{
       float: left;
@@ -121,21 +137,25 @@
       /*width:100%;*/
       height:70px;
       border:1px solid #ccc;
+      color:#969CA8;
     }
-    /*.el-submenu__icon-arrow{*/
-      /*right:0;*/
-    /*}*/
-    /*.el-submenu{*/
-      /*padding:0 20px;*/
-    /*}*/
-    /*.el-breadcrumb{*/
-      /*padding:20px 0;*/
-    /*}*/
-    /*a{*/
-      /*margin:0 20px;*/
-      /*&:hover{*/
-        /*cursor: pointer;*/
-      /*}*/
-    /*}*/
+    .el-submenu__title,.el-menu-item{
+      font-size: 14px;
+      &:hover{
+        background-color: #416EFF !important;
+      }
+      a{
+        color:#B7BAC4;
+        text-decoration: none;
+      }
+    }
+    .el-menu-item.is-active{
+        background-color: #416EFF !important;
+        color:#B7BAC4;
+    }
+    .el-submenu.is-active{
+      background-color: #416EFF !important;
+      color:#B7BAC4;
+    }
   }
 </style>
