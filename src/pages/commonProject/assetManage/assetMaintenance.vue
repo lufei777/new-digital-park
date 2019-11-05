@@ -1,5 +1,5 @@
 <template>
-  <div class="asset-maintenance">
+  <div class="asset-maintenance" v-loading="loading">
     <div class="choose-box flex-align">
       <div class="block flex-align-center">
         <span>编号</span>
@@ -132,6 +132,7 @@ export default {
       typeTree: [],
       orderType: "0",
       orderBy: "create_time",
+      loading:true,
       excelDialogObj: {//excel导入
         title: "excel导入",
         classList: [],
@@ -354,6 +355,7 @@ export default {
         res.hideExportBtn=true
         res.dataList=res.list
         this.assetData=res
+        this.loading=false
       },
       onClickSearchBtn(){
         this.curPage=1

@@ -1,6 +1,6 @@
 <template>
   <div class="asset-growth-statistics">
-    <div ref="myChart" class="my-chart"></div>
+    <div ref="myChart" class="my-chart" id="asset-growth-statistics-chart"></div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     initChart(){
-      let myChart = echarts.init(this.$refs.myChart);
+      let myChart = echarts.init(this.$refs.myChart || document.getElementById('asset-growth-statistics-chart'));
       let option = {
         xAxis: {
           type: 'category',

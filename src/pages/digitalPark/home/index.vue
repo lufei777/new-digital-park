@@ -1,6 +1,6 @@
 <template>
   <div class="park-home-page" v-loading="loading">
-    <div class="home-header" v-if="!hideHeader">
+    <div class="home-header" v-show="!hideHeader">
       <div class="home-header-inner flex-align-between">
         <div class="header-nav-left">
           <h3 class="title">{{$t('homeHeader.title')}}</h3>
@@ -13,7 +13,7 @@
       <Sidebar  :menuList="menuList"/>
     </div>
 
-    <el-carousel height="550px" :interval="2000">
+    <el-carousel height="550px" :interval="2000" v-if="!hideHeader">
       <el-carousel-item >
         <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo1.png" alt="">
       </el-carousel-item>

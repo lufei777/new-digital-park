@@ -56,7 +56,7 @@
          this.initChart(res)
       },
       initChart(res) {
-        let myChart = echarts.init(this.$refs.myChart);
+        let myChart = echarts.init(this.$refs.myChart || document.getElementById('energy-proportion-analysis-chart'));
         let xAxis
         xAxis = res.value.map((item)=>item.date.slice(0,7))
         let dqzh={
