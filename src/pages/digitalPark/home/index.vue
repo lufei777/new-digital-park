@@ -40,6 +40,8 @@
                   v-bind="getOptions()"
                   class="draggable-box"
                   @change="onDragChange"
+                  @start="onDragStart"
+                  @end="onDragEnd"
 
       >
         <ItemProModule v-for="(item) in userProModuleList"
@@ -77,8 +79,7 @@
   import NavOperator from '../coms/navOperator'
   import draggable from 'vuedraggable'
   import ItemProModule from '../coms/itemProModule'
-  import {mapState} from 'vuex';
-
+  import {mapState} from 'vuex'
   export default {
     name: 'DigitalHomePage',
     props:['hideHeader','curProModule'],
@@ -97,11 +98,15 @@
         userProModuleList:[],
         moduleType:"2",
         loading:true,
-        dragFlag:true
+        // dragFlag:true
       }
     },
     computed:{
-      ...mapState('digitalPark',["oldProjectHome"])
+      ...mapState({
+        dragFlag:state=>state.digitalPark.dragFlag,
+        oldProjectHome:state=>state.digitalPark.oldProjectHome
+      })
+      // ...mapState('digitalPark',["oldProjectHome"])
     },
     watch:{
       $route(){
@@ -116,7 +121,6 @@
              }
            })
          }
-         this.dragFlag=Boolean(this.$route.query.updateDragFlag) //设置右侧非同组不可拖动
       }
     },
     methods:{
@@ -186,10 +190,15 @@
            }
            this.userProModuleList.splice(evt.added.newIndex,1,obj)
            this.userProModuleList.splice(evt.added.newIndex-1,1)
-           // console.log('2',this.userProModuleList)
            this.$parent.setItemDragFlag &&
            this.$parent.setItemDragFlag(this.userProModuleList)
          }
+      },
+      onDragStart(){
+        this.$parent.setContentListDragFlag && this.$parent.setContentListDragFlag(false)
+      },
+      onDragEnd(){
+        this.$parent.setContentListDragFlag && this.$parent.setContentListDragFlag(true)
       },
       handleLangChange(){
         this.getMenuTree()
@@ -205,7 +214,7 @@
             return item.menuId==this.curProModule.id
           })
           if(obj){  //整个userList不可拖动
-            this.dragFlag=false
+            this.$store.commit('digitalPark/dragFlag',false)
           }
           this.userProModuleList.map((item)=>{
             if(item.menuId!=this.curProModule.id){

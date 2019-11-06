@@ -1,6 +1,11 @@
 <template>
   <div class="task-ranking">
-    <div ref="pieCharts" class="my-chart" id="task-ranking-chart"></div>
+    <!--<div ref="pieCharts" class="my-chart" id="task-ranking-chart"></div>-->
+    <div class="my-chart">
+    <img
+      style="width:100%;height:auto;margin-top:40px;display: inline-block"
+      src="../../../../static/image/digitalPark/renwu2_tmp.png" alt="">
+  </div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>

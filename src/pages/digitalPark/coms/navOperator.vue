@@ -63,7 +63,7 @@
       },
       async onClickUserConfigure(val){
         if(val==1){
-          this.$router.push(`/digitalPark/moduleConfigure?type=${this.moduleType}`)
+          this.$router.push(`/digitalPark/moduleConfigure?type=${this.moduleType}&updateDragFlag=true`)
         }else{
           sessionStorage.removeItem('token')
           window.location.href='/digitalPark/homePage'
