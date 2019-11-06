@@ -6,6 +6,9 @@ const state = {
 const mutations={
   dragFlag(state,data) {
     state.dragFlag = data
+  },
+  oldProjectHome(state,data){
+    state.oldProjectHome = data
   }
 }
 
