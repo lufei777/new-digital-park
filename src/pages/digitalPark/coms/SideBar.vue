@@ -2,7 +2,6 @@
   <div class="sidebar-container">
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
-        router
         :default-active="activeIndex2"
         mode="horizontal"
         class="el-menu-demo"
@@ -19,6 +18,7 @@
 </template>
 <script>
 import SidebarItem from "./SidebarItem";
+import { mapState } from "vuex";
 
 export default {
   name: "Sidebar",
@@ -39,8 +39,15 @@ export default {
   },
   methods: {
     handleSelect(key, keyPath) {
-      console.log(key, keyPath);
+      var routerUrl = ("@?forward=" + keyPath[0].split("@")[1]).replace(
+        "@",
+        this.oldProjectHome
+      );
+      console.log(routerUrl);
     }
+  },
+  computed: {
+    ...mapState("digitalPark", ["oldProjectHome"])
   }
 };
 </script>
@@ -49,7 +56,7 @@ export default {
 .el-submenu__title {
   font-size: 16px;
 }
-.el-menu-demo{
+.el-menu-demo {
   border-bottom: none !important;
 }
 .sidebar-container .is-active {

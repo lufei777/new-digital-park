@@ -1,13 +1,13 @@
 <template>
   <div class="menu-item" v-if="item.childNode">
     <template v-if="item.childNode.length == 0">
-      <el-menu-item :index="item.id">
+      <el-menu-item :index="item.id + item.routeAddress">
         <!-- <i class="el-icon-menu"></i> -->
         {{item.name}}
       </el-menu-item>
     </template>
 
-    <el-submenu v-else :index="item.id">
+    <el-submenu v-else :index="item.id + item.routeAddress">
       <template slot="title">
         <!-- <i class="el-icon-menu"></i> -->
         {{item.name}}
@@ -37,6 +37,9 @@ export default {
       type: Object,
       required: true
     }
+  },
+  mounted() {
+    // console.log(this.item);
   }
 };
 </script>
