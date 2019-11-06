@@ -131,6 +131,8 @@
             window.open(this.oldProjectHome + '?forward=' + routeAddress.split('@')[1])
           }
           // window.open(item.routeAddress)
+        }else{
+          window.open('/#/digitalPark/defaultPage')
         }
       },
       onShowMoreProduct(){
