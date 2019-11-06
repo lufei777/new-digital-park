@@ -103,8 +103,10 @@
     },
     computed:{
       ...mapState({
-        dragFlag:state=>state.digitalPark.dragFlag
+        dragFlag:state=>state.digitalPark.dragFlag,
+        oldProjectHome:state=>state.digitalPark.oldProjectHome
       })
+      // ...mapState('digitalPark',["oldProjectHome"])
     },
     watch:{
       $route(){
@@ -123,8 +125,18 @@
     },
     methods:{
       onClickItemProduct(item){
-        if(item.routeAddress){
-          window.open(item.routeAddress)
+        // 192.168.1.69：9002/html
+        console.log(this.oldProjectHome);
+        console.log(item.routeAddress);
+        let routeAddress = item.routeAddress;
+        if(routeAddress){
+          // 如果带有@字符，则跳转旧项目
+          if(routeAddress.indexOf('@') != -1){
+            window.open(this.oldProjectHome + '?forward=' + routeAddress.split('@')[1])
+          }else{
+            window.open(item.routeAddress);
+            // this.$router.push();
+          }
         }else{
           window.open('/#/digitalPark/defaultPage')
         }
