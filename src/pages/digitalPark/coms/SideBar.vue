@@ -39,11 +39,13 @@ export default {
   },
   methods: {
     handleSelect(key, keyPath) {
-      var routerUrl = ("@?forward=" + keyPath[0].split("@")[1]).replace(
-        "@",
-        this.oldProjectHome
-      );
-      console.log(routerUrl);
+      if (keyPath[0].indexOf("@") != -1) {
+        window.open(
+          this.oldProjectHome +
+            "?forward=" +
+            keyPath[keyPath.length - 1].split("@")[1]
+        );
+      }
     }
   },
   computed: {
