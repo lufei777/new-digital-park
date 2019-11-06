@@ -129,8 +129,10 @@
           // 如果带有@字符，则跳转旧项目
           if(routeAddress.indexOf('@') != -1){
             window.open(this.oldProjectHome + '?forward=' + routeAddress.split('@')[1])
+          }else{
+            window.open(item.routeAddress);
+            // this.$router.push();
           }
-          // window.open(item.routeAddress)
         }else{
           window.open('/#/digitalPark/defaultPage')
         }

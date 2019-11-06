@@ -39,12 +39,13 @@ export default {
   },
   methods: {
     handleSelect(key, keyPath) {
-      if (keyPath[0].indexOf("@") != -1) {
-        window.open(
-          this.oldProjectHome +
-            "?forward=" +
-            keyPath[keyPath.length - 1].split("@")[1]
-        );
+      if (key) {
+        if (key.indexOf("null") != -1) {
+          window.open("/#/digitalPark/defaultPage");
+        }
+        if (key.indexOf("@") != -1) {
+          window.open(this.oldProjectHome + "?forward=" + key.split("@")[1]);
+        }
       }
     }
   },
