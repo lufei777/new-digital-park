@@ -489,6 +489,7 @@ export default {
 .asset-maintenance {
   height: 100%;
   padding: 20px;
+  font-size: 14px;
   .choose-box {
     overflow: hidden;
     padding: 20px 0;
@@ -496,6 +497,7 @@ export default {
   .block {
     margin-right: 40px;
     display: flex;
+
     span {
       flex-shrink: 0;
       margin-right: 10px;

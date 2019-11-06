@@ -21,7 +21,7 @@
         <el-submenu index="/assetMaintenance">
           <template slot="title">
             <i class="el-icon-location"></i>
-            <span>资产信息维护</span>
+            <span class="">资产信息维护</span>
           </template>
           <el-menu-item index="/assetGroup">资产组设置</el-menu-item>
           <el-menu-item index="/assetType">资产类型设置</el-menu-item>

@@ -15,18 +15,18 @@
 
     <el-carousel height="550px" :interval="2000" v-if="!hideHeader">
       <el-carousel-item >
-        <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo1.png" alt="">
+        <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo1.jpg" alt="">
       </el-carousel-item>
       <el-carousel-item >
-        <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo2.png" alt="">
+        <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo2.jpg" alt="">
       </el-carousel-item>
     </el-carousel>
 
     <div class="home-center">
       <div class="product-module">
         <div class="flex-align-between module-title">
-          <h3>我们的产品</h3>
-          <span class="hover-pointer more-btn" @click="onShowMoreProduct">更多</span>
+          <h3>功能模块</h3>
+          <span class="hover-pointer more-btn" @click="onShowMoreProduct">{{$t('more')}}</span>
         </div>
         <ul class="flex-align-around production-list" :style="showMoreProduct?'':{height:'120px'}">
           <li v-for="(item,index) in productList"
@@ -132,13 +132,12 @@
         if(routeAddress){
           // 如果带有@字符，则跳转旧项目
           if(routeAddress.indexOf('@') != -1){
-            window.open(this.oldProjectHome + '?forward=' + routeAddress.split('@')[1])
+            location.href=this.oldProjectHome + '?forward=' + routeAddress.split('@')[1]
           }else{
-            window.open(item.routeAddress);
-            // this.$router.push();
+            this.$router.push(item.routeAddress);
           }
         }else{
-          window.open('/#/digitalPark/defaultPage')
+            this.$router.push('/digitalPark/defaultPage')
         }
       },
       onShowMoreProduct(){
@@ -179,7 +178,7 @@
         this.userProModuleList =res
         this.loading=false
       },
-      onDragChange(evt){
+      async onDragChange(evt){
          console.log('out-moudle-change',evt)
          if(evt.added) {
            let obj = {
@@ -192,6 +191,11 @@
            this.userProModuleList.splice(evt.added.newIndex-1,1)
            this.$parent.setItemDragFlag &&
            this.$parent.setItemDragFlag(this.userProModuleList)
+         }
+         if(evt.moved){
+           if(this.$route.path=='/digitalPark/homePage'){
+             await DigitalParkApi.updateUserProModules(this.userProModuleList)
+           }
          }
       },
       onDragStart(){
