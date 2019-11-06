@@ -77,6 +77,8 @@
   import NavOperator from '../coms/navOperator'
   import draggable from 'vuedraggable'
   import ItemProModule from '../coms/itemProModule'
+  import {mapState} from 'vuex';
+
   export default {
     name: 'DigitalHomePage',
     props:['hideHeader','curProModule'],
@@ -99,6 +101,7 @@
       }
     },
     computed:{
+      ...mapState('digitalPark',["oldProjectHome"])
     },
     watch:{
       $route(){
@@ -118,10 +121,16 @@
     },
     methods:{
       onClickItemProduct(item){
-        if(item.routeAddress){
-          window.open(item.routeAddress)
-        }else{
-          window.open('/#/digitalPark/defaultPage')
+        // 192.168.1.69：9002/html
+        console.log(this.oldProjectHome);
+        console.log(item.routeAddress);
+        let routeAddress = item.routeAddress;
+        if(routeAddress){
+          // 如果带有@字符，则跳转旧项目
+          if(routeAddress.indexOf('@') != -1){
+            window.open(this.oldProjectHome + '?forward=' + routeAddress.split('@')[1])
+          }
+          // window.open(item.routeAddress)
         }
       },
       onShowMoreProduct(){
