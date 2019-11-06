@@ -1,10 +1,10 @@
 const state = {
-  userProModuleList:[]
+  dragFlag:true
 }
 
 const mutations={
-  userProModuleList(state,data){
-    state.userProModuleList=data
+  dragFlag(state,data){
+    state.dragFlag=data
   }
 }
 

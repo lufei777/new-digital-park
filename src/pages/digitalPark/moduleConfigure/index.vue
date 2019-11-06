@@ -63,6 +63,7 @@
   import HomePage from '../home/index'
   import Dashboard from '../home/dashboard'
   import CommonFun from '../../../utils/commonFun'
+  import {mapState} from 'vuex'
   export default {
     name: 'ModuleConfigure',
     components: {
@@ -110,6 +111,14 @@
         return {
           backgroundImage:'url('+require('../../../../static/image/digitalPark/full_btn_bg.png')+')',
         }
+      },
+      ...mapState({
+        dragFlag:state=>state.digitalPark.dragFlag
+      })
+    },
+    watch:{
+      dragFlag(){
+        this.setContentListDragFlag(this.dragFlag)
       }
     },
     methods: {
