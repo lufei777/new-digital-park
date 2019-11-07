@@ -26,10 +26,10 @@ const router = new Router({
   "routes": DigitalRouters
 })
 
-// router.beforeEach((to, from, next) => {
-//   // console.log(to,from)
-//   axois.get('/oaApi/user/login').then(()=>{
-//     next()
-//   }).catch(()=>{})
-// })
+router.beforeEach((to, from, next) => {
+  // console.log(to,from)
+  axois.get('/oaApi/user/login').then(()=>{
+    next()
+  }).catch(()=>{})
+})
 export default router

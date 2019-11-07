@@ -10,7 +10,9 @@
         </el-input>
         <NavOperator :moduleType.sync="moduleType" />
       </div>
-      <Sidebar  :menuList="menuList"/>
+      <div class="sidebar-container">
+        <Sidebar  :menuList="menuList" :menuConfig="menuConfig"/>
+      </div>
     </div>
 
     <el-carousel height="550px" :interval="2000" v-if="!hideHeader">
@@ -98,7 +100,13 @@
         userProModuleList:[],
         moduleType:"2",
         loading:true,
-        // dragFlag:true
+        menuConfig:{
+          mode:'horizontal',
+          bgColor:'#fff',
+          textColor:'#606266',
+          specialRoute:true,
+          // activeTextColor:'red'
+        }
       }
     },
     computed:{
@@ -127,8 +135,12 @@
       onClickItemProduct(item){
         // 192.168.1.69：9002/html
         console.log(this.oldProjectHome);
-        console.log(item.routeAddress);
+        console.log(item);
         let routeAddress = item.routeAddress;
+        if(item.name=="综合安防" ||item.name=="机房动环" || item.name=="智能建筑"){//目前先写死
+          Client.SkipToSigleBuild(item.name);
+          return ;
+        }
         if(routeAddress){
           // 如果带有@字符，则跳转旧项目
           if(routeAddress.indexOf('@') != -1){
@@ -389,6 +401,29 @@
     }
     .product-module{
       margin-top: 20px;
+    }
+    .menu-item {
+      float: left;
+    }
+    .sidebar-container {
+      width: 80%;
+      margin: 0 auto;
+      padding-top: 10px;
+    }
+    .sidebar-container .is-active {
+      /*border-bottom: 2px solid red;*/
+    }
+    .nest-menu {
+        float: none;
+       .el-submenu__icon-arrow {
+           position: absolute !important;
+       }
+    }
+    .el-menu--horizontal .el-submenu__icon-arrow {
+      position: static;
+      vertical-align: middle;
+      margin-left: 8px;
+      margin-top: -3px;
     }
   }
 </style>

@@ -1,9 +1,9 @@
 <template>
   <div class="asset-manage">
-    <div class="left-nav">
+    <!--<div class="left-nav">-->
       <!--<el-menu-->
-               <!--:class="isCollapse?'my-el-menu2':'my-el-menu'"-->
-               <!--:collapse="isCollapse"-->
+               <!--:class="menuConfig.isCollapse?'my-el-menu2':'my-el-menu'"-->
+               <!--:collapse="menuConfig.isCollapse"-->
                <!--background-color="#394562"-->
                <!--text-color="#B7BAC4"-->
                <!--@open="handleOpen"-->
@@ -27,9 +27,9 @@
           <!--<el-menu-item index="/assetType">资产类型设置</el-menu-item>-->
         <!--</el-submenu>-->
       <!--</el-menu>-->
-      <SideBar :menu-list="menuList"
-      :class="isCollapse?'my-el-menu2':'my-el-menu'"/>
-    </div>
+      <SideBar :menu-list="menuList" :menu-config="menuConfig"
+      :class="menuConfig.isCollapse?'my-el-menu2':'my-el-menu'"/>
+    <!--</div>-->
 
     <div class="right-content">
         <div class="asset-bread-crumb flex-align">
@@ -44,36 +44,44 @@
             </el-breadcrumb-item>
           </el-breadcrumb>
         </div>
-        <!--<router-view></router-view>-->
+        <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
   let menuList=[{
-    path:'$1',
+    routeAddress:'$1',
     name:'首页',
     childNode:[],
     id:1,
+    icon:'123'
   },{
-    path:'$2',
+    routeAddress:'$2',
     name:'我的资产',
     childNode:[],
-    id:2
+    id:2,
+    icon:'123'
   },{
-    path:"/assetMaintenance",
-    name:'资产信息维护',
+    routeAddress:"/assetMaintenance",
+    name:'资产信息',
     id:3,
+    icon:'123',
     childNode:[{
-      path:"/assetGroup",
-      name:'资产组设置',
+      routeAddress:"/assetMaintenance",
+      name:'资产信息维护',
       childNode:[],
       id:4
     },{
-      path:"/assetType",
-      name:'资产类型设置',
+      routeAddress:"/assetGroup",
+      name:'资产组设置',
       childNode:[],
       id:5
+    },{
+      routeAddress:"/assetType",
+      name:'资产类型设置',
+      childNode:[],
+      id:6
     }]
   }]
   import {mapState} from 'vuex'
@@ -92,6 +100,11 @@
       return {
         menuList:menuList,
         isCollapse:false,
+        menuConfig:{
+          bgColor:'#394562',
+          textColor:'#B7BAC4',
+          isCollapse:false,
+        }
         // assetBreadcrumb:[{name:'资产信息维护',path:'/assetMaintenance'}]
       }
     },
@@ -117,7 +130,7 @@
         this.$router.push(key)
       },
       onClickCollapseBtn(){
-        this.isCollapse=!this.isCollapse
+        this.menuConfig.isCollapse=!this.menuConfig.isCollapse
       },
       handleSelect(index,indexPath){
         console.log(index,indexPath)
@@ -137,10 +150,14 @@
 <style lang="less">
   .asset-manage{
     height: 100%;
+    .left-nav{
+      /*height:100%;*/
+    }
     .my-el-menu{
       float: left;
       height:100%;
       width:15%;
+      background-color:#394562 ;
 
     }
     .my-el-menu2{
@@ -162,7 +179,7 @@
       color:#969CA8;
     }
     .el-submenu__title,.el-menu-item{
-      font-size: 14px;
+      font-size: 18px;
       &:hover{
         background-color: #416EFF !important;
       }
@@ -170,6 +187,9 @@
         color:#B7BAC4;
         text-decoration: none;
       }
+    }
+    .el-menu-item{
+      font-size: 16px;
     }
     .el-menu-item.is-active{
         background-color: #416EFF !important;
