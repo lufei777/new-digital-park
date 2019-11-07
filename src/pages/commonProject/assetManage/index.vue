@@ -1,33 +1,36 @@
 <template>
   <div class="asset-manage">
     <!--<div class="left-nav">-->
-      <el-menu default-active="1-4-1"
-               :class="isCollapse?'my-el-menu2':'my-el-menu'"
-               :collapse="isCollapse"
-               background-color="#394562"
-               text-color="#B7BAC4"
-               @open="handleOpen"
-               @close="handleClose"
-               @select="handleSelect"
-      >
-        <el-menu-item index="">
-          <i class="el-icon-menu"></i>
-          <span slot="title">首页</span>
-        </el-menu-item>
-        <el-menu-item index="2">
-          <i class="el-icon-menu"></i>
-          <span slot="title">我的资产</span>
-        </el-menu-item>
-        <el-submenu index="/assetMaintenance">
-          <template slot="title">
-            <i class="el-icon-location"></i>
-            <span>资产信息维护</span>
-          </template>
-          <el-menu-item index="/assetGroup">资产组设置</el-menu-item>
-          <el-menu-item index="/assetType">资产类型设置</el-menu-item>
-        </el-submenu>
-      </el-menu>
+      <!--<el-menu-->
+               <!--:class="menuConfig.isCollapse?'my-el-menu2':'my-el-menu'"-->
+               <!--:collapse="menuConfig.isCollapse"-->
+               <!--background-color="#394562"-->
+               <!--text-color="#B7BAC4"-->
+               <!--@open="handleOpen"-->
+               <!--@close="handleClose"-->
+               <!--@select="handleSelect"-->
+      <!--&gt;-->
+        <!--<el-menu-item index="">-->
+          <!--<i class="el-icon-menu"></i>-->
+          <!--<span slot="title">首页</span>-->
+        <!--</el-menu-item>-->
+        <!--<el-menu-item index="2">-->
+          <!--<i class="el-icon-menu"></i>-->
+          <!--<span slot="title">我的资产</span>-->
+        <!--</el-menu-item>-->
+        <!--<el-submenu index="/assetMaintenance">-->
+          <!--<template slot="title">-->
+            <!--<i class="el-icon-location"></i>-->
+            <!--<span class="">资产信息维护</span>-->
+          <!--</template>-->
+          <!--<el-menu-item index="/assetGroup">资产组设置</el-menu-item>-->
+          <!--<el-menu-item index="/assetType">资产类型设置</el-menu-item>-->
+        <!--</el-submenu>-->
+      <!--</el-menu>-->
+      <SideBar :menu-list="menuList" :menu-config="menuConfig"
+      :class="menuConfig.isCollapse?'my-el-menu2':'my-el-menu'"/>
     <!--</div>-->
+
     <div class="right-content">
         <div class="asset-bread-crumb flex-align">
           <i class="el-icon-location"
@@ -48,19 +51,45 @@
 
 <script>
   let menuList=[{
-    path:"/assetMaintenance",
-    name:'资产信息维护'
+    routeAddress:'$1',
+    name:'首页',
+    childNode:[],
+    id:1,
+    icon:'123'
   },{
-    path:"/assetGroup",
-    name:'资产组设置'
+    routeAddress:'$2',
+    name:'我的资产',
+    childNode:[],
+    id:2,
+    icon:'123'
   },{
-    path:"/assetType",
-    name:'资产类型设置'
+    routeAddress:"/assetMaintenance",
+    name:'资产信息',
+    id:3,
+    icon:'123',
+    childNode:[{
+      routeAddress:"/assetMaintenance",
+      name:'资产信息维护',
+      childNode:[],
+      id:4
+    },{
+      routeAddress:"/assetGroup",
+      name:'资产组设置',
+      childNode:[],
+      id:5
+    },{
+      routeAddress:"/assetType",
+      name:'资产类型设置',
+      childNode:[],
+      id:6
+    }]
   }]
   import {mapState} from 'vuex'
+  import SideBar from '../../digitalPark/coms/SideBar'
   export default {
     name: 'AssetManage',
     components: {
+      SideBar
     },
     computed:{
       ...mapState({
@@ -71,6 +100,11 @@
       return {
         menuList:menuList,
         isCollapse:false,
+        menuConfig:{
+          bgColor:'#394562',
+          textColor:'#B7BAC4',
+          isCollapse:false,
+        }
         // assetBreadcrumb:[{name:'资产信息维护',path:'/assetMaintenance'}]
       }
     },
@@ -96,7 +130,7 @@
         this.$router.push(key)
       },
       onClickCollapseBtn(){
-        this.isCollapse=!this.isCollapse
+        this.menuConfig.isCollapse=!this.menuConfig.isCollapse
       },
       handleSelect(index,indexPath){
         console.log(index,indexPath)
@@ -108,6 +142,7 @@
     mounted(){
       document.title='资产管理'
       Cookies.set('assetBreadcrumb',[{name:'资产管理',path:'/assetManage'}])
+      console.log($(".asset-manage").length)
     }
   }
 </script>
@@ -115,10 +150,14 @@
 <style lang="less">
   .asset-manage{
     height: 100%;
+    .left-nav{
+      /*height:100%;*/
+    }
     .my-el-menu{
       float: left;
       height:100%;
       width:15%;
+      background-color:#394562 ;
 
     }
     .my-el-menu2{
@@ -140,7 +179,7 @@
       color:#969CA8;
     }
     .el-submenu__title,.el-menu-item{
-      font-size: 14px;
+      font-size: 18px;
       &:hover{
         background-color: #416EFF !important;
       }
@@ -148,6 +187,9 @@
         color:#B7BAC4;
         text-decoration: none;
       }
+    }
+    .el-menu-item{
+      font-size: 16px;
     }
     .el-menu-item.is-active{
         background-color: #416EFF !important;

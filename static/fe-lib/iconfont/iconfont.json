@@ -1,0 +1,86 @@
+{
+  "id": "1496800",
+  "name": "数字园区",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "11664319",
+      "name": "我的资产",
+      "font_class": "wodezichan",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "11664629",
+      "name": "管理资产",
+      "font_class": "guanlizichan",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "11664631",
+      "name": "重点",
+      "font_class": "zhongdian",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "11664632",
+      "name": "入库管理",
+      "font_class": "rukuguanli",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "11664633",
+      "name": "资产盘库",
+      "font_class": "zichanpanku",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "11664634",
+      "name": "资产台账",
+      "font_class": "zichantaizhang",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "11664635",
+      "name": "资产信息维护",
+      "font_class": "zichanxinxiweihu",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "11664636",
+      "name": "日历",
+      "font_class": "rili",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "11664637",
+      "name": "下拉",
+      "font_class": "xiala",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "11664638",
+      "name": "统计分析",
+      "font_class": "tongjifenxi",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "11664697",
+      "name": "搜索",
+      "font_class": "sousuo",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    }
+  ]
+}

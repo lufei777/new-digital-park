@@ -1,8 +1,7 @@
 <template>
   <div class="digital-nav-operator flex-align">
       <span class="nav-right-item"><span>{{$t('homeHeader.news')}}</span><i>|</i></span>
-      <span class="nav-right-item"><span>{{$t('homeHeader.skin')}}</span><i>|</i></span>
-      <!--<span class="nav-right-item"><span>admin</span><i>|</i></span>-->
+      <!--<span class="nav-right-item"><span>{{$t('homeHeader.skin')}}</span><i>|</i></span>-->
       <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
           <el-select v-model="langValue" placeholder="切换语言" @change="onClickChangeLang">
               <el-option label="中文" value="zh"></el-option>
@@ -16,9 +15,16 @@
          </el-select><i>|</i>
       </span>
      <span class="nav-right-item">
+         <el-select v-model="setupValue" placeholder="设置" @change="onClickSetup">
+             <el-option label="模块设置" value="1"></el-option>
+            <el-option :label="$t('homeHeader.skin')" value="2"></el-option>
+         </el-select><i>|</i>
+     </span>
+     <span class="nav-right-item">
           <el-select v-model="userValue" placeholder="admin" @change="onClickUserConfigure">
-              <el-option label="模块管理" value="1"></el-option>
-              <el-option label="退出" value="2"></el-option>
+              <el-option label="个人中心" value="1"></el-option>
+              <el-option label="修改密码" value="2"></el-option>
+              <el-option label="退出" value="3"></el-option>
            </el-select>
       </span>
   </div>
@@ -34,7 +40,8 @@
     data () {
       return {
         langValue:Cookies.get('lang'),
-        userValue:''
+        userValue:'',
+        setupValue:''
       }
     },
     computed:{
@@ -62,12 +69,15 @@
         this.$parent.handleLangChange && this.$parent.handleLangChange()
       },
       async onClickUserConfigure(val){
-        if(val==1){
-          this.$router.push(`/digitalPark/moduleConfigure?type=${this.moduleType}&updateDragFlag=true`)
-        }else{
+        if(val==3){
           sessionStorage.removeItem('token')
           window.location.href='/digitalPark/homePage'
           await DigitalParkApi.logOut()
+        }
+      },
+      onClickSetup(val){
+        if(val==1){
+          this.$router.push(`/digitalPark/moduleConfigure?type=${this.moduleType}&updateDragFlag=true`)
         }
       }
     },
@@ -110,6 +120,10 @@
     .dashboard-nav{
       .el-input__inner{
         color:@white;
+      }
+      .el-input__inner::-ms-input-placeholder,
+      .el-input__inner::-webkit-input-placeholder{
+      color:red;
       }
     }
   }

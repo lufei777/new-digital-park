@@ -124,7 +124,8 @@
     methods: {
       async getProModules() {
         let res = await DigitalParkApi.getProModules({
-          language:Cookies.get('lang')
+          language:Cookies.get('lang'),
+          chart:this.type //是否显示非图表类
         })
         this.loading=false
         res[0].activeFlag=true

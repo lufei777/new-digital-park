@@ -59,6 +59,7 @@
 <script>
   import draggable from 'vuedraggable'
   import CommonFun from '../../../utils/commonFun'
+  import DigitalParkApi from '../../../service/api/digitalParkApi'
   export default {
     name: 'ItemProModule',
     props:['moduleData','type','userProModuleList'],
@@ -100,7 +101,7 @@
         })
         // console.log(this.userProModuleList)
       },
-      onChange (evt) {
+      async onChange (evt) {
         console.log("itemchange",evt)
         if (evt.added) {
           console.log(this.moduleData.moduleList)
@@ -122,9 +123,13 @@
             }
           })
         }
-        // if (evt.moved) {
-          // this.moduleData.moduleDragFlag=true
-        // }
+        if(evt.moved){
+          console.log(this.$route.path)
+          if(this.$route.path=='/digitalPark/homePage'){
+            await DigitalParkApi.updateUserProModules(this.userProModuleList)
+          }
+
+        }
       },
     },
     mounted(){
