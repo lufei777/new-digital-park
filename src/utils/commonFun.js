@@ -13,6 +13,11 @@ import taskPersonTask from '../pages/digitalPark/coms/taskPersonTask'
 import TestModuleOne from '../pages/digitalPark/coms/TestModuleOne'
 import TestModuleTwo from '../pages/digitalPark/coms/TestModuleTwo'
 import TestModuleThree from '../pages/digitalPark/coms/TestModuleThree'
+import emergencies from '../pages/digitalPark/coms/emergencies'
+import escapeRoutes from '../pages/digitalPark/coms/escapeRoutes'
+import saleStatistics from '../pages/digitalPark/coms/saleStatistics'
+import inventoryAnalysis from '../pages/digitalPark/coms/inventoryAnalysis'
+import messageRelease from '../pages/digitalPark/coms/messageRelease'
 class commonFun {
   exportComs={
     energyProportionAnalysis,
@@ -29,7 +34,12 @@ class commonFun {
     taskPersonTask,
     TestModuleOne,
     TestModuleTwo,
-    TestModuleThree
+    TestModuleThree,
+    emergencies,
+    escapeRoutes,
+    saleStatistics,
+    inventoryAnalysis,
+    messageRelease
   }
   //this,删除的id,没有id时的提示信息，点击确定的回调函数
   deleteTip(that, deleteId, msgTip, callBack) {

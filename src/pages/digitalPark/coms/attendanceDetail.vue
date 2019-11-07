@@ -1,11 +1,11 @@
 <template>
   <div class="attendance-detail">
     <!--<div ref="pieCharts"  class="my-chart" id="attendance-detail-chart"></div>-->
-    <div class="my-chart">
+    <!--<div class="my-chart">-->
       <img
-        style="width:100%;height:auto;margin-top:70px;display: inline-block"
+        style="width:100%;height:85%;"
         src="../../../../static/image/digitalPark/zhiban_tmp.png" alt="">
-    </div>
+    <!--</div>-->
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
