@@ -15,10 +15,8 @@ import SystemManage from './commonRouter/systemManage'
 import EnergyRouter from './energy-router'
 import DigitalParkRouter from './digital-park-router'
 
-// 能源管理
-let EnergyRouters = flattenDeep([EnergyRouter, Collect, DataReport, DeviceRecord, StatisAnalysis, SystemManage])
 // 数字园区
-let DigitalRouters = flattenDeep([DigitalParkRouter, AssetManage, EnergyRouters]);
+let DigitalRouters = flattenDeep([DigitalParkRouter, AssetManage, EnergyRouter]);
 
 // const routes = flattenDeep([DigitalRouters]);
 Vue.use(Router)
