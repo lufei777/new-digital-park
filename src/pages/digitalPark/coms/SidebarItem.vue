@@ -3,14 +3,14 @@
     <!--<template >-->
       <el-menu-item v-if="item.childNode.length == 0"
                     :index="specialRoute?item.id + item.routeAddress:item.routeAddress">
-         <i v-if='item.icon' class="iconfont iconzichanxinxiweihu"></i>
+         <i v-if='item.icon' :class="['iconfont',item.icon]"></i>
         <span slot="title">{{item.name}}</span>
       </el-menu-item>
     <!--</template>-->
     <!--<template v-else>-->
       <el-submenu v-else :index="specialRoute?item.id + item.routeAddress:item.routeAddress">
         <template slot="title">
-          <i v-if='item.icon' class="el-icon-menu"></i>
+          <i v-if='item.icon' :class="['iconfont',item.icon]"></i>
           <span>{{item.name}}</span>
         </template>
 
