@@ -1,33 +1,36 @@
 <template>
   <div class="asset-manage">
-    <!--<div class="left-nav">-->
-      <el-menu default-active="1-4-1"
-               :class="isCollapse?'my-el-menu2':'my-el-menu'"
-               :collapse="isCollapse"
-               background-color="#394562"
-               text-color="#B7BAC4"
-               @open="handleOpen"
-               @close="handleClose"
-               @select="handleSelect"
-      >
-        <el-menu-item index="">
-          <i class="el-icon-menu"></i>
-          <span slot="title">首页</span>
-        </el-menu-item>
-        <el-menu-item index="2">
-          <i class="el-icon-menu"></i>
-          <span slot="title">我的资产</span>
-        </el-menu-item>
-        <el-submenu index="/assetMaintenance">
-          <template slot="title">
-            <i class="el-icon-location"></i>
-            <span class="">资产信息维护</span>
-          </template>
-          <el-menu-item index="/assetGroup">资产组设置</el-menu-item>
-          <el-menu-item index="/assetType">资产类型设置</el-menu-item>
-        </el-submenu>
-      </el-menu>
-    <!--</div>-->
+    <div class="left-nav">
+      <!--<el-menu-->
+               <!--:class="isCollapse?'my-el-menu2':'my-el-menu'"-->
+               <!--:collapse="isCollapse"-->
+               <!--background-color="#394562"-->
+               <!--text-color="#B7BAC4"-->
+               <!--@open="handleOpen"-->
+               <!--@close="handleClose"-->
+               <!--@select="handleSelect"-->
+      <!--&gt;-->
+        <!--<el-menu-item index="">-->
+          <!--<i class="el-icon-menu"></i>-->
+          <!--<span slot="title">首页</span>-->
+        <!--</el-menu-item>-->
+        <!--<el-menu-item index="2">-->
+          <!--<i class="el-icon-menu"></i>-->
+          <!--<span slot="title">我的资产</span>-->
+        <!--</el-menu-item>-->
+        <!--<el-submenu index="/assetMaintenance">-->
+          <!--<template slot="title">-->
+            <!--<i class="el-icon-location"></i>-->
+            <!--<span class="">资产信息维护</span>-->
+          <!--</template>-->
+          <!--<el-menu-item index="/assetGroup">资产组设置</el-menu-item>-->
+          <!--<el-menu-item index="/assetType">资产类型设置</el-menu-item>-->
+        <!--</el-submenu>-->
+      <!--</el-menu>-->
+      <SideBar :menu-list="menuList"
+      :class="isCollapse?'my-el-menu2':'my-el-menu'"/>
+    </div>
+
     <div class="right-content">
         <div class="asset-bread-crumb flex-align">
           <i class="el-icon-location"
@@ -41,26 +44,44 @@
             </el-breadcrumb-item>
           </el-breadcrumb>
         </div>
-        <router-view></router-view>
+        <!--<router-view></router-view>-->
     </div>
   </div>
 </template>
 
 <script>
   let menuList=[{
+    path:'$1',
+    name:'首页',
+    childNode:[],
+    id:1,
+  },{
+    path:'$2',
+    name:'我的资产',
+    childNode:[],
+    id:2
+  },{
     path:"/assetMaintenance",
-    name:'资产信息维护'
-  },{
-    path:"/assetGroup",
-    name:'资产组设置'
-  },{
-    path:"/assetType",
-    name:'资产类型设置'
+    name:'资产信息维护',
+    id:3,
+    childNode:[{
+      path:"/assetGroup",
+      name:'资产组设置',
+      childNode:[],
+      id:4
+    },{
+      path:"/assetType",
+      name:'资产类型设置',
+      childNode:[],
+      id:5
+    }]
   }]
   import {mapState} from 'vuex'
+  import SideBar from '../../digitalPark/coms/SideBar'
   export default {
     name: 'AssetManage',
     components: {
+      SideBar
     },
     computed:{
       ...mapState({
@@ -108,6 +129,7 @@
     mounted(){
       document.title='资产管理'
       Cookies.set('assetBreadcrumb',[{name:'资产管理',path:'/assetManage'}])
+      console.log($(".asset-manage").length)
     }
   }
 </script>
