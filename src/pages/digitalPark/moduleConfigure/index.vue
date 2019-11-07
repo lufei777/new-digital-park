@@ -119,6 +119,9 @@
     watch:{
       dragFlag(){
         this.setContentListDragFlag(this.dragFlag)
+      },
+      type(){
+        this.getProModules()
       }
     },
     methods: {

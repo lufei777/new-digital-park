@@ -48,13 +48,6 @@
       "unicode_decimal": 58900
     },
     {
-      "icon_id": "11664635",
-      "name": "资产信息维护",
-      "font_class": "zichanxinxiweihu",
-      "unicode": "e615",
-      "unicode_decimal": 58901
-    },
-    {
       "icon_id": "11664636",
       "name": "日历",
       "font_class": "rili",
@@ -81,6 +74,27 @@
       "font_class": "sousuo",
       "unicode": "e619",
       "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "11672619",
+      "name": "资产信息",
+      "font_class": "zichanxinxi",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "11672620",
+      "name": "展开",
+      "font_class": "zhankai",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "11672621",
+      "name": "收起",
+      "font_class": "shouqi",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
     }
   ]
 }

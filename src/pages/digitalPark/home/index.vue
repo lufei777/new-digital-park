@@ -55,21 +55,21 @@
                        :id="item.menuId"
         />
       </draggable>
-      <!--<div class="item-module">-->
-        <!--<div class="flex-align-between module-title">-->
-          <!--<h3>信息发布</h3>-->
-          <!--<span class="hover-pointer" @click="onShowMoreProduct">更多</span>-->
-        <!--</div>-->
-        <!--<div class="module-border">-->
-          <!--<el-tabs style="height: 200px;" type="border-card" tabPosition="top">-->
-            <!--<el-tab-pane label="员工活动">员工活动</el-tab-pane>-->
-            <!--<el-tab-pane label="党建工作">党建工作</el-tab-pane>-->
-            <!--<el-tab-pane label="规章制度">规章制度</el-tab-pane>-->
-            <!--<el-tab-pane label="通知公告">通止规</el-tab-pane>-->
-            <!--<el-tab-pane label="时事要闻">通止规</el-tab-pane>-->
-          <!--</el-tabs>-->
-        <!--</div>-->
-      <!--</div>-->
+      <div class="item-module">
+        <div class="flex-align-between module-title">
+          <h3>信息发布</h3>
+          <span class="hover-pointer" @click="onShowMoreProduct">{{$t('more')}}</span>
+        </div>
+        <div class="module-border">
+          <el-tabs style="height: 200px;" type="border-card" tabPosition="top">
+            <el-tab-pane label="员工活动">员工活动</el-tab-pane>
+            <el-tab-pane label="党建工作">党建工作</el-tab-pane>
+            <el-tab-pane label="规章制度">规章制度</el-tab-pane>
+            <el-tab-pane label="通知公告">通止规</el-tab-pane>
+            <el-tab-pane label="时事要闻">通止规</el-tab-pane>
+          </el-tabs>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -206,7 +206,7 @@
          }
          if(evt.moved){
            if(this.$route.path=='/digitalPark/homePage'){
-             await DigitalParkApi.updateUserProModules(this.userProModuleList)
+             // await DigitalParkApi.updateUserProModules(this.userProModuleList)
            }
          }
       },

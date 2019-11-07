@@ -16,33 +16,34 @@
       <el-button type="primary" @click="onClickSearchBtn">搜索</el-button>
       <el-button type="primary" @click="onClickResetBtn">重置</el-button>
     </div>
-    <div class="operator-box">
-      <el-button type="primary" @click="onClickImportExcel">EXCEL导入</el-button>
-      <el-button type="primary" @click="showDeleteTip">批量删除</el-button>
+    <div class="asset-table">
+      <div class="operator-box">
+        <el-button type="primary" @click="onClickImportExcel">EXCEL导入</el-button>
+        <el-button type="primary" @click="showDeleteTip">批量删除</el-button>
 
-      <el-button type="primary" @click="onMultiEdit">批量编辑</el-button>
-      <el-button type="primary" @click="onClickAddBtn">新建</el-button>
+        <el-button type="primary" @click="onMultiEdit">批量编辑</el-button>
+        <el-button type="primary" @click="onClickAddBtn">新建</el-button>
+      </div>
+      <CommonTable :tableObj="assetData" :curPage="1">
+        <template v-slot:special-operator>
+          <el-table-column fixed="right" label="操作" align="right" width="120">
+            <template slot-scope="scope">
+              <el-button type="text" size="small" v-if="scope.row.status==1">变更</el-button>
+              <el-button type="text" size="small">调拨</el-button>
+              <el-button type="text" size="small" icon="el-icon-more"
+                         @click.stop="onClickMore(scope.$index)"
+                         class="more-btn">
+                <div v-show="scope.row.showMore" class="more-operator-box">
+                  <el-button type="text" size="small">报修</el-button>
+                  <el-button type="text" size="small">报废</el-button>
+                  <el-button type="text" size="small" @click.stop="deleteRow(scope.row)">删除</el-button>
+                </div>
+              </el-button>
+            </template>
+          </el-table-column>
+        </template>
+      </CommonTable>
     </div>
-    <CommonTable :tableObj="assetData" :curPage="1">
-      <template v-slot:special-operator>
-        <el-table-column fixed="right" label="操作" align="right" width="120">
-          <template slot-scope="scope">
-            <el-button type="text" size="small" v-if="scope.row.status==1">变更</el-button>
-            <el-button type="text" size="small">调拨</el-button>
-            <el-button type="text" size="small" icon="el-icon-more"
-                       @click.stop="onClickMore(scope.$index)"
-                       class="more-btn">
-              <div v-show="scope.row.showMore" class="more-operator-box">
-                <el-button type="text" size="small">报修</el-button>
-                <el-button type="text" size="small">报废</el-button>
-                <el-button type="text" size="small" @click.stop="deleteRow(scope.row)">删除</el-button>
-              </div>
-            </el-button>
-          </template>
-        </el-table-column>
-      </template>
-    </CommonTable>
-
     <!--<Table :ref="assetsTableConfig.ref" :tableConfig="assetsTableConfig">-->
       <!--<template slot="custom-top" slot-scope="customTopObj">-->
         <!--<div>-->
@@ -492,7 +493,10 @@ export default {
   font-size: 14px;
   .choose-box {
     overflow: hidden;
-    padding: 20px 0;
+    padding: 20px;
+    background-color: @white;
+    border-radius: 10px;
+    margin-bottom: 20px;
   }
   .block {
     margin-right: 40px;
@@ -512,6 +516,7 @@ export default {
     padding: 20px 0;
     display: flex;
     flex-direction: row-reverse;
+
     .el-button {
       margin: 0 5px;
     }
@@ -537,6 +542,11 @@ export default {
       margin:0;
       padding:10px;
     }
+  }
+  .asset-table{
+    border-radius: 10px;
+    background-color: @white;
+    overflow: hidden;
   }
 }
 .upload-excel {

@@ -37,7 +37,7 @@ export default {
     menuConfig:{}
   },
   mounted() {
-    console.log(this.menuList);
+    // console.log(this.menuList);
   },
   data() {
     return {
@@ -60,15 +60,15 @@ export default {
       }
     },
     handleOpen(key){
-      if(key=='/assetMaintenance'){
-        this.$router.push(key)
-      }
+      // if(key=='/assetMaintenance'){
+      //   this.$router.push(key)
+      // }
     },
     handleClose(key){
-      console.log(key)
-      if(key=='/assetMaintenance'){
-        this.$router.push(key)
-      }
+      // console.log(key)
+      // if(key=='/assetMaintenance'){
+      //   this.$router.push(key)
+      // }
     }
   },
   computed: {

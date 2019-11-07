@@ -1,40 +1,13 @@
 <template>
   <div class="asset-manage">
-    <!--<div class="left-nav">-->
-      <!--<el-menu-->
-               <!--:class="menuConfig.isCollapse?'my-el-menu2':'my-el-menu'"-->
-               <!--:collapse="menuConfig.isCollapse"-->
-               <!--background-color="#394562"-->
-               <!--text-color="#B7BAC4"-->
-               <!--@open="handleOpen"-->
-               <!--@close="handleClose"-->
-               <!--@select="handleSelect"-->
-      <!--&gt;-->
-        <!--<el-menu-item index="">-->
-          <!--<i class="el-icon-menu"></i>-->
-          <!--<span slot="title">首页</span>-->
-        <!--</el-menu-item>-->
-        <!--<el-menu-item index="2">-->
-          <!--<i class="el-icon-menu"></i>-->
-          <!--<span slot="title">我的资产</span>-->
-        <!--</el-menu-item>-->
-        <!--<el-submenu index="/assetMaintenance">-->
-          <!--<template slot="title">-->
-            <!--<i class="el-icon-location"></i>-->
-            <!--<span class="">资产信息维护</span>-->
-          <!--</template>-->
-          <!--<el-menu-item index="/assetGroup">资产组设置</el-menu-item>-->
-          <!--<el-menu-item index="/assetType">资产类型设置</el-menu-item>-->
-        <!--</el-submenu>-->
-      <!--</el-menu>-->
-      <SideBar :menu-list="menuList" :menu-config="menuConfig"
-      :class="menuConfig.isCollapse?'my-el-menu2':'my-el-menu'"/>
-    <!--</div>-->
-
+     <div :class="menuConfig.isCollapse?'my-el-menu2':'my-el-menu'">
+       <div v-show="!menuConfig.isCollapse" class="title">资产管理</div>
+       <SideBar :menu-list="menuList" :menu-config="menuConfig"/>
+     </div>
     <div class="right-content">
         <div class="asset-bread-crumb flex-align">
-          <i class="el-icon-location"
-             style="font-size: 30px;line-height: 70px;"
+          <i :class="menuConfig.isCollapse?'iconzhankai':'iconshouqi'"
+             class="iconfont collapse-icon"
              @click="onClickCollapseBtn"
           ></i>
           <el-breadcrumb separator="/">
@@ -44,7 +17,7 @@
             </el-breadcrumb-item>
           </el-breadcrumb>
         </div>
-        <router-view></router-view>
+        <router-view class="router-view"></router-view>
     </div>
   </div>
 </template>
@@ -61,12 +34,12 @@
     name:'我的资产',
     childNode:[],
     id:2,
-    icon:'123'
+    icon:'iconwodezichan'
   },{
     routeAddress:"/assetMaintenance",
     name:'资产信息',
     id:3,
-    icon:'123',
+    icon:'iconzichanxinxi',
     childNode:[{
       routeAddress:"/assetMaintenance",
       name:'资产信息维护',
@@ -83,6 +56,64 @@
       childNode:[],
       id:6
     }]
+  },{
+    routeAddress:'/7',
+    name:'管理资产',
+    icon:'iconguanlizichan',
+    id:7,
+    childNode:[{
+      routeAddress:"/7001",
+      name:'资产领用',
+      childNode:[],
+      id:7001
+    },{
+      routeAddress:"/7002",
+      name:'资产变更',
+      childNode:[],
+      id:7002
+    },{
+      routeAddress:"/assetType",
+      name:'资产借用',
+      childNode:[],
+      id:7003
+    },{
+      routeAddress:"/7004",
+      name:'资产归还',
+      childNode:[],
+      id:7004
+    },{
+      routeAddress:"/7005",
+      name:'资产调拨',
+      childNode:[],
+      id:7005
+    },{
+      routeAddress:"/7006",
+      name:'资产减损',
+      childNode:[],
+      id:7006
+    }, {
+      routeAddress:"/7007",
+      name:'资产送修',
+      childNode:[],
+      id:7007
+    },{
+      routeAddress:"/7008",
+      name:'资产报废',
+      childNode:[],
+      id:7008
+    }]
+  },{
+    routeAddress:"/8",
+    name:'资产台账',
+    childNode:[],
+    id:8,
+    icon:'iconzichantaizhang'
+  },{
+    routeAddress:"/9",
+    name:'资产盘库',
+    childNode:[],
+    id:9,
+    icon:'iconzichanpanku'
   }]
   import {mapState} from 'vuex'
   import SideBar from '../../digitalPark/coms/SideBar'
@@ -150,6 +181,7 @@
 <style lang="less">
   .asset-manage{
     height: 100%;
+    background-color: #efefef;
     .left-nav{
       /*height:100%;*/
     }
@@ -158,25 +190,41 @@
       height:100%;
       width:15%;
       background-color:#394562 ;
-
     }
     .my-el-menu2{
       float: left;
       height:100%;
+      background-color:#394562 ;
     }
-    /*.el-menu{*/
-      /*height:100%;*/
-    /*}*/
     .right-content{
       max-width: 100%;
       /*height:100%;*/
       overflow: auto;
+      background-color: #efefef;
+    }
+    .title{
+      font-size: 24px;
+      color:@white;
+      text-align: center;
+      margin:20px 0 40px 0 ;
     }
     .asset-bread-crumb{
-      /*width:100%;*/
-      height:70px;
-      border:1px solid #ccc;
+      padding:0 15px;
+      height:60px;
+      /*border:1px solid #ccc;*/
       color:#969CA8;
+      background-color: @white;
+    }
+    .collapse-icon{
+      font-size: 24px;
+      line-height: 70px;
+      padding-right:20px;
+    }
+    .router-view{
+      padding:20px 20px 0 20px;
+    }
+    .el-menu{
+      border-right: none;
     }
     .el-submenu__title,.el-menu-item{
       font-size: 18px;
@@ -188,7 +236,7 @@
         text-decoration: none;
       }
     }
-    .el-menu-item{
+    .nest-menu{
       font-size: 16px;
     }
     .el-menu-item.is-active{
