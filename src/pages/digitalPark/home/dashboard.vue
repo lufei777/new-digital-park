@@ -41,10 +41,10 @@
         <img v-if="pageFlag==2" src="../../../../static/image/digitalPark/unity_priview.png"
              class="unity_priview"
              alt="">
-        <iframe v-if="pageFlag==1"
-                src="../../../../static/HomePage/index.html"
-                frameborder="0"
-                class="unity-frame"></iframe>
+        <!--<iframe v-if="pageFlag==1"-->
+                <!--src="../../../../static/HomePage/index.html"-->
+                <!--frameborder="0"-->
+                <!--class="unity-frame"></iframe>-->
       </div>
       <div class="dashboard-right">
         <draggable :list="proModuleList2"
@@ -414,7 +414,7 @@
       flex: 1;
     }
     .dashboard-nav-operator .digital-nav-operator{
-      width:90%;
+      /*width:90%;*/
       float: right;
     }
     .unity_priview{

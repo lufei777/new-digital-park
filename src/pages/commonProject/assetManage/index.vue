@@ -16,6 +16,10 @@
                                 :to="item.path">{{item.name}}
             </el-breadcrumb-item>
           </el-breadcrumb>
+          <div class="asset-nav-operator-box">
+            <NavOperator class='asset-nav-operator' :showGoback="true"/>
+          </div>
+
         </div>
         <router-view class="router-view"></router-view>
     </div>
@@ -28,7 +32,7 @@
     name:'首页',
     childNode:[],
     id:1,
-    icon:'123'
+    icon:'iconshouye'
   },{
     routeAddress:'$2',
     name:'我的资产',
@@ -114,13 +118,27 @@
     childNode:[],
     id:9,
     icon:'iconzichanpanku'
+  },{
+    routeAddress:"/10",
+    name:'入库管理',
+    childNode:[],
+    id:10,
+    icon:'iconrukuguanli'
+  },{
+    routeAddress:"/11",
+    name:'统计分析',
+    childNode:[],
+    id:11,
+    icon:'icontongjifenxi'
   }]
   import {mapState} from 'vuex'
   import SideBar from '../../digitalPark/coms/SideBar'
+  import NavOperator from '../../digitalPark/coms/navOperator'
   export default {
     name: 'AssetManage',
     components: {
-      SideBar
+      SideBar,
+      NavOperator
     },
     computed:{
       ...mapState({
@@ -205,23 +223,30 @@
     .title{
       font-size: 24px;
       color:@white;
-      text-align: center;
+      padding-left:20px;
       margin:20px 0 40px 0 ;
     }
     .asset-bread-crumb{
       padding:0 15px;
       height:60px;
       /*border:1px solid #ccc;*/
-      color:#969CA8;
+
       background-color: @white;
     }
     .collapse-icon{
       font-size: 24px;
       line-height: 70px;
       padding-right:20px;
+      color:#969CA8;
     }
     .router-view{
       padding:20px 20px 0 20px;
+    }
+    .asset-nav-operator-box{
+      flex-grow: 1;
+    }
+    .asset-nav-operator{
+      float: right;
     }
     .el-menu{
       border-right: none;

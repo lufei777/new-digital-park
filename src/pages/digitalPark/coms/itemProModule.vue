@@ -168,6 +168,7 @@
       border:1px solid #ccc;
       padding:10px;
       box-sizing: border-box;
+      overflow: hidden;
     }
     .single-module-name{
       margin-bottom: 10px;

@@ -95,6 +95,13 @@
       "font_class": "shouqi",
       "unicode": "e61b",
       "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "11675748",
+      "name": "首页",
+      "font_class": "shouye",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
     }
   ]
 }
