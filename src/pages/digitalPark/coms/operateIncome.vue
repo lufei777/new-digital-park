@@ -46,7 +46,6 @@ export default {
       this.initChart(res);
     },
     initChart(res) {
-      console.log(res);
       let myChart = echarts.init(this.$refs.myChart);
       let legendData = [];
       let legend = "right";

@@ -20,7 +20,7 @@ function getParameterByName(name) {
 
 let ssoToken = getParameterByName('sso_token');//从url中获得token
 var href = window.location.href;
-history.pushState(null, "", href.replace(/[&]?sso_token=[^&^#]*/g, ""));
+history.pushState(null, "", href.replace(/[&]?\?sso_token=[^&^#]*/g, ""));
 if (ssoToken) {
   sessionStorage.token = ssoToken;
 }
@@ -33,14 +33,14 @@ var axios = axiosOrigin.create(config);
 
 axios.defaults.headers.get["Content-Type"] = "application/x-www-form-urlencoded";
 axios.defaults.headers.post["Content-Type"] = "application/json";
-// axios.get('/oaApi/user/login').then().catch()
+let redirectHref = sessionStorage.getItem('logout')?location.origin+'/#/digitalPark/homePage':window.location.href
 axios.interceptors.request.use(
   function (config) {
     if (sessionStorage.token) {
       config.headers['X-SSO-Token'] = sessionStorage.token;
     }
     config.headers['X-Requested-With'] = 'XMLHttpRequest';
-    config.headers['X-Requested-InPage'] = window.location.href ;
+    config.headers['X-Requested-InPage'] =redirectHref;
     /* try {
       loadingInstance = Loading.service({});
       loadingCount++;

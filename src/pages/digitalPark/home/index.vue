@@ -75,7 +75,7 @@
 </template>
 
 <script>
-  import  Sidebar from '../coms/SideBar.vue'
+  import Sidebar from '../../../components/commonMenu/SideBar'
   import CommonFun from '../../../utils/commonFun'
   import DigitalParkApi from '../../../service/api/digitalParkApi'
   import NavOperator from '../coms/navOperator'
@@ -144,12 +144,12 @@
         if(routeAddress){
           // 如果带有@字符，则跳转旧项目
           if(routeAddress.indexOf('@') != -1){
-            location.href=this.oldProjectHome + '?forward=' + routeAddress.split('@')[1]
+            location.href=this.oldProjectHome + '?forward=' + routeAddress.split('@')[1]+'?type=2'
           }else{
-            this.$router.push(item.routeAddress);
+            this.$router.push(item.routeAddress+'?type=2');
           }
         }else{
-            this.$router.push('/digitalPark/defaultPage')
+            this.$router.push('/digitalPark/defaultPage?type=2')
         }
       },
       onShowMoreProduct(){
@@ -248,6 +248,10 @@
       }
     },
     mounted(){
+      document.body.ondrop = function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
       this.getMenuTree()
       this.getProductList()
       this.getModulesByType()

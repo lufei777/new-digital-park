@@ -2,7 +2,7 @@
   <div class="asset-manage">
      <div :class="menuConfig.isCollapse?'my-el-menu2':'my-el-menu'">
        <div v-show="!menuConfig.isCollapse" class="title">资产管理</div>
-       <SideBar :menu-list="menuList" :menu-config="menuConfig"/>
+       <Sidebar :menu-list="menuList" :menu-config="menuConfig"/>
      </div>
     <div class="right-content">
         <div class="asset-bread-crumb flex-align">
@@ -132,12 +132,12 @@
     icon:'icontongjifenxi'
   }]
   import {mapState} from 'vuex'
-  import SideBar from '../../digitalPark/coms/SideBar'
+  import Sidebar from '../../../components/commonMenu/SideBar'
   import NavOperator from '../../digitalPark/coms/navOperator'
   export default {
     name: 'AssetManage',
     components: {
-      SideBar,
+      Sidebar,
       NavOperator
     },
     computed:{
@@ -264,7 +264,7 @@
     .nest-menu{
       font-size: 16px;
     }
-    .el-menu-item.is-active{
+    .el-menu-item.nest-menu.is-active{
         background-color: #416EFF !important;
         color:#B7BAC4;
     }

@@ -20,6 +20,7 @@
                    @change="onDragChange"
                    @start="onDragStart"
                    @end="onDragEnd"
+                   :move="onDragMove"
                    class="content-drag-box"
 
         >
@@ -28,8 +29,8 @@
                      :is="item.componentName"
                      :moduleItem="item"
                      :class="['item-content','flex-colum-center',item.dragFlag?'item-drag-product':'']"
-                     :style="contentBg"
-                     :id="item.pid"
+                     :style="contentBg(item)"
+                     :id="item.id"
           />
         </draggable>
       </div>
@@ -82,6 +83,7 @@
         contentListDragFlag:true,
         showEsc:false,
         loading:true,
+        curDrag:''
       }
     },
     computed:{
@@ -102,11 +104,6 @@
           color:'#0257FF'
         }
       },
-      contentBg(){
-        return {
-          // backgroundImage:'url('+require('../../../../static/image/digitalPark/content_bg.png')+')',
-        }
-      },
       escFullBtnBg(){
         return {
           backgroundImage:'url('+require('../../../../static/image/digitalPark/full_btn_bg.png')+')',
@@ -120,7 +117,8 @@
       dragFlag(){
         this.setContentListDragFlag(this.dragFlag)
       },
-      type(){
+      async type(){
+        await this.getModulesByType()
         this.getProModules()
       }
     },
@@ -168,7 +166,10 @@
         return {
           group:{name:'product',pull:'clone'},
           draggable:'.item-drag-product',
-          disabled:!this.contentListDragFlag
+          disabled:!this.contentListDragFlag,
+          ghostClass:'drag-shadow',
+          dragClass:'drag-shadow',
+          chosenClass:'drag-shadow'
         }
       },
       async getModulesByType(){
@@ -237,15 +238,33 @@
         this.isFull=false
       },
       onDragStart(evt){
+        this.curDrag=evt.item.id
         if(this.type==2) {
           this.$refs.homePage.setItemModuleDragFlag('start')
         }
       },
       onDragEnd(){
+        this.curDrag=''
         if(this.type==2) this.$refs.homePage.setItemModuleDragFlag('end')
-      }
+      },
+      onDragMove(evt){
+
+      },
+      contentBg(item){
+        if(this.curDrag==item.id){
+          return {
+            backgroundImage:'url('+require('../../../../static/image/digitalPark/content_bg.png')+')',
+          }
+        }else{
+          return {}
+        }
+      },
     },
     async mounted() {
+      document.body.ondrop = function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
       await this.getModulesByType()
       this.getProModules()
       this.controlHeader()
@@ -380,5 +399,12 @@
       background-size: 100% 100%;
       background-repeat: no-repeat;
     }
+    .drag-shadow{
+      /*color:#fff;*/
+      /*border:10px solid red;*/
+      background-image: url('../../../../static/image/digitalPark/content_bg.png');
+      background-repeat: no-repeat;
+    }
   }
+
 </style>
