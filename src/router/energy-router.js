@@ -11,6 +11,12 @@ import NightElec from '../pages/energy/energySaving/nightElec.vue'
 import EnergyLogin from '../pages/energy/login/index.vue'
 import ElecAnalysis from '../pages/energy/energySaving/helloWorld.vue'
 
+import Collect from './commonRouter/collect'
+import DataReport from './commonRouter/dataReport'
+import DeviceRecord from './commonRouter/deviceRecord'
+import StatisAnalysis from './commonRouter/statisAnalysis'
+import SystemManage from './commonRouter/systemManage'
+
 export default [{
   path: '/',
   redirect: '/login'
