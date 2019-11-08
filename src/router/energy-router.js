@@ -62,5 +62,5 @@ export default [{
     path: '/energy/elecAnalysis',
     name: 'ElecAnalysis',
     component: ElecAnalysis,
-  }]
+  }].concat(StatisAnalysis, DataReport, SystemManage, DeviceRecord, Collect)
 }]

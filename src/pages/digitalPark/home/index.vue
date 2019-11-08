@@ -101,7 +101,9 @@
       }
     },
     computed:{
-      ...mapState('digitalPark',["oldProjectHome"])
+      ...mapState({
+        dragFlag:state=>state.digitalPark.dragFlag
+      })
     },
     watch:{
       $route(){
@@ -122,13 +124,21 @@
     methods:{
       onClickItemProduct(item){
         // 192.168.1.69：9002/html
-        console.log(this.oldProjectHome);
-        console.log(item.routeAddress);
+        console.log(item);
         let routeAddress = item.routeAddress;
+
+        // 如果是客户端
+        // if(this.$isClient){
+          if(item.name=="综合安防" ||item.name=="机房动环" || item.name=="智能建筑"){//目前先写死
+            Client.SkipToSigleBuild(item.name);
+            return ;
+          }
+        // }
+
         if(routeAddress){
           // 如果带有@字符，则跳转旧项目
           if(routeAddress.indexOf('@') != -1){
-            window.open(this.oldProjectHome + '?forward=' + routeAddress.split('@')[1])
+            location.href = OLDPROJECTHOME + '?forward=' + routeAddress.split('@')[1]
           }else{
             window.open(item.routeAddress);
             // this.$router.push();
