@@ -42,7 +42,7 @@
         @end="onEnd"
         @change="onChange"
         class="component-box com-width-border"
-        :id="moduleData.id"
+        :id="moduleData.menuId"
       >
         <component
           v-for="(item,index) in moduleData.moduleList"
@@ -59,6 +59,7 @@
 <script>
   import draggable from 'vuedraggable'
   import CommonFun from '../../../utils/commonFun'
+  import DigitalParkApi from '../../../service/api/digitalParkApi'
   export default {
     name: 'ItemProModule',
     props:['moduleData','type','userProModuleList'],
@@ -68,33 +69,24 @@
     },
     data () {
       return {
-        // contentListDragFlag:true
       }
     },
     methods: {
       getOptions(){
-        return {
+        let obj={
           group:{name:'product'},
           draggable:'.drag-component',
           disabled:!this.moduleData.moduleDragFlag
         }
+        return obj
       },
       onStart(evt){
-        console.log('start',evt)
+        // console.log('start',evt)
         let id=evt.srcElement.id
-        console.log(id)
-        this.$router.replace({   //设置不可往其他块拖（整个块）
-          path: this.$route.path,
-          query: {...this.$route.query,...{
-              updateDragFlag:false
-            }
-          }
-        })
+        this.$store.commit('digitalPark/dragFlag',false) //设置不可往其他块拖（整个块）
         this.userProModuleList.map((item)=>{//设置不可往其他块内容拖（块内容）
-          if(id!=item.id){
+          if(id!=item.menuId){
             item.moduleDragFlag=false
-          }else{
-            item.moduleDragFlag=true
           }
         })
       },
@@ -102,21 +94,15 @@
 
       },
       onEnd(evt){
-        console.log('end',evt)
-        this.$router.replace({   //设置不可往其他块拖（整个块）
-          path: this.$route.path,
-          query: {...this.$route.query,...{
-              updateDragFlag:true
-            }
-          }
-        })
+        // console.log('end',evt)
+        this.$store.commit('digitalPark/dragFlag',true)//设置可往其他块拖（整个块）
         this.userProModuleList.map((item)=>{
             item.moduleDragFlag=true
         })
-        console.log(this.userProModuleList)
+        // console.log(this.userProModuleList)
       },
-      onChange (evt) {
-        console.log("itempromodule",evt,this.moduleData)
+      async onChange (evt) {
+        console.log("itemchange",evt)
         if (evt.added) {
           console.log(this.moduleData.moduleList)
           let index=evt.added.newIndex-1
@@ -126,10 +112,6 @@
             }
             this.moduleData.moduleList.splice(index, 1)
           }
-          // if(evt.added.newIndex==0 && this.moduleData.moduleList.length!=1) {
-          //   index = 1
-          //
-          // }
           console.log( this.moduleData.moduleList)
           this.$router.replace({
             path: this.$route.path,
@@ -141,12 +123,20 @@
             }
           })
         }
-        // if (evt.moved) {
-          // this.moduleData.moduleDragFlag=true
-        // }
+        if(evt.moved){
+          console.log(this.$route.path)
+          if(this.$route.path=='/digitalPark/homePage'){
+            // await DigitalParkApi.updateUserProModules(this.userProModuleList)
+          }
+
+        }
       },
     },
     mounted(){
+      document.body.ondrop = function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
     }
   }
 </script>
@@ -182,6 +172,7 @@
       border:1px solid #ccc;
       padding:10px;
       box-sizing: border-box;
+      overflow: hidden;
     }
     .single-module-name{
       margin-bottom: 10px;

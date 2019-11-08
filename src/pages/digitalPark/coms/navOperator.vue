@@ -1,24 +1,36 @@
 <template>
   <div class="digital-nav-operator flex-align">
+      <span class="nav-right-item long-text" v-if="showGoback" @click="onClickGoBack">
+        <span style="color:#416EFF">
+          <i class="iconfont iconshouye"></i>返回园区首页</span>
+          <i>|</i>
+      </span>
       <span class="nav-right-item"><span>{{$t('homeHeader.news')}}</span><i>|</i></span>
-      <span class="nav-right-item"><span>{{$t('homeHeader.skin')}}</span><i>|</i></span>
-      <!--<span class="nav-right-item"><span>admin</span><i>|</i></span>-->
       <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
           <el-select v-model="langValue" placeholder="切换语言" @change="onClickChangeLang">
               <el-option label="中文" value="zh"></el-option>
               <el-option label="English" value="en"></el-option>
            </el-select><i>|</i>
       </span>
-      <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
+      <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoback">
          <el-select v-model="myModuleType" placeholder="切换模式" @change="onClickChangeModel">
             <el-option :label="$t('homeHeader.waterfall')" value="2"></el-option>
             <el-option :label="$t('homeHeader.dashboard')" value="1"></el-option>
          </el-select><i>|</i>
       </span>
-     <span class="nav-right-item">
+     <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
+         <el-select v-model="setupValue" placeholder="设置" @change="onClickSetup">
+             <el-option :label="$t('homeHeader.setup')" value="0" hidden></el-option>
+             <el-option :label="$t('homeHeader.moduleConfig')" value="1"></el-option>
+             <el-option :label="$t('homeHeader.skin')" value="2"></el-option>
+         </el-select><i>|</i>
+     </span>
+     <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
           <el-select v-model="userValue" placeholder="admin" @change="onClickUserConfigure">
-              <el-option label="模块管理" value="1"></el-option>
-              <el-option label="退出" value="2"></el-option>
+              <el-option label="admin" value="0" hidden></el-option>
+              <el-option :label="$t('homeHeader.personalCenter')" value="1"></el-option>
+              <el-option :label="$t('homeHeader.changePassword')" value="2"></el-option>
+              <el-option :label="$t('homeHeader.signOut')" value="3"></el-option>
            </el-select>
       </span>
   </div>
@@ -30,11 +42,12 @@
     name: 'DigitalNavOperator',
     components: {
     },
-    props:['moduleType'],
+    props:['moduleType','showGoback'],
     data () {
       return {
         langValue:Cookies.get('lang'),
-        userValue:''
+        userValue:'0',
+        setupValue:'0'
       }
     },
     computed:{
@@ -62,12 +75,24 @@
         this.$parent.handleLangChange && this.$parent.handleLangChange()
       },
       async onClickUserConfigure(val){
-        if(val==1){
-          this.$router.push(`/digitalPark/moduleConfigure?type=${this.moduleType}`)
-        }else{
+        if(val==3){
+          // debugger
           sessionStorage.removeItem('token')
-          window.location.href='/digitalPark/homePage'
+          sessionStorage.logout=true
+          // window.location.href='/#/digitalPark/homePage'
           await DigitalParkApi.logOut()
+        }
+      },
+      onClickSetup(val){
+        if(val==1){
+          this.$router.push(`/digitalPark/moduleConfigure?type=${this.moduleType}&updateDragFlag=true`)
+        }
+      },
+      onClickGoBack(){
+        if(this.$route.query.type==2){
+          location.href='/#/digitalPark/homePage'
+        }else{
+          location.href='/#/digitalPark/dashboardHomePage'
         }
       }
     },
@@ -81,7 +106,6 @@
   .digital-nav-operator{
     font-size: 16px;
     .nav-right-item{
-      
       span{
         width:90px;
         display: inline-block;
@@ -108,9 +132,12 @@
       }
     }
     .dashboard-nav{
-      .el-input__inner{
+     .el-input__inner{
         color:@white;
       }
+    }
+    .long-text span{
+      width:120px;
     }
   }
 </style>

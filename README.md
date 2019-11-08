@@ -229,6 +229,7 @@
         </template>
     </Table>
    ```
+   
 二、commonFun公共方法/数据封装  （有些为测试数据，不再此说明，用完可删）
 
 一）deleteTip 删除提示函数 
@@ -239,6 +240,16 @@
   4）callBack 确定删除的回调
   
   
+六）通用导航菜单 commonMenu
+1.传递参数
+ 1)menuList ：菜单列表
+ 2)menuConfig,示例：{
+          mode:'horizontal', //默认垂直模式
+          bgColor:'#fff', //菜单背景色
+          textColor:'#606266', //字体颜色
+          specialRoute:true, // 此字段是数字园区首页使用。数字园区导航跳转的路由特殊处理，默认不传
+          ...
+         }
 
 三、chartUtils封装 
 (基础charts封装，当无法满足需求时，可自己再在自己的页面重新定义特殊化option，与封装组件相同处不必重复写)

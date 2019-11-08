@@ -1,10 +1,10 @@
 <template>
-  <div class="task-ranking" >
-    <!--<div ref="pieCharts" class="my-chart" id="task-ranking-chart"></div>-->
+  <div class="escapeRoutes">
+    <!--<div ref="pieCharts" class="my-chart" id="task-person-task-chart"></div>-->
     <!--<div class="my-chart">-->
     <img
-      style="width:100%;height:auto;"
-      src="../../../../static/image/digitalPark/renwu2_tmp.png" alt="">
+      style="width:90%;height:85%;"
+      src="../../../../static/image/digitalPark/tslx.jpg" alt="">
   <!--</div>-->
     <div>{{moduleItem.moduleName}}</div>
   </div>
@@ -14,7 +14,7 @@
 import CommonFun from "../../../utils/commonFun";
 import ChartUtils from "../../../utils/chartUtils";
 export default {
-  name: "taskRanking",
+  name: "EscapeRoutes",
   components: {},
   props: ["moduleItem"],
   data() {

@@ -10,23 +10,25 @@
         </el-input>
         <NavOperator :moduleType.sync="moduleType" />
       </div>
-      <Sidebar  :menuList="menuList"/>
+      <div class="sidebar-container">
+        <Sidebar  :menuList="menuList" :menuConfig="menuConfig"/>
+      </div>
     </div>
 
     <el-carousel height="550px" :interval="2000" v-if="!hideHeader">
       <el-carousel-item >
-        <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo1.png" alt="">
+        <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo1.jpg" alt="">
       </el-carousel-item>
       <el-carousel-item >
-        <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo2.png" alt="">
+        <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo2.jpg" alt="">
       </el-carousel-item>
     </el-carousel>
 
     <div class="home-center">
       <div class="product-module">
         <div class="flex-align-between module-title">
-          <h3>我们的产品</h3>
-          <span class="hover-pointer more-btn" @click="onShowMoreProduct">更多</span>
+          <h3>功能模块</h3>
+          <span class="hover-pointer more-btn" @click="onShowMoreProduct">{{$t('more')}}</span>
         </div>
         <ul class="flex-align-around production-list" :style="showMoreProduct?'':{height:'120px'}">
           <li v-for="(item,index) in productList"
@@ -40,6 +42,8 @@
                   v-bind="getOptions()"
                   class="draggable-box"
                   @change="onDragChange"
+                  @start="onDragStart"
+                  @end="onDragEnd"
 
       >
         <ItemProModule v-for="(item) in userProModuleList"
@@ -54,7 +58,7 @@
       <!--<div class="item-module">-->
         <!--<div class="flex-align-between module-title">-->
           <!--<h3>信息发布</h3>-->
-          <!--<span class="hover-pointer" @click="onShowMoreProduct">更多</span>-->
+          <!--<span class="hover-pointer" @click="onShowMoreProduct">{{$t('more')}}</span>-->
         <!--</div>-->
         <!--<div class="module-border">-->
           <!--<el-tabs style="height: 200px;" type="border-card" tabPosition="top">-->
@@ -71,14 +75,13 @@
 </template>
 
 <script>
-  import  Sidebar from '../coms/SideBar.vue'
+  import Sidebar from '../../../components/commonMenu/SideBar'
   import CommonFun from '../../../utils/commonFun'
   import DigitalParkApi from '../../../service/api/digitalParkApi'
   import NavOperator from '../coms/navOperator'
   import draggable from 'vuedraggable'
   import ItemProModule from '../coms/itemProModule'
-  import {mapState} from 'vuex';
-
+  import {mapState} from 'vuex'
   export default {
     name: 'DigitalHomePage',
     props:['hideHeader','curProModule'],
@@ -97,13 +100,21 @@
         userProModuleList:[],
         moduleType:"2",
         loading:true,
-        dragFlag:true
+        menuConfig:{
+          mode:'horizontal',
+          bgColor:'#fff',
+          textColor:'#606266',
+          specialRoute:true,
+          // activeTextColor:'red'
+        }
       }
     },
     computed:{
       ...mapState({
-        dragFlag:state=>state.digitalPark.dragFlag
+        dragFlag:state=>state.digitalPark.dragFlag,
+        oldProjectHome:state=>state.digitalPark.oldProjectHome
       })
+      // ...mapState('digitalPark',["oldProjectHome"])
     },
     watch:{
       $route(){
@@ -118,33 +129,27 @@
              }
            })
          }
-         this.dragFlag=Boolean(this.$route.query.updateDragFlag) //设置右侧非同组不可拖动
       }
     },
     methods:{
       onClickItemProduct(item){
         // 192.168.1.69：9002/html
+        console.log(this.oldProjectHome);
         console.log(item);
         let routeAddress = item.routeAddress;
-
-        // 如果是客户端
-        // if(this.$isClient){
-          if(item.name=="综合安防" ||item.name=="机房动环" || item.name=="智能建筑"){//目前先写死
-            Client.SkipToSigleBuild(item.name);
-            return ;
-          }
-        // }
-
+        if(item.name=="综合安防" ||item.name=="机房动环" || item.name=="智能建筑"){//目前先写死
+          Client.SkipToSigleBuild(item.name);
+          return ;
+        }
         if(routeAddress){
           // 如果带有@字符，则跳转旧项目
           if(routeAddress.indexOf('@') != -1){
-            location.href = OLDPROJECTHOME + '?forward=' + routeAddress.split('@')[1]
+            location.href=this.oldProjectHome + '?forward=' + routeAddress.split('@')[1]+'?type=2'
           }else{
-            window.open(item.routeAddress);
-            // this.$router.push();
+            this.$router.push(item.routeAddress+'?type=2');
           }
         }else{
-          window.open('/#/digitalPark/defaultPage')
+            this.$router.push('/digitalPark/defaultPage?type=2')
         }
       },
       onShowMoreProduct(){
@@ -185,7 +190,7 @@
         this.userProModuleList =res
         this.loading=false
       },
-      onDragChange(evt){
+      async onDragChange(evt){
          console.log('out-moudle-change',evt)
          if(evt.added) {
            let obj = {
@@ -196,10 +201,20 @@
            }
            this.userProModuleList.splice(evt.added.newIndex,1,obj)
            this.userProModuleList.splice(evt.added.newIndex-1,1)
-           // console.log('2',this.userProModuleList)
            this.$parent.setItemDragFlag &&
            this.$parent.setItemDragFlag(this.userProModuleList)
          }
+         if(evt.moved){
+           if(this.$route.path=='/digitalPark/homePage'){
+             // await DigitalParkApi.updateUserProModules(this.userProModuleList)
+           }
+         }
+      },
+      onDragStart(){
+        this.$parent.setContentListDragFlag && this.$parent.setContentListDragFlag(false)
+      },
+      onDragEnd(){
+        this.$parent.setContentListDragFlag && this.$parent.setContentListDragFlag(true)
       },
       handleLangChange(){
         this.getMenuTree()
@@ -215,7 +230,7 @@
             return item.menuId==this.curProModule.id
           })
           if(obj){  //整个userList不可拖动
-            this.dragFlag=false
+            this.$store.commit('digitalPark/dragFlag',false)
           }
           this.userProModuleList.map((item)=>{
             if(item.menuId!=this.curProModule.id){
@@ -233,6 +248,10 @@
       }
     },
     mounted(){
+      document.body.ondrop = function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
       this.getMenuTree()
       this.getProductList()
       this.getModulesByType()
@@ -386,6 +405,29 @@
     }
     .product-module{
       margin-top: 20px;
+    }
+    .menu-item {
+      float: left;
+    }
+    .sidebar-container {
+      width: 80%;
+      margin: 0 auto;
+      padding-top: 10px;
+    }
+    .sidebar-container .is-active {
+      /*border-bottom: 2px solid red;*/
+    }
+    .nest-menu {
+        float: none;
+       .el-submenu__icon-arrow {
+           position: absolute !important;
+       }
+    }
+    .el-menu--horizontal .el-submenu__icon-arrow {
+      position: static;
+      vertical-align: middle;
+      margin-left: 8px;
+      margin-top: -3px;
     }
   }
 </style>

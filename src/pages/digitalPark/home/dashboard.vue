@@ -72,7 +72,6 @@
                  >{{item.name}}</div>
                </el-tooltip>
              </div>
-
         </div>
         </draggable>
       </div>
@@ -292,10 +291,20 @@
           this.getProductList()
         },
         onClickItemFixPro(item){
-          if(item.routeAddress){
-            window.open(item.routeAddress)
+          let routeAddress = item.routeAddress;
+          if(item.name=="综合安防" ||item.name=="机房动环" || item.name=="智能建筑"){//目前先写死
+            Client.SkipToSigleBuild(item.name);
+            return ;
+          }
+          if(routeAddress){
+            // 如果带有@字符，则跳转旧项目
+            if(routeAddress.indexOf('@') != -1){
+              location.href=this.oldProjectHome + '?forward=' + routeAddress.split('@')[1]+'?type=1'
+            }else{
+              this.$router.push(item.routeAddress+'?type=1');
+            }
           }else{
-            window.open('/#/digitalPark/defaultPage')
+            this.$router.push('/digitalPark/defaultPage?type=1')
           }
         }
     },
@@ -304,6 +313,10 @@
       //   this.showHeader=false
       //   this.controlHeader()
       // },3000)
+      document.body.ondrop = function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
       this.scrollNews()
       this.getModulesByType()
       this.getProductList()
@@ -414,7 +427,7 @@
       flex: 1;
     }
     .dashboard-nav-operator .digital-nav-operator{
-      width:90%;
+      /*width:90%;*/
       float: right;
     }
     .unity_priview{

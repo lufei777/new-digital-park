@@ -24,6 +24,7 @@
 </template>
 <script>
 import SidebarItem from "./SidebarItem";
+import { mapState } from "vuex";
 
 export default {
   name: "Sidebar",
@@ -48,9 +49,9 @@ export default {
       console.log(key)
       if (key) {
         if (key.indexOf("null") != -1) {
-          this.$router.push("/digitalPark/defaultPage");
+          window.open("/#/digitalPark/defaultPage");
         }else if (key.indexOf("@") != -1) {
-          location.href = OLDPROJECTHOME + "?forward=" + key.split("@")[1];
+          window.open(this.oldProjectHome + "?forward=" + key.split("@")[1]);
         }else{
           if(key=='/assetGroup' || key=='/assetType' || key=='/assetMaintenance'){ //测试
             this.$router.push(key)
@@ -71,6 +72,7 @@ export default {
     }
   },
   computed: {
+    ...mapState("digitalPark", ["oldProjectHome"])
   }
 };
 </script>

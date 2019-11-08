@@ -11,11 +11,11 @@ import NightElec from '../pages/energy/energySaving/nightElec.vue'
 import EnergyLogin from '../pages/energy/login/index.vue'
 import ElecAnalysis from '../pages/energy/energySaving/helloWorld.vue'
 
-import Collect from './commonRouter/collect'
-import DataReport from './commonRouter/dataReport'
-import DeviceRecord from './commonRouter/deviceRecord'
 import StatisAnalysis from './commonRouter/statisAnalysis'
 import SystemManage from './commonRouter/systemManage'
+import DeviceRecord from './commonRouter/deviceRecord'
+import Collect from './commonRouter/collect'
+import DataReport from './commonRouter/dataReport'
 
 export default [{
   path: '/',
@@ -68,5 +68,7 @@ export default [{
     path: '/energy/elecAnalysis',
     name: 'ElecAnalysis',
     component: ElecAnalysis,
-  }].concat(StatisAnalysis, DataReport, SystemManage, DeviceRecord, Collect)
+  }].concat(StatisAnalysis).concat(SystemManage)
+    .concat(DeviceRecord).concat(Collect)
+    .concat(DataReport)
 }]
