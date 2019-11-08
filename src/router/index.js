@@ -27,6 +27,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   // console.log(to,from)
   axois.get('/oaApi/user/login').then(()=>{
+    sessionStorage.removeItem('logout')
     next()
   }).catch(()=>{})
 })

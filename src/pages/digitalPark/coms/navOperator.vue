@@ -22,7 +22,7 @@
          <el-select v-model="setupValue" placeholder="设置" @change="onClickSetup">
              <el-option :label="$t('homeHeader.setup')" value="0" hidden></el-option>
              <el-option :label="$t('homeHeader.moduleConfig')" value="1"></el-option>
-            <el-option  :label="$t('homeHeader.skin')" value="2"></el-option>
+             <el-option :label="$t('homeHeader.skin')" value="2"></el-option>
          </el-select><i>|</i>
      </span>
      <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
@@ -76,8 +76,10 @@
       },
       async onClickUserConfigure(val){
         if(val==3){
+          // debugger
           sessionStorage.removeItem('token')
-          window.location.href='/digitalPark/homePage'
+          sessionStorage.logout=true
+          // window.location.href='/#/digitalPark/homePage'
           await DigitalParkApi.logOut()
         }
       },
@@ -87,7 +89,11 @@
         }
       },
       onClickGoBack(){
-        location.href='/#/digitalPark/homePage'
+        if(this.$route.query.type==2){
+          location.href='/#/digitalPark/homePage'
+        }else{
+          location.href='/#/digitalPark/dashboardHomePage'
+        }
       }
     },
     mounted(){
