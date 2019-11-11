@@ -111,10 +111,8 @@
     },
     computed:{
       ...mapState({
-        dragFlag:state=>state.digitalPark.dragFlag,
-        oldProjectHome:state=>state.digitalPark.oldProjectHome
+        dragFlag:state=>state.digitalPark.dragFlag
       })
-      // ...mapState('digitalPark',["oldProjectHome"])
     },
     watch:{
       $route(){
@@ -134,7 +132,6 @@
     methods:{
       onClickItemProduct(item){
         // 192.168.1.69：9002/html
-        console.log(this.oldProjectHome);
         console.log(item);
         let routeAddress = item.routeAddress;
         if(item.name=="综合安防" ||item.name=="机房动环" || item.name=="智能建筑"){//目前先写死
@@ -144,7 +141,7 @@
         if(routeAddress){
           // 如果带有@字符，则跳转旧项目
           if(routeAddress.indexOf('@') != -1){
-            location.href=this.oldProjectHome + '?forward=' + routeAddress.split('@')[1]+'?type=2'
+            location.href=OLDPROJECTHOME + '?forward=' + routeAddress.split('@')[1]+'?type=2'
           }else{
             this.$router.push(item.routeAddress+'?type=2');
           }
