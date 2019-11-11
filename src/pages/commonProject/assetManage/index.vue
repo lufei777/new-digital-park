@@ -1,19 +1,25 @@
 <template>
   <div class="asset-manage">
      <div :class="menuConfig.isCollapse?'my-el-menu2':'my-el-menu'">
-       <div v-show="!menuConfig.isCollapse" class="title">资产管理</div>
+       <div  class="title">
+         <div v-show="!menuConfig.isCollapse"><i class="iconfont iconshouye"></i>&nbsp;资产管理</div>
+         <el-tooltip v-show="menuConfig.isCollapse" effect="dark" content="资产管理" placement="right-start" >
+             <i class="iconfont iconshouye hover-pointer"></i>
+         </el-tooltip>
+       </div>
        <Sidebar :menu-list="menuList" :menu-config="menuConfig"/>
      </div>
     <div class="right-content">
         <div class="asset-bread-crumb flex-align">
           <i :class="menuConfig.isCollapse?'iconzhankai':'iconshouqi'"
-             class="iconfont collapse-icon"
+             class="iconfont collapse-icon hover-pointer"
              @click="onClickCollapseBtn"
           ></i>
           <el-breadcrumb separator="/">
-            <el-breadcrumb-item v-for="(item,index) in assetBreadcrumb"
+            <el-breadcrumb-item v-for="(item,index) in breadcrumb"
                                 :key="index"
-                                :to="item.path">{{item.name}}
+                                >{{item.name}}
+              <!--:to="item.path"-->
             </el-breadcrumb-item>
           </el-breadcrumb>
           <div class="asset-nav-operator-box">
@@ -140,21 +146,27 @@
       Sidebar,
       NavOperator
     },
-    computed:{
-      ...mapState({
-        assetBreadcrumb:state=>state.assetManage.assetBreadcrumb
-      })
-    },
     data () {
       return {
         menuList:menuList,
-        isCollapse:false,
         menuConfig:{
           bgColor:'#394562',
           textColor:'#B7BAC4',
           isCollapse:false,
-        }
-        // assetBreadcrumb:[{name:'资产信息维护',path:'/assetMaintenance'}]
+          activeIndex:''
+        },
+        breadcrumb:Cookies.get('breadcrumb')?JSON.parse(Cookies.get('breadcrumb')):
+                   [{name:'资产管理',routeAddress:'/assetManage'}]
+      }
+    },
+    computed:{
+      ...mapState({
+        tmpBreadcrumb:state=>state.digitalPark.tmpBreadcrumb
+      })
+    },
+    watch:{
+      tmpBreadcrumb(){
+        this.breadcrumb=JSON.parse(Cookies.get('breadcrumb'))
       }
     },
     methods:{
@@ -190,8 +202,14 @@
     },
     mounted(){
       document.title='资产管理'
-      Cookies.set('assetBreadcrumb',[{name:'资产管理',path:'/assetManage'}])
-      console.log($(".asset-manage").length)
+      if(!Cookies.get('breadcrumb')){
+        Cookies.set('breadcrumb',[{name:'资产管理',routeAddress:'/assetManage'}])
+      }
+      if(Cookies.get('activeIndex')){
+        this.menuConfig.activeIndex=Cookies.get('activeIndex')
+      }else{
+        this.menuConfig.activeIndex=this.menuList[0].routeAddress
+      }
     }
   }
 </script>
@@ -264,7 +282,7 @@
     .nest-menu{
       font-size: 16px;
     }
-    .el-menu-item.nest-menu.is-active{
+    .el-menu-item.is-active{
         background-color: #416EFF !important;
         color:#B7BAC4;
     }

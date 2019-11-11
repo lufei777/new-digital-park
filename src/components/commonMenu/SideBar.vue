@@ -3,7 +3,7 @@
     <!--<el-scrollbar wrap-class="scrollbar-wrapper">-->
       <el-menu
         class="el-menu-demo"
-        :default-active="activeIndex2"
+        :default-active="menuConfig.activeIndex"
         :mode="menuConfig.mode"
         :background-color="menuConfig.bgColor"
         :text-color="menuConfig.textColor"
@@ -41,21 +41,29 @@ export default {
   },
   data() {
     return {
-      activeIndex2: "1"
+      breadcrumb:[]
     };
+  },
+  computed: {
+    ...mapState({
+      // breadcrumb:state=>state.digitalPark.breadcrumb
+    })
   },
   methods: {
     handleSelect(key, keyPath) {
-      console.log(key)
+      // console.log(key,keyPath)
       if (key) {
         if (key.indexOf("null") != -1) {
           window.open("/#/digitalPark/defaultPage");
         }else if (key.indexOf("@") != -1) {
-          window.open(this.oldProjectHome + "?forward=" + key.split("@")[1]);
+          window.open(OLDPROJECTHOME + "?forward=" + key.split("@")[1]);
         }else{
           if(key=='/assetGroup' || key=='/assetType' || key=='/assetMaintenance'){ //测试
             this.$router.push(key)
           }
+          this.breadcrumb=[]
+          this.matchRoute(this.menuList,[...keyPath])
+          Cookies.set('activeIndex',key)
         }
       }
     },
@@ -69,11 +77,23 @@ export default {
       // if(key=='/assetMaintenance'){
       //   this.$router.push(key)
       // }
+    },
+    matchRoute(list,keyPath){
+      list.map((item)=>{
+        keyPath.map((path)=>{
+          if(item.routeAddress==path){
+            this.breadcrumb.push(item)
+            keyPath.shift()
+          }
+        })
+        if(keyPath){
+          this.matchRoute(item.childNode,keyPath)
+        }
+      })
+      Cookies.set('breadcrumb',this.breadcrumb)
+      this.$store.commit('digitalPark/tmpBreadcrumb',this.breadcrumb)
     }
   },
-  computed: {
-    ...mapState("digitalPark", ["oldProjectHome"])
-  }
 };
 </script>
 <style lang="less">

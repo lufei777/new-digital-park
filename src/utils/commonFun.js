@@ -18,6 +18,7 @@ import escapeRoutes from '../pages/digitalPark/coms/escapeRoutes'
 import saleStatistics from '../pages/digitalPark/coms/saleStatistics'
 import inventoryAnalysis from '../pages/digitalPark/coms/inventoryAnalysis'
 import messageRelease from '../pages/digitalPark/coms/messageRelease'
+
 class commonFun {
   exportComs={
     energyProportionAnalysis,
@@ -441,54 +442,6 @@ class commonFun {
     }]
   }
 
-  productList = [
-    { id: 1, name: '能源管理', url: '/#/energy', bgUrl: 'nygl.png' },
-    { id: 2, name: '资产管理', url: '/#/assetManage', bgUrl: 'zcgl.png' },
-    { id: 3, name: '能源管理', bgUrl: 'nygl.png' },
-    { id: 4, name: '通行管理', bgUrl: 'nygl.png' },
-    { id: 5, name: '经营管理', bgUrl: 'nygl.png' },
-    { id: 6, name: '综合安防', bgUrl: 'nygl.png' },
-    { id: 7, name: '应急指挥', bgUrl: 'nygl.png' },
-    { id: 8, name: '资产管理', bgUrl: 'nygl.png' },
-    { id: 9, name: '能源管理', bgUrl: 'nygl.png' },
-    { id: 10, name: '资产管理', bgUrl: 'nygl.png' },
-    { id: 11, name: '能源管理', bgUrl: 'nygl.png' },
-    { id: 22, name: '资产管理', bgUrl: 'nygl.png' },
-    { id: 13, name: '能源管理', bgUrl: 'nygl.png' },
-    { id: 14, name: '资产管理', bgUrl: 'nygl.png' },
-    { id: 15, name: '能源管理', bgUrl: 'nygl.png' },
-    { id: 16, name: '资产管理', bgUrl: 'nygl.png' },
-    { id: 17, name: '能源管理', bgUrl: 'nygl.png' },
-    { id: 18, name: '资产管理', bgUrl: 'nygl.png' }]
-
-  navList = [{
-    id: '1', name: '首页', children: []
-  }, {
-    id: '2', name: '运维', children: [{
-      id: '3', name: '综合安防', children: [{
-        id: '16', name: 'threeDemo1', children: []
-      }, {
-        id: '17', name: 'threeDemo2', children: []
-      }]
-    }, {
-      id: '4', name: '应急指挥', children: [{
-        id: '18', name: 'threeDemo3', children: []
-      }, {
-        id: '19', name: 'threeDemo4', children: []
-      }]
-    }]
-  }, {
-    id: '5', name: '经营', children: [{
-      id: '13', name: '测试1', children: []
-    }, {
-      id: '14', name: '测试2', children: []
-    }]
-  }, {
-    id: '6', name: '服务', children: []
-  }, {
-    id: '7', name: '办公', children: []
-  }]
-
   incomeList = [{
     name: "代收款项",
     id: 1,
@@ -528,5 +481,6 @@ class commonFun {
     id: 4,
     value: 300,
   }]
+
 }
 export default new commonFun()
