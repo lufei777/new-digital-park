@@ -41,12 +41,19 @@ export default {
   },
   data() {
     return {
-      activeIndex2: "1"
+      activeIndex2: "1",
+      breadcrumb:[]
     };
+  },
+  computed: {
+    ...mapState({
+      oldProjectHome:state=>state.digitalPark.oldProjectHome,
+      // breadcrumb:state=>state.digitalPark.breadcrumb
+    })
   },
   methods: {
     handleSelect(key, keyPath) {
-      console.log(key)
+      // console.log(key,keyPath)
       if (key) {
         if (key.indexOf("null") != -1) {
           window.open("/#/digitalPark/defaultPage");
@@ -56,6 +63,8 @@ export default {
           if(key=='/assetGroup' || key=='/assetType' || key=='/assetMaintenance'){ //测试
             this.$router.push(key)
           }
+          this.breadcrumb=[]
+          this.matchRoute(this.menuList,[...keyPath])
         }
       }
     },
@@ -69,11 +78,23 @@ export default {
       // if(key=='/assetMaintenance'){
       //   this.$router.push(key)
       // }
+    },
+    matchRoute(list,keyPath){
+      list.map((item)=>{
+        keyPath.map((path)=>{
+          if(item.routeAddress==path){
+            this.breadcrumb.push(item)
+            keyPath.shift()
+          }
+        })
+        if(keyPath){
+          this.matchRoute(item.childNode,keyPath)
+        }
+      })
+      Cookies.set('breadcrumb',this.breadcrumb)
+      this.$store.commit('digitalPark/tmpBreadcrumb',this.breadcrumb)
     }
   },
-  computed: {
-    ...mapState("digitalPark", ["oldProjectHome"])
-  }
 };
 </script>
 <style lang="less">

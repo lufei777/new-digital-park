@@ -11,9 +11,10 @@
              @click="onClickCollapseBtn"
           ></i>
           <el-breadcrumb separator="/">
-            <el-breadcrumb-item v-for="(item,index) in assetBreadcrumb"
+            <el-breadcrumb-item v-for="(item,index) in breadcrumb"
                                 :key="index"
-                                :to="item.path">{{item.name}}
+                                >{{item.name}}
+              <!--:to="item.path"-->
             </el-breadcrumb-item>
           </el-breadcrumb>
           <div class="asset-nav-operator-box">
@@ -140,11 +141,6 @@
       Sidebar,
       NavOperator
     },
-    computed:{
-      ...mapState({
-        assetBreadcrumb:state=>state.assetManage.assetBreadcrumb
-      })
-    },
     data () {
       return {
         menuList:menuList,
@@ -153,8 +149,19 @@
           bgColor:'#394562',
           textColor:'#B7BAC4',
           isCollapse:false,
-        }
-        // assetBreadcrumb:[{name:'资产信息维护',path:'/assetMaintenance'}]
+        },
+        breadcrumb:Cookies.get('breadcrumb')?JSON.parse(Cookies.get('breadcrumb')):
+                   [{name:'资产管理',routeAddress:'/assetManage'}]
+      }
+    },
+    computed:{
+      ...mapState({
+        tmpBreadcrumb:state=>state.digitalPark.tmpBreadcrumb
+      })
+    },
+    watch:{
+      tmpBreadcrumb(){
+        this.breadcrumb=JSON.parse(Cookies.get('breadcrumb'))
       }
     },
     methods:{
@@ -190,8 +197,9 @@
     },
     mounted(){
       document.title='资产管理'
-      Cookies.set('assetBreadcrumb',[{name:'资产管理',path:'/assetManage'}])
-      console.log($(".asset-manage").length)
+      if(!Cookies.get('breadcrumb')){
+        Cookies.set('breadcrumb',[{name:'资产管理',routeAddress:'/assetManage'}])
+      }
     }
   }
 </script>

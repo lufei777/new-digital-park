@@ -151,6 +151,7 @@
         }else{
             this.$router.push('/digitalPark/defaultPage?type=2')
         }
+        Cookies.set('moduleType',2)
       },
       onShowMoreProduct(){
         this.showMoreProduct=!this.showMoreProduct
