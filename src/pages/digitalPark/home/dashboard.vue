@@ -299,7 +299,7 @@
           if(routeAddress){
             // 如果带有@字符，则跳转旧项目
             if(routeAddress.indexOf('@') != -1){
-              location.href=this.oldProjectHome + '?forward=' + routeAddress.split('@')[1]+'?type=1'
+              location.href=OLDPROJECTHOME + '?forward=' + routeAddress.split('@')[1]+'?type=1'
             }else{
               this.$router.push(item.routeAddress+'?type=1');
             }

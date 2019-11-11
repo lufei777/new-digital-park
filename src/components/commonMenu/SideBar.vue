@@ -47,7 +47,6 @@ export default {
   },
   computed: {
     ...mapState({
-      oldProjectHome:state=>state.digitalPark.oldProjectHome,
       // breadcrumb:state=>state.digitalPark.breadcrumb
     })
   },
@@ -58,7 +57,7 @@ export default {
         if (key.indexOf("null") != -1) {
           window.open("/#/digitalPark/defaultPage");
         }else if (key.indexOf("@") != -1) {
-          window.open(this.oldProjectHome + "?forward=" + key.split("@")[1]);
+          window.open(OLDPROJECTHOME + "?forward=" + key.split("@")[1]);
         }else{
           if(key=='/assetGroup' || key=='/assetType' || key=='/assetMaintenance'){ //测试
             this.$router.push(key)
