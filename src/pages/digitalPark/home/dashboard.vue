@@ -306,6 +306,7 @@
           }else{
             this.$router.push('/digitalPark/defaultPage?type=1')
           }
+          Cookies.set('moduleType',1)
         }
     },
     mounted(){

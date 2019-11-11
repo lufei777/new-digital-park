@@ -1,10 +1,14 @@
 const state = {
-  dragFlag:true
+  dragFlag:true,
+  tmpBreadcrumb:[]
 }
 
 const mutations={
   dragFlag(state,data) {
     state.dragFlag = data
+  },
+  tmpBreadcrumb(state,data) {
+    state.tmpBreadcrumb = data
   }
 }
 
