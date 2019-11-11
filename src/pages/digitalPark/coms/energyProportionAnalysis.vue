@@ -55,8 +55,6 @@ export default {
       this.initChart(res);
     },
     initChart(res) {
-      console.log(res);
-
       let vm = this;
       let myChart = echarts.init(this.$refs.myChart);
       let xAxis = res.value.map(item => item.date.slice(0, 7));
@@ -171,7 +169,6 @@ export default {
       };
       // 点击事件
       myChart.on("click", params => {
-        console.log(params);
         if (vm.moduleItem.routeAddress) {
           window.open(vm.moduleItem.routeAddress);
         }

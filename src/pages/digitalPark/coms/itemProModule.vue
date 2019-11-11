@@ -124,7 +124,6 @@
           })
         }
         if(evt.moved){
-          console.log(this.$route.path)
           if(this.$route.path=='/digitalPark/homePage'){
             // await DigitalParkApi.updateUserProModules(this.userProModuleList)
           }
