@@ -68,7 +68,5 @@ export default [{
     path: '/energy/elecAnalysis',
     name: 'ElecAnalysis',
     component: ElecAnalysis,
-  }].concat(StatisAnalysis).concat(SystemManage)
-    .concat(DeviceRecord).concat(Collect)
-    .concat(DataReport)
+  }].concat(StatisAnalysis,DataReport,SystemManage,DeviceRecord,Collect)
 }]
