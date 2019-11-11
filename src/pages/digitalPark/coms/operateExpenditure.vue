@@ -136,7 +136,6 @@ export default {
     }
   },
   mounted() {
-    console.log(echarts);
     // this.initChart();
   }
 };

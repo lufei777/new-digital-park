@@ -47,7 +47,7 @@
 
       >
         <ItemProModule v-for="(item) in userProModuleList"
-                       :class="item.moduleDragFlag?'drag-item item-module':'item-module'"
+                       class="drag-item item-module"
                        :key="item.id"
                        :moduleData="item"
                        :type="2"
@@ -183,7 +183,8 @@
           language:Cookies.get('lang')
         })
         res.map((item)=>{
-           item.moduleDragFlag=true
+           item.moduleDragFlag=true  //控制模块内容
+           // item.parentModuleDragFlag=true //控制块，不可与块内容用同一变量
         })
         this.userProModuleList =res
         this.loading=false
@@ -209,9 +210,17 @@
          }
       },
       onDragStart(){
+         //设置不可往其他块内容拖
+         this.userProModuleList.map((item)=>{
+           item.moduleDragFlag=false
+         })
+        //设置不可往左侧的配置列表拖
         this.$parent.setContentListDragFlag && this.$parent.setContentListDragFlag(false)
       },
       onDragEnd(){
+        this.userProModuleList.map((item)=>{
+          item.moduleDragFlag=true
+        })
         this.$parent.setContentListDragFlag && this.$parent.setContentListDragFlag(true)
       },
       handleLangChange(){
