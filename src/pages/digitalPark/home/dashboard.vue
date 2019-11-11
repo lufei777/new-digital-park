@@ -1,4 +1,5 @@
 <template>
+
   <div class="dashboard-park-home-page" :style="homePageBg" v-loading="loading">
       <div class="dashboard-header flex-align-between" v-show="!hideHeader">
         <div class="news-box">
