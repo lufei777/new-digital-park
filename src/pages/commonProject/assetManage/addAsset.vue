@@ -181,6 +181,10 @@
       },
       goBack(){
         this.$router.push('/assetMaintenance')
+        let tmp=JSON.parse(Cookies.get('breadcrumb'))
+        tmp.pop()
+        this.$store.commit('digitalPark/tmpBreadcrumb',tmp)
+        Cookies.set('breadcrumb',tmp)
       },
       hideTreeModal(){
         this.showTree=false
@@ -359,11 +363,16 @@
         }
         this.$message({
           type:'success',
-          message
+          message,
+          duration:500
         })
-        // setTimeout(()=>{
-        //   this.$router.replace('/assetMaintenance')
-        // },1000)
+        setTimeout(()=>{
+          this.$router.replace('/assetMaintenance')
+        },1000)
+        let tmpArr=JSON.parse(Cookies.get('breadcrumb'))
+        tmpArr.pop()
+        this.$store.commit('digitalPark/tmpBreadcrumb',tmpArr)
+        Cookies.set('breadcrumb',tmpArr)
       },
       async multiEditAsset(){
         let tmp=[]

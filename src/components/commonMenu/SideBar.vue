@@ -3,7 +3,7 @@
     <!--<el-scrollbar wrap-class="scrollbar-wrapper">-->
       <el-menu
         class="el-menu-demo"
-        :default-active="activeIndex2"
+        :default-active="menuConfig.activeIndex"
         :mode="menuConfig.mode"
         :background-color="menuConfig.bgColor"
         :text-color="menuConfig.textColor"
@@ -41,7 +41,6 @@ export default {
   },
   data() {
     return {
-      activeIndex2: "1",
       breadcrumb:[]
     };
   },
@@ -64,6 +63,7 @@ export default {
           }
           this.breadcrumb=[]
           this.matchRoute(this.menuList,[...keyPath])
+          Cookies.set('activeIndex',key)
         }
       }
     },
