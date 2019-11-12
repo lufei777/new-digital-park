@@ -3,8 +3,8 @@
     <div v-show="!isFull">
       <div class="set-tip">模式设置</div>
       <div class="module-change">
-        <el-button @click="onClickModuleBtn('2')" :style="type==2?moduleBtnBg:defaultBtn" >{{$t('homeHeader.waterfall')}}</el-button>
-        <el-button @click="onClickModuleBtn('1')" :style="type==1?moduleBtnBg:defaultBtn" >{{$t('homeHeader.dashboard')}}</el-button>
+        <el-button @click="onClickModuleBtn('2')" :class="type==2?'moduleBtnBg':'defaultBtn'">{{$t('homeHeader.waterfall')}}</el-button>
+        <el-button @click="onClickModuleBtn('1')" :class="type==1?'moduleBtnBg':'defaultBtn'">{{$t('homeHeader.dashboard')}}</el-button>
       </div>
     </div>
     <div :class="isFull?'full-main-container':'main-container'">
@@ -40,15 +40,14 @@
           <HomePage v-if="type==2" :curProModule="curProModule" :hideHeader="true" ref="homePage"></HomePage>
         </div>
         <div class="operator-box" v-if="!isFull">
-          <el-button  @click="onClickSureBtn" :style="defaultBtn">确认</el-button>
-          <el-button  @click="onClickGoBackBtn" :style="defaultBtn">取消</el-button>
-          <el-button  @click="onClickFullScreenBtn" :style="defaultBtn">预览</el-button>
+          <el-button  @click="onClickSureBtn" class="defaultBtn">确认</el-button>
+          <el-button  @click="onClickGoBackBtn" class="defaultBtn">取消</el-button>
+          <el-button  @click="onClickFullScreenBtn" class="defaultBtn">预览</el-button>
         </div>
       </div>
     </div>
     <div v-show='isFull && showEsc'
          class="esc-full-btn hover-pointer"
-         :style="escFullBtnBg"
          @click="onClickEscBtn"
     >
       <img src="../../../../static/image/digitalPark/esc_btn.png" alt="">
@@ -89,25 +88,6 @@
     computed:{
       type(){
         return this.$route.query.type
-      },
-      moduleBtnBg(){
-        return {
-           backgroundImage:'url('+require('../../../../static/image/digitalPark/module_btn_bg.png')+')',
-           color:'#fff',
-           'background-repeat':'no-repeat',
-           'background-size':'100% 100%'
-        }
-      },
-      defaultBtn(){
-        return {
-          border:'1px solid #0257FF',
-          color:'#0257FF'
-        }
-      },
-      escFullBtnBg(){
-        return {
-          backgroundImage:'url('+require('../../../../static/image/digitalPark/full_btn_bg.png')+')',
-        }
       },
       ...mapState({
         dragFlag:state=>state.digitalPark.dragFlag
@@ -398,12 +378,26 @@
       right:0;
       background-size: 100% 100%;
       background-repeat: no-repeat;
+      background-image: url('../../../../static/image/digitalPark/full_btn_bg.png');
     }
     .drag-shadow{
       /*color:#fff;*/
       /*border:10px solid red;*/
       background-image: url('../../../../static/image/digitalPark/content_bg.png');
       background-repeat: no-repeat;
+    }
+    .moduleBtnBg{
+      background-image:url('../../../../static/image/digitalPark/module_btn_bg.png');
+      color:#fff;
+      background-repeat:no-repeat;
+      background-size:100% 100%;
+    }
+    .moduleBtnBg.el-button:focus{
+      color:@white;
+    }
+    .defaultBtn{
+      border:1px solid #0257FF;
+      color:#0257FF;
     }
   }
 
