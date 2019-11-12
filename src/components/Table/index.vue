@@ -55,13 +55,12 @@
           :formatter="col.formatter"
           show-overflow-tooltip
           align="right"
-        >
-          <!-- <template slot-scope="scopeRow"></template> -->
-        </el-table-column>
+        ></el-table-column>
       </template>
 
       <!-- 列操作 -->
       <el-table-column
+        v-if="btnConfig"
         :fixed="btnConfig.fixed"
         :prop="btnConfig.prop"
         :label="btnConfig.label"
@@ -127,6 +126,8 @@ const LOG = {
 };
 //默认uiConfig
 const defaultUiConfig = {
+  size: "medium",
+  height: "300px", //高度
   pagination: {
     layout: "->, total, sizes, prev, pager, next, jumper",
     pageSizes: [5, 10, 20],
@@ -168,20 +169,23 @@ export default {
     };
   },
   created() {
+    const tableConfig = this.tableConfig;
     /**
      * 事件配置处理
      */
-    this.tableMethods = this.tableConfig.tableMethods;
+    this.tableMethods = tableConfig.tableMethods
+      ? tableConfig.tableMethods
+      : {};
     //如果行单击和行双击都设置了，则需要解决事件冲突
     if (this.tableMethods.rowClick && this.tableMethods.rowDblclick) {
       this.clickConflict = true;
     }
 
     //服务器模式
-    this.isServerMode = this.tableConfig.serverMode;
+    this.isServerMode = tableConfig.serverMode;
 
     //ui配置处理
-    if (this.tableConfig.uiConfig.pagination === true) {
+    if (tableConfig.uiConfig && tableConfig.uiConfig.pagination === true) {
       this.tableConfig.uiConfig.pagination = {};
     }
     //分页
@@ -194,7 +198,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.computedLayoutHeight();
+      this._computedLayoutHeight();
     });
   },
   methods: {
@@ -301,7 +305,6 @@ export default {
 
         this.$axios[type](url, sendData)
           .then(res => {
-            console.log(res);
             res = res.data;
             this.setTableData(res.data);
             this.uiConfig.pagination.total = res.total;
@@ -320,7 +323,7 @@ export default {
         params: params
       });
     },
-    computedLayoutHeight() {
+    _computedLayoutHeight() {
       this.layoutHeight.push(this.uiConfig.height);
       for (const key in this.$refs) {
         if (this.$refs.hasOwnProperty(key)) {
@@ -328,6 +331,9 @@ export default {
           this.layoutHeight.push(element.offsetHeight);
         }
       }
+    },
+    _handleRowEdit(index, row) {
+      console.log(index, row);
     },
 
     /**
@@ -365,11 +371,6 @@ export default {
       clearTimeout(dblclickTimer);
       this.tableMethods.rowDblclick &&
         this.tableMethods.rowDblclick(row, column, e);
-    },
-    //列操作下拉方法
-    handleCommand(command, currentMenu) {
-      //下拉回调执行
-      command(currentMenu.$attrs);
     },
     //单选选择当前行
     setCurrentRow(index) {
@@ -493,12 +494,18 @@ export default {
   },
   computed: {
     columnConfig() {
-      return this.tableConfig.columnConfig;
+      if (this.tableConfig.columnConfig) {
+        return this.tableConfig.columnConfig;
+      } else {
+        console.error("表格列配置为必须项");
+        return;
+      }
     },
     btnConfig() {
-      return this.tableConfig.btnConfig;
+      return this.tableConfig.btnConfig ? this.tableConfig.btnConfig : false;
     },
     uiConfig() {
+      if (!this.tableConfig.uiConfig) return defaultUiConfig;
       //如果没有配置的pagination，则使用默认的配置项
       if (this.tableConfig.uiConfig.pagination) {
         var defaultKeys = Object.keys(defaultUiConfig.pagination);
@@ -596,6 +603,17 @@ export default {
     .el-icon--right {
       margin-left: 0;
     }
+  }
+
+  .edit-row-input {
+    display: none;
+  }
+
+  .current-row .edit-row-input {
+    display: block;
+  }
+  .current-row .edit-row-input + span {
+    display: none;
   }
 }
 </style>
