@@ -48,7 +48,6 @@
     </div>
     <div v-show='isFull && showEsc'
          class="esc-full-btn hover-pointer"
-         :style="escFullBtnBg"
          @click="onClickEscBtn"
     >
       <img src="../../../../static/image/digitalPark/esc_btn.png" alt="">
@@ -89,25 +88,6 @@
     computed:{
       type(){
         return this.$route.query.type
-      },
-      // moduleBtnBg(){
-      //   return {
-      //      backgroundImage:'url('+require('../../../../static/image/digitalPark/module_btn_bg.png')+')',
-      //      color:'#fff',
-      //      'background-repeat':'no-repeat',
-      //      'background-size':'100% 100%'
-      //   }
-      // },
-      // defaultBtn(){
-      //   return {
-      //     border:'1px solid #0257FF',
-      //     color:'#0257FF'
-      //   }
-      // },
-      escFullBtnBg(){
-        return {
-          backgroundImage:'url('+require('../../../../static/image/digitalPark/full_btn_bg.png')+')',
-        }
       },
       ...mapState({
         dragFlag:state=>state.digitalPark.dragFlag
@@ -398,6 +378,7 @@
       right:0;
       background-size: 100% 100%;
       background-repeat: no-repeat;
+      background-image: url('../../../../static/image/digitalPark/full_btn_bg.png');
     }
     .drag-shadow{
       /*color:#fff;*/
@@ -410,6 +391,9 @@
       color:#fff;
       background-repeat:no-repeat;
       background-size:100% 100%;
+    }
+    .moduleBtnBg.el-button:focus{
+      color:@white;
     }
     .defaultBtn{
       border:1px solid #0257FF;
