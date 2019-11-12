@@ -46,7 +46,7 @@ export default {
       this.initChart(res);
     },
     initChart(res) {
-      let myChart = echarts.init(this.$refs.myChart);
+      let myChart = echarts.init(this.$refs.myChart || document.getElementById('operate-income-chart'));
       let legendData = [];
       let legend = "right";
       let color = ["#418CF0", "#FCB441", "#E0400A", "#056492"];
