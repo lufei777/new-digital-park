@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-park-home-page" :style="homePageBg" v-loading="loading">
+  <div class="dashboard-park-home-page"  v-loading="loading">
       <div class="dashboard-header flex-align-between" v-show="!hideHeader">
         <div class="news-box">
           <ul class="news-list hover-pointer" :style="{top}" @mouseenter="stopNews" @mouseleave="scrollNews">
@@ -10,7 +10,7 @@
           </ul>
         </div>
         <div class="digital-title">
-          <div class="digital-title-text" :style="titleBg">{{$t('homeHeader.title')}}</div>
+          <div class="digital-title-text">{{$t('homeHeader.title')}}</div>
         </div>
         <div class='dashboard-nav-operator'>
           <NavOperator  :moduleType.sync="moduleType" />
@@ -31,7 +31,6 @@
                          :key="item.id"
                          :moduleData="item"
                          :type="1"
-                         :style="moduleBg"
           />
         </draggable>
       </div>
@@ -59,15 +58,13 @@
                        :key="item.id"
                        :moduleData="item"
                        :type="1"
-                       :style="moduleBg"
         />
-        <div class="fixed-prod-module" :style="moduleBg">
+        <div class="fixed-prod-module">
              <span>{{$t('proEntry')}}</span>
              <div class="flex-wrap-align-center product-list">
                <el-tooltip v-for="(item) in fixedProList" :key="item.id"
                            effect="dark" :content="item.name" placement="top-end">
                  <div class="fixed-pro-item hover-pointer"
-                      :style="tagBg"
                       @click="onClickItemFixPro(item)"
                  >{{item.name}}</div>
                </el-tooltip>
@@ -96,26 +93,6 @@
     computed: {
       top() {
         return -this.curNewsIndex * 50 + 'px';
-      },
-      homePageBg(){
-        return {
-          backgroundImage:'url('+require('../../../../static/image/digitalPark/home.png')+')'
-        }
-      },
-      moduleBg(){
-        return {
-          backgroundImage:'url('+require('../../../../static/image/digitalPark/module_bg.png')+')'
-        }
-      },
-      titleBg(){
-        return {
-          backgroundImage:'url('+require('../../../../static/image/digitalPark/title_bg.png')+')'
-        }
-      },
-      tagBg(){
-        return {
-          backgroundImage:'url('+require('../../../../static/image/digitalPark/tag_large_bg.png')+')'
-        }
       },
       pageFlag(){
         console.log(this.$route.path)
@@ -333,6 +310,7 @@
     flex-direction: column;
     height:100%;
     overflow: hidden;
+    background: url('../../../../static/image/digitalPark/home.png');
     .dashboard-left,.dashboard-right{
       width:22%;
       height:100%;
@@ -353,6 +331,7 @@
       padding:0 10px 10px 10px;
       background-repeat: no-repeat;
       background-size: 100% 100%;
+      background-image: url('../../../../static/image/digitalPark/module_bg.png');
     }
     .dashboard-header{
       width:100%;
@@ -389,6 +368,7 @@
       /*text-align: center;*/
       background-repeat: no-repeat;
       background-size: 100% 100%;
+      background-image: url('../../../../static/image/digitalPark/title_bg.png');
     }
     .dashboard-content-panel{
       display: flex;
@@ -413,6 +393,7 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+      background-image: url('../../../../static/image/digitalPark/tag_large_bg.png') ;
     }
     .carousel-box{
       width:95%;
