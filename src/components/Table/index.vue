@@ -55,7 +55,19 @@
           :formatter="col.formatter"
           show-overflow-tooltip
           align="right"
-        ></el-table-column>
+        >
+          <template scope="scope">
+            <!-- <el-input
+              class="edit-row-input"
+              size="small"
+              v-model="scope.row[col.prop]"
+              placeholder="请输入内容"
+              @change="_handleRowEdit(scope.$index, scope.row)"
+            ></el-input>-->
+            <span>{{scope.row[col.prop]}}</span>
+          </template>
+          <!-- <template slot-scope="scopeRow"></template> -->
+        </el-table-column>
       </template>
 
       <!-- 列操作 -->
@@ -262,8 +274,6 @@ export default {
       let paginationConfig = this.uiConfig.pagination;
 
       if (paginationConfig) {
-        //加载开始
-        this.loading = true;
         //如果采用服务端分页模式
         if (this.isServerMode) {
           this._loadServerMode({
@@ -293,12 +303,15 @@ export default {
 
       if (url instanceof Function) {
         //如果使用方法来进行分页请求
-        url(sendData).then(res => {
-          this.setTableData(res.list);
-          this.uiConfig.pagination.total = res.total;
-          //加载中结束
-          this.loading = false;
-        });
+        url(sendData)
+          .then(res => {
+            this.setTableData(res.list);
+            this.uiConfig.pagination.total = res.total;
+          })
+          .finally(() => {
+            //加载中结束
+            this.loading = false;
+          });
       } else {
         //ajax请求type和url
         let type = this.isServerMode.type.toLowerCase();
@@ -308,11 +321,13 @@ export default {
             res = res.data;
             this.setTableData(res.data);
             this.uiConfig.pagination.total = res.total;
-            //加载中结束
-            this.loading = false;
           })
           .catch(err => {
             throw err;
+          })
+          .finally(() => {
+            //加载中结束
+            this.loading = false;
           });
       }
     },
@@ -575,8 +590,6 @@ export default {
     //动态监测tableConfig.data的改变，有可能外部ajax改变data值
     "tableConfig.data"(val) {
       this.setTableData(val);
-      //关闭加载
-      this.loading = false;
     },
     tableData(newVal, oldVal) {
       if (newVal instanceof Array) {
