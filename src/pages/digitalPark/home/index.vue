@@ -229,7 +229,13 @@
         this.getModulesByType()
       },
       getOptions(){
-        return {draggable:'.drag-item',group:'product',disabled:!this.dragFlag}
+        return {
+          draggable:'.drag-item',
+          group:'product',
+          disabled:!this.dragFlag,
+          scroll:true,
+          scrollSensitivity:50 //鼠标距离底部100px时可以滚动
+        }
       },
       setItemModuleDragFlag(flag){
         if(flag=='start'){
@@ -248,6 +254,7 @@
           this.userProModuleList.map((item)=>{
               item.moduleDragFlag=true
           })
+          this.$store.commit('digitalPark/dragFlag',true)
         }
       },
       async sureUpdateUserProModules(){

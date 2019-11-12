@@ -104,15 +104,13 @@
       async onChange (evt) {
         console.log("itemchange",evt)
         if (evt.added) {
-          console.log(this.moduleData.moduleList)
-          let index=evt.added.newIndex-1
+          let index=evt.added.newIndex+1
           if(this.moduleData.moduleList.length==3){
-            if(evt.added.newIndex==0){
+            if(evt.added.newIndex==0 ||evt.added.newIndex==2){
               index = 1
             }
             this.moduleData.moduleList.splice(index, 1)
           }
-          console.log( this.moduleData.moduleList)
           this.$router.replace({
             path: this.$route.path,
             query: {...this.$route.query,...{
