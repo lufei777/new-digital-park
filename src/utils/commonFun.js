@@ -482,5 +482,11 @@ class commonFun {
     value: 300,
   }]
 
+  // 跳转链接
+  loadOldPage(url) {
+    sessionStorage.setItem('park_home_Page', location.href);
+    location.href = OLDPROJECTHOME + '?forward=' + url.split('@')[1];
+  }
+
 }
 export default new commonFun()
