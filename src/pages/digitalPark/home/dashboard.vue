@@ -58,6 +58,7 @@
                        :key="item.id"
                        :moduleData="item"
                        :type="1"
+                       :hideHeader="hideHeader"
         />
         </draggable>
         <div class="fixed-prod-module">
@@ -276,6 +277,7 @@
           this.getProductList()
         },
         onClickItemFixPro(item){
+          if(this.hideHeader) return ; //配置页不进行后续操作
           let routeAddress = item.routeAddress;
           if(item.name=="综合安防" ||item.name=="机房动环" || item.name=="智能建筑"){//目前先写死
             Client.SkipToSigleBuild(item.name);
@@ -330,7 +332,6 @@
       overflow: hidden;
     }
     .draggable-box2{
-      /*height:465px;*/
       height:66%;
       overflow: hidden;
       .item-drag-product{
@@ -339,7 +340,6 @@
     }
     .item-drag-product,.fixed-prod-module{
       /*width:100%;*/
-      /*height:220px;*/
       height:31%;
       margin-bottom:2%;
       font-size: 16px;
