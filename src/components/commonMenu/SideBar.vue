@@ -23,6 +23,7 @@
   <!--</div>-->
 </template>
 <script>
+import CommonFun from '@/utils/CommonFun'
 import SidebarItem from "./SidebarItem";
 import { mapState } from "vuex";
 
@@ -54,9 +55,9 @@ export default {
       // console.log(key,keyPath)
       if (key) {
         if (key.indexOf("null") != -1) {
-          window.open("/#/digitalPark/defaultPage");
+          this.$router.push("/digitalPark/defaultPage");
         }else if (key.indexOf("@") != -1) {
-          window.open(OLDPROJECTHOME + "?forward=" + key.split("@")[1]);
+          CommonFun.loadOldPage(key);
         }else{
           if(key=='/assetGroup' || key=='/assetType' || key=='/assetMaintenance'){ //测试
             this.$router.push(key)
