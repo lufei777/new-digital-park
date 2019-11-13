@@ -36,7 +36,7 @@
       </div>
       <div :class="isFull?'full-right-module-content':'right-module-content'">
         <div :class="isFull?'full-preview-panel':'preview-panel'" >
-          <Dashboard v-if="type==1" :curProModule="curProModule" :hideHeader="true" ref="dashboard"/>
+          <DashboardNew v-if="type==1" :curProModule="curProModule" :hideHeader="true" ref="dashboard"/>
           <HomePage v-if="type==2" :curProModule="curProModule"
                     :hideHeader="true"
                     ref="homePage"
@@ -68,6 +68,7 @@
   import Dashboard from '../home/dashboard'
   import CommonFun from '../../../utils/commonFun'
   import {mapState} from 'vuex'
+  import DashboardNew from '../home/dashboardNew'
   export default {
     name: 'ModuleConfigure',
     components: {
@@ -75,6 +76,7 @@
       Dashboard,
       draggable,
       HomePage,
+      DashboardNew
     },
     data() {
       return {
@@ -87,7 +89,7 @@
         showEsc:false,
         loading:true,
         curDrag:'',
-        forceBack:true
+        forceBack:true,
       }
     },
     computed:{
@@ -227,6 +229,8 @@
         if(this.type==2) {
           this.$refs.homePage.setItemModuleDragFlag('start')
           this.forceBack=false
+        }else{
+          this.$refs.dashboard.setInnerDragFlag(true)
         }
       },
       onDragEnd(){
@@ -234,6 +238,8 @@
         if(this.type==2){
           this.$refs.homePage.setItemModuleDragFlag('end')
           this.forceBack=true
+        }else{
+          this.$refs.dashboard.setInnerDragFlag(false)
         }
       },
       onDragMove(evt){

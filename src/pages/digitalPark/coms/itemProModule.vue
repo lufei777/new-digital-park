@@ -128,6 +128,9 @@
      display: flex;
      align-items: center;
      flex-direction: column;
+     overflow: hidden;
+     padding:0 10px 10px 10px;
+     box-sizing: border-box;
     .component-box{
       /*height:100%;*/
       width:100%;
@@ -148,7 +151,8 @@
     .my-chart{
       margin:auto;
       width:95%;
-      flex-grow: 1;
+      /*flex-grow: 1;*/
+      height:90%;
     }
     .com-width-border{
       border:1px solid #ccc;
