@@ -1,12 +1,10 @@
 <template>
   <div class="asset-manage">
      <div :class="menuConfig.isCollapse?'my-el-menu2':'my-el-menu'">
-       <div  class="title">
-         <div v-show="!menuConfig.isCollapse"><i class="iconfont iconshouye"></i>&nbsp;资产管理</div>
-         <el-tooltip v-show="menuConfig.isCollapse" effect="dark" content="资产管理" placement="right-start" >
-             <i class="iconfont iconshouye hover-pointer"></i>
-         </el-tooltip>
-       </div>
+       <div v-show="!menuConfig.isCollapse" class="title"><i class="iconfont iconshouye"></i>&nbsp;资产管理</div>
+       <el-tooltip v-show="menuConfig.isCollapse" effect="dark" content="资产管理" placement="right-start" >
+           <div class="title"><i class="iconfont iconshouye hover-pointer"></i></div>
+       </el-tooltip>
        <Sidebar :menu-list="menuList" :menu-config="menuConfig"/>
      </div>
     <div class="right-content">
@@ -241,7 +239,7 @@
     .title{
       font-size: 24px;
       color:@white;
-      padding-left:20px;
+      padding:0 20px;
       margin:20px 0 40px 0 ;
     }
     .asset-bread-crumb{

@@ -1,5 +1,5 @@
 <template>
-  <div class="item-product-coms">
+  <div class="item-product-coms" >
     <div v-if="type==2" class="flex-align-between module-title">
       <h3>{{moduleData.menuName}}</h3>
       <span class="more-btn hover-pointer">{{$t('more')}}</span>
@@ -11,28 +11,9 @@
                  :is="item.componentName"
                  :moduleItem="item"
                  class="item-component flex-colum-center"
+                 @click.native="onClickItemComponent(item)"
       />
     </div>
-    <!--<div v-if="type==2" style="width:100%;" class="component-box com-width-border">-->
-        <!--<draggable-->
-                   <!--v-bind="getOptions()"-->
-                   <!--:list="moduleData.moduleList"-->
-                   <!--@start="onStart"-->
-                   <!--:move="onMove"-->
-                   <!--@end="onEnd"-->
-                   <!--@change="onChange"-->
-                   <!--v-for="(item,index) in moduleData.moduleList"-->
-                   <!--:key="index"-->
-                   <!--class="two-component"-->
-        <!--&gt;-->
-          <!--<component-->
-            <!--class="flex-colum-center drag-component"-->
-            <!--style="height: 100%;"-->
-            <!--:is="item.componentName"-->
-            <!--:moduleItem="item"-->
-          <!--/>-->
-        <!--</draggable>-->
-    <!--</div>-->
      <draggable
        v-if="type==2"
         v-bind="getOptions()"
@@ -62,7 +43,7 @@
   import DigitalParkApi from '../../../service/api/digitalParkApi'
   export default {
     name: 'ItemProModule',
-    props:['moduleData','type','userProModuleList'],
+    props:['moduleData','type','userProModuleList','hideHeader'],
     components: {
       ...CommonFun.exportComs,
       draggable
@@ -104,15 +85,13 @@
       async onChange (evt) {
         console.log("itemchange",evt)
         if (evt.added) {
-          console.log(this.moduleData.moduleList)
-          let index=evt.added.newIndex-1
+          let index=evt.added.newIndex+1
           if(this.moduleData.moduleList.length==3){
-            if(evt.added.newIndex==0){
+            if(evt.added.newIndex==0 ||evt.added.newIndex==2){
               index = 1
             }
             this.moduleData.moduleList.splice(index, 1)
           }
-          console.log( this.moduleData.moduleList)
           this.$router.replace({
             path: this.$route.path,
             query: {...this.$route.query,...{
@@ -130,6 +109,10 @@
 
         }
       },
+      onClickItemComponent(item){
+         if(this.hideHeader) return ;  //配置页点击不进行操作
+         console.log(item)
+      }
     },
     mounted(){
       document.body.ondrop = function (event) {
@@ -172,6 +155,9 @@
       padding:10px;
       box-sizing: border-box;
       overflow: hidden;
+      .item-content{
+        width:50%;
+      }
     }
     .single-module-name{
       margin-bottom: 10px;

@@ -44,6 +44,9 @@
                   @change="onDragChange"
                   @start="onDragStart"
                   @end="onDragEnd"
+                  :scroll-sensitivity="150"
+                  :force-fallback="forceFallback"
+                  :sroll="forceFallback"
 
       >
         <ItemProModule v-for="(item) in userProModuleList"
@@ -84,7 +87,7 @@
   import {mapState} from 'vuex'
   export default {
     name: 'DigitalHomePage',
-    props:['hideHeader','curProModule'],
+    props:['hideHeader','curProModule','forceFallback'],
     components: {
       NavOperator,
       Sidebar,
@@ -229,7 +232,15 @@
         this.getModulesByType()
       },
       getOptions(){
-        return {draggable:'.drag-item',group:'product',disabled:!this.dragFlag}
+        return {
+          draggable:'.drag-item',
+          group:'product',
+          disabled:!this.dragFlag,
+          // scroll:true,
+          // scrollSensitivity:100,
+          // scrollSpeed:20,
+          // forceFallback:true,//this.forceFallback
+        }
       },
       setItemModuleDragFlag(flag){
         if(flag=='start'){
@@ -248,6 +259,7 @@
           this.userProModuleList.map((item)=>{
               item.moduleDragFlag=true
           })
+          this.$store.commit('digitalPark/dragFlag',true)
         }
       },
       async sureUpdateUserProModules(){

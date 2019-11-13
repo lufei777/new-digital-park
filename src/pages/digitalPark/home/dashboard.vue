@@ -58,19 +58,20 @@
                        :key="item.id"
                        :moduleData="item"
                        :type="1"
+                       :hideHeader="hideHeader"
         />
-        <div class="fixed-prod-module">
-             <span>{{$t('proEntry')}}</span>
-             <div class="flex-wrap-align-center product-list">
-               <el-tooltip v-for="(item) in fixedProList" :key="item.id"
-                           effect="dark" :content="item.name" placement="top-end">
-                 <div class="fixed-pro-item hover-pointer"
-                      @click="onClickItemFixPro(item)"
-                 >{{item.name}}</div>
-               </el-tooltip>
-             </div>
-        </div>
         </draggable>
+        <div class="fixed-prod-module">
+          <span>{{$t('proEntry')}}</span>
+          <div class="flex-wrap-align-center product-list">
+            <el-tooltip v-for="(item) in fixedProList" :key="item.id"
+                        effect="dark" :content="item.name" placement="top-end">
+              <div class="fixed-pro-item hover-pointer"
+                   @click="onClickItemFixPro(item)"
+              >{{item.name}}</div>
+            </el-tooltip>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -125,20 +126,22 @@
             this.proModuleList1.splice(evt.removed.oldIndex, 0, this.changeObj)
             this.updateProModule()
           } else if (evt.added) {
-            if(evt.added.newIndex>2){
-              let obj={
-                // menuId:item.menuId,
-                menuName:evt.added.element.menuName,
-                type:1,
-                moduleList:[evt.added.element],
-              }
-              this.proModuleList1.splice(evt.added.newIndex-1,1,obj)
-              this.proModuleList1.splice(evt.added.newIndex,1)
-              this.$parent.setItemDragFlag &&
-              this.$parent.setItemDragFlag([...this.proModuleList1,...this.proModuleList2])
-              return;
+            let index=1;
+            if(evt.added.newIndex==3){
+              index=-1
+              // let obj={
+              //   // menuId:item.menuId,
+              //   menuName:evt.added.element.menuName,
+              //   type:1,
+              //   moduleList:[evt.added.element],
+              // }
+              // this.proModuleList1.splice(evt.added.newIndex-1,1,obj)
+              // this.proModuleList1.splice(evt.added.newIndex,1)
+              // this.$parent.setItemDragFlag &&
+              // this.$parent.setItemDragFlag([...this.proModuleList1,...this.proModuleList2])
+              // return;
             }
-            this.changeObj = this.proModuleList1.splice(evt.added.newIndex + 1, 1)[0]
+            this.changeObj = this.proModuleList1.splice(evt.added.newIndex + index, 1)[0]
             if(!evt.added.element.moduleList){
               this.updateProModule(evt.added,this.proModuleList1)
             }
@@ -152,20 +155,22 @@
             this.proModuleList2.splice(evt.removed.oldIndex, 0, this.changeObj)
             this.updateProModule()
           } else if (evt.added){
-            if(evt.added.newIndex==3){
-              let obj={
-                // menuId:item.menuId,
-                menuName:evt.added.element.menuName,
-                type:1,
-                moduleList:[evt.added.element],
-              }
-              this.proModuleList2.splice(evt.added.newIndex-2,1,obj)
-              this.proModuleList2.splice(evt.added.newIndex-1,1)
-              this.$parent.setItemDragFlag &&
-              this.$parent.setItemDragFlag([...this.proModuleList1,...this.proModuleList2])
-              return;
+            let index=1;
+            if(evt.added.newIndex==2){
+              index=-1
+              // let obj={
+              //   // menuId:item.menuId,
+              //   menuName:evt.added.element.menuName,
+              //   type:1,
+              //   moduleList:[evt.added.element],
+              // }
+              // this.proModuleList2.splice(evt.added.newIndex-2,1,obj)
+              // this.proModuleList2.splice(evt.added.newIndex-1,1)
+              // this.$parent.setItemDragFlag &&
+              // this.$parent.setItemDragFlag([...this.proModuleList1,...this.proModuleList2])
+              // return;
             }
-            this.changeObj = this.proModuleList2.splice(evt.added.newIndex + 1, 1)[0]
+            this.changeObj = this.proModuleList2.splice(evt.added.newIndex + index, 1)[0]
             if(!evt.added.element.moduleList){
               this.updateProModule(evt.added,this.proModuleList2)
             }
@@ -236,8 +241,14 @@
           this.$parent.setContentListDragFlag(false)
         },
         updateProModule(data,list){
-          // console.log('data',data)
           if(this.curProModule && data && !data.element.moduleList){
+            let index=data.newIndex;
+            if(list &&list.length==3 && data.newIndex==3){
+              index=2
+            }
+            if(list && list.length==2 && data.newIndex==2){
+              index=1
+            }
             this.curProModule.moduleList.map((item)=>{
               if(item.id==data.element.id){
                 let obj={
@@ -246,19 +257,17 @@
                   moduleList:[item],
                 }
                 // console.log(obj)
-                list[data.newIndex]=obj
+                list[index]=obj
                 console.log('list',this.proModuleList1,this.proModuleList2)
                 this.$parent.setItemDragFlag &&
                 this.$parent.setItemDragFlag([...this.proModuleList1,...this.proModuleList2])
               }
             })
-            // console.log(this.proModuleList1)
 
           }
           if(!this.curProModule){
             this.sureUpdateUserProModules()
           }
-          // this.getModulesByType()
         },
         async sureUpdateUserProModules(){
           await DigitalParkApi.updateUserProModules([...this.proModuleList1,...this.proModuleList2])
@@ -268,6 +277,7 @@
           this.getProductList()
         },
         onClickItemFixPro(item){
+          if(this.hideHeader) return ; //配置页不进行后续操作
           let routeAddress = item.routeAddress;
           if(item.name=="综合安防" ||item.name=="机房动环" || item.name=="智能建筑"){//目前先写死
             Client.SkipToSigleBuild(item.name);
@@ -287,10 +297,6 @@
         }
     },
     mounted(){
-      // setTimeout(()=>{
-      //   this.showHeader=false
-      //   this.controlHeader()
-      // },3000)
       document.body.ondrop = function (event) {
         event.preventDefault();
         event.stopPropagation();
@@ -315,12 +321,22 @@
       width:22%;
       height:100%;
       color: @white;
+      overflow: hidden;
     }
     .dashboard-center{
       width:56%;
+      overflow: hidden;
     }
-    .draggable-box1,.draggable-box2{
+    .draggable-box1{
       height:100%;
+      overflow: hidden;
+    }
+    .draggable-box2{
+      height:66%;
+      overflow: hidden;
+      .item-drag-product{
+        height:47%;
+      }
     }
     .item-drag-product,.fixed-prod-module{
       /*width:100%;*/
@@ -332,6 +348,7 @@
       background-repeat: no-repeat;
       background-size: 100% 100%;
       background-image: url('../../../../static/image/digitalPark/module_bg.png');
+      overflow: hidden;
     }
     .dashboard-header{
       width:100%;
@@ -375,6 +392,7 @@
       flex-grow: 1;
       padding:10px;
       box-sizing: border-box;
+      overflow: hidden;
     }
     .product-list{
       height:90%;

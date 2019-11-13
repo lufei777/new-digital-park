@@ -56,12 +56,23 @@
           show-overflow-tooltip
           align="right"
         >
+          <template scope="scope">
+            <!-- <el-input
+              class="edit-row-input"
+              size="small"
+              v-model="scope.row[col.prop]"
+              placeholder="请输入内容"
+              @change="_handleRowEdit(scope.$index, scope.row)"
+            ></el-input>-->
+            <span>{{scope.row[col.prop]}}</span>
+          </template>
           <!-- <template slot-scope="scopeRow"></template> -->
         </el-table-column>
       </template>
 
       <!-- 列操作 -->
       <el-table-column
+        v-if="btnConfig"
         :fixed="btnConfig.fixed"
         :prop="btnConfig.prop"
         :label="btnConfig.label"
@@ -127,6 +138,8 @@ const LOG = {
 };
 //默认uiConfig
 const defaultUiConfig = {
+  size: "medium",
+  height: "300px", //高度
   pagination: {
     layout: "->, total, sizes, prev, pager, next, jumper",
     pageSizes: [5, 10, 20],
@@ -168,20 +181,23 @@ export default {
     };
   },
   created() {
+    const tableConfig = this.tableConfig;
     /**
      * 事件配置处理
      */
-    this.tableMethods = this.tableConfig.tableMethods;
+    this.tableMethods = tableConfig.tableMethods
+      ? tableConfig.tableMethods
+      : {};
     //如果行单击和行双击都设置了，则需要解决事件冲突
     if (this.tableMethods.rowClick && this.tableMethods.rowDblclick) {
       this.clickConflict = true;
     }
 
     //服务器模式
-    this.isServerMode = this.tableConfig.serverMode;
+    this.isServerMode = tableConfig.serverMode;
 
     //ui配置处理
-    if (this.tableConfig.uiConfig.pagination === true) {
+    if (tableConfig.uiConfig && tableConfig.uiConfig.pagination === true) {
       this.tableConfig.uiConfig.pagination = {};
     }
     //分页
@@ -194,7 +210,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.computedLayoutHeight();
+      this._computedLayoutHeight();
     });
   },
   methods: {
@@ -258,8 +274,6 @@ export default {
       let paginationConfig = this.uiConfig.pagination;
 
       if (paginationConfig) {
-        //加载开始
-        this.loading = true;
         //如果采用服务端分页模式
         if (this.isServerMode) {
           this._loadServerMode({
@@ -289,27 +303,31 @@ export default {
 
       if (url instanceof Function) {
         //如果使用方法来进行分页请求
-        url(sendData).then(res => {
-          this.setTableData(res.list);
-          this.uiConfig.pagination.total = res.total;
-          //加载中结束
-          this.loading = false;
-        });
+        url(sendData)
+          .then(res => {
+            this.setTableData(res.list);
+            this.uiConfig.pagination.total = res.total;
+          })
+          .finally(() => {
+            //加载中结束
+            this.loading = false;
+          });
       } else {
         //ajax请求type和url
         let type = this.isServerMode.type.toLowerCase();
 
         this.$axios[type](url, sendData)
           .then(res => {
-            console.log(res);
             res = res.data;
             this.setTableData(res.data);
             this.uiConfig.pagination.total = res.total;
-            //加载中结束
-            this.loading = false;
           })
           .catch(err => {
             throw err;
+          })
+          .finally(() => {
+            //加载中结束
+            this.loading = false;
           });
       }
     },
@@ -320,7 +338,7 @@ export default {
         params: params
       });
     },
-    computedLayoutHeight() {
+    _computedLayoutHeight() {
       this.layoutHeight.push(this.uiConfig.height);
       for (const key in this.$refs) {
         if (this.$refs.hasOwnProperty(key)) {
@@ -328,6 +346,9 @@ export default {
           this.layoutHeight.push(element.offsetHeight);
         }
       }
+    },
+    _handleRowEdit(index, row) {
+      console.log(index, row);
     },
 
     /**
@@ -365,11 +386,6 @@ export default {
       clearTimeout(dblclickTimer);
       this.tableMethods.rowDblclick &&
         this.tableMethods.rowDblclick(row, column, e);
-    },
-    //列操作下拉方法
-    handleCommand(command, currentMenu) {
-      //下拉回调执行
-      command(currentMenu.$attrs);
     },
     //单选选择当前行
     setCurrentRow(index) {
@@ -493,12 +509,18 @@ export default {
   },
   computed: {
     columnConfig() {
-      return this.tableConfig.columnConfig;
+      if (this.tableConfig.columnConfig) {
+        return this.tableConfig.columnConfig;
+      } else {
+        console.error("表格列配置为必须项");
+        return;
+      }
     },
     btnConfig() {
-      return this.tableConfig.btnConfig;
+      return this.tableConfig.btnConfig ? this.tableConfig.btnConfig : false;
     },
     uiConfig() {
+      if (!this.tableConfig.uiConfig) return defaultUiConfig;
       //如果没有配置的pagination，则使用默认的配置项
       if (this.tableConfig.uiConfig.pagination) {
         var defaultKeys = Object.keys(defaultUiConfig.pagination);
@@ -568,8 +590,6 @@ export default {
     //动态监测tableConfig.data的改变，有可能外部ajax改变data值
     "tableConfig.data"(val) {
       this.setTableData(val);
-      //关闭加载
-      this.loading = false;
     },
     tableData(newVal, oldVal) {
       if (newVal instanceof Array) {
@@ -596,6 +616,17 @@ export default {
     .el-icon--right {
       margin-left: 0;
     }
+  }
+
+  .edit-row-input {
+    display: none;
+  }
+
+  .current-row .edit-row-input {
+    display: block;
+  }
+  .current-row .edit-row-input + span {
+    display: none;
   }
 }
 </style>
