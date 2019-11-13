@@ -37,7 +37,11 @@
       <div :class="isFull?'full-right-module-content':'right-module-content'">
         <div :class="isFull?'full-preview-panel':'preview-panel'" >
           <Dashboard v-if="type==1" :curProModule="curProModule" :hideHeader="true" ref="dashboard"/>
-          <HomePage v-if="type==2" :curProModule="curProModule" :hideHeader="true" ref="homePage"></HomePage>
+          <HomePage v-if="type==2" :curProModule="curProModule"
+                    :hideHeader="true"
+                    ref="homePage"
+                    :forceFallback="forceBack"
+          ></HomePage>
         </div>
         <div class="operator-box" v-if="!isFull">
           <el-button  @click="onClickSureBtn" class="defaultBtn">确认</el-button>
@@ -82,7 +86,8 @@
         contentListDragFlag:true,
         showEsc:false,
         loading:true,
-        curDrag:''
+        curDrag:'',
+        forceBack:true
       }
     },
     computed:{
@@ -221,11 +226,15 @@
         this.curDrag=evt.item.id
         if(this.type==2) {
           this.$refs.homePage.setItemModuleDragFlag('start')
+          this.forceBack=false
         }
       },
       onDragEnd(){
         this.curDrag=''
-        if(this.type==2) this.$refs.homePage.setItemModuleDragFlag('end')
+        if(this.type==2){
+          this.$refs.homePage.setItemModuleDragFlag('end')
+          this.forceBack=true
+        }
       },
       onDragMove(evt){
 

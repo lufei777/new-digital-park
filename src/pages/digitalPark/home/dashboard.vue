@@ -319,14 +319,18 @@
       width:22%;
       height:100%;
       color: @white;
+      overflow: hidden;
     }
     .dashboard-center{
       width:56%;
+      overflow: hidden;
     }
     .draggable-box1{
       height:100%;
+      overflow: hidden;
     }
     .draggable-box2{
+      /*height:465px;*/
       height:66%;
       overflow: hidden;
       .item-drag-product{
@@ -335,6 +339,7 @@
     }
     .item-drag-product,.fixed-prod-module{
       /*width:100%;*/
+      /*height:220px;*/
       height:31%;
       margin-bottom:2%;
       font-size: 16px;
@@ -343,6 +348,7 @@
       background-repeat: no-repeat;
       background-size: 100% 100%;
       background-image: url('../../../../static/image/digitalPark/module_bg.png');
+      overflow: hidden;
     }
     .dashboard-header{
       width:100%;
@@ -386,6 +392,7 @@
       flex-grow: 1;
       padding:10px;
       box-sizing: border-box;
+      overflow: hidden;
     }
     .product-list{
       height:90%;

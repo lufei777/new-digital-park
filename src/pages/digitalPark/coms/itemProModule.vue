@@ -170,6 +170,9 @@
       padding:10px;
       box-sizing: border-box;
       overflow: hidden;
+      .item-content{
+        width:50%;
+      }
     }
     .single-module-name{
       margin-bottom: 10px;
