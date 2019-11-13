@@ -239,7 +239,7 @@
     .title{
       font-size: 24px;
       color:@white;
-      padding-left:20px;
+      padding:0 20px;
       margin:20px 0 40px 0 ;
     }
     .asset-bread-crumb{

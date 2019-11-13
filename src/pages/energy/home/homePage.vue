@@ -214,6 +214,8 @@ export default {
       });
       if (res && res.total) {
         this.total = res.total;
+        // res.value[0].elecAndWaterSum=(Math.random()*10000).toFixed(2)
+        // res.value[0].elecSum=(Math.random()*10000).toFixed(2)
         res.labelList=[
           {name:'排名', prop:'xulie', sort:false},
         {name: '建筑楼层', prop:'floor', sort:false},
