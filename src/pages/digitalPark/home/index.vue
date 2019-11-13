@@ -135,7 +135,6 @@
     methods:{
       onClickItemProduct(item){
         // 192.168.1.69：9002/html
-        console.log(item);
         let routeAddress = item.routeAddress;
         if(item.name=="综合安防" ||item.name=="机房动环" || item.name=="智能建筑"){//目前先写死
           Client.SkipToSigleBuild(item.name);
@@ -144,7 +143,7 @@
         if(routeAddress){
           // 如果带有@字符，则跳转旧项目
           if(routeAddress.indexOf('@') != -1){
-            location.href=OLDPROJECTHOME + '?forward=' + routeAddress.split('@')[1]+'?type=2'
+            CommonFun.loadOldPage(routeAddress);
           }else{
             this.$router.push(item.routeAddress+'?type=2');
           }
