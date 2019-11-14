@@ -55,7 +55,7 @@ export default {
       // console.log(key,keyPath)
       if (key) {
         if (key.indexOf("null") != -1) {
-          this.$router.push("/#/digitalPark/defaultPage");
+          this.$router.push("/digitalPark/defaultPage");
         }else if (key.indexOf("@") != -1) {
           CommonFun.loadOldPage(key);
         }else{
