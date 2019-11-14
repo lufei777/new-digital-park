@@ -13,13 +13,7 @@
              class="iconfont collapse-icon hover-pointer"
              @click="onClickCollapseBtn"
           ></i>
-          <el-breadcrumb separator="/">
-            <el-breadcrumb-item v-for="(item,index) in breadcrumb"
-                                :key="index"
-                                >{{item.name}}
-              <!--:to="item.path"-->
-            </el-breadcrumb-item>
-          </el-breadcrumb>
+          <breadCrumb></breadCrumb>
           <div class="asset-nav-operator-box">
             <NavOperator class='asset-nav-operator' :showGoback="true"/>
           </div>
@@ -138,11 +132,13 @@
   import {mapState} from 'vuex'
   import Sidebar from '../../../components/commonMenu/SideBar'
   import NavOperator from '../../digitalPark/coms/navOperator'
+  import breadCrumb from '@/components/breadCrumb'
   export default {
     name: 'AssetManage',
     components: {
       Sidebar,
-      NavOperator
+      NavOperator,
+      breadCrumb
     },
     data () {
       return {
