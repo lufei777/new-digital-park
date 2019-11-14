@@ -31,7 +31,7 @@ export default {
         });
       });
       // 添加首页
-      if (this.breadcrumb[0].title !== "首页") {
+      /* if (this.breadcrumb[0].title !== "首页") {
         this.breadcrumb = [
           {
             title: "首页",
@@ -39,7 +39,7 @@ export default {
           },
           ...this.breadcrumb
         ];
-      }
+      } */
     },
     toPath(route, e) {
       // 如果有重定向
@@ -53,6 +53,7 @@ export default {
   },
   watch: {
     $route() {
+      console.log(this.$route);
       this.getBreadCrumb();
     }
   }
