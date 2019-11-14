@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-park-home-page"  v-loading="loading">
+  <div class="dashboard-park-home-page-new"  v-loading="loading">
       <div class="dashboard-header flex-align-between" v-show="!hideHeader">
         <div class="news-box">
           <ul class="news-list hover-pointer" :style="{top}" @mouseenter="stopNews" @mouseleave="scrollNews">
@@ -26,14 +26,14 @@
                    @end="onLeftEnd"
         >
           <draggable v-for="(item,index) in proModuleList1"
-                     class="item-drag-product"
+                     class="item-drag-product left-item-drag-product"
                      :key="item.id"
-                     :list="list1"
+                     :list="[item]"
                      :id="index"
                      v-bind="getInnerOptions()"
                      @start="onLeftInnerStart"
                      @end="onLeftInnerEnd"
-                     @change="onLeftInnerChange"
+                     @change="onInnerChange"
           >
             <ItemProModule
                  class="inner-drag-content"
@@ -64,11 +64,13 @@
                    @start="onRightStart"
                    @end="onRightEnd"
         >
-          <draggable v-for="item in proModuleList2"
-                     class="item-drag-product"
+          <draggable v-for="(item,index) in proModuleList2"
+                     class="item-drag-product right-item-drag-product"
                      :key="item.id"
+                     :list="[item]"
+                     :id="index"
                      v-bind="getInnerOptions()"
-                     @change="onRightInnerChange"
+                     @change="onInnerChange"
                      @start="onRightInnerStart"
                      @end="onRightInnerEnd"
           >
@@ -102,7 +104,7 @@
   import DigitalParkApi from '../../../service/api/digitalParkApi'
   import ItemProModule from '../coms/itemProModule'
   export default {
-    name: 'DashBoardHomePage',
+    name: 'DashBoardHomePageNew',
     props:['curProModule','hideHeader'],
     components: {
       draggable,
@@ -122,7 +124,6 @@
         return {
           proModuleList1: [],
           proModuleList2: [],
-          list1:[],
           changeObj: {},
           newsList: [{id: 1, time: '2019-10-10 10:10:10', text: '消息消息消息1111111'},
             {id: 1, time: '2019-10-11 10:11:11', text: '消息消息消息2222222'},
@@ -133,7 +134,8 @@
           moduleType:"1",
           loading:true,
           innerDragFlag:false,
-          outDragFlag:false
+          outDragFlag:false,
+          innerObj:{}
         }
       },
       methods: {
@@ -203,7 +205,6 @@
           })
           this.proModuleList1 =res.slice(0,3)
           this.proModuleList2 =res.slice(3,5)
-          this.list1=[res[1]]
           this.loading=false
         },
         async getProductList(){
@@ -216,13 +217,13 @@
           return {draggable:'.item-drag-product',group:"out-product",disabled:this.outDragFlag}
         },
         onLeftStart(evt){
-          console.log("start",evt)
+          // console.log("start",evt)
           this.$parent.setContentListDragFlag &&
           this.$parent.setContentListDragFlag(false)
           // this.innerDragFlag=false
         },
         onLeftMove(evt){
-          // console.log('move',evt)
+          console.log('move',evt)
           // console.log(evt.draggedContext.element.position-1,evt.relatedContext.element.position-1,
           //   this.proModuleList2[evt.relatedContext.element.position-1-3])
           // if(evt.to.className=="draggable-box2"){
@@ -309,28 +310,29 @@
         onLeftInnerEnd(){
           this.outDragFlag=true
         },
-        onLeftInnerChange(evt){
+        onInnerChange(evt){
           console.log("inner-change1",evt)
-          let obj={
+          this.innerObj={
             menuId:evt.added.element.pid,
             menuName:evt.added.element.menuName,
             type:1,
             moduleList:[evt.added.element]
           }
-          this.list1=[obj]
-          this.proModuleList1[1]=obj
-          console.log(this.list1)
-          this.$parent.setItemDragFlag &&
-          this.$parent.setItemDragFlag([...this.proModuleList1,...this.proModuleList2])
           // this.proModuleList1[evt]
-        },
-        onRightInnerChange(evt){
-          console.log('inner-change2',evt)
         },
         onRightInnerStart(){},
         onRightInnerEnd(){},
         setInnerDragFlag(val){
           this.innerDragFlag=val
+        },
+        updateInnerModule(id,flag){
+          if(flag=='left'){
+            this.proModuleList1[id]=this.innerObj
+          }else{
+            this.proModuleList2[id]=this.innerObj
+          }
+          this.$parent.setItemDragFlag &&
+          this.$parent.setItemDragFlag([...this.proModuleList1,...this.proModuleList2])
         }
     },
     mounted(){
@@ -341,13 +343,12 @@
       this.scrollNews()
       this.getModulesByType()
       this.getProductList()
-
     }
   }
 </script>
 
 <style lang="less">
-  .dashboard-park-home-page{
+  .dashboard-park-home-page-new{
     color: @white;
     display: flex;
     flex-direction: column;
@@ -361,8 +362,8 @@
       overflow: hidden;
     }
     .dashboard-right{
-      display: flex;
-      flex-direction: column;
+      /*display: flex;*/
+      /*flex-direction: column;*/
     }
     .dashboard-center{
       width:56%;
@@ -371,27 +372,47 @@
     .draggable-box1{
       height:100%;
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
+      position: relative;
+      /*writing-mode: tb-rl;*/
+      /*display: flex;*/
+      /*flex-direction: column;*/
+      /*align-items: center;*/
+      /*justify-content: space-between;*/
+      .item-drag-product:nth-child(3){
+        top:68%;
+        position: absolute;
+      }
+      .item-drag-product:nth-child(2){
+        top:34%;
+        position: absolute;
+      }
+      .item-drag-product:nth-child(1){
+        top:0;
+        position: absolute;
+      }
     }
     .draggable-box2{
-      height:66%;
+      height:67%;
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-around;
-      flex-grow: 2;
+      position: relative;
+      /*display: flex;*/
+      /*flex-direction: column;*/
+      /*align-items: center;*/
+      /*justify-content: space-around;*/
+      /*flex-grow: 2;*/
       .item-drag-product{
-        height:49%;
+        height:48%;
+      }
+      .item-drag-product:nth-child(2){
+        top:50%;
+        position: absolute;
       }
     }
     .item-drag-product,.fixed-prod-module{
       width:100%;
-      height:33%;
-      /*margin:1% 0;*/
+      height:32%;
+      /*marg
+      in-bottom:2%;*/
       font-size: 16px;
       text-align: center;
       background-repeat: no-repeat;
@@ -403,8 +424,8 @@
       }
     }
     .fixed-prod-module{
-      /*margin-top:1%;*/
-      flex-grow: 1;
+      margin:0;
+      height:33%;
     }
     .dashboard-header{
       width:100%;

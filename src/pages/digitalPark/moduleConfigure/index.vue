@@ -233,13 +233,22 @@
           this.$refs.dashboard.setInnerDragFlag(true)
         }
       },
-      onDragEnd(){
+      onDragEnd(evt){
+        // console.log('end',evt)
         this.curDrag=''
         if(this.type==2){
           this.$refs.homePage.setItemModuleDragFlag('end')
           this.forceBack=true
         }else{
           this.$refs.dashboard.setInnerDragFlag(false)
+          let targetId=$(evt.to).attr('id')
+          let classStr=$(evt.to).attr('class')
+          let flag=classStr.indexOf('left-item-drag-product')!=-1?'left':
+                   classStr.indexOf('right-item-drag-product')!=-1?'right':''
+          if(flag){
+            this.$refs.dashboard.updateInnerModule(targetId,flag)
+          }
+
         }
       },
       onDragMove(evt){

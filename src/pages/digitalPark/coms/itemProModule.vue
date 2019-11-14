@@ -41,12 +41,14 @@
   import draggable from 'vuedraggable'
   import CommonFun from '../../../utils/commonFun'
   import DigitalParkApi from '../../../service/api/digitalParkApi'
+  // import operateIncome from '../coms/operateIncome'
   export default {
     name: 'ItemProModule',
     props:['moduleData','type','userProModuleList','hideHeader'],
     components: {
       ...CommonFun.exportComs,
-      draggable
+      draggable,
+      // operateIncome
     },
     data () {
       return {
