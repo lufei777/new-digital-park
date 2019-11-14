@@ -1,10 +1,6 @@
 <template>
   <div class="asset-manage">
      <div :class="menuConfig.isCollapse?'my-el-menu2':'my-el-menu'">
-       <div v-show="!menuConfig.isCollapse" class="title"><i class="iconfont iconshouye"></i>&nbsp;资产管理</div>
-       <el-tooltip v-show="menuConfig.isCollapse" effect="dark" content="资产管理" placement="right-start" >
-           <div class="title"><i class="iconfont iconshouye hover-pointer"></i></div>
-       </el-tooltip>
        <Sidebar :menu-list="menuList" :menu-config="menuConfig"/>
      </div>
     <div class="right-content">
@@ -147,7 +143,9 @@
           bgColor:'#394562',
           textColor:'#B7BAC4',
           isCollapse:false,
-          activeIndex:''
+          activeIndex:'',
+          moduleName:'资产管理',
+          moduleLogo:'iconzichanguanli'
         },
         breadcrumb:Cookies.get('breadcrumb')?JSON.parse(Cookies.get('breadcrumb')):
                    [{name:'资产管理',routeAddress:'/assetManage'}]
@@ -231,12 +229,6 @@
       /*height:100%;*/
       overflow: auto;
       background-color: #efefef;
-    }
-    .title{
-      font-size: 24px;
-      color:@white;
-      padding:0 20px;
-      margin:20px 0 40px 0 ;
     }
     .asset-bread-crumb{
       padding:0 15px;

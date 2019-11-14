@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import Table from "@/components/Table"
+// import Table from "@/components/Table"
 import CommonDialog from "../coms/commonDialog";
 import CommonUpload from "../coms/commonUpload";
 import AssetManageApi from "../../../service/api/assetManageApi";
@@ -114,7 +114,7 @@ export default {
     TreeModal,
     CommonDialog,
     CommonUpload,
-    Table
+    // Table
   },
   data() {
     var _this = this;
