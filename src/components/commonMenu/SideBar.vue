@@ -1,24 +1,34 @@
 <template>
   <!--<div class="sidebar-container">-->
     <!--<el-scrollbar wrap-class="scrollbar-wrapper">-->
-      <el-menu
-        class="el-menu-demo"
-        :default-active="menuConfig.activeIndex"
-        :mode="menuConfig.mode"
-        :background-color="menuConfig.bgColor"
-        :text-color="menuConfig.textColor"
-        :unique-opened="true"
-        :active-text-color="menuConfig.activeTextColor"
-        :collapse="menuConfig.isCollapse"
-        @select="handleSelect"
-        @open="handleOpen"
-        @close="handleClose"
-      >
-        <sidebar-item v-for="menu in menuList"
-                      :key="menu.id"
-                      :item="menu"
-                      :specialRoute="menuConfig.specialRoute"/>
-      </el-menu>
+  <div class="common-menu">
+    <div v-show="!menuConfig.isCollapse" class="title flex-align">
+      <i :class="['iconfont',menuConfig.moduleLogo]"></i>
+      <span>&nbsp;&nbsp;{{menuConfig.moduleName}}</span>
+    </div>
+    <el-tooltip v-show="menuConfig.isCollapse" effect="dark" :content="menuConfig.moduleName" placement="right-start" >
+      <div class="title"><i :class="['iconfont',menuConfig.moduleLogo ,'hover-pointer']"></i></div>
+    </el-tooltip>
+    <el-menu
+      class="el-menu-demo"
+      :default-active="menuConfig.activeIndex"
+      :mode="menuConfig.mode"
+      :background-color="menuConfig.bgColor"
+      :text-color="menuConfig.textColor"
+      :unique-opened="true"
+      :active-text-color="menuConfig.activeTextColor"
+      :collapse="menuConfig.isCollapse"
+      @select="handleSelect"
+      @open="handleOpen"
+      @close="handleClose"
+    >
+      <sidebar-item v-for="menu in menuList"
+                    :key="menu.id"
+                    :item="menu"
+                    :specialRoute="menuConfig.specialRoute"/>
+    </el-menu>
+  </div>
+
     <!--</el-scrollbar>-->
   <!--</div>-->
 </template>
@@ -50,6 +60,7 @@ export default {
       // breadcrumb:state=>state.digitalPark.breadcrumb
     })
   },
+
   methods: {
     handleSelect(key, keyPath) {
       // console.log(key,keyPath)
@@ -98,13 +109,34 @@ export default {
 };
 </script>
 <style lang="less">
-.el-menu-item,
-.el-submenu__title {
-  font-size: 16px;
-}
-.el-menu-demo {
-  border-bottom: none !important;
-}
+  .common-menu{
+    .el-menu-item,
+    .el-submenu__title {
+      font-size: 18px;
+    }
+    .nest-menu{
+      font-size: 16px;
+    }
+    .el-menu-demo {
+      border-bottom: none !important;
+    }
+    .title{
+      font-size: 24px;
+      color:@white;
+      padding:0 20px;
+      margin:30px 0 40px 0 ;
+    }
+    .title .iconfont{
+      font-size:38px;
+    }
+    .el-menu--collapse{
+      width:inherit;
+    }
+   /*.el-tooltip{*/
+      /*text-align: center;*/
+    /*}*/
+  }
+
 /*.sidebar-container .is-active {*/
   /*border-bottom: 2px solid red;*/
 /*}*/
