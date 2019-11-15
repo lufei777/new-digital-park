@@ -143,7 +143,7 @@
         if(routeAddress){
           // 如果带有@字符，则跳转旧项目
           if(routeAddress.indexOf('@') != -1){
-            CommonFun.loadOldPage(routeAddress);
+            CommonFun.loadOldPage(item);
           }else{
             this.$router.push(item.routeAddress+'?type=2');
           }

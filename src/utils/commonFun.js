@@ -18,9 +18,10 @@ import escapeRoutes from '../pages/digitalPark/coms/escapeRoutes'
 import saleStatistics from '../pages/digitalPark/coms/saleStatistics'
 import inventoryAnalysis from '../pages/digitalPark/coms/inventoryAnalysis'
 import messageRelease from '../pages/digitalPark/coms/messageRelease'
+import router from '@/router'
 
 class commonFun {
-  exportComs={
+  exportComs = {
     energyProportionAnalysis,
     energyElectricityProportion,
     operateIncome,
@@ -483,9 +484,12 @@ class commonFun {
   }]
 
   // 跳转链接
-  loadOldPage(url) {
-    sessionStorage.setItem('park_home_Page', location.href);
-    location.href = OLDPROJECTHOME + '?forward=' + url.split('@')[1];
+  loadOldPage(item) {
+    /* sessionStorage.setItem('park_home_Page', location.href);
+    location.href = OLDPROJECTHOME + '?forward=' + url.split('@')[1]; */
+
+    sessionStorage.setItem('vibe_menuList', JSON.stringify(item));
+    router.push('/vibe-web')
   }
 
 }

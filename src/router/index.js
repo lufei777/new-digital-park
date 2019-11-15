@@ -5,18 +5,14 @@ import { flattenDeep } from '../utils/czUtils'
 
 // 公共路由
 import AssetManage from './commonRouter/assetManage'
-import Collect from './commonRouter/collect'
-import DataReport from './commonRouter/dataReport'
-import DeviceRecord from './commonRouter/deviceRecord'
-import StatisAnalysis from './commonRouter/statisAnalysis'
-import SystemManage from './commonRouter/systemManage'
+import vibeWeb from './vibeWeb'
 
 // 项目私有路由
 import EnergyRouter from './energy-router'
 import DigitalParkRouter from './digital-park-router'
 
 // 数字园区
-let DigitalRouters = flattenDeep([DigitalParkRouter, AssetManage, EnergyRouter]);
+let DigitalRouters = flattenDeep([DigitalParkRouter, AssetManage, EnergyRouter, vibeWeb]);
 
 // const routes = flattenDeep([DigitalRouters]);
 Vue.use(Router)
@@ -26,9 +22,9 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   // console.log(to,from)
-  axois.get('/oaApi/user/login').then(()=>{
+  axois.get('/oaApi/user/login').then(() => {
     sessionStorage.removeItem('logout')
     next()
-  }).catch(()=>{})
+  }).catch(() => { })
 })
 export default router
