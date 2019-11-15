@@ -106,7 +106,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
   .digital-nav-operator{
-    font-size: 16px;
+    font-size: 14px;
     .nav-right-item{
       span{
         width:90px;
