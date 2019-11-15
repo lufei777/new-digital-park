@@ -4,12 +4,14 @@
        <Sidebar :menu-list="menuList" :menu-config="menuConfig"/>
      </div>
     <div :class="menuConfig.isCollapse?'right-content2':'right-content'">
-        <div class="asset-bread-crumb flex-align">
-          <i :class="menuConfig.isCollapse?'iconzhankai':'iconshouqi'"
-             class="iconfont collapse-icon hover-pointer"
-             @click="onClickCollapseBtn"
-          ></i>
-          <breadCrumb></breadCrumb>
+        <div class="right-content-header">
+          <div class="flex-align asset-bread-crumb">
+            <i :class="menuConfig.isCollapse?'iconzhankai':'iconshouqi'"
+               class="iconfont collapse-icon hover-pointer"
+               @click="onClickCollapseBtn"
+            ></i>
+            <breadCrumb></breadCrumb>
+          </div>
           <div class="asset-nav-operator-box">
             <NavOperator class='asset-nav-operator' :showGoback="true"/>
           </div>
@@ -218,6 +220,7 @@
       width:250px;
       overflow-y: auto;
       overflow-x: unset;
+      z-index:999999999;
     }
     .my-el-menu2{
       width:80px;
@@ -232,24 +235,35 @@
     .right-content2{
       margin-left: 80px;
     }
-    .asset-bread-crumb{
+    .right-content-header{
       padding:0 20px;
-      height:60px;
-      /*border:1px solid #ccc;*/
-
+      height:70px;
       background-color: @white;
+      /*position: fixed;*/
+      width:100%;
+      box-sizing: border-box;
+      z-index: 99;
+      overflow: hidden;
+    }
+    .asset-bread-crumb{
+      float: left;
+      width:60%;
     }
     .collapse-icon{
       font-size: 24px;
-      line-height: 70px;
+      line-height: 60px;
       padding-right:20px;
       color:#969CA8;
+      float: left;
     }
     .router-view{
       padding:20px 20px 0 20px;
     }
     .asset-nav-operator-box{
-      flex-grow: 1;
+      /*flex-grow: 1;*/
+      float: right;
+      width: 40%;
+      line-height: 70px;
     }
     .asset-nav-operator{
       float: right;

@@ -16,37 +16,37 @@
       <el-button type="primary" @click="onClickSearchBtn">搜索</el-button>
       <el-button type="primary" @click="onClickResetBtn">重置</el-button>
     </div>
-    <div class="asset-table">
-      <div class="operator-box">
-        <el-button type="primary" @click="onClickImportExcel">EXCEL导入</el-button>
-        <el-button type="primary" @click="showDeleteTip">批量删除</el-button>
+    <!--<div class="asset-table">-->
+      <!--<div class="operator-box">-->
+        <!--<el-button type="primary" @click="onClickImportExcel">EXCEL导入</el-button>-->
+        <!--<el-button type="primary" @click="showDeleteTip">批量删除</el-button>-->
 
-        <el-button type="primary" @click="onMultiEdit">批量编辑</el-button>
-        <el-button type="primary" @click="onClickAddBtn">新建</el-button>
-      </div>
-      <CommonTable :tableObj="assetData" :curPage="1">
-        <template v-slot:special-operator>
-          <el-table-column fixed="right" label="操作" align="right" width="120">
-            <template slot-scope="scope">
-              <el-button type="text" size="small" v-if="scope.row.status==1">变更</el-button>
-              <el-button type="text" size="small">调拨</el-button>
-              <el-button type="text" size="small" icon="el-icon-more"
-                         @click.stop="onClickMore(scope.$index)"
-                         class="more-btn">
-                <div v-show="scope.row.showMore" class="more-operator-box">
-                  <el-button type="text" size="small">报修</el-button>
-                  <el-button type="text" size="small">报废</el-button>
-                  <el-button type="text" size="small" @click.stop="deleteRow(scope.row)">删除</el-button>
-                </div>
-              </el-button>
-            </template>
-          </el-table-column>
-        </template>
-      </CommonTable>
-    </div>
-    <!--<Table :ref="assetsTableConfig.ref" :tableConfig="assetsTableConfig">-->
-      <!--<template slot="custom-top" slot-scope="customTopObj">-->
-        <!--<div>-->
+        <!--<el-button type="primary" @click="onMultiEdit">批量编辑</el-button>-->
+        <!--<el-button type="primary" @click="onClickAddBtn">新建</el-button>-->
+      <!--</div>-->
+      <!--<CommonTable :tableObj="assetData" :curPage="1">-->
+        <!--<template v-slot:special-operator>-->
+          <!--<el-table-column fixed="right" label="操作" align="right" width="120">-->
+            <!--<template slot-scope="scope">-->
+              <!--<el-button type="text" size="small" v-if="scope.row.status==1">变更</el-button>-->
+              <!--<el-button type="text" size="small">调拨</el-button>-->
+              <!--<el-button type="text" size="small" icon="el-icon-more"-->
+                         <!--@click.stop="onClickMore(scope.$index)"-->
+                         <!--class="more-btn">-->
+                <!--<div v-show="scope.row.showMore" class="more-operator-box">-->
+                  <!--<el-button type="text" size="small">报修</el-button>-->
+                  <!--<el-button type="text" size="small">报废</el-button>-->
+                  <!--<el-button type="text" size="small" @click.stop="deleteRow(scope.row)">删除</el-button>-->
+                <!--</div>-->
+              <!--</el-button>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+        <!--</template>-->
+      <!--</CommonTable>-->
+    <!--</div>-->
+    <Table :ref="assetsTableConfig.ref" :tableConfig="assetsTableConfig">
+      <template slot="custom-top" slot-scope="customTopObj">
+        <div>
           <!--<el-button-group>-->
             <!--<template v-for="col in customTopObj.columnConfig">-->
               <!--<el-button-->
@@ -56,9 +56,9 @@
               <!--&gt;{{col.label}}</el-button>-->
             <!--</template>-->
           <!--</el-button-group>-->
-        <!--</div>-->
-      <!--</template>-->
-    <!--</Table>-->
+        </div>
+      </template>
+    </Table>
 
     <TreeModal
       :showTree="showTree"
@@ -100,7 +100,7 @@
 </template>
 
 <script>
-// import Table from "@/components/Table"
+import Table from "@/components/Table"
 import CommonDialog from "../coms/commonDialog";
 import CommonUpload from "../coms/commonUpload";
 import AssetManageApi from "../../../service/api/assetManageApi";
@@ -114,7 +114,7 @@ export default {
     TreeModal,
     CommonDialog,
     CommonUpload,
-    // Table
+    Table
   },
   data() {
     var _this = this;
@@ -227,7 +227,7 @@ export default {
           }
         ],
         uiConfig: {
-          height: "500px", //高度
+          height: "",//"500px", //高度
           selection: true, //是否多选
           searchable: ["coding", "name", "groupName", "currentCustodian"],
           pagination: {
