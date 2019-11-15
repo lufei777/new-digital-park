@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <el-carousel height="360px" :interval="3000" v-if="!hideHeader">
+    <el-carousel height="360px" :interval="6000" v-if="!hideHeader">
       <el-carousel-item >
         <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo1.jpg" alt="">
       </el-carousel-item>
