@@ -1,12 +1,12 @@
 <template>
   <div class="digital-nav-operator flex-align">
       <span class="nav-right-item long-text" v-if="showGoback" @click="onClickGoBack">
-        <span style="color:#416EFF">
-          <i class="iconfont iconshouye"></i>返回园区首页</span>
+        <span style="color:#008DEA">
+          <i class="iconfont iconshouye"></i>&nbsp;返回园区首页</span>
           <i>|</i>
       </span>
-      <span class="nav-right-item"><span>{{$t('homeHeader.news')}}</span><i>|</i></span>
-      <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
+      <span class="nav-right-item"><span style="color:#ED6C01">{{$t('homeHeader.news')}}</span><i>|</i></span>
+      <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoback">
           <el-select v-model="langValue" placeholder="切换语言" @change="onClickChangeLang">
               <el-option label="中文" value="zh"></el-option>
               <el-option label="English" value="en"></el-option>
@@ -18,7 +18,7 @@
             <el-option :label="$t('homeHeader.dashboard')" value="1"></el-option>
          </el-select><i>|</i>
       </span>
-     <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
+     <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoback">
          <el-select v-model="setupValue" placeholder="设置" @change="onClickSetup">
              <el-option :label="$t('homeHeader.setup')" value="0" hidden></el-option>
              <el-option :label="$t('homeHeader.moduleConfig')" value="1"></el-option>

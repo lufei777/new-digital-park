@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <el-carousel height="550px" :interval="2000" v-if="!hideHeader">
+    <el-carousel height="360px" :interval="3000" v-if="!hideHeader">
       <el-carousel-item >
         <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo1.jpg" alt="">
       </el-carousel-item>
@@ -283,7 +283,7 @@
     font-size: 14px;
     .carousel-img{
       width:100%;
-      height:550px;
+      height:360px;
     }
     .home-header{
       width:100%;
@@ -296,33 +296,6 @@
       right:0;
       /*margin:auto;*/
      }
-    .nav-list{
-      width:1200px;
-      margin:0 auto;
-      padding-top: 20px;
-      .nav-list-text{
-        margin-right: 48px;
-        font-size: 16px;
-      }
-      .nav-list-content {
-        position: absolute;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-top: 10px;
-        background: #fff;
-        padding: 2px 10px 10px 10px;
-        .two-menu {
-          margin: 10px 0;
-        } 
-        .three-menu {
-          float: right;
-          // background: orange;
-          li {
-            padding: 0 15px 10px 15px;
-          }
-        }
-      }
-    }
     .home-header-inner{
       width:80%;
       margin:0 auto;
@@ -431,15 +404,20 @@
       width: 80%;
       margin: 0 auto;
       padding-top: 10px;
+
     }
-    .sidebar-container .is-active {
-      /*border-bottom: 2px solid red;*/
+    .sidebar-container .common-menu .el-submenu__title{
+        font-size: 16px;
     }
     .nest-menu {
+       font-size: 16px !important;
         float: none;
        .el-submenu__icon-arrow {
            position: absolute !important;
        }
+    }
+    .el-menu--horizontal .el-menu-item{
+      font-size: 16px;
     }
     .el-menu--horizontal .el-submenu__icon-arrow {
       position: static;
@@ -447,5 +425,8 @@
       margin-left: 8px;
       margin-top: -3px;
     }
+  }
+  .el-menu-item,.el-submenu__title{
+    font-size: 16px;
   }
 </style>

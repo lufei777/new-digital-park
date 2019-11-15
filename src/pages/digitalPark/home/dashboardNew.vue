@@ -426,6 +426,8 @@
     .fixed-prod-module{
       margin:0;
       height:33%;
+      padding:0 10px;
+      box-sizing: border-box;
     }
     .dashboard-header{
       width:100%;

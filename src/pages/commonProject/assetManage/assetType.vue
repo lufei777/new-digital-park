@@ -165,7 +165,6 @@
       background: #3a8ee6;
     }
     .right-content{
-      float: right;
       width: 75%;
       padding:0 20px;
       box-sizing: border-box;

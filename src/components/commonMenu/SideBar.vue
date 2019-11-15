@@ -1,8 +1,6 @@
 <template>
-  <!--<div class="sidebar-container">-->
-    <!--<el-scrollbar wrap-class="scrollbar-wrapper">-->
   <div class="common-menu">
-    <div v-show="!menuConfig.isCollapse" class="title flex-align">
+    <div v-show="!menuConfig.isCollapse" class="title flex-align" v-if="!menuConfig.specialRoute">
       <i :class="['iconfont',menuConfig.moduleLogo]"></i>
       <span>&nbsp;&nbsp;{{menuConfig.moduleName}}</span>
     </div>
@@ -27,16 +25,17 @@
                     :item="menu"
                     :specialRoute="menuConfig.specialRoute"/>
     </el-menu>
+    <div class="iconfont iconkuaijierukou hover-pointer shortcut-btn" @click="onClickShortcutBtn">
+    </div>
+    <ul class="shortcut-list" v-show="showShortcutList">
+      <li v-for="(item,index) in shortCutList" :key="index">{{item.name}}</li>
+    </ul>
   </div>
-
-    <!--</el-scrollbar>-->
-  <!--</div>-->
 </template>
 <script>
 import commonFun from '@/utils/commonFun'
 import SidebarItem from "./SidebarItem";
-import { mapState } from "vuex";
-
+import DigitalParkApi from '../../service/api/digitalParkApi'
 export default {
   name: "Sidebar",
   components: { SidebarItem },
@@ -47,20 +46,25 @@ export default {
     },
     menuConfig:{}
   },
-  mounted() {
-    // console.log(this.menuList);
-  },
+
   data() {
     return {
-      breadcrumb:[]
+      shortCutList:[],
+      showShortcutList:false
     };
   },
   computed: {
-    ...mapState({
-      // breadcrumb:state=>state.digitalPark.breadcrumb
-    })
+    isCollapse() {
+      return this.menuConfig.isCollapse
+    }
   },
-
+  watch:{
+    isCollapse(){
+      if(this.isCollapse){
+        this.showShortcutList=false
+      }
+    }
+  },
   methods: {
     handleSelect(key, keyPath) {
       // console.log(key,keyPath)
@@ -73,8 +77,6 @@ export default {
           if(key=='/assetGroup' || key=='/assetType' || key=='/assetMaintenance'){ //测试
             this.$router.push(key)
           }
-          this.breadcrumb=[]
-          this.matchRoute(this.menuList,[...keyPath])
           Cookies.set('activeIndex',key)
         }
       }
@@ -90,21 +92,18 @@ export default {
       //   this.$router.push(key)
       // }
     },
-    matchRoute(list,keyPath){
-      list.map((item)=>{
-        keyPath.map((path)=>{
-          if(item.routeAddress==path){
-            this.breadcrumb.push(item)
-            keyPath.shift()
-          }
+    async getProModules(){
+       let res  = await DigitalParkApi.getProductList({
+          lang:Cookies.get('lang')
         })
-        if(keyPath){
-          this.matchRoute(item.childNode,keyPath)
-        }
-      })
-      Cookies.set('breadcrumb',this.breadcrumb)
-      this.$store.commit('digitalPark/tmpBreadcrumb',this.breadcrumb)
+      this.shortCutList=res.slice(0,6)
+    },
+    onClickShortcutBtn(){
+      this.showShortcutList=!this.showShortcutList
     }
+  },
+  mounted() {
+    this.getProModules()
   },
 };
 </script>
@@ -113,6 +112,9 @@ export default {
     .el-menu-item,
     .el-submenu__title {
       font-size: 18px;
+      .iconfont{
+        /*padding:0 10px;*/
+      }
     }
     .nest-menu{
       font-size: 16px;
@@ -131,6 +133,36 @@ export default {
     }
     .el-menu--collapse{
       width:inherit;
+    }
+    .shortcut-btn{
+      font-size: 37px;
+      color:#fff;
+      border-radius: 50%;
+      position: fixed;
+      bottom:20px;
+      left:20px;
+      z-index: 99;
+    }
+    .shortcut-list{
+      width:190px;
+      /*height:400px;*/
+      background: #000;
+      color:@white;
+      text-align: center;
+      padding:10px 0;
+      position: fixed;
+      bottom:80px;
+      left:0;
+      overflow: auto;
+      z-index: 99;
+      li{
+         height:56px;
+         line-height: 56px;
+         color:@white;
+        &:hover{
+          background: #363636;
+        }
+      }
     }
    /*.el-tooltip{*/
       /*text-align: center;*/
