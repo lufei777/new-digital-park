@@ -227,7 +227,7 @@ export default {
           }
         ],
         uiConfig: {
-          height: "",//"500px", //高度
+          height: "500px",//"", //高度
           selection: true, //是否多选
           searchable: ["coding", "name", "groupName", "currentCustodian"],
           pagination: {
