@@ -251,6 +251,8 @@ export default{
         }
       }
 		}
-
+    .el-tree{
+      position: static;
+    }
 	}
 </style>

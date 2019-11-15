@@ -3,7 +3,7 @@
      <div :class="menuConfig.isCollapse?'my-el-menu2':'my-el-menu'">
        <Sidebar :menu-list="menuList" :menu-config="menuConfig"/>
      </div>
-    <div class="right-content">
+    <div :class="menuConfig.isCollapse?'right-content2':'right-content'">
         <div class="asset-bread-crumb flex-align">
           <i :class="menuConfig.isCollapse?'iconzhankai':'iconshouqi'"
              class="iconfont collapse-icon hover-pointer"
@@ -13,7 +13,6 @@
           <div class="asset-nav-operator-box">
             <NavOperator class='asset-nav-operator' :showGoback="true"/>
           </div>
-
         </div>
         <router-view class="router-view"></router-view>
     </div>
@@ -23,10 +22,10 @@
 <script>
   let menuList=[{
     routeAddress:'$1',
-    name:'首页',
+    name:'概览',
     childNode:[],
     id:1,
-    icon:'iconshouye'
+    icon:'icongailan'
   },{
     routeAddress:'$2',
     name:'我的资产',
@@ -210,28 +209,31 @@
   .asset-manage{
     height: 100%;
     background-color: #efefef;
-    .left-nav{
-      /*height:100%;*/
-    }
-    .my-el-menu{
+    .my-el-menu,.my-el-menu2{
       float: left;
       height:100%;
-      width:15%;
+      /*width:15%;*/
       background-color:#394562 ;
+      position: fixed;
+      width:250px;
+      overflow-y: auto;
+      overflow-x: unset;
     }
     .my-el-menu2{
-      float: left;
-      height:100%;
-      background-color:#394562 ;
+      width:80px;
     }
     .right-content{
       max-width: 100%;
       /*height:100%;*/
       overflow: auto;
       background-color: #efefef;
+      margin-left: 250px;
+    }
+    .right-content2{
+      margin-left: 80px;
     }
     .asset-bread-crumb{
-      padding:0 15px;
+      padding:0 20px;
       height:60px;
       /*border:1px solid #ccc;*/
 
@@ -256,25 +258,26 @@
       border-right: none;
     }
     .el-submenu__title,.el-menu-item{
-      font-size: 18px;
+      /*font-size: 18px;*/
       &:hover{
-        background-color: #416EFF !important;
+        background-color: #008DEA !important;
+        color:@white !important;
+        i{
+          color:@white;
+        }
       }
-      a{
-        color:#B7BAC4;
-        text-decoration: none;
-      }
+
     }
     .nest-menu{
-      font-size: 16px;
+      /*font-size: 16px;*/
     }
     .el-menu-item.is-active{
-        background-color: #416EFF !important;
-        color:#B7BAC4;
+        background-color: #008DEA !important;
+        color:@white;
     }
     .el-submenu.is-active{
-      background-color: #416EFF !important;
-      color:#B7BAC4;
+      background-color: #008DEA !important;
+      color:@white;
     }
   }
 </style>
