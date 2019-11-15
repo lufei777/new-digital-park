@@ -119,7 +119,7 @@
     float: right;
     margin: 10px 0;
   }
-  th.is-right{
+  .el-table td.is-right, .el-table th.is-right{
     text-align: left;
   }
 </style>
