@@ -1,6 +1,22 @@
 .el-table th.gutter{
   display: table-cell!important;
 }
+.el-button--primary{
+  background:@mainBgColor;
+  border:1px solid @mainBgColor;
+  &:hover{
+    background: @mainHoverColor;
+  }
+  &:focus{
+    background:@mainBgColor;
+  }
+}
+.el-button--primary,.el-button--default{
+  width:98px;
+  height:34px;
+  line-height: 8px;
+}
+
 //.el-button{
 //  background: var(--mainBg);
 //  border-color:var(--mainBg);
