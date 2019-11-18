@@ -13,7 +13,7 @@
     @close="menuConfig.handleClose"
   >
     <sidebar-item
-      v-for="menu in menuList"
+      v-for="menu in menuConfig.menuList"
       :key="menu.id"
       :item="menu"
       :specialRoute="menuConfig.specialRoute"
@@ -28,11 +28,10 @@ export default {
   name: "Sidebar",
   components: { SidebarItem },
   props: {
-    menuList: {
-      type: Array,
-      required: true
-    },
-    menuConfig: {}
+    menuConfig: {
+      type: Object,
+      require: true
+    }
   },
   mounted() {},
   data() {
