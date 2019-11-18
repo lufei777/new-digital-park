@@ -121,7 +121,7 @@
         // padding-right: 5px;
         background: none;
         text-align: center;
-        font-size: 16px;
+        font-size: 14px;
       }
       .el-input__suffix,.el-input__suffix-inner{
         padding: 0;
