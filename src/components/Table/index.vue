@@ -177,7 +177,7 @@ export default {
       currentPage: 1,
       pageSize: Number.POSITIVE_INFINITY,
       searchVal: "",
-      tableHeight: "0",
+      tableHeight: undefined,
       layoutHeight: [] //高度数组，用来决定整体高度
     };
   },
@@ -340,9 +340,12 @@ export default {
     },
     // 计算高度
     _computedLayoutHeight() {
+      if (this.uiConfig.height === "auto") return;
+
       let _height = this.uiConfig.height
         ? parseFloat(this.uiConfig.height)
         : this.$el.parentNode.clientHeight;
+
       this.layoutHeight.push(_height);
 
       for (const key in this.$refs) {
@@ -544,10 +547,11 @@ export default {
       return { ...defaultUiConfig, ...this.tableConfig.uiConfig };
     },
     wrapperHeight() {
+      if (this.uiConfig.height === "auto") return;
       let layoutHeight = this.layoutHeight.reduce((last, next) => {
         return last + (next ? parseFloat(next) : 0);
       }, 0);
-      console.log(layoutHeight + "px");
+
       return layoutHeight + "px";
     },
     paginationObj() {
