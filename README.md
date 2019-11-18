@@ -230,6 +230,7 @@
         </template>
     </Table>
    ```
+   
 六）通用导航菜单 commonMenu
    1.传递参数
     1)menuList ：菜单列表
@@ -239,7 +240,8 @@
              textColor:'#606266', //字体颜色
              specialRoute:true, // 此字段是数字园区首页使用。数字园区导航跳转的路由特殊处理，默认不传
              isCollapse:false, //默认不传即展开
-             ...
+             moduleName:'资产管理' , //模块名称
+             moduleLogo:'iconzichanguanli' //模块logo
             }
             
             
