@@ -1,23 +1,6 @@
 <template>
   <div class="asset-manage">
-     <div :class="menuConfig.isCollapse?'my-el-menu2':'my-el-menu'">
-       <Sidebar :menu-list="menuList" :menu-config="menuConfig"/>
-     </div>
-    <div :class="menuConfig.isCollapse?'right-content2':'right-content'">
-        <div class="right-content-header">
-          <div class="flex-align asset-bread-crumb">
-            <i :class="menuConfig.isCollapse?'iconzhankai':'iconshouqi'"
-               class="iconfont collapse-icon hover-pointer"
-               @click="onClickCollapseBtn"
-            ></i>
-            <breadCrumb></breadCrumb>
-          </div>
-          <div class="asset-nav-operator-box">
-            <NavOperator class='asset-nav-operator' :showGoback="true"/>
-          </div>
-        </div>
-        <router-view class="router-view"></router-view>
-    </div>
+    <CommonIndexLayout :menu-list="menuList" :menu-config="menuConfig" />
   </div>
 </template>
 
@@ -126,16 +109,11 @@
     id:11,
     icon:'icontongjifenxi'
   }]
-  import {mapState} from 'vuex'
-  import Sidebar from '../../../components/commonMenu/SideBar'
-  import NavOperator from '../../digitalPark/coms/navOperator'
-  import breadCrumb from '@/components/breadCrumb'
+  import CommonIndexLayout from '../coms/commonIndexLayout'
   export default {
     name: 'AssetManage',
     components: {
-      Sidebar,
-      NavOperator,
-      breadCrumb
+      CommonIndexLayout
     },
     data () {
       return {
@@ -148,150 +126,19 @@
           moduleName:'资产管理',
           moduleLogo:'iconzichanguanli'
         },
-        breadcrumb:Cookies.get('breadcrumb')?JSON.parse(Cookies.get('breadcrumb')):
-                   [{name:'资产管理',routeAddress:'/assetManage'}]
-      }
-    },
-    computed:{
-      ...mapState({
-        tmpBreadcrumb:state=>state.digitalPark.tmpBreadcrumb
-      })
-    },
-    watch:{
-      tmpBreadcrumb(){
-        this.breadcrumb=JSON.parse(Cookies.get('breadcrumb'))
       }
     },
     methods:{
-      onClickNav(item){
-        // let obj=JSON.parse(Cookies.get('assetBreadcrumb'))
-        // obj.push(item)
-        // Cookies.set('assetBreadcrumb',obj)
-        // this.assetBreadcrumb=obj
-        // let obj=this.assetBreadcrumb.find((item)=>{
-        //   return item.path==obj.path
-        // })
-        // if(!obj){
-        //   let tmp=this.assetBreadcrumb.concat(item)
-        //   this.$store.commit('assetManage/assetBreadcrumb',tmp)
-        // }
-        this.$router.push(item.path)
-      },
-      handleOpen(key){
-          this.$router.push(key)
-      },
-      handleClose(key){
-        this.$router.push(key)
-      },
-      onClickCollapseBtn(){
-        this.menuConfig.isCollapse=!this.menuConfig.isCollapse
-      },
-      handleSelect(index,indexPath){
-        console.log(index,indexPath)
-        if(index && index!=2){
-          this.$router.push(index)
-        }
-      }
     },
     mounted(){
       document.title='资产管理'
-      if(!Cookies.get('breadcrumb')){
-        Cookies.set('breadcrumb',[{name:'资产管理',routeAddress:'/assetManage'}])
-      }
-      if(Cookies.get('activeIndex')){
-        this.menuConfig.activeIndex=Cookies.get('activeIndex')
-      }else{
-        this.menuConfig.activeIndex=this.menuList[0].routeAddress
-      }
     }
   }
 </script>
 
 <style lang="less">
   .asset-manage{
-    height: 100%;
-    background-color: #efefef;
-    .my-el-menu,.my-el-menu2{
-      float: left;
-      height:100%;
-      /*width:15%;*/
-      background-color:#394562 ;
-      position: fixed;
-      width:250px;
-      overflow-y: auto;
-      overflow-x: unset;
-      z-index:999999999;
-    }
-    .my-el-menu2{
-      width:80px;
-    }
-    .right-content{
-      max-width: 100%;
-      /*height:100%;*/
-      overflow: auto;
-      background-color: #efefef;
-      margin-left: 250px;
-    }
-    .right-content2{
-      margin-left: 80px;
-    }
-    .right-content-header{
-      padding:0 20px;
-      height:70px;
-      background-color: @white;
-      /*position: fixed;*/
-      width:100%;
-      box-sizing: border-box;
-      z-index: 99;
-      overflow: hidden;
-    }
-    .asset-bread-crumb{
-      float: left;
-      width:60%;
-    }
-    .collapse-icon{
-      font-size: 24px;
-      line-height: 60px;
-      padding-right:20px;
-      color:#969CA8;
-      float: left;
-    }
-    .router-view{
-      padding:20px 20px 0 20px;
-    }
-    .asset-nav-operator-box{
-      /*flex-grow: 1;*/
-      float: right;
-      width: 40%;
-      line-height: 70px;
-    }
-    .asset-nav-operator{
-      float: right;
-    }
-    .el-menu{
-      border-right: none;
-    }
-    .el-submenu__title,.el-menu-item{
-      /*font-size: 18px;*/
-      &:hover{
-        background-color: #008DEA !important;
-        color:@white !important;
-        i{
-          color:@white;
-        }
-      }
-
-    }
-    .nest-menu{
-      /*font-size: 16px;*/
-    }
-    .el-menu-item.is-active{
-        background-color: #008DEA !important;
-        color:@white;
-    }
-    .el-submenu.is-active{
-      background-color: #008DEA !important;
-      color:@white;
-    }
+    /*height: 100%;*/
+    /*background-color: #efefef;*/
   }
 </style>
