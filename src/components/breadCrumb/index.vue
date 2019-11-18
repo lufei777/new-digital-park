@@ -24,11 +24,13 @@ export default {
       this.breadcrumb.length = 0;
       // 从路由中获取matched
       this.$route.matched.forEach((route, index) => {
-        this.breadcrumb.push({
-          title: route.meta.title ? route.meta.title : "",
-          redirect: route.redirect,
-          path: route.path
-        });
+        if (route.meta.title) {
+          this.breadcrumb.push({
+            title: route.meta.title,
+            redirect: route.redirect,
+            path: route.path
+          });
+        }
       });
       // 添加首页
       /* if (this.breadcrumb[0].title !== "首页") {

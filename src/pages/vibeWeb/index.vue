@@ -15,7 +15,7 @@
           <i class="iconfont iconshouye hover-pointer"></i>
         </div>
       </el-tooltip>
-      <Sidebar :menu-list="menuList" :menu-config="menuConfig" />
+      <Sidebar :menu-config="menuConfig" />
     </div>
     <div class="right-content">
       <div class="asset-bread-crumb flex-align">
@@ -403,11 +403,11 @@ export default {
 
     return {
       title: menuList.name,
-      menuList: menuList.childNode,
       iframeConfig: {
         src: menuList.routeAddress.replace("@", "")
       },
       menuConfig: {
+        menuList: menuList.childNode,
         bgColor: "#394562",
         textColor: "#B7BAC4",
         isCollapse: false,
