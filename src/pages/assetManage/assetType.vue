@@ -24,11 +24,11 @@
 </template>
 
 <script>
-  import AddAssetTypeAttr from '../coms/addAssetTypeAttr'
-  import CommonTable from '../../../components/commonTable/index'
-  import AssetManageApi from '../../../service/api/assetManageApi'
-  import CommonFun from '../../../utils/commonFun'
-  import CustomTree from '../../../components/customTree/slotTree'
+  import AddAssetTypeAttr from '../commonProject/coms/addAssetTypeAttr'
+  import CommonTable from '../../components/commonTable'
+  import AssetManageApi from '../../service/api/assetManageApi'
+  import CommonFun from '../../utils/commonFun'
+  import CustomTree from '../../components/customTree/slotTree'
   export default {
     name: 'AssetType',
     components: {

@@ -229,13 +229,14 @@
   .device-record{
     margin-top: 50px;
     .left-zoom-nav{
-      width:17%;
+      width:250px;
       float: left;
       position: fixed;
       height: 100%;
       overflow: auto;
       background: @mainBg;
       padding: 10px 0;
+      left:270px;
       .el-select{
         width:120px;
         margin:0 0 20px 25%;

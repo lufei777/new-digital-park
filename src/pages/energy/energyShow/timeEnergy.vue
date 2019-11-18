@@ -37,10 +37,11 @@
   .time-energy{
     margin-top: 85px;
       .left-zoom-nav{
-        width:17%;
+        width:250px;
         float: left;
         position: fixed;
         height: 100%;
+        left:270px;
       }
       .right-content{
         width:83%;

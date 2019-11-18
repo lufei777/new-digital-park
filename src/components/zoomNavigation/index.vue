@@ -1,27 +1,35 @@
 <template>
   <div class="zoom-navigation">
-    <div class="zoom-title">空间导航</div>
-    <el-tree
-      :data="floorList"
-      :props="treeProps"
-      node-key="floorId"
-      show-checkbox
-      :default-expanded-keys="[1]"
-      :default-checked-keys="defaultCheckedKey"
-      @check-change="handleCheckChange"
-      @check="handleCheck"
-      ref="navTree"
-    >
-    </el-tree>
+    <div class="tree-box radius-shadow">
+      <el-input
+        placeholder="请输入"
+        v-model="searchText">
+        <i class="el-icon-search" slot="suffix"></i>
+      </el-input>
+      <el-tree
+        :data="floorList"
+        :props="treeProps"
+        node-key="floorId"
+        show-checkbox
+        :default-expanded-keys="[1]"
+        :default-checked-keys="defaultCheckedKey"
+        @check-change="handleCheckChange"
+        @check="handleCheck"
+        ref="navTree"
+      >
+      </el-tree>
+    </div>
   </div>
 
 </template>
 
 <script>
   import { mapState } from 'vuex'
+  import ModuleTip from '../../pages/commonProject/coms/moduleTip'
   export default {
     name:'ZoomNavigation',
     components: {
+      ModuleTip
     },
     props:['floorList','defaultChecked'],
     data () {
@@ -30,6 +38,7 @@
           label:'floor',
           children: 'nodes',
         },
+        searchText:''
       }
     },
     computed: {
@@ -82,7 +91,7 @@
 <style lang="less">
   .zoom-navigation{
   /*  background: @mainBg;*/
-    background: @mainBg;
+
     color:@white;
     text-align: left;
     overflow: hidden;
@@ -95,20 +104,44 @@
      line-height: 40px;
      margin: 20px 0 0 20px;
    }
+    .tree-box{
+      padding:20px 0;
+      background: @white;
+    }
     .el-tree{
-      background: @mainBg;
       font-size: 16px;
-      color:@white;
       /*font-weight: 600;*/
     }
     .el-tree-node__content{
        padding:12px 0;
     }
     .el-tree-node__content:hover{
-      color:#22dbfc;
+      color:@white;
+      background: @mainHoverColor;
     }
     .el-tree-node:focus>.el-tree-node__content{
-      color:#22dbfc;
+      color:@white;
+      background: @mainBgColor;
     }
+    .el-input__inner{
+        border:none;
+        background: #F4F5F7;
+    }
+    .el-input{
+      width:90%;
+      margin:0 0 20px 15px;
+    }
+    .el-input__suffix{
+      right:unset;
+      left:15px;
+      color:@mainBgColor;
+      line-height: 40px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    input::-webkit-input-placeholder{
+      padding-left: 30px;
+    }
+
   }
 </style>

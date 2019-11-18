@@ -74,9 +74,7 @@ export default {
         }else if (key.indexOf("@") != -1) {
           commonFun.loadOldPage(key);
         }else{
-          if(key=='/assetGroup' || key=='/assetType' || key=='/assetMaintenance'){ //测试
-            this.$router.push(key)
-          }
+          this.$router.push(key)
           Cookies.set('activeIndex',key)
         }
       }

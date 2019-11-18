@@ -10,10 +10,13 @@ import ElecDiffer from '../pages/energy/energySaving/elecDiffer.vue'
 import NightElec from '../pages/energy/energySaving/nightElec.vue'
 import EnergyLogin from '../pages/energy/login/index.vue'
 import ElecAnalysis from '../pages/energy/energySaving/helloWorld.vue'
-
 import StatisAnalysis from './commonRouter/statisAnalysis'
 import SystemManage from './commonRouter/systemManage'
 import DeviceRecord from './commonRouter/deviceRecord'
+import EnergyShow from '../pages/energy/energyShow/index'
+
+
+
 import Collect from './commonRouter/collect'
 import DataReport from './commonRouter/dataReport'
 
@@ -36,11 +39,27 @@ export default [{
     path: '/energy/compare',
     name: 'EnergyCompare',
     component: EnergyCompare,
-  }, {
-    path: '/energy/timeEnergy',
-    name: 'TimeEnergy',
-    component: TimeEnergy,
-  }, {
+  },{
+    meta:{title:'能耗展示'},
+    path:'/energy/energyShow',
+    component:EnergyShow,
+    name:'EnergyShow',
+    // redirect:'/energy/timeEnergy',
+    children:[{
+      path: '/energy/timeEnergy',
+      name: 'TimeEnergy',
+      component: TimeEnergy,
+      meta:{title:'分时能耗'}
+    }, {
+      path: '/energy/categoryEnergy',
+      name: 'CategoryEnergy',
+      component: CategoryEnergy,
+    }, {
+      path: '/energy/rankEnergy',
+      name: 'RankEnergy',
+      component: RankEnergy,
+    }]
+  },{
     path: '/energy/categoryEnergy',
     name: 'CategoryEnergy',
     component: CategoryEnergy,
