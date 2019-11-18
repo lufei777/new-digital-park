@@ -151,6 +151,7 @@
             this.$router.push('/digitalPark/defaultPage?type=2')
         }
         Cookies.set('moduleType',2)
+        Cookies.set('menuList',item.childNode)
       },
       onShowMoreProduct(){
         this.showMoreProduct=!this.showMoreProduct

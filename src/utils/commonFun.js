@@ -70,415 +70,415 @@ class commonFun {
   menuData = {
     "id": 1,
     "parent": 0,
-    "name": "space",
-    "caption": "根节点\t",
+    "name2": "space",
+    "name": "根节点\t",
     "catalog": null,
-    "url": null,
+    "routeAddress": null,
     "sequence": 1,
     "icon": null,
     "permisionList": [],
-    "children": [{
+    "childNode": [{
       "id": 11,
       "parent": 1,
-      "name": "space",
-      "caption": "首页",
+      "name2": "space",
+      "name": "首页",
       "catalog": null,
-      "url": "/energy/homePage",
+      "routeAddress": "/energy/homePage",
       "sequence": 1,
       "icon": null,
       "permisionList": ["首页"],
-      "children": []
+      "childNode": []
     }, {
       "id": 2,
       "parent": 1,
-      "name": "space",
-      "caption": "能耗展示",
+      "name2": "space",
+      "name": "能耗展示",
       "catalog": null,
-      "url": "/energy/timeEnergy",
+      "routeAddress": "/energy/timeEnergy",
       "sequence": 1,
       "icon": null,
       "permisionList": [],
-      "children": [{
+      "childNode": [{
         "id": 21,
         "parent": 2,
-        "name": "space",
-        "caption": "分时能耗",
+        "name2": "space",
+        "name": "分时能耗",
         "catalog": null,
-        "url": "/energy/timeEnergy",
+        "routeAddress": "/energy/timeEnergy",
         "sequence": 1,
         "icon": null,
         "permisionList": ["分时能耗"],
-        "children": []
+        "childNode": []
       }, {
         "id": 22,
         "parent": 2,
-        "name": "space",
-        "caption": "分项能耗",
+        "name2": "space",
+        "name": "分项能耗",
         "catalog": null,
-        "url": "/energy/categoryEnergy",
+        "routeAddress": "/energy/categoryEnergy",
         "sequence": 2,
         "icon": null,
         "permisionList": ["分项能耗"],
-        "children": []
+        "childNode": []
       }, {
         "id": 23,
         "parent": 2,
-        "name": "space",
-        "caption": "能耗排名",
+        "name2": "space",
+        "name": "能耗排名",
         "catalog": null,
-        "url": "/energy/rankEnergy",
+        "routeAddress": "/energy/rankEnergy",
         "sequence": 3,
         "icon": null,
         "permisionList": ["能耗排名"],
-        "children": []
+        "childNode": []
       }]
     }, {
       "id": 3,
       "parent": 1,
-      "name": "space",
-      "caption": "统计分析",
+      "name2": "space",
+      "name": "统计分析",
       "catalog": null,
-      "url": "/deviceAnalysis",
+      "routeAddress": "/deviceAnalysis",
       "sequence": 2,
       "icon": null,
       "permisionList": [],
-      "children": [{
+      "childNode": [{
         "id": 31,
         "parent": 3,
-        "name": "space",
-        "caption": "设备分析",
+        "name2": "space",
+        "name": "设备分析",
         "catalog": null,
-        "url": "/deviceAnalysis",
+        "routeAddress": "/deviceAnalysis",
         "sequence": 1,
         "icon": null,
         "permisionList": ["设备状态分析"],
-        "children": []
+        "childNode": []
       }, {
         "id": 32,
         "parent": 3,
-        "name": "space",
-        "caption": "相关性分析",
+        "name2": "space",
+        "name": "相关性分析",
         "catalog": null,
-        "url": "/correlationAnalysis",
+        "routeAddress": "/correlationAnalysis",
         "sequence": 2,
         "icon": null,
         "permisionList": ["相关分析"],
-        "children": []
+        "childNode": []
       }, {
         "id": 33,
         "parent": 3,
-        "name": "space",
-        "caption": "统计对比",
+        "name2": "space",
+        "name": "统计对比",
         "catalog": null,
-        "url": "/statisCompare",
+        "routeAddress": "/statisCompare",
         "sequence": 3,
         "icon": null,
         "permisionList": ["统计对比"],
-        "children": []
+        "childNode": []
       }, {
         "id": 34,
         "parent": 3,
-        "name": "space",
-        "caption": "往期统计",
+        "name2": "space",
+        "name": "往期统计",
         "catalog": null,
-        "url": "/historyStatis",
+        "routeAddress": "/historyStatis",
         "sequence": 4,
         "icon": null,
         "permisionList": ["往期统计"],
-        "children": []
+        "childNode": []
       }, {
         "id": 35,
         "parent": 3,
-        "name": "space",
-        "caption": "能耗对比分析",
+        "name2": "space",
+        "name": "能耗对比分析",
         "catalog": null,
-        "url": "/energy/compare",
+        "routeAddress": "/energy/compare",
         "sequence": 5,
         "icon": null,
         "permisionList": [],
-        "children": [{
+        "childNode": [{
           "id": 36,
           "parent": 35,
-          "name": "space",
-          "caption": "空间对比",
+          "name2": "space",
+          "name": "空间对比",
           "catalog": null,
-          "url": "/html/energyNew/energy_ranking.html",
+          "routeAddress": "/html/energyNew/energy_ranking.html",
           "sequence": 1,
           "icon": null,
           "permisionList": ["空间对比"],
-          "children": []
+          "childNode": []
         }, {
           "id": 37,
           "parent": 35,
-          "name": "space",
-          "caption": "同比环比分析",
+          "name2": "space",
+          "name": "同比环比分析",
           "catalog": null,
-          "url": "/html/energyNew/energy_ranking.html",
+          "routeAddress": "/html/energyNew/energy_ranking.html",
           "sequence": 2,
           "icon": null,
           "permisionList": ["同比环比分析"],
-          "children": []
+          "childNode": []
         }, {
           "id": 38,
           "parent": 35,
-          "name": "space",
-          "caption": "能耗类型对比",
+          "name2": "space",
+          "name": "能耗类型对比",
           "catalog": null,
-          "url": "/html/energyNew/energy_ranking.html",
+          "routeAddress": "/html/energyNew/energy_ranking.html",
           "sequence": 3,
           "icon": null,
           "permisionList": ["能耗类型对比"],
-          "children": []
+          "childNode": []
         }]
       }]
     }, {
       "id": 4,
       "parent": 1,
-      "name": "space",
-      "caption": "节能诊断",
+      "name2": "space",
+      "name": "节能诊断",
       "catalog": null,
-      "url": "/energy/waterDiffer",
+      "routeAddress": "/energy/waterDiffer",
       "sequence": 3,
       "icon": null,
       "permisionList": [],
-      "children": [{
+      "childNode": [{
         "id": 41,
         "parent": 4,
-        "name": "space",
-        "caption": "水量异常突增诊断",
+        "name2": "space",
+        "name": "水量异常突增诊断",
         "catalog": null,
-        "url": "/energy/waterDiffer",
+        "routeAddress": "/energy/waterDiffer",
         "sequence": 1,
         "icon": null,
         "permisionList": ["水量异常突增诊断"],
-        "children": []
+        "childNode": []
       }, {
         "id": 42,
         "parent": 4,
-        "name": "space",
-        "caption": "夜间用水跑冒滴漏诊断",
+        "name2": "space",
+        "name": "夜间用水跑冒滴漏诊断",
         "catalog": null,
-        "url": "/energy/nightWater",
+        "routeAddress": "/energy/nightWater",
         "sequence": 2,
         "icon": null,
         "permisionList": ["夜间用水跑冒滴漏诊断"],
-        "children": []
+        "childNode": []
       }, {
         "id": 43,
         "parent": 4,
-        "name": "space",
-        "caption": "用电量异常突增诊断",
+        "name2": "space",
+        "name": "用电量异常突增诊断",
         "catalog": null,
-        "url": "/energy/elecDiffer",
+        "routeAddress": "/energy/elecDiffer",
         "sequence": 3,
         "icon": null,
         "permisionList": ["用电量异常突增诊断"],
-        "children": []
+        "childNode": []
       }, {
         "id": 44,
         "parent": 4,
-        "name": "space",
-        "caption": "夜间用电浪费诊断",
+        "name2": "space",
+        "name": "夜间用电浪费诊断",
         "catalog": null,
-        "url": "/energy/nightElec",
+        "routeAddress": "/energy/nightElec",
         "sequence": 4,
         "icon": null,
         "permisionList": ["夜间用电浪费诊断"],
-        "children": []
+        "childNode": []
       }, {
         "id": 45,
         "parent": 4,
-        "name": "space",
-        "caption": "电流向及线损分析",
+        "name2": "space",
+        "name": "电流向及线损分析",
         "catalog": null,
-        "url": "/energy/elecAnalysis",
+        "routeAddress": "/energy/elecAnalysis",
         "sequence": 5,
         "icon": null,
         "permisionList": ["电流向及线损分析"],
-        "children": []
+        "childNode": []
       }]
     }, {
       "id": 5,
       "parent": 1,
-      "name": "space",
-      "caption": "人工采集",
+      "name2": "space",
+      "name": "人工采集",
       "catalog": null,
-      "url": "/manMadeCollect",
+      "routeAddress": "/manMadeCollect",
       "sequence": 4,
       "icon": null,
       "permisionList": ["人工采集"],
-      "children": [{
+      "childNode": [{
         "id": 71,
         "parent": 7,
-        "name": "space",
-        "caption": "人工采集列表",
+        "name2": "space",
+        "name": "人工采集列表",
         "catalog": null,
-        "url": "/manMadeCollect",
+        "routeAddress": "/manMadeCollect",
         "sequence": 1,
         "icon": null,
         "permisionList": ["空间报表查看"],
-        "children": []
+        "childNode": []
       }, {
         "id": 72,
         "parent": 7,
-        "name": "space",
-        "caption": "自动采集列表",
+        "name2": "space",
+        "name": "自动采集列表",
         "catalog": null,
-        "url": "/autoCollect",
+        "routeAddress": "/autoCollect",
         "sequence": 2,
         "icon": null,
         "permisionList": ["分项报表查看"],
-        "children": []
+        "childNode": []
       }]
     }, {
       "id": 6,
       "parent": 1,
-      "name": "space",
-      "caption": "设备表记",
+      "name2": "space",
+      "name": "设备表记",
       "catalog": null,
-      "url": "/deviceRecord",
+      "routeAddress": "/deviceRecord",
       "sequence": 5,
       "icon": null,
       "permisionList": ["设备表记查看", "设备表导入"],
-      "children": []
+      "childNode": []
     }, {
       "id": 7,
       "parent": 1,
-      "name": "space",
-      "caption": "数据报表",
+      "name2": "space",
+      "name": "数据报表",
       "catalog": null,
-      "url": "/spaceReport",
+      "routeAddress": "/spaceReport",
       "sequence": 6,
       "icon": null,
       "permisionList": [],
-      "children": [{
+      "childNode": [{
         "id": 71,
         "parent": 7,
-        "name": "space",
-        "caption": "空间能耗报表",
+        "name2": "space",
+        "name": "空间能耗报表",
         "catalog": null,
-        "url": "/spaceReport",
+        "routeAddress": "/spaceReport",
         "sequence": 1,
         "icon": null,
         "permisionList": ["空间报表查看"],
-        "children": []
+        "childNode": []
       }, {
         "id": 72,
         "parent": 7,
-        "name": "space",
-        "caption": "分项能耗报表",
+        "name2": "space",
+        "name": "分项能耗报表",
         "catalog": null,
-        "url": "/categoryReport",
+        "routeAddress": "/categoryReport",
         "sequence": 2,
         "icon": null,
         "permisionList": ["分项报表查看"],
-        "children": []
+        "childNode": []
       }]
     }, {
       "id": 10,
       "parent": 1,
-      "name": "space",
-      "caption": "系统管理",
+      "name2": "space",
+      "name": "系统管理",
       "catalog": null,
-      "url": "/userManage",
+      "routeAddress": "/userManage",
       "sequence": 8,
       "icon": null,
       "permisionList": [],
-      "children": [{
+      "childNode": [{
         "id": 101,
         "parent": 10,
-        "name": "space",
-        "caption": "用户管理",
+        "name2": "space",
+        "name": "用户管理",
         "catalog": null,
-        "url": "/userManage",
+        "routeAddress": "/userManage",
         "sequence": 1,
         "icon": null,
         "permisionList": ["用户查看", "添加用户", "修改用户", "重置密码", "导出用户信息"],
-        "children": []
+        "childNode": []
       }, {
         "id": 104,
         "parent": 10,
-        "name": "space",
-        "caption": "角色管理",
+        "name2": "space",
+        "name": "角色管理",
         "catalog": null,
-        "url": "/roleManage",
+        "routeAddress": "/roleManage",
         "sequence": 2,
         "icon": null,
         "permisionList": ["角色查询", "角色修改", "角色添加", "角色删除"],
-        "children": []
+        "childNode": []
       }, {
         "id": 102,
         "parent": 10,
-        "name": "space",
-        "caption": "组织机构",
+        "name2": "space",
+        "name": "组织机构",
         "catalog": null,
-        "url": "/departmentManage",
+        "routeAddress": "/departmentManage",
         "sequence": 3,
         "icon": null,
         "permisionList": ["组织机构查看", "组织机构添加", "组织机构修改", "组织机构删除"],
-        "children": []
+        "childNode": []
       }, {
         "id": 103,
         "parent": 10,
-        "name": "space",
-        "caption": "空间管理",
+        "name2": "space",
+        "name": "空间管理",
         "catalog": null,
-        "url": "/spaceManage",
+        "routeAddress": "/spaceManage",
         "sequence": 4,
         "icon": null,
         "permisionList": ["空间查看", "空间添加", "空间修改", "空间删除"],
-        "children": []
+        "childNode": []
       }, {
         "id": 105,
         "parent": 10,
-        "name": "space",
-        "caption": "操作日志",
+        "name2": "space",
+        "name": "操作日志",
         "catalog": null,
-        "url": "/operatorLog",
+        "routeAddress": "/operatorLog",
         "sequence": 6,
         "icon": null,
         "permisionList": ["日志查看"],
-        "children": []
+        "childNode": []
       }]
     }]
   }
 
   incomeList = [{
-    name: "代收款项",
+    name2: "代收款项",
     id: 1,
     unit: "元",
     value: 350000,
   }, {
-    name: "经营收入",
+    name2: "经营收入",
     id: 2,
     unit: "元",
     value: 46000,
   }, {
-    name: "财务收入",
+    name2: "财务收入",
     id: 3,
     unit: "元",
     value: 38000,
   }, {
-    name: "主收入收款",
+    name2: "主收入收款",
     id: 4,
     unit: "元",
     value: 39000,
   }]
 
   deviceStatusList = [{
-    name: "正常",
+    name2: "正常",
     id: 1,
     value: 520,
   }, {
-    name: "未知",
+    name2: "未知",
     id: 2,
     value: 310,
   }, {
-    name: "警告",
+    name2: "警告",
     id: 3,
     value: 200,
   }, {
-    name: "错误",
+    name2: "错误",
     id: 4,
     value: 300,
   }]
@@ -486,7 +486,7 @@ class commonFun {
   // 跳转链接
   loadOldPage(item) {
     /* sessionStorage.setItem('park_home_Page', location.href);
-    location.href = OLDPROJECTHOME + '?forward=' + url.split('@')[1]; */
+    location.href = OLDPROJECTHOME + '?forward=' + routeAddress.split('@')[1]; */
 
     sessionStorage.setItem('vibe_menuList', JSON.stringify(item));
     router.push('/vibe-web')

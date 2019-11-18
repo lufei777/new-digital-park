@@ -101,8 +101,8 @@
 </template>
 
 <script>
-  import AssetManageApi from '../../../service/api/assetManageApi'
-  import TreeModal from '../coms/treeModal'
+  import AssetManageApi from '../../service/api/assetManageApi'
+  import TreeModal from '../commonProject/coms/treeModal'
   export default {
     name: 'AddAsset',
     components: {

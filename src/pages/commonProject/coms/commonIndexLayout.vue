@@ -1,10 +1,10 @@
 <template>
   <div class="common-index-layout">
-    <div :class="menuConfig.isCollapse?'my-el-menu2':'my-el-menu'">
+    <div :class="menuConfig.isCollapse?'collapse-my-el-menu':'unfold-my-el-menu'">
       <Sidebar :menu-list="menuList" :menu-config="menuConfig"/>
     </div>
-    <div :class="menuConfig.isCollapse?'right-content2':'right-content'">
-      <div :class="menuConfig.isCollapse?'right-content-header2':'right-content-header'">
+    <div :class="menuConfig.isCollapse?'collapse-right-content':'unfold-right-content'">
+      <div :class="menuConfig.isCollapse?'collapse-right-content-header':'unfold-right-content-header'">
         <div class="flex-align asset-bread-crumb">
           <i :class="menuConfig.isCollapse?'iconzhankai':'iconshouqi'"
              class="iconfont collapse-icon hover-pointer"
@@ -70,7 +70,7 @@
   .common-index-layout{
     height: 100%;
     background-color: #efefef;
-    .my-el-menu,.my-el-menu2{
+    .unfold-my-el-menu,.collapse-my-el-menu{
       float: left;
       height:100%;
       /*width:15%;*/
@@ -81,10 +81,10 @@
       overflow-x: unset;
       z-index:999999999;
     }
-    .my-el-menu2{
+    .collapse-my-el-menu{
       width:80px;
     }
-    .right-content,.right-content2{
+    .unfold-right-content,.collapse-right-content{
       max-width: 100%;
       /*height:100%;*/
       overflow: auto;
@@ -92,10 +92,10 @@
       margin-left: 250px;
 
     }
-    .right-content2{
+    .collapse-right-content{
       margin-left: 80px;
     }
-    .right-content-header,.right-content-header2{
+    .unfold-right-content-header,.collapse-right-content-header{
       padding:0 20px;
       height:70px;
       background-color: @white;
@@ -107,7 +107,7 @@
       left:250px;
       right:0;
     }
-    .right-content-header2{
+    .collapse-right-content-header{
       left:80px;
     }
     .asset-bread-crumb{
@@ -124,6 +124,7 @@
     .router-view{
       padding:20px 20px 0 20px;
       margin-top: 70px;
+      overflow: auto;
     }
     .asset-nav-operator-box{
       /*flex-grow: 1;*/

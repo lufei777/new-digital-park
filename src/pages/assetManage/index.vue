@@ -109,7 +109,7 @@
     id:11,
     icon:'icontongjifenxi'
   }]
-  import CommonIndexLayout from '../coms/commonIndexLayout'
+  import CommonIndexLayout from '../commonProject/coms/commonIndexLayout'
   export default {
     name: 'AssetManage',
     components: {

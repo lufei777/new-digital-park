@@ -101,12 +101,12 @@
 
 <script>
 import Table from "@/components/Table"
-import CommonDialog from "../coms/commonDialog";
-import CommonUpload from "../coms/commonUpload";
-import AssetManageApi from "../../../service/api/assetManageApi";
-import CommonTable from "../../../components/commonTable/index";
-import TreeModal from "../coms/treeModal";
-import CommonFun from "../../../utils/commonFun";
+import CommonDialog from "../commonProject/coms/commonDialog";
+import CommonUpload from "../commonProject/coms/commonUpload";
+import AssetManageApi from "../../service/api/assetManageApi";
+import CommonTable from "../../components/commonTable";
+import TreeModal from "../commonProject/coms/treeModal";
+import CommonFun from "../../utils/commonFun";
 export default {
   name: "AssetMaintenance",
   components: {
