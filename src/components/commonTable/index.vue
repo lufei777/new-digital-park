@@ -19,10 +19,10 @@
                            :sortable="item.sort"
                            :formatter="formatSpecialCol"
                            :type="item.type"
-                           align="right"
           >
           </af-table-column>
-          <el-table-column v-if="tableObj.showOperator" fixed="right" label="操作" width="120"  align="right">
+          <el-table-column v-if="tableObj.showOperator" fixed="right"
+                           label="操作" width="120" align="left">
             <template v-slot="myScope">
               <el-button size="small" type="text"
                @click.native.prevent="editRow(myScope.$index, tableObj.dataList)" >
@@ -36,7 +36,8 @@
           </el-table-column>
           <slot name="special-operator"></slot>
         </el-table>
-        <div class="page-box" v-if="tableObj.total && tableObj.total!=0">
+        <div class="page-box flex-align-between" v-if="tableObj.total && tableObj.total!=0">
+          <span>共{{tableObj.total}}条信息</span>
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page="curPage"
@@ -102,8 +103,13 @@
 
 <style lang="less">
   .page-box{
-    float: right;
-    margin:20px;
+    /*float: right;*/
+    /*margin:20px;*/
+    width:97%;
+    padding:5px 10px;
+    margin:10px auto 0 auto;
+    background: #F4F5F7;
+    box-sizing: border-box;
   }
   .table-tip{
     float: left;
@@ -112,5 +118,8 @@
   .export-btn{
     float: right;
     margin: 10px 0;
+  }
+  .el-table td.is-right, .el-table th.is-right{
+    text-align: left;
   }
 </style>
