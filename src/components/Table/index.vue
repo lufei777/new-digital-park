@@ -1,7 +1,5 @@
 <template>
-  <div class="el-table-wrapper" :style="{
-    height:wrapperHeight
-  }">
+  <div class="el-table-wrapper" :style="{height:wrapperHeight}">
     <div ref="customTop" style="height:auto;">
       <slot
         name="custom-top"
@@ -11,6 +9,8 @@
       ></slot>
     </div>
 
+    <!-- stripe 
+    border-->
     <el-table
       ref="dataBaseTable"
       :data="tableShowData"
@@ -19,12 +19,12 @@
       :key="key"
       :size="uiConfig.size"
       :row-style="{height:'20px'}"
-      :cell-style="{padding:'0px'}"
+      :cell-style="{padding:'2px'}"
       :header-cell-style="{padding:'0px'}"
       row-key="id"
-      border
-      stripe
       highlight-current-row
+      header-row-class-name="el-table-header"
+      cell-class-name="el-table-cell"
       @row-click="rowClick"
       @row-dblclick="rowDblclick"
       @sort-change="sortChange"
@@ -54,9 +54,9 @@
           :sortable="col.sortable||false"
           :formatter="col.formatter"
           show-overflow-tooltip
-          align="right"
+          align="left"
         >
-          <template scope="scope">
+          <template slot-scope="scope">
             <!-- <el-input
               class="edit-row-input"
               size="small"
@@ -139,7 +139,7 @@ const LOG = {
 //默认uiConfig
 const defaultUiConfig = {
   size: "medium",
-  height: "300px", //高度
+  // height: "300px", //高度
   pagination: {
     layout: "->, total, sizes, prev, pager, next, jumper",
     pageSizes: [5, 10, 20],
@@ -177,6 +177,7 @@ export default {
       currentPage: 1,
       pageSize: Number.POSITIVE_INFINITY,
       searchVal: "",
+      tableHeight: "0",
       layoutHeight: [] //高度数组，用来决定整体高度
     };
   },
@@ -270,7 +271,6 @@ export default {
     _getPatinationData() {
       let currentPage = this.currentPage;
       let pageSize = this.pageSize;
-      let _this = this;
       let paginationConfig = this.uiConfig.pagination;
 
       if (paginationConfig) {
@@ -338,14 +338,23 @@ export default {
         params: params
       });
     },
+    // 计算高度
     _computedLayoutHeight() {
-      this.layoutHeight.push(this.uiConfig.height);
+      let _height = this.uiConfig.height
+        ? parseFloat(this.uiConfig.height)
+        : this.$el.parentNode.clientHeight;
+      this.layoutHeight.push(_height);
+
       for (const key in this.$refs) {
         if (this.$refs.hasOwnProperty(key)) {
           const element = this.$refs[key];
-          this.layoutHeight.push(element.offsetHeight);
+          if (element.offsetHeight) {
+            _height = _height - element.offsetHeight;
+          }
         }
       }
+
+      this.tableHeight = _height;
     },
     _handleRowEdit(index, row) {
       console.log(index, row);
@@ -520,9 +529,8 @@ export default {
       return this.tableConfig.btnConfig ? this.tableConfig.btnConfig : false;
     },
     uiConfig() {
-      if (!this.tableConfig.uiConfig) return defaultUiConfig;
-      //如果没有配置的pagination，则使用默认的配置项
-      if (this.tableConfig.uiConfig.pagination) {
+      // if (!this.tableConfig.uiConfig) return defaultUiConfig;
+      /* if (this.tableConfig.uiConfig.pagination) {
         var defaultKeys = Object.keys(defaultUiConfig.pagination);
         for (let index = 0; index < defaultKeys.length; index++) {
           const element = defaultKeys[index];
@@ -531,17 +539,16 @@ export default {
               defaultUiConfig.pagination[element];
           }
         }
-      }
-      return this.tableConfig.uiConfig;
+      } */
+      //如果没有配置的pagination，则使用默认的配置项
+      return { ...defaultUiConfig, ...this.tableConfig.uiConfig };
     },
     wrapperHeight() {
       let layoutHeight = this.layoutHeight.reduce((last, next) => {
         return last + (next ? parseFloat(next) : 0);
       }, 0);
+      console.log(layoutHeight + "px");
       return layoutHeight + "px";
-    },
-    tableHeight() {
-      return this.uiConfig.height;
     },
     paginationObj() {
       const { currentPage, pageSize } = this;
@@ -605,28 +612,76 @@ export default {
 };
 </script>
 <style lang='less'>
+@headerBgc: #f4f6fc;
+@headerTextColor: #333333;
+@TableFontFamily: "Microsoft YaHei";
+
 .el-table-wrapper {
-  .el-dropdown {
-    margin-left: 10px;
-    font-size: 12px;
-    .el-dropdown-link {
-      cursor: pointer;
-      color: #409eff;
+  font-family: @TableFontFamily;
+  .el-table {
+    .el-table__fixed-right-patch {
+      background-color: @headerBgc;
+      border: 1px solid #e5eaf2;
+      border-left: 0px;
     }
-    .el-icon--right {
-      margin-left: 0;
+    .el-table__header,
+    .el-table__body {
+      border: 1px solid #e5eaf2;
+      border-bottom: 0px;
+    }
+    .el-table__header {
+      border-right: 0px;
+    }
+    .el-table__body {
+      border-top: 0px;
+    }
+    // 列标题
+    .el-table-header th {
+      background-color: @headerBgc !important;
+      color: @headerTextColor;
+      font-weight: 400;
+    }
+    .el-table-cell {
+      color: #666;
+      font-weight: 400;
+    }
+    // 当前行
+    .current-row {
+      td {
+        background-color: #f5fafb !important;
+      }
+      .edit-row-input {
+        display: block;
+      }
+      .edit-row-input + span {
+        display: none;
+      }
+    }
+    // 下拉
+    .el-dropdown {
+      margin-left: 10px;
+      font-size: 12px;
+      .el-dropdown-link {
+        cursor: pointer;
+        color: #409eff;
+      }
+      .el-icon--right {
+        margin-left: 0;
+      }
+    }
+    .edit-row-input {
+      display: none;
     }
   }
-
-  .edit-row-input {
-    display: none;
-  }
-
-  .current-row .edit-row-input {
-    display: block;
-  }
-  .current-row .edit-row-input + span {
-    display: none;
+  // 分页
+  .table-pagination {
+    color: #bababa;
+    background-color: #f4f5f7;
+    .btn-prev,
+    .btn-next,
+    ul.el-pager li {
+      background-color: inherit;
+    }
   }
 }
 </style>
