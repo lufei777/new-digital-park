@@ -1,5 +1,4 @@
 import EnergyIndex from '../pages/energy/index.vue'
-import EnergyCompare from '../pages/energy/energyComare/energyCompare.vue'
 import HomePage from '../pages/energy/home/homePage.vue'
 import TimeEnergy from '../pages/energy/energyShow/timeEnergy.vue'
 import CategoryEnergy from '../pages/energy/energyShow/categoryEnergy.vue'
@@ -13,7 +12,7 @@ import ElecAnalysis from '../pages/energy/energySaving/helloWorld.vue'
 import StatisAnalysis from './commonRouter/statisAnalysis'
 import SystemManage from './commonRouter/systemManage'
 import DeviceRecord from './commonRouter/deviceRecord'
-import EnergyShow from '../pages/energy/energyShow/index'
+import TmpRouter from '../pages/commonProject/coms/tmpRouterBox'
 
 
 
@@ -35,16 +34,12 @@ export default [{
     path: '/energy/homePage',
     name: 'HomePage',
     component: HomePage,
-  }, {
-    path: '/energy/compare',
-    name: 'EnergyCompare',
-    component: EnergyCompare,
+    meta:{title:'首页'}
   },{
     meta:{title:'能耗展示'},
-    path:'/energy/energyShow',
-    component:EnergyShow,
-    name:'EnergyShow',
-    // redirect:'/energy/timeEnergy',
+    path:'/tmpRouter',
+    component:TmpRouter,
+    redirect:'/energy/timeEnergy',
     children:[{
       path: '/energy/timeEnergy',
       name: 'TimeEnergy',

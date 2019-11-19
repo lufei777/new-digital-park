@@ -1,13 +1,14 @@
 <template>
   <div class="type-compare">
-    <div class="left-zoom-nav">
-      <ZoomNavigation :floorList="floorList" :defaultChecked="defaultChecked" />
-    </div>
-    <div class="right-content">
-      <ConditionSelect :isGroup="true" :showEnergy="true"/>
-      <div ref="myChart" class="my-chart"></div>
-      <DynamicTable :tableData="tableData" :tableTip="tableTip" :curPage="curPage"/>
-    </div>
+    <!--<div class="left-zoom-nav">-->
+      <!--<ZoomNavigation :floorList="floorList" :defaultChecked="defaultChecked" />-->
+    <!--</div>-->
+    <!--<div class="right-content">-->
+      <!--<ConditionSelect :isGroup="true" :showEnergy="true"/>-->
+      <!--<div ref="myChart" class="my-chart"></div>-->
+      <!--<DynamicTable :tableData="tableData" :tableTip="tableTip" :curPage="curPage"/>-->
+    <!--</div>-->
+    <EnergyCommon :is-zoom-multiple="false" :isEnergyByGroup="true" :from-flag="3"/>
   </div>
 </template>
 
@@ -16,15 +17,17 @@
   import {mapState} from 'vuex'
   import ChartUtils from '../../../utils/chartUtils'
   import CommonApi from '../../../service/api/commonApi'
-  import ZoomNavigation from '../../../components/zoomNavigation/index'
-  import ConditionSelect from '../../../components/conditionSelect/index'
-  import DynamicTable from '../../../components/dynamicTable/index'
+  import ZoomNavigation from '../../../components/zoomNavigation'
+  import ConditionSelect from '../../../components/conditionSelect'
+  import DynamicTable from '../../../components/dynamicTable'
+  import EnergyCommon from './energyCommon'
   export default {
     name:'TypeCompare',
     components: {
       ZoomNavigation,
       ConditionSelect,
-      DynamicTable
+      DynamicTable,
+      EnergyCommon
     },
     data () {
       return {
@@ -88,8 +91,8 @@
       },
       async getTypeChart(){
         let res =  await CommonApi.getTypeChart(this.commonParams)
-        this.showChart=true
-        this.initChart(res)
+        // this.showChart=true
+        this.initTypeChart(res)
       },
       async getTypeTable(){
         let tableParams = {...this.commonParams,...{
@@ -137,16 +140,16 @@
          this.getTypeChart()
          this.getTypeTable()
       },
-      initChart(res){
+      initTypeChart(res){
         this.myChart = echarts.init(this.$refs.myChart);
-        let titleText =`A3${this.energyNameList}趋势对比`
+        let titleText =`A3${this.selectParams.energy.map((item)=>item.name).join('与')}趋势对比`
         let xAxis = []
         if(this.selectType==3 && this.radioType==0){
           xAxis= res[0].map(item=>item.time?item.time.slice(0,16):'')
         }else{
           xAxis= res[0].map(item=>item.time?item.time.slice(0,10):'')
         }
-        let legendData = this.energyNameList.split("与")
+        let legendData = this.selectParams.energy.map((item)=>item.name)
         let yAxis =  res[0] && res[0][0] && res[0][0].unit
         let series=[]
         let tmp
@@ -181,8 +184,8 @@
       }
     },
     async mounted(){
-      await this.getAllFloor()
-      this.getData()
+      // await this.getAllFloor()
+      // this.getData()
     }
   }
 </script>

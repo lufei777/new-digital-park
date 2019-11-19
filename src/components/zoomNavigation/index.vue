@@ -1,16 +1,16 @@
 <template>
-  <div class="zoom-navigation">
+  <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'" class="zoom-navigation">
     <div class="tree-box radius-shadow">
       <el-input
         placeholder="请输入"
         v-model="searchText">
-        <i class="el-icon-search" slot="suffix"></i>
+        <i class="iconfont iconsousuo search-icon" slot="suffix"></i>
       </el-input>
       <el-tree
         :data="floorList"
         :props="treeProps"
         node-key="floorId"
-        show-checkbox
+        :show-checkbox="isMultiple"
         :default-expanded-keys="[1]"
         :default-checked-keys="defaultCheckedKey"
         @check-change="handleCheckChange"
@@ -31,7 +31,7 @@
     components: {
       ModuleTip
     },
-    props:['floorList','defaultChecked'],
+    props:['floorList','defaultChecked','isMultiple','fromFlag','selectCallBack'],
     data () {
       return {
         treeProps:{
@@ -45,6 +45,7 @@
       ...mapState({
         activeIndex:state => state.conditionSelect.activeIndex,
         curModule:state => state.conditionSelect.curModule,
+        menuIsCollapse:state=> state.digitalPark.menuIsCollapse
       }),
       defaultCheckedKey(){
         return this.defaultChecked.map((item)=>item.id)
@@ -57,30 +58,31 @@
       },
       handleCheck(val){
         let tmp=[]
-        if(this.activeIndex==1){
+        if(this.fromFlag==1){
           let checkedNode = this.$refs.navTree.getCheckedNodes()
-          this.$parent.handleNavCanCheck(checkedNode)
+          this.$parent.handleFloorCanCheck(checkedNode)
           checkedNode.map((item)=>{
             tmp.push({
-              id:item.floorId,
-              name:item.floor
+               id:item.floorId,
+               name:item.floor
             })
           })
-          this.$store.commit('conditionSelect/checkedFloorList',tmp)
         }else{
           this.$refs.navTree.setCheckedNodes([val])
           tmp.push({
             id:val.floorId,
             name:val.floor
           })
-          if(this.activeIndex==2){
-            this.$store.commit('conditionSelect/tbhbCheckedFloorList',tmp)
-          }else if(this.activeIndex==3){
-            this.$store.commit('conditionSelect/typeCheckedFloorList',tmp)
-          }else if(this.activeIndex==4){
-            this.$store.commit('conditionSelect/timeCheckedFloorList',tmp)
-          }
+          // if(this.activeIndex==2){
+          //   this.$store.commit('conditionSelect/tbhbCheckedFloorList',tmp)
+          // }else if(this.activeIndex==3){
+          //   this.$store.commit('conditionSelect/typeCheckedFloorList',tmp)
+          // }else if(this.activeIndex==4){
+          //   this.$store.commit('conditionSelect/timeCheckedFloorList',tmp)
+          // }
         }
+        console.log(tmp)
+        this.selectCallBack &&  this.selectCallBack(tmp)
       }
     },
     mounted(){
@@ -91,7 +93,6 @@
 <style lang="less">
   .zoom-navigation{
   /*  background: @mainBg;*/
-
     color:@white;
     text-align: left;
     overflow: hidden;
@@ -115,6 +116,9 @@
     .el-tree-node__content{
        padding:12px 0;
     }
+    .el-tree-node__label{
+      font-size: 16px;
+    }
     .el-tree-node__content:hover{
       color:@white;
       background: @mainHoverColor;
@@ -126,6 +130,7 @@
     .el-input__inner{
         border:none;
         background: #F4F5F7;
+        padding:0 50px;
     }
     .el-input{
       width:90%;
@@ -139,9 +144,5 @@
       font-size: 18px;
       font-weight: bold;
     }
-    input::-webkit-input-placeholder{
-      padding-left: 30px;
-    }
-
   }
 </style>

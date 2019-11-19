@@ -75,7 +75,7 @@ class commonFun {
     "catalog": null,
     "routeAddress": null,
     "sequence": 1,
-    "icon": null,
+    "icon": 'iconshouye',
     "permisionList": [],
     "childNode": [{
       "id": 11,
@@ -85,7 +85,7 @@ class commonFun {
       "catalog": null,
       "routeAddress": "/energy/homePage",
       "sequence": 1,
-      "icon": null,
+      "icon": 'iconshouye',
       "permisionList": ["首页"],
       "childNode": []
     }, {
@@ -96,7 +96,7 @@ class commonFun {
       "catalog": null,
       "routeAddress": "/energy/timeEnergy",
       "sequence": 1,
-      "icon": null,
+      "icon": 'iconshouye',
       "permisionList": [],
       "childNode": [{
         "id": 21,
@@ -106,7 +106,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/energy/timeEnergy",
         "sequence": 1,
-        "icon": null,
+        "icon": '',
         "permisionList": ["分时能耗"],
         "childNode": []
       }, {
@@ -117,7 +117,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/energy/categoryEnergy",
         "sequence": 2,
-        "icon": null,
+        "icon": '',
         "permisionList": ["分项能耗"],
         "childNode": []
       }, {
@@ -128,7 +128,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/energy/rankEnergy",
         "sequence": 3,
-        "icon": null,
+        "icon": '',
         "permisionList": ["能耗排名"],
         "childNode": []
       }]
@@ -140,7 +140,7 @@ class commonFun {
       "catalog": null,
       "routeAddress": "/deviceAnalysis",
       "sequence": 2,
-      "icon": null,
+      "icon": 'iconshouye',
       "permisionList": [],
       "childNode": [{
         "id": 31,
@@ -150,7 +150,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/deviceAnalysis",
         "sequence": 1,
-        "icon": null,
+        "icon": '',
         "permisionList": ["设备状态分析"],
         "childNode": []
       }, {
@@ -161,7 +161,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/correlationAnalysis",
         "sequence": 2,
-        "icon": null,
+        "icon": '',
         "permisionList": ["相关分析"],
         "childNode": []
       }, {
@@ -172,7 +172,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/statisCompare",
         "sequence": 3,
-        "icon": null,
+        "icon": '',
         "permisionList": ["统计对比"],
         "childNode": []
       }, {
@@ -183,7 +183,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/historyStatis",
         "sequence": 4,
-        "icon": null,
+        "icon": '',
         "permisionList": ["往期统计"],
         "childNode": []
       }, {
@@ -194,7 +194,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/energy/compare",
         "sequence": 5,
-        "icon": null,
+        "icon": '',
         "permisionList": [],
         "childNode": [{
           "id": 36,
@@ -202,9 +202,9 @@ class commonFun {
           "name2": "space",
           "name": "空间对比",
           "catalog": null,
-          "routeAddress": "/html/energyNew/energy_ranking.html",
+          "routeAddress": "/energy/zoomCompare",
           "sequence": 1,
-          "icon": null,
+          "icon": '',
           "permisionList": ["空间对比"],
           "childNode": []
         }, {
@@ -213,9 +213,9 @@ class commonFun {
           "name2": "space",
           "name": "同比环比分析",
           "catalog": null,
-          "routeAddress": "/html/energyNew/energy_ranking.html",
+          "routeAddress": "/energy/tbhbAnalysis",
           "sequence": 2,
-          "icon": null,
+          "icon": '',
           "permisionList": ["同比环比分析"],
           "childNode": []
         }, {
@@ -224,9 +224,9 @@ class commonFun {
           "name2": "space",
           "name": "能耗类型对比",
           "catalog": null,
-          "routeAddress": "/html/energyNew/energy_ranking.html",
+          "routeAddress": "/energy/typeCompare",
           "sequence": 3,
-          "icon": null,
+          "icon": '',
           "permisionList": ["能耗类型对比"],
           "childNode": []
         }]
@@ -239,7 +239,7 @@ class commonFun {
       "catalog": null,
       "routeAddress": "/energy/waterDiffer",
       "sequence": 3,
-      "icon": null,
+      "icon": 'iconshouye',
       "permisionList": [],
       "childNode": [{
         "id": 41,
@@ -249,7 +249,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/energy/waterDiffer",
         "sequence": 1,
-        "icon": null,
+        "icon": '',
         "permisionList": ["水量异常突增诊断"],
         "childNode": []
       }, {
@@ -260,7 +260,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/energy/nightWater",
         "sequence": 2,
-        "icon": null,
+        "icon": '',
         "permisionList": ["夜间用水跑冒滴漏诊断"],
         "childNode": []
       }, {
@@ -271,7 +271,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/energy/elecDiffer",
         "sequence": 3,
-        "icon": null,
+        "icon": '',
         "permisionList": ["用电量异常突增诊断"],
         "childNode": []
       }, {
@@ -282,7 +282,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/energy/nightElec",
         "sequence": 4,
-        "icon": null,
+        "icon": '',
         "permisionList": ["夜间用电浪费诊断"],
         "childNode": []
       }, {
@@ -293,7 +293,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/energy/elecAnalysis",
         "sequence": 5,
-        "icon": null,
+        "icon": '',
         "permisionList": ["电流向及线损分析"],
         "childNode": []
       }]
@@ -305,7 +305,7 @@ class commonFun {
       "catalog": null,
       "routeAddress": "/manMadeCollect",
       "sequence": 4,
-      "icon": null,
+      "icon": 'iconshouye',
       "permisionList": ["人工采集"],
       "childNode": [{
         "id": 71,
@@ -315,7 +315,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/manMadeCollect",
         "sequence": 1,
-        "icon": null,
+        "icon": '',
         "permisionList": ["空间报表查看"],
         "childNode": []
       }, {
@@ -326,7 +326,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/autoCollect",
         "sequence": 2,
-        "icon": null,
+        "icon": '',
         "permisionList": ["分项报表查看"],
         "childNode": []
       }]
@@ -338,7 +338,7 @@ class commonFun {
       "catalog": null,
       "routeAddress": "/deviceRecord",
       "sequence": 5,
-      "icon": null,
+      "icon": 'iconshouye',
       "permisionList": ["设备表记查看", "设备表导入"],
       "childNode": []
     }, {
@@ -349,7 +349,7 @@ class commonFun {
       "catalog": null,
       "routeAddress": "/spaceReport",
       "sequence": 6,
-      "icon": null,
+      "icon": 'iconshouye',
       "permisionList": [],
       "childNode": [{
         "id": 71,
@@ -359,7 +359,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/spaceReport",
         "sequence": 1,
-        "icon": null,
+        "icon": '',
         "permisionList": ["空间报表查看"],
         "childNode": []
       }, {
@@ -370,7 +370,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/categoryReport",
         "sequence": 2,
-        "icon": null,
+        "icon": '',
         "permisionList": ["分项报表查看"],
         "childNode": []
       }]
@@ -382,7 +382,7 @@ class commonFun {
       "catalog": null,
       "routeAddress": "/userManage",
       "sequence": 8,
-      "icon": null,
+      "icon": 'iconshouye',
       "permisionList": [],
       "childNode": [{
         "id": 101,
@@ -392,7 +392,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/userManage",
         "sequence": 1,
-        "icon": null,
+        "icon": 'iconshouye',
         "permisionList": ["用户查看", "添加用户", "修改用户", "重置密码", "导出用户信息"],
         "childNode": []
       }, {
@@ -403,7 +403,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/roleManage",
         "sequence": 2,
-        "icon": null,
+        "icon": 'iconshouye',
         "permisionList": ["角色查询", "角色修改", "角色添加", "角色删除"],
         "childNode": []
       }, {
@@ -414,7 +414,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/departmentManage",
         "sequence": 3,
-        "icon": null,
+        "icon": 'iconshouye',
         "permisionList": ["组织机构查看", "组织机构添加", "组织机构修改", "组织机构删除"],
         "childNode": []
       }, {
@@ -425,7 +425,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/spaceManage",
         "sequence": 4,
-        "icon": null,
+        "icon": 'iconshouye',
         "permisionList": ["空间查看", "空间添加", "空间修改", "空间删除"],
         "childNode": []
       }, {
@@ -436,7 +436,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/operatorLog",
         "sequence": 6,
-        "icon": null,
+        "icon": 'iconshouye',
         "permisionList": ["日志查看"],
         "childNode": []
       }]

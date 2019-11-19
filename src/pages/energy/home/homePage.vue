@@ -425,13 +425,13 @@ export default {
     .icon {
       width: 4px;
       height: 16px;
-      background: #4d7cfeff;
+      background: @mainBgColor;
       border-radius: 2px;
       margin-right: 10px;
     }
     span {
       font-size: 16px;
-      color: #4d7cfeff;
+      color: @mainBgColor;
     }
   }
   .overview-list {

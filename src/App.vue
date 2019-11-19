@@ -20,7 +20,8 @@ export default {
 @import url('./less/index.less');
 #app {
   font-family: 'MicrosoftYaHei', Helvetica, Arial, sans-serif;
-  color: #606266;
+  color: #666;
   height:100%;
+  font-size: 14px;
 }
 </style>

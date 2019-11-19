@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import TbhbAnalysis from '../coms/tbhbAnalysis'
+  import TbhbAnalysis from '../energyCompare/tbhbAnalysis'
   export default {
     name: 'TimeEnergy',
     components: {
@@ -35,18 +35,7 @@
 
 <style lang="less">
   .time-energy{
-      .left-zoom-nav{
-        width:250px;
-        float: left;
-        position: fixed;
-        height: 100%;
-        left:270px;
-      }
-      .right-content{
-        width:83%;
-        background: #f2f2f2;
-        float: right;
-        box-sizing: border-box;
-      }
+
+
   }
 </style>

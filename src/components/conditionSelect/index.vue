@@ -1,12 +1,12 @@
 <template>
-  <div class="condition-select flex-align-between">
+  <div class="condition-select flex-align radius-shadow">
      <div class="item-group" v-if="showEnergy">
-        <span>能源：</span>
-        <el-select v-if="!isGroup" v-model="curEnergy" placeholder="请选择" @change="handleEnergyChange" >
+        <label>能源：</label>
+        <el-select v-if="!isGroup" v-model="curEnergyId" placeholder="请选择" @change="handleEnergyChange" >
            <el-option v-for="item in energyList" :key="item.id" :label="item.name" :value="item.id">
            </el-option>
         </el-select>
-       <el-select v-if="isGroup" v-model="curEnergy" multiple @change="handleEnergyChange">
+       <el-select v-if="isGroup" v-model="curEnergyId" multiple @change="handleEnergyChange">
          <el-option-group v-for="group in energyList" :key="group.id" :label="group.name" :disabled="group.disabled">
            <el-option
              v-for="item in group.energyType"
@@ -18,7 +18,7 @@
        </el-select>
      </div>
      <div class="item-group">
-      <span>时间类型：</span>
+      <label>时间类型：</label>
       <el-select v-model="curDateType" placeholder="请选择" @change="handleDateTypeChange">
         <el-option v-for="item in dateTypeList" :key="item.id" :label="item.name" :value="item.id">
         </el-option>
@@ -30,9 +30,9 @@
         <el-radio label="1">范围</el-radio>
       </el-radio-group>
     </div>
-    <div style="flex-shrink: 0" class="flex">
+    <div style="flex-shrink: 0" class="flex item-group">
       <div>
-        <span>时间：</span>
+        <label>时间：</label>
         <el-date-picker v-model='startTime' :type="dateType"
                         @change="handleStartTimeChange" :clearable="false">
         </el-date-picker>
@@ -68,18 +68,19 @@
     name:'ConditionSelect',
     components: {
     },
-    props:['isGroup','showEnergy'],
+    props:['isGroup','showEnergy','fromFlag','getDataFlag'],
     data () {
       return {
         energyList:[],
         // dateTypeList,
-        curEnergy:[],
+        curEnergyId:[],
         curDateType:2,
         dateType:'month',
         radio:'0',
-        startTime:new Date(new Date().getTime()-30*24*60*60*1000),
-        lastTime:new Date(),
+        startTime:moment(new Date(new Date().getTime()-30*24*60*60*1000)).format('YYYY-MM'),
+        lastTime:'',
         showLastTime:false,
+        curEnergy:[]
       }
     },
     computed: {
@@ -111,10 +112,15 @@
       }
     },
     watch:{
+      async getDataFlag(){
+        if(this.getDataFlag){
+            await this.getEnergyList()
+            this.handleClickSureBtn()
+        }
+      }
     },
     methods: {
       async getEnergyList(){
-        let energy
         let res = await CommonApi.getEnergyListByGroup()
         if(this.isGroup){
           res.map((item,index)=>{
@@ -124,78 +130,46 @@
             }
           })
           this.energyList = res
-          this.curEnergy=[res[0].energyType[0].id,res[0].energyType[1].id]
-          energy=[res[0].energyType[0],res[0].energyType[1]]
+          this.curEnergyId=[res[0].energyType[0].id,res[0].energyType[1].id]
+          this.curEnergy=[res[0].energyType[0],res[0].energyType[1]]
         }else{
           let tmp=[]
-           if(this.curModule==1){
+           if(this.fromFlag==1){
              res.map((item)=>{
                tmp.push(item)
                item.energyType.map((val)=>{
                  tmp.push(val)
                })
              })
-           }else if(this.curModule==2){
+           }else if(this.fromFlag==2){
              res.map((item)=>{
-               item.energyType.map((val)=>{
-                 tmp.push(val)
-               })
-             })
-           }else if(this.curModule==3){
+                   item.energyType.map((val)=>{
+                     tmp.push(val)
+                   })
+                 })
+           }else if(this.fromFlag==3){
              res.map((item)=>{
                tmp.push(item)
              })
            }
           this.energyList = tmp
-          this.curEnergy=tmp[0].id
-            energy=[{
+          this.curEnergyId=tmp[0].id
+            this.curEnergy=[{
              id:tmp[0].id,
              name:tmp[0].name
            }]
         }
-       if(this.activeIndex==1){
-         this.$store.commit("conditionSelect/energy",energy)
-       }else if(this.activeIndex==2){
-         this.$store.commit("conditionSelect/tbhbEnergy",energy)
-       }else{
-         this.$store.commit("conditionSelect/typeEnergy",energy)
-       }
-
       },
       handleRadioChange(value){
          this.showLastTime = value==1?true:false
-         if(this.activeIndex==1){
-           this.$store.commit("conditionSelect/radioType",value)
-           if(value==0){
-             this.timeFormat('lastTime','')
-           }else{
-             this.timeFormat('lastTime',this.startTime)
-           }
-         }else if(this.activeIndex==2){
-           this.$store.commit("conditionSelect/tbhbRadioType",value)
-           if(value==0){
-             this.timeFormat('tbhbLastTime','')
-           }else{
-             this.timeFormat('tbhbLastTime',this.startTime)
-           }
-         }else{
-           this.$store.commit("conditionSelect/typeRadioType",value)
-           if(value==0){
-             this.timeFormat('typeLastTime','')
-           }else{
-             this.timeFormat('typeLastTime',this.startTime)
-           }
-         }
+         if(value==0){
+              this.lastTime=''
+          }else{
+              this.lastTime=moment(new Date()).format('YYYY-MM')
+          }
       },
       handleDateTypeChange(value){
         this.dateType=value==1?'year':value==2?"month":'date'
-        if(this.activeIndex==1){
-          this.$store.commit("conditionSelect/selectType",value)
-        }else if(this.activeIndex==2){
-          this.$store.commit("conditionSelect/tbhbSelectType",value)
-        }else{
-          this.$store.commit("conditionSelect/typeSelectType",value)
-        }
         this.timeFormat('startTime',this.startTime)
         this.timeFormat('lastTime',this.lastTime)
       },
@@ -223,13 +197,6 @@
         }else{
            tmp=this.energyList.filter((item)=>item.id==value)
         }
-        if(this.activeIndex==1){
-          this.$store.commit("conditionSelect/energy",tmp)
-        }else if(this.activeIndex==2){
-          this.$store.commit("conditionSelect/tbhbEnergy",tmp)
-        }else{
-          this.$store.commit("conditionSelect/typeEnergy",tmp)
-        }
       },
       handleStartTimeChange(value){
          this.timeFormat('startTime',value)
@@ -239,28 +206,22 @@
       },
       timeFormat(time,value){
         let formatType = this.dateType =='year'?'YYYY':this.dateType=='month'?'YYYY-MM':'YYYY-MM-DD'
-        if(this.activeIndex==1){
-          this.$store.commit(`conditionSelect/${time}`,value?moment(value).format(formatType):'')
-        }else if(this.activeIndex==2){
-          if(time=='startTime'){
-            this.$store.commit(`conditionSelect/tbhbStartTime`,moment(value).format(formatType))
-          }else{
-            this.$store.commit(`conditionSelect/tbhbLastTime`,value?moment(value).format(formatType):'')
-          }
-        }else{
-          if(time=='startTime'){
-            this.$store.commit(`conditionSelect/typeStartTime`,moment(value).format(formatType))
-          }else{
-            this.$store.commit(`conditionSelect/typeLastTime`,value?moment(value).format(formatType):'')
-          }
-        }
+        this[time]=this[time]?moment(value).format(formatType):''
       },
       handleClickSureBtn(){
-        this.$parent.getData && this.$parent.getData()
+        let params ={
+          energy:this.curEnergy,
+          selectType:this.curDateType,
+          redioType:this.radio,
+          startTime:this.startTime,
+          lastTime:this.lastTime
+        }
+        console.log(params)
+        this.$parent.getData && this.$parent.getData(params)
       },
     },
-    mounted(){
-      this.getEnergyList()
+    async mounted(){
+     await this.getEnergyList()
     }
   }
 </script>
@@ -269,11 +230,7 @@
   .condition-select {
     background: @white;
     padding:25px 15px;
-    border:1px solid #ccc;
-    border-radius: 10px;
-    .item-group{
-      flex-shrink: 1;
-    }
+    flex-flow: wrap;
     .tag-style{
       margin:0 5px;
     }

@@ -53,6 +53,7 @@
       },
       onClickCollapseBtn(){
         this.menuConfig.isCollapse=!this.menuConfig.isCollapse
+        this.$store.commit('digitalPark/menuIsCollapse',this.menuConfig.isCollapse)
       },
       handleSelect(index,indexPath){
         console.log(index,indexPath)
@@ -124,7 +125,7 @@
     .router-view{
       padding:20px 20px 0 20px;
       margin-top: 70px;
-      overflow: auto;
+      overflow: hidden;
     }
     .asset-nav-operator-box{
       /*flex-grow: 1;*/

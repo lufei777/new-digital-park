@@ -1,14 +1,15 @@
 <template>
   <div class="zoom-compare">
-      <div class="left-zoom-nav">
-        <ZoomNavigation :floorList="floorList" :defaultChecked="defaultChecked"/>
-      </div>
-      <div class="right-content">
-        <ConditionSelect :isGroup="false" :showEnergy="true"/>
-        <div ref="myChart" class="my-chart"></div>
-        <DynamicTable :tableData="tableData" :tableTip="tableTip" :curPage="curPage" />
-        <!--<ThirdPartyVideo videoUrl="videoUrl"/>-->
-      </div>
+      <!--<div class="left-zoom-nav">-->
+        <!--<ZoomNavigation :floorList="floorList" :defaultChecked="defaultChecked"/>-->
+      <!--</div>-->
+      <!--<div class="right-content">-->
+        <!--<ConditionSelect :isGroup="false" :showEnergy="true"/>-->
+        <!--<div ref="myChart" class="my-chart radius-shadow"></div>-->
+        <!--<DynamicTable :tableData="tableData" :tableTip="tableTip" :curPage="curPage" />-->
+        <!--&lt;!&ndash;<ThirdPartyVideo videoUrl="videoUrl"/>&ndash;&gt;-->
+      <!--</div>-->
+     <EnergyCommon :isZoomMultiple="true" :fromFlag="1"/>
   </div>
 </template>
 
@@ -17,16 +18,18 @@
   import {mapState} from 'vuex'
   import CommonApi from '../../../service/api/commonApi'
   import ChartUtils from '../../../utils/chartUtils'
-  import ZoomNavigation from '../../../components/zoomNavigation/index'
-  import ConditionSelect from '../../../components/conditionSelect/index'
-  import DynamicTable from '../../../components/dynamicTable/index'
-  import ThirdPartyVideo from '../../../components/thirdPartyVideo/index'
+  import ZoomNavigation from '../../../components/zoomNavigation'
+  import ConditionSelect from '../../../components/conditionSelect'
+  import DynamicTable from '../../../components/dynamicTable'
+  import ThirdPartyVideo from '../../../components/thirdPartyVideo'
+  import EnergyCommon from './energyCommon'
   export default {
     name:'ZoomCompare',
     components: {
       ZoomNavigation,
       ConditionSelect,
       DynamicTable,
+      EnergyCommon
       // ThirdPartyVideo
     },
     data () {
@@ -38,7 +41,6 @@
         myChart:'',
         curPage:1,
         defaultChecked:[],
-        videoUrl:'rtsp://admin:xzl123456@192.168.1.108:554t/cam/realmonitor?channel=1&subtype=0'
       }
     },
     computed: {
@@ -182,8 +184,8 @@
       }
     },
     async mounted(){
-      await this.getAllFloor()
-      this.getData()
+      // await this.getAllFloor()
+      // this.getData()
     }
   }
 </script>
@@ -192,9 +194,7 @@
  .zoom-compare {
    width: 100%;
    .my-chart{
-     border-radius: 10px;
-     border:1px solid #ccc;
-     margin-top: 30px;
+     margin-top: 20px;
      background: @white;
      overflow: hidden;
      /*width: 100%;*/

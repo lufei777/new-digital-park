@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import TbhbAnalysis from '../coms/tbhbAnalysis'
+  import TbhbAnalysis from '../energyCompare/tbhbAnalysis'
   export default {
     name: 'TimeEnergy',
     components: {
