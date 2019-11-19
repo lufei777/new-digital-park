@@ -35,7 +35,6 @@
 
 <style lang="less">
   .time-energy{
-    margin-top: 85px;
       .left-zoom-nav{
         width:250px;
         float: left;
@@ -46,7 +45,6 @@
       .right-content{
         width:83%;
         background: #f2f2f2;
-        padding:10px;
         float: right;
         box-sizing: border-box;
       }
