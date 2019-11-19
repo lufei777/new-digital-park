@@ -107,15 +107,24 @@ export default {
 </script>
 <style lang="less">
   .common-menu{
-    .el-menu-item,
-    .el-submenu__title {
+    .el-menu-item,.el-submenu .el-submenu__title {
       font-size: 18px;
+      height:70px;
+      line-height: 70px;
       .iconfont{
         /*padding:0 10px;*/
       }
     }
-    .nest-menu{
-      font-size: 16px;
+    .el-submenu .el-menu{
+      .el-menu-item,.el-submenu__title{
+        font-size: 16px;
+        height:60px;
+        line-height: 60px;
+      }
+    }
+    .el-submenu .el-menu .el-submenu .el-menu .el-menu-item{
+      font-size: 14px;
+      padding-left: 40px !important;
     }
     .el-menu-demo {
       border-bottom: none !important;

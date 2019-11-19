@@ -303,6 +303,7 @@
       text-align: center;
     }
     .header-nav-left{
+      flex-shrink: 0;
       .title{
         font-size: 30px;
         color:@parkMainTextColor;
@@ -429,5 +430,10 @@
   }
   .el-menu-item,.el-submenu__title{
     font-size: 16px;
+
+  }
+  .common-menu .el-submenu .el-submenu__title{
+    height: 60px !important;
+    line-height: 60px !important;
   }
 </style>

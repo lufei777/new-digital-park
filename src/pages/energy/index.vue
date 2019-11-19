@@ -39,6 +39,13 @@
       },
     },
     methods: {
+      selectMenuCallback(key){
+        debugger
+        console.log(key.path)
+        if(key.path=='/energy/timeEnergy'){
+          this.$store.commit('selectCondition/activeIndex',2)
+        }
+      }
     },
     created(){
       this.$store.dispatch('analysis/setDefaultNode')

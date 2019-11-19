@@ -1,6 +1,7 @@
 const state = {
   dragFlag:true,
-  tmpBreadcrumb:[]
+  tmpBreadcrumb:[],
+  menuIsCollapse:false
 }
 
 const mutations={
@@ -9,6 +10,9 @@ const mutations={
   },
   tmpBreadcrumb(state,data) {
     state.tmpBreadcrumb = data
+  },
+  menuIsCollapse(state,data) {
+    state.menuIsCollapse = data
   }
 }
 

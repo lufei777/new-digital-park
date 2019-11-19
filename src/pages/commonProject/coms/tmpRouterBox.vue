@@ -1,12 +1,12 @@
 <template>
-  <div class="energy-show">
+  <div class="tmp-router-box">
     <router-view></router-view>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'EnergyShow',
+    name: 'TmpRouterBox',
     components: {
     },
     data () {
