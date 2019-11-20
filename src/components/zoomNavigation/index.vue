@@ -15,6 +15,7 @@
         :default-checked-keys="defaultCheckedKey"
         @check-change="handleCheckChange"
         @check="handleCheck"
+        @node-click="onClickNode"
         ref="navTree"
       >
       </el-tree>
@@ -81,8 +82,26 @@
           //   this.$store.commit('conditionSelect/timeCheckedFloorList',tmp)
           // }
         }
-        console.log(tmp)
+        console.log("tmp",tmp)
         this.selectCallBack &&  this.selectCallBack(tmp)
+      },
+      onClickNode(node,value){
+        if(value.disabled){
+          return ;
+        }
+        // console.log(this.$refs.navTree.getCheckedNodes(),node,value)
+        let arr=this.$refs.navTree.getCheckedNodes()
+        if(this.fromFlag==1){
+          if(!value.checked){
+            arr.push(node)
+          }else{
+            arr.pop()
+          }
+          this.$refs.navTree.setCheckedNodes(arr)
+          this.handleCheck()
+        }else{
+          this.handleCheck(val)
+        }
       }
     },
     mounted(){

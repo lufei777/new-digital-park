@@ -21,7 +21,12 @@ class chartUtils {
       }
     let option = {
       title: {
-        text: data.titleText
+        text: data.titleText,
+        textStyle:{
+          fontSize: 14,
+          color:'#008DEA',
+          // fontFamily:'MicrosoftYaHei'
+        }
       },
       legend: {
         data: data.legendData
