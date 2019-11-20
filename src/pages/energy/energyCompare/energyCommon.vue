@@ -14,8 +14,9 @@
         <div ref="myChart2" class="my-chart category-chart"></div>
       </div>
       <div class="table-box radius-shadow">
-        <div class="table-tip">A3{{selectParams.energy[0].name}}明细展示排名</div>
-        <CommonTable v-if='fromFlag==1' :tableObj="tableData" :curPage="curPage" :showExportBtn="true"/>
+        <div class="table-tip">{{tableTip}}</div>
+        <!--<CommonTable v-if='fromFlag==1' :tableObj="tableData" :curPage="curPage" :showExportBtn="true"/>-->
+        <!--<DynamicTable v-if="fromFlag==1 || fromFlag==3" :tableData="tableData" :curPage="curPage"/>-->
         <Table :ref="tableConfig.ref" :tableConfig="tableConfig"></Table>
       </div>
     </div>
@@ -32,13 +33,15 @@
   import ChartUtils from '../../../utils/chartUtils'
   import CommonTable from '../../../components/commonTable'
   import Table from '../../../components/Table/index'
+  import DynamicTable from '../../../components/dynamicTable'
   export default {
     name:'TbhbAnalysis',
     components: {
       ZoomNavigation,
       ConditionSelect,
       CommonTable,
-      Table
+      Table,
+      DynamicTable
     },
     props:['isZoomMultiple','fromFlag','isEnergyByGroup'],
     data () {
@@ -104,13 +107,14 @@
       //   }
       // },
       tableTip(){
-        if(this.curModule==1){
-          return `A3${this.energy[0].name}明细展示排名`
-        }else if(this.curModule==2){
-          let lastTime = this.lastTime?'至'+this.lastTime:''
-          return `${this.startTime}${lastTime}${this.energy[0].name}排名`
-        }else if(this.curModule==3){
-          return `用${this.energy[0].name}分项能耗展示排名`
+        if(this.fromFlag==1){
+          return `A3${this.floorNameList}${this.selectParams.energy[0].name}展示排名`
+        }else if(this.fromFlag==2){
+          // let lastTime = this.lastTime?'至'+this.lastTime:''
+          // return `${this.startTime}${lastTime}${this.selectParams.energy[0].name}排名`
+          return `A3${this.selectParams.energy[0].name}明细展示排名`
+        }else if(this.fromFlag==3){
+          return `用${this.selectParams.energy[0].name}分项能耗展示排名`
         }
       },
       floorId(){
@@ -491,25 +495,30 @@
           }
         }
         let res = await CommonApi.getZoomCompareTable(tableParams)
-        if(res && res.value){
-          res.value.map((item)=>{
-            if(item[1])
-              item[1]=item[1].slice(0,10)
-          })
+        if(res && res.value) {
           let tmp=[]
-          let obj={}
-          res.value.map((item,index)=>{
-            item.map((child)=>{
-
+          res.value.map((item)=>{
+            let obj={}
+            res.title.map((tit,index)=>{
+              if(tit=="占比(%)"){
+                obj[tit+index]=item[index]
+              }else{
+                obj[tit]=item[index]
+              }
             })
-            obj[res.title[index]]=item[index]
-            if(index==item.length){
-              obj={}
-              tmp.push(obj)
-            }
+            tmp.push(obj)
           })
-          console.log(tmp)
-          this.tableData=res
+
+          let columnConfig=[]
+          res.title.map((item)=>{
+             columnConfig.push({
+               label:item,
+               prop:item
+             })
+          })
+          this.tableConfig.columnConfig=columnConfig
+          this.tableConfig.data=tmp
+          console.log("tmp",tmp)
         }
       },
       initZoomChart(res){
@@ -631,6 +640,7 @@
       color:@mainBgColor;
       font-weight: bold;
       margin-bottom: 20px;
+      margin-top: 0;
     }
     /*.el-table th div{*/
     /*padding-left:0;*/
