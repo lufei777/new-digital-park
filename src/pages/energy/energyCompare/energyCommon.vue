@@ -14,6 +14,7 @@
         <div ref="myChart2" class="my-chart category-chart"></div>
       </div>
       <div class="table-box radius-shadow">
+        <div class="table-tip">A3{{selectParams.energy[0].name}}明细展示排名</div>
         <CommonTable v-if='fromFlag==1' :tableObj="tableData" :curPage="curPage" :showExportBtn="true"/>
         <Table :ref="tableConfig.ref" :tableConfig="tableConfig"></Table>
       </div>
@@ -57,12 +58,11 @@
         myChart2:'',
         checkedFloorList:[],
         getDataFlag:false,
-        selectParams:{},
+        selectParams:{
+          energy:[{name:''}]
+        },
         tableConfig:{
           ref: "tableRef",
-          serverMode:{
-            url:''
-          },
           data:[],
           columnConfig:[],
           uiConfig: {
@@ -70,7 +70,7 @@
             pagination: {
               //是否分页，分页是否自定义
               layout: "total,->,  sizes, prev, pager, next, jumper",
-              // pageSizes: [10, 20, 50]
+              pageSizes: [10, 20, 50]
             }
           },
           tableMethods: {
@@ -119,18 +119,6 @@
     },
     watch:{
       fromFlag(){
-        // if(this.fromFlag==2){
-        //   this.tableConfig.serverMode={
-        //     url:CommonApi.getTbhbTable,
-        //     data:{...this.commonParams,...{
-        //         rankType:this.rankType,
-        //         rank:this.rank,
-        //         page:this.curPage,
-        //         size:10,
-        //       }
-        //     },
-        //   }
-        // }
       }
     },
     methods: {
@@ -219,14 +207,14 @@
         let res = await CommonApi.getTbhbTable(tableParams)
         this.tableConfig.columnConfig=[{label:'排名',prop:'xulie'},
           {label:'当期综合能耗(kwh)',prop:'date'},
-          {label:'同期综合能耗(kwh)',prop:'dqzh',sort:'custom'},
-          {label:'上期综合能耗(kwh)',prop:'tqzh',sort:'custom'},
-          {label:'综合能耗同比增长率(%)',prop:'tbzz',sort:'custom',
+          {label:'同期综合能耗(kwh)',prop:'dqzh',sortable:'custom'},
+          {label:'上期综合能耗(kwh)',prop:'tqzh',sortable:'custom'},
+          {label:'综合能耗同比增长率(%)',prop:'tbzz',sortable:'custom',
             formatter: function(row, column) {
               return row[column.property]+"%";
             }
           },
-          {label:'综合能耗环比增长率(%)',prop:'hbzz',sort:'custom',
+          {label:'综合能耗环比增长率(%)',prop:'hbzz',sortable:'custom',
             formatter: function(row, column) {
               return row[column.property]+"%";
             }
@@ -328,6 +316,7 @@
         console.log(column)
         this.seq = column.prop == 'shijian' ? 0 : 1
         this.rank=column.order=='ascending'?'asc':'desc'
+        this.rankType=column.prop
         if(this.fromFlag==2){
           this.getTbhbTable()
         }else{
@@ -637,6 +626,11 @@
       height:0;
       padding:0;
       border:none;
+    }
+    .table-tip{
+      color:@mainBgColor;
+      font-weight: bold;
+      margin-bottom: 20px;
     }
     /*.el-table th div{*/
     /*padding-left:0;*/

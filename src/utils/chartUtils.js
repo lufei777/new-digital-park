@@ -24,7 +24,8 @@ class chartUtils {
         text: data.titleText,
         textStyle:{
           fontSize: 14,
-          color:'#008DEA'
+          color:'#008DEA',
+          // fontFamily:'MicrosoftYaHei'
         }
       },
       legend: {
