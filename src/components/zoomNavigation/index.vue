@@ -12,6 +12,7 @@
         node-key="floorId"
         :show-checkbox="isMultiple"
         :default-expanded-keys="[1]"
+        :highlight-current="true"
         :default-checked-keys="defaultCheckedKey"
         @check-change="handleCheckChange"
         @check="handleCheck"
@@ -100,7 +101,7 @@
           this.$refs.navTree.setCheckedNodes(arr)
           this.handleCheck()
         }else{
-          this.handleCheck(val)
+          this.handleCheck(node)
         }
       }
     },
@@ -162,6 +163,10 @@
       line-height: 40px;
       font-size: 18px;
       font-weight: bold;
+    }
+    .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
+      background: @mainBgColor;
+      color:@white;
     }
   }
 </style>

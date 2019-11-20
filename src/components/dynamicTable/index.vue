@@ -70,9 +70,9 @@
 <style lang="less">
   .dynamic-table-box{
     .table-box{
-      border-radius: 10px;
-      border:1px solid #ccc;
-      margin-top: 30px;
+      /*border-radius: 10px;*/
+      /*border:1px solid #ccc;*/
+      /*margin-top: 30px;*/
       padding:5px;
       background: @white;
       overflow: hidden;
@@ -123,10 +123,11 @@
           bottom: 7px;
         }
         th{
-          text-align: right;
+          /*text-align: right;*/
           padding-right: 10px;
           font-weight: 600;
           color:#909399;
+          background: #E5EAF2;
         }
         tbody td{
           text-align: right;
