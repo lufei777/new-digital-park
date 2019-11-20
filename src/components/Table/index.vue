@@ -55,19 +55,7 @@
           :formatter="col.formatter"
           show-overflow-tooltip
           align="left"
-        >
-          <template slot-scope="scope">
-            <!-- <el-input
-              class="edit-row-input"
-              size="small"
-              v-model="scope.row[col.prop]"
-              placeholder="请输入内容"
-              @change="_handleRowEdit(scope.$index, scope.row)"
-            ></el-input>-->
-            <span>{{scope.row[col.prop]}}</span>
-          </template>
-          <!-- <template slot-scope="scopeRow"></template> -->
-        </el-table-column>
+        ></el-table-column>
       </template>
 
       <!-- 列操作 -->
@@ -203,8 +191,17 @@ export default {
     }
     //分页
     if (this.uiConfig.pagination) {
-      this.currentPage = this.uiConfig.pagination.currentPage;
-      this.pageSize = this.uiConfig.pagination.pageSizes[0];
+      let currentPage = this.uiConfig.pagination.currentPage;
+      let pageSizes = this.uiConfig.pagination.pageSizes;
+
+      if (currentPage) {
+        this.currentPage = currentPage;
+      }
+      if (pageSizes instanceof Array) {
+        this.pageSize = pageSizes[0];
+      } else if (typeof pageSizes === "number") {
+        this.pageSize = pageSizes;
+      }
     }
 
     this._tableInit();
