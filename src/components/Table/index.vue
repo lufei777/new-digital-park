@@ -191,8 +191,17 @@ export default {
     }
     //分页
     if (this.uiConfig.pagination) {
-      this.currentPage = this.uiConfig.pagination.currentPage;
-      this.pageSize = this.uiConfig.pagination.pageSizes[0];
+      let currentPage = this.uiConfig.pagination.currentPage;
+      let pageSizes = this.uiConfig.pagination.pageSizes;
+
+      if (currentPage) {
+        this.currentPage = currentPage;
+      }
+      if (pageSizes instanceof Array) {
+        this.pageSize = pageSizes[0];
+      } else if (typeof pageSizes === "number") {
+        this.pageSize = pageSizes;
+      }
     }
 
     this._tableInit();
