@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="energy-common">
     <ZoomNavigation :floorList="floorList"
                     :defaultChecked="defaultChecked"
                     :isMultiple="isZoomMultiple"
@@ -14,7 +14,8 @@
         <div ref="myChart2" class="my-chart category-chart"></div>
       </div>
       <div class="table-box radius-shadow">
-        <CommonTable :tableObj="tableData" :curPage="curPage" :showExportBtn="true"/>
+        <CommonTable v-if='fromFlag==1' :tableObj="tableData" :curPage="curPage" :showExportBtn="true"/>
+        <Table :ref="tableConfig.ref" :tableConfig="tableConfig"></Table>
       </div>
     </div>
   </div>
@@ -29,15 +30,18 @@
   import ConditionSelect from '../../../components/conditionSelect'
   import ChartUtils from '../../../utils/chartUtils'
   import CommonTable from '../../../components/commonTable'
+  import Table from '../../../components/Table/index'
   export default {
     name:'TbhbAnalysis',
     components: {
       ZoomNavigation,
       ConditionSelect,
-      CommonTable
+      CommonTable,
+      Table
     },
     props:['isZoomMultiple','fromFlag','isEnergyByGroup'],
     data () {
+      let _this = this
       return {
         floorList:[],
         curPage:1,
@@ -53,7 +57,26 @@
         myChart2:'',
         checkedFloorList:[],
         getDataFlag:false,
-        selectParams:{}
+        selectParams:{},
+        tableConfig:{
+          ref: "tableRef",
+          serverMode:{
+            url:''
+          },
+          data:[],
+          columnConfig:[],
+          uiConfig: {
+            height: "auto",//"", //高度
+            pagination: {
+              //是否分页，分页是否自定义
+              layout: "total,->,  sizes, prev, pager, next, jumper",
+              // pageSizes: [10, 20, 50]
+            }
+          },
+          tableMethods: {
+            sortChange: _this.sortTable
+          }
+        }
       }
     },
     computed: {
@@ -92,10 +115,23 @@
       },
       floorId(){
         return this.checkedFloorList.map((item)=>item.id).join(',')
-      }
+      },
     },
     watch:{
-
+      fromFlag(){
+        // if(this.fromFlag==2){
+        //   this.tableConfig.serverMode={
+        //     url:CommonApi.getTbhbTable,
+        //     data:{...this.commonParams,...{
+        //         rankType:this.rankType,
+        //         rank:this.rank,
+        //         page:this.curPage,
+        //         size:10,
+        //       }
+        //     },
+        //   }
+        // }
+      }
     },
     methods: {
       async getAllFloor(){
@@ -181,17 +217,35 @@
           }
         }
         let res = await CommonApi.getTbhbTable(tableParams)
-        if(res && res.total){
-          res.labelList=[{name:'排名',prop:'xulie',sort:false},
-            {name:'当期综合能耗(kwh)',prop:'date',sort:false},
-            {name:'同期综合能耗(kwh)',prop:'dqzh',sort:'custom'},
-            {name:'上期综合能耗(kwh)',prop:'tqzh',sort:'custom'},
-            {name:'综合能耗同比增长率(%)',prop:'tbzz',sort:'custom'},
-            {name:'综合能耗环比增长率(%)',prop:'hbzz',sort:'custom'}]
-          res.dataList=res.value
-          res.tableTip=this.tableTip
-          this.tableData=res
-        }
+        this.tableConfig.columnConfig=[{label:'排名',prop:'xulie'},
+          {label:'当期综合能耗(kwh)',prop:'date'},
+          {label:'同期综合能耗(kwh)',prop:'dqzh',sort:'custom'},
+          {label:'上期综合能耗(kwh)',prop:'tqzh',sort:'custom'},
+          {label:'综合能耗同比增长率(%)',prop:'tbzz',sort:'custom',
+            formatter: function(row, column) {
+              return row[column.property]+"%";
+            }
+          },
+          {label:'综合能耗环比增长率(%)',prop:'hbzz',sort:'custom',
+            formatter: function(row, column) {
+              return row[column.property]+"%";
+            }
+          }]
+         if(res && res.value){
+           this.$refs['tableRef'].setTableData(res.value)
+          this.tableConfig.data=res.value
+         }
+        // if(res && res.total){
+        //   res.labelList=[{name:'排名',prop:'xulie',sort:false},
+        //     {name:'当期综合能耗(kwh)',prop:'date',sort:false},
+        //     {name:'同期综合能耗(kwh)',prop:'dqzh',sort:'custom'},
+        //     {name:'上期综合能耗(kwh)',prop:'tqzh',sort:'custom'},
+        //     {name:'综合能耗同比增长率(%)',prop:'tbzz',sort:'custom'},
+        //     {name:'综合能耗环比增长率(%)',prop:'hbzz',sort:'custom'}]
+        //   res.dataList=res.value
+        //   res.tableTip=this.tableTip
+        //   this.tableData=res
+        // }
       },
       initTbhbChart(res) {
         this.myChart = echarts.init(this.$refs.myChart);
@@ -271,9 +325,10 @@
         }
       },
       sortTable(column){
+        console.log(column)
         this.seq = column.prop == 'shijian' ? 0 : 1
         this.rank=column.order=='ascending'?'asc':'desc'
-        if(this.curModule==1){
+        if(this.fromFlag==2){
           this.getTbhbTable()
         }else{
           this.getTimeEnergyTable()
@@ -433,7 +488,7 @@
         }
       },
       selectZoomCallBack(val){
-
+         this.checkedFloorList=val
       },
       async getZoomCompareChart(){
         let res =  await CommonApi.getZoomCompareChart(this.commonParams)
@@ -452,6 +507,19 @@
             if(item[1])
               item[1]=item[1].slice(0,10)
           })
+          let tmp=[]
+          let obj={}
+          res.value.map((item,index)=>{
+            item.map((child)=>{
+
+            })
+            obj[res.title[index]]=item[index]
+            if(index==item.length){
+              obj={}
+              tmp.push(obj)
+            }
+          })
+          console.log(tmp)
           this.tableData=res
         }
       },
@@ -544,18 +612,17 @@
 </script>
 
 <style lang="less">
-  .tbhb-analysis{
+  .energy-common{
     width:100%;
     .table-box,.my-chart{
       margin-top: 20px;
-      padding:5px;
+      padding:20px;
       background: @white !important;
       overflow: hidden;
     }
     .my-chart{
       /*width: 100%;*/
       height:450px;
-      padding-top:20px;
     }
     .export-btn{
       margin-right: 10px;
