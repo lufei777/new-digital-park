@@ -13,18 +13,18 @@
     border-->
     <el-table
       ref="dataBaseTable"
-      :data="tableShowData"
-      v-loading="loading||false"
-      :height="tableHeight"
-      :key="key"
-      :size="uiConfig.size"
-      :row-style="{height:'20px'}"
-      :cell-style="{padding:'2px'}"
-      :header-cell-style="{padding:'0px'}"
       row-key="id"
+      :row-style="{height:'20px'}"
+      :cell-style="{padding:'0px'}"
+      :header-cell-style="{padding:'0px'}"
       highlight-current-row
       header-row-class-name="el-table-header"
       cell-class-name="el-table-cell"
+      :key="key"
+      :data="tableShowData"
+      v-loading="loading || false"
+      :height="tableHeight"
+      :size="uiConfig.size"
       @row-click="rowClick"
       @row-dblclick="rowDblclick"
       @sort-change="sortChange"
@@ -51,11 +51,22 @@
           :label="col.label"
           :width="col.width"
           :fixed="col.fixed"
-          :sortable="col.sortable||false"
-          :formatter="col.formatter"
+          :sortable="col.sortable || false"
+          :formatter="col.formatter || _globalColumnFormatter"
+          :align="col.align || 'left'"
           show-overflow-tooltip
-          align="left"
-        ></el-table-column>
+        >
+          <template slot-scope="scopeRow">
+            <!-- <el-input
+              class="edit-row-input"
+              size="small"
+              v-model="scope.row[col.prop]"
+              placeholder="请输入内容"
+              @change="_handleRowEdit(scopeRow)"
+            ></el-input>-->
+            <span v-html="_columnFormatter(scopeRow,col)"></span>
+          </template>
+        </el-table-column>
       </template>
 
       <!-- 列操作 -->
@@ -103,8 +114,8 @@
       <pagination
         :paginationConfig="uiConfig.pagination"
         :total="uiConfig.pagination.total||tableData.length"
-        :handleSizeChange="handleSizeChange"
-        :handleCurrentChange="handleCurrentChange"
+        :handleSizeChange="_handleSizeChange"
+        :handleCurrentChange="_handleCurrentChange"
       />
     </div>
   </div>
@@ -114,6 +125,7 @@
 import pagination from "./pagination";
 import dropDown from "./dropDown";
 
+// 默认log
 const LOG = {
   error: {
     tableData: {
@@ -124,22 +136,47 @@ const LOG = {
     }
   }
 };
+
 //默认uiConfig
 const defaultUiConfig = {
+  /**
+   * height: "300px" 设定按照设定值来规定table高度
+   *         "auto"  根据内容自适应
+   *          不设置  根据父级计算高度
+   */
   size: "medium",
-  // height: "300px", //高度
   pagination: {
-    layout: "->, total, sizes, prev, pager, next, jumper",
-    pageSizes: [5, 10, 20],
+    // sizes
+    layout: "->, total, prev, pager, next, jumper",
+    pageSizes: [10],
     currentPage: 1
   }
 };
+
 //单双击冲突timer
 let dblclickTimer = null;
 let paginationTimer = null;
 
 //点击事件屏蔽列
 let preventClick = ["selection", "operation"];
+
+// 设置默认值
+const _objKeysForeach = (obj, cb) => {
+  Object.keys(obj).forEach((key, index) => {
+    cb(key, obj[key], index);
+  });
+};
+const setDefaultValue = (defaultOptions, options) => {
+  _objKeysForeach(defaultOptions, (key, value, index) => {
+    if (!options.hasOwnProperty(key)) {
+      options[key] = value;
+    } else {
+      if (typeof value === "object") {
+        setDefaultValue(value, options[key]);
+      }
+    }
+  });
+};
 
 export default {
   props: {
@@ -154,6 +191,7 @@ export default {
     dropDown
   },
   data() {
+    let _this = this;
     return {
       allData: [], //保存数组原始数据，用来复原数据
       tableData: [], //表格传入数据，用作分页使用
@@ -162,8 +200,8 @@ export default {
       methodsQueue: [], //方法队列，因为可能是ajax请求的数据，所以需要在加载未成功前缓存方法，加载成功后再执行
       key: 1, //在doLayout中改变，为保证每次Table都是重新渲染
       loading: false, //是否呈加载状态
-      currentPage: 1,
-      pageSize: Number.POSITIVE_INFINITY,
+      currentPage: 1, // 内部使用
+      pageSize: Number.POSITIVE_INFINITY, // 内部使用
       searchVal: "",
       tableHeight: undefined,
       layoutHeight: [] //高度数组，用来决定整体高度
@@ -197,11 +235,7 @@ export default {
       if (currentPage) {
         this.currentPage = currentPage;
       }
-      if (pageSizes instanceof Array) {
-        this.pageSize = pageSizes[0];
-      } else if (typeof pageSizes === "number") {
-        this.pageSize = pageSizes;
-      }
+      this.pageSize = pageSizes[0];
     }
 
     this._tableInit();
@@ -229,12 +263,13 @@ export default {
           this.loading = true;
           setTimeout(() => {
             this.loading = false;
-          }, 3000);
+          }, 2000);
         }
 
-        this.setTableData(this.tableConfig.data);
+        this._setTableData(this.tableConfig.data);
       }
     },
+    // 检索
     _getFilterTableData() {
       return this.allData.filter((row, index) => {
         //如果开启搜索则进行检索，否则直接返回true
@@ -265,6 +300,7 @@ export default {
         }
       });
     },
+    // 获取分页数据
     _getPatinationData() {
       let currentPage = this.currentPage;
       let pageSize = this.pageSize;
@@ -291,6 +327,7 @@ export default {
 
       this.searchVal = "";
     },
+    // 加载服务端数据
     _loadServerMode(sendData) {
       //加载中开始
       this.loading = true;
@@ -302,7 +339,7 @@ export default {
         //如果使用方法来进行分页请求
         url(sendData)
           .then(res => {
-            this.setTableData(res.list);
+            this._setTableData(res.list);
             this.uiConfig.pagination.total = res.total;
           })
           .finally(() => {
@@ -311,12 +348,19 @@ export default {
           });
       } else {
         //ajax请求type和url
+        let config = {};
         let type = this.isServerMode.type.toLowerCase();
 
-        this.$axios[type](url, sendData)
+        if (type === "get") {
+          config.params = sendData;
+        } else if (type === "post") {
+          config = sendData;
+        }
+
+        this.$axios[type](url, config)
           .then(res => {
             res = res.data;
-            this.setTableData(res.data);
+            this._setTableData(res.data);
             this.uiConfig.pagination.total = res.total;
           })
           .catch(err => {
@@ -337,27 +381,83 @@ export default {
     },
     // 计算高度
     _computedLayoutHeight() {
+      // 如果是根据内容自适应
       if (this.uiConfig.height === "auto") return;
 
+      // 拿到设置高度
       let _height = this.uiConfig.height
         ? parseFloat(this.uiConfig.height)
         : this.$el.parentNode.clientHeight;
 
+      // 放进layout数组中
       this.layoutHeight.push(_height);
 
+      // 计算组件中$refs的高度
       for (const key in this.$refs) {
         if (this.$refs.hasOwnProperty(key)) {
           const element = this.$refs[key];
-          if (element.offsetHeight) {
-            _height = _height - element.offsetHeight;
+          if (element.clientHeight) {
+            _height = _height - element.clientHeight;
           }
         }
       }
 
-      this.tableHeight = _height;
+      // 分页有20px的margin-top
+      this.tableHeight = _height - 20;
     },
     _handleRowEdit(index, row) {
       console.log(index, row);
+    },
+    // 由于slot-scope和formatter不能共存只能如此
+    _columnFormatter(scopeRow, currentColumn) {
+      let row = scopeRow.row;
+      let column = scopeRow.column;
+
+      if (typeof currentColumn.formatter === "function") {
+        return currentColumn.formatter(row, column);
+      } else {
+        return this._globalColumnFormatter(row, column);
+      }
+    },
+    // 全局初始化
+    _globalColumnFormatter(row, column) {
+      if (typeof row[column.property] === "string") {
+        return row[column.property].trim().length === 0
+          ? "--"
+          : row[column.property];
+      } else if (row[column.property] === null) {
+        return "--";
+      }
+      return row[column.property];
+    },
+    //set
+    _setCurrentRowData(row) {
+      //设置当前选中行
+      this.currentRowData = row;
+    },
+    _setTableData(data) {
+      if (!(data instanceof Array)) return;
+      if (this.isServerMode) {
+        this.tableShowData = data;
+      } else {
+        this.tableData = data;
+      }
+      this.allData = data;
+    },
+    //分页模式，每页显示数量变化时触发
+    _handleSizeChange(pageSize) {
+      this.pageSize = pageSize;
+      this._handlerPagination(pageSize, this.currentPage);
+    },
+    //分页模式，切换页时触发
+    _handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+      this._handlerPagination(this.pageSize, currentPage);
+    },
+    // 分页点击调用
+    _handlerPagination(pageSize, currentPage) {
+      this.uiConfig.pagination.handler &&
+        this.uiConfig.pagination.handler(pageSize, currentPage, this);
     },
 
     /**
@@ -371,7 +471,7 @@ export default {
         preventClick.includes(column.type)
       )
         return;
-      this.setCurrentRowData(row);
+      this._setCurrentRowData(row);
 
       clearTimeout(dblclickTimer);
       dblclickTimer = setTimeout(
@@ -390,7 +490,7 @@ export default {
         preventClick.includes(column.type)
       )
         return;
-      this.setCurrentRowData(row);
+      this._setCurrentRowData(row);
 
       clearTimeout(dblclickTimer);
       this.tableMethods.rowDblclick &&
@@ -405,7 +505,7 @@ export default {
 
       this.$refs.dataBaseTable.setCurrentRow(this.tableShowData[index]);
 
-      this.setCurrentRowData(this.tableShowData[index]);
+      this._setCurrentRowData(this.tableShowData[index]);
     },
     //多选选择当前项
     toggleSelection(rowsIndex, selectedArr) {
@@ -442,14 +542,6 @@ export default {
     //多选清除选择项
     clearSelection() {
       this.$refs.dataBaseTable.clearSelection();
-    },
-    //分页模式，每页显示数量变化时触发
-    handleSizeChange(pageSize) {
-      this.pageSize = pageSize;
-    },
-    //分页模式，切换页时触发
-    handleCurrentChange(currentPage) {
-      this.currentPage = currentPage;
     },
     //点击排序触发
     sortChange(sortObj) {
@@ -488,27 +580,13 @@ export default {
     },
     getTableData() {
       if (this.isServerMode) {
-        return this.tableShowData;
+        return this.getTableShowData();
       } else {
         return this.tableData;
       }
     },
     getTableShowData() {
       return this.tableShowData;
-    },
-    //set
-    setCurrentRowData(row) {
-      //设置当前选中行
-      this.currentRowData = row;
-    },
-    setTableData(data) {
-      if (!(data instanceof Array)) return;
-      if (this.isServerMode) {
-        this.tableShowData = data;
-      } else {
-        this.tableData = data;
-      }
-      this.allData = data;
     },
     //refresh
     refreshTable() {
@@ -529,34 +607,26 @@ export default {
       return this.tableConfig.btnConfig ? this.tableConfig.btnConfig : false;
     },
     uiConfig() {
-      // if (!this.tableConfig.uiConfig) return defaultUiConfig;
-      /* if (this.tableConfig.uiConfig.pagination) {
-        var defaultKeys = Object.keys(defaultUiConfig.pagination);
-        for (let index = 0; index < defaultKeys.length; index++) {
-          const element = defaultKeys[index];
-          if (!this.tableConfig.uiConfig.pagination[element]) {
-            this.tableConfig.uiConfig.pagination[element] =
-              defaultUiConfig.pagination[element];
-          }
-        }
-      } */
+      let uiConfig = this.tableConfig.uiConfig;
+      if (!uiConfig) return defaultUiConfig;
+
+      setDefaultValue(defaultUiConfig, uiConfig);
+
       //如果没有配置的pagination，则使用默认的配置项
-      return { ...defaultUiConfig, ...this.tableConfig.uiConfig };
+      return uiConfig;
     },
     wrapperHeight() {
-      if (this.uiConfig.height === "auto") return;
+      if (this.layoutHeight.length === 0) return;
+
       let layoutHeight = this.layoutHeight.reduce((last, next) => {
         return last + (next ? parseFloat(next) : 0);
       }, 0);
-
+      console.log(layoutHeight + "px");
       return layoutHeight + "px";
     },
     paginationObj() {
       const { currentPage, pageSize } = this;
-      return {
-        currentPage,
-        pageSize
-      };
+      return { currentPage, pageSize };
     }
   },
   watch: {
@@ -586,6 +656,9 @@ export default {
     paginationObj: {
       deep: true,
       handler: function(newVal, oldVal) {
+        if (this.uiConfig.pagination.handler) {
+          return;
+        }
         if (oldVal.pageSize != Number.POSITIVE_INFINITY) {
           //为防止在极短的时间内重复请求
           clearTimeout(paginationTimer);
@@ -597,11 +670,15 @@ export default {
     },
     //动态监测tableConfig.data的改变，有可能外部ajax改变data值
     "tableConfig.data"(val) {
-      this.setTableData(val);
+      this._setTableData(val);
+      // 重新设置值后应该重设现页数
+      this.currentPage = 1;
     },
     tableData(newVal, oldVal) {
       if (newVal instanceof Array) {
         this._getPatinationData();
+        //加载中结束
+        this.loading = false;
       } else {
         this.$notify({
           type: "error",
@@ -614,11 +691,13 @@ export default {
 </script>
 <style lang='less'>
 @headerBgc: #f4f6fc;
-@headerTextColor: #333333;
+@headerTextColor: #666;
 @TableFontFamily: "Microsoft YaHei";
+@TableFontSize: 14px;
 
 .el-table-wrapper {
   font-family: @TableFontFamily;
+  font-size: @TableFontSize;
   .el-table {
     .el-table__fixed-right-patch {
       background-color: @headerBgc;
@@ -676,6 +755,7 @@ export default {
   }
   // 分页
   .table-pagination {
+    margin-top: 20px;
     color: #bababa;
     background-color: #f4f5f7;
     .btn-prev,
