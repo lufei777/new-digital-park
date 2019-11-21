@@ -72,8 +72,11 @@
             height: "auto",//"", //高度
             pagination: {
               //是否分页，分页是否自定义
-              layout: "total,->,  sizes, prev, pager, next, jumper",
-              pageSizes: [10, 20, 50]
+              layout: "total,->, prev, pager, next, jumper",
+              pageSizes: [10, 20, 50],
+              handler(pageSize,currentPage,table){
+
+              }
             }
           },
           tableMethods: {
