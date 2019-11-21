@@ -722,6 +722,7 @@ export default {
     // 列标题
     .el-table-header {
       // 去除多选宽度不够会显示省略号
+      td.el-table-column--selection,
       th.el-table-column--selection {
         text-overflow: inherit !important;
         .cell {
@@ -731,7 +732,7 @@ export default {
       th {
         background-color: @headerBgc !important;
         color: @headerTextColor;
-        font-weight: 400;
+        font-weight: bold;
       }
     }
     .el-table-cell {
