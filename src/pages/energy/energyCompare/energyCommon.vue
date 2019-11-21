@@ -35,7 +35,7 @@
   import Table from '../../../components/Table/index'
   import DynamicTable from '../../../components/dynamicTable'
   export default {
-    name:'TbhbAnalysis',
+    name:'EnergyCommon',
     components: {
       ZoomNavigation,
       ConditionSelect,
@@ -224,7 +224,6 @@
             }
           }]
          if(res && res.value){
-           this.$refs['tableRef'].setTableData(res.value)
           this.tableConfig.data=res.value
          }
         // if(res && res.total){
@@ -498,6 +497,7 @@
         if(res && res.value) {
           let tmp=[]
           res.value.map((item)=>{
+            item[1]=item[1].slice(0,10)
             let obj={}
             res.title.map((tit,index)=>{
               if(tit=="占比(%)"){
@@ -505,20 +505,27 @@
               }else{
                 obj[tit]=item[index]
               }
+              // obj.name=tit
             })
             tmp.push(obj)
           })
-
+          console.log("tmp",tmp)
           let columnConfig=[]
-          res.title.map((item)=>{
-             columnConfig.push({
-               label:item,
-               prop:item
-             })
-          })
+          // res[0].title.map((item)=>{
+          //    columnConfig.push({
+          //      label:item,
+          //      prop:item
+          //    })
+          // })
+          for(let key in tmp[0]){
+               columnConfig.push({
+                 label:key.indexOf('占比')!=-1?'占比(%)':key,
+                 prop:key
+               })
+          }
           this.tableConfig.columnConfig=columnConfig
           this.tableConfig.data=tmp
-          console.log("tmp",tmp)
+
         }
       },
       initZoomChart(res){
