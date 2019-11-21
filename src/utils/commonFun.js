@@ -484,12 +484,14 @@ class commonFun {
   }]
 
   // 跳转链接
-  loadOldPage(item) {
-    /* sessionStorage.setItem('park_home_Page', location.href);
-    location.href = OLDPROJECTHOME + '?forward=' + routeAddress.split('@')[1]; */
-
-    sessionStorage.setItem('vibe_menuList', JSON.stringify(item));
-    router.push('/vibe-web')
+  loadOldPage(item, routeOldProject) {
+    if (routeOldProject) {
+      sessionStorage.setItem('park_home_Page', location.href);
+      location.href = OLDPROJECTHOME + '?forward=' + item.split('@')[1];
+    } else {
+      sessionStorage.setItem('vibe_menuList', JSON.stringify(item));
+      router.push('/vibe-web')
+    }
   }
 
 }
