@@ -114,6 +114,7 @@
     .asset-bread-crumb{
       float: left;
       width:60%;
+      box-sizing: border-box;
     }
     .collapse-icon{
       font-size: 24px;

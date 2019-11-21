@@ -227,6 +227,7 @@
               return row[column.property]+"%";
             }
           }]
+
          if(res && res.value){
           this.tableConfig.data=res.value
          }
@@ -321,13 +322,14 @@
           this.getTypeTable()
         }
       },
-      sortTable(column){
+      sortTable(column,table){
         console.log(column)
         this.seq = column.prop == 'shijian' ? 0 : 1
         this.rank=column.order=='ascending'?'asc':'desc'
         this.rankType=column.prop
         if(this.fromFlag==2){
-          this.getTbhbTable()
+          // this.getTbhbTable()
+          table.setData()
         }else{
           this.getTimeEnergyTable()
           this.getCategoryEnergyTable()
