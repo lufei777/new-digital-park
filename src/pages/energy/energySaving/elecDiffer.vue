@@ -1,6 +1,6 @@
 <template>
   <div class="elec-differ">
-      <EnergySavingSelect/>
+      <EnergySavingSelect :energySaveFlag="1"/>
   </div>
 </template>
 

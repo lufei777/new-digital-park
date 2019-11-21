@@ -24,6 +24,7 @@
     "less-loader": "^5.0.0",
     "moment": "^2.24.0",
     "sortablejs": "^1.10.1",
+    "v-charts": "^1.19.0",
     "vconsole": "^3.3.4",
     "vue": "^2.5.2",
     "vue-router": "^3.0.7",
