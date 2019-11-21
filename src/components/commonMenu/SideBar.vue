@@ -67,13 +67,13 @@ export default {
   },
   methods: {
     handleSelect(key, keyPath) {
-      // console.log(key,keyPath)
       if (key) {
         if (key.indexOf("null") != -1) {
           this.$router.push("/digitalPark/defaultPage");
         }else if (key.indexOf("@") != -1) {
-          commonFun.loadOldPage(key);
+          commonFun.loadOldPage(key,true);
         }else{
+          key = key.slice(key.indexOf('/'));
           this.$router.push(key)
           Cookies.set('activeIndex',key)
         }
