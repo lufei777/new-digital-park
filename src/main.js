@@ -59,6 +59,10 @@ if (!Cookies.get('lang')) {
   Cookies.set('lang', 'zh')
 }
 
+// lodash
+import _ from 'lodash';
+Vue.prototype._ = _;
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
