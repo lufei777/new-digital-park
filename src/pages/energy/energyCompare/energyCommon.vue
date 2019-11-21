@@ -75,7 +75,8 @@
               layout: "total,->, prev, pager, next, jumper",
               pageSizes: [10, 20, 50],
               handler(pageSize,currentPage,table){
-
+                // console.log(pageSize,currentPage,table)
+                _this.handleCurrentChange(currentPage)
               }
             }
           },
@@ -312,10 +313,12 @@
       },
       handleCurrentChange(value){
         this.curPage=value
-        if(this.curModule==1){
+        if(this.fromFlag==1){
+          this.getZoomCompareTable()
+        }else if(this.fromFlag==2){
           this.getTbhbTable()
-        }else{
-          this.getTimeEnergyTable()
+        }else if(this.fromFlag==3){
+          this.getTypeTable()
         }
       },
       sortTable(column){
@@ -528,7 +531,7 @@
           }
           this.tableConfig.columnConfig=columnConfig
           this.tableConfig.data=tmp
-
+          this.tableConfig.uiConfig.pagination.total = res.total;
         }
       },
       initZoomChart(res){
