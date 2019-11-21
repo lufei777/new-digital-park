@@ -176,7 +176,8 @@
             },...params
            }
            this.getTbhbChart()
-           this.getTbhbTable()
+           // this.getTbhbTable()
+           this.initTbhbTable()
         }else if(this.fromFlag==3){
           this.commonParams={...{
               floorId: this.floorId,
@@ -213,34 +214,36 @@
           }
         }
         let res = await CommonApi.getTbhbTable(tableParams)
-        this.tableConfig.columnConfig=[{label:'排名',prop:'xulie'},
-          {label:'当期综合能耗(kwh)',prop:'date'},
-          {label:'同期综合能耗(kwh)',prop:'dqzh',sortable:'custom'},
-          {label:'上期综合能耗(kwh)',prop:'tqzh',sortable:'custom'},
-          {label:'综合能耗同比增长率(%)',prop:'tbzz',sortable:'custom',
-            formatter: function(row, column) {
-              return row[column.property]+"%";
-            }
-          },
-          {label:'综合能耗环比增长率(%)',prop:'hbzz',sortable:'custom',
-            formatter: function(row, column) {
-              return row[column.property]+"%";
-            }
-          }]
-         if(res && res.value){
-          this.tableConfig.data=res.value
+        this.setTableDataConfig(res)
+      },
+      async initTbhbTable(){
+        this.setColumnConfig()
+        this.getTbhbTable()
+      },
+       setColumnConfig(){
+         let columnList = []
+         if(this.fromFlag==2){
+           columnList = [{label:'排名',prop:'xulie'},
+             {label:'当期综合能耗(kwh)',prop:'date'},
+             {label:'同期综合能耗(kwh)',prop:'dqzh',sortable:'custom'},
+             {label:'上期综合能耗(kwh)',prop:'tqzh',sortable:'custom'},
+             {label:'综合能耗同比增长率(%)',prop:'tbzz',sortable:'custom',
+               formatter: function(row, column) {
+                 return row[column.property]+"%";
+               }
+             },
+             {label:'综合能耗环比增长率(%)',prop:'hbzz',sortable:'custom',
+               formatter: function(row, column) {
+                 return row[column.property]+"%";
+               }
+             }]
          }
-        // if(res && res.total){
-        //   res.labelList=[{name:'排名',prop:'xulie',sort:false},
-        //     {name:'当期综合能耗(kwh)',prop:'date',sort:false},
-        //     {name:'同期综合能耗(kwh)',prop:'dqzh',sort:'custom'},
-        //     {name:'上期综合能耗(kwh)',prop:'tqzh',sort:'custom'},
-        //     {name:'综合能耗同比增长率(%)',prop:'tbzz',sort:'custom'},
-        //     {name:'综合能耗环比增长率(%)',prop:'hbzz',sort:'custom'}]
-        //   res.dataList=res.value
-        //   res.tableTip=this.tableTip
-        //   this.tableData=res
-        // }
+         this.tableConfig.columnConfig=columnList
+      },
+      async setTableDataConfig(res){
+        if(res){
+          this.tableConfig.data=res.value
+        }
       },
       initTbhbChart(res) {
         this.myChart = echarts.init(this.$refs.myChart);
@@ -321,7 +324,7 @@
           this.getTypeTable()
         }
       },
-      sortTable(column){
+      sortTable(column,table){
         console.log(column)
         this.seq = column.prop == 'shijian' ? 0 : 1
         this.rank=column.order=='ascending'?'asc':'desc'
