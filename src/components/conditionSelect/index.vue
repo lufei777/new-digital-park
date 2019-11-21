@@ -123,6 +123,7 @@
       async getEnergyList(){
         let res = await CommonApi.getEnergyListByGroup()
         if(this.isGroup){
+          console.log(1)
           res.map((item,index)=>{
             item.disabled=false
             if(index!=0){
@@ -147,17 +148,20 @@
                      tmp.push(val)
                    })
                  })
-           }else if(this.fromFlag==3){
+           }else if(this.fromFlag==5){
              res.map((item)=>{
                tmp.push(item)
              })
            }
-          this.energyList = tmp
-          this.curEnergyId=tmp[0].id
-            this.curEnergy=[{
-             id:tmp[0].id,
-             name:tmp[0].name
-           }]
+           if(this.fromFlag){
+             this.energyList = tmp
+             this.curEnergyId=tmp[0].id
+             this.curEnergy=[{
+               id:tmp[0].id,
+               name:tmp[0].name
+             }]
+           }
+
         }
       },
       handleRadioChange(value){
@@ -197,6 +201,7 @@
         }else{
            tmp=this.energyList.filter((item)=>item.id==value)
         }
+        this.curEnergy=tmp
       },
       handleStartTimeChange(value){
          this.timeFormat('startTime',value)
@@ -221,7 +226,6 @@
       },
     },
     async mounted(){
-     await this.getEnergyList()
     }
   }
 </script>
