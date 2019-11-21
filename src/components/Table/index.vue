@@ -14,9 +14,9 @@
     <el-table
       ref="dataBaseTable"
       row-key="id"
-      :row-style="{height:'35px'}"
+      :row-style="{height:'50px'}"
       :cell-style="{padding:'0px'}"
-      :header-cell-style="{padding:'0px'}"
+      :header-cell-style="{padding:'0px',height:'50px'}"
       highlight-current-row
       header-row-class-name="el-table-header"
       cell-class-name="el-table-cell"
@@ -720,10 +720,19 @@ export default {
       border-top: 0px;
     }
     // 列标题
-    .el-table-header th {
-      background-color: @headerBgc !important;
-      color: @headerTextColor;
-      font-weight: 400;
+    .el-table-header {
+      // 去除多选宽度不够会显示省略号
+      th.el-table-column--selection {
+        text-overflow: inherit !important;
+        .cell {
+          text-overflow: inherit !important;
+        }
+      }
+      th {
+        background-color: @headerBgc !important;
+        color: @headerTextColor;
+        font-weight: 400;
+      }
     }
     .el-table-cell {
       color: #666;
