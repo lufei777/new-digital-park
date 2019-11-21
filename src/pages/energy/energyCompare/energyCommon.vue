@@ -577,11 +577,37 @@
         }
         let res = await CommonApi.getTypeTable(tableParams)
         if(res && res.value){
+          let tmp=[]
           res.value.map((item)=>{
-            if(item[1])
-              item[1]=item[1].slice(0,10)
+            item[1]=item[1].slice(0,10)
+            let obj={}
+            res.title.map((tit,index)=>{
+              if(tit=="占比(%)"){
+                obj[tit+index]=item[index]
+              }else{
+                obj[tit]=item[index]
+              }
+              // obj.name=tit
+            })
+            tmp.push(obj)
           })
-          this.tableData=res
+          console.log("tmp",tmp)
+          let columnConfig=[]
+          // res[0].title.map((item)=>{
+          //    columnConfig.push({
+          //      label:item,
+          //      prop:item
+          //    })
+          // })
+          for(let key in tmp[0]){
+            columnConfig.push({
+              label:key.indexOf('占比')!=-1?'占比(%)':key,
+              prop:key
+            })
+          }
+          this.tableConfig.columnConfig=columnConfig
+          this.tableConfig.data=tmp
+          this.tableConfig.uiConfig.pagination.total = res.total;
         }
       },
       initTypeChart(res){

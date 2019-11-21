@@ -184,8 +184,6 @@
       }
     },
     async mounted(){
-      // await this.getAllFloor()
-      // this.getData()
     }
   }
 </script>
