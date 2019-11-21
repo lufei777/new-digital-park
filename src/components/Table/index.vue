@@ -588,6 +588,10 @@ export default {
     getTableShowData() {
       return this.tableShowData;
     },
+    //set
+    setData(rows) {
+      this._setTableData(data);
+    },
     //refresh
     refreshTable() {
       this._tableInit(true);
