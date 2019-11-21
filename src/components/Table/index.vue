@@ -46,7 +46,7 @@
       <template v-for="col in columnConfig">
         <el-table-column
           v-if="!col.hide"
-          :key="`${col.label}-${new Date().valueOf()}`"
+          :key="_.uniqueId(col.label)"
           :prop="col.prop"
           :label="col.label"
           :width="col.width"
