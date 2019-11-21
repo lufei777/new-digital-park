@@ -157,7 +157,8 @@
           searchable:Array -> ["name","sex"]需要筛选字段的prop
           pagination:Boolea || Object -> (Boolean是否开启分页,Object{
               layout:"total,->,sizes,prev"等，elementUI官方格式
-              pageSizes:Number[] -> 每页显示个数选择器的选项设置
+              pageSizes:Number[] -> 每页显示个数选择器的选项设置,
+              handler:Function -> 添加一个方法，在点击翻页后调用，传回 pageSize,currentPage,tabel,如果有handler会屏蔽所有默认分页功能
           })
           showIndex:Boolean || Object -> (是否显示索引,Object{
               //自定义索引

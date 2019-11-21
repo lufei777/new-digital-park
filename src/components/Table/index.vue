@@ -14,7 +14,7 @@
     <el-table
       ref="dataBaseTable"
       row-key="id"
-      :row-style="{height:'20px'}"
+      :row-style="{height:'35px'}"
       :cell-style="{padding:'0px'}"
       :header-cell-style="{padding:'0px'}"
       highlight-current-row
@@ -76,7 +76,7 @@
         :prop="btnConfig.prop"
         :label="btnConfig.label"
         :width="btnConfig.width"
-        :align="uiConfig.searchable ? 'center' : 'right'"
+        :align="'center'"
       >
         <!-- 搜索框 -->
         <template v-if="uiConfig.searchable" slot="header">
@@ -147,7 +147,7 @@ const defaultUiConfig = {
   size: "medium",
   pagination: {
     // sizes
-    layout: "->, total, prev, pager, next, jumper",
+    layout: "total, ->, prev, pager, next, jumper",
     pageSizes: [10],
     currentPage: 1
   }
