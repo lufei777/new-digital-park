@@ -225,7 +225,6 @@ export default {
     },
     async getApi() {
       let res = await AssetManageApi.getAssetList()
-      console.log('111111111',res);
     },
   },
   mounted() {

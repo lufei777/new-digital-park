@@ -1,13 +1,13 @@
 <template>
-  <div class="energy-saving-select">
+  <div class="energy-saving-select radius-shadow">
     <div class="flex-align-between condition-box">
-      <div class="block">
+      <div class="item-group block">
         <span class="demonstration">建筑群：</span>
         <el-select v-model="energyA3" placeholder="请选择">
           <el-option label="A3" value="1"></el-option>
         </el-select>
       </div>
-      <div class="block">
+      <div class="item-group block">
         <span class="demonstration">能源分项：</span>
         <el-select v-model="energySubentry" placeholder="请选择">
           <el-option
@@ -18,14 +18,14 @@
           ></el-option>
         </el-select>
       </div>
-      <div class="block">
+      <div class="item-group block">
         <span class="demonstration">指标选择：</span>
         <el-select v-model="indexEnergy" placeholder="请选择">
           <el-option label="参考标准" value="1"></el-option>
           <el-option label="国家标准" value="2" disabled></el-option>
         </el-select>
       </div>
-      <div class="block">
+      <div class="item-group block">
         <span class="demonstration">楼层检索：</span>
         <el-select v-model="curEnergy" placeholder="请选择">
           <el-option label="全部" value="0"></el-option>
@@ -37,7 +37,7 @@
           ></el-option>
         </el-select>
       </div>
-      <div class="block">
+      <div class="item-group block">
         <span class="demonstration">月份：</span>
         <el-date-picker
           v-model="startTime"
@@ -55,7 +55,8 @@
         <span>注:红色字体为超标</span>
         <em>{{tabTitle}}</em>
       </div>
-      <DynamicTable :tableData="tableData" :hideExportBtn="true" :styleLabel="true" :curPage="currentPage" />
+      <!-- <DynamicTable :tableData="tableData" :hideExportBtn="true" :styleLabel="true" :curPage="currentPage" /> -->
+      <Table :ref="tableConfig.ref" :tableConfig="tableConfig" ></Table>
     </div>
   </div>
 </template>
@@ -65,15 +66,18 @@ import CommonApi from "../../../service/api/commonApi";
 import EnergyApi from "../../../service/api/energyApi";
 import DynamicTable from "../../../components/dynamicTable/index";
 import { mapState } from "vuex";
+import Table from "../../../components/Table/index";
 import moment from "moment";
 let activeNav;
 export default {
   name: "EnergySavingSelect",
   components: {
-    DynamicTable
+    DynamicTable,
+    Table
   },
-  props:['energySaveFlag'],
+  props: ["energySaveFlag"],
   data() {
+    let _this = this;
     return {
       curEnergy: "0", //楼层检索
       energyA3: "1", //建筑群
@@ -81,12 +85,31 @@ export default {
       indexEnergy: "1", //指标选择
       energySubentryData: [],
       floorSelectData: "",
-      startTime: moment(new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000)).format("YYYY-MM"),
+      startTime: moment(
+        new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000)
+      ).format("YYYY-MM"),
       page: 1,
       tableData: {
         total: 0
       },
-      currentPage: 1
+      currentPage: 1,
+      tableConfig: {
+        ref: "tableRef",
+        data: [],
+        columnConfig: [],
+        uiConfig: {
+          height: "auto", //"", //高度
+          pagination: {
+            //是否分页，分页是否自定义
+            layout: "total,->, prev, pager, next, jumper",
+            pageSizes: [10, 20, 50],
+            handler(pageSize, currentPage, table) {}
+          }
+        },
+        tableMethods: {
+          sortChange: _this.sortTable
+        }
+      }
     };
   },
   computed: {
@@ -94,7 +117,8 @@ export default {
     //   energySaveFlag: state => state.energySavingSelect.energySaveFlag
     // }),
     tabTitle() {
-      activeNav = Cookies.get("activeNav") && JSON.parse(Cookies.get("activeNav"));
+      activeNav =
+        Cookies.get("activeNav") && JSON.parse(Cookies.get("activeNav"));
       let tmp = this.energySubentryData.find(item => {
         return item.id == this.energySubentry;
       });
@@ -119,11 +143,13 @@ export default {
   methods: {
     onTimeChange() {},
     async getEnergyList() {
+      console.log("this.energySaveFlag", this.energySaveFlag);
       let res = await CommonApi.getEnergyListByGroup();
-      if (this.energySaveFlag == 1) {
+      console.log("hahha", res);
+      if (this.energySaveFlag == 3 || this.energySaveFlag == 4) {
         this.energySubentryData = res[1].energyType;
         this.energySubentry = res[1].energyType[0].id;
-      } else if (this.energySaveFlag == 2) {
+      } else if (this.energySaveFlag == 1 || this.energySaveFlag == 2) {
         this.energySubentryData = res[0].energyType;
         this.energySubentry = res[0].energyType[0].id;
       }
@@ -140,22 +166,50 @@ export default {
       //   res = await EnergyApi.getEnergySavingNight(this.commonParams);
       // }
 
-      if (this.energySaveFlag == 1) {
+      if (this.energySaveFlag == 1 || this.energySaveFlag == 3) {
         res = await EnergyApi.getEnergySavingElec(this.commonParams);
-      } else {
+      } else if (this.energySaveFlag == 2 || this.energySaveFlag == 4) {
         res = await EnergyApi.getEnergySavingNight(this.commonParams);
       }
       if (res && res.value) {
         var title = ["建筑楼层", "参考指标"];
         res.value[0].map((item, index) => {
-          if (index < res.value[0].length - 2) title.push(index + 1);
+          if (index < res.value[0].length - 2) title.push(index + 1 + "日");
         });
         res.title = title;
         this.tableData.total = res.total;
         this.tableData = res;
+        console.log("res", res);
       } else {
         this.tableData.total = 0;
       }
+
+      if (res && res.value) {
+        let tmp = [];
+        res.value.map(item => {
+          let obj = {};
+          title.map((tit, index) => {
+            if (tit == "占比(%)") {
+              obj[tit + index] = item[index];
+            } else {
+              obj[tit] = item[index];
+            }
+          });
+          tmp.push(obj);
+        });
+       
+        let columnConfig=[]
+          for(let key in tmp[0]){
+               columnConfig.push({
+                 label:key,
+                 prop:key
+               })
+          }
+          this.tableConfig.columnConfig = columnConfig;
+          this.tableConfig.data = tmp;
+      }
+
+     
     },
     async exportList() {
       let url;
@@ -165,9 +219,9 @@ export default {
       //   url = `/vibe-web/energyCount/energy/night/export?`;
       // }
 
-       if (this.energySaveFlag == 1) {
+      if (this.energySaveFlag == 1 || this.energySaveFlag == 3) {
         url = `/vibe-web/energyCount/energy/elec/export?`;
-      } else {
+      } else if (this.energySaveFlag == 2 || this.energySaveFlag == 4) {
         url = `/vibe-web/energyCount/energy/night/export?`;
       }
       let params = "";
@@ -175,7 +229,6 @@ export default {
         params += key + "=" + this.commonParams[key] + "&";
       }
       location.href = url + params;
-      
     },
     handleCurrentChange(value) {
       this.page = value;
@@ -192,30 +245,29 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-
 .energy-saving-select {
-  margin-top: 80px;
-  padding: 0 20px;
+  padding: 0 20px 20px 20px;
   background: #fff;
   .condition-box {
     width: 100%;
-    padding: 30px 0;
+    padding: 20px 0;
     .block {
       // padding: 0px 20px;
       // flex-shrink: 0;
       .el-select {
-        width: 140px!important;
+        width: 140px !important;
       }
     }
-    .el-button {
-      //  margin-left: -40px;
-      width: 5%;
-    }
+    // .el-button {
+    //   //  margin-left: -40px;
+    //   width: 5%;
+    // }
   }
   .tabulation .tab-title {
     width: 57%;
     height: 50px;
     line-height: 50px;
+
     span {
       color: red;
       font-size: 14px;
@@ -225,7 +277,7 @@ export default {
       font-size: 20px;
     }
   }
-   .dynamic-table-box .table-box {
+  .dynamic-table-box .table-box {
     border-radius: 0;
     border: none;
     margin-top: 0px;

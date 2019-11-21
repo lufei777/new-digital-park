@@ -500,9 +500,11 @@
         if(res && res.value) {
           let tmp=[]
           res.value.map((item)=>{
+           
             item[1]=item[1].slice(0,10)
             let obj={}
             res.title.map((tit,index)=>{
+               console.log(15151,tit,res.title)
               if(tit=="占比(%)"){
                 obj[tit+index]=item[index]
               }else{
@@ -510,6 +512,7 @@
               }
               // obj.name=tit
             })
+            
             tmp.push(obj)
           })
           console.log("tmp",tmp)
@@ -526,6 +529,7 @@
                  prop:key
                })
           }
+          console.log(155,columnConfig)
           this.tableConfig.columnConfig=columnConfig
           this.tableConfig.data=tmp
 
