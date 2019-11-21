@@ -46,7 +46,7 @@
       <template v-for="col in columnConfig">
         <el-table-column
           v-if="!col.hide"
-          :key="_.uniqueId(col.label)"
+          :key="_.uniqueId(`${col.label}_`)"
           :prop="col.prop"
           :label="col.label"
           :width="col.width"
