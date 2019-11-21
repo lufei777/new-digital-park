@@ -1,15 +1,15 @@
 <template>
-  <div class="time-energy">
-    <TbhbAnalysis/>
+  <div class="category-energy">
+    <EnergyCommon :from-flag="5"/>
   </div>
 </template>
 
 <script>
-  import TbhbAnalysis from '../energyCompare/tbhbAnalysis'
+  import EnergyCommon from '../energyCompare/energyCommon'
   export default {
-    name: 'TimeEnergy',
+    name: 'CategoryEnergy',
     components: {
-      TbhbAnalysis
+      EnergyCommon
     },
     data () {
       return {
@@ -20,26 +20,11 @@
     mounted(){
     },
     created(){
-      this.$store.commit("conditionSelect/tbhbEnergy",[{id:34,name:'电'}])
     }
   }
 </script>
 
 <style lang="less">
-  .time-energy{
-    margin-top: 85px;
-    .left-zoom-nav{
-      width:17%;
-      float: left;
-      position: fixed;
-      height: 100%;
-    }
-    .right-content{
-      width:83%;
-      background: #f2f2f2;
-      padding:10px;
-      float: right;
-      box-sizing: border-box;
-    }
+  .category-energy{
   }
 </style>

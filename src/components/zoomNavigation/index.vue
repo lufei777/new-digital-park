@@ -17,6 +17,7 @@
         @check-change="handleCheckChange"
         @check="handleCheck"
         @node-click="onClickNode"
+        :filter-node-method="filterNode"
         ref="navTree"
       >
       </el-tree>
@@ -53,7 +54,11 @@
         return this.defaultChecked.map((item)=>item.id)
       },
     },
-    watch:{},
+    watch:{
+      searchText(val) {
+        this.$refs.navTree.filter(val);
+      }
+    },
     methods: {
       handleCheckChange(val){
 
@@ -75,13 +80,6 @@
             id:val.floorId,
             name:val.floor
           })
-          // if(this.activeIndex==2){
-          //   this.$store.commit('conditionSelect/tbhbCheckedFloorList',tmp)
-          // }else if(this.activeIndex==3){
-          //   this.$store.commit('conditionSelect/typeCheckedFloorList',tmp)
-          // }else if(this.activeIndex==4){
-          //   this.$store.commit('conditionSelect/timeCheckedFloorList',tmp)
-          // }
         }
         console.log("tmp",tmp)
         this.selectCallBack &&  this.selectCallBack(tmp)
@@ -103,6 +101,10 @@
         }else{
           this.handleCheck(node)
         }
+      },
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.floor.indexOf(value) !== -1;
       }
     },
     mounted(){
@@ -128,6 +130,7 @@
     .tree-box{
       padding:20px 0;
       background: @white;
+      height:100%;
     }
     .el-tree{
       font-size: 16px;

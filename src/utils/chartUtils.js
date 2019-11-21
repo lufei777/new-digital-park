@@ -25,7 +25,7 @@ class chartUtils {
         textStyle:{
           fontSize: 14,
           color:'#008DEA',
-          // fontFamily:'MicrosoftYaHei'
+          fontFamily:'MicrosoftYaHei'
         }
       },
       legend: {
@@ -123,7 +123,12 @@ class chartUtils {
     let option = {
       title : {
         text: data.titleText,
-        x:'left'
+        x:'left',
+        textStyle:{
+          fontSize: 14,
+          color:'#008DEA',
+          fontFamily:'MicrosoftYaHei'
+        }
       },
       tooltip : {
         trigger: 'item',

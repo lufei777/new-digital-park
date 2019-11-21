@@ -1,24 +1,22 @@
 <template>
   <div class="rank-energy">
-    <div class="out-box">
-      <div class="select-box">
-        <ConditionSelect :showEnergy="false"/>
-      </div>
+    <div class="out-box radius-shadow">
+        <ConditionSelect :showEnergy="false" :get-data-flag="getDataFlag"/>
     </div>
     <div class="flex-align-between">
-      <div class="rank-box flex-align-center">
+      <div class="rank-box radius-shadow flex-align-center">
         <h4 class="rank-tip">A3总用电量</h4>
         <span class="rank-value">{{overViewData.elecSum}}<span>kwh</span></span>
       </div>
-      <div class="rank-box flex-align-center">
+      <div class="rank-box radius-shadow flex-align-center">
         <h4 class="rank-tip">A3总用水量</h4>
         <span class="rank-value">{{overViewData.waterSum}}<span>m³</span></span>
       </div>
-      <div class="rank-box" ref="myChart1"></div>
-      <div class="rank-box" ref="myChart2"></div>
+      <div class="rank-box radius-shadow my-chart" ref="myChart1"></div>
+      <div class="rank-box radius-shadow my-chart" ref="myChart2"></div>
     </div>
-    <div class="table-box">
-      <CommonTable :tableObj="tableData" :curPage="curPage"/>
+    <div class="table-box radius-shadow">
+      <Table :ref="tableConfig.ref" :tableConfig="tableConfig"></Table>
     </div>
   </div>
 </template>
@@ -29,41 +27,48 @@
   import ChartUtils from '../../../utils/chartUtils'
   import EnergyApi from '../../../service/api/energyApi'
   import ConditionSelect from '../../../components/conditionSelect/index'
-  import CommonTable from '../../../components/commonTable/index'
+  import Table from '../../../components/Table/index'
   export default {
     name: 'TimeEnergy',
     components: {
       ConditionSelect,
-      CommonTable
+      Table
     },
     data () {
+      let _this = this
       return {
         overViewData:{},
         rankType:'elecAndWaterSum',
         rank:'asc',
         curPage:1,
-        tableData:{}
+        tableData:{},
+        selectParams:{},
+        getDataFlag:false,
+        tableConfig:{
+          ref: "tableRef",
+          data:[],
+          columnConfig:[],
+          uiConfig: {
+            height: "auto",
+            pagination: {
+              layout: "total,->, prev, pager, next, jumper",
+              pageSizes: [10, 20, 50],
+              handler(pageSize,currentPage,table){
+                _this.handleCurrentChange(currentPage)
+              }
+            }
+          },
+          tableMethods: {
+            sortChange: _this.sortTable
+          }
+        },
       }
     },
     computed:{
-      ...mapState({
-        selectType: state => state.conditionSelect.selectType,
-        radioType: state => state.conditionSelect.radioType,
-        startTime: state => state.conditionSelect.startTime,
-        lastTime: state => state.conditionSelect.lastTime,
-      }),
-      commonParams(){
-        return {
-          selectType:this.selectType,
-          redioType:this.radioType,
-          startTime:this.startTime,
-          lastTime:this.lastTime
-        }
-      }
     },
     methods: {
       async getEnergyOverView(){
-        this.overViewData = await EnergyApi.getEnergyOverView(this.commonParams)
+        this.overViewData = await EnergyApi.getEnergyOverView(this.selectParams)
         this.initElecChart(this.overViewData)
         this.initWaterChart(this.overViewData)
       },
@@ -104,33 +109,31 @@
         ChartUtils.handlePieChart(myChart2,data)
       },
       async getEnergyRanking(){
-        let params = {...this.commonParams,...{
+        let params = {...this.selectParams,...{
             page: this.curPage,
             rankType: this.rankType,
             size: 10,
             rank: this.rank
           }}
         let res = await EnergyApi.getEnergyRanking(params)
-        res.labelList=[
-          {name:'排名', prop:'xulie', sort:false},
-          {name: '建筑楼层', prop:'floor', sort:false},
-          {name:'综合耗能',prop:'elecAndWaterSum',sort:'custom'},
-          {name:'总用电量',prop:'elecSum',sort:'custom'},
-          {name:'照明用电',prop:'zmElec',sort:'custom'},
-          {name:'空调用电',prop:'zmElec',sort:'custom'},
-          {name:'特殊用电',prop:'tsElec',sort:'custom'},
-          {name:'其他用电',prop:'tsElec',sort:'custom'},
-          {name:'动力用电',prop:'dlElec',sort:'custom'},
-          {name:'总用水量',prop:'waterSum',sort:'custom'},
-          {name:'生活用水',prop:'shWater',sort:'custom'},
-          {name:'生活污水',prop:'wsWater',sort:'custom'},
-          {name:'空调用水',prop:'ktWater',sort:'custom'},
-          {name:'消防用水',prop:'xfWater',sort:'custom'},
-          {name:'其他用水',prop:'qtWater',sort:'custom'}]
-        res.dataList=res.value
-        res.tableTip='A3能耗展示排名'
-        res.hideExportBtn=true
-        this.tableData=res
+        this.tableConfig.columnConfig = [
+          {label:'排名', prop:'xulie'},
+          {label: '建筑楼层', prop:'floor'},
+          {label:'综合耗能',prop:'elecAndWaterSum',sortable:'custom'},
+          {label:'总用电量',prop:'elecSum',sortable:'custom'},
+          {label:'照明用电',prop:'zmElec',sortable:'custom'},
+          {label:'空调用电',prop:'zmElec',sortable:'custom'},
+          {label:'特殊用电',prop:'tsElec',sortable:'custom'},
+          {label:'其他用电',prop:'tsElec',sortable:'custom'},
+          {label:'动力用电',prop:'dlElec',sortable:'custom'},
+          {label:'总用水量',prop:'waterSum',sortable:'custom'},
+          {label:'生活用水',prop:'shWater',sortable:'custom'},
+          {label:'生活污水',prop:'wsWater',sortable:'custom'},
+          {label:'空调用水',prop:'ktWater',sortable:'custom'},
+          {label:'消防用水',prop:'xfWater',sortable:'custom'},
+          {label:'其他用水',prop:'qtWater',sortable:'custom'}]
+         this.tableConfig.data=res.value
+         this.tableConfig.uiConfig.pagination.total = res.total
       },
       sortTable(column){
         this.rankType = column.prop
@@ -141,27 +144,23 @@
         this.curPage=value
         this.getEnergyRanking()
       },
-      getData(){
+      getData(params){
+        this.selectParams = params
         this.getEnergyOverView()
         this.getEnergyRanking()
       }
     },
     mounted(){
-      this.getData()
+      this.getDataFlag=true
     }
   }
 </script>
 
 <style lang="less">
   .rank-energy{
-    margin-top: 85px;
-    padding:20px;
-    background: #f2f2f2;
     .out-box{
       width: 100%;
       background: @white;
-      border:1px solid #ccc;
-      border-radius: 10px;
     }
     .select-box{
       /*padding:*/
@@ -172,7 +171,6 @@
     }
     .rank-box{
       width:24%;
-      border:1px solid #ccc;
       border-radius: 10px;
       height:300px;
       margin-top: 20px;
@@ -191,12 +189,14 @@
       }
     }
     .table-box{
-      border-radius: 10px;
-      border:1px solid #ccc;
-      margin-top: 30px;
-      padding:5px;
+      margin-top: 20px;
+      padding:20px;
       background: @white;
       overflow: hidden;
+    }
+    .my-chart{
+      padding:10px;
+      box-sizing: border-box;
     }
   }
 </style>

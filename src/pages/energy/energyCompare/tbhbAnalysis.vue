@@ -1,17 +1,5 @@
 <template>
   <div class="tbhb-analysis">
-      <!--<ZoomNavigation :floorList="floorList" :defaultChecked="defaultChecked" />-->
-    <!--<div class="right-content">-->
-      <!--<ConditionSelect :isGroup="false" :showEnergy="true"/>-->
-      <!--<div ref="myChart" :class="curModule==3?'hide':'my-chart radius-shadow'"></div>-->
-      <!--<div class="flex-align-around" v-if="curModule==3">-->
-        <!--<div ref="myChart1" class="my-chart category-chart"></div>-->
-        <!--<div ref="myChart2" class="my-chart category-chart"></div>-->
-      <!--</div>-->
-      <!--<div class="table-box radius-shadow">-->
-        <!--<CommonTable :tableObj="tableData" :curPage="curPage" :showExportBtn="true"/>-->
-      <!--</div>-->
-    <!--</div>-->
     <EnergyCommon  :is-zoom-multiple="false" :from-flag="2"/>
   </div>
 
@@ -29,25 +17,10 @@
   export default {
     name:'TbhbAnalysis',
     components: {
-      ZoomNavigation,
-      ConditionSelect,
-      CommonTable,
       EnergyCommon
     },
     data () {
       return {
-        floorList:[],
-        curPage:1,
-        rankType:'dqzh',
-        myChart:'',
-        tableData:{
-          total:0
-        },
-        defaultChecked:[],
-        rank:'asc',
-        seq:0,
-        myChart1:'',
-        myChart2:'',
       }
     },
     computed: {
@@ -376,34 +349,5 @@
 
 <style lang="less">
   .tbhb-analysis{
-    width:100%;
-    .table-box,.my-chart{
-      margin-top: 20px;
-      padding:5px;
-      background: @white !important;
-      overflow: hidden;
-    }
-    .my-chart{
-      /*width: 100%;*/
-      height:450px;
-      padding-top:20px;
-    }
-    .export-btn{
-      margin-right: 10px;
-    }
-    .category-chart{
-      width:48%;
-    }
-    .table-box{
-      clear: both;
-    }
-    .hide{
-      height:0;
-      padding:0;
-      border:none;
-    }
-    /*.el-table th div{*/
-      /*padding-left:0;*/
-    /*}*/
   }
 </style>
