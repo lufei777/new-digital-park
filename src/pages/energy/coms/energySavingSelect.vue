@@ -72,6 +72,7 @@ export default {
   components: {
     DynamicTable
   },
+  props:['energySaveFlag'],
   data() {
     return {
       curEnergy: "0", //楼层检索
@@ -89,15 +90,15 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      energySaveFlag: state => state.energySavingSelect.energySaveFlag
-    }),
+    // ...mapState({
+    //   energySaveFlag: state => state.energySavingSelect.energySaveFlag
+    // }),
     tabTitle() {
       activeNav = Cookies.get("activeNav") && JSON.parse(Cookies.get("activeNav"));
       let tmp = this.energySubentryData.find(item => {
         return item.id == this.energySubentry;
       });
-      if (activeNav.childIndex == 0 || activeNav.childIndex == 2) {
+      if (this.energySaveFlag == 1) {
         return `${this.startTime}逐日全天${tmp && tmp.name}统计`;
       } else {
         return `${this.startTime}逐日夜间${tmp && tmp.name}统计`;
@@ -133,7 +134,13 @@ export default {
     },
     async getList() {
       let res;
-      if (activeNav.childIndex == 0 || activeNav.childIndex == 2) {
+      // if (activeNav.childIndex == 0 || activeNav.childIndex == 2) {
+      //   res = await EnergyApi.getEnergySavingElec(this.commonParams);
+      // } else {
+      //   res = await EnergyApi.getEnergySavingNight(this.commonParams);
+      // }
+
+      if (this.energySaveFlag == 1) {
         res = await EnergyApi.getEnergySavingElec(this.commonParams);
       } else {
         res = await EnergyApi.getEnergySavingNight(this.commonParams);
@@ -152,7 +159,13 @@ export default {
     },
     async exportList() {
       let url;
-      if (activeNav.childIndex == 0 || activeNav.childIndex == 2) {
+      // if (activeNav.childIndex == 0 || activeNav.childIndex == 2) {
+      //   url = `/vibe-web/energyCount/energy/elec/export?`;
+      // } else {
+      //   url = `/vibe-web/energyCount/energy/night/export?`;
+      // }
+
+       if (this.energySaveFlag == 1) {
         url = `/vibe-web/energyCount/energy/elec/export?`;
       } else {
         url = `/vibe-web/energyCount/energy/night/export?`;
