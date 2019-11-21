@@ -24,7 +24,7 @@
         <el-button type="primary" @click="onMultiEdit">批量编辑</el-button>
         <el-button type="primary" @click="onClickAddBtn">新建</el-button>
       </div>
-      <CommonTable :tableObj="assetData" :curPage="1">
+      <!-- <CommonTable :tableObj="assetData" :curPage="1">
         <template v-slot:special-operator>
           <el-table-column fixed="right" label="操作" align="right" width="120">
             <template slot-scope="scope">
@@ -42,23 +42,10 @@
             </template>
           </el-table-column>
         </template>
-      </CommonTable>
+      </CommonTable> -->
+      <Table :ref="assetsTableConfig.ref" :tableConfig="assetsTableConfig">
+      </Table>
     </div>
-    <!--<Table :ref="assetsTableConfig.ref" :tableConfig="assetsTableConfig">-->
-      <!--<template slot="custom-top" slot-scope="customTopObj">-->
-        <!--<div>-->
-          <!--&lt;!&ndash;<el-button-group>&ndash;&gt;-->
-            <!--&lt;!&ndash;<template v-for="col in customTopObj.columnConfig">&ndash;&gt;-->
-              <!--&lt;!&ndash;<el-button&ndash;&gt;-->
-                <!--&lt;!&ndash;:key="col.prop"&ndash;&gt;-->
-                <!--&lt;!&ndash;:type="col.hide ?'danger': 'primary'"&ndash;&gt;-->
-                <!--&lt;!&ndash;@click="switchHide(col)"&ndash;&gt;-->
-              <!--&lt;!&ndash;&gt;{{col.label}}</el-button>&ndash;&gt;-->
-            <!--&lt;!&ndash;</template>&ndash;&gt;-->
-          <!--&lt;!&ndash;</el-button-group>&ndash;&gt;-->
-        <!--</div>-->
-      <!--</template>-->
-    <!--</Table>-->
 
     <TreeModal
       :showTree="showTree"
@@ -227,7 +214,7 @@ export default {
           }
         ],
         uiConfig: {
-          height: "500px",//"", //高度
+          height: "auto",//"", //高度
           selection: true, //是否多选
           searchable: ["coding", "name", "groupName", "currentCustodian"],
           pagination: {
@@ -295,6 +282,7 @@ export default {
           rowClick: _this.assetsRowClick,
           rowDblclick: _this.assetsRowDbClick,
           sortChange: function(sortObj, $table) {
+            console.log($table);
             //这里返回请求后的排序数组 return []
             AssetManageApi.getAssetList({
               coding: "",
