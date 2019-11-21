@@ -141,7 +141,7 @@
                  tmp.push(val)
                })
              })
-           }else if(this.fromFlag==2){
+           }else if(this.fromFlag==2 || this.fromFlag==4){
              res.map((item)=>{
                    item.energyType.map((val)=>{
                      tmp.push(val)
