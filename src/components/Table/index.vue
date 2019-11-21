@@ -719,16 +719,15 @@ export default {
     .el-table__body {
       border-top: 0px;
     }
+    // 去除多选宽度不够会显示省略号
+    .el-table-column--selection {
+      text-overflow: inherit !important;
+      .cell {
+        text-overflow: inherit !important;
+      }
+    }
     // 列标题
     .el-table-header {
-      // 去除多选宽度不够会显示省略号
-      td.el-table-column--selection,
-      th.el-table-column--selection {
-        text-overflow: inherit !important;
-        .cell {
-          text-overflow: inherit !important;
-        }
-      }
       th {
         background-color: @headerBgc !important;
         color: @headerTextColor;
