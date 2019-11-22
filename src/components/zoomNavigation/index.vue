@@ -1,6 +1,7 @@
 <template>
-  <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'" class="zoom-navigation">
-    <div class="tree-box radius-shadow">
+  <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
+       class="zoom-navigation radius-shadow">
+    <div class="tree-box">
       <el-input
         placeholder="请输入"
         v-model="searchText">
@@ -108,17 +109,15 @@
       }
     },
     mounted(){
+      $(".zoom-navigation").css({
+        height:($(document).height()-110)+'px'
+      })
     }
   }
 </script>
 
 <style lang="less">
   .zoom-navigation{
-  /*  background: @mainBg;*/
-    color:@white;
-    text-align: left;
-    overflow: hidden;
-    height: 100%;
    .zoom-title{
      font-size: 20px;
      font-weight: 700;

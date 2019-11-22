@@ -29,12 +29,16 @@
         <el-button type="primary" @click="getManMadeCollectList">确定</el-button>
       </div>
       <div class="table-box radius-shadow">
-        <Table  :ref="tableConfig.ref" :table-config="tableConfig"/>
+        <Table  :ref="tableConfig.ref" :table-config="tableConfig">
+          <template slot="custom-top" slot-scope="scope">
+            <div class="operator-box">
+              <el-button type="primary" icon="el-icon-delete">删除记录</el-button>
+              <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
+            </div>
+          </template>
+        </Table>
       </div>
-      <div class="operator-box">
-        <el-button type="primary" icon="el-icon-delete">删除记录</el-button>
-        <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
-      </div>
+
     </div>
     <AddCollect v-if="showAdd" />
   </div>
@@ -119,9 +123,11 @@
     }
     .operator-box{
       clear: both;
-      padding:10px 0;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: row-reverse;
       .el-button{
-        margin-right: 20px;
+        margin-left: 20px;
       }
     }
     .table-box{
