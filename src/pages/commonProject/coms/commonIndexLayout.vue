@@ -3,8 +3,8 @@
     <div :class="menuConfig.isCollapse?'collapse-my-el-menu':'unfold-my-el-menu'">
       <Sidebar :menu-list="menuList" :menu-config="menuConfig"/>
     </div>
-    <div :class="menuConfig.isCollapse?'collapse-right-content':'unfold-right-content'">
-      <div :class="menuConfig.isCollapse?'collapse-right-content-header':'unfold-right-content-header'">
+    <div :class="[menuConfig.isCollapse?'collapse-right-content':'unfold-right-content','right-content']">
+      <div :class="[menuConfig.isCollapse?'collapse-right-content-header':'unfold-right-content-header','right-content-header']">
         <div class="flex-align asset-bread-crumb">
           <i :class="menuConfig.isCollapse?'iconzhankai':'iconshouqi'"
              class="iconfont collapse-icon hover-pointer"
@@ -107,6 +107,9 @@
       overflow: hidden;
       left:250px;
       right:0;
+    }
+    .right-content-header{
+      box-shadow: 0 0 20px #ccc;
     }
     .collapse-right-content-header{
       left:80px;
