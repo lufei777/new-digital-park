@@ -1,6 +1,6 @@
 <template>
   <div class="home-page">
-    <div class="tip flex-align">
+    <div class="tip frist-tip flex-align">
       <span class="icon"></span>
       <span>能耗总览</span>
     </div>
@@ -136,7 +136,9 @@
       <span>能耗排名列表</span>
     </div>
     <div class="tabulation">
-      <CommonTable :tableObj="tableData" :curPage="currentPage"/>
+     <div class="tabulation-title">2019年A3能耗排名展示(按综合能耗排名)</div>
+      <Table :ref="homePageTableConfig.ref" :tableConfig="homePageTableConfig"></Table>
+        <!-- <Table :ref="tableConfig.ref" :tableConfig="tableConfig" ></Table> -->
     </div>
   </div>
 </template>
@@ -147,12 +149,15 @@ import EnergyApi from "../../../service/api/energyApi";
 import CommonApi from "../../../service/api/commonApi";
 import ChartUtils from "../../../utils/chartUtils";
 import CommonTable from '../../../components/commonTable'
+import Table from "../../../components/Table/index";
 export default {
   name: "HomePage",
   components: {
-    CommonTable
+    CommonTable,
+    Table
   },
   data() {
+    let _this = this
     return {
       energyOverview: {},
       currentTime: new Date().getFullYear() + "-" + "01",
@@ -178,7 +183,26 @@ export default {
       total: 0,
       size: "",
       rankType: "elecAndWaterSum",
-      rank: "asc"
+      rank: "asc",
+      homePageTableConfig: {
+        ref:"homePageTable",
+        data:[],
+        columnConfig:[],
+         uiConfig: {
+          height: "auto", //"", //高度
+          pagination: {
+            //是否分页，分页是否自定义
+            layout: "total,->, prev, pager, next, jumper",
+            pageSizes: [10, 20, 50],
+            handler(pageSize, currentPage, table) {
+               _this.handleCurrentChange(currentPage)
+            }
+          }
+        },
+        tableMethods: {
+          sortChange: _this.sortTable
+        }
+      }
     };
   },
   methods: {
@@ -213,29 +237,36 @@ export default {
         rank: this.rank
       });
       if (res && res.total) {
+        console.log(111,res)
         this.total = res.total;
+       this.homePageTableConfig.data = res.value
+        
         // res.value[0].elecAndWaterSum=(Math.random()*10000).toFixed(2)
         // res.value[0].elecSum=(Math.random()*10000).toFixed(2)
-        res.labelList=[
-          {name:'排名', prop:'xulie', sort:false},
-        {name: '建筑楼层', prop:'floor', sort:false},
-        {name:'综合耗能',prop:'elecAndWaterSum',sort:'custom'},
-        {name:'总用电量',prop:'elecSum',sort:'custom'},
-        {name:'照明用电',prop:'zmElec',sort:'custom'},
-        {name:'空调用电',prop:'zmElec',sort:'custom'},
-        {name:'特殊用电',prop:'tsElec',sort:'custom'},
-        {name:'其他用电',prop:'tsElec',sort:'custom'},
-        {name:'动力用电',prop:'dlElec',sort:'custom'},
-        {name:'总用水量',prop:'waterSum',sort:'custom'},
-        {name:'生活用水',prop:'shWater',sort:'custom'},
-        {name:'生活污水',prop:'wsWater',sort:'custom'},
-        {name:'空调用水',prop:'ktWater',sort:'custom'},
-        {name:'消防用水',prop:'xfWater',sort:'custom'},
-        {name:'其他用水',prop:'qtWater',sort:'custom'}]
-        res.dataList=res.value
-        res.tableTip='A3能耗展示排名'
-        res.hideExportBtn=true
-        this.tableData=res
+        let labelList=[
+          {label:'排名', prop:'xulie', sortable:false},
+        {label: '建筑楼层', prop:'floor', sortable:false},
+        {label:'综合耗能',prop:'elecAndWaterSum',sortable:'custom'},
+        {label:'总用电量',prop:'elecSum',sortable:'custom'},
+        {label:'照明用电',prop:'zmElec',sortable:'custom'},
+        {label:'空调用电',prop:'zmElec',sortable:'custom'},
+        {label:'特殊用电',prop:'tsElec',sortable:'custom'},
+        {label:'其他用电',prop:'tsElec',sortable:'custom'},
+        {label:'动力用电',prop:'dlElec',sortable:'custom'},
+        {label:'总用水量',prop:'waterSum',sortable:'custom'},
+        {label:'生活用水',prop:'shWater',sortable:'custom'},
+        {label:'生活污水',prop:'wsWater',sortable:'custom'},
+        {label:'空调用水',prop:'ktWater',sortable:'custom'},
+        {label:'消防用水',prop:'xfWater',sortable:'custom'},
+        {label:'其他用水',prop:'qtWater',sortable:'custom'}]
+        this.homePageTableConfig.columnConfig = labelList
+        this.homePageTableConfig.uiConfig.pagination.total = res.total;
+        // res.dataList=res.value
+        // res.tableTip='A3能耗展示排名'
+        // res.hideExportBtn=true
+        // this.tableData=res
+
+        
       }
       
     },
@@ -416,7 +447,7 @@ export default {
 
 <style lang="less">
 .home-page {
-  margin-top: 50px;
+  // margin-top: 50px;
   padding: 0 20px;
   background: rgb(242, 242, 242);
   overflow: hidden;
@@ -433,6 +464,9 @@ export default {
       font-size: 16px;
       color: @mainBgColor;
     }
+  }
+  .frist-tip {
+    margin-top: 0px!important;
   }
   .overview-list {
     flex-wrap: wrap;
@@ -539,6 +573,12 @@ export default {
     margin-bottom: 15px;
     padding: 15px;
     overflow: hidden;
+    .tabulation-title {
+      height: 30px;
+      line-height: 20px;
+      color: #333;
+      font-size: 16px;
+    }
     .box_title {
       font-size: 16px;
       color: #666666;

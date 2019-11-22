@@ -1,6 +1,6 @@
 <template>
   <div class="night-water">
-      <EnergySavingSelect :energySaveFlag="2"/>
+      <EnergySavingSelect :energySaveFlag="4"/>
   </div>
 </template>
 
