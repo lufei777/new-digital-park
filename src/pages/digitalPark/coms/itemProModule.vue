@@ -121,6 +121,13 @@
         event.preventDefault();
         event.stopPropagation();
       }
+      // $(".item-compnent").css({
+      //   height:$(".component-box").height()*0.9
+      // })
+      // $(".my-chart").css({
+      //   height:$(".component-box").height()*0.8
+      // })
+      // console.log("111",$(".item-product-coms").height())
     }
   }
 </script>
@@ -153,8 +160,9 @@
     .my-chart{
       margin:auto;
       width:95%;
-      /*flex-grow: 1;*/
-      height:90%;
+      flex-grow: 1;
+      /*height:90%;*/
+      /*height:200px;*/
     }
     .com-width-border{
       border:1px solid #ccc;

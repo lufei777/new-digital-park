@@ -106,11 +106,17 @@
       filterNode(value, data) {
         if (!value) return true;
         return data.floor.indexOf(value) !== -1;
+      },
+      fixTree(){
+        $(".zoom-navigation").css({
+          height:($(document).height()-110)+'px'
+        })
       }
     },
     mounted(){
-      $(".zoom-navigation").css({
-        height:($(document).height()-110)+'px'
+      this.fixTree()
+      $(window).resize(()=>{
+        this.fixTree()
       })
     }
   }
@@ -131,24 +137,6 @@
       background: @white;
       height:100%;
     }
-    .el-tree{
-      font-size: 16px;
-      /*font-weight: 600;*/
-    }
-    .el-tree-node__content{
-       padding:12px 0;
-    }
-    .el-tree-node__label{
-      font-size: 16px;
-    }
-    .el-tree-node__content:hover{
-      color:@white;
-      background: @mainHoverColor;
-    }
-    .el-tree-node:focus>.el-tree-node__content{
-      color:@white;
-      background: @mainBgColor;
-    }
     .el-input__inner{
         border:none;
         background: #F4F5F7;
@@ -165,10 +153,6 @@
       line-height: 40px;
       font-size: 18px;
       font-weight: bold;
-    }
-    .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
-      background: @mainBgColor;
-      color:@white;
     }
   }
 </style>

@@ -100,10 +100,5 @@
     .el-input{
       width:220px;
     }
-    .go-back{
-      background: #ecf5ff;
-      color:#3a8ee6;
-      border-color:#c6e2ff;
-    }
   }
 </style>

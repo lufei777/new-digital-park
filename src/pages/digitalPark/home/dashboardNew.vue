@@ -50,10 +50,10 @@
         <img v-if="pageFlag==2" src="../../../../static/image/digitalPark/unity_priview.png"
              class="unity_priview"
              alt="">
-        <iframe v-if="pageFlag==1"
-                src="../../../../static/HomePage/index.html"
-                frameborder="0"
-                class="unity-frame"></iframe>
+        <!--<iframe v-if="pageFlag==1"-->
+                <!--src="../../../../static/HomePage/index.html"-->
+                <!--frameborder="0"-->
+                <!--class="unity-frame"></iframe>-->
       </div>
       <div class="dashboard-right">
         <draggable :list="proModuleList2"
@@ -343,6 +343,13 @@
       this.scrollNews()
       this.getModulesByType()
       this.getProductList()
+      // $(".draggable-box1").css({
+      //   height:($("#app").height()-80)+'px'
+      // })
+      // $(".draggable-box2").css({
+      //   height:($("#app").height()-80-$(".fixed-pro-module"))+'px'
+      // })
+      // console.log($(".draggable-box2").height())
     }
   }
 </script>
