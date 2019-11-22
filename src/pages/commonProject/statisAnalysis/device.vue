@@ -1,9 +1,5 @@
 <template>
-  <div class="device-analysis">
-    <div class="tip flex-align">
-      <span class="icon"></span>
-      <span>传感器设备状态</span>
-    </div>
+  <div class="device-analysis radius-shadow">
     <div class="chart-box"><div ref="myChart" class="my-chart"></div></div>
     <el-dialog
       :visible.sync="showDialog"
@@ -97,27 +93,10 @@
 
 <style lang="less">
   .device-analysis{
-    margin-top: 85px;
-    padding:0 20px;
-    overflow: hidden;
-    .tip{
-      height: 66px;
-      border-bottom: 1px solid #eaeaea;
-      .icon {
-        width: 2px;
-        height: 24px;
-        background: #01465c;
-        border-radius: 2px;
-        margin-right: 10px;
-      }
-      span{
-        font-size: 24px;
-        color:#01465c;
-      }
-    }
+    background: @white;
     .chart-box{
       width:80%;
-      margin:20px auto;
+      margin:0 auto;
       overflow: hidden;
     }
     .my-chart{

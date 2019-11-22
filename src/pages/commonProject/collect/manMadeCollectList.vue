@@ -1,11 +1,7 @@
 <template>
   <div>
     <div class="man-made-list" v-if="!showAdd" >
-      <div class="tip flex-align">
-        <span class="icon"></span>
-        <span>人工采集列表</span>
-      </div>
-      <div class="flex condition-box">
+      <div class="flex condition-box radius-shadow">
         <div class="block">
           <span class="demonstration">开始时间</span>
           <el-date-picker
@@ -32,7 +28,9 @@
         </div>
         <el-button type="primary" @click="getManMadeCollectList">确定</el-button>
       </div>
-      <CommonTable  :tableObj="tableData" :curPage="curPage"/>
+      <div class="table-box radius-shadow">
+        <Table  :ref="tableConfig.ref" :table-config="tableConfig"/>
+      </div>
       <div class="operator-box">
         <el-button type="primary" icon="el-icon-delete">删除记录</el-button>
         <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
@@ -44,20 +42,35 @@
 
 <script>
   import CommonApi from '../../../service/api/commonApi'
-  import CommonTable from '../../../components/commonTable/index'
+  import Table from '../../../components/Table/index'
   import AddCollect from './addCollect'
+
   export default {
     name: 'ManMadeCollectList',
     components: {
-      CommonTable,
+      Table,
       AddCollect
     },
     data () {
+      let _this = this
       return {
        startTime:'',
        endTime:'',
        curPage:1,
-       tableData:{},
+       tableConfig:{
+        ref: "tableRef",
+        data:[],
+        columnConfig:[],
+        uiConfig: {
+          height: "auto",
+          selection: true,
+          pagination: {
+            layout: "total,->, prev, pager, next, jumper",
+          }
+        },
+        tableMethods: {
+        }
+       },
        showAdd: false
       }
     },
@@ -73,21 +86,13 @@
           rows:10
         }
         let res = await CommonApi.getManMadeCollectList(params)
-        if(!res || !res.total){
-          res={
-            data:[],
-            total:0
-          }
-        }
-        res.labelList=[{name:'',prop:'',type:'selection'},
-          {name:'监测器名称',prop:'monitorStr'},
-          {name:'录入时间',prop:'lookTime'},
-          {name:'用户名',prop:''},
-          {name:'表值',prop:'value'}]
-        res.dataList=res.data
-        res.hideExportBtn=true
-        res.showOperator=true
-        this.tableData=res
+        this.tableConfig.columnConfig=[
+          {label:'监测器名称',prop:'monitorStr'},
+          {label:'录入时间',prop:'lookTime'},
+          {label:'用户名',prop:''},
+          {label:'表值',prop:'value'}]
+        this.tableConfig.data=res.value
+        this.tableConfig.uiConfig.pagination.total=res.total
       },
       onClickAddBtn(){
          this.showAdd= true
@@ -101,28 +106,13 @@
 
 <style lang="less">
   .man-made-list{
-    margin-top: 85px;
-    padding:0 20px;
-    .tip{
-      height: 66px;
-      border-bottom: 1px solid #eaeaea;
-      .icon {
-        width: 2px;
-        height: 24px;
-        background: #01465c;
-        border-radius: 2px;
-        margin-right: 10px;
-      }
-      span{
-        font-size: 24px;
-        color:#01465c;
-      }
-    }
     .condition-box{
-      padding:20px 0;
+      padding:20px;
+      background: @white;
+      margin-bottom:20px;
     }
     .block{
-      margin:0 20px;
+      margin-right:40px;
     }
     .demonstration{
       margin-right: 5px;
@@ -133,6 +123,10 @@
       .el-button{
         margin-right: 20px;
       }
+    }
+    .table-box{
+      padding:20px;
+      background: @white;
     }
   }
 </style>

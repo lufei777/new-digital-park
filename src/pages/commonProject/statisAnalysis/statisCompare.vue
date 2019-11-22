@@ -1,9 +1,5 @@
 <template>
   <div class="statis-compare">
-    <div class="tip flex-align">
-      <span class="icon"></span>
-      <span>统计对比</span>
-    </div>
     <MonitorChoose :showDateType="true" :showTwoMonitor="true"/>
     <MonitorModal />
     <el-button type="primary" class='handle-btn' @click="onClickBtn">处理</el-button>
@@ -141,23 +137,6 @@
 
 <style lang="less">
   .statis-compare{
-    margin-top: 85px;
-    padding:0 20px;
-    .tip{
-      height: 66px;
-      border-bottom: 1px solid #eaeaea;
-      .icon {
-        width: 2px;
-        height: 24px;
-        background: #01465c;
-        border-radius: 2px;
-        margin-right: 10px;
-      }
-      span{
-        font-size: 24px;
-        color:#01465c;
-      }
-    }
     .chart-box{
       width:80%;
       margin:20px auto;
