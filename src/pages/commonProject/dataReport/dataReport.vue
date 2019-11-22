@@ -1,22 +1,22 @@
 <template>
   <div class="data-report">
-    <div class="flex-align choose-box">
+    <div class="flex-align choose-box radius-shadow">
       <div class="block small-select">
-        <span class="choose-tip">能耗类型</span>
+        <span class="choose-tip">能耗类型：</span>
         <el-select v-model="curEnergy" placeholder="请选择">
           <el-option v-for="item in energyList" :key="item.id" :label="item.name" :value="item.id">
           </el-option>
         </el-select>
       </div>
       <div class="block small-select">
-        <span class="choose-tip">日期单位</span>
+        <span class="choose-tip">日期单位：</span>
         <el-select v-model="curDateType" placeholder="请选择" @change="handleDateTypeChange">
           <el-option v-for="item in dateTypeList" :key="item.id" :label="item.name" :value="item.id">
           </el-option>
         </el-select>
       </div>
       <div class="block">
-        <span class="choose-tip">开始时间</span>
+        <span class="choose-tip">开始时间：</span>
         <el-date-picker
           v-model="startTime"
           :type="pickerType"
@@ -27,7 +27,7 @@
         </el-date-picker>
       </div>
       <div class="block">
-        <span class="choose-tip">结束时间</span>
+        <span class="choose-tip">结束时间：</span>
         <el-date-picker
           v-model="endTime"
           :type="pickerType"
@@ -125,16 +125,15 @@
 
 <style lang="less">
   .data-report{
-    margin-top: 85px;
-    padding:0 20px;
     .choose-box{
-      padding:20px 0;
+      padding:20px;
+      background: @white;
     }
     .block{
       margin-right:40px;
     }
     .choose-tip{
-      margin-right:10px;
+      margin-right:5px;
     }
     .el-button{
       margin:0 10px;

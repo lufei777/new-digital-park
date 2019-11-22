@@ -55,7 +55,6 @@
         <span>注:红色字体为超标</span>
         <em>{{tabTitle}}</em>
       </div>
-      <!-- <DynamicTable :tableData="tableData" :hideExportBtn="true" :styleLabel="true" :curPage="currentPage" /> -->
       <Table :ref="tableConfig.ref" :tableConfig="tableConfig" ></Table>
     </div>
   </div>
@@ -64,15 +63,12 @@
 <script>
 import CommonApi from "../../../service/api/commonApi";
 import EnergyApi from "../../../service/api/energyApi";
-import DynamicTable from "../../../components/dynamicTable/index";
-import { mapState } from "vuex";
 import Table from "../../../components/Table/index";
 import moment from "moment";
 let activeNav;
 export default {
   name: "EnergySavingSelect",
   components: {
-    DynamicTable,
     Table
   },
   props: ["energySaveFlag"],

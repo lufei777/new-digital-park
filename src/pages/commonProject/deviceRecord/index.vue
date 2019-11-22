@@ -1,26 +1,29 @@
 <template>
   <div class="device-record">
-    <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'">
+    <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
+         class="energy-tree-box radius-shadow">
       <el-select  v-model="curEnergy" placeholder="请选择" @change="getMeterTree">
         <el-option label="电" value="1002"></el-option>
         <el-option label="水" value="4000"></el-option>
       </el-select>
-      <el-tree
-        :data="meterList"
-        :props="treeProps"
-        node-key="id"
-        ref="navTree"
-        @node-click="onClickItemTree"
-      >
-      </el-tree>
+      <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
+        <el-tree
+          :data="meterList"
+          :props="treeProps"
+          :accordion="true"
+          node-key="id"
+          ref="navTree"
+          @node-click="onClickItemTree"
+        >
+        </el-tree>
+      </el-scrollbar>
     </div>
     <div class="right-content" v-if="!showEdit && !showAdd && !showImport">
-      <div class="search-box radius-shadow">
-         <div class="left-search">
-            <div class="item-group flex-align">
-              <label>表名称：</label>
-              <el-input v-model="meterName" class="meter-name"></el-input>
-            </div>
+      <div class="search-box radius-shadow flex-align">
+           <div class="item-group flex-align">
+               <label>表名称：</label>
+               <el-input v-model="meterName" class="meter-name"></el-input>
+           </div>
            <div class="item-group">
              <label>表计：</label>
              <el-select v-model="meterTypes">
@@ -34,24 +37,21 @@
            </div>
            <el-button type="primary" icon="el-icon-search"
                       class="search-btn" @click="onClickSearchBtn">搜索</el-button>
-         </div>
       </div>
       <div class="table-box radius-shadow">
         <Table :ref="tableConfig.ref" :table-config="tableConfig">
           <template slot="custom-top" slot-scope="scope">
             <div class="operator-box">
               <el-button type="primary" class="" @click="onClickImportBtn">导入</el-button>
-              <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除记录</el-button>
+              <el-button type="primary" icon="el-icon-delete" @click="deleteTip(scope.row)">删除记录</el-button>
               <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
             </div>
           </template>
         </Table>
       </div>
-      <div class="tip flex-align">
-        <span class="icon"></span>
-        <span>列表详情</span>
-      </div>
-      <div class="item-row-detail-table">
+
+      <div class="item-row-detail-table radius-shadow">
+        <div class="item-row-detail-tip">列表详情</div>
         <table>
           <tbody>
           <tr><th>编号</th><td>{{curTableData.id}}</td></tr>
@@ -85,6 +85,7 @@
       ImportMeter
     },
     data () {
+      let _this = this
       return {
         curEnergy:'1002',
         meterList:[],
@@ -105,10 +106,35 @@
             selection: true,
             pagination: {
               layout: "total,->, prev, pager, next, jumper",
+              handler(pageSize,val) {
+                _this.handleCurrentChange(val)
+              }
             }
           },
+          btnConfig:{
+            prop: "operation",
+            label:'操作',
+            fixed: "right",
+            width: 150,
+            btns: [
+              {
+                type: "basic",
+                label: "编辑",
+                handler: function(row) {
+                  _this.tableEdit(row);
+                }
+              },
+              {
+                type: "basic",
+                label: "删除",
+                handler: function(row) {
+                  _this.tableDel(row);
+                }
+              }]
+          },
           tableMethods: {
-          }
+            rowClick:_this.rowClick
+          },
         },
         curTableData:{},
         showEdit:false,
@@ -147,8 +173,12 @@
           {label:'表名称',prop:'caption'},
           {label:'表类型',prop:'meterType'},
           {label:'分项类别',prop:'itemizeCaption'}]
-        this.tableConfig.data=res.rows
-        this.tableConfig.uiConfig.pagination.total=res.total
+        if(res && res.rows){
+          this.tableConfig.data=res.rows
+          this.tableConfig.uiConfig.pagination.total=res.total
+          this.curTableData=res.rows[0]
+        }
+
       },
       onClickItemTree(val,val2){
         if(val2.level==1) return;
@@ -227,6 +257,9 @@
     async mounted(){
       await this.getMeterTree()
       this.getMeterTable()
+      $(".energy-tree-box").css({
+        height:($(document).height()-110)+'px'
+      })
     }
   }
 </script>
@@ -236,62 +269,22 @@
   @import '../less/dataDetailRow.less';
   .device-record{
     margin-top: 50px;
-    .left-zoom-nav{
-      width:250px;
-      float: left;
-      position: fixed;
-      height: 100%;
-      overflow: auto;
-      background: @mainBg;
-      padding: 10px 0;
-      left:270px;
-      .el-select{
-        width:120px;
-        margin:0 0 20px 25%;
-      }
-      .el-tree{
-        background: @mainBg;
-        font-size: 16px;
-      }
-      .el-tree-node__content{
-        color:@white;
-        padding:5px 0;
-      }
-      .el-tree-node__content:hover{
-        color:#22dbfc;
-      }
-      .el-tree-node:focus>.el-tree-node__content{
-        color:#22dbfc;
-      }
-    }
-    .right-content{
-    }
     .search-box{
       padding:20px 0 20px 20px;
       background: @white;
       overflow: hidden;
       margin-bottom: 20px;
     }
-    .left-search{
-      float: left;
-      width:70%;
-      display: flex;
-      align-items: center;
-    }
     .item-group{
-       label{
-         flex-shrink: 0;
-         text-align: right;
-         margin-right: 5px;
-       }
+      label{
+        flex-shrink: 0;
+        text-align: right;
+        margin-right: 5px;
+      }
       .el-select{
         width:100px;
         margin:0;
       }
-    }
-    .import-btn{
-      float: right;
-      margin-right: 20px;
     }
     .search-btn{
       margin-left: 20px;
@@ -312,9 +305,45 @@
       }
     }
     .item-row-detail-table{
+      margin-top: 20px;
       tr:nth-child(5) td{
         border-bottom:1px solid @mainBg;
       }
     }
+    .item-row-detail-tip{
+      color:@mainBgColor;
+      margin-bottom:20px;
+    }
+    .energy-tree-box{
+      height: 100%;
+      padding:20px 0;
+      background: @white;
+      /*top:90px;*/
+      bottom:20px;
+    }
+      .el-select{
+        width:120px;
+        margin:0 0 20px 65px;
+      }
+      .el-tree{
+        /*font-size: 16px;*/
+      }
+      .el-tree-node__content{
+        padding:5px 0;
+      }
+      .el-tree-node__content:hover{
+        color:@white;
+        background: @mainHoverColor;
+      }
+      .el-tree-node:focus>.el-tree-node__content{
+        color:@white;
+        background: @mainBgColor;
+      }
+      .el-tree .el-tree-node__label{
+        font-size: 16px;
+      }
+      .el-tree .el-tree-node__children .el-tree-node__label{
+        font-size: 14px;
+      }
   }
 </style>
