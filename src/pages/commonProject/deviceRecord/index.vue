@@ -39,14 +39,15 @@
                       class="search-btn" @click="onClickSearchBtn">搜索</el-button>
       </div>
       <div class="table-box radius-shadow">
+        <div class="operator-box">
+          <el-button type="primary" class="" @click="onClickImportBtn">导入</el-button>
+          <el-button type="primary" icon="el-icon-delete" @click="delete222">删除记录</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
+        </div>
         <Table :ref="tableConfig.ref" :table-config="tableConfig">
-          <template slot="custom-top" slot-scope="scope">
-            <div class="operator-box">
-              <el-button type="primary" class="" @click="onClickImportBtn">导入</el-button>
-              <el-button type="primary" icon="el-icon-delete" @click="deleteTip(scope.row)">删除记录</el-button>
-              <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
-            </div>
-          </template>
+          <!--<template slot="custom-top" slot-scope="scope">-->
+            <!---->
+          <!--</template>-->
         </Table>
       </div>
 
@@ -120,15 +121,15 @@
               {
                 type: "basic",
                 label: "编辑",
-                handler: function(row) {
-                  _this.tableEdit(row);
+                handler: function(data) {
+                  _this.editRow(data.row);
                 }
               },
               {
                 type: "basic",
                 label: "删除",
-                handler: function(row) {
-                  _this.tableDel(row);
+                handler: function(data) {
+                  _this.deleteRow(data.row);
                 }
               }]
           },
@@ -204,6 +205,7 @@
         this.isEdit=true
       },
       deleteRow(data){
+        console.log("data",data)
         this.isdeleteAll=1
         this.deleteId=data.id
         this.deleteTip()
@@ -252,6 +254,10 @@
       },
       onClickImportBtn(){
         this.showImport=true
+      },
+      delete222(){
+        let res = this.$refs[this.tableConfig.ref].getSelectedData()
+        console.log(res)
       }
     },
     async mounted(){
@@ -313,6 +319,7 @@
     .item-row-detail-tip{
       color:@mainBgColor;
       margin-bottom:20px;
+      font-weight: bold;
     }
     .energy-tree-box{
       height: 100%;
