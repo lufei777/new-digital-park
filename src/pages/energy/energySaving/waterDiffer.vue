@@ -1,6 +1,6 @@
 <template>
   <div class="water-differ">
-      <EnergySavingSelect :energySaveFlag="1"/>
+      <EnergySavingSelect :energySaveFlag="3"/>
   </div>
 </template>
 
