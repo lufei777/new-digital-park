@@ -32,17 +32,13 @@
   import ZoomNavigation from '../../../components/zoomNavigation'
   import ConditionSelect from '../../../components/conditionSelect'
   import ChartUtils from '../../../utils/chartUtils'
-  import CommonTable from '../../../components/commonTable'
   import Table from '../../../components/Table/index'
-  import DynamicTable from '../../../components/dynamicTable'
   export default {
     name:'EnergyCommon',
     components: {
       ZoomNavigation,
       ConditionSelect,
-      CommonTable,
       Table,
-      DynamicTable
     },
     props:['isZoomMultiple','fromFlag','isEnergyByGroup'],
     data () {
