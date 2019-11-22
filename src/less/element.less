@@ -47,8 +47,25 @@
   height: 100%;
 }
 
-//.el-button{
-//  background: var(--mainBg);
-//  border-color:var(--mainBg);
-//  color: @white;
-//}
+//
+.el-tree-node__content:hover{
+  color:@white;
+  background: @mainHoverColor;
+}
+.el-tree-node:focus>.el-tree-node__content{
+  color:@white;
+  background: @mainBgColor;
+}
+.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
+  background: @mainBgColor;
+  color:@white;
+}
+.el-tree .el-tree-node__label{
+  font-size: 16px;
+}
+.el-tree .el-tree-node__children .el-tree-node__label{
+  font-size: 14px;
+}
+.el-tree-node__content{
+  padding:10px 0;
+}

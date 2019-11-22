@@ -63,7 +63,7 @@
       let timeValidate=function(rule,value,callback){
          let reg=/^[0-9]*[h|m|s]$/
          if(!reg.test(value)){
-           callback(new Error('请填入正确的间隔时间'));
+           callback(new Error('请填入正确的间隔时间:数字+时/分/秒 如10h/10m/10s'));
          }
 
       }
@@ -135,6 +135,7 @@
         this.showDialog=true
       },
       async submitForm(){
+        console.log(this.meterForm)
         let res = await CommonApi.updateMeter(this.meterForm)
       },
       goBack(){
