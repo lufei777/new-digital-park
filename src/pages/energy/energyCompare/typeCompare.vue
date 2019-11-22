@@ -1,13 +1,5 @@
 <template>
   <div class="type-compare">
-    <!--<div class="left-zoom-nav">-->
-      <!--<ZoomNavigation :floorList="floorList" :defaultChecked="defaultChecked" />-->
-    <!--</div>-->
-    <!--<div class="right-content">-->
-      <!--<ConditionSelect :isGroup="true" :showEnergy="true"/>-->
-      <!--<div ref="myChart" class="my-chart"></div>-->
-      <!--<DynamicTable :tableData="tableData" :tableTip="tableTip" :curPage="curPage"/>-->
-    <!--</div>-->
     <EnergyCommon :is-zoom-multiple="false" :isEnergyByGroup="true" :from-flag="3"/>
   </div>
 </template>
@@ -192,16 +184,5 @@
 
 <style lang="less">
   .type-compare {
-    width: 100%;
-    .my-chart{
-      border-radius: 10px;
-      border:1px solid #ccc;
-      margin-top: 30px;
-      background: @white;
-      overflow: hidden;
-      /*width: 100%;*/
-      height:450px;
-      padding:20px 5px 5px 5px;
-    }
   }
 </style>

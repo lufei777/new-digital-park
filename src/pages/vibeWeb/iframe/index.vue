@@ -28,9 +28,7 @@ export default {
   },
   computed: {
     computedSrc() {
-      console.log(OLDPROJECTHOME);
-      console.log(this.iframeConfig.src);
-      return OLDPROJECTHOME + '/' + this.iframeConfig.src;
+      return vibeWebUrl + '/' + this.iframeConfig.src;
     }
   }
 };

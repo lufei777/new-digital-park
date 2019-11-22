@@ -1,27 +1,26 @@
 <template>
   <div id="app">
-    <router-view/>
+    <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
+      <router-view />
+    </el-scrollbar>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
-  data(){
-    return{
-    }
+  name: "App",
+  data() {
+    return {};
   },
-  created(){
-
-  },
-}
+  created() {}
+};
 </script>
 <style lang="less">
-@import url('./less/index.less');
+@import url("./less/index.less");
 #app {
-  font-family: 'MicrosoftYaHei', Helvetica, Arial, sans-serif;
+  font-family: "MicrosoftYaHei", Helvetica, Arial, sans-serif;
   color: #666;
-  height:100%;
+  height: 100%;
   font-size: 14px;
 }
 </style>
