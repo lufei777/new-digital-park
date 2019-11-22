@@ -1,15 +1,15 @@
 <template>
   <div class="time-energy">
-    <TbhbAnalysis />
+    <EnergyCommon :from-flag="3" />
   </div>
 </template>
 
 <script>
-  import TbhbAnalysis from '../energyCompare/tbhbAnalysis'
+  import EnergyCommon from '../../energy/energyCompare/energyCommon'
   export default {
     name: 'TimeEnergy',
     components: {
-      TbhbAnalysis
+      EnergyCommon
     },
     data () {
       return {

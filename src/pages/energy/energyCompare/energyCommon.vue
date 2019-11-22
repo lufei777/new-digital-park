@@ -75,7 +75,8 @@
               layout: "total,->, prev, pager, next, jumper",
               pageSizes: [10, 20, 50],
               handler(pageSize,currentPage,table){
-
+                // console.log(pageSize,currentPage,table)
+                _this.handleCurrentChange(currentPage)
               }
             }
           },
@@ -175,7 +176,8 @@
             },...params
            }
            this.getTbhbChart()
-           this.getTbhbTable()
+           // this.getTbhbTable()
+           this.initTbhbTable()
         }else if(this.fromFlag==3){
           this.commonParams={...{
               floorId: this.floorId,
@@ -212,34 +214,36 @@
           }
         }
         let res = await CommonApi.getTbhbTable(tableParams)
-        this.tableConfig.columnConfig=[{label:'排名',prop:'xulie'},
-          {label:'当期综合能耗(kwh)',prop:'date'},
-          {label:'同期综合能耗(kwh)',prop:'dqzh',sortable:'custom'},
-          {label:'上期综合能耗(kwh)',prop:'tqzh',sortable:'custom'},
-          {label:'综合能耗同比增长率(%)',prop:'tbzz',sortable:'custom',
-            formatter: function(row, column) {
-              return row[column.property]+"%";
-            }
-          },
-          {label:'综合能耗环比增长率(%)',prop:'hbzz',sortable:'custom',
-            formatter: function(row, column) {
-              return row[column.property]+"%";
-            }
-          }]
-         if(res && res.value){
-          this.tableConfig.data=res.value
+        this.setTableDataConfig(res)
+      },
+      async initTbhbTable(){
+        this.setColumnConfig()
+        this.getTbhbTable()
+      },
+       setColumnConfig(){
+         let columnList = []
+         if(this.fromFlag==2){
+           columnList = [{label:'排名',prop:'xulie'},
+             {label:'当期综合能耗(kwh)',prop:'date'},
+             {label:'同期综合能耗(kwh)',prop:'dqzh',sortable:'custom'},
+             {label:'上期综合能耗(kwh)',prop:'tqzh',sortable:'custom'},
+             {label:'综合能耗同比增长率(%)',prop:'tbzz',sortable:'custom',
+               formatter: function(row, column) {
+                 return row[column.property]+"%";
+               }
+             },
+             {label:'综合能耗环比增长率(%)',prop:'hbzz',sortable:'custom',
+               formatter: function(row, column) {
+                 return row[column.property]+"%";
+               }
+             }]
          }
-        // if(res && res.total){
-        //   res.labelList=[{name:'排名',prop:'xulie',sort:false},
-        //     {name:'当期综合能耗(kwh)',prop:'date',sort:false},
-        //     {name:'同期综合能耗(kwh)',prop:'dqzh',sort:'custom'},
-        //     {name:'上期综合能耗(kwh)',prop:'tqzh',sort:'custom'},
-        //     {name:'综合能耗同比增长率(%)',prop:'tbzz',sort:'custom'},
-        //     {name:'综合能耗环比增长率(%)',prop:'hbzz',sort:'custom'}]
-        //   res.dataList=res.value
-        //   res.tableTip=this.tableTip
-        //   this.tableData=res
-        // }
+         this.tableConfig.columnConfig=columnList
+      },
+      async setTableDataConfig(res){
+        if(res){
+          this.tableConfig.data=res.value
+        }
       },
       initTbhbChart(res) {
         this.myChart = echarts.init(this.$refs.myChart);
@@ -312,13 +316,15 @@
       },
       handleCurrentChange(value){
         this.curPage=value
-        if(this.curModule==1){
+        if(this.fromFlag==1){
+          this.getZoomCompareTable()
+        }else if(this.fromFlag==2){
           this.getTbhbTable()
-        }else{
-          this.getTimeEnergyTable()
+        }else if(this.fromFlag==3){
+          this.getTypeTable()
         }
       },
-      sortTable(column){
+      sortTable(column,table){
         console.log(column)
         this.seq = column.prop == 'shijian' ? 0 : 1
         this.rank=column.order=='ascending'?'asc':'desc'
@@ -500,11 +506,9 @@
         if(res && res.value) {
           let tmp=[]
           res.value.map((item)=>{
-           
             item[1]=item[1].slice(0,10)
             let obj={}
             res.title.map((tit,index)=>{
-               console.log(15151,tit,res.title)
               if(tit=="占比(%)"){
                 obj[tit+index]=item[index]
               }else{
@@ -512,7 +516,6 @@
               }
               // obj.name=tit
             })
-            
             tmp.push(obj)
           })
           console.log("tmp",tmp)
@@ -529,10 +532,9 @@
                  prop:key
                })
           }
-          console.log(155,columnConfig)
           this.tableConfig.columnConfig=columnConfig
           this.tableConfig.data=tmp
-
+          this.tableConfig.uiConfig.pagination.total = res.total;
         }
       },
       initZoomChart(res){
@@ -578,11 +580,37 @@
         }
         let res = await CommonApi.getTypeTable(tableParams)
         if(res && res.value){
+          let tmp=[]
           res.value.map((item)=>{
-            if(item[1])
-              item[1]=item[1].slice(0,10)
+            item[1]=item[1].slice(0,10)
+            let obj={}
+            res.title.map((tit,index)=>{
+              if(tit=="占比(%)"){
+                obj[tit+index]=item[index]
+              }else{
+                obj[tit]=item[index]
+              }
+              // obj.name=tit
+            })
+            tmp.push(obj)
           })
-          this.tableData=res
+          console.log("tmp",tmp)
+          let columnConfig=[]
+          // res[0].title.map((item)=>{
+          //    columnConfig.push({
+          //      label:item,
+          //      prop:item
+          //    })
+          // })
+          for(let key in tmp[0]){
+            columnConfig.push({
+              label:key.indexOf('占比')!=-1?'占比(%)':key,
+              prop:key
+            })
+          }
+          this.tableConfig.columnConfig=columnConfig
+          this.tableConfig.data=tmp
+          this.tableConfig.uiConfig.pagination.total = res.total;
         }
       },
       initTypeChart(res){

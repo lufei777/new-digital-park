@@ -103,7 +103,9 @@ export default {
             //是否分页，分页是否自定义
             layout: "total,->, prev, pager, next, jumper",
             pageSizes: [10, 20, 50],
-            handler(pageSize, currentPage, table) {}
+            handler(pageSize, currentPage, table) {
+               _this.handleCurrentChange(currentPage)
+            }
           }
         },
         tableMethods: {
@@ -143,9 +145,7 @@ export default {
   methods: {
     onTimeChange() {},
     async getEnergyList() {
-      console.log("this.energySaveFlag", this.energySaveFlag);
       let res = await CommonApi.getEnergyListByGroup();
-      console.log("hahha", res);
       if (this.energySaveFlag == 3 || this.energySaveFlag == 4) {
         this.energySubentryData = res[1].energyType;
         this.energySubentry = res[1].energyType[0].id;
@@ -171,42 +171,49 @@ export default {
       } else if (this.energySaveFlag == 2 || this.energySaveFlag == 4) {
         res = await EnergyApi.getEnergySavingNight(this.commonParams);
       }
+      // if (res && res.value) {
+      //   var title = ["建筑楼层", "参考指标"];
+      //   res.value[0].map((item, index) => {
+      //     if (index < res.value[0].length - 2) title.push(index + 1 + "日");
+      //   });
+      //   res.title = title;
+      //   this.tableData.total = res.total;
+      //   this.tableData = res;
+      // } else {
+      //   this.tableData.total = 0;
+      // }
       if (res && res.value) {
         var title = ["建筑楼层", "参考指标"];
         res.value[0].map((item, index) => {
           if (index < res.value[0].length - 2) title.push(index + 1 + "日");
         });
-        res.title = title;
-        this.tableData.total = res.total;
-        this.tableData = res;
-        console.log("res", res);
-      } else {
-        this.tableData.total = 0;
-      }
-
-      if (res && res.value) {
         let tmp = [];
         res.value.map(item => {
           let obj = {};
           title.map((tit, index) => {
-            if (tit == "占比(%)") {
-              obj[tit + index] = item[index];
-            } else {
               obj[tit] = item[index];
-            }
           });
           tmp.push(obj);
         });
-       
         let columnConfig=[]
           for(let key in tmp[0]){
                columnConfig.push({
                  label:key,
-                 prop:key
+                 prop:key,
+                 formatter:function(row,column){
+                   if (row[column.property] > row.参考指标) {
+                     return `<span class="styleRed">${row[column.property]}</span>`;
+                   } else {
+                     return `<span>${row[column.property]}</span>`;
+                   }
+                   
+                  },
                })
           }
+          console.log('aaaaa',tmp)
           this.tableConfig.columnConfig = columnConfig;
           this.tableConfig.data = tmp;
+          this.tableConfig.uiConfig.pagination.total = res.total;
       }
 
      
@@ -248,6 +255,9 @@ export default {
 .energy-saving-select {
   padding: 0 20px 20px 20px;
   background: #fff;
+  .styleRed {
+    color: red;
+  }
   .condition-box {
     width: 100%;
     padding: 20px 0;

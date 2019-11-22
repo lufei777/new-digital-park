@@ -290,6 +290,7 @@
       padding:10px 0;
       /*margin-left:10px;*/
       box-sizing: border-box;
+      font-size: 16px;
     }
     .item-left-pro{
       display: block;

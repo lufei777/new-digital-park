@@ -444,52 +444,54 @@ class commonFun {
   }
 
   incomeList = [{
-    name2: "代收款项",
+    name: "代收款项",
     id: 1,
     unit: "元",
     value: 350000,
   }, {
-    name2: "经营收入",
+    name: "经营收入",
     id: 2,
     unit: "元",
     value: 46000,
   }, {
-    name2: "财务收入",
+    name: "财务收入",
     id: 3,
     unit: "元",
     value: 38000,
   }, {
-    name2: "主收入收款",
+    name: "主收入收款",
     id: 4,
     unit: "元",
     value: 39000,
   }]
 
   deviceStatusList = [{
-    name2: "正常",
+    name: "正常",
     id: 1,
     value: 520,
   }, {
-    name2: "未知",
+    name: "未知",
     id: 2,
     value: 310,
   }, {
-    name2: "警告",
+    name: "警告",
     id: 3,
     value: 200,
   }, {
-    name2: "错误",
+    name: "错误",
     id: 4,
     value: 300,
   }]
 
   // 跳转链接
-  loadOldPage(item) {
-    /* sessionStorage.setItem('park_home_Page', location.href);
-    location.href = OLDPROJECTHOME + '?forward=' + routeAddress.split('@')[1]; */
-
-    sessionStorage.setItem('vibe_menuList', JSON.stringify(item));
-    router.push('/vibe-web')
+  loadOldPage(item, routeOldProject) {
+    if (routeOldProject) {
+      sessionStorage.setItem('park_home_Page', location.href);
+      location.href = OLDPROJECTHOME + '?forward=' + item.split('@')[1];
+    } else {
+      sessionStorage.setItem('vibe_menuList', JSON.stringify(item));
+      router.push('/vibe-web')
+    }
   }
 
 }

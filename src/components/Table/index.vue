@@ -14,9 +14,9 @@
     <el-table
       ref="dataBaseTable"
       row-key="id"
-      :row-style="{height:'35px'}"
+      :row-style="{height:'50px'}"
       :cell-style="{padding:'0px'}"
-      :header-cell-style="{padding:'0px'}"
+      :header-cell-style="{padding:'0px',height:'50px'}"
       highlight-current-row
       header-row-class-name="el-table-header"
       cell-class-name="el-table-cell"
@@ -46,7 +46,7 @@
       <template v-for="col in columnConfig">
         <el-table-column
           v-if="!col.hide"
-          :key="`${col.label}-${new Date().valueOf()}`"
+          :key="col.label"
           :prop="col.prop"
           :label="col.label"
           :width="col.width"
@@ -727,7 +727,7 @@ export default {
       }
     }
     // 列标题
-     .el-table-header {
+    .el-table-header {
       th {
         background-color: @headerBgc !important;
         color: @headerTextColor;
