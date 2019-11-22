@@ -1,18 +1,15 @@
 <template>
   <div class="man-made-list">
-    <div class="tip flex-align">
-      <span class="icon"></span>
-      <span>自动采集列表</span>
-    </div>
-    <div class="flex condition-box">
+    <div class="flex condition-box radius-shadow">
       <div class="block">
+        <span class="">能源：</span>
         <el-select  v-model="curEnergy" placeholder="请选择">
           <el-option label="电" value="34"></el-option>
           <el-option label="水" value="37"></el-option>
         </el-select>
       </div>
       <div class="block">
-        <span class="demonstration">开始时间</span>
+        <span class="demonstration">开始时间：</span>
         <el-date-picker
           v-model="startTime"
           type="datetime"
@@ -24,7 +21,7 @@
         </el-date-picker>
       </div>
       <div class="block">
-        <span class="demonstration">结束时间</span>
+        <span class="demonstration">结束时间：</span>
         <el-date-picker
           v-model="endTime"
           type="datetime"
@@ -37,25 +34,42 @@
       </div>
       <el-button type="primary" @click="getAutoCollectList">确定</el-button>
     </div>
-    <CommonTable  :tableObj="tableData" :curPage="curPage" :showExportBtn="true"/>
+    <div class="table-box radius-shadow">
+      <Table  :ref="tableConfig.ref" :table-config="tableConfig"/>
+    </div>
   </div>
 </template>
 
 <script>
   import CommonApi from '../../../service/api/commonApi'
-  import CommonTable from '../../../components/commonTable/index'
+  import Table from '../../../components/Table/index'
   export default {
     name: 'AutoCollectList',
     components: {
-      CommonTable
+      Table
     },
     data () {
+      let _this = this
       return {
         startTime:'',
         endTime:'',
         curPage:1,
         tableData:{},
-        curEnergy:'34'
+        curEnergy:'34',
+        tableConfig:{
+          ref: "tableRef",
+          data:[],
+          columnConfig:[],
+          uiConfig: {
+            height: "auto",
+            selection: true,
+            pagination: {
+              layout: "total,->, prev, pager, next, jumper",
+            }
+          },
+          tableMethods: {
+          }
+        },
       }
     },
     methods: {
@@ -71,19 +85,13 @@
           size:10
         }
         let res = await CommonApi.getAutoCollectList(params)
-        if(!res || !res.total){
-          res={
-            value:[],
-            total:0
-          }
-        }
-        res.labelList=[{name:'序号',prop:'xulie'},
-                       {name:'时间',prop:'time'},
-                       {name:'表名称',prop:'name'},
-                       {name:'数值',prop:'value'},
-                       {name:'所属空间',prop:'caption'}]
-        res.dataList=res.value
-        this.tableData=res
+        this.tableConfig.columnConfig=[{label:'序号',prop:'xulie'},
+                       {label:'时间',prop:'time'},
+                       {label:'表名称',prop:'name'},
+                       {label:'数值',prop:'value'},
+                       {label:'所属空间',prop:'caption'}]
+        this.tableConfig.data=res.value
+        this.tableConfig.uiConfig.pagination.total=res.total
       },
       handleCurrentChange(val){
         this.curPage=val
@@ -103,28 +111,13 @@
 
 <style lang="less">
   .man-made-list{
-    margin-top: 85px;
-    padding:0 20px;
-    .tip{
-      height: 66px;
-      border-bottom: 1px solid #eaeaea;
-      .icon {
-        width: 2px;
-        height: 24px;
-        background: #01465c;
-        border-radius: 2px;
-        margin-right: 10px;
-      }
-      span{
-        font-size: 24px;
-        color:#01465c;
-      }
-    }
     .condition-box{
-      padding:20px 0;
+      padding:20px;
+      background: @white;
+      margin-bottom: 20px;
     }
     .block{
-      margin:0 20px;
+      margin-right:40px;
     }
     .demonstration{
       margin-right: 5px;
@@ -135,6 +128,10 @@
       .el-button{
         margin-right: 20px;
       }
+    }
+    .table-box{
+      padding:20px;
+      background: @white;
     }
   }
 </style>

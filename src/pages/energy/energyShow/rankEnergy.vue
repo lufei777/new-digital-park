@@ -16,13 +16,13 @@
       <div class="rank-box radius-shadow my-chart" ref="myChart2"></div>
     </div>
     <div class="table-box radius-shadow">
+      <div class="table-tip">A3{{commonTip}}能耗展示排名</div>
       <Table :ref="tableConfig.ref" :tableConfig="tableConfig"></Table>
     </div>
   </div>
 </template>
 
 <script>
-  import {mapState} from 'vuex'
   import echarts from 'echarts'
   import ChartUtils from '../../../utils/chartUtils'
   import EnergyApi from '../../../service/api/energyApi'
@@ -52,7 +52,6 @@
             height: "auto",
             pagination: {
               layout: "total,->, prev, pager, next, jumper",
-              pageSizes: [10, 20, 50],
               handler(pageSize,currentPage,table){
                 _this.handleCurrentChange(currentPage)
               }
@@ -65,6 +64,9 @@
       }
     },
     computed:{
+      commonTip(){
+        return `${this.selectParams.startTime}${this.selectParams.lastTime?'至'+this.selectParams.lastTime:''}`
+      },
     },
     methods: {
       async getEnergyOverView(){
@@ -74,7 +76,7 @@
       },
       initElecChart(res){
         let myChart1 = echarts.init(this.$refs.myChart1);
-        let titleText =`分项耗电占比分析`
+        let titleText =`${this.commonTip}分项耗电占比分析`
         let legendData = res.elecList && res.elecList.map((item)=>item.name)
         let series=[]
         res.elecList && res.elecList.map((item)=>{
@@ -92,7 +94,7 @@
       },
       initWaterChart(res){
         let myChart2 = echarts.init(this.$refs.myChart2);
-        let titleText =`分项耗水占比分析`
+        let titleText =`${this.commonTip}分项耗水占比分析`
         let legendData = res.waterList && res.waterList.map((item)=>item.name)
         let series=[]
         res.waterList && res.waterList.map((item)=>{
@@ -197,6 +199,11 @@
     .my-chart{
       padding:10px;
       box-sizing: border-box;
+    }
+    .table-tip{
+      color:@mainBgColor;
+      font-weight: bold;
+      margin-bottom:20px;
     }
   }
 </style>

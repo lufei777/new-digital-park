@@ -1,9 +1,5 @@
 <template>
   <div class="correlation">
-    <div class="tip flex-align">
-      <span class="icon"></span>
-      <span>相关性分析</span>
-    </div>
     <MonitorChoose :showDateType="false" :showTwoMonitor="true" />
     <MonitorModal />
     <el-button type="primary" class='handle-btn' @click="onClickBtn">处理</el-button>
@@ -206,23 +202,7 @@
 
 <style lang="less">
   .correlation{
-    margin-top: 85px;
-    padding:0 20px;
-    .tip{
-      height: 66px;
-      border-bottom: 1px solid #eaeaea;
-      .icon {
-        width: 2px;
-        height: 24px;
-        background: #01465c;
-        border-radius: 2px;
-        margin-right: 10px;
-      }
-      span{
-        font-size: 24px;
-        color:#01465c;
-      }
-    }
+    background: @white;
     .chart-box{
       width:80%;
       margin:20px auto;

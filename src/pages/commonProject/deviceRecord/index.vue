@@ -1,6 +1,6 @@
 <template>
   <div class="device-record">
-    <div class="left-zoom-nav">
+    <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'">
       <el-select  v-model="curEnergy" placeholder="请选择" @change="getMeterTree">
         <el-option label="电" value="1002"></el-option>
         <el-option label="水" value="4000"></el-option>
@@ -15,18 +15,14 @@
       </el-tree>
     </div>
     <div class="right-content" v-if="!showEdit && !showAdd && !showImport">
-      <div class="tip flex-align">
-        <span class="icon"></span>
-        <span>设备表计</span>
-      </div>
-      <div class="search-box">
+      <div class="search-box radius-shadow">
          <div class="left-search">
-            <div class="block flex-align">
-              <span>表名称</span>
+            <div class="item-group flex-align">
+              <label>表名称：</label>
               <el-input v-model="meterName" class="meter-name"></el-input>
             </div>
-           <div class="block flex-align">
-             <span>表计</span>
+           <div class="item-group">
+             <label>表计：</label>
              <el-select v-model="meterTypes">
                <el-option  label="全部" value="0,1">
                </el-option>
@@ -39,14 +35,17 @@
            <el-button type="primary" icon="el-icon-search"
                       class="search-btn" @click="onClickSearchBtn">搜索</el-button>
          </div>
-         <el-button type="primary" class="import-btn" @click="onClickImportBtn">导入</el-button>
       </div>
-      <div class="table-box">
-        <CommonTable :tableObj="tableData" :curPage="1"/>
-      </div>
-      <div class="operator-box">
-        <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除记录</el-button>
-        <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
+      <div class="table-box radius-shadow">
+        <Table :ref="tableConfig.ref" :table-config="tableConfig">
+          <template slot="custom-top" slot-scope="scope">
+            <div class="operator-box">
+              <el-button type="primary" class="" @click="onClickImportBtn">导入</el-button>
+              <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除记录</el-button>
+              <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
+            </div>
+          </template>
+        </Table>
       </div>
       <div class="tip flex-align">
         <span class="icon"></span>
@@ -71,16 +70,16 @@
 </template>
 
 <script>
-  import axios from 'axios';
+  import {mapState} from 'vuex'
   import CommonApi from '../../../service/api/commonApi'
-  import CommonTable from '../../../components/commonTable'
+  import Table from '../../../components/Table/index'
   import EditMeter from './editMeter'
   import AddMeter from './addMeter'
   import ImportMeter from './importMeter'
   export default {
     name: 'DeviceRecord',
     components: {
-      CommonTable,
+      Table,
       EditMeter,
       AddMeter,
       ImportMeter
@@ -97,7 +96,20 @@
         meterTypes:"0,1",
         parentMeter:'',
         curPage:1,
-        tableData:{},
+        tableConfig:{
+          ref: "tableRef",
+          data:[],
+          columnConfig:[],
+          uiConfig: {
+            height: "auto",
+            selection: true,
+            pagination: {
+              layout: "total,->, prev, pager, next, jumper",
+            }
+          },
+          tableMethods: {
+          }
+        },
         curTableData:{},
         showEdit:false,
         isdeleteAll:1,
@@ -106,6 +118,11 @@
         isEdit:false,
         showImport:false
       }
+    },
+    computed:{
+      ...mapState({
+        menuIsCollapse:state=>state.digitalPark.menuIsCollapse
+      })
     },
     methods: {
       async getMeterTree(){
@@ -124,23 +141,14 @@
           size:10
         }
         let res = await CommonApi.getMeterTable(params)
-        if(!res || !res.total){
-          res={
-            rows:[],
-            total:0
-          }
-        }
-        res.labelList=[{name:'',prop:'',type:'selection'},
-          {name:'编号',prop:'id'},
-          {name:'工程名称',prop:'name'},
-          {name:'表名称',prop:'caption'},
-          {name:'表类型',prop:'meterType'},
-          {name:'分项类别',prop:'itemizeCaption'}]
-        res.dataList=res.rows
-        res.hideExportBtn=true
-        res.showOperator=true
-        this.tableData=res
-        if(res.total) this.curTableData=res.rows[0]
+        this.tableConfig.columnConfig=[
+          {label:'编号',prop:'id'},
+          {label:'工程名称',prop:'name'},
+          {label:'表名称',prop:'caption'},
+          {label:'表类型',prop:'meterType'},
+          {label:'分项类别',prop:'itemizeCaption'}]
+        this.tableConfig.data=res.rows
+        this.tableConfig.uiConfig.pagination.total=res.total
       },
       onClickItemTree(val,val2){
         if(val2.level==1) return;
@@ -257,34 +265,12 @@
       }
     }
     .right-content{
-      width:83%;
-      padding:10px;
-      float: right;
-      box-sizing: border-box;
-      background: #eaeff3;
-    }
-
-    .tip{
-      height: 66px;
-      border-bottom: 1px solid #eaeaea;
-      background: @white;
-      padding:0 10px;
-      .icon {
-        width: 2px;
-        height: 24px;
-        background: #01465c;
-        border-radius: 2px;
-        margin-right: 10px;
-      }
-      span{
-        font-size: 24px;
-        color:#01465c;
-      }
     }
     .search-box{
-      padding:20px 0;
+      padding:20px 0 20px 20px;
       background: @white;
       overflow: hidden;
+      margin-bottom: 20px;
     }
     .left-search{
       float: left;
@@ -292,10 +278,9 @@
       display: flex;
       align-items: center;
     }
-    .block{
-      margin-right:10px;
-       span{
-         width:70px;
+    .item-group{
+       label{
+         flex-shrink: 0;
          text-align: right;
          margin-right: 5px;
        }
@@ -306,13 +291,13 @@
     }
     .import-btn{
       float: right;
-      margin-right: 10px;
+      margin-right: 20px;
     }
     .search-btn{
       margin-left: 20px;
     }
     .table-box{
-      padding:10px;
+      padding:20px;
       clear: both;
       background: @white;
       /*overflow: hidden;*/
@@ -320,7 +305,11 @@
     .operator-box{
       background: @white;
       margin-bottom: 20px;
-      padding: 10px;
+      display: flex;
+      flex-direction: row-reverse;
+      .el-button{
+        margin-left:20px;
+      }
     }
     .item-row-detail-table{
       tr:nth-child(5) td{
