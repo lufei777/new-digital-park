@@ -84,10 +84,6 @@
       }
     },
     computed: {
-      ...mapState({
-        activeIndex:state => state.conditionSelect.activeIndex,
-        curModule:state => state.conditionSelect.curModule
-      }),
       dateTypeList(){
         // if(this.activeIndex==2){
         //   return [{

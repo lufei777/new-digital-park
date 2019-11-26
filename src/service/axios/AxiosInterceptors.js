@@ -1,4 +1,5 @@
 import axiosOrigin from "axios";
+import router from '@/router'
 // import { Loading } from 'element-ui'
 // 服务端不需loading
 const Message = require("element-ui").Message
@@ -22,7 +23,7 @@ let ssoToken = getParameterByName('sso_token');//从url中获得token
 var href = window.location.href;
 history.pushState(null, "", href.replace(/[&]?\?sso_token=[^&^#]*/g, ""));
 if (ssoToken) {
-  sessionStorage.token = ssoToken;
+  // sessionStorage.token = ssoToken;
 }
 
 var config = {};
@@ -98,10 +99,8 @@ axios.interceptors.response.use(
   function (error) {
     try {
       let redirect = error.response.headers["X-SSO-Redirect"] || error.response.headers["x-sso-redirect"];
-      if (error.response && error.response.status == 401 && redirect) {
-        debugger
-         location.href='/#/login'
-        // window.location = redirect;
+    if (error.response && error.response.status == 401 && redirect) {
+        router.push('/login');
       }
       // resetLoading();
       return Promise.reject(error);

@@ -84,9 +84,6 @@
       }
     },
     computed: {
-      ...mapState({
-        curModule:state => state.conditionSelect.curModule,
-      }),
       floorNameList() {
         return this.checkedFloorList.map((item)=>item.name).join('、')
       },
@@ -99,7 +96,7 @@
         }else if(this.fromFlag==3){
           return `${this.tmpCommonTip}分项能耗展示排名`
         }else if(this.fromFlag==5){
-          return `A3${this.floorNameList}${this.selectParams.startTime}`+
+          return `${this.floorNameList}${this.selectParams.startTime}`+
             `${this.selectParams.lastTime?'至'+this.selectParams.lastTime:''}用${this.selectParams.energy[0].name}分项展示排名`
         }
       },
@@ -107,7 +104,7 @@
         return this.checkedFloorList.map((item)=>item.id).join(',')
       },
       tmpCommonTip(){
-        return `A3${this.floorNameList}${this.selectParams.startTime}`+
+        return `${this.floorNameList}${this.selectParams.startTime}`+
           `${this.selectParams.lastTime?'至'+this.selectParams.lastTime:''}${this.energyNameList}`
       }
     },
@@ -167,7 +164,7 @@
               floorId: this.floorId,
               catalog:params.energy[0].parent,
               ids:params.energy.map((item)=>item.id).join(','),
-              parent:1 //必传代表A3
+              parent:1 //必传代表
             },...params
           }
           this.getTypeChart()
@@ -489,7 +486,7 @@
       },
       initCategoryBarChart(res){
         let myChart1 = echarts.init(this.$refs.myChart1);
-        let titleText =`A3${this.floorNameList}${this.selectParams.startTime}`+
+        let titleText =`${this.floorNameList}${this.selectParams.startTime}`+
           `${this.selectParams.lastTime?'至'+this.selectParams.lastTime:''}用${this.selectParams.energy[0].name}分项能耗统计`
         let legendData = []
         let xAxis = res.map((item)=>item.name)
@@ -510,7 +507,7 @@
       },
       initCategoryPieChart(res){
         let myChart2 = echarts.init(this.$refs.myChart2);
-        let titleText =`A3${this.floorNameList}${this.selectParams.startTime}`+
+        let titleText =`${this.floorNameList}${this.selectParams.startTime}`+
           `${this.selectParams.lastTime?'至'+this.selectParams.lastTime:''}用${this.selectParams.energy[0].name}分项能耗占比分析`
         let legendData = res.map((item)=>item.name)
         let series=[]

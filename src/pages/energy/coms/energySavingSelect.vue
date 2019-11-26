@@ -3,8 +3,8 @@
     <div class="flex-align-between condition-box">
       <div class="item-group block">
         <span class="demonstration">建筑群：</span>
-        <el-select v-model="energyA3" placeholder="请选择">
-          <el-option label="A3" value="1"></el-option>
+        <el-select v-model="energy" placeholder="请选择">
+          <el-option label="" value="1"></el-option>
         </el-select>
       </div>
       <div class="item-group block">
@@ -76,7 +76,7 @@ export default {
     let _this = this;
     return {
       curEnergy: "0", //楼层检索
-      energyA3: "1", //建筑群
+      energy: "1", //建筑群
       energySubentry: "", //能源分项
       indexEnergy: "1", //指标选择
       energySubentryData: [],
@@ -129,7 +129,7 @@ export default {
     commonParams() {
       return {
         moment: this.startTime,
-        lou: this.energyA3,
+        lou: this.energy,
         standard: this.indexEnergy,
         type: this.energySubentry,
         parent: this.curEnergy,

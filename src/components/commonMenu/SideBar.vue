@@ -183,9 +183,6 @@ export default {
       }
     }
   }
-  /*.el-tooltip{*/
-  /*text-align: center;*/
-  /*}*/
 }
 
 /*.sidebar-container .is-active {*/

@@ -46,11 +46,6 @@
       }
     },
     computed: {
-      ...mapState({
-        activeIndex:state => state.conditionSelect.activeIndex,
-        curModule:state => state.conditionSelect.curModule,
-        menuIsCollapse:state=> state.digitalPark.menuIsCollapse
-      }),
       defaultCheckedKey(){
         return this.defaultChecked.map((item)=>item.id)
       },
