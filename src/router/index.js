@@ -21,11 +21,11 @@ Vue.use(Router)
 const router = new Router({
   "routes": DigitalRouters
 })
-
+//
 router.beforeEach((to, from, next) => {
-  // console.log(to,from)
+  console.log(to,from)
   axois.get('/oaApi/user/login').then(() => {
-    sessionStorage.removeItem('logout')
+    // sessionStorage.removeItem('logout')
     next()
   }).catch(() => { })
 })

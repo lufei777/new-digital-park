@@ -76,11 +76,9 @@
       },
       async onClickUserConfigure(val){
         if(val==3){
-          // debugger
-          sessionStorage.removeItem('token')
-          sessionStorage.logout=true
-          // window.location.href='/#/digitalPark/homePage'
           await DigitalParkApi.logOut()
+          sessionStorage.removeItem('token')
+          this.$router.push('/login')
         }
       },
       onClickSetup(val){

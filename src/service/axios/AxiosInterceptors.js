@@ -99,7 +99,9 @@ axios.interceptors.response.use(
     try {
       let redirect = error.response.headers["X-SSO-Redirect"] || error.response.headers["x-sso-redirect"];
       if (error.response && error.response.status == 401 && redirect) {
-        window.location = redirect;
+        debugger
+         location.href='/#/login'
+        // window.location = redirect;
       }
       // resetLoading();
       return Promise.reject(error);
