@@ -2,11 +2,15 @@ import DigitalHomePage from '../pages/digitalPark/home/index'
 import DashBoardHomePage from '../pages/digitalPark/home/dashboardNew'
 import ModuleConfigure from '../pages/digitalPark/moduleConfigure/index'
 import DefaultPage from '../pages/digitalPark/defaultPage/index'
-
+import Login from '../pages/digitalPark/login/index'
 export default [{
   path: '/',
   redirect: '/digitalPark/homePage'
-}, {
+},{
+  path: '/login',
+  name: 'Login',
+  component: Login,
+},{
   path: '/digitalPark/homePage',
   name: 'DigitalHomePage',
   component: DigitalHomePage,
