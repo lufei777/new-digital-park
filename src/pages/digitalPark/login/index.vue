@@ -119,7 +119,7 @@
       color:#333;
     }
     .name-box,.pwd-box{
-      border-bottom:1px solid @black;
+      border-bottom:1px solid #333;
       box-sizing: border-box;
     }
     .border-css{

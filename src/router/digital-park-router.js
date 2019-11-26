@@ -9,6 +9,9 @@ export default [{
 },{
   path: '/login',
   name: 'Login',
+  meta:{
+    loginCheck:false
+  },
   component: Login,
 },{
   path: '/digitalPark/homePage',

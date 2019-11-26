@@ -1,24 +1,6 @@
 <template>
   <div class="device-record">
-    <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
-         class="energy-tree-box radius-shadow">
-      <el-select  v-model="curEnergy" placeholder="请选择" @change="getMeterTree">
-        <el-option label="电" value="1002"></el-option>
-        <el-option label="水" value="4000"></el-option>
-      </el-select>
-      <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
-        <el-tree
-          :data="meterList"
-          :props="treeProps"
-          :accordion="true"
-          :highlight-current="true"
-          node-key="id"
-          ref="navTree"
-          @node-click="onClickItemTree"
-        >
-        </el-tree>
-      </el-scrollbar>
-    </div>
+    <EnergyTree />
     <div class="right-content" v-if="!showEdit && !showAdd && !showImport">
       <div class="search-box radius-shadow flex-align">
            <div class="item-group flex-align">
@@ -72,29 +54,25 @@
 </template>
 
 <script>
-  import {mapState} from 'vuex'
   import CommonApi from '../../../service/api/commonApi'
   import Table from '../../../components/Table/index'
   import EditMeter from './editMeter'
   import AddMeter from './addMeter'
   import ImportMeter from './importMeter'
+  import EnergyTree from './coms/energyTree'
   export default {
     name: 'DeviceRecord',
     components: {
       Table,
       EditMeter,
       AddMeter,
-      ImportMeter
+      ImportMeter,
+      EnergyTree
     },
     data () {
       let _this = this
       return {
         curEnergy:'1002',
-        meterList:[],
-        treeProps:{
-          label:'text',
-          children: 'nodes',
-        },
         meterName:'',
         meterTypes:"0,1",
         parentMeter:'',
@@ -148,17 +126,9 @@
       }
     },
     computed:{
-      ...mapState({
-        menuIsCollapse:state=>state.digitalPark.menuIsCollapse
-      })
+
     },
     methods: {
-      async getMeterTree(){
-        this.meterList = await CommonApi.getMeterTree({
-          parentMeter: 0,
-          catalogId:this.curEnergy
-        })
-      },
       async getMeterTable(){
         let params={
           catalogId:this.curEnergy,
@@ -181,8 +151,7 @@
           this.curTableData=res.rows[0] || {}
         }
       },
-      onClickItemTree(val,val2){
-        if(val2.level==1) return;
+      onClickItemTree(val){
         this.parentMeter=val.id
         // this.showAdd=false
         // this.showEdit=false
@@ -249,8 +218,9 @@
         });
       },
       onClickAddBtn(){
-        this.showAdd=true
-        this.isEdit=false
+        // this.showAdd=true
+        // this.isEdit=false
+        this.$router.push("/addDevice")
       },
       onClickImportBtn(){
         this.showImport=true
@@ -259,19 +229,9 @@
         let res = this.$refs[this.tableConfig.ref].getSelectedData()
         console.log(res)
       },
-      fixTree(){
-        $(".energy-tree-box").css({
-          height:($(document).height()-110)+'px'
-        })
-      }
     },
-    async mounted(){
-      await this.getMeterTree()
+     mounted(){
       this.getMeterTable()
-      this.fixTree()
-      $(window).resize(()=>{
-        this.fixTree()
-      })
     }
   }
 </script>
@@ -326,16 +286,6 @@
       color:@mainBgColor;
       margin-bottom:20px;
       font-weight: bold;
-    }
-    .energy-tree-box{
-      height: 100%;
-      padding:20px 0;
-      background: @white;
-      bottom:20px;
-      .el-select{
-        width:120px;
-        margin:0 0 20px 65px;
-      }
     }
   }
 </style>

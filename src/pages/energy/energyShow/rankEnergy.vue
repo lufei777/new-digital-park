@@ -5,18 +5,18 @@
     </div>
     <div class="flex-align-between">
       <div class="rank-box radius-shadow flex-align-center">
-        <h4 class="rank-tip">A3总用电量</h4>
+        <h4 class="rank-tip">总用电量</h4>
         <span class="rank-value">{{overViewData.elecSum}}<span>kwh</span></span>
       </div>
       <div class="rank-box radius-shadow flex-align-center">
-        <h4 class="rank-tip">A3总用水量</h4>
+        <h4 class="rank-tip">总用水量</h4>
         <span class="rank-value">{{overViewData.waterSum}}<span>m³</span></span>
       </div>
       <div class="rank-box radius-shadow my-chart" ref="myChart1"></div>
       <div class="rank-box radius-shadow my-chart" ref="myChart2"></div>
     </div>
     <div class="table-box radius-shadow">
-      <div class="table-tip">A3{{commonTip}}能耗展示排名</div>
+      <div class="table-tip">{{commonTip}}能耗展示排名</div>
       <Table :ref="tableConfig.ref" :tableConfig="tableConfig"></Table>
     </div>
   </div>

@@ -76,8 +76,8 @@
       },
       async onClickUserConfigure(val){
         if(val==3){
-          await DigitalParkApi.logOut()
           sessionStorage.removeItem('token')
+          await DigitalParkApi.logOut()
           this.$router.push('/login')
         }
       },

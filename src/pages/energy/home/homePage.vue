@@ -8,7 +8,7 @@
       <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
-            <span>A3当年总用电量</span>
+            <span>当年总用电量</span>
           </p>
           <p class="num">
             <span>{{energyOverview.elecSum}}</span>
@@ -20,7 +20,7 @@
       <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
-            <span>A3当年总用水量</span>
+            <span>当年总用水量</span>
           </p>
           <p class="num">
             <span>{{energyOverview.waterSum}}</span>
@@ -31,7 +31,7 @@
       <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
-            <span>A3总用能人数</span>
+            <span>总用能人数</span>
           </p>
           <p class="num">
             <span>{{energyOverview.person}}</span>
@@ -42,7 +42,7 @@
       <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
-            <span>A3人均用电</span>
+            <span>人均用电</span>
           </p>
           <p class="num">
             <span>{{energyOverview.elecAvgPerson}}</span>
@@ -53,7 +53,7 @@
       <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
-            <span>A3人均用水</span>
+            <span>人均用水</span>
           </p>
           <p class="num">
             <span>{{energyOverview.waterAvgPerson}}</span>
@@ -64,7 +64,7 @@
       <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
-            <span>A3总面积</span>
+            <span>总面积</span>
           </p>
           <p class="num">
             <span>{{energyOverview.area}}</span>
@@ -75,7 +75,7 @@
       <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
-            <span>A3单位面积用电</span>
+            <span>单位面积用电</span>
           </p>
           <p class="num">
             <span>{{energyOverview.elecArea}}</span>
@@ -86,7 +86,7 @@
       <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
-            <span>A3单位面积用水</span>
+            <span>单位面积用水</span>
           </p>
           <p class="num">
             <span>{{energyOverview.waterArea}}</span>
@@ -136,7 +136,7 @@
       <span>能耗排名列表</span>
     </div>
     <div class="tabulation">
-     <div class="tabulation-title">2019年A3能耗排名展示(按综合能耗排名)</div>
+     <div class="tabulation-title">2019年能耗排名展示(按综合能耗排名)</div>
       <Table :ref="homePageTableConfig.ref" :tableConfig="homePageTableConfig"></Table>
         <!-- <Table :ref="tableConfig.ref" :tableConfig="tableConfig" ></Table> -->
     </div>
@@ -262,7 +262,7 @@ export default {
         this.homePageTableConfig.columnConfig = labelList
         this.homePageTableConfig.uiConfig.pagination.total = res.total;
         // res.dataList=res.value
-        // res.tableTip='A3能耗展示排名'
+        // res.tableTip='能耗展示排名'
         // res.hideExportBtn=true
         // this.tableData=res
 
