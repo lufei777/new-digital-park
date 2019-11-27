@@ -1,5 +1,6 @@
 import ManMadeCollectList from '../../pages/commonProject/collect/manMadeCollectList'
 import AutoCollectList from '../../pages/commonProject/collect/autoCollectList'
+import AddCollect from '../../pages/commonProject/collect/addCollect'
 import TmpRouter from '../../pages/commonProject/coms/tmpRouterBox'
 export default [{
   path:'/tmpRouter',
@@ -11,6 +12,11 @@ export default [{
     path:'/manMadeCollect',
     name:'ManMadeCollectList',
     component:ManMadeCollectList,
+    meta:{title:'人工采集'}
+  },{
+    path:'/addCollect',
+    name:'AddCollect',
+    component:AddCollect,
     meta:{title:'人工采集'}
   },{
     path:'/autoCollect',
