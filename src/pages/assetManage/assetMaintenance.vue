@@ -400,13 +400,6 @@ export default {
             return;
           }
           this.$router.push(`/addAsset?typeId=${val.id}&status=${val.status}`)
-          let tmp=JSON.parse(Cookies.get('breadcrumb'))
-          tmp.push({
-            name:'新建',
-            routeAddress:'/addAsset'
-          })
-          this.$store.commit('digitalPark/tmpBreadcrumb',tmp)
-          Cookies.set('breadcrumb',tmp)
         }else {
           this.groupName = val.name
         }

@@ -1,20 +1,23 @@
 <template>
   <div class="choose-asset-type">
-    <el-dialog :title="tip" :visible.sync="childShowTree" width="30%" :show-close="false">
-      <el-tree
-        :data="treeList"
-        :props="treeProps"
-        node-key="id"
-        @node-click="handleTreeClick"
-        ref="treeList"
-        :highlight-current="true"
-        :close-on-click-modal="false"
-      ></el-tree>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="goBack">取 消</el-button>
-        <el-button type="primary" @click="onClickSureBtn">确定</el-button>
-      </span>
-    </el-dialog>
+      <el-dialog :title="tip" :visible.sync="childShowTree" width="30%" :show-close="false">
+        <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
+        <el-tree
+          :data="treeList"
+          :props="treeProps"
+          node-key="id"
+          @node-click="handleTreeClick"
+          ref="treeList"
+          :highlight-current="true"
+          :close-on-click-modal="false"
+        ></el-tree>
+        </el-scrollbar>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="goBack">取 消</el-button>
+          <el-button type="primary" @click="onClickSureBtn">确定</el-button>
+        </span>
+      </el-dialog>
+
   </div>
 </template>
 
@@ -73,5 +76,9 @@ export default {
 
 <style lang="less">
 .choose-asset-type {
+  .el-dialog__body{
+    height:500px;
+    overflow: auto;
+  }
 }
 </style>

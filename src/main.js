@@ -44,6 +44,11 @@ import VueDND from 'awe-dnd'
 Vue.use(VueDND)
 
 // 语言包
+
+if (!Cookies.get('lang')) {
+  Cookies.set('lang', 'zh')
+}
+
 import VueI18n from 'vue-i18n'
 import LangEN from './utils/lang/en.js'
 import LangZH from './utils/lang/zh.js'
@@ -55,9 +60,6 @@ const i18n = new VueI18n({
     'zh': LangZH
   }
 });
-if (!Cookies.get('lang')) {
-  Cookies.set('lang', 'zh')
-}
 
 // lodash
 import _ from 'lodash';

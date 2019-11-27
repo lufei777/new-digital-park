@@ -2,24 +2,26 @@
   <div class="zoom-modal">
     <el-dialog
       title="请选择"
-      :visible.sync="showDialog"
+      :visible.sync="showModal"
       :show-close="false"
       width="30%"
     >
-      <el-tree
-        :data="zoomTree"
-        :props="treeProps"
-        node-key="id"
-        :default-expanded-keys="[1]"
-        ref="navTree"
-        highlight-current
-        @node-click="onClickTree"
-      >
+      <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
+        <el-tree
+          :data="zoomTree"
+          :props="treeProps"
+          node-key="id"
+          :default-expanded-keys="[1]"
+          ref="navTree"
+          highlight-current
+          @node-click="onClickTree"
+        >
       </el-tree>
+      </el-scrollbar>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="onClickCancelBtn">取 消</el-button>
-    <el-button type="primary" @click="onClickSureBtn">确 定</el-button>
-  </span>
+          <el-button @click="onClickCancelBtn">取 消</el-button>
+          <el-button type="primary" @click="onClickSureBtn">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -43,6 +45,14 @@
       }
     },
     computed:{
+      showModal:{
+        get(){
+          return this.showDialog
+        },
+        set(){
+          this.onClickCancelBtn()
+        }
+      }
     },
     methods: {
       async getAssetAllTree(){

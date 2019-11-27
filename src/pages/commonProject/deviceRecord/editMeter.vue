@@ -1,5 +1,5 @@
 <template>
-  <div class="edit-meter">
+  <div class="edit-meter radius-shadow">
     <div class="tip flex-align">
       <span class="icon"></span>
       <span>编辑表计</span>
@@ -15,10 +15,19 @@
         <el-input v-model="meterForm.memo"></el-input>
       </el-form-item>
       <el-form-item label="监控类型" prop="region">
-        <el-select v-model="meterForm.catalogId">
-          <el-option label="电" value="1002"></el-option>
-          <el-option label="水" value="4000"></el-option>
+        <el-select v-model="meterForm.catalogId" @change="onEnergyChange">
+          <el-option label="电" :value="1002"></el-option>
+          <el-option label="水" :value="4000"></el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="能耗类型">
+        <el-select v-model="meterForm.itemizeType">
+          <el-option v-for="item in energyList" :key="item.id" :label="item.text" :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="监控位置">
+        <el-input v-model="meterForm.monitorName" @focus="showMonitorModal"></el-input>
       </el-form-item>
       <el-form-item label="监测间隔" prop="time_interval">
         <el-input v-model="meterForm.time_interval" placeholder="数字+时/分/秒 如10h/10m/10s"></el-input>
@@ -29,14 +38,8 @@
       <el-form-item label="警告条件表达式">
         <el-input v-model="meterForm.warn_cond" placeholder="如 '#R > 400'"></el-input>
       </el-form-item>
-      <el-form-item label="位置">
+      <el-form-item label="安装位置">
         <el-input v-model="meterForm.floorName" @focus="showModal"></el-input>
-      </el-form-item>
-      <el-form-item label="能耗类型">
-        <el-select v-model="meterForm.itemizeType">
-          <el-option v-for="item in energyList" :key="item.id" :label="item.text" :value="item.id">
-          </el-option>
-        </el-select>
       </el-form-item>
       <el-form-item label="分项表达式">
         <el-input v-model="meterForm.itemizeExpression"></el-input>
@@ -47,37 +50,40 @@
       </el-form-item>
     </el-form>
     <ZoomModal :showDialog="showDialog"/>
+    <MeterModal :showDialog="showMonitor" :enegyId="meterForm.catalogId"></MeterModal>
   </div>
 </template>
 
 <script>
   import CommonApi from '../../../service/api/commonApi'
   import ZoomModal from '../../../components/zoomModal/index'
+  import MeterModal from './coms/meterTree'
   export default {
     name: 'EditMeter',
     components: {
-      ZoomModal
+      ZoomModal,
+      MeterModal
     },
-    props:['curMeterId','isEdit'],
+    props:[],
     data () {
       let timeValidate=function(rule,value,callback){
          let reg=/^[0-9]*[h|m|s]$/
          if(!reg.test(value)){
            callback(new Error('请填入正确的间隔时间:数字+时/分/秒 如10h/10m/10s'));
          }
-
       }
       return {
         meterForm:{
           caption:'',
           name:'',
           memo:'',
-          catalogId:"",
+          catalogId:1002,
           time_interval:'',
           warn_cond:'',
           itemizeType:'',
           itemizeExpression:'',
-          floorName:''
+          floorName:'',
+          monitorName:''
         },
         rules: {
           time_interval:[{validator: timeValidate, trigger: 'blur' }]
@@ -85,21 +91,25 @@
         meterDetail:{},
         energyList:[],
         showDialog:false,
+        showMonitor:false
       }
     },
     computed:{
-      floor(){
-        return {
-          id:this.$route.query.id,
-          name:this.$route.query.name
-        }
-      },
+      // floor(){
+      //   return {
+      //     id:this.$route.query.id,
+      //     name:this.$route.query.name
+      //   }
+      // },
+      curMeterId(){
+        return this.$route.query.meterId
+      }
     },
     watch:{
-      floor(){
-        this.meterForm.floorName=this.floor.name
-        this.meterForm.parentId=this.floor.id
-      },
+      // floor(){
+      //   this.meterForm.floorName=this.floor.name
+      //   this.meterForm.parentId=this.floor.id
+      // },
     },
     methods: {
       async getItemMeterDetail(){
@@ -110,7 +120,7 @@
           caption:this.meterDetail.caption,
           name:this.meterDetail.name,
           memo:this.meterDetail.memo,
-          catalogId:this.meterDetail.catalogId+"",
+          catalogId:this.meterDetail.catalogId,
           time_interval:this.meterDetail.time_interval,
           warn_cond:this.meterDetail.warn_cond,
           parentId:this.meterDetail.parentId,
@@ -123,13 +133,18 @@
           catalogId:2200
         })
         let tmp=[]
-        res.map((item)=>{
-          tmp.push(item)
-          item.nodes && item.nodes.map((node)=>{
-            tmp.push(node)
-          })
+        if(this.meterForm.catalogId==1002){
+          tmp.push(res[0])
+          res=res[0]
+        }else if(this.meterForm.catalogId==4000){
+          tmp.push(res[1])
+          res=res[1]
+        }
+        res.nodes && res.nodes.map((node)=>{
+          tmp.push(node)
         })
         this.energyList=tmp
+        this.meterForm.itemizeType=tmp[0].id
       },
       showModal(){
         this.showDialog=true
@@ -139,17 +154,22 @@
         let res = await CommonApi.updateMeter(this.meterForm)
       },
       goBack(){
-        this.$parent.showEdit=false
-        if(!this.isEdit){
-          this.$parent.showAdd=true
-        }
+         history.go(-1)
+      },
+      onEnergyChange(){
+        this.getEnergyListAll()
+      },
+      showMonitorModal(){
+        this.showMonitor=true
+      },
+      onClickItemMeterTree(val){
+        this.meterForm.parentMeter = val.id
+        this.meterForm.monitorName=val.text
       }
     },
-     mounted(){
-      this.getEnergyListAll()
-       if(this.isEdit){
-         this.getItemMeterDetail()
-       }
+    async mounted(){
+       await this.getEnergyListAll()
+       this.getItemMeterDetail()
     }
   }
 </script>
@@ -157,22 +177,14 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
   .edit-meter{
-    width:83%;
-    padding:10px;
-    float: right;
-    box-sizing: border-box;
     background: @white;
+    padding:20px;
     .el-form{
       width:50%;
       margin:30px auto;
     }
     .el-input{
       width:60%;
-    }
-    .go-back{
-      background: #ecf5ff;
-      color:#3a8ee6;
-      border-color:#c6e2ff;
     }
   }
 </style>

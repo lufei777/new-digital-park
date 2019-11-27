@@ -68,8 +68,7 @@
       onClickNextBtn(){
         // this.$parent.showEdit=true
         // this.$parent.showAdd=false
-        this.$router.push("/addDevice")
-        // this.$router.push(`/editMeter?typeName=${this.addForm.typeName}&&kind=PROBE`)
+        this.$router.push(`/editDevice?typeName=${this.addForm.typeName}&&kind=PROBE`)
       },
       goBack(){
         // this.$parent.showAdd=false
