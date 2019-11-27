@@ -122,7 +122,6 @@
           bgColor:'#394562',
           textColor:'#B7BAC4',
           isCollapse:false,
-          activeIndex:'',
           moduleName:'资产管理',
           moduleLogo:'iconzichanguanli'
         },
