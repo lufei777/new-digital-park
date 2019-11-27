@@ -15,10 +15,14 @@
           <el-option v-for="(item,index) in childEnergyList" :label="item.text" :value="item.id" :key="index"></el-option>
         </el-select>
       </el-form-item>
+      <el-radio-group v-model="tableRadio"  @change="agreeChange">
+          <el-radio :label="0">智能表</el-radio>
+          <el-radio :label="1">非智能表</el-radio>
+      </el-radio-group>
       <el-form-item label="设备表" prop="region">
-        <el-select v-model="collectForm.catalogId">
-          <el-option label="电" value="1002"></el-option>
-          <el-option label="水" value="4000"></el-option>
+        <el-select v-model="collectForm.catalogId"  filterable placeholder="请选择">
+            <el-option v-for="item in deviceTableList" :key="item.id" :label="item.caption" :value="item.id">
+            </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="录入时间" prop="time">
@@ -70,6 +74,8 @@
         },
         energyList:[],
         childEnergyList:[],
+        tableRadio:0,
+        deviceTableList:[]
       }
     },
     computed:{
@@ -88,9 +94,21 @@
         })
         this.energyList=res
         this.childEnergyList=res[0].nodes
-        this.collectForm.catalogId=res[0].id
+        // this.collectForm.catalogId=res[0].id
         this.collectForm.childId=res[0].nodes[0].id
       },
+      async getProbe(val){
+        let res = await CommonApi.getProbe({
+          type:val
+        })
+        if(res){
+          this.deviceTableList = res
+        }
+        console.log('res',this.tableRadio)
+      },
+      agreeChange:function() {
+				this.getProbe(this.tableRadio)
+			},
       onEnergyChange(val){
         let tmp =this.energyList.find((item)=>{
           return item.id==val
@@ -107,6 +125,7 @@
     },
     mounted(){
       this.getEnergyList()
+      this.getProbe(0)
     }
   }
 </script>
@@ -114,7 +133,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
   .add-collect{
-    margin-top: 85px;
+    // margin-top: 85px;
     padding:0 20px;
     .tip{
       height: 66px;

@@ -201,6 +201,10 @@ class CommonApi {
   @get
   previewReportData(){}
 
+  @url('/vibe-web/getProbe')
+  @get
+  getProbe(){}
+
 }
 
 export default new CommonApi()

@@ -99,7 +99,8 @@
         this.tableConfig.uiConfig.pagination.total=res.total
       },
       onClickAddBtn(){
-         this.showAdd= true
+        //  this.showAdd= true
+         this.$router.push('addCollect')
       }
     },
     mounted(){
