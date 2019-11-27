@@ -45,7 +45,7 @@
     props:['moduleType','showGoback'],
     data () {
       return {
-        langValue:Cookies.get('lang'),
+        langValue:Cookies.get('lang') || 'zh',
         userValue:'0',
         setupValue:'0'
       }
@@ -76,7 +76,6 @@
       },
       async onClickUserConfigure(val){
         if(val==3){
-          sessionStorage.removeItem('token')
           await DigitalParkApi.logOut()
           this.$router.push('/login')
         }
@@ -92,7 +91,6 @@
         }else{
           location.href='/#/digitalPark/dashboardHomePage'
         }
-        Cookies.remove('breadcrumb')
         Cookies.remove('activeIndex')
       }
     },

@@ -1,7 +1,7 @@
 <template>
   <div class="digital-park-login" @click="showErrTip=false">
     <img src="../../../../static/image/digitalPark/logo.png" class="logo-img" alt="">
-    <div class="login-box flex-column flex-align">
+    <div class="login-box flex-column flex-align" v-loading="loading">
       <span class="login-title">数字园区管理平台</span>
       <div class="flex-item flex-align border-basic name-box">
       <i class="iconfont iconzhanghao login-icon name-icon"></i>
@@ -40,7 +40,8 @@
         name:Cookies.get('username') || '',
         pwd:'',
         errTip:'',
-        showErrTip:false
+        showErrTip:false,
+        loading:false
       }
     },
     methods: {
@@ -62,6 +63,7 @@
         }
       },
       async onClickLoginBtn(){
+        this.loading=true
         let params={
           username:this.name,
           password:this.pwd
@@ -70,13 +72,14 @@
         if(res){
           sessionStorage.token=res
           Cookies.set('username',this.name)
-          // this.$router.push("/digitalPark/homePage")
+          this.$router.push("/digitalPark/homePage")
         }else{
           this.errTip='用户名或密码错误'
           this.showErrTip=true
           setTimeout(()=>{
             this.showErrTip=false
           },2000)
+          this.loading=false
         }
       }
     },

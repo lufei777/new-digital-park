@@ -1,5 +1,5 @@
 <template>
-  <div class="add-asset">
+  <div class="add-asset radius-shadow">
       <el-form ref="assetAddForm" :rules="rules" :model="assetAddForm" :inline="true"
                label-position="right" label-width="120px">
         <el-col>
@@ -181,10 +181,6 @@
       },
       goBack(){
         this.$router.push('/assetMaintenance')
-        let tmp=JSON.parse(Cookies.get('breadcrumb'))
-        tmp.pop()
-        this.$store.commit('digitalPark/tmpBreadcrumb',tmp)
-        Cookies.set('breadcrumb',tmp)
       },
       hideTreeModal(){
         this.showTree=false
@@ -369,10 +365,6 @@
         setTimeout(()=>{
           this.$router.replace('/assetMaintenance')
         },1000)
-        let tmpArr=JSON.parse(Cookies.get('breadcrumb'))
-        tmpArr.pop()
-        this.$store.commit('digitalPark/tmpBreadcrumb',tmpArr)
-        Cookies.set('breadcrumb',tmpArr)
       },
       async multiEditAsset(){
         let tmp=[]
@@ -407,8 +399,10 @@
 
 <style lang="less">
   .add-asset{
+    margin:90px 20px 20px 20px !important;
     padding-bottom:20px;
     overflow: auto;
+    background: @white;
     .el-form{
       width:60%;
       margin:0 auto;

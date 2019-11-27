@@ -49,6 +49,9 @@
       defaultCheckedKey(){
         return this.defaultChecked.map((item)=>item.id)
       },
+      ...mapState({
+        menuIsCollapse:state=>state.digitalPark.menuIsCollapse
+      })
     },
     watch:{
       searchText(val) {
