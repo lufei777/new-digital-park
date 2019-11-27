@@ -17,7 +17,7 @@
       </el-tooltip>
       <el-menu
         class="el-menu-demo"
-        :default-active="menuConfig.activeIndex"
+        :default-active="activeMenuIndex"
         :mode="menuConfig.mode"
         :background-color="menuConfig.bgColor"
         :text-color="menuConfig.textColor"
@@ -66,6 +66,10 @@ export default {
   computed: {
     isCollapse() {
       return this.menuConfig.isCollapse;
+    },
+    activeMenuIndex(){
+      //当前激活的菜单，顺序是cookie拿到的、父级传递的、默认的父级没传时使用菜单第一个
+      return Cookies.get('activeMenuIndex') || this.menuConfig.activeIndex || this.menuList[0].routeAddress
     }
   },
   watch: {
@@ -85,7 +89,7 @@ export default {
         } else {
           key = key.slice(key.indexOf("/"));
           this.$router.push(key);
-          Cookies.set("activeIndex", key);
+          Cookies.set("activeMenuIndex", key);
         }
       }
     },

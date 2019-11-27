@@ -91,7 +91,7 @@
         }else{
           location.href='/#/digitalPark/dashboardHomePage'
         }
-        Cookies.remove('activeIndex')
+        Cookies.remove('activeMenuIndex')
       }
     },
     mounted(){

@@ -7,7 +7,6 @@ import WaterDiffer from '../pages/energy/energySaving/waterDiffer.vue'
 import NightWater from '../pages/energy/energySaving/nightWater.vue'
 import ElecDiffer from '../pages/energy/energySaving/elecDiffer.vue'
 import NightElec from '../pages/energy/energySaving/nightElec.vue'
-import EnergyLogin from '../pages/energy/login/index.vue'
 import ElecAnalysis from '../pages/energy/energySaving/helloWorld.vue'
 import StatisAnalysis from './commonRouter/statisAnalysis'
 import SystemManage from './commonRouter/systemManage'
@@ -21,12 +20,8 @@ import DataReport from './commonRouter/dataReport'
 
 export default [{
   path: '/',
-  redirect: '/login'
-}, {
-  path: '/login',
-  name: 'EnergyLogin',
-  component: EnergyLogin
-}, {
+  redirect: '/energy'
+},{
   path: '/energy',
   name: 'EnergyIndex',
   component: EnergyIndex,
