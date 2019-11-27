@@ -8,7 +8,7 @@
       <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
-            <span>A3当年总用电量</span>
+            <span>当年总用电量</span>
           </p>
           <p class="num">
             <span>{{energyOverview.elecSum}}</span>
@@ -20,7 +20,7 @@
       <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
-            <span>A3当年总用水量</span>
+            <span>当年总用水量</span>
           </p>
           <p class="num">
             <span>{{energyOverview.waterSum}}</span>
@@ -31,7 +31,7 @@
       <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
-            <span>A3总用能人数</span>
+            <span>总用能人数</span>
           </p>
           <p class="num">
             <span>{{energyOverview.person}}</span>
@@ -42,7 +42,7 @@
       <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
-            <span>A3人均用电</span>
+            <span>人均用电</span>
           </p>
           <p class="num">
             <span>{{energyOverview.elecAvgPerson}}</span>
@@ -53,7 +53,7 @@
       <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
-            <span>A3人均用水</span>
+            <span>人均用水</span>
           </p>
           <p class="num">
             <span>{{energyOverview.waterAvgPerson}}</span>
@@ -64,7 +64,7 @@
       <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
-            <span>A3总面积</span>
+            <span>总面积</span>
           </p>
           <p class="num">
             <span>{{energyOverview.area}}</span>
@@ -75,7 +75,7 @@
       <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
-            <span>A3单位面积用电</span>
+            <span>单位面积用电</span>
           </p>
           <p class="num">
             <span>{{energyOverview.elecArea}}</span>
@@ -86,7 +86,7 @@
       <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
-            <span>A3单位面积用水</span>
+            <span>单位面积用水</span>
           </p>
           <p class="num">
             <span>{{energyOverview.waterArea}}</span>

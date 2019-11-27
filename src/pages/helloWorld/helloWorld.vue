@@ -1,16 +1,13 @@
 <template>
   <div class="hello">
-    <NavList />
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-  import NavList from './coms/navList'
   export default {
     name: 'HelloWorld',
     components: {
-      NavList
     },
     data () {
       return {

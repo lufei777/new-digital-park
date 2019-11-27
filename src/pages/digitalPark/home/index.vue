@@ -282,6 +282,8 @@
   .park-home-page{
     height: 100%;
     font-size: 14px;
+    background: @white;
+    /*overflow: auto;*/
     .carousel-img{
       width:100%;
       height:360px;

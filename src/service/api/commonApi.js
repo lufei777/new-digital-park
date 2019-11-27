@@ -7,7 +7,7 @@ class CommonApi {
   @get
   getEnergyList() {}
 
-  //a3所有楼层
+  //所有楼层
   @url('/vibe-web/energyCount/energy/energy_A3floor')
   @get
   getAllFloorOfA3(){}

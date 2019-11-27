@@ -29,6 +29,11 @@ class DigitalParkApi {
   @url('/oaApi/user/logout')
   @get
   logOut(){}
+
+  @url('/oaApi/user/mobileLogin')
+  @post
+  login(){}
+
 }
 
 export default new DigitalParkApi()

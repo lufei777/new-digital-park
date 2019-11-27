@@ -165,5 +165,8 @@
       background-color: #008DEA !important;
       color:@white;
     }
+    .el-scrollbar__view{
+      height: unset !important;
+    }
   }
 </style>
