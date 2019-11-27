@@ -1,7 +1,7 @@
 <template>
-  <div class="add-meter">
-    <EnergyTree />
-    <div class="right-content radius-shadow add-meter-box">
+  <div class="add-meter radius-shadow">
+    <!--<EnergyTree />-->
+    <!--<div class="radius-shadow add-meter-box">-->
       <div class="tip flex-align">
         <span class="icon"></span>
         <span>添加表计</span>
@@ -28,7 +28,7 @@
           <el-button @click="goBack" class="go-back">返回</el-button>
         </el-form-item>
       </el-form>
-    </div>
+    <!--</div>-->
 
   </div>
 </template>
@@ -66,15 +66,10 @@
         this.addForm.typeName=res[0].name
       },
       onClickNextBtn(){
-        this.$parent.showEdit=true
-        this.$parent.showAdd=false
-        this.$router.replace({
-          path:this.$route.path,
-          query:{
-            typeName:this.addForm.typeName,
-            kind:'PROBE'
-          }
-        })
+        // this.$parent.showEdit=true
+        // this.$parent.showAdd=false
+        this.$router.push("/addDevice")
+        // this.$router.push(`/editMeter?typeName=${this.addForm.typeName}&&kind=PROBE`)
       },
       goBack(){
         // this.$parent.showAdd=false
@@ -95,16 +90,14 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
   .add-meter{
+    background: @white;
+    padding:20px;
     .el-form{
       width:50%;
       margin:30px auto;
       .el-input{
         width:220px;
       }
-    }
-    .add-meter-box{
-      padding:20px;
-      background:@white;
     }
   }
 </style>
