@@ -240,7 +240,7 @@
 <style lang="less">
   @import '../less/dataDetailRow.less';
   .device-record{
-    margin-top: 50px;
+    /*margin-top: 50px;*/
     .search-box{
       padding:20px 0 20px 20px;
       background: @white;
