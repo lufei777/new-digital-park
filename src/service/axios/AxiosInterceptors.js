@@ -14,18 +14,6 @@ let resetLoading = function () {
   loadingCount = 0;
 }; */
 
-function getParameterByName(name) {
-  var match = RegExp('[?&]' + name + '=([^&^#]*)').exec(window.location.href);
-  return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
-}
-
-let ssoToken = getParameterByName('sso_token');//从url中获得token
-var href = window.location.href;
-history.pushState(null, "", href.replace(/[&]?\?sso_token=[^&^#]*/g, ""));
-if (ssoToken) {
-  // sessionStorage.token = ssoToken;
-}
-
 var config = {};
 
 // config.baseURL ='/api'
@@ -75,8 +63,6 @@ axios.interceptors.response.use(
       console.log("axios from server url:", response.config.url);
     }
     let data = response.data
-    // token超时需要重新刷新token, 600测试用  token超时直接退出
-    //  console.log('datadata',data,data.successful)
     if (data.successful) {
       if (process.server) {
         // 服务端打印日志
@@ -99,8 +85,8 @@ axios.interceptors.response.use(
   function (error) {
     try {
       let redirect = error.response.headers["X-SSO-Redirect"] || error.response.headers["x-sso-redirect"];
-    if (error.response && error.response.status == 401 && redirect) {
-        router.push('/login');
+      if (error.response && error.response.status == 401 && redirect) {
+           router.push('/login');
       }
       // resetLoading();
       return Promise.reject(error);

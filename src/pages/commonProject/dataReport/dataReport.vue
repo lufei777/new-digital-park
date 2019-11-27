@@ -21,7 +21,6 @@
           v-model="startTime"
           :type="pickerType"
           placeholder="选择日期时间"
-          value-format="yyyy-MM-dd HH:mm:ss"
           :clearable="false"
         >
         </el-date-picker>
@@ -32,7 +31,6 @@
           v-model="endTime"
           :type="pickerType"
           placeholder="选择日期时间"
-          value-format="yyyy-MM-dd HH:mm:ss"
           :clearable="false"
         >
         </el-date-picker>
@@ -80,14 +78,15 @@
         endTime:moment(new Date()).format('YYYY-MM'),
         energyList:energyList,
         curEnergy:'electricity',
-        tableData:''
+        tableData:'',
+        valueFormat:"YYYY-MM"
       }
     },
     computed:{
       commonParams() {
         return {
-          start:this.startTime,
-          end:this.endTime,
+          start:moment(this.startTime).format(this.valueFormat),
+          end:moment(this.endTime).format(this.valueFormat),
           type:this.curDateType,
           catalog:this.curEnergy,
           parentSpace:1,
@@ -98,6 +97,7 @@
     methods: {
       handleDateTypeChange(value){
         this.pickerType=value=='year'?'year':value=='monthly'?"month":'date'
+        this.valueFormat=value=='year'?'YYYY':value=='monthly'?"YYYY-MM":'YYYY-MM-DD'
       },
       async getEnergyListAll(){
         this.energyList = await CommonApi.getEnergyListAll({

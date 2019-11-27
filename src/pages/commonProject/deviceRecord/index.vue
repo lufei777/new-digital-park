@@ -28,9 +28,6 @@
           <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
         </div>
         <Table :ref="tableConfig.ref" :table-config="tableConfig">
-          <!--<template slot="custom-top" slot-scope="scope">-->
-            <!---->
-          <!--</template>-->
         </Table>
       </div>
 
@@ -143,7 +140,11 @@
           {label:'编号',prop:'id'},
           {label:'工程名称',prop:'name'},
           {label:'表名称',prop:'caption'},
-          {label:'表类型',prop:'meterType'},
+          {label:'表类型',prop:'meterType',
+            formatter: function(row, column) {
+              return row[column.property] ? '虚表' : "实表";
+            }
+          },
           {label:'分项类别',prop:'itemizeCaption'}]
         if(res && res.rows){
           this.tableConfig.data=res.rows
@@ -169,9 +170,7 @@
         this.curTableData=row
       },
       editRow(data){
-        this.curTableData=data
-        this.showEdit=true
-        this.isEdit=true
+        this.$router.push(`/editDevice?meterId=${data.id}`)
       },
       deleteRow(data){
         console.log("data",data)
