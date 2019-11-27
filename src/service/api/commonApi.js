@@ -205,6 +205,17 @@ class CommonApi {
   @get
   getProbe(){}
 
+  @url('/vibe-web/insertHandInput')
+  @post
+  insertHandInput(){}
+
+  @url('/vibe-web/deleteHandInput')
+  @get
+  deleteHandInput(){}
+
+  @url('/vibe-web/updateHandInput')
+  @post
+  updateHandInput(){}
 }
 
 export default new CommonApi()
