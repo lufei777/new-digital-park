@@ -362,9 +362,9 @@
           message,
           duration:500
         })
-        setTimeout(()=>{
-          this.$router.replace('/assetMaintenance')
-        },1000)
+        // setTimeout(()=>{
+        //   this.$router.replace('/assetMaintenance')
+        // },1000)
       },
       async multiEditAsset(){
         let tmp=[]

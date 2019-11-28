@@ -44,7 +44,7 @@ class commonFun {
     messageRelease
   }
   //this,删除的id,没有id时的提示信息，点击确定的回调函数
-  deleteTip(that, deleteId, msgTip, callBack) {
+  deleteTip(that, deleteId, msgTip, sureCallBack,cancelCallBack) {
     if (!deleteId) {
       that.$message({
         type: 'warning',
@@ -58,12 +58,13 @@ class commonFun {
       cancelButtonText: '取消',
       type: 'warning'
     }).then(() => {
-      callBack()
+      sureCallBack()
     }).catch(() => {
       that.$message({
         type: 'info',
         message: '已取消删除',
       });
+      cancelCallBack()
     });
   }
 

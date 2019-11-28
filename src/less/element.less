@@ -1,26 +1,13 @@
 .el-table th.gutter{
   display: table-cell!important;
 }
+.el-button--default{
+}
 .el-button--primary{
   background:@mainBgColor;
   border:1px solid @mainBgColor;
   &:hover{
     background: @mainHoverColor;
-  }
-  &:focus{
-    background:@mainBgColor;
-  }
-}
-.el-button--default{
-  &:hover{
-    background: #ecf5ff;
-    border-color: #c6e2ff;
-    color:#409eff;
-  }
-  &:focus{
-    background:@white;
-    color:#606266;
-    border:1px solid #dedfe6;
   }
 }
 .el-button--primary,.el-button--default{
@@ -28,6 +15,10 @@
   height:34px;
   padding:0;
 }
+.el-button.el-button--default.el-button--small.el-button--primary{
+  background: @mainBgColor;
+}
+
 .el-table th{
   background: #F4F6FC;
 }
@@ -46,6 +37,7 @@
 .el-scrollbar {
   height: 100%;
 }
+
 
 //
 .el-tree-node__content:hover{
