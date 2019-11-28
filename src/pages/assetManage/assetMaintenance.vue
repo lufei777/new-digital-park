@@ -19,41 +19,17 @@
     <div class="asset-table">
       <div class="operator-box">
         <el-button type="primary" @click="onClickImportExcel">批量导入</el-button>
-        <el-button type="primary" @click="showDeleteTip">批量删除</el-button>
+        <el-button type="primary" @click="onMultiDel">批量删除</el-button>
 
         <el-button type="primary" @click="onMultiEdit">批量编辑</el-button>
         <el-button type="primary" @click="onClickAddBtn">新建</el-button>
       </div>
-      <!-- <CommonTable :tableObj="assetData" :curPage="1">
-        <template v-slot:special-operator>
-          <el-table-column fixed="right" label="操作" align="right" width="120">
-            <template slot-scope="scope">
-              <el-button type="text" size="small" v-if="scope.row.status==1">变更</el-button>
-              <el-button type="text" size="small">调拨</el-button>
-              <el-button type="text" size="small" icon="el-icon-more"
-                         @click.stop="onClickMore(scope.$index)"
-                         class="more-btn">
-                <div v-show="scope.row.showMore" class="more-operator-box">
-                  <el-button type="text" size="small">报修</el-button>
-                  <el-button type="text" size="small">报废</el-button>
-                  <el-button type="text" size="small" @click.stop="deleteRow(scope.row)">删除</el-button>
-                </div>
-              </el-button>
-            </template>
-          </el-table-column>
-        </template>
-      </CommonTable> -->
+
       <Table :ref="assetsTableConfig.ref" :tableConfig="assetsTableConfig">
       </Table>
     </div>
 
-    <TreeModal
-      :showTree="showTree"
-      :treeList="treeList"
-      :cancelCallback="hideTreeModal"
-      :sureCallback="onClickTreeModalSureBtn"
-      :tip="modalTip"
-    />
+    <TreeModal :treeModalConfig="treeModalConfig"/>
 
     <CommonDialog class="upload-excel" :dialogConfig="excelDialogObj">
       <template slot-scope="slotConfig">
@@ -92,7 +68,7 @@ import CommonDialog from "../commonProject/coms/commonDialog";
 import CommonUpload from "../commonProject/coms/commonUpload";
 import AssetManageApi from "../../service/api/assetManageApi";
 import CommonTable from "../../components/commonTable";
-import TreeModal from "../commonProject/coms/treeModal";
+import TreeModal from ".././../components/treeModal/index";
 import CommonFun from "../../utils/commonFun";
 export default {
   name: "AssetMaintenance",
@@ -111,13 +87,24 @@ export default {
       groupName: "",
       assetData: {},
       curPage: 1,
-      showTree: false,
-      showGroup: false,
       treeList: [],
       modalTip: "",
       modalFlag: 1, //treeModal 代表所有树形弹框 1代表是资产类型 2代表是资产组
       groupTree: [],
       typeTree: [],
+      treeModalConfig:{
+        treeList:[],
+        treeConfig:{
+          treeProps:{
+            label:'name',
+            children:'childNode'
+          },
+        },
+        showModal:false,
+        modalTip:'',
+        onClickCancelBtnCallback:this.hideTreeModal,
+        onClickSureBtnCallback:this.onClickTreeModalSureBtn
+      },
       orderType: "0",
       orderBy: "create_time",
       loading:true,
@@ -141,60 +128,60 @@ export default {
       //资产管理表格
       assetsTableConfig: {
         ref: "assetsTable",
-        serverMode: {
-          url: AssetManageApi.getAssetList
+        data:[],
+        columnConfig:[],
+        btnConfig:[],
+        uiConfig: {
+          height: "auto",//"", //高度
+          selection: true, //是否多选
+          pagination:{
+            layout: "total,->, prev, pager, next, jumper",
+            pageSizes: [10, 20, 50],
+            handler:function(size,page){
+              _this.handleCurrentChange(page)
+            }
+          }
         },
-        columnConfig: [
-          {
-            prop: "coding",
-            label: "编号",
-            width: 80,
-            sortable: "custom"
-          },
-          {
-            prop: "name",
-            label: "名称",
-            // width: 150,
-            sortable: "custom"
-          },
-          {
-            prop: "groupName",
-            label: "资产组"
-            // width: 80
-          },
-          {
-            prop: "providerName",
-            label: "供应商",
-            width: 80
-          },
-          {
-            prop: "typeName",
-            label: "资产类型",
-            width: 100,
-            formatter: function(row, column) {
-              return row[column.property] ? row[column.property] : "--";
-            }
-          },
-          {
-            prop: "currentCustodian",
-            label: "当前保管人",
-            formatter: function(row, column) {
-              return row[column.property] ? row[column.property] : "--";
-            }
-            // width: 100
-          },
-          {
-            prop: "specification",
-            label: "规格型号",
-            width: 80,
-            formatter: function(row, column) {
-              return row[column.property] ? row[column.property].trim() : "--";
-            }
-          },
-          {
-            prop: "status",
-            label: "状态",
-            width: 80,
+        tableMethods: {
+          rowClick: _this.rowClick,
+          rowDblclick: _this.assetsRowDbClick,
+          sortChange:_this.sortTable
+        },
+      },
+    };
+  },
+  computed:{
+  },
+  methods: {
+    switchHide(col) {
+      let tableRefs = this.$refs;
+      if (col.hide) {
+        this.$set(col, "hide", !col.hide);
+      } else {
+        this.$set(col, "hide", true);
+      }
+      tableRefs[this.assetsTableConfig.ref].doLayout();
+    },
+    async getAssetList() {
+      //status(资产状态)：1-闲置，2-在用，3-报修，4-报废
+        let res = await AssetManageApi.getAssetList({
+          coding:this.coding,
+          name:this.name,
+          groupName:this.groupName,
+          orderType:this.orderType, //0降序1升序
+          orderBy:this.orderBy,
+          pageNum:this.curPage,
+          pageSize:10
+        })
+        this.assetsTableConfig.columnConfig=[
+          {label:'编号',prop:'coding',sortable:'custom'},
+          {label:'名称',prop:'name',sortable:'custom'},
+          {label:'资产组',prop:'groupName'},
+          {label:'供应商',prop:'providerName'},
+          {label:'资产类型',prop:'typeName'},
+          {label:'当前保管人',prop:'currentCustodian'},
+          {label:'规格型号',prop:'specification'},
+          {label:'状态',prop:'statusText',
             formatter: function(row, column) {
               switch (row[column.property]) {
                 case 1:
@@ -211,174 +198,82 @@ export default {
                   break;
               }
             }
-          }
-        ],
-        uiConfig: {
-          height: "auto",//"", //高度
-          selection: true, //是否多选
-          searchable: ["coding", "name", "groupName", "currentCustodian"],
-          pagination: {
-            //是否分页，分页是否自定义
-            layout: "total,->, prev, pager, next, jumper",
-            // pageSizes: [10, 20, 50]
-          }
-        },
-        btnConfig: {
-          prop: "operation",
-          label: "列操作",
-          fixed: "right",
-          width: 150,
-          btns: [
-            {
-              type: "basic",
-              label: "变更",
-              handler: function(row) {
-                _this.tableEdit(row);
-              }
-            },
-            {
-              type: "basic",
-              label: "调拨",
-              handler: function(row) {
-                _this.tableDel(row);
-              }
-            },
-            {
-              type: "dropDown",
-              icon: "el-icon-more",
-              showMore: false,
-              menus: [
-                {
-                  label: "报修",
-                  handler: function(row) {
-                    console.log("报修", row);
-                  }
-                },
-                {
-                  label: "报废",
-                  handler: function(row) {
-                    console.log("报废", row);
-                  }
-                },
-                {
-                  label: "删除",
-                  handler: function(scope) {
-                    AssetManageApi.delAsset({
-                      assetId:scope.row.id
-                    }).then(res=>{
-                      scope._self.refreshTable();
-                      _this.$message({
-                        type: 'success',
-                        message: '删除成功!'
-                      })
-                    })
-                  }
+          }]
+        let _this=this
+        this.assetsTableConfig.btnConfig={
+            prop: "operation",
+            label: "列操作",
+            fixed: "right",
+            width: 150,
+            btns: [{
+                label: "变更",
+                handler: function(row) {
+                  // this.tableEdit(row);
                 }
-              ]
-            }
-          ]
-        },
-        tableMethods: {
-          rowClick: _this.assetsRowClick,
-          rowDblclick: _this.assetsRowDbClick,
-          sortChange: function(sortObj, $table) {
-            console.log($table);
-            //这里返回请求后的排序数组 return []
-            AssetManageApi.getAssetList({
-              coding: "",
-              name: "",
-              groupName: "",
-              orderType: sortObj.order === "ascending" ? 1 : 0, //0降序1升序
-              orderBy: "create_time",
-              pageNum: this.curPage,
-              pageSize: 10
-            }).then(res => {
-              $table.setTableData(res.list);
-            });
+              },
+              {
+                label: "调拨",
+                handler: function(row) {
+                  // this.tableDel(row);
+                }
+              },
+              {
+                type: "dropDown",
+                icon: "el-icon-more",
+                showMore: false,
+                menus: [
+                  {
+                    label: "报修",
+                    handler: function(row) {
+                      console.log("报修", row);
+                    }
+                  },
+                  {
+                    label: "报废",
+                    handler: function(row) {
+                      console.log("报废", row);
+                    }
+                  },
+                  {
+                    label: "删除",
+                    handler: function(data){
+                      _this.deleteRow(data.row)
+                    }
+                  }]
           }
-        }
-      }
-    };
-  },
-  computed:{
-  },
-  methods: {
-    switchHide(col) {
-      let tableRefs = this.$refs;
-      if (col.hide) {
-        this.$set(col, "hide", !col.hide);
-      } else {
-        this.$set(col, "hide", true);
-      }
-      tableRefs[this.assetsTableConfig.ref].doLayout();
+        ]
+      },
+         this.assetsTableConfig.data=res.list
+         this.assetsTableConfig.uiConfig.pagination.total=res.total
+         this.loading=false
+      },
+    onClickSearchBtn(){
+      this.curPage=1
+      this.getAssetList()
     },
-    assetsRowClick(row,column,e){
-
+    onClickResetBtn(){
+      this.curPage=1
+      this.groupName=''
+      this.coding=''
+      this.name=''
+      this.orderType=1,
+      this.orderBy='create_time'
+      this.getAssetList()
     },
-    assetsRowDbClick(row,column,e){
-      this.isEdit=true
-      this.$router.push(`/addAsset?assetId=${row.id}&typeId=${row.typeId}`)
+    onClickAddBtn(){
+      this.treeModalConfig.treeList=this.typeTree
+      this.treeModalConfig.modalTip="选择资产类型"
+      this.treeModalConfig.showModal = true
+      this.modalFlag=1
     },
-    async getAssetList() {
-      //status(资产状态)：1-闲置，2-在用，3-报修，4-报废
-        let res = await AssetManageApi.getAssetList({
-          coding:this.coding,
-          name:this.name,
-          groupName:this.groupName,
-          orderType:this.orderType, //0降序1升序
-          orderBy:this.orderBy,
-          pageNum:this.curPage,
-          pageSize:10
-        })
-        res.list.map((item)=>{
-          item.showMore=false
-          item.statusText = item.status==1?'闲置':item.status==2?'在用':item.status==3?'报修':'报废'
-        })
-        res.labelList=[{name:'',prop:'',type:'selection'},
-          {name:'编号',prop:'coding',sort:'custom'},
-          {name:'名称',prop:'name',sort:'custom'},
-          {name:'资产组',prop:'groupName'},
-          {name:'供应商',prop:'providerName'},
-          {name:'资产类型',prop:'typeName'},
-          {name:'当前保管人',prop:'currentCustodian'},
-          {name:'规格型号',prop:'specification'},
-          {name:'状态',prop:'statusText'}]
-        res.hideExportBtn=true
-        res.dataList=res.list
-        this.assetData=res
-        this.loading=false
-      },
-      onClickSearchBtn(){
-        this.curPage=1
-        this.getAssetList()
-      },
-      onClickResetBtn(){
-        this.curPage=1
-        this.groupName=''
-        this.coding=''
-        this.name=''
-        this.orderType=1,
-        this.orderBy='create_time'
-        this.getAssetList()
-      },
-      onClickAddBtn(){
-        this.treeList=this.typeTree
-        this.modalTip="选择资产类型"
-        this.showTree = true
-        this.modalFlag=1
-      },
-      rowClick(row){
+    rowClick(row){
         this.isEdit=true
         this.$router.push(`/addAsset?assetId=${row.id}&typeId=${row.typeId}`)
-      },
-      onClickMore(index){
-        console.log(index)
-        this.assetData.dataList[index].showMore=!this.assetData.dataList[index].showMore
-      },
+    },
       onShowGroup(){
-        this.treeList=this.groupTree
-        this.showTree=true
-        this.modalTip="选择资产组"
+        this.treeModalConfig.treeList=this.groupTree
+        this.treeModalConfig.showModal=true
+        this.treeModalConfig.modalTip="选择资产组"
         this.modalFlag=2
       },
       async getAssetTypeList(){
@@ -386,10 +281,9 @@ export default {
         this.typeTree =res
       },
       hideTreeModal(){
-        this.showTree=false
+        this.treeModalConfig.showModal=false
       },
       onClickTreeModalSureBtn(val){
-        this.showTree=false
         if(this.modalFlag==1){
           if(!val.id){
             this.$message({
@@ -402,7 +296,9 @@ export default {
           this.$router.push(`/addAsset?typeId=${val.id}&status=${val.status}`)
         }else {
           this.groupName = val.name
+          this.treeModalConfig.showModal=false
         }
+
     },
     async getAssetGroupTree() {
       let res = await AssetManageApi.getAssetGroupTree();
@@ -419,7 +315,7 @@ export default {
       this.getAssetList();
     },
     showDeleteTip() {
-      CommonFun.deleteTip(this, this.curAssetIds, "请至少选择一条资产！", this.sureDelete);
+      CommonFun.deleteTip(this, this.curAssetIds, "请至少选择一条资产！", this.sureDelete,this.cancelDelete);
     },
     async sureDelete() {
       console.log(this.curAssetIds);
@@ -430,16 +326,16 @@ export default {
         type: 'success',
         message: '删除成功!'
       })
+      this.curAssetIds=''
       this.getAssetList()
+    },
+    cancelDelete(){
+      this.curAssetIds=''
     },
     deleteRow(val) {
       this.curAssetIds=val.id
       console.log("val",this.curAssetIds)
-      this.sureDelete()
-    },
-    handleSelectionChange(val) {
-      let tmp = val.map(item => item.id).join(",");
-      this.curAssetIds = tmp;
+      this.showDeleteTip()
     },
     //excel导入
     onClickImportExcel() {
@@ -457,6 +353,8 @@ export default {
       });
     },
     onMultiEdit(){
+      this.curAssetIds=this.$refs['assetsTable'].getSelectedData().length &&
+                       this.$refs['assetsTable'].getSelectedData().map((item)=>item.id)
       if(!this.curAssetIds){
         this.$message({
           type:'warning',
@@ -466,6 +364,11 @@ export default {
       }else{
         this.$router.push(`/addAsset?assetIds=${this.curAssetIds}`)
       }
+    },
+    onMultiDel(){
+      this.curAssetIds=this.$refs['assetsTable'].getSelectedData().length &&
+      this.$refs['assetsTable'].getSelectedData().map((item)=>item.id).join(",")
+      this.showDeleteTip()
     }
   },
   mounted() {

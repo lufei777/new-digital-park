@@ -69,11 +69,9 @@
 
 <script>
 import CommonApi from "../../../service/api/commonApi";
-import ZoomModal from "../../../components/zoomModal/index";
 export default {
   name: "AddCollect",
   components: {
-    ZoomModal
   },
   props: ["curMeterId", "isEdit"],
   data() {

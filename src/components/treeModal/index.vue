@@ -1,12 +1,12 @@
 <template>
   <div class="common-tree-modal">
     <el-dialog
-      title="请选择"
+      :title="treeModalConfig.modalTip || '请选择'"
       :visible.sync="showModal"
       :show-close="false"
       width="30%"
     >
-      <Tree :tree-list="treeList" :tree-config="modalTreeConfig"/>
+      <Tree :tree-list="treeModalConfig.treeList" :tree-config="treeConfig"/>
       <span slot="footer" class="dialog-footer">
           <el-button @click="onClickCancelBtn">取 消</el-button>
           <el-button type="primary" @click="onClickSureBtn">确 定</el-button>
@@ -19,7 +19,7 @@
   import Tree from '../tree/index'
   export default {
     name: 'ZoomModal',
-    props:["showDialog","treeList",'treeConfig','onClickSureBtnCallback','onClickCancelBtnCallback'],
+    props:['treeModalConfig'],
     components: {
       Tree
     },
@@ -31,24 +31,26 @@
     computed:{
       showModal:{
         get(){
-          return this.showDialog
+          return this.treeModalConfig.showModal
         },
         set(){
           this.onClickCancelBtn()
         }
       },
-      modalTreeConfig(){
-        return{...this.treeConfig,...{
+      treeConfig(){
+        return{...this.treeModalConfig.treeConfig,...{
             onClickTreeNodeCallBack:this.onClickTreeNodeCallBack
         }}
       }
     },
     methods: {
       onClickSureBtn(){
-        this.onClickSureBtnCallback && this.onClickSureBtnCallback(this.curNode)
+        this.treeModalConfig.onClickSureBtnCallback &&
+        this.treeModalConfig.onClickSureBtnCallback(this.curNode)
       },
       onClickCancelBtn(){
-        this.onClickCancelBtnCallback && this.onClickCancelBtnCallback()
+        this.treeModalConfig.onClickCancelBtnCallback &&
+        this.treeModalConfig.onClickCancelBtnCallback()
       },
       onClickTreeNodeCallBack(val){
          this.curNode=val

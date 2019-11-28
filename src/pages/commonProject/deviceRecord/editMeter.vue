@@ -49,23 +49,16 @@
         <el-button @click="goBack" class="go-back">返回</el-button>
       </el-form-item>
     </el-form>
-    <TreeModal :showDialog="showDialog" :treeList="treeList" :tree-config="treeConfig"
-               :on-click-sure-btn-callback="onClickModalSureBtn"
-               :onClickCancelBtnCallback="onClickModalCancelBtn"
-    />
+    <TreeModal :tree-modal-config="treeModalConfig"/>
   </div>
 </template>
 
 <script>
   import CommonApi from '../../../service/api/commonApi'
-  import ZoomModal from '../../../components/zoomModal/index'
-  import MeterModal from './coms/meterTree'
   import TreeModal from '../../../components/treeModal/index'
   export default {
     name: 'EditMeter',
     components: {
-      ZoomModal,
-      MeterModal,
       TreeModal
     },
     props:[],
@@ -96,11 +89,16 @@
         energyList:[],
         showDialog:false,
         showMonitor:false,
-        treeConfig:{
-          defaultExpandedkeys:[],
-        },
-        treeList:[],
-        spaceList:[]
+        spaceList:[],
+        modalFlag:1,
+        treeModalConfig:{
+          treeList:[],
+          treeConfig:{
+            defaultExpandedkeys:[],
+          },
+         onClickSureBtnCallback:this.onClickModalSureBtn,
+         onClickCancelBtnCallback:this.onClickModalCancelBtn
+        }
       }
     },
     computed:{
@@ -163,6 +161,7 @@
         this.monitorList=res
       },
       showTreeModal(flag){
+        this.modalFlag=flag
         if(flag==1){
           this.treeList=this.monitorList
           this.treeConfig.defaultExpandedkeys=[this.monitorList[0].id]
@@ -173,10 +172,10 @@
         this.showDialog=true
       },
       onClickModalSureBtn(val){
-        if(this.flag==1){
+        if(this.modalFlag==1){
           this.meterForm.parentMeter = val.id
           this.meterForm.monitorName=val.text
-        }else{
+        }else if(this.modalFlag==2){
           this.meterForm.floorName=val.text
           this.meterForm.parentId=val.id
         }

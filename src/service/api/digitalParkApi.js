@@ -34,6 +34,9 @@ class DigitalParkApi {
   @post
   login(){}
 
+  @url("/oaApi/user/getNowUser")
+  @get
+  getUserInfo(){}
 }
 
 export default new DigitalParkApi()

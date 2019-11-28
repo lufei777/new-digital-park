@@ -69,7 +69,8 @@ export default {
     },
     activeMenuIndex(){
       //当前激活的菜单，顺序是cookie拿到的、父级传递的、默认的父级没传时使用菜单第一个
-      return Cookies.get('activeMenuIndex') || this.menuConfig.activeIndex || this.menuList[0].routeAddress
+      return this.menuConfig.specialRoute?'':
+        (Cookies.get('activeMenuIndex') || this.menuConfig.activeIndex || this.menuList[0].routeAddress)
     }
   },
   watch: {

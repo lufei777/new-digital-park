@@ -26,7 +26,7 @@
          </el-select><i>|</i>
      </span>
      <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
-          <el-select v-model="userValue" placeholder="admin" @change="onClickUserConfigure">
+          <el-select v-model="userValue" placeholder="" @change="onClickUserConfigure">
               <el-option label="admin" value="0" hidden></el-option>
               <el-option :label="$t('homeHeader.personalCenter')" value="1"></el-option>
               <el-option :label="$t('homeHeader.changePassword')" value="2"></el-option>
@@ -47,7 +47,8 @@
       return {
         langValue:Cookies.get('lang') || 'zh',
         userValue:'0',
-        setupValue:'0'
+        setupValue:'0',
+        userInfo:{}
       }
     },
     computed:{
@@ -76,6 +77,7 @@
       },
       async onClickUserConfigure(val){
         if(val==3){
+          sessionStorage.removeItem('token')
           await DigitalParkApi.logOut()
           this.$router.push('/login')
         }
@@ -92,9 +94,13 @@
           location.href='/#/digitalPark/dashboardHomePage'
         }
         Cookies.remove('activeMenuIndex')
+      },
+      async getUserInfo(){
+        this.userInfo = await DigitalParkApi.getUserInfo()
       }
     },
     mounted(){
+      this.getUserInfo()
     }
   }
 </script>
