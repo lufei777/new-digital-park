@@ -40,20 +40,18 @@
       </div>
 
     </div>
-    <AddCollect v-if="showAdd" />
   </div>
 </template>
 
 <script>
   import CommonApi from '../../../service/api/commonApi'
   import Table from '../../../components/Table/index'
-  import AddCollect from './addCollect'
+import commonApi from '../../../service/api/commonApi';
 
   export default {
     name: 'ManMadeCollectList',
     components: {
-      Table,
-      AddCollect
+      Table
     },
     data () {
       let _this = this
@@ -72,10 +70,33 @@
             layout: "total,->, prev, pager, next, jumper",
           }
         },
+        btnConfig:{
+          prop: "operation",
+          label: "操作",
+          fixed: "right",
+          width: 150,
+          btns:[
+            {
+              type: "basic",
+              label: "修改",
+              handler: function(data) {
+                _this.tableEdit(data.row);
+              }
+            },
+            {
+              type: "basic",
+              label: "删除",
+              handler: function(data) {
+                _this.tableDel(data.row);
+              }
+            }
+          ]
+        },
         tableMethods: {
         }
        },
-       showAdd: false
+       showAdd: false,
+       deviceId:""
       }
     },
     methods: {
@@ -93,13 +114,56 @@
         this.tableConfig.columnConfig=[
           {label:'监测器名称',prop:'monitorStr'},
           {label:'录入时间',prop:'lookTime'},
-          {label:'用户名',prop:''},
+          {label:'用户名',prop:'person'},
           {label:'表值',prop:'value'}]
-        this.tableConfig.data=res.value
+        this.tableConfig.data=res.data
         this.tableConfig.uiConfig.pagination.total=res.total
+        if(res && res.data){
+          res.data.map(item=>{
+            this.deviceId = item.id
+          })
+        }
+        
+      },
+      tableEdit(data){
+        // this.$router.push('/addCollect')
+        console.log('data',data)
+        this.$router.push({
+          path:'addCollect',
+          query:data
+        })
+      },
+      async deviceDel(){
+        await commonApi.deleteHandInput({
+          idStr:this.deviceId
+        })
+        this.$message({
+              type: 'success',
+              message: '删除成功!'
+         });
+         this.getManMadeCollectList()
+      },
+      tableDel(data){
+          this.deviceId=data.id
+          this.deleteTip()
+      },
+      deleteTip(){
+        this.$confirm('确定要删除吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.deviceDel()
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除',
+          });
+        });
       },
       onClickAddBtn(){
-         this.showAdd= true
+        //  this.showAdd= true
+         this.$router.push('/addCollect')
       }
     },
     mounted(){

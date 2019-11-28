@@ -16,7 +16,7 @@
           </p>
         </div>
       </div>
-      
+
       <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
@@ -126,8 +126,12 @@
     </div>
 
     <div class="pieCharts flex-align-between">
-      <div class="pieChart box"><div ref="pieChart1" class="chart-inner"></div></div>
-      <div  class="pieChart box"><div ref="pieChart2" class="chart-inner"></div></div>
+      <div class="pieChart box">
+        <div ref="pieChart1" class="chart-inner"></div>
+      </div>
+      <div class="pieChart box">
+        <div ref="pieChart2" class="chart-inner"></div>
+      </div>
       <!-- <div class="pieChart box"></div> -->
     </div>
 
@@ -136,9 +140,8 @@
       <span>能耗排名列表</span>
     </div>
     <div class="tabulation">
-     <div class="tabulation-title">2019年能耗排名展示(按综合能耗排名)</div>
+      <div class="tabulation-title">2019年A3能耗排名展示(按综合能耗排名)</div>
       <Table :ref="homePageTableConfig.ref" :tableConfig="homePageTableConfig"></Table>
-        <!-- <Table :ref="tableConfig.ref" :tableConfig="tableConfig" ></Table> -->
     </div>
   </div>
 </template>
@@ -148,16 +151,14 @@ import echarts from "echarts";
 import EnergyApi from "../../../service/api/energyApi";
 import CommonApi from "../../../service/api/commonApi";
 import ChartUtils from "../../../utils/chartUtils";
-import CommonTable from '../../../components/commonTable'
 import Table from "../../../components/Table/index";
 export default {
   name: "HomePage",
   components: {
-    CommonTable,
     Table
   },
   data() {
-    let _this = this
+    let _this = this;
     return {
       energyOverview: {},
       currentTime: new Date().getFullYear() + "-" + "01",
@@ -178,10 +179,7 @@ export default {
       ],
       dateType: "电",
       catalog: 34,
-      tableData: [],
       currentPage: 1, //当前页
-      total: 0,
-      size: "",
       rankType: "elecAndWaterSum",
       rank: "asc",
       homePageTableConfig: {
@@ -213,7 +211,7 @@ export default {
         selectType: 1
       });
       this.piechart1(this.energyOverview);
-      this.piechart2(this.energyOverview)
+      this.piechart2(this.energyOverview);
     },
     async getEnergyEcharts() {
       let res = await CommonApi.getTbhbChart({
@@ -227,6 +225,22 @@ export default {
       this.createCharts(res);
     },
     async rankingList() {
+      let labelList = [{ label: "排名", prop: "xulie", sortable: false },
+        { label: "建筑楼层", prop: "floor", sortable: false },
+        { label: "综合耗能", prop: "elecAndWaterSum", sortable: "custom" },
+        { label: "总用电量", prop: "elecSum", sortable: "custom" },
+        { label: "照明用电", prop: "zmElec", sortable: "custom" },
+        { label: "空调用电", prop: "zmElec", sortable: "custom" },
+        { label: "特殊用电", prop: "tsElec", sortable: "custom" },
+        { label: "其他用电", prop: "tsElec", sortable: "custom" },
+        { label: "动力用电", prop: "dlElec", sortable: "custom" },
+        { label: "总用水量", prop: "waterSum", sortable: "custom" },
+        { label: "生活用水", prop: "shWater", sortable: "custom" },
+        { label: "生活污水", prop: "wsWater", sortable: "custom" },
+        { label: "空调用水", prop: "ktWater", sortable: "custom" },
+        { label: "消防用水", prop: "xfWater", sortable: "custom" },
+        { label: "其他用水", prop: "qtWater", sortable: "custom" }];
+      this.homePageTableConfig.columnConfig = labelList;
       let res = await EnergyApi.getEnergyRanking({
         redioType: 0,
         startTime: 2019,
@@ -237,38 +251,9 @@ export default {
         rank: this.rank
       });
       if (res && res.total) {
-        console.log(111,res)
-        this.total = res.total;
-       this.homePageTableConfig.data = res.value
-        
-        // res.value[0].elecAndWaterSum=(Math.random()*10000).toFixed(2)
-        // res.value[0].elecSum=(Math.random()*10000).toFixed(2)
-        let labelList=[
-          {label:'排名', prop:'xulie', sortable:false},
-        {label: '建筑楼层', prop:'floor', sortable:false},
-        {label:'综合耗能',prop:'elecAndWaterSum',sortable:'custom'},
-        {label:'总用电量',prop:'elecSum',sortable:'custom'},
-        {label:'照明用电',prop:'zmElec',sortable:'custom'},
-        {label:'空调用电',prop:'zmElec',sortable:'custom'},
-        {label:'特殊用电',prop:'tsElec',sortable:'custom'},
-        {label:'其他用电',prop:'tsElec',sortable:'custom'},
-        {label:'动力用电',prop:'dlElec',sortable:'custom'},
-        {label:'总用水量',prop:'waterSum',sortable:'custom'},
-        {label:'生活用水',prop:'shWater',sortable:'custom'},
-        {label:'生活污水',prop:'wsWater',sortable:'custom'},
-        {label:'空调用水',prop:'ktWater',sortable:'custom'},
-        {label:'消防用水',prop:'xfWater',sortable:'custom'},
-        {label:'其他用水',prop:'qtWater',sortable:'custom'}]
-        this.homePageTableConfig.columnConfig = labelList
+        this.homePageTableConfig.data = res.value;
         this.homePageTableConfig.uiConfig.pagination.total = res.total;
-        // res.dataList=res.value
-        // res.tableTip='能耗展示排名'
-        // res.hideExportBtn=true
-        // this.tableData=res
-
-        
       }
-      
     },
     DateTypeChange(value) {
       this.catalog = value;
@@ -336,14 +321,14 @@ export default {
               // }
               label: {
                 show: true,
-                position: 'top',
-                formatter: '{c} %'
+                position: "top",
+                formatter: "{c} %"
               }
             }
           }
         }
-      ]
-      let data={
+      ];
+      let data = {
         legendData,
         xAxis,
         series,
@@ -354,24 +339,24 @@ export default {
           type: 'value',
           name: '能耗(kwh)',
           axisLabel: {
-            formatter: '{value} kwh'
-          }
-        },
+              formatter: "{value} kwh"
+            }
+          },
           {
             show: true,
-            type: 'value',
-            name: '增长率',
+            type: "value",
+            name: "增长率",
             min: -100,
             max: 100,
             axisLabel: {
-              formatter: '{value} %'
+              formatter: "{value} %"
             }
           }
-        ],
-      }
+        ]
+      };
 
-       ChartUtils.handleBarChart(myChart,data)
-        myChart.setOption(option)
+      ChartUtils.handleBarChart(myChart, data);
+      myChart.setOption(option);
     },
     piechart1(res) {
       let myPieChart = echarts.init(this.$refs.pieChart1);
@@ -385,31 +370,34 @@ export default {
         };
         dataList.push(itemObj);
       });
-      let seriesData =dataList
-      let titleText = "当年分项用电占比"
+      let seriesData = dataList;
+      let titleText = "当年分项用电占比";
       let data = {
         legendData,
         seriesData,
-        titleText,
+        titleText
       };
       window.onresize = myPieChart.resize;
       ChartUtils.hollowPieChart(myPieChart, data);
     },
     piechart2(res){
       let myPieChart = echarts.init(this.$refs.pieChart2);
-      let legendData = ['生活用水','消防用水','空调用水','其他用水'];
-      let dataList = [{
-        name:'生活用水',
-        value:1989555
-      },{ name:'消防用水',
-        value:1172323
-       },{
-        name:'空调用水',
-        value:100242,
-       },{
-        name:'其他用水',
-        value:353431
-      }];
+      let legendData = ["生活用水", "消防用水", "空调用水", "其他用水"];
+      let dataList = [
+        {
+          name: "生活用水",
+          value: 1989555
+        },
+        { name: "消防用水", value: 1172323 },
+        {
+          name: "空调用水",
+          value: 100242
+        },
+        {
+          name: "其他用水",
+          value: 353431
+        }
+      ];
       // res.elecList.map(item => {
       //   var itemObj = {
       //     value: item.value,
@@ -417,8 +405,8 @@ export default {
       //   };
       //   dataList.push(itemObj);
       // });
-      let seriesData =dataList
-      let titleText = "当年分项用水占比"
+      let seriesData = dataList;
+      let titleText = "当年分项用水占比";
       let data = {
         legendData,
         seriesData,
@@ -562,7 +550,7 @@ export default {
       box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.1);
       /*padding:10px;*/
       box-sizing: border-box;
-      background-color:@white;
+      background-color: @white;
     }
   }
   // 能耗排名
@@ -584,12 +572,8 @@ export default {
       color: #666666;
       margin-bottom: 15px;
     }
-    .el-pagination {
-      float: right;
-      margin-top: 15px;
-    }
   }
-  .chart-inner{
+  .chart-inner {
     height: 100%;
   }
 }
