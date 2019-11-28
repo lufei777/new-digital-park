@@ -1,6 +1,15 @@
 <template>
   <div class="device-record">
-    <EnergyTree />
+
+    <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
+         class="energy-tree-box radius-shadow">
+       <el-select  v-model="curEnergy" placeholder="请选择" @change="onEnergyChange">
+        <el-option label="电" value="1002"></el-option>
+        <el-option label="水" value="4000"></el-option>
+      </el-select>
+      <Tree :tree-list="meterList" :tree-config="meterTreeConfig"></Tree>
+    </div>
+
     <div class="right-content" v-if="!showEdit && !showAdd && !showImport">
       <div class="search-box radius-shadow flex-align">
            <div class="item-group flex-align">
@@ -51,12 +60,13 @@
 </template>
 
 <script>
+  import {mapState} from 'vuex'
   import CommonApi from '../../../service/api/commonApi'
   import Table from '../../../components/Table/index'
   import EditMeter from './editMeter'
   import AddMeter from './addMeter'
   import ImportMeter from './importMeter'
-  import EnergyTree from './coms/energyTree'
+  import Tree from '../../../components/tree/index'
   export default {
     name: 'DeviceRecord',
     components: {
@@ -64,7 +74,7 @@
       EditMeter,
       AddMeter,
       ImportMeter,
-      EnergyTree
+      Tree
     },
     data () {
       let _this = this
@@ -119,11 +129,19 @@
         deleteId:'',
         showAdd:false,
         isEdit:false,
-        showImport:false
+        showImport:false,
+        meterList:[],
+        meterTreeConfig:{
+          nodeKey:'id',
+          onClickTreeNodeCallBack:this.onClickTreeNodeCallBack,
+          defaultExpandedkeys:[]
+        }
       }
     },
     computed:{
-
+      ...mapState({
+        menuIsCollapse:state=>state.digitalPark.menuIsCollapse
+      })
     },
     methods: {
       async getMeterTable(){
@@ -152,11 +170,8 @@
           this.curTableData=res.rows[0] || {}
         }
       },
-      onClickItemTree(val){
+      onClickTreeNodeCallBack(val){
         this.parentMeter=val.id
-        // this.showAdd=false
-        // this.showEdit=false
-        // this.getMeterTable()
       },
       handleCurrentChange(val){
         this.curPage=val
@@ -228,9 +243,35 @@
         let res = this.$refs[this.tableConfig.ref].getSelectedData()
         console.log(res)
       },
+      async getMeterTree(){
+        let res  = await CommonApi.getMeterTree({
+          parentMeter: 0,
+          catalogId:this.curEnergy
+        })
+        this.meterList=res
+        this.meterTreeConfig.defaultExpandedkeys=[res[0].id]
+      },
+      onEnergyChange(val){
+        this.curEnergy=val
+        this.getMeterTree()
+        this.fixTree()
+        $(window).resize(()=>{
+          this.fixTree()
+        })
+      },
+      fixTree(){
+        $(".energy-tree-box").css({
+          height:($(document).height()-110)+'px'
+        })
+      },
     },
      mounted(){
+      this.getMeterTree()
       this.getMeterTable()
+      this.fixTree()
+      $(window).resize(()=>{
+       this.fixTree()
+     })
     }
   }
 </script>
@@ -285,6 +326,16 @@
       color:@mainBgColor;
       margin-bottom:20px;
       font-weight: bold;
+    }
+    .energy-tree-box{
+      height: 100%;
+      padding:20px 0;
+      background: @white;
+      bottom:20px;
+      .el-select{
+        width:120px;
+        margin:0 0 20px 65px;
+      }
     }
   }
 </style>

@@ -27,7 +27,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="监控位置">
-        <el-input v-model="meterForm.monitorName" @focus="showMonitorModal"></el-input>
+        <el-input v-model="meterForm.monitorName" @focus="showTreeModal(1)"></el-input>
       </el-form-item>
       <el-form-item label="监测间隔" prop="time_interval">
         <el-input v-model="meterForm.time_interval" placeholder="数字+时/分/秒 如10h/10m/10s"></el-input>
@@ -39,7 +39,7 @@
         <el-input v-model="meterForm.warn_cond" placeholder="如 '#R > 400'"></el-input>
       </el-form-item>
       <el-form-item label="安装位置">
-        <el-input v-model="meterForm.floorName" @focus="showModal"></el-input>
+        <el-input v-model="meterForm.floorName" @focus="showTreeModal(2)"></el-input>
       </el-form-item>
       <el-form-item label="分项表达式">
         <el-input v-model="meterForm.itemizeExpression"></el-input>
@@ -49,8 +49,10 @@
         <el-button @click="goBack" class="go-back">返回</el-button>
       </el-form-item>
     </el-form>
-    <ZoomModal :showDialog="showDialog"/>
-    <MeterModal :showDialog="showMonitor" :enegyId="meterForm.catalogId"></MeterModal>
+    <TreeModal :showDialog="showDialog" :treeList="treeList" :tree-config="treeConfig"
+               :on-click-sure-btn-callback="onClickModalSureBtn"
+               :onClickCancelBtnCallback="onClickModalCancelBtn"
+    />
   </div>
 </template>
 
@@ -58,11 +60,13 @@
   import CommonApi from '../../../service/api/commonApi'
   import ZoomModal from '../../../components/zoomModal/index'
   import MeterModal from './coms/meterTree'
+  import TreeModal from '../../../components/treeModal/index'
   export default {
     name: 'EditMeter',
     components: {
       ZoomModal,
-      MeterModal
+      MeterModal,
+      TreeModal
     },
     props:[],
     data () {
@@ -91,25 +95,20 @@
         meterDetail:{},
         energyList:[],
         showDialog:false,
-        showMonitor:false
+        showMonitor:false,
+        treeConfig:{
+          defaultExpandedkeys:[],
+        },
+        treeList:[],
+        spaceList:[]
       }
     },
     computed:{
-      // floor(){
-      //   return {
-      //     id:this.$route.query.id,
-      //     name:this.$route.query.name
-      //   }
-      // },
       curMeterId(){
         return this.$route.query.meterId
       }
     },
     watch:{
-      // floor(){
-      //   this.meterForm.floorName=this.floor.name
-      //   this.meterForm.parentId=this.floor.id
-      // },
     },
     methods: {
       async getItemMeterDetail(){
@@ -146,30 +145,59 @@
         this.energyList=tmp
         this.meterForm.itemizeType=tmp[0].id
       },
-      showModal(){
+      onEnergyChange(){
+        this.getEnergyListAll()
+      },
+      async getAssetAllTree(){
+        let res =  await CommonApi.getAssetAllTree({
+          flag: "space",
+          locationRoot: 1
+        })
+        this.spaceList = res
+      },
+      async getMeterTree(){
+        let res = await CommonApi.getMeterTree({
+          parentMeter: 0,
+          catalogId:this.enegyId
+        })
+        this.monitorList=res
+      },
+      showTreeModal(flag){
+        if(flag==1){
+          this.treeList=this.monitorList
+          this.treeConfig.defaultExpandedkeys=[this.monitorList[0].id]
+        }else if(flag==2){
+          this.treeList=this.spaceList
+          this.treeConfig.defaultExpandedkeys=[this.spaceList[0].id]
+        }
         this.showDialog=true
+      },
+      onClickModalSureBtn(val){
+        if(this.flag==1){
+          this.meterForm.parentMeter = val.id
+          this.meterForm.monitorName=val.text
+        }else{
+          this.meterForm.floorName=val.text
+          this.meterForm.parentId=val.id
+        }
+        this.showDialog=false
+      },
+      onClickModalCancelBtn(){
+        this.showDialog=false
       },
       async submitForm(){
         console.log(this.meterForm)
         let res = await CommonApi.updateMeter(this.meterForm)
       },
       goBack(){
-         history.go(-1)
+        history.go(-1)
       },
-      onEnergyChange(){
-        this.getEnergyListAll()
-      },
-      showMonitorModal(){
-        this.showMonitor=true
-      },
-      onClickItemMeterTree(val){
-        this.meterForm.parentMeter = val.id
-        this.meterForm.monitorName=val.text
-      }
     },
     async mounted(){
        await this.getEnergyListAll()
        this.getItemMeterDetail()
+       this.getAssetAllTree()
+       this.getMeterTree()
     }
   }
 </script>
