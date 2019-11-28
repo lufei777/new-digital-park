@@ -12,9 +12,10 @@
           :props="treeConfig.treeProps || treeProps"
           :node-key="treeConfig.nodeKey || 'id'"
           :default-expanded-keys="treeConfig.defaultExpandedkeys"
-          :ref="treeConfig.ref || 'TreeRef'"
+          :ref="treeConfig.ref || 'treeRef'"
           highlight-current
           @node-click="onClickNode"
+          :filter-node-method="filterNode"
         >
         </el-tree>
       </el-scrollbar>
@@ -45,7 +46,7 @@
     },
     watch:{
       searchText(val) {
-        this.$refs.treeRef.filter(val);
+        this.$refs[this.treeConfig.ref ||'treeRef'].filter(val);
       }
     },
     methods: {
@@ -59,7 +60,8 @@
       },
       filterNode(value, data) {
         if (!value) return true;
-        return data.floor.indexOf(value) !== -1;
+        let tmp = data.floor || data.text || data.name  //兼容后端不同名称
+        return tmp.indexOf(value) !== -1;
       },
     },
     mounted(){
@@ -73,6 +75,7 @@
       padding:20px 0;
       background: @white;
       height:100%;
+      box-sizing: border-box;
     .el-input__inner{
       border:none;
       background: #F4F5F7;

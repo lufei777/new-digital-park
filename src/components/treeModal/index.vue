@@ -18,7 +18,7 @@
 <script>
   import Tree from '../tree/index'
   export default {
-    name: 'ZoomModal',
+    name: 'TreeModal',
     props:['treeModalConfig'],
     components: {
       Tree
@@ -65,7 +65,11 @@
   .common-tree-modal{
     .el-dialog__body{
       height:500px;
+      padding-bottom: 64px;
+    }
+    .el-dialog__footer{
+      position: relative;
+      z-index: 999999;
     }
   }
-
 </style>

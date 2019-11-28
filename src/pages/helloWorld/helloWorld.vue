@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <router-view></router-view>
+    <img src="../../../static/image/digitalPark/login_bg.png" alt="">
   </div>
 </template>
 
@@ -23,4 +23,12 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
+  .hello{
+    height:100%;
+    img{
+      width:100%;
+      height:100%;
+    }
+
+  }
 </style>

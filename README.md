@@ -243,7 +243,10 @@
              isCollapse:false, //默认不传即展开
              moduleName:'资产管理' , //模块名称
              moduleLogo:'iconzichanguanli' //模块logo
+             activeIndex:'1' //当前激活菜单，不传默认第一个
             }
+            
+七）
             
             
 
