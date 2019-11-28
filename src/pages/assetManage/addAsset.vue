@@ -93,16 +93,13 @@
           </div>
         </el-col>
       </el-form>
-    <TreeModal :showTree="showTree" :treeList="treeList"
-               :cancelCallback="hideTreeModal" :sureCallback="onClickTreeModalSureBtn"
-               :tip="modalTip"
-    />
+    <TreeModal :tree-modal-config="treeModalConfig"/>
   </div>
 </template>
 
 <script>
   import AssetManageApi from '../../service/api/assetManageApi'
-  import TreeModal from '../commonProject/coms/treeModal'
+  import TreeModal from '../../components/treeModal/index'
   export default {
     name: 'AddAsset',
     components: {
@@ -144,12 +141,24 @@
                     {validator:checkQuantity, trigger: 'blur' }],
         },
         providerList:[],
-        showTree:false,
-        modalTip:'',
-        treeList:[],
         groupTree:[],
         deptTree:[],
-        modalFlag:1 //1代表部门 2代表资产组
+        modalFlag:1, //1代表部门 2代表资产组
+        treeModalConfig:{
+          treeList:[],
+          treeConfig:{
+            treeProps:{
+              label:"name",
+              children:'childNode'
+            },
+            defaultExpandedkeys:[],
+            // showSearch:true
+          },
+          showModal:false,
+          modalTip:'',
+          onClickSureBtnCallback:this.onClickTreeModalSureBtn,
+          onClickCancelBtnCallback:this.hideTreeModal
+        }
       }
     },
     computed:{
@@ -183,7 +192,7 @@
         this.$router.push('/assetMaintenance')
       },
       hideTreeModal(){
-        this.showTree=false
+        this.treeModalConfig.showModal=false
       },
       async getAssetDetail(){
         let res = await AssetManageApi.getAssetDetail({
@@ -263,10 +272,11 @@
         this.groupTree=res
       },
       onShowGroup(){
-        this.treeList=this.groupTree
-        this.modalTip='选择资产组'
+        this.treeModalConfig.treeList=this.groupTree
+        this.treeModalConfig.modalTip='选择资产组'
         this.modalFlag=2
-        this.showTree=true
+        this.treeModalConfig.showModal=true
+        this.treeModalConfig.treeConfig.defaultExpandedkeys=[this.groupTree[0].id]
       },
       addCustomAttr(){
         this.assetAddForm.customAttrList.push({
@@ -276,11 +286,11 @@
         })
       },
       onClickTreeModalSureBtn(val){
-        this.showTree=false
+        this.treeModalConfig.showModal=false
         if(this.modalFlag==2){
           this.assetAddForm.groupId=val.id
           this.assetAddForm.groupName=val.name
-        }else{
+        }else if(this.modalFlag==1){
           this.assetAddForm.departmentId=val.id
           this.assetAddForm.departmentName=val.name
         }
@@ -305,10 +315,11 @@
         this.deptTree = res
       },
       onShowDept(){
-        this.treeList = this.deptTree
-        this.modalTip = '选择部门'
+        this.treeModalConfig.treeList = this.deptTree
+        this.treeModalConfig.modalTip = '选择部门'
         this.modalFlag = 1
-        this.showTree = true
+        this.treeModalConfig.showModal = true
+        this.treeModalConfig.treeConfig.defaultExpandedkeys=[this.deptTree[0].id]
       },
       onClickDelCustomBtn(index){
         this.assetAddForm.customAttrList.splice(index,1)

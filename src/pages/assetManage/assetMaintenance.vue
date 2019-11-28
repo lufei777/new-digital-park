@@ -99,6 +99,7 @@ export default {
             label:'name',
             children:'childNode'
           },
+          showSearch:true
         },
         showModal:false,
         modalTip:'',
