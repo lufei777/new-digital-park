@@ -5,27 +5,30 @@
       <el-option label="电" value="1002"></el-option>
       <el-option label="水" value="4000"></el-option>
     </el-select>
-    <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
-      <el-tree
-        :data="meterList"
-        :props="treeProps"
-        :accordion="true"
-        :highlight-current="true"
-        node-key="id"
-        ref="navTree"
-        @node-click="onClickItemTree"
-      >
-      </el-tree>
-    </el-scrollbar>
+    <!--<el-scrollbar wrap-class="scrollbar-wrapper" :native="false">-->
+      <!--<el-tree-->
+        <!--:data="meterList"-->
+        <!--:props="treeProps"-->
+        <!--:accordion="true"-->
+        <!--:highlight-current="true"-->
+        <!--node-key="id"-->
+        <!--ref="navTree"-->
+        <!--@node-click="onClickItemTree"-->
+      <!--&gt;-->
+      <!--</el-tree>-->
+    <!--</el-scrollbar>-->
+    <Tree :tree-list="meterList" :tree-config="meterTreeConfig"></Tree>
   </div>
 </template>
 
 <script>
   import {mapState} from 'vuex'
   import CommonApi from '../../../../service/api/commonApi'
+  import Tree from '../../../../components/tree'
   export default {
     name: 'EnergyTree',
     components: {
+      Tree
     },
     data () {
       return {
@@ -35,7 +38,10 @@
           children: 'nodes',
         },
         curEnergy:'1002',
-        params:{}
+        params:{},
+        meterTreeConfig:{
+           nodeKey:'id'
+        }
       }
     },
     computed:{

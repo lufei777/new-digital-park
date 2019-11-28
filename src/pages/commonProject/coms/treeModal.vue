@@ -48,7 +48,16 @@ export default {
       curSelect: ""
     };
   },
-  computed: {},
+  computed: {
+    childShowTree: {
+      get() {
+        return this.showTree;
+      },
+      set() {
+        this.goBack();
+      }
+    }
+  },
   methods: {
     handleTreeClick(val) {
       this.curSelect = val;
@@ -61,16 +70,6 @@ export default {
     }
   },
   mounted() {},
-  computed: {
-    childShowTree: {
-      get() {
-        return this.showTree;
-      },
-      set() {
-        this.goBack();
-      }
-    }
-  }
 };
 </script>
 
