@@ -2,7 +2,7 @@
   <div class="el-table-wrapper" :style="{height:wrapperHeight}">
     <div ref="customTop" style="height:auto;">
       <slot
-        name="custom-top"
+        :name="topSlotName"
         :columnConfig="columnConfig"
         :allData="allData"
         :tableShowData="tableShowData"
@@ -28,6 +28,9 @@
       @row-click="rowClick"
       @row-dblclick="rowDblclick"
       @sort-change="sortChange"
+      @select-all="selectAll"
+      @selection-change="selectionChange"
+      @select="select"
     >
       <!-- 多选 -->
       <el-table-column fixed="left" v-if="uiConfig.selection" type="selection" width="37"></el-table-column>
@@ -76,7 +79,7 @@
         :prop="btnConfig.prop"
         :label="btnConfig.label"
         :width="btnConfig.width"
-        :align="'center'"
+        :align="'left'"
       >
         <!-- 搜索框 -->
         <template v-if="uiConfig.searchable" slot="header">
@@ -84,6 +87,7 @@
         </template>
         <!-- 按钮 -->
         <template slot-scope="scopeRow">
+          <slot :name="operationSlotName" :scopeRow="scopeRow"></slot>
           <template v-for="btn in btnConfig.btns">
             <!-- 基础模式，如删除，编辑。参数为scopeRow -->
             <el-button
@@ -113,6 +117,7 @@
     <div ref="tablePagination" v-if="uiConfig.pagination" class="table-pagination">
       <pagination
         :paginationConfig="uiConfig.pagination"
+        :currentPage="paginationObj.currentPage"
         :total="uiConfig.pagination.total||tableData.length"
         :handleSizeChange="_handleSizeChange"
         :handleCurrentChange="_handleCurrentChange"
@@ -158,7 +163,7 @@ let dblclickTimer = null;
 let paginationTimer = null;
 
 //点击事件屏蔽列
-let preventClick = ["selection", "operation"];
+let preventClick = ["selection", "operation", undefined];
 
 // 设置默认值
 const _objKeysForeach = (obj, cb) => {
@@ -193,6 +198,8 @@ export default {
   data() {
     let _this = this;
     return {
+      topSlotName: "custom-top",
+      operationSlotName: "operation",
       allData: [], //保存数组原始数据，用来复原数据
       tableData: [], //表格传入数据，用作分页使用
       tableShowData: [], //表格实际展示数据
@@ -346,7 +353,7 @@ export default {
             //加载中结束
             this.loading = false;
           });
-      } else {
+      } else if (typeof url === "string") {
         //ajax请求type和url
         let config = {};
         let type = this.isServerMode.type.toLowerCase();
@@ -560,10 +567,35 @@ export default {
       this.$refs.dataBaseTable.doLayout();
       this.key++;
     },
+    // 当勾选数据行的checkbox时触发
+    select(selection, row) {
+      if (this.tableMethods.select) {
+        this.tableMethods.select(selection, row, this);
+      }
+    },
+    // 当勾选全选checkbox时触发
+    selectAll(selection) {
+      if (this.tableMethods.selectAll) {
+        this.tableMethods.selectAll(selection, this);
+      }
+    },
+    // 当选择项发生变化时触发该事件
+    selectionChange(selection) {
+      if (this.tableMethods.selectionChange) {
+        this.tableMethods.selectionChange(selection, this);
+      }
+    },
     //以下方法未添加
     toggleRowExpansion() {},
-    clearSort() {},
-    clearFilter() {},
+    // 清除排序
+    clearSort() {
+      this.$refs.dataBaseTable.clearSort();
+      this.tableData = this.allData;
+    },
+    // 清除过滤
+    clearFilter(columnKey) {
+      this.$refs.dataBaseTable.clearFilter(columnKey);
+    },
     sort() {},
 
     /**
@@ -592,6 +624,12 @@ export default {
     setData(rows) {
       this._setTableData(data);
     },
+    setCurrentPage(pageNum) {
+      this.currentPage = pageNum;
+    },
+    setPaginationTotal(totalNum) {
+      this.uiConfig.pagination.total = totalNum;
+    },
     //refresh
     refreshTable() {
       this._tableInit(true);
@@ -608,6 +646,19 @@ export default {
       }
     },
     btnConfig() {
+      // 如果有operation，则代表要使用slot的列操作，权重为最高
+      let operation = this.tableConfig.operation;
+      if (operation) {
+        if (typeof operation === "boolean") {
+          this.tableConfig.btnConfig = {
+            prop: "operation",
+            label: "",
+            fixed: "right"
+          };
+        } else if (typeof operation === "object") {
+          this.tableConfig.btnConfig = operation;
+        }
+      }
       return this.tableConfig.btnConfig ? this.tableConfig.btnConfig : false;
     },
     uiConfig() {
@@ -676,7 +727,7 @@ export default {
     "tableConfig.data"(val) {
       this._setTableData(val);
       // 重新设置值后应该重设现页数
-      this.currentPage = 1;
+      this.setCurrentPage(1);
     },
     tableData(newVal, oldVal) {
       if (newVal instanceof Array) {
