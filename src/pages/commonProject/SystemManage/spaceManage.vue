@@ -46,7 +46,7 @@
   import { mapState } from 'vuex'
   import CommonApi from '../../../service/api/commonApi'
   import CommonTable from '../../../components/commonTable/index'
-  import AddSpace from '../coms/addSpace'
+  import AddSpace from './addSpace'
   import Tree from '../../../components/tree/index'
   export default {
     name: 'UserManage',
@@ -177,8 +177,7 @@
         this.isEdit=true
       },
       onClickAddBtn(){
-        this.showAdd=true
-        this.isEdit=false
+        this.$router.push('/addSpace')
       },
       rowClick(row){
         this.curSpace=row

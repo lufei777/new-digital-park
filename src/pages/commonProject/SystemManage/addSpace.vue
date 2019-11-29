@@ -1,5 +1,5 @@
 <template>
-  <div class="add-space">
+  <div class="add-space radius-shadow">
     <div class="tip flex-align">
       <span class="icon"></span>
       <span>{{tipText}}</span>
@@ -26,7 +26,7 @@
 <script>
   import CommonApi from '../../../service/api/commonApi'
   export default {
-    name: 'AddUser',
+    name: 'AddSpace',
     components: {
     },
     props:['curSpaceId','isEdit'],
@@ -108,10 +108,7 @@
 
 <style lang="less">
   .add-space{
-    width:83%;
-    padding:10px;
-    float: right;
-    box-sizing: border-box;
+    padding:20px;
     background: @white;
     .el-form{
       width:50%;

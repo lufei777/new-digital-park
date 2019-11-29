@@ -35,7 +35,7 @@
             <li v-for="(item,index) in productList"
                 :key="index"
                 @click="onClickItemProduct(item)"
-                :style="getItemBg(item)"
+                :style="{backgroundImage:'url('+item.productBgUrl+')'}"
             ><span>{{item.name}}</span></li>
           </ul>
         </div>
@@ -121,6 +121,9 @@
     },
     methods:{
       onClickItemProduct(item){
+        console.log(item.childNode)
+        Cookies.set('moduleType',2)
+        localStorage.setItem('menuList',JSON.stringify(item.childNode))
         // 192.168.1.69：9002/html
         let routeAddress = item.routeAddress;
         if(item.name=="综合安防" ||item.name=="机房动环" || item.name=="智能建筑"){//目前先写死
@@ -132,13 +135,13 @@
           if(routeAddress.indexOf('@') != -1){
             CommonFun.loadOldPage(item);
           }else{
-            this.$router.push(item.routeAddress+'?type=2');
+           setTimeout(()=>{
+             this.$router.push(item.routeAddress+'?type=2');
+           },1000)
           }
         }else{
             this.$router.push('/digitalPark/defaultPage?type=2')
         }
-        Cookies.set('moduleType',2)
-        Cookies.set('menuList',item.childNode)
       },
       onShowMoreProduct(){
         this.showMoreProduct=!this.showMoreProduct

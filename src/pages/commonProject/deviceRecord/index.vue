@@ -33,7 +33,7 @@
       <div class="table-box radius-shadow">
         <div class="operator-box">
           <el-button type="primary" class="" @click="onClickImportBtn">导入</el-button>
-          <el-button type="primary" icon="el-icon-delete" @click="onClickmultipleDelBtn">删除记录</el-button>
+          <el-button type="primary" icon="el-icon-delete" @click="onClickMultipleDelBtn">删除记录</el-button>
           <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
         </div>
         <Table :ref="tableConfig.ref" :table-config="tableConfig">
@@ -53,9 +53,6 @@
         </table>
       </div>
     </div>
-    <EditMeter v-if="showEdit" :curMeterId="curTableData.id" :isEdit="isEdit"/>
-    <AddMeter  v-if="showAdd" />
-    <ImportMeter v-if="showImport"/>
   </div>
 </template>
 
@@ -233,14 +230,12 @@
         });
       },
       onClickAddBtn(){
-        // this.showAdd=true
-        // this.isEdit=false
         this.$router.push("/addDevice")
       },
       onClickImportBtn(){
-        this.showImport=true
+        this.$router.push("/importDevice")
       },
-      onClickmultipleDelBtn(){
+      onClickMultipleDelBtn(){
         let res = this.$refs[this.tableConfig.ref].getSelectedData()
         console.log(res)
       },

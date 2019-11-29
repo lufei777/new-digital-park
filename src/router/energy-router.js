@@ -12,8 +12,7 @@ import StatisAnalysis from './commonRouter/statisAnalysis'
 import SystemManage from './commonRouter/systemManage'
 import DeviceRecord from './commonRouter/deviceRecord'
 import TmpRouter from '../pages/commonProject/coms/tmpRouterBox'
-
-
+import DefaultPage from '../pages/digitalPark/defaultPage/index'
 
 import Collect from './commonRouter/collect'
 import DataReport from './commonRouter/dataReport'
@@ -22,10 +21,14 @@ export default [{
   path: '/',
   redirect: '/energy'
 },{
-  path: '/energy',
-  name: 'EnergyIndex',
-  component: EnergyIndex,
-  children: [{
+  path:'/digitalPark/defaultPage',
+  name:'DefaultPage',
+  component:DefaultPage
+},{
+    path: '/energy',
+    name: 'EnergyIndex',
+    component: EnergyIndex,
+    children: [{
     path: '/energy/homePage',
     name: 'HomePage',
     component: HomePage,
