@@ -1,11 +1,11 @@
 <template>
   <div>
     <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="paginationConfig.currentPage"
-      :page-sizes="paginationConfig.pageSizes"
-      :page-size="paginationConfig.pageSizes[0]"
+      @size-change="sizeChange"
+      @current-change="currentChange"
+      :current-page.sync="curPage"
+      :page-sizes="pageSizes"
+      :page-size.sync="size || pageSizes[0]"
       :layout="paginationConfig.layout"
       :total="total"
     ></el-pagination>
@@ -18,6 +18,8 @@ export default {
       type: Object,
       required: true
     },
+    pageSize: Number,
+    currentPage: Number,
     total: Number,
     handleSizeChange: Function,
     handleCurrentChange: Function
@@ -25,7 +27,31 @@ export default {
   data() {
     return {};
   },
-  methods: {}
+  methods: {
+    sizeChange(...args) {
+      this.handleSizeChange(...args);
+    },
+    currentChange(...args) {
+      this.handleCurrentChange(...args);
+    }
+  },
+  computed: {
+    curPage: {
+      get() {
+        return this.currentPage;
+      },
+      set(...args) {}
+    },
+    size: {
+      get() {
+        return this.pageSize;
+      },
+      set() {}
+    },
+    pageSizes() {
+      return this.paginationConfig.pageSizes;
+    }
+  }
 };
 </script>
 <style lang='less' scoped>

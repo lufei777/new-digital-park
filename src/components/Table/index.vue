@@ -2,7 +2,7 @@
   <div class="el-table-wrapper" :style="{height:wrapperHeight}">
     <div ref="customTop" style="height:auto;">
       <slot
-        name="custom-top"
+        :name="topSlotName"
         :columnConfig="columnConfig"
         :allData="allData"
         :tableShowData="tableShowData"
@@ -28,6 +28,9 @@
       @row-click="rowClick"
       @row-dblclick="rowDblclick"
       @sort-change="sortChange"
+      @select-all="selectAll"
+      @selection-change="selectionChange"
+      @select="select"
     >
       <!-- 多选 -->
       <el-table-column fixed="left" v-if="uiConfig.selection" type="selection" width="37"></el-table-column>
@@ -76,7 +79,7 @@
         :prop="btnConfig.prop"
         :label="btnConfig.label"
         :width="btnConfig.width"
-        :align="'center'"
+        :align="'left'"
       >
         <!-- 搜索框 -->
         <template v-if="uiConfig.searchable" slot="header">
@@ -84,6 +87,7 @@
         </template>
         <!-- 按钮 -->
         <template slot-scope="scopeRow">
+          <slot :name="operationSlotName" :scopeRow="scopeRow"></slot>
           <template v-for="btn in btnConfig.btns">
             <!-- 基础模式，如删除，编辑。参数为scopeRow -->
             <el-button
@@ -113,6 +117,8 @@
     <div ref="tablePagination" v-if="uiConfig.pagination" class="table-pagination">
       <pagination
         :paginationConfig="uiConfig.pagination"
+        :currentPage="paginationObj.currentPage"
+        :pageSize="paginationObj.pageSize"
         :total="uiConfig.pagination.total||tableData.length"
         :handleSizeChange="_handleSizeChange"
         :handleCurrentChange="_handleCurrentChange"
@@ -149,6 +155,7 @@ const defaultUiConfig = {
     // sizes
     layout: "total, ->, prev, pager, next, jumper",
     pageSizes: [10],
+    pageSize: 10,
     currentPage: 1
   }
 };
@@ -158,7 +165,7 @@ let dblclickTimer = null;
 let paginationTimer = null;
 
 //点击事件屏蔽列
-let preventClick = ["selection", "operation"];
+let preventClick = ["selection", "operation", undefined];
 
 // 设置默认值
 const _objKeysForeach = (obj, cb) => {
@@ -193,6 +200,8 @@ export default {
   data() {
     let _this = this;
     return {
+      topSlotName: "custom-top",
+      operationSlotName: "operation",
       allData: [], //保存数组原始数据，用来复原数据
       tableData: [], //表格传入数据，用作分页使用
       tableShowData: [], //表格实际展示数据
@@ -226,16 +235,6 @@ export default {
     //ui配置处理
     if (tableConfig.uiConfig && tableConfig.uiConfig.pagination === true) {
       this.tableConfig.uiConfig.pagination = {};
-    }
-    //分页
-    if (this.uiConfig.pagination) {
-      let currentPage = this.uiConfig.pagination.currentPage;
-      let pageSizes = this.uiConfig.pagination.pageSizes;
-
-      if (currentPage) {
-        this.currentPage = currentPage;
-      }
-      this.pageSize = pageSizes[0];
     }
 
     this._tableInit();
@@ -340,13 +339,13 @@ export default {
         url(sendData)
           .then(res => {
             this._setTableData(res.list);
-            this.uiConfig.pagination.total = res.total;
+            this.setPaginationTotal(res.total);
           })
           .finally(() => {
             //加载中结束
             this.loading = false;
           });
-      } else {
+      } else if (typeof url === "string") {
         //ajax请求type和url
         let config = {};
         let type = this.isServerMode.type.toLowerCase();
@@ -361,7 +360,7 @@ export default {
           .then(res => {
             res = res.data;
             this._setTableData(res.data);
-            this.uiConfig.pagination.total = res.total;
+            this.setPaginationTotal(res.total);
           })
           .catch(err => {
             throw err;
@@ -560,24 +559,52 @@ export default {
       this.$refs.dataBaseTable.doLayout();
       this.key++;
     },
+    // 当勾选数据行的checkbox时触发
+    select(selection, row) {
+      if (this.tableMethods.select) {
+        this.tableMethods.select(selection, row, this);
+      }
+    },
+    // 当勾选全选checkbox时触发
+    selectAll(selection) {
+      if (this.tableMethods.selectAll) {
+        this.tableMethods.selectAll(selection, this);
+      }
+    },
+    // 当选择项发生变化时触发该事件
+    selectionChange(selection) {
+      if (this.tableMethods.selectionChange) {
+        this.tableMethods.selectionChange(selection, this);
+      }
+    },
     //以下方法未添加
     toggleRowExpansion() {},
-    clearSort() {},
-    clearFilter() {},
+    // 清除排序
+    clearSort() {
+      this.$refs.dataBaseTable.clearSort();
+      this.tableData = this.allData;
+    },
+    // 清除过滤
+    clearFilter(columnKey) {
+      this.$refs.dataBaseTable.clearFilter(columnKey);
+    },
     sort() {},
 
     /**
      * 外部调用方法
      */
     //get
+    // 获取表格多选框选中数据
     getSelectedData() {
       //多选获取当前选中值
       return this.$refs.dataBaseTable.selection;
     },
+    // 获取当前表格单击选中数据
     getCurrentRowData() {
       //单选获取当前选中行
       return this.currentRowData;
     },
+    // 获取表格全部数据
     getTableData() {
       if (this.isServerMode) {
         return this.getTableShowData();
@@ -585,12 +612,32 @@ export default {
         return this.tableData;
       }
     },
+    // 获取表格当前显示数据
     getTableShowData() {
       return this.tableShowData;
     },
     //set
+    // 设置表格数据
     setData(rows) {
       this._setTableData(data);
+      // 设置总页数为null，这样在数据更新后没有手动设置total，会自动读取数据长度
+      this.setPaginationTotal(null);
+    },
+    // 设置分页每页显示条数
+    setPaginationPageSize(pageSize) {
+      this.pageSize = pageSize;
+    },
+    // 设置分页显示当前第几页
+    setCurrentPage(pageNum) {
+      this.currentPage = pageNum;
+    },
+    // 设置数据总条数，计算页数使用
+    setPaginationTotal(totalNum) {
+      this.uiConfig.pagination.total = totalNum;
+    },
+    // 设置列配置
+    setColumnConfig(columnConfig) {
+      this.columnConfig = columnConfig;
     },
     //refresh
     refreshTable() {
@@ -599,23 +646,43 @@ export default {
     }
   },
   computed: {
-    columnConfig() {
-      if (this.tableConfig.columnConfig) {
-        return this.tableConfig.columnConfig;
-      } else {
-        console.error("表格列配置为必须项");
-        return;
+    columnConfig: {
+      get() {
+        if (this.tableConfig.columnConfig) {
+          return this.tableConfig.columnConfig;
+        } else {
+          console.error("表格列配置为必须项");
+          return;
+        }
+      },
+      set(columnConfig) {
+        this.tableConfig.columnConfig = columnConfig;
       }
     },
     btnConfig() {
+      // 如果有operation，则代表要使用slot的列操作，权重为最高
+      let operation = this.tableConfig.operation;
+      if (operation) {
+        if (typeof operation === "boolean") {
+          this.tableConfig.btnConfig = {
+            prop: "operation",
+            label: "",
+            fixed: "right",
+            width: 100
+          };
+        } else if (typeof operation === "object") {
+          this.tableConfig.btnConfig = operation;
+        }
+      }
       return this.tableConfig.btnConfig ? this.tableConfig.btnConfig : false;
     },
     uiConfig() {
-      let uiConfig = this.tableConfig.uiConfig;
-      if (!uiConfig) return defaultUiConfig;
-
+      let uiConfig = this.tableConfig.uiConfig || {};
+      // 设置默认值
       setDefaultValue(defaultUiConfig, uiConfig);
-
+      // 初始化currentPage和pageSize
+      this.currentPage = uiConfig.pagination.currentPage;
+      this.pageSize = uiConfig.pagination.pageSize;
       //如果没有配置的pagination，则使用默认的配置项
       return uiConfig;
     },
@@ -675,8 +742,8 @@ export default {
     //动态监测tableConfig.data的改变，有可能外部ajax改变data值
     "tableConfig.data"(val) {
       this._setTableData(val);
-      // 重新设置值后应该重设现页数
-      this.currentPage = 1;
+      // 重新设置值tableConfig.data后应该重设现页数
+      this.setCurrentPage(1);
     },
     tableData(newVal, oldVal) {
       if (newVal instanceof Array) {
