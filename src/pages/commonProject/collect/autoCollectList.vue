@@ -62,7 +62,6 @@
           columnConfig:[],
           uiConfig: {
             height: "auto",
-            selection: true,
             pagination: {
               layout: "total,->, prev, pager, next, jumper",
             }

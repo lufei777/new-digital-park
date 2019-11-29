@@ -95,14 +95,30 @@
       initWaterChart(res){
         let myChart2 = echarts.init(this.$refs.myChart2);
         let titleText =`${this.commonTip}分项耗水占比分析`
-        let legendData = res.waterList && res.waterList.map((item)=>item.name)
-        let series=[]
-        res.waterList && res.waterList.map((item)=>{
-          series.push({
-            name:item.name,
-            value:item.value
-          })
-        })
+        let legendData=['生活用水','生活污水','空调用水','消防用水','其他用水']
+        // let legendData = res.waterList && res.waterList.map((item)=>item.name)
+        let series=[{
+          name:'生活用水',
+          value:0
+        },{
+          name:'生活污水',
+          value:0
+        },{
+          name:'空调用水',
+          value:0
+        },{
+          name:'消防用水',
+          value:0
+        },{
+          name:'其他用水',
+          value:0
+        }]
+        // res.waterList && res.waterList.map((item)=>{
+        //   series.push({
+        //     name:item.name,
+        //     value:item.value
+        //   })
+        // })
         let data={
           titleText,
           legendData,

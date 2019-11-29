@@ -136,8 +136,6 @@ export default {
           height: "auto",//"", //高度
           selection: true, //是否多选
           pagination:{
-            layout: "total,->, prev, pager, next, jumper",
-            pageSizes: [10, 20, 50],
             handler:function(size,page){
               _this.handleCurrentChange(page)
             },
@@ -177,7 +175,7 @@ export default {
         })
         this.assetsTableConfig.columnConfig=[
           {label:'编号',prop:'coding',sortable:'custom'},
-          {label:'名称',prop:'name',sortable:'custom'},
+          {label:'名称',prop:'name',sortable:'custom',width:200 },
           {label:'资产组',prop:'groupName'},
           {label:'供应商',prop:'providerName'},
           {label:'资产类型',prop:'typeName'},
