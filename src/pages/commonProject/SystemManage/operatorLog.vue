@@ -1,10 +1,6 @@
 <template>
   <div class="operator-log">
-    <div class="tip flex-align">
-      <span class="icon"></span>
-      <span>操作日志列表</span>
-    </div>
-    <div class="choose-box flex-align">
+    <div class="choose-box flex-align radius-shadow">
       <div class="block flex-align-center">
         <span>操作者</span>
         <el-input v-model="loginName" />
@@ -19,7 +15,8 @@
           v-model="startTime"
           type="datetime"
           placeholder="选择日期时间"
-          value-format="yyyy-MM-dd HH:mm:ss"
+          value-format="yyyy-MM-dd HH:mm"
+          format="yyyy-MM-dd HH:mm"
           :clearable="false"
         >
         </el-date-picker>
@@ -27,10 +24,11 @@
       <div class="block flex-align-center">
         <span>结束时间</span>
         <el-date-picker
-          v-model="endTime"
+          v-model="lastTime"
           type="datetime"
           placeholder="选择日期时间"
-          value-format="yyyy-MM-dd HH:mm:ss"
+          value-format="yyyy-MM-dd HH:mm"
+          format="yyyy-MM-dd HH:mm"
           :clearable="false"
         >
         </el-date-picker>
@@ -55,7 +53,7 @@
       return {
         logList:{},
         startTime:'',
-        endTime:'',
+        lastTime:'',
         curPage:1,
         operatingContent:'',
         loginName: ""
@@ -63,12 +61,12 @@
     },
     methods: {
       async getLogList(){
-        let endTime=this.endTime?this.endTime:moment(new Date()).format('YYYY-MM-DD hh:mm:ss')
+        let lastTime=this.lastTime?this.lastTime:moment(new Date()).format('YYYY-MM-DD hh:mm:ss')
         let params={
           loginName:this.loginName,
           operatingContent:this.operatingContent,
           startTime:this.startTime,
-          endTime,
+          lastTime,
           rows:10,
           page:this.curPage
         }
@@ -97,7 +95,7 @@
         this.loginName=''
         this.operatingContent=''
         this.startTime=''
-        this.endTime=''
+        this.lastTime=''
         this.getLogList()
       },
       onClickSearchBtn(){
@@ -113,26 +111,11 @@
 
 <style lang="less">
   .operator-log{
-    margin-top: 85px;
-    padding:0 20px;
-    .tip{
-      height: 66px;
-      border-bottom: 1px solid #eaeaea;
-      .icon {
-        width: 2px;
-        height: 24px;
-        background: #01465c;
-        border-radius: 2px;
-        margin-right: 10px;
-      }
-      span{
-        font-size: 24px;
-        color:#01465c;
-      }
-    }
     .choose-box{
       overflow: hidden;
-      padding:20px 0;
+      padding:20px;
+      background: @white;
+      margin-bottom:20px;
     }
     .block{
       margin-right:40px;

@@ -105,7 +105,7 @@
   .page-box{
     /*float: right;*/
     /*margin:20px;*/
-    width:97%;
+    width:100%;
     padding:5px 10px;
     margin:10px auto 0 auto;
     background: #F4F5F7;
