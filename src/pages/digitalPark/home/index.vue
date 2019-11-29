@@ -12,7 +12,7 @@
         <NavOperator :moduleType.sync="moduleType" />
       </div>
       <div class="sidebar-container">
-        <Sidebar  :menuList="menuList" :menuConfig="menuConfig"/>
+        <Sidebar :menuList="menuList" :menuConfig="menuConfig"/>
       </div>
     </div>
 
