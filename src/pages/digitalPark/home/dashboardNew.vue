@@ -54,10 +54,7 @@
                 <!--src="../../../../static/HomePage/index.html"-->
                 <!--frameborder="0"-->
                 <!--class="unity-frame"></iframe>-->
-                 <iframe v-if="pageFlag==1"
-                src="../../../../static/HomePage/index.html"
-                frameborder="0"
-                class="unity-frame"></iframe>
+
       </div>
       <div class="dashboard-right">
         <draggable :list="proModuleList2"
@@ -348,11 +345,16 @@
       this.getModulesByType()
       this.getProductList()
       // $(".draggable-box1").css({
-      //   height:($("#app").height()-80)+'px'
+      //   height:($(".dashboard-content-panel").height())+'px'
       // })
+      // $(".dashboard-right").css({
+      //   height:($(".dashboard-content-panel").height())+'px'
+      // })
+      // let height=$(".dashboard-content-panel").height()-$(".fixed-prod-module").height()
       // $(".draggable-box2").css({
-      //   height:($("#app").height()-80-$(".fixed-pro-module"))+'px'
+      //   height:height+'px'
       // })
+      // console.log("box2",$(".dashboard-content-panel").height(),$(".fixed-prod-module").height(),height)
       // console.log($(".draggable-box2").height())
     }
   }
@@ -384,11 +386,6 @@
       height:100%;
       overflow: hidden;
       position: relative;
-      /*writing-mode: tb-rl;*/
-      /*display: flex;*/
-      /*flex-direction: column;*/
-      /*align-items: center;*/
-      /*justify-content: space-between;*/
       .item-drag-product:nth-child(3){
         top:68%;
         position: absolute;
@@ -406,11 +403,6 @@
       height:67%;
       overflow: hidden;
       position: relative;
-      /*display: flex;*/
-      /*flex-direction: column;*/
-      /*align-items: center;*/
-      /*justify-content: space-around;*/
-      /*flex-grow: 2;*/
       .item-drag-product{
         height:48%;
       }
@@ -422,8 +414,7 @@
     .item-drag-product,.fixed-prod-module{
       width:100%;
       height:32%;
-      /*marg
-      in-bottom:2%;*/
+      /*margin-bottom:2%;*/
       font-size: 16px;
       text-align: center;
       background-repeat: no-repeat;

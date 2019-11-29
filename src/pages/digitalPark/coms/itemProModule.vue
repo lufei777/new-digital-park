@@ -14,6 +14,7 @@
                  @click.native="onClickItemComponent(item)"
       />
     </div>
+
      <draggable
        v-if="type==2"
         v-bind="getOptions()"
@@ -121,13 +122,14 @@
         event.preventDefault();
         event.stopPropagation();
       }
-      // $(".item-compnent").css({
-      //   height:$(".component-box").height()*0.9
+      // $(".item-component,.two-component").css({
+      //   height:$(".component-box").height()
       // })
+      // // console.log($(".component-box").height(), $(".item-component").height())
       // $(".my-chart").css({
-      //   height:$(".component-box").height()*0.8
+      //   height:$(".item-component").height()*0.8
       // })
-      // console.log("111",$(".item-product-coms").height())
+      // // console.log( $(".my-chart").height())
     }
   }
 </script>

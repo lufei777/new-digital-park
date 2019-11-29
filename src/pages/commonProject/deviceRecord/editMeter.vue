@@ -87,17 +87,18 @@
         },
         meterDetail:{},
         energyList:[],
-        showDialog:false,
         showMonitor:false,
         spaceList:[],
+        monitorList:[],
         modalFlag:1,
         treeModalConfig:{
           treeList:[],
           treeConfig:{
             defaultExpandedkeys:[],
           },
-         onClickSureBtnCallback:this.onClickModalSureBtn,
-         onClickCancelBtnCallback:this.onClickModalCancelBtn
+          showModal:false,
+          onClickSureBtnCallback:this.onClickModalSureBtn,
+          onClickCancelBtnCallback:this.onClickModalCancelBtn
         }
       }
     },
@@ -163,13 +164,13 @@
       showTreeModal(flag){
         this.modalFlag=flag
         if(flag==1){
-          this.treeList=this.monitorList
-          this.treeConfig.defaultExpandedkeys=[this.monitorList[0].id]
+          this.treeModalConfig.treeList=this.monitorList
+          this.treeModalConfig.treeConfig.defaultExpandedkeys=[this.monitorList[0].id]
         }else if(flag==2){
-          this.treeList=this.spaceList
-          this.treeConfig.defaultExpandedkeys=[this.spaceList[0].id]
+          this.treeModalConfig.treeList=this.spaceList
+          this.treeModalConfig.treeConfig.defaultExpandedkeys=[this.spaceList[0].id]
         }
-        this.showDialog=true
+        this.treeModalConfig.showModal=true
       },
       onClickModalSureBtn(val){
         if(this.modalFlag==1){
@@ -179,10 +180,10 @@
           this.meterForm.floorName=val.text
           this.meterForm.parentId=val.id
         }
-        this.showDialog=false
+        this.treeModalConfig.showModal=false
       },
       onClickModalCancelBtn(){
-        this.showDialog=false
+        this.treeModalConfig.showModal=false
       },
       async submitForm(){
         console.log(this.meterForm)
@@ -194,9 +195,11 @@
     },
     async mounted(){
        await this.getEnergyListAll()
-       this.getItemMeterDetail()
        this.getAssetAllTree()
        this.getMeterTree()
+       if(this.curMeterId){
+         this.getItemMeterDetail()
+       }
     }
   }
 </script>
