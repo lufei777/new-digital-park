@@ -117,14 +117,15 @@
          console.log(item)
       },
       onClickMoreBtn(){
+        let routeAddress = this.moduleData.routeAddress
         console.log(this.moduleData)
-        if(this.moduleData.routeAddress){
+        if(routeAddress){
           // 如果带有@字符，则跳转旧项目
           if(routeAddress.indexOf('@') != -1){
-            CommonFun.loadOldPage(item);
+            CommonFun.loadOldPage(this.moduleData);
           }else{
             setTimeout(()=>{
-              this.$router.push(item.routeAddress+'?type=2');
+              this.$router.push(routeAddress);
             },500)
           }
         }else{
