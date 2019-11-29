@@ -4,6 +4,7 @@ import RoleManage from '../../pages/commonProject/SystemManage/roleManage'
 import DepartmentManage from '../../pages/commonProject/SystemManage/departmentManage'
 import SpaceManage from '../../pages/commonProject/SystemManage/spaceManage'
 import TmpRouter from '../../pages/commonProject/coms/tmpRouterBox'
+// import Add
 export default [{
   path:'/tmpRouter',
   redirect:'/userManage',
@@ -33,6 +34,6 @@ export default [{
     path:'/spaceManage',
     name:'SpaceManage',
     component:SpaceManage,
-    meta:{title:'空间管理'}
+    meta:{title:'空间管理'},
   }]
 }]
