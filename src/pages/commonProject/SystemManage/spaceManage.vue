@@ -1,39 +1,31 @@
 <template>
   <div class="user-manage">
-    <div class="left-zoom-nav">
-      <el-tree
-        :data="treeList"
-        :props="treeProps"
-        node-key="id"
-        ref="navTree"
-        @node-click="onClickItemTree"
-      >
-      </el-tree>
+    <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
+         class="radius-shadow">
+      <Tree :tree-list="treeList" :tree-config="treeConfig"/>
     </div>
     <div class="right-content" v-if="!showAdd">
-        <div class="tip flex-align">
-          <span class="icon"></span>
-          <span>空间列表</span>
-        </div>
-        <div class="choose-box flex-align">
+        <div class="choose-box flex-align radius-shadow">
           <div class="block flex-align-center">
-            <span>编号</span>
+            <span>编号：</span>
             <el-input v-model="id" />
           </div>
           <div class="block flex-align-center">
-            <span>名称</span>
+            <span>名称：</span>
             <el-input v-model="caption" />
           </div>
             <div class="block flex-align-center">
-              <span>工程用名</span>
+              <span>工程用名：</span>
               <el-input v-model="name" />
             </div>
             <el-button type="primary" icon="el-icon-search" @click="onClickSearchBtn">搜索</el-button>
       </div>
-      <CommonTable :tableObj="tableData" :curPage="1"/>
-      <div class="operator-box">
-        <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除记录</el-button>
-        <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
+      <div class="table-wrapper radius-shadow">
+        <div class="operator-box flex-row-reverse">
+          <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除记录</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
+        </div>
+        <CommonTable :tableObj="tableData" :curPage="1"/>
       </div>
       <div class="item-row-detail-table">
         <table>
@@ -51,14 +43,17 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import CommonApi from '../../../service/api/commonApi'
   import CommonTable from '../../../components/commonTable/index'
   import AddSpace from '../coms/addSpace'
+  import Tree from '../../../components/tree/index'
   export default {
     name: 'UserManage',
     components: {
       CommonTable,
-      AddSpace
+      AddSpace,
+      Tree
     },
     data () {
       return {
@@ -76,7 +71,19 @@
         showAdd:false,
         curSpace:{},
         isEdit:false,
+        treeConfig:{
+          treeProps:{
+            label:'text',
+            children:'nodes'
+          },
+          defaultExpandedkeys:[]
+        }
       }
+    },
+    computed:{
+      ...mapState({
+        menuIsCollapse:state=>state.digitalPark.menuIsCollapse
+      })
     },
     methods: {
       async getAssetAllTree(){
@@ -84,7 +91,7 @@
           flag: 'space',
           locationRoot: 1
         })
-
+        this.treeConfig.defaultExpandedkeys=[this.treeList[0].id]
       },
       onClickItemTree(val){
         this.showAdd=false
@@ -187,37 +194,6 @@
 <style lang="less">
   @import '../less/dataDetailRow.less';
   .user-manage{
-    margin-top: 85px;
-    .left-zoom-nav{
-      width:17%;
-      float: left;
-      position: fixed;
-      height: 100%;
-      overflow: auto;
-      background: @mainBg;
-      padding: 10px 0;
-      .el-tree{
-        background: @mainBg;
-        font-size: 16px;
-      }
-      .el-tree-node__content{
-        color:@white;
-        padding:5px 0;
-      }
-      .el-tree-node__content:hover{
-        color:#22dbfc;
-      }
-      .el-tree-node:focus>.el-tree-node__content{
-        color:#22dbfc;
-      }
-    }
-    .right-content{
-      width:83%;
-      padding:10px;
-      float: right;
-      box-sizing: border-box;
-      /*background: #eaeff3;*/
-    }
     .tip{
       height: 66px;
       border-bottom: 1px solid #eaeaea;
@@ -234,8 +210,9 @@
       }
     }
     .choose-box{
-      overflow: hidden;
-      padding:20px 0;
+      padding:20px;
+      background: @white;
+      margin-bottom: 20px;
     }
     .block{
       margin-right:40px;
@@ -254,11 +231,19 @@
       background: @white;
       margin-bottom: 20px;
       padding: 10px;
+      .el-button{
+        margin-left:20px;
+      }
     }
     .item-row-detail-table{
       tr:nth-child(4) td{
         border-bottom:1px solid @mainBg;
       }
+    }
+    .table-wrapper{
+      padding:20px;
+      background: @white;
+      margin-bottom: 20px;
     }
   }
 </style>

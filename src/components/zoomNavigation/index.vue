@@ -47,7 +47,7 @@
     },
     computed: {
       defaultCheckedKey(){
-        return this.defaultChecked.map((item)=>item.id)
+        return this.defaultChecked && this.defaultChecked.map((item)=>item.id)
       },
       ...mapState({
         menuIsCollapse:state=>state.digitalPark.menuIsCollapse

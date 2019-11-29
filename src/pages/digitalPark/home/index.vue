@@ -12,7 +12,7 @@
         <NavOperator :moduleType.sync="moduleType" />
       </div>
       <div class="sidebar-container">
-        <Sidebar  :menuList="menuList" :menuConfig="menuConfig"/>
+        <Sidebar :menuList="menuList" :menuConfig="menuConfig"/>
       </div>
     </div>
 
@@ -420,7 +420,11 @@
       margin-left: 8px;
       margin-top: -3px;
     }
+    .scrollbar-wrapper.el-scrollbar__wrap{
+      margin-bottom:0 !important;
+    }
   }
+
   .el-menu-item,.el-submenu__title{
     font-size: 16px;
 

@@ -179,6 +179,7 @@
       },
       onClickSearchBtn(){
         this.curPage=1
+        this.$refs['tableRef'].setCurrentPage(1)
         this.getMeterTable()
       },
       rowClick(row){

@@ -19,10 +19,6 @@ export default {
     initChart(){
       let myChart = echarts.init(this.$refs.myChart || document.getElementById('asset-type-proportion-chart'));
       let option = {
-        title: {
-          text: '世界人口总量',
-          subtext: '数据来自网络'
-        },
         tooltip: {
           trigger: 'axis',
           axisPointer: {
