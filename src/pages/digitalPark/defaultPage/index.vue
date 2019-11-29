@@ -16,7 +16,7 @@
     },
     methods: {
       onClickGoBack(){
-        if(this.$route.query.type==2){
+        if(Cookies.get('moduleType')==2){
           location.href='/#/digitalPark/homePage'
         }else{
           location.href='/#/digitalPark/dashboardHomePage'

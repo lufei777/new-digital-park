@@ -2,7 +2,7 @@
   <div class="item-product-coms" >
     <div v-if="type==2" class="flex-align-between module-title">
       <h3>{{moduleData.menuName}}</h3>
-      <span class="more-btn hover-pointer">{{$t('more')}}</span>
+      <span class="more-btn hover-pointer" @click="onClickMoreBtn">{{$t('more')}}</span>
     </div>
     <span v-if="type==1" class="single-module-name">{{moduleData.menuName}}</span>
     <div v-if='type==1' class="component-box">
@@ -115,6 +115,21 @@
       onClickItemComponent(item){
          if(this.hideHeader) return ;  //配置页点击不进行操作
          console.log(item)
+      },
+      onClickMoreBtn(){
+        console.log(this.moduleData)
+        if(this.moduleData.routeAddress){
+          // 如果带有@字符，则跳转旧项目
+          if(routeAddress.indexOf('@') != -1){
+            CommonFun.loadOldPage(item);
+          }else{
+            setTimeout(()=>{
+              this.$router.push(item.routeAddress+'?type=2');
+            },500)
+          }
+        }else{
+          this.$router.push('/digitalPark/defaultPage?type=2')
+        }
       }
     },
     mounted(){
