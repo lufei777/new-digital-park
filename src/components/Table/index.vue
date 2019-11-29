@@ -244,10 +244,6 @@ export default {
       this._computedLayoutHeight();
     });
   },
-  updated() {
-    // 更新过后将total置位null
-    this.setPaginationTotal(0);
-  },
   methods: {
     /**
      * 内部使用方法
@@ -343,7 +339,7 @@ export default {
         url(sendData)
           .then(res => {
             this._setTableData(res.list);
-            this.uiConfig.pagination.total = res.total;
+            this.setPaginationTotal(res.total);
           })
           .finally(() => {
             //加载中结束
@@ -364,7 +360,7 @@ export default {
           .then(res => {
             res = res.data;
             this._setTableData(res.data);
-            this.uiConfig.pagination.total = res.total;
+            this.setPaginationTotal(res.total);
           })
           .catch(err => {
             throw err;
@@ -598,14 +594,17 @@ export default {
      * 外部调用方法
      */
     //get
+    // 获取表格多选框选中数据
     getSelectedData() {
       //多选获取当前选中值
       return this.$refs.dataBaseTable.selection;
     },
+    // 获取当前表格单击选中数据
     getCurrentRowData() {
       //单选获取当前选中行
       return this.currentRowData;
     },
+    // 获取表格全部数据
     getTableData() {
       if (this.isServerMode) {
         return this.getTableShowData();
@@ -613,6 +612,7 @@ export default {
         return this.tableData;
       }
     },
+    // 获取表格当前显示数据
     getTableShowData() {
       return this.tableShowData;
     },
@@ -620,6 +620,8 @@ export default {
     // 设置表格数据
     setData(rows) {
       this._setTableData(data);
+      // 设置总页数为null，这样在数据更新后没有手动设置total，会自动读取数据长度
+      this.setPaginationTotal(null);
     },
     // 设置分页每页显示条数
     setPaginationPageSize(pageSize) {
@@ -633,6 +635,10 @@ export default {
     setPaginationTotal(totalNum) {
       this.uiConfig.pagination.total = totalNum;
     },
+    // 设置列配置
+    setColumnConfig(columnConfig) {
+      this.columnConfig = columnConfig;
+    },
     //refresh
     refreshTable() {
       this._tableInit(true);
@@ -640,12 +646,17 @@ export default {
     }
   },
   computed: {
-    columnConfig() {
-      if (this.tableConfig.columnConfig) {
-        return this.tableConfig.columnConfig;
-      } else {
-        console.error("表格列配置为必须项");
-        return;
+    columnConfig: {
+      get() {
+        if (this.tableConfig.columnConfig) {
+          return this.tableConfig.columnConfig;
+        } else {
+          console.error("表格列配置为必须项");
+          return;
+        }
+      },
+      set(columnConfig) {
+        this.tableConfig.columnConfig = columnConfig;
       }
     },
     btnConfig() {
@@ -731,7 +742,7 @@ export default {
     //动态监测tableConfig.data的改变，有可能外部ajax改变data值
     "tableConfig.data"(val) {
       this._setTableData(val);
-      // 重新设置值后应该重设现页数
+      // 重新设置值tableConfig.data后应该重设现页数
       this.setCurrentPage(1);
     },
     tableData(newVal, oldVal) {
