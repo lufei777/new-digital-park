@@ -305,7 +305,7 @@ export default {
       let pageSize = this.pageSize;
       let paginationConfig = this.uiConfig.pagination;
 
-      if (paginationConfig) {
+      if (paginationConfig && !this.tableConfig.serverPaging) {
         //如果采用服务端分页模式
         if (this.isServerMode) {
           this._loadServerMode({
@@ -618,10 +618,8 @@ export default {
     },
     //set
     // 设置表格数据
-    setData(rows) {
+    setData(data) {
       this._setTableData(data);
-      // 设置总页数为null，这样在数据更新后没有手动设置total，会自动读取数据长度
-      this.setPaginationTotal(null);
     },
     // 设置分页每页显示条数
     setPaginationPageSize(pageSize) {
@@ -742,8 +740,6 @@ export default {
     //动态监测tableConfig.data的改变，有可能外部ajax改变data值
     "tableConfig.data"(val) {
       this._setTableData(val);
-      // 重新设置值tableConfig.data后应该重设现页数
-      this.setCurrentPage(1);
     },
     tableData(newVal, oldVal) {
       if (newVal instanceof Array) {
