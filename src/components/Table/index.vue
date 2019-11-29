@@ -305,7 +305,7 @@ export default {
       let pageSize = this.pageSize;
       let paginationConfig = this.uiConfig.pagination;
 
-      if (paginationConfig && !this.tableConfig.serverPaging) {
+      if (paginationConfig) {
         //如果采用服务端分页模式
         if (this.isServerMode) {
           this._loadServerMode({
@@ -314,11 +314,17 @@ export default {
           });
         } else {
           //如果不是服务器模式
-          let currentIndex = currentPage * pageSize;
-          this.tableShowData = this.tableData.slice(
-            currentIndex - pageSize,
-            currentIndex
-          );
+          // 如果tableData.length >= total，说明allData是全部数据，使用tableData分页即可
+          if (this.tableData.length >= this.uiConfig.pagination.total) {
+            let currentIndex = currentPage * pageSize;
+            this.tableShowData = this.tableData.slice(
+              currentIndex - pageSize,
+              currentIndex
+            );
+          } else {
+            // 否则直接显示设置数据
+            this.tableShowData = this.tableData;
+          }
         }
       } else {
         this.tableShowData = this.tableData;
