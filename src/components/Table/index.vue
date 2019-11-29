@@ -118,6 +118,7 @@
       <pagination
         :paginationConfig="uiConfig.pagination"
         :currentPage="paginationObj.currentPage"
+        :pageSize="paginationObj.pageSize"
         :total="uiConfig.pagination.total||tableData.length"
         :handleSizeChange="_handleSizeChange"
         :handleCurrentChange="_handleCurrentChange"
@@ -154,6 +155,7 @@ const defaultUiConfig = {
     // sizes
     layout: "total, ->, prev, pager, next, jumper",
     pageSizes: [10],
+    pageSize: 10,
     currentPage: 1
   }
 };
@@ -234,16 +236,6 @@ export default {
     if (tableConfig.uiConfig && tableConfig.uiConfig.pagination === true) {
       this.tableConfig.uiConfig.pagination = {};
     }
-    //分页
-    if (this.uiConfig.pagination) {
-      let currentPage = this.uiConfig.pagination.currentPage;
-      let pageSizes = this.uiConfig.pagination.pageSizes;
-
-      if (currentPage) {
-        this.currentPage = currentPage;
-      }
-      this.pageSize = pageSizes[0];
-    }
 
     this._tableInit();
   },
@@ -251,6 +243,10 @@ export default {
     this.$nextTick(() => {
       this._computedLayoutHeight();
     });
+  },
+  updated() {
+    // 更新过后将total置位null
+    this.setPaginationTotal(0);
   },
   methods: {
     /**
@@ -621,12 +617,19 @@ export default {
       return this.tableShowData;
     },
     //set
+    // 设置表格数据
     setData(rows) {
       this._setTableData(data);
     },
+    // 设置分页每页显示条数
+    setPaginationPageSize(pageSize) {
+      this.pageSize = pageSize;
+    },
+    // 设置分页显示当前第几页
     setCurrentPage(pageNum) {
       this.currentPage = pageNum;
     },
+    // 设置数据总条数，计算页数使用
     setPaginationTotal(totalNum) {
       this.uiConfig.pagination.total = totalNum;
     },
@@ -653,7 +656,8 @@ export default {
           this.tableConfig.btnConfig = {
             prop: "operation",
             label: "",
-            fixed: "right"
+            fixed: "right",
+            width: 100
           };
         } else if (typeof operation === "object") {
           this.tableConfig.btnConfig = operation;
@@ -662,11 +666,12 @@ export default {
       return this.tableConfig.btnConfig ? this.tableConfig.btnConfig : false;
     },
     uiConfig() {
-      let uiConfig = this.tableConfig.uiConfig;
-      if (!uiConfig) return defaultUiConfig;
-
+      let uiConfig = this.tableConfig.uiConfig || {};
+      // 设置默认值
       setDefaultValue(defaultUiConfig, uiConfig);
-
+      // 初始化currentPage和pageSize
+      this.currentPage = uiConfig.pagination.currentPage;
+      this.pageSize = uiConfig.pagination.pageSize;
       //如果没有配置的pagination，则使用默认的配置项
       return uiConfig;
     },

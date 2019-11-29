@@ -5,7 +5,7 @@
       @current-change="currentChange"
       :current-page.sync="curPage"
       :page-sizes="pageSizes"
-      :page-size.sync="pageSizes[0]"
+      :page-size.sync="size || pageSizes[0]"
       :layout="paginationConfig.layout"
       :total="total"
     ></el-pagination>
@@ -18,6 +18,7 @@ export default {
       type: Object,
       required: true
     },
+    pageSize: Number,
     currentPage: Number,
     total: Number,
     handleSizeChange: Function,
@@ -40,6 +41,12 @@ export default {
         return this.currentPage;
       },
       set(...args) {}
+    },
+    size: {
+      get() {
+        return this.pageSize;
+      },
+      set() {}
     },
     pageSizes() {
       return this.paginationConfig.pageSizes;
