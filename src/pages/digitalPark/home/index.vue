@@ -126,7 +126,9 @@
         localStorage.setItem('menuList',JSON.stringify(item.childNode))
         // 192.168.1.69：9002/html
         let routeAddress = item.routeAddress;
-        if(item.name=="综合安防" ||item.name=="机房动环" || item.name=="智能建筑"){//目前先写死
+        if(item.name=="综合安防" ||item.name=="机房动环" ||
+         item.name=="智能建筑" || item.name=="建筑监控" ||
+         item.name=="消防管理"){//目前先写死
           Client.SkipToSigleBuild(item.name);
           return ;
         }
