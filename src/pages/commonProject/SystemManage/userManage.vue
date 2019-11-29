@@ -1,6 +1,6 @@
 <template>
   <div class="user-manage">
-    <div class="left-zoom-nav">
+    <!-- <div class="left-zoom-nav radius-shadow unload-left-zoom-nav">
       <el-tree
         :data="treeList"
         :props="treeProps"
@@ -9,13 +9,17 @@
         @node-click="onClickItemTree"
       >
       </el-tree>
-    </div>
+</div> -->
+      <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
+         class="radius-shadow">
+        <Tree :tree-list="treeList" :tree-config="treeConfig"/>
+      </div>
     <div class="right-content" v-if="!showAdd">
-        <div class="tip flex-align">
+        <!-- <div class="tip flex-align">
           <span class="icon"></span>
           <span>员工列表</span>
-        </div>
-        <div class="choose-box flex-align">
+        </div> -->
+        <div class="choose-box flex-align radius-shadow">
           <div class="block flex-align-center">
             <span>编号</span>
             <el-input v-model="id" />
@@ -35,10 +39,17 @@
             <el-button type="primary" icon="el-icon-search" @click="onClickSearchBtn">搜索</el-button>
             <el-button type="primary"  @click="onClickExportBtn">导出</el-button>
       </div>
-      <CommonTable :tableObj="tableData" :curPage="1"/>
+      <!-- <CommonTable :tableObj="tableData" :curPage="1"/>
       <div class="operator-box">
         <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除用户</el-button>
         <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加用户</el-button>
+      </div> -->
+       <div class="table-wrapper radius-shadow">
+        <div class="operator-box flex-row-reverse">
+          <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除记录</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
+        </div>
+        <CommonTable :tableObj="tableData" :curPage="1"/>
       </div>
       <div class="item-row-detail-table">
         <table>
@@ -58,18 +69,29 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import CommonApi from '../../../service/api/commonApi'
   import CommonTable from '../../../components/commonTable/index'
   import AddUser from '../coms/addUser'
+  import Tree from '../../../components/tree/index'
   export default {
     name: 'UserManage',
     components: {
       CommonTable,
-      AddUser
+      AddUser,
+      Tree
     },
     data () {
       return {
         treeList:[],
+        treeConfig:{
+          treeProps:{
+            label:'text',
+            children:'nodes'
+          },
+          onClickTreeNodeCallBack:this.onClickTreeNodeCallBack,
+          defaultExpandedkeys:[]
+        },
         treeProps:{
           label:'text',
           children: 'nodes',
@@ -87,12 +109,18 @@
         roleList:{}
       }
     },
+    computed:{
+      ...mapState({
+        menuIsCollapse:state=>state.digitalPark.menuIsCollapse
+      })
+    },
     methods: {
       async getUserTree(){
         this.treeList = await CommonApi.getUserTree()
         this.department= this.treeList[0].id
+         this.treeConfig.defaultExpandedkeys=[this.treeList[0].id]
       },
-      onClickItemTree(val){
+      onClickTreeNodeCallBack(val){
         this.showAdd=false
         this.department=val.id
         this.getUserList()
@@ -216,7 +244,6 @@
 <style lang="less">
   @import '../less/dataDetailRow.less';
   .user-manage{
-    margin-top: 85px;
     .left-zoom-nav{
       width:17%;
       float: left;
@@ -240,13 +267,6 @@
         color:#22dbfc;
       }
     }
-    .right-content{
-      width:83%;
-      padding:10px;
-      float: right;
-      box-sizing: border-box;
-      /*background: #eaeff3;*/
-    }
     .tip{
       height: 66px;
       border-bottom: 1px solid #eaeaea;
@@ -264,7 +284,9 @@
     }
     .choose-box{
       overflow: hidden;
-      padding:20px 0;
+      padding:20px;
+      background: @white;
+      margin-bottom: 20px;
     }
     .block{
       margin-right:40px;
@@ -283,11 +305,19 @@
       background: @white;
       margin-bottom: 20px;
       padding: 10px;
+      .el-button{
+        margin-left:20px;
+      }
     }
     .item-row-detail-table{
       tr:nth-child(6) td{
         border-bottom:1px solid @mainBg;
       }
+    }
+    .table-wrapper{
+      padding:20px;
+      background: @white;
+      margin-bottom: 20px;
     }
   }
 </style>
