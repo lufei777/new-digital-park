@@ -250,7 +250,7 @@ export default {
       },
     onClickSearchBtn(){
       this.curPage=1
-      this.assetsTableConfig.uiConfig.pagination.currentPage=1
+      this.$refs[this.assetsTableConfig.ref].setCurrentPage(1)
       this.getAssetList()
     },
     onClickResetBtn(){
@@ -260,6 +260,7 @@ export default {
       this.name=''
       this.orderType=1,
       this.orderBy='create_time'
+      this.$refs[this.assetsTableConfig.ref].setCurrentPage(1)
       this.getAssetList()
     },
     onClickAddBtn(){
