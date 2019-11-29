@@ -286,6 +286,7 @@
         onClickItemFixPro(item){
           if(this.hideHeader) return ; //配置页不进行后续操作
           let routeAddress = item.routeAddress;
+          localStorage.setItem('menuList',JSON.stringify(item.childNode))
           if(item.name=="综合安防" ||item.name=="机房动环" || item.name=="智能建筑"){//目前先写死
             Client.SkipToSigleBuild(item.name);
             return ;
