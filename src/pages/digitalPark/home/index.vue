@@ -137,7 +137,7 @@
           }else{
            setTimeout(()=>{
              this.$router.push(item.routeAddress+'?type=2');
-           },1000)
+           },500)
           }
         }else{
             this.$router.push('/digitalPark/defaultPage?type=2')
