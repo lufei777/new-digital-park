@@ -8,12 +8,14 @@
       </div>
     </div>
     <div :class="isFull?'full-main-container':'main-container'">
-      <div :class="isFull?'hide':'left-module-list'">
-          <div v-for="item in proModuleList"
-             :key="item.id"
-             :class="['item-left-pro','hover-pointer',item.activeFlag?'active-pro':'']"
-             @click="onClickItemProModule(item)">{{item.name}}</div>
-      </div>
+      <!--<el-scrollbar wrap-class="scrollbar-wrapper" :native="false">-->
+        <div :class="isFull?'hide':'left-module-list'">
+            <div v-for="item in proModuleList"
+               :key="item.id"
+               :class="['item-left-pro','hover-pointer',item.activeFlag?'active-pro':'']"
+               @click="onClickItemProModule(item)">{{item.name}}</div>
+        </div>
+      <!--</el-scrollbar>-->
       <div class="module-content-list" v-show="!isFull">
         <draggable :list="contentList"
                    v-bind="getOptions()"
@@ -291,6 +293,7 @@
       /*margin-left:10px;*/
       box-sizing: border-box;
       font-size: 16px;
+      overflow: auto;
     }
     .item-left-pro{
       display: block;
