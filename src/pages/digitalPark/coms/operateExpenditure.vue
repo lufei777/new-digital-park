@@ -1,8 +1,8 @@
 <template>
   <div class="operate-expenditure">
-    <!-- <div ref="myChart" class="my-chart"></div>
-    <div>{{moduleItem.moduleName}}</div>-->
-    <vcharts :chartConfig="chartConfig"></vcharts>
+     <div ref="myChart" class="my-chart"></div>
+    <div>{{moduleItem.moduleName}}</div>
+    <!--<vcharts :chartConfig="chartConfig"></vcharts>-->
   </div>
 </template>
 
@@ -136,7 +136,7 @@ export default {
     }
   },
   mounted() {
-    // this.initChart();
+    this.initChart();
   }
 };
 </script>

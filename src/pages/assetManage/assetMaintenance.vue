@@ -140,7 +140,8 @@ export default {
             pageSizes: [10, 20, 50],
             handler:function(size,page){
               _this.handleCurrentChange(page)
-            }
+            },
+            currentPage:1
           }
         },
         tableMethods: {
@@ -250,6 +251,7 @@ export default {
       },
     onClickSearchBtn(){
       this.curPage=1
+      this.assetsTableConfig.uiConfig.pagination.currentPage=1
       this.getAssetList()
     },
     onClickResetBtn(){

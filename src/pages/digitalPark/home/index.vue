@@ -1,4 +1,5 @@
 <template>
+
   <div class="park-home-page" v-loading="loading">
     <div class="home-header" v-show="!hideHeader">
       <div class="home-header-inner flex-align-between">
@@ -23,56 +24,42 @@
         <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo2.jpg" alt="">
       </el-carousel-item>
     </el-carousel>
-
-    <div class="home-center">
-      <div class="product-module">
-        <div class="flex-align-between module-title">
-          <h3>功能模块</h3>
-          <span class="hover-pointer more-btn" @click="onShowMoreProduct">{{$t('more')}}</span>
+    <div class="home-header-wrapper">
+      <div class="home-center">
+        <div class="product-module">
+          <div class="flex-align-between module-title">
+            <h3>功能模块</h3>
+            <span class="hover-pointer more-btn" @click="onShowMoreProduct">{{$t('more')}}</span>
+          </div>
+          <ul class="flex-align-around production-list" :style="showMoreProduct?'':{height:'120px'}">
+            <li v-for="(item,index) in productList"
+                :key="index"
+                @click="onClickItemProduct(item)"
+                :style="getItemBg(item)"
+            ><span>{{item.name}}</span></li>
+          </ul>
         </div>
-        <ul class="flex-align-around production-list" :style="showMoreProduct?'':{height:'120px'}">
-          <li v-for="(item,index) in productList"
-              :key="index"
-              @click="onClickItemProduct(item)"
-              :style="getItemBg(item)"
-          ><span>{{item.name}}</span></li>
-        </ul>
-      </div>
-      <draggable :list="userProModuleList"
-                  v-bind="getOptions()"
-                  class="draggable-box"
-                  @change="onDragChange"
-                  @start="onDragStart"
-                  @end="onDragEnd"
-                  :scroll-sensitivity="150"
-                  :force-fallback="forceFallback"
-                  :sroll="forceFallback"
+        <draggable :list="userProModuleList"
+                   v-bind="getOptions()"
+                   class="draggable-box"
+                   @change="onDragChange"
+                   @start="onDragStart"
+                   @end="onDragEnd"
+                   :scroll-sensitivity="150"
+                   :force-fallback="forceFallback"
+                   :sroll="forceFallback"
 
-      >
-        <ItemProModule v-for="(item) in userProModuleList"
-                       class="drag-item item-module"
-                       :key="item.id"
-                       :moduleData="item"
-                       :type="2"
-                       :userProModuleList="userProModuleList"
-                       :id="item.menuId"
-        />
-      </draggable>
-      <!--<div class="item-module">-->
-        <!--<div class="flex-align-between module-title">-->
-          <!--<h3>信息发布</h3>-->
-          <!--<span class="hover-pointer" @click="onShowMoreProduct">{{$t('more')}}</span>-->
-        <!--</div>-->
-        <!--<div class="module-border">-->
-          <!--<el-tabs style="height: 200px;" type="border-card" tabPosition="top">-->
-            <!--<el-tab-pane label="员工活动">员工活动</el-tab-pane>-->
-            <!--<el-tab-pane label="党建工作">党建工作</el-tab-pane>-->
-            <!--<el-tab-pane label="规章制度">规章制度</el-tab-pane>-->
-            <!--<el-tab-pane label="通知公告">通止规</el-tab-pane>-->
-            <!--<el-tab-pane label="时事要闻">通止规</el-tab-pane>-->
-          <!--</el-tabs>-->
-        <!--</div>-->
-      <!--</div>-->
+        >
+          <ItemProModule v-for="(item) in userProModuleList"
+                         class="drag-item item-module"
+                         :key="item.id"
+                         :moduleData="item"
+                         :type="2"
+                         :userProModuleList="userProModuleList"
+                         :id="item.menuId"
+          />
+        </draggable>
+      </div>
     </div>
   </div>
 </template>
@@ -344,6 +331,10 @@
       width:20px;
       height:20px;
       margin:0 25px;
+    }
+    .home-header-wrapper{
+      width:100%;
+      background: @white;
     }
     .home-center{
       width:80%;
