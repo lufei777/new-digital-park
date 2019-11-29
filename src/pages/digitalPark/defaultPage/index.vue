@@ -17,9 +17,11 @@
     methods: {
       onClickGoBack(){
         if(Cookies.get('moduleType')==2){
-          location.href='/#/digitalPark/homePage'
+          this.$router.push('/digitalPark/homePage')
+          // location.href='/#/digitalPark/homePage'
         }else{
-          location.href='/#/digitalPark/dashboardHomePage'
+          this.$router.push('/digitalPark/dashboardHomePage')
+          // location.href='/#/digitalPark/dashboardHomePage'
         }
       }
     },
