@@ -1,9 +1,5 @@
 <template>
-  <div class="import-meter">
-    <div class="tip flex-align">
-      <span class="icon"></span>
-      <span>批量导入</span>
-    </div>
+  <div class="import-meter radius-shadow">
     <div class="import-box">
       <span>批量导入设备</span>
       <el-input type="file" />
@@ -19,7 +15,7 @@
 <script>
   import CommonApi from '../../../service/api/commonApi'
   export default {
-    name: 'ImprotMeter',
+    name: 'ImportMeter',
     components: {
     },
     data () {
@@ -32,7 +28,7 @@
     },
     methods: {
       goBack(){
-        this.$parent.showImport=false
+        history.go(-1)
       },
       onClickSureBtn(){}
     },
@@ -44,10 +40,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
   .import-meter{
-    width:83%;
-    padding:10px;
-    float: right;
-    box-sizing: border-box;
+    padding:20px;
     background: @white;
     .el-form{
       width:50%;
