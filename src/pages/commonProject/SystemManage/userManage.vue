@@ -1,24 +1,10 @@
 <template>
   <div class="user-manage">
-    <!-- <div class="left-zoom-nav radius-shadow unload-left-zoom-nav">
-      <el-tree
-        :data="treeList"
-        :props="treeProps"
-        node-key="id"
-        ref="navTree"
-        @node-click="onClickItemTree"
-      >
-      </el-tree>
-</div> -->
       <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
          class="radius-shadow">
         <Tree :tree-list="treeList" :tree-config="treeConfig"/>
       </div>
     <div class="right-content" v-if="!showAdd">
-        <!-- <div class="tip flex-align">
-          <span class="icon"></span>
-          <span>员工列表</span>
-        </div> -->
         <div class="choose-box flex-align radius-shadow">
           <div class="block flex-align-center">
             <span>编号</span>
@@ -92,10 +78,6 @@
           onClickTreeNodeCallBack:this.onClickTreeNodeCallBack,
           defaultExpandedkeys:[]
         },
-        treeProps:{
-          label:'text',
-          children: 'nodes',
-        },
         id:'',
         login_id:'',
         mail:'',
@@ -117,8 +99,9 @@
     methods: {
       async getUserTree(){
         this.treeList = await CommonApi.getUserTree()
+        console.log('123',this.treeList)
         this.department= this.treeList[0].id
-         this.treeConfig.defaultExpandedkeys=[this.treeList[0].id]
+        this.treeConfig.defaultExpandedkeys=[this.treeList[0].id]
       },
       onClickTreeNodeCallBack(val){
         this.showAdd=false
@@ -218,13 +201,15 @@
         });
       },
       editRow(data){
-        this.curUser=data
-        this.showAdd=true
-        this.isEdit=true
+        // this.curUser=data
+        // this.showAdd=true
+        // this.isEdit=true
+
+        this.$router.push(`/addUser?curUserId=${data.id}`)
       },
       onClickAddBtn(){
-        this.showAdd=true
-        this.isEdit=false
+        // this.isEdit=false
+        this.$router.push('/addUser')
       },
       rowClick(row){
         this.curUser=row

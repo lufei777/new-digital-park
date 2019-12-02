@@ -5,6 +5,7 @@ import DepartmentManage from '../../pages/commonProject/SystemManage/departmentM
 import SpaceManage from '../../pages/commonProject/SystemManage/spaceManage'
 import TmpRouter from '../../pages/commonProject/coms/tmpRouterBox'
 import AddSpace from '../../pages/commonProject/SystemManage/addSpace'
+import AddUser from '../../pages/commonProject/coms/addUser'
 export default [{
   path:'/tmpRouter',
   redirect:'/userManage',
@@ -39,6 +40,11 @@ export default [{
       path:'/addSpace',
       name:'AddSpace',
       component:AddSpace,
+      meta:{title:'空间编辑'},
+    },{
+      path:'/addUser',
+      name:'AddUser',
+      component:AddUser,
       meta:{title:'空间编辑'},
     }]
 }]
