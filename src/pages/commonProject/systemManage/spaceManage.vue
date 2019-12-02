@@ -1,10 +1,10 @@
 <template>
-  <div class="user-manage">
+  <div class="space-manage">
     <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
          class="radius-shadow">
       <Tree :tree-list="treeList" :tree-config="treeConfig"/>
     </div>
-    <div class="right-content" v-if="!showAdd">
+    <div class="right-content">
         <div class="choose-box flex-align radius-shadow">
           <div class="block flex-align-center">
             <span>编号：</span>
@@ -38,7 +38,6 @@
         </table>
       </div>
     </div>
-    <AddSpace v-if="showAdd" :curSpaceId='curSpace.id' :isEdit="isEdit"/>
   </div>
 </template>
 
@@ -68,15 +67,14 @@
         parentId:0,
         tableData:{},
         curPage:1,
-        showAdd:false,
         curSpace:{},
-        isEdit:false,
         treeConfig:{
           treeProps:{
             label:'text',
             children:'nodes'
           },
-          defaultExpandedkeys:[]
+          defaultExpandedkeys:[],
+          onClickTreeNodeCallBack:this.onClickItemTree
         }
       }
     },
@@ -94,9 +92,7 @@
         this.treeConfig.defaultExpandedkeys=[this.treeList[0].id]
       },
       onClickItemTree(val){
-        this.showAdd=false
         this.parentId=val.id
-        this.getSpaceList()
       },
       async getSpaceList(){
         let res = await CommonApi.getSpaceList({
@@ -190,22 +186,7 @@
 
 <style lang="less">
   @import '../less/dataDetailRow.less';
-  .user-manage{
-    .tip{
-      height: 66px;
-      border-bottom: 1px solid #eaeaea;
-      .icon {
-        width: 2px;
-        height: 24px;
-        background: #01465c;
-        border-radius: 2px;
-        margin-right: 10px;
-      }
-      span{
-        font-size: 24px;
-        color:#01465c;
-      }
-    }
+  .space-manage{
     .choose-box{
       padding:20px;
       background: @white;
@@ -227,7 +208,6 @@
     .operator-box{
       background: @white;
       margin-bottom: 20px;
-      padding: 10px;
       .el-button{
         margin-left:20px;
       }
