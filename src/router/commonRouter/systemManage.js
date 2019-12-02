@@ -1,11 +1,12 @@
-import UserManage from '../../pages/commonProject/SystemManage/userManage'
-import OperatorLog from '../../pages/commonProject/SystemManage/operatorLog'
-import RoleManage from '../../pages/commonProject/SystemManage/roleManage'
-import DepartmentManage from '../../pages/commonProject/SystemManage/departmentManage'
-import SpaceManage from '../../pages/commonProject/SystemManage/spaceManage'
+import UserManage from '../../pages/commonProject/systemManage/userManage'
+import OperatorLog from '../../pages/commonProject/systemManage/operatorLog'
+import RoleManage from '../../pages/commonProject/systemManage/roleManage'
+import DepartmentManage from '../../pages/commonProject/systemManage/departmentManage'
+import SpaceManage from '../../pages/commonProject/systemManage/spaceManage'
 import TmpRouter from '../../pages/commonProject/coms/tmpRouterBox'
-import AddSpace from '../../pages/commonProject/SystemManage/addSpace'
+import AddSpace from '../../pages/commonProject/systemManage/addSpace'
 import AddUser from '../../pages/commonProject/coms/addUser'
+import AddDept from '../../pages/commonProject/systemManage/addDept'
 export default [{
   path:'/tmpRouter',
   redirect:'/userManage',
@@ -32,19 +33,24 @@ export default [{
     component:DepartmentManage,
     meta:{title:'组织机构'}
   },{
-      path:'/spaceManage',
-      name:'SpaceManage',
-      component:SpaceManage,
-      meta:{title:'空间管理'},
-    },{
-      path:'/addSpace',
-      name:'AddSpace',
-      component:AddSpace,
-      meta:{title:'空间编辑'},
-    },{
-      path:'/addUser',
-      name:'AddUser',
-      component:AddUser,
-      meta:{title:'空间编辑'},
-    }]
+    path:'/spaceManage',
+    name:'SpaceManage',
+    component:SpaceManage,
+    meta:{title:'空间管理'},
+  },{
+    path:'/addSpace',
+    name:'AddSpace',
+    component:AddSpace,
+    meta:{title:'空间编辑'},
+  },{
+    path:'/addUser',
+    name:'AddUser',
+    component:AddUser,
+    meta:{title:'空间编辑'},
+  },{
+    path:'/addDept',
+    name:'AddDept',
+    component:AddDept,
+    meta:{title:'机构编辑'},
+  }]
 }]

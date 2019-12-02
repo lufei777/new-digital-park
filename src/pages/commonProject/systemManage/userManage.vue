@@ -97,9 +97,8 @@
       })
     },
     methods: {
-      async getUserTree(){
-        this.treeList = await CommonApi.getUserTree()
-        console.log('123',this.treeList)
+      async getDeptTree(){
+        this.treeList = await CommonApi.getDeptTree()
         this.department= this.treeList[0].id
         this.treeConfig.defaultExpandedkeys=[this.treeList[0].id]
       },
@@ -219,7 +218,7 @@
       }
     },
     async mounted(){
-      await this.getUserTree()
+      await this.getDeptTree()
       await this.getRoleList()
       this.getUserList()
     }
