@@ -11,6 +11,9 @@
       <el-form-item label="工程用名" prop="name">
         <el-input v-model="spaceForm.name"></el-input>
       </el-form-item>
+      <el-form-item label="所属空间" prop="parentName">
+        <el-input v-model="spaceForm.parentName" @focus="onShowModal"></el-input>
+      </el-form-item>
       <el-form-item label="描述" prop="memo">
         <el-input v-model="spaceForm.memo" type="textarea" rows="4" :maxlength="255"></el-input>
         <span class="memo-length-tip">{{this.spaceForm.memo.length}}/255</span>
@@ -20,16 +23,19 @@
         <el-button @click="goBack" class="go-back">返回</el-button>
       </el-form-item>
     </el-form>
+    <TreeModal :tree-modal-config="treeModalConfig"></TreeModal>
   </div>
 </template>
 
 <script>
   import CommonApi from '../../../service/api/commonApi'
+  import TreeModal from '../../../components/treeModal/index'
   export default {
     name: 'AddSpace',
     components: {
+      TreeModal
     },
-    props:['curSpaceId','isEdit'],
+    // props:['spaceId','isEdit'],
     data () {
       return {
         spaceForm:{
@@ -38,7 +44,8 @@
           memo:'',
           kind:'SPACE',
           typeName:'3DSpace',
-          parentId:0  //目前写死，建议设计改进
+          parentId:0,
+          parentName:''
         },
         rules: {
           caption:[{ required: true, message: '请输入空间名称', trigger: 'blur' }],
@@ -46,12 +53,24 @@
         },
         roleList:[],
         showDialog:false,
-        departmentList:[]
+        departmentList:[],
+        treeModalConfig:{
+          treeList:[],
+          treeConfig:{
+            defaultExpandedkeys:[],
+          },
+          showModal:false,
+          onClickSureBtnCallback:this.onClickModalSureBtn,
+          onClickCancelBtnCallback:this.onClickModalCancelBtn
+        }
       }
     },
     computed:{
       tipText(){
         return this.isEdit?'编辑空间':'添加空间'
+      },
+      spaceId(){
+        return this.$route.query.spaceId
       }
     },
     watch:{
@@ -59,11 +78,11 @@
     methods: {
       async getItemSpaceDetail(){
         let res =await CommonApi.getItemSpaceDetail({
-          id:this.curSpaceId,
+          id:this.spaceId,
           kind:'SPACE'
         })
         this.spaceForm={
-          id:this.curSpaceId,
+          id:this.spaceId,
           caption:res.caption,
           name:res.name,
           memo:res.memo
@@ -81,27 +100,44 @@
       },
       async addSpace(){
         let res
-        if(this.isEdit){
+        if(this.spaceId){
           res = await CommonApi.editSpace(this.spaceForm)
         }else{
           res = await CommonApi.addSpace(this.spaceForm)
         }
         this.$message({
           type: 'success',
-          message: this.isEdit?'修改成功！':'添加成功！',
+          message: this.spaceId?'修改成功！':'添加成功！',
           duration:1000
         });
-        this.$parent.showAdd=false
-        this.$parent.getSpaceList()
       },
       goBack(){
-        this.$parent.showAdd=false
+        history.go(-1)
       },
-    },
-    mounted(){
-     if(this.isEdit){
-        this.getItemSpaceDetail()
+      async getAssetAllTree(){
+        this.treeModalConfig.treeList = await CommonApi.getAssetAllTree({
+          flag: 'space',
+          locationRoot: 1
+        })
+        this.treeModalConfig.treeConfig.defaultExpandedkeys=[this.treeModalConfig.treeList[0].id]
+      },
+      onShowModal(){
+        this.treeModalConfig.showModal=true
+      },
+      onClickModalSureBtn(val){
+        this.spaceForm.parentId=val.id
+        this.spaceForm.parentName=val.text
+        this.treeModalConfig.showModal=false
+      },
+      onClickModalCancelBtn(){
+        this.treeModalConfig.showModal=false
       }
+    },
+    async mounted(){
+       await this.getAssetAllTree()
+       if(this.spaceId){
+          this.getItemSpaceDetail()
+       }
     }
   }
 </script>
@@ -118,9 +154,6 @@
       width:60%;
     }
     .go-back{
-      background: #ecf5ff;
-      color:#3a8ee6;
-      border-color:#c6e2ff;
     }
     .el-input{
       width:280px;
