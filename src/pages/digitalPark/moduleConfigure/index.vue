@@ -17,6 +17,7 @@
         </div>
       <!--</el-scrollbar>-->
       <div class="module-content-list" v-show="!isFull">
+
         <draggable :list="contentList"
                    v-bind="getOptions()"
                    @change="onDragChange"

@@ -3,7 +3,7 @@ import router from '@/router'
 // import { Loading } from 'element-ui'
 // 服务端不需loading
 const Message = require("element-ui").Message
-/* const Loading = require("element-ui").Loading;
+const Loading = require("element-ui").Loading
 
 let loadingInstance = "";
 let loadingCount = 0;
@@ -12,7 +12,7 @@ let resetLoading = function () {
   loadingInstance && loadingInstance.close();
   loadingInstance = "";
   loadingCount = 0;
-}; */
+};
 
 var config = {};
 
@@ -30,12 +30,12 @@ axios.interceptors.request.use(
     }
     config.headers['X-Requested-With'] = 'XMLHttpRequest';
     config.headers['X-Requested-InPage'] =redirectHref;
-    /* try {
-      loadingInstance = Loading.service({});
-      loadingCount++;
-    } catch (err) {
-      resetLoading();
-    } */
+    //  try {
+    //   loadingInstance = Loading.service({});
+    //   loadingCount++;
+    // } catch (err) {
+    //   resetLoading();
+    // }
     return config;
   },
   function (error) {
@@ -46,15 +46,15 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   async function (response) {
     // loading处理
-    /* try {
-      loadingCount--;
-      if (loadingCount == 0) loadingInstance.close();
-      setTimeout(function () {
-        resetLoading();
-      }, 5000);
-    } catch (err) {
-      resetLoading();
-    } */
+    //  try {
+    //   loadingCount--;
+    //   if (loadingCount == 0) loadingInstance.close();
+    //   setTimeout(function () {
+    //     resetLoading();
+    //   }, 5000);
+    // } catch (err) {
+    //   resetLoading();
+    // }
 
     // Do something with response data
     if (response && process.server && response.config) {

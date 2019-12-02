@@ -129,7 +129,6 @@ export default {
       //资产管理表格
       assetsTableConfig: {
         ref: "assetsTable",
-        serverPaging:true,
         data:[],
         columnConfig:[],
         btnConfig:[],

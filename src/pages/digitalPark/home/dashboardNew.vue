@@ -50,10 +50,10 @@
         <img v-if="pageFlag==2" src="../../../../static/image/digitalPark/unity_priview.png"
              class="unity_priview"
              alt="">
-        <iframe v-if="pageFlag==1"
-                src="../../../../static/HomePage/index.html"
-                frameborder="0"
-                class="unity-frame"></iframe>
+        <!--<iframe v-if="pageFlag==1"-->
+                <!--src="../../../../static/HomePage/index.html"-->
+                <!--frameborder="0"-->
+                <!--class="unity-frame"></iframe>-->
 
       </div>
       <div class="dashboard-right">
@@ -142,7 +142,14 @@
       },
       methods: {
         async onLeftChange (evt) {
-          console.log('change1', evt)
+          // console.log('change1', evt)
+          // console.log($(".draggable-box1").height())
+          // $(".item-drag-product").eq(0).css({
+          //   marginBottom: $(".draggable-box1").height()*0.02+'px',
+          // })
+          // $(".item-drag-product").eq(1).css({
+          //   marginBottom: $(".draggable-box1").height()*0.02+'px'
+          // })
           if(evt.moved && !this.curProModule){ //只要有curProModule就代表是配置页，因为此处是仪表盘首页拖动而非配置页
             this.sureUpdateUserProModules()
           }else if (evt.removed) {
@@ -358,6 +365,15 @@
       // })
       // console.log("box2",$(".dashboard-content-panel").height(),$(".fixed-prod-module").height(),height)
       // console.log($(".draggable-box2").height())
+      // setTimeout(()=>{
+      //   $(".item-drag-product").eq(0).css({
+      //     marginBottom: $(".draggable-box1").height()*0.02+'px'
+      //   })
+      //   $(".item-drag-product").eq(1).css({
+      //     marginBottom: $(".draggable-box1").height()*0.02+'px'
+      //   })
+      // },1000)
+      // console.log($(".draggable-box1").height())
     }
   }
 </script>
@@ -406,7 +422,7 @@
       overflow: hidden;
       position: relative;
       .item-drag-product{
-        height:48%;
+        height:47.5%;
       }
       .item-drag-product:nth-child(2){
         top:50%;
@@ -432,6 +448,12 @@
       height:33%;
       padding:0 10px;
       box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      span{
+        /*margin-bottom: 10px;*/
+      }
     }
     .dashboard-header{
       width:100%;
@@ -478,7 +500,10 @@
       overflow: hidden;
     }
     .product-list{
-      height:90%;
+      flex-grow: 1;
+      box-sizing: border-box;
+      padding-top:10px;
+      overflow: hidden;
       &:after{
       width:40%;
       content:''
@@ -508,10 +533,12 @@
     }
     .news-box,.digital-title,.dashboard-nav-operator{
       flex: 1;
+
     }
-    .dashboard-nav-operator .digital-nav-operator{
-      /*width:90%;*/
-      float: right;
+    .dashboard-nav-operator{
+      .digital-nav-operator{
+        float: right;
+      }
     }
     .unity_priview{
       width:100%;
