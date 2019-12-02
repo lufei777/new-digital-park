@@ -1,7 +1,7 @@
 <template>
   <div class="space-manage">
     <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
-         class="radius-shadow">
+         class="space-tree-box radius-shadow">
       <Tree :tree-list="treeList" :tree-config="treeConfig"/>
     </div>
     <div class="right-content">
@@ -89,7 +89,7 @@
           flag: 'space',
           locationRoot: 1
         })
-        this.treeConfig.defaultExpandedkeys=[this.treeList[0].id]
+        this.treeConfig.defaultExpandedkeys=[this.treeList && this.treeList[0].id]
       },
       onClickItemTree(val){
         this.parentId=val.id
@@ -176,10 +176,19 @@
       rowClick(row){
         this.curSpace=row
       },
+      fixTree(){
+        $(".space-tree-box").css({
+          height:($(document).height()-110)+'px'
+        })
+      },
     },
     async mounted(){
       await this.getAssetAllTree()
       this.getSpaceList()
+      this.fixTree()
+      $(window).resize(()=>{
+        this.fixTree()
+      })
     }
   }
 </script>

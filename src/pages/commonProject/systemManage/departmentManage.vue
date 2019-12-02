@@ -1,7 +1,7 @@
 <template>
   <div class="department-manage">
     <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
-         class="radius-shadow">
+         class="dept-tree-box radius-shadow">
       <Tree :tree-list="treeList" :tree-config="treeConfig"/>
     </div>
     <div class="right-content">
@@ -145,10 +145,19 @@
       onClickAddBtn(){
          this.$router.push("/addDept")
       },
+      fixTree(){
+        $(".dept-tree-box").css({
+          height:($(document).height()-110)+'px'
+        })
+      },
     },
     async mounted(){
       await this.getDeptTree()
       await this.queryDeptList()
+      this.fixTree()
+      $(window).resize(()=>{
+        this.fixTree()
+      })
     }
   }
 </script>
