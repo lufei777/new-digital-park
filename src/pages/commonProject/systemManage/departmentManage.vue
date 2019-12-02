@@ -1,61 +1,53 @@
 <template>
-  <div class="user-manage">
-    <div class="left-zoom-nav">
-      <el-tree
-        :data="treeList"
-        :props="treeProps"
-        node-key="id"
-        ref="navTree"
-        @node-click="onClickItemTree"
-      >
-      </el-tree>
+  <div class="department-manage">
+    <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
+         class="radius-shadow">
+      <Tree :tree-list="treeList" :tree-config="treeConfig"/>
     </div>
-    <div class="right-content" v-if="!showAdd">
-        <div class="tip flex-align">
-          <span class="icon"></span>
-          <span>机构列表</span>
-        </div>
-        <div class="choose-box flex-align">
+    <div class="right-content">
+        <div class="choose-box flex-align radius-shadow">
           <div class="block flex-align-center">
-            <span>编号</span>
+            <span>编号：</span>
             <el-input v-model="did" />
           </div>
           <div class="block flex-align-center">
-            <span>机构简称</span>
+            <span>机构简称：</span>
             <el-input v-model="name" />
           </div>
           <div class="block flex-align-center">
-            <span>机构全称</span>
+            <span>机构全称：</span>
             <el-input v-model="abbr" />
           </div>
           <el-button type="primary" icon="el-icon-search" @click="onClickSearchBtn">搜索</el-button>
       </div>
-      <CommonTable :tableObj="departList" :curPage="1"/>
-      <div class="operator-box">
-        <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除机构</el-button>
-        <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加机构</el-button>
+      <div class="table-wrapper radius-shadow">
+        <div class="operator-box flex-row-reverse">
+          <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除机构</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加机构</el-button>
+        </div>
+        <CommonTable :tableObj="departList" :curPage="1"/>
       </div>
     </div>
-    <AddUser v-if="showAdd" :curUserId='curUser.id' :isEdit="isEdit"/>
   </div>
 </template>
 
 <script>
+  import {mapState} from 'vuex'
   import CommonApi from '../../../service/api/commonApi'
   import CommonTable from '../../../components/commonTable/index'
-  import AddUser from '../coms/addUser'
+  import Tree from '../../../components/tree/index'
   export default {
     name: 'UserManage',
     components: {
       CommonTable,
-      AddUser
+      Tree
     },
     data () {
       return {
         treeList:[],
-        treeProps:{
-          label:'text',
-          children: 'nodes',
+        treeConfig: {
+          defaultExpandedkeys: [],
+          onClickTreeNodeCallBack: this.onClickItemTree,
         },
         parent:0,
         departList:{},
@@ -66,19 +58,26 @@
         curPage:1
       }
     },
+    computed:{
+      ...mapState({
+        menuIsCollapse:state=>state.digitalPark.menuIsCollapse
+      })
+    },
     methods: {
-      async getUserTree(){
-        this.treeList = await CommonApi.getUserTree()
+      async getDeptTree(){
+        this.treeList = await CommonApi.getDeptTree()
+        this.treeConfig.defaultExpandedkeys=[this.treeList[0].id]
         this.department= this.treeList[0].id
       },
       onClickItemTree(val){
-        this.showAdd=false
         this.parent=val.id
-        this.queryDeptList()
       },
       async queryDeptList(){
         let res  = await CommonApi.queryDeptList({
-          parent:this.parent
+          parent:this.parent,
+          did:this.did,
+          name:this.name,
+          abbr:this.abbr
         })
         if(!res || !res.total){
           res={
@@ -97,10 +96,10 @@
       },
       onClickSearchBtn(){
         this.curPage=1
-        this.getUserList()
+        this.queryDeptList()
       },
       deleteRow(data){
-        this.deleteId=data.id
+        this.deleteId=data.did
         this.deleteTip()
       },
       async sureDelete(){
@@ -114,14 +113,14 @@
         this.getUserList()
       },
       handleSelectionChange(val){
-        let tmp=val.map((item)=>item.id)
+        let tmp=val.map((item)=>item.did)
         this.deleteId=tmp.join(",")
       },
       deleteTip(){
         if(!this.deleteId){
           this.$message({
             type: 'warning',
-            message: '请先选择用户！',
+            message: '请先选择机构！',
             duration:1000
           });
           return;
@@ -140,20 +139,15 @@
         });
       },
       editRow(data){
-        this.curUser=data
-        this.showAdd=true
-        this.isEdit=true
+        console.log(data)
+        this.$router.push(`/addDept?deptId=${data.did}`)
       },
       onClickAddBtn(){
-        this.showAdd=true
-        this.isEdit=false
-      },
-      rowClick(row){
-        this.curUser=row
+         this.$router.push("/addDept")
       },
     },
     async mounted(){
-      await this.getUserTree()
+      await this.getDeptTree()
       await this.queryDeptList()
     }
   }
@@ -161,56 +155,14 @@
 
 <style lang="less">
   @import '../less/dataDetailRow.less';
-  .user-manage{
-    margin-top: 85px;
-    .left-zoom-nav{
-      width:17%;
-      float: left;
-      position: fixed;
-      height: 100%;
-      overflow: auto;
-      background: @mainBg;
-      padding: 10px 0;
-      .el-tree{
-        background: @mainBg;
-        font-size: 16px;
-      }
-      .el-tree-node__content{
-        color:@white;
-        padding:5px 0;
-      }
-      .el-tree-node__content:hover{
-        color:#22dbfc;
-      }
-      .el-tree-node:focus>.el-tree-node__content{
-        color:#22dbfc;
-      }
-    }
+  .department-manage{
     .right-content{
-      width:83%;
-      padding:10px;
-      float: right;
-      box-sizing: border-box;
-      /*background: #eaeff3;*/
-    }
-    .tip{
-      height: 66px;
-      border-bottom: 1px solid #eaeaea;
-      .icon {
-        width: 2px;
-        height: 24px;
-        background: #01465c;
-        border-radius: 2px;
-        margin-right: 10px;
-      }
-      span{
-        font-size: 24px;
-        color:#01465c;
-      }
     }
     .choose-box{
       overflow: hidden;
-      padding:20px 0;
+      padding:20px;
+      background: @white;
+      margin-bottom: 20px;
     }
     .block{
       margin-right:40px;
@@ -228,12 +180,18 @@
     .operator-box{
       background: @white;
       margin-bottom: 20px;
-      padding: 10px;
+      .el-button{
+        margin-left: 20px;
+      }
     }
     .item-row-detail-table{
       tr:nth-child(6) td{
         border-bottom:1px solid @mainBg;
       }
+    }
+    .table-wrapper{
+       background: @white;
+      padding: 20px;
     }
   }
 </style>

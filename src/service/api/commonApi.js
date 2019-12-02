@@ -135,7 +135,7 @@ class CommonApi {
 
   @url('/vibe-web/dept/treeAllData')
   @get
-  getUserTree(){}
+  getDeptTree(){}
 
   @url('/vibe-web/user/userList')
   @get
@@ -216,6 +216,10 @@ class CommonApi {
   @url('/vibe-web/updateHandInput')
   @post
   updateHandInput(){}
+
+  @url("/vibe-web/dept/toDeptEdit")
+  @get
+  getDeptDetail(){}
 }
 
 export default new CommonApi()
