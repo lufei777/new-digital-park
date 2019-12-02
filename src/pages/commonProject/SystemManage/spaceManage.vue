@@ -49,7 +49,7 @@
   import AddSpace from './addSpace'
   import Tree from '../../../components/tree/index'
   export default {
-    name: 'UserManage',
+    name: 'SpaceManage',
     components: {
       CommonTable,
       AddSpace,
@@ -172,9 +172,7 @@
         });
       },
       editRow(data){
-        this.curSpace=data
-        this.showAdd=true
-        this.isEdit=true
+        this.$router.push(`/addSpace?spaceId=${data.id}`)
       },
       onClickAddBtn(){
         this.$router.push('/addSpace')
