@@ -33,18 +33,15 @@
 <script>
   import CommonApi from '../../../service/api/commonApi'
   import CommonTable from '../../../components/commonTable/index'
-  import AddUser from '../coms/addUser'
   export default {
     name: 'UserManage',
     components: {
-      CommonTable,
-      AddUser
+      CommonTable
     },
     data () {
       return {
         roleList:{},
         curPage:1,
-        showAdd:false,
         curRole:{}
       }
     },
@@ -128,13 +125,10 @@
         });
       },
       editRow(data){
-        this.curRole=data
-        this.showAdd=true
-        this.isEdit=true
+         this.$router.push(`/addRole?roleId=${data.id}`)
       },
       onClickAddBtn(){
-        this.showAdd=true
-        this.isEdit=false
+         this.$router.push('/addRole')
       },
       rowClick(row){
         this.curRole=row
@@ -160,7 +154,6 @@
 <style lang="less">
   @import '../less/dataDetailRow.less';
   .role-manage{
-    margin-top: 85px;
     background: #eaeff3;
     .role-list,.role-detail{
       background: @white;

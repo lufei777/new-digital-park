@@ -220,6 +220,14 @@ class CommonApi {
   @url("/vibe-web/dept/toDeptEdit")
   @get
   getDeptDetail(){}
+
+  @url('/vibe-web/role/roleAdd')
+  @post
+  addRole(){}
+
+  @url('/vibe-web/role/updateRole')
+  @post
+  updateRole(){}
 }
 
 export default new CommonApi()

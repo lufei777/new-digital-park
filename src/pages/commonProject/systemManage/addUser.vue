@@ -1,5 +1,5 @@
 <template>
-  <div class="add-user">
+  <div class="add-user radius-shadow">
     <div class="tip flex-align">
       <span class="icon"></span>
       <span>{{tipText}}</span>
@@ -24,10 +24,6 @@
         <el-input v-model="userForm.mail"></el-input>
       </el-form-item>
       <el-form-item label="所在部门" prop="departmentName">
-        <!-- <el-select v-model="userForm.department">
-          <el-option v-for="item in departmentList" :key="item.id" :label="item.name" :value="item.id">
-          </el-option>
-        </el-select> -->
         <el-input v-model="userForm.departmentName" @focus="onShowModal"></el-input>
       </el-form-item>
       <el-form-item label="用户身份" prop="rid">
@@ -135,7 +131,6 @@
         let res =await CommonApi.getItemUser({
           id:this.curUserId
         })
-        console.log('jajajjajajajajaj',res)
         this.userForm={
           id:this.curUserId,
           login_id:res.login_id,
@@ -145,6 +140,7 @@
           mail:res.mail,
           phone:res.phone,
           department:res.department,
+          departmentName:res.deptName?null:res.department,
           rid:res.rlist[0].id,
         }
       },
@@ -175,21 +171,16 @@
             message: this.isEdit?'修改成功！':'添加成功！',
             duration:1000
           });
-          // this.$parent.getUserList()
+          if(res){
+            this.$router.push('./userManage')
+          }
       },
       goBack(){
         history.go(-1)
       },
       async getDepartmentList(){
-        // let res = await CommonApi.getDepartmentList()
-        // console.log('res0,res',res)
-        // this.departmentList=res
-        // this.userForm.department=res[0] && res[0].id
-
-        this.treeModalConfig.treeList = await CommonApi.getUserTree()
-        console.log('123',this.treeModalConfig.treeList)
+        this.treeModalConfig.treeList = await CommonApi.getDeptTree()
         this.userForm.departmentName= this.treeModalConfig.treeList[0].text
-        // this.treeConfig.defaultExpandedkeys=[this.treeList[0].id]
         this.treeModalConfig.treeConfig.defaultExpandedkeys=[this.treeModalConfig.treeList[0].id]
       },
       onShowModal(){
@@ -217,10 +208,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
   .add-user{
-    width:100%;
     padding:10px;
-    float: right;
-    box-sizing: border-box;
     background: @white;
     .el-form{
       width:50%;
@@ -230,9 +218,6 @@
       width:60%;
     }
     .go-back{
-      background: #ecf5ff;
-      color:#3a8ee6;
-      border-color:#c6e2ff;
     }
     .el-input{
       width:280px;
