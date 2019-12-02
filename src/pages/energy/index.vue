@@ -1,7 +1,5 @@
 <template>
   <div class="energy-index">
-    <!--<Theme />-->
-    <!--<router-view></router-view>-->
     <CommonIndexLayout :menu-list="menuList" :menu-config="menuConfig"/>
   </div>
 </template>
@@ -18,7 +16,7 @@
     },
     data () {
       return {
-        menuList:CommonFun.menuData.childNode,// JSON.parse(localStorage.menuList),
+        menuList:JSON.parse(localStorage.menuList),//CommonFun.menuData.childNode,// JSON.parse(localStorage.menuList),
         menuConfig:{
           bgColor:'#394562',
           textColor:'#B7BAC4',
