@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import EnergyCommon from '../../energy/energyCompare/energyCommon'
+  import EnergyCommon from '../coms/energyCommon'
   export default {
     name: 'TimeEnergy',
     components: {

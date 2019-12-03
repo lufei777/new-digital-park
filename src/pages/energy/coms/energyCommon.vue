@@ -32,7 +32,7 @@
   import ZoomNavigation from '../../../components/zoomNavigation'
   import ConditionSelect from '../../../components/conditionSelect'
   import ChartUtils from '../../../utils/chartUtils'
-  import Table from '../../../components/Table/index'
+  import Table from '../../../components/Table'
   export default {
     name:'EnergyCommon',
     components: {
