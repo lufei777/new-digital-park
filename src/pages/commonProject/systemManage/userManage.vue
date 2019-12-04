@@ -1,7 +1,7 @@
 <template>
   <div class="user-manage">
       <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
-         class="radius-shadow">
+         class="user-tree-box radius-shadow">
         <Tree :tree-list="treeList" :tree-config="treeConfig"/>
       </div>
     <div class="right-content">
@@ -33,7 +33,7 @@
         </div>
         <CommonTable :tableObj="tableData" :curPage="1"/>
       </div>
-      <div class="item-row-detail-table">
+      <div class="item-row-detail-table radius-shadow">
         <table>
           <tbody>
           <tr><th>用户名</th><td>{{curUser.login_id}}</td></tr>
@@ -201,12 +201,21 @@
       },
       async getRoleList(){
         this.roleList = await CommonApi.getRoleList()
-      }
+      },
+      fixTree(){
+        $(".user-tree-box").css({
+          height:($(document).height()-110)+'px'
+        })
+      },
     },
     async mounted(){
       await this.getDeptTree()
       await this.getRoleList()
       this.getUserList()
+      this.fixTree()
+      $(window).resize(()=>{
+        this.fixTree()
+      })
     }
   }
 </script>
@@ -265,11 +274,6 @@
         flex-shrink: 0;
         margin-right: 10px;
       }
-    }
-    .choose-tip{
-      margin-left: 100px;
-      width:80px;
-      text-align: right;
     }
     .operator-box{
       background: @white;

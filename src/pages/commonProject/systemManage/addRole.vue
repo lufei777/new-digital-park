@@ -7,11 +7,11 @@
       label-position="right"
       label-width="120px"
     >
-      <el-form-item label="角色名" prop="roleName">
-        <el-input v-model="roleForm.roleName"></el-input>
+      <el-form-item label="角色名" prop="name">
+        <el-input v-model="roleForm.name"></el-input>
       </el-form-item>
-      <el-form-item label="角色详情" prop="roleDesc">
-        <el-input v-model="roleForm.roleDesc" type="textarea" rows="4" :maxlength="255"></el-input>
+      <el-form-item label="角色详情" prop="caption">
+        <el-input v-model="roleForm.caption" type="textarea" rows="4" :maxlength="255"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('roleForm')">确定</el-button>
@@ -27,13 +27,13 @@ export default {
   data() {
     return {
       roleForm: {
-        roleName: "",
-        roleDesc: ""
+        name: "",
+        caption: ""
       },
       rules: {
-          roleName:[{ required: true, message: '角色名不能为空', trigger: 'blur' },
+          name:[{ required: true, message: '角色名不能为空', trigger: 'blur' },
                     { min: 1, message: '至少输入1个字符', trigger: 'blur' }],
-            roleDesc:[{required: true, message: '请输入角色详情', trigger: 'blur'}],
+            caption:[{required: true, message: '请输入角色详情', trigger: 'blur'}],
       }
     };
   },
@@ -52,9 +52,12 @@ export default {
         }
           this.$message({
             type: 'success',
-            message: this.isEdit?'修改成功！':'添加成功！',
+            message: this.roleId?'修改成功！':'添加成功！',
             duration:1000
           });
+         if(res){
+            this.$router.push('./roleManage')
+          }
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {

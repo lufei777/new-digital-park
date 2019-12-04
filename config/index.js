@@ -11,7 +11,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/vibe-web': {
-        target:'http://192.168.1.116:8080',//后端接口地址
+        target:'http://39.98.130.147:9003',//后端接口地址
         // changeOrigin: true,//是否允许跨越
         // pathRewrite: {
         //   '^/api': '',//重写,

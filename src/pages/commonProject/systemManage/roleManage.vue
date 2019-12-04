@@ -1,31 +1,21 @@
 <template>
-  <div class="role-manage">
-    <div class="role-list">
-      <div class="tip flex-align">
-        <span class="icon"></span>
-        <span>角色列表</span>
-      </div>
+  <div class="role-manage ">
+    <div class="role-list radius-shadow">
+      <div class="operator-box flex-row-reverse">
+          <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除记录</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
+        </div>
       <CommonTable :tableObj="roleList" :curPage="1"/>
     </div>
-    <div class="operator-box">
-      <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除角色</el-button>
-      <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加角色</el-button>
-    </div>
-    <div class="role-detail">
-      <div class="tip flex-align">
-        <span class="icon"></span>
-        <span>角色详情</span>
-      </div>
-      <div class="item-row-detail-table">
-        <table>
-          <tbody>
-          <tr><th>角色名</th><td>{{curRole.name}}</td></tr>
-          <tr><th>角色介绍</th><td>{{curRole.caption}}</td></tr>
-          <tr><th>人员</th><td>{{curRole.userList}}</td></tr>
-          <tr><th>权限详情</th><td>{{curRole.menuDataDetail}}</td></tr>
-          </tbody>
-        </table>
-      </div>
+    <div class="item-row-detail-table radius-shadow">
+      <table>
+        <tbody>
+        <tr><th>角色名</th><td>{{curRole.name}}</td></tr>
+        <tr><th>角色介绍</th><td>{{curRole.caption}}</td></tr>
+        <tr><th>人员</th><td>{{curRole.userList}}</td></tr>
+        <tr><th>权限详情</th><td>{{curRole.menuDataDetail}}</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
@@ -142,7 +132,6 @@
           tmp+=item.name+" "
         })
         this.curRole.userList=tmp
-
       }
     },
     async mounted(){
@@ -154,55 +143,22 @@
 <style lang="less">
   @import '../less/dataDetailRow.less';
   .role-manage{
-    background: #eaeff3;
-    .role-list,.role-detail{
+    .role-list{
+      padding:20px;
       background: @white;
-      padding:10px 20px;
-    }
-    .tip{
-      height: 66px;
-      border-bottom: 1px solid #eaeaea;
-      .icon {
-        width: 2px;
-        height: 24px;
-        background: #01465c;
-        border-radius: 2px;
-        margin-right: 10px;
-      }
-      span{
-        font-size: 24px;
-        color:#01465c;
-      }
-    }
-    .choose-box{
-      overflow: hidden;
-      padding:20px 0;
-    }
-    .block{
-      margin-right:40px;
-      display: flex;
-      span{
-        flex-shrink: 0;
-        margin-right: 10px;
-      }
-    }
-    .choose-tip{
-      margin-left: 100px;
-      width:80px;
-      text-align: right;
+      margin-bottom: 20px;
     }
     .operator-box{
       background: @white;
       margin-bottom: 20px;
-      padding: 10px;
+      .el-button{
+        margin-left:20px;
+      }
     }
     .item-row-detail-table{
       tr:nth-child(4) td{
         border-bottom:1px solid @mainBg;
       }
-    }
-    .role-detail{
-      margin-top:20px;
     }
   }
 </style>

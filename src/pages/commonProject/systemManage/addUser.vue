@@ -118,7 +118,7 @@
     },
     computed:{
       tipText(){
-        return this.isEdit?'编辑用户':'添加用户'
+        return this.curUserId?'编辑用户':'添加用户'
       },
       curUserId(){
         return this.$route.query.curUserId
@@ -168,7 +168,7 @@
         }
           this.$message({
             type: 'success',
-            message: this.isEdit?'修改成功！':'添加成功！',
+            message: this.curUserId?'修改成功！':'添加成功！',
             duration:1000
           });
           if(res){
