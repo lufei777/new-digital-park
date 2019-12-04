@@ -32,7 +32,7 @@
   import ZoomNavigation from '../../../components/zoomNavigation'
   import ConditionSelect from '../../../components/conditionSelect'
   import ChartUtils from '../../../utils/chartUtils'
-  import Table from '../../../components/Table/index'
+  import Table from '../../../components/Table'
   export default {
     name:'EnergyCommon',
     components: {
@@ -40,6 +40,7 @@
       ConditionSelect,
       Table,
     },
+    //fromFlag 1:空间管理 2:同比环比分析 3:能耗对比 4:分时能耗 5:分项能耗
     props:['isZoomMultiple','fromFlag','isEnergyByGroup'],
     data () {
       let _this = this

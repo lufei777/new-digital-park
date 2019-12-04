@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import EnergyCommon from './energyCommon'
+  import EnergyCommon from '../coms/energyCommon'
   export default {
     name:'TypeCompare',
     components: {
