@@ -1,8 +1,9 @@
 <template>
   <div class="el-table-wrapper" :style="{height:wrapperHeight}">
-    <div ref="customTop" style="height:auto;">
+    <div ref="customTop" :style="{textAlign:'left',height:'auto',padding:'0 20px 20px'}">
       <slot
         :name="topSlotName"
+        :size="uiConfig.size"
         :columnConfig="columnConfig"
         :allData="allData"
         :tableShowData="tableShowData"
@@ -92,7 +93,7 @@
             <!-- 基础模式，如删除，编辑。参数为scopeRow -->
             <el-button
               v-if="btn.type === 'basic' || !btn.type"
-              size="small"
+              :size="btn.size || uiConfig.size"
               type="text"
               :key="btn.label"
               @click.stop="btn.handler(scopeRow)"
@@ -103,6 +104,7 @@
             <!-- 带下拉按钮，参数为scopeRow -->
             <dropDown
               v-if="btn.type === 'dropDown'"
+              :size="btn.size || uiConfig.size"
               :key="btn.label"
               :dropDown="btn"
               :carryData="scopeRow"
@@ -163,7 +165,7 @@ const defaultUiConfig = {
 // 默认按钮配置
 const defaultBtnConfig = {
   prop: "operation",
-  label: "",
+  label: "操作",
   fixed: "right",
   width: 100
 };
