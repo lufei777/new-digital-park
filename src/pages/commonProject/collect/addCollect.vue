@@ -1,8 +1,7 @@
 <template>
-  <div class="add-collect">
+  <div class="add-collect radius-shadow">
     <div class="tip flex-align">
-      <span class="icon"></span>
-      <span>人工采集</span>
+      <span>{{tipText}}</span>
     </div>
     <el-form
       ref="collectForm"
@@ -71,8 +70,7 @@
 import CommonApi from "../../../service/api/commonApi";
 export default {
   name: "AddCollect",
-  components: {
-  },
+  components: {},
   props: ["curMeterId", "isEdit"],
   data() {
     return {
@@ -82,7 +80,7 @@ export default {
         deviceTableId: "",
         time: "",
         positiveNumber: "",
-        tableRadio: 0,
+        tableRadio: 0
       },
       rules: {
         positiveNumber: [
@@ -106,9 +104,12 @@ export default {
     };
   },
   computed: {
-    rowData() {
-      return this.$route.query;
+    tipText(){
+      return this.rowData?'编辑用户':'添加用户'
     },
+    rowData() {
+      return this.$route.query.rowData;
+    }
   },
   watch: {},
   methods: {
@@ -152,14 +153,12 @@ export default {
         }
       ];
       let res = await CommonApi.insertHandInput(params);
-      if(res.result == true) {
+      if (res.result == true) {
         this.$message({
-            type: 'success',
-            message: '添加成功!'
-         });
-        //  this.$router.push('/manMadeCollectList')
-        this.$router.go(-1)
-         
+          type: "success",
+          message: this.rowData?'修改成功！':'添加成功！'
+        });
+        this.$router.go(-1);
       }
     },
     submitForm(form) {
@@ -173,22 +172,20 @@ export default {
       });
     },
     goBack() {
-      // this.$parent.showAdd = false;
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
-    editList(){
-      if(this.rowData) {
-        this.collectForm.time = this.rowData.lookTime
-        this.collectForm.positiveNumber = this.rowData.value
-        this.collectForm.deviceTableId = this.rowData.monitor
+    editList() {
+      if (this.rowData) {
+        this.collectForm.time = this.rowData.lookTime;
+        this.collectForm.positiveNumber = this.rowData.value;
+        this.collectForm.deviceTableId = this.rowData.monitor;
       }
     }
   },
   mounted() {
     this.getEnergyList();
     this.getProbe(0);
-    this.editList()
-    console.log('rowData',this.rowData)
+    this.editList();
   }
 };
 </script>
@@ -196,23 +193,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
 .add-collect {
-  // margin-top: 85px;
-  padding: 0 20px;
-  .tip {
-    height: 66px;
-    border-bottom: 1px solid #eaeaea;
-    .icon {
-      width: 2px;
-      height: 24px;
-      background: #01465c;
-      border-radius: 2px;
-      margin-right: 10px;
-    }
-    span {
-      font-size: 24px;
-      color: #01465c;
-    }
-  }
+  padding: 10px;
+  background: @white;
   .el-form {
     width: 50%;
     margin: 30px auto;

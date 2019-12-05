@@ -1,24 +1,10 @@
 <template>
   <div class="user-manage">
-    <!-- <div class="left-zoom-nav radius-shadow unload-left-zoom-nav">
-      <el-tree
-        :data="treeList"
-        :props="treeProps"
-        node-key="id"
-        ref="navTree"
-        @node-click="onClickItemTree"
-      >
-      </el-tree>
-</div> -->
       <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
-         class="radius-shadow">
+         class="user-tree-box radius-shadow">
         <Tree :tree-list="treeList" :tree-config="treeConfig"/>
       </div>
-    <div class="right-content" v-if="!showAdd">
-        <!-- <div class="tip flex-align">
-          <span class="icon"></span>
-          <span>员工列表</span>
-        </div> -->
+    <div class="right-content">
         <div class="choose-box flex-align radius-shadow">
           <div class="block flex-align-center">
             <span>编号</span>
@@ -37,21 +23,17 @@
               <el-input v-model="phone" />
             </div>
             <el-button type="primary" icon="el-icon-search" @click="onClickSearchBtn">搜索</el-button>
-            <el-button type="primary"  @click="onClickExportBtn">导出</el-button>
+           
       </div>
-      <!-- <CommonTable :tableObj="tableData" :curPage="1"/>
-      <div class="operator-box">
-        <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除用户</el-button>
-        <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加用户</el-button>
-      </div> -->
        <div class="table-wrapper radius-shadow">
         <div class="operator-box flex-row-reverse">
+          <el-button type="primary"  @click="onClickExportBtn">导出</el-button>
           <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除记录</el-button>
           <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
         </div>
         <CommonTable :tableObj="tableData" :curPage="1"/>
       </div>
-      <div class="item-row-detail-table">
+      <div class="item-row-detail-table radius-shadow">
         <table>
           <tbody>
           <tr><th>用户名</th><td>{{curUser.login_id}}</td></tr>
@@ -64,7 +46,6 @@
         </table>
       </div>
     </div>
-    <AddUser v-if="showAdd" :curUserId='curUser.id' :isEdit="isEdit"/>
   </div>
 </template>
 
@@ -72,13 +53,11 @@
   import { mapState } from 'vuex'
   import CommonApi from '../../../service/api/commonApi'
   import CommonTable from '../../../components/commonTable/index'
-  import AddUser from '../coms/addUser'
   import Tree from '../../../components/tree/index'
   export default {
     name: 'UserManage',
     components: {
       CommonTable,
-      AddUser,
       Tree
     },
     data () {
@@ -92,17 +71,12 @@
           onClickTreeNodeCallBack:this.onClickTreeNodeCallBack,
           defaultExpandedkeys:[]
         },
-        treeProps:{
-          label:'text',
-          children: 'nodes',
-        },
         id:'',
         login_id:'',
         mail:'',
         phone:'',
         tableData:{},
         curPage:1,
-        showAdd:false,
         curUser:{},
         isEdit:false,
         department:1,
@@ -121,7 +95,6 @@
         this.treeConfig.defaultExpandedkeys=[this.treeList[0].id]
       },
       onClickTreeNodeCallBack(val){
-        this.showAdd=false
         this.department=val.id
         this.getUserList()
       },
@@ -218,25 +191,31 @@
         });
       },
       editRow(data){
-        this.curUser=data
-        this.showAdd=true
-        this.isEdit=true
+        this.$router.push(`/addUser?curUserId=${data.id}`)
       },
       onClickAddBtn(){
-        this.showAdd=true
-        this.isEdit=false
+        this.$router.push('/addUser')
       },
       rowClick(row){
         this.curUser=row
       },
       async getRoleList(){
         this.roleList = await CommonApi.getRoleList()
-      }
+      },
+      fixTree(){
+        $(".user-tree-box").css({
+          height:($(document).height()-110)+'px'
+        })
+      },
     },
     async mounted(){
       await this.getDeptTree()
       await this.getRoleList()
       this.getUserList()
+      this.fixTree()
+      $(window).resize(()=>{
+        this.fixTree()
+      })
     }
   }
 </script>
@@ -295,11 +274,6 @@
         flex-shrink: 0;
         margin-right: 10px;
       }
-    }
-    .choose-tip{
-      margin-left: 100px;
-      width:80px;
-      text-align: right;
     }
     .operator-box{
       background: @white;

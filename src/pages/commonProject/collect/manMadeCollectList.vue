@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="man-made-list" v-if="!showAdd" >
+    <div class="man-made-list">
       <div class="flex condition-box radius-shadow">
         <div class="block">
           <span class="demonstration">开始时间</span>
@@ -95,7 +95,6 @@ import commonApi from '../../../service/api/commonApi';
         tableMethods: {
         }
        },
-       showAdd: false,
        deviceId:""
       }
     },
@@ -130,7 +129,9 @@ import commonApi from '../../../service/api/commonApi';
         console.log('data',data)
         this.$router.push({
           path:'addCollect',
-          query:data
+          query:{
+            rowData:data
+          }
         })
       },
       async deviceDel(){
@@ -162,7 +163,6 @@ import commonApi from '../../../service/api/commonApi';
         });
       },
       onClickAddBtn(){
-        //  this.showAdd= true
          this.$router.push('/addCollect')
       }
     },
