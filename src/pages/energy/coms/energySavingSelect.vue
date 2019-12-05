@@ -81,7 +81,7 @@ export default {
       indexEnergy: "1", //指标选择
       energySubentryData: [],
       floorSelectData: "",
-      startTime: moment(new Date(new Date().getTime()-((30*24*60*60*1000)*10))).format('YYYY-MM'),
+      startTime: moment(new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000)).format("YYYY-MM"),
       page: 1,
       tableData: {
         total: 0
