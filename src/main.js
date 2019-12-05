@@ -44,10 +44,12 @@ import VueDND from 'awe-dnd'
 Vue.use(VueDND)
 
 // 语言包
-
 if (!Cookies.get('lang')) {
   Cookies.set('lang', 'zh')
 }
+
+import axios from '@/service/axios/AxiosInterceptors.js'
+Vue.prototype.$axios = axios;
 
 import VueI18n from 'vue-i18n'
 import LangEN from './utils/lang/en.js'

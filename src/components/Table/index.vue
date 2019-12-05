@@ -160,6 +160,14 @@ const defaultUiConfig = {
   }
 };
 
+// 默认按钮配置
+const defaultBtnConfig = {
+  prop: "operation",
+  label: "",
+  fixed: "right",
+  width: 100
+};
+
 //单双击冲突timer
 let dblclickTimer = null;
 let paginationTimer = null;
@@ -668,13 +676,9 @@ export default {
       let operation = this.tableConfig.operation;
       if (operation) {
         if (typeof operation === "boolean") {
-          this.tableConfig.btnConfig = {
-            prop: "operation",
-            label: "",
-            fixed: "right",
-            width: 100
-          };
+          this.tableConfig.btnConfig = defaultBtnConfig;
         } else if (typeof operation === "object") {
+          setDefaultValue(defaultBtnConfig, operation);
           this.tableConfig.btnConfig = operation;
         }
       }

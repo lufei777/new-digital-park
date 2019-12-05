@@ -1,0 +1,432 @@
+<template>
+  <div :style="setPx(parentOption.formSize,'100%')">
+    <el-form
+      ref="form"
+      label-suffix=":"
+      status-icon
+      :rules="formRules"
+      :model="model"
+      :disabled="parentOption.disabled || allDisabled"
+      :size="controlSize"
+      :label-width="setPx(parentOption.labelWidth,90)"
+      :label-position="parentOption.labelPosition"
+      :hide-required-asterisk="parentOption.hideRequiredAsterisk"
+      :show-message="parentOption.showMessage"
+      :inline-message="parentOption.inlineMessage"
+    >
+      <el-row :span="24">
+        <div
+          v-for="(item,index) in columnOption"
+          :key="item.prop"
+          :display="item.display"
+          :icon="item.icon"
+          :card="parentOption.card"
+          :label="item.label"
+        >
+          <template v-for="(column, cindex) in item.forms">
+            <el-col
+              :key="column.prop"
+              :span="column.span || itemSpanDefault"
+              :offset="column.offset || 0"
+              :xs="24"
+              v-if="vaildDisplay(column)"
+            >
+              <el-form-item
+                :label="column.label"
+                :prop="column.prop"
+                :required="column.required"
+                :error="column.error"
+                :show-message="column.showMessage"
+                :inline-message="column.inlineMessage"
+                :size="column.size || controlSize"
+                :label-width="column.width"
+              >
+                <el-tooltip
+                  :disabled="!column.tip || column.type==='upload'"
+                  :content="vaildData(column.tip,getPlaceholder(column))"
+                  :placement="column.tipPlacement"
+                >
+                  <slot
+                    :value="model[column.prop]"
+                    :column="column"
+                    :label="model['$'+column.prop]"
+                    :size="column.size || controlSize"
+                    :disabled="column.disabled"
+                    :dic="DIC[column.prop]"
+                    :name="column.prop"
+                    v-if="column.formslot"
+                  ></slot>
+                  <form-temp
+                    v-else
+                    v-model="model[column.prop]"
+                    :column="column"
+                    :dic="DIC[column.prop]"
+                    :upload-before="uploadBefore"
+                    :upload-after="uploadAfter"
+                    :disabled="column.disabled"
+                  >
+                    <template
+                      :slot="`${column.prop}Type`"
+                      slot-scope="{item,labelKey,valueKey}"
+                      v-if="column.typeslot"
+                    >
+                      <slot
+                        :name="`${column.prop}Type`"
+                        :size="column.size || controlSize"
+                        :item="item"
+                        :labelKey="labelKey"
+                        :valueKey="valueKey"
+                      ></slot>
+                    </template>
+                  </form-temp>
+                </el-tooltip>
+              </el-form-item>
+            </el-col>
+
+            <el-col
+              :key="cindex"
+              tag="div"
+              style="display:inline-block;height:42px;"
+              :span="column.count"
+              v-if="column.row && column.span!==24 && column.count"
+            ></el-col>
+
+            <!-- <div
+              class="form_line"
+              :key="cindex"
+              :style="{width:`${column.count/24*100}%`}"
+              v-if="column.row && column.span!==24 && column.count"
+            ></div>-->
+          </template>
+        </div>
+
+        <el-col :span="24" v-if="vaildData(parentOption.menuBtn,true)">
+          <el-form-item>
+            <!-- 菜单按钮组 -->
+            <div :class="`form_menu-${menuPosition}`">
+              <el-button
+                type="primary"
+                @click="submit"
+                :size="controlSize"
+                icon="el-icon-check"
+                :loading="allDisabled"
+                v-if="vaildData(parentOption.submitBtn,true)"
+              >{{vaildData(parentOption.submitText,'提 交')}}</el-button>
+              <el-button
+                icon="el-icon-delete"
+                :size="controlSize"
+                :loading="allDisabled"
+                v-if="vaildData(parentOption.emptyBtn,true)"
+                @click="resetForm"
+              >{{vaildData(parentOption.emptyText,'清 空')}}</el-button>
+              <slot name="menuBtn" :size="controlSize"></slot>
+            </div>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+  </div>
+</template>
+<script>
+import formTemp from "./formtemp";
+import { deepClone, vaildData, setPx, filterDefaultParams } from "./utils/util";
+import init from "./common/init";
+import { validatenull } from "./utils/validate";
+import { detail } from "./utils/detail";
+import {
+  calcCascader,
+  calcCount,
+  getPlaceholder,
+  formInitVal
+} from "./utils/dataformat";
+import Vue from "vue";
+import clickout from "./directive/clickout";
+
+export default {
+  name: "miForm",
+  components: { formTemp },
+  mixins: [init()],
+  props: {
+    uploadBefore: Function,
+    uploadAfter: Function,
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    value: {
+      type: Object,
+      required: true,
+      default: () => {}
+    }
+  },
+  data() {
+    return {
+      itemSpanDefault: 12,
+      formRules: {},
+      formCreate: true, // 表单是否第一次创建
+      modelOld: {}, // 表单上一次更新的model
+      modelDefault: {}, // 表单的初始model
+      model: {}, // 表单的model
+      modelTranslate: {}, // 翻译的值
+      allDisabled: false
+    };
+  },
+  created() {
+    console.log("form create");
+    // 绑定指令
+    if (this.formCreate) {
+      clickout(Vue);
+    }
+    //初始化字典
+    this.columnOption.forEach(ele => {
+      this.handleLoadDic(ele).then(res => {
+        this.forEachLabel();
+      });
+    });
+    // 初始化表单
+    this.dataFormat();
+  },
+  methods: {
+    deepClone,
+    validatenull,
+    vaildData,
+    getPlaceholder,
+    setPx,
+    dataFormat() {
+      // 页面初始化
+      let modelDefault = formInitVal(this.propOption);
+      this.modelDefault = modelDefault;
+
+      this.model = deepClone(modelDefault.tableForm);
+      this.formVal();
+    },
+    formRulesInit() {
+      let _self = this;
+      _.map(this.options.forms, (item, key) => {
+        if (item.rules && item.disabled !== false && item.display !== false) {
+          let currentRules = item.rules;
+          if (_.isArray(currentRules)) {
+            _self.$set(_self.formRules, item.prop, currentRules);
+          } else if (_.isObject(currentRules)) {
+            _self.$set(_self.formRules, item.prop, [currentRules]);
+          }
+        }
+      });
+    },
+    formVal() {
+      _.map(this.value, (value, key) => {
+        this.$set(this.model, key, value);
+      });
+      this.forEachLabel();
+      this.$emit("input", this.model);
+    },
+    forEachLabel() {
+      this.options.forms.forEach(column => {
+        this.handleShowLabel(column, this.DIC[column.prop]);
+      });
+    },
+    handleShowLabel(column, DIC) {
+      let result = "";
+      if (!this.validatenull(DIC)) {
+        result = detail(this.model, column, this.options, DIC);
+        this.$set(this.modelTranslate, `$${column.prop}`, result);
+      }
+      return result;
+    },
+    // 验证表单是否显隐
+    vaildDisplay(column) {
+      if (!this.validatenull(column.display)) {
+        return this.vaildData(column.display, true);
+      } else if (this.boxType === "add") {
+        return this.vaildData(column.addDisplay, true);
+      } else if (this.boxType === "edit") {
+        return this.vaildData(column.editDisplay, true);
+      } else if (this.boxType === "view") {
+        return this.vaildData(column.viewDisplay, true);
+      } else {
+        return true;
+      }
+    },
+    clearValidate() {
+      this.$refs.form.clearValidate();
+    },
+    /**
+     * 清空表单字段
+     * @param part:true 清空在column中字段,否则清空全部
+     */
+    resetForm(params = {}) {
+      const part = params.part;
+      if (part) {
+        this.columnOption.forEach(ele => {
+          ele.column.forEach(column => {
+            const prop = column.prop;
+            this.model[prop] = this.modelDefault.tableForm[prop];
+          });
+        });
+      } else {
+        this.model = this.deepClone(this.modelDefault.tableForm);
+      }
+      this.$emit("input", this.model);
+      this.$emit("reset-change");
+      this.clearValidate();
+    },
+    validate(callback) {
+      if (!callback) {
+        return new Promise((resolve, reject) => {
+          this.$refs.form.validate(valid => {
+            if (valid) {
+              resolve(valid);
+            } else {
+              reject(valid);
+            }
+          });
+        });
+      } else {
+        this.$refs["form"].validate(valid => callback(valid));
+      }
+    },
+    submit() {
+      this.validate(valid => {
+        if (valid) {
+          this.show();
+          this.$emit(
+            "submit",
+            filterDefaultParams(
+              this.model,
+              this.modelTranslate,
+              this.parentOption.translate
+            ),
+            this.hide
+          );
+        }
+      });
+    },
+    show() {
+      this.allDisabled = true;
+    },
+    hide() {
+      this.allDisabled = false;
+    },
+    // get
+    // 获取表单验证后的整个model
+    getFormModel(cb) {
+      if (cb) {
+        this.validate(valid => {
+          if (valid) {
+            cb(
+              filterDefaultParams(
+                this.model,
+                this.modelTranslate,
+                this.parentOption.translate
+              )
+            );
+          } else {
+            return reject(valid);
+          }
+        });
+      } else {
+        return new Promise((resolve, reject) => {
+          this.validate(valid => {
+            if (valid) {
+              resolve(
+                filterDefaultParams(
+                  this.model,
+                  this.modelTranslate,
+                  this.parentOption.translate
+                )
+              );
+            } else {
+              return reject(valid);
+            }
+          });
+        });
+      }
+    }
+  },
+  computed: {
+    propOption() {
+      let list = [];
+      this.columnOption.forEach(option => {
+        option.forms.forEach(form => {
+          list.push(form);
+        });
+      });
+      return list;
+    },
+    parentOption() {
+      let option = this.deepClone(this.tableOption);
+      let group = option.group;
+      if (!group) {
+        option = Object.assign(option, {
+          group: [this.deepClone(option)]
+        });
+      }
+      delete option.forms;
+      console.log("parentOption", option);
+      return option;
+    },
+    columnOption() {
+      let list = [...this.parentOption.group] || [];
+      list.forEach((ele, index) => {
+        ele.forms = ele.forms || [];
+        // 循环列的全部属性
+        ele.forms.forEach((form, cindex) => {
+          //动态计算列的位置，如果为隐藏状态则或则手机状态不计算
+          if (form.display !== false && !this.isMobile) {
+            form = calcCount(form, this.itemSpanDefault, cindex === 0);
+          }
+        });
+        //处理级联属性
+        ele.forms = calcCascader(ele.forms);
+      });
+      console.log("columnOption", list);
+      return list;
+    },
+    menuPosition() {
+      if (this.parentOption.menuPosition) {
+        return this.parentOption.menuPosition;
+      }
+      return "center";
+    }
+  },
+  watch: {
+    model: {
+      deep: true,
+      handler(newVal, oldVal) {
+        // console.log("formTemp model change");
+        if (!this.formCreate) {
+          this.$emit("input", this.model);
+          this.$emit("change", this.model);
+        }
+      }
+    },
+    value: {
+      deep: true,
+      handler() {
+        // console.log("formTemp value change");
+        this.modelOld = deepClone(this.value);
+        if (!this.formCreate) {
+          this.formVal();
+        } else {
+          this.formCreate = false;
+        }
+      }
+    }
+  }
+};
+</script>
+<style lang='less' scoped>
+.form_line {
+  display: inline-block;
+  height: 42px;
+}
+.form_menu-center {
+  text-align: center;
+}
+.form_menu-left {
+  text-align: left;
+}
+.form_menu-right {
+  text-align: right;
+}
+</style>
