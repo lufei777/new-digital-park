@@ -175,7 +175,7 @@ export default {
                  label:key,
                  prop:key,
                  formatter:function(row,column){
-                   if (row[column.property] > row.参考指标) {
+                   if (row[column.property] > parseFloat(row.参考指标)) {
                      return `<span class="styleRed">${row[column.property]}</span>`;
                    } else {
                      return `<span>${row[column.property]}</span>`;
