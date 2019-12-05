@@ -16,7 +16,7 @@
     },
     data () {
       return {
-        menuList:CommonFun.menuData.childNode,//CommonFun.menuData.childNode,// JSON.parse(localStorage.menuList),
+        menuList:JSON.parse(localStorage.menuList),//CommonFun.menuData.childNode,// JSON.parse(localStorage.menuList),
         menuConfig:{
           bgColor:'#394562',
           textColor:'#B7BAC4',
