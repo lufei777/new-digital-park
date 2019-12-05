@@ -1,7 +1,7 @@
 <template>
   <div class="common-index-layout">
     <div :class="menuConfig.isCollapse?'collapse-my-el-menu':'unfold-my-el-menu'">
-      <Sidebar :menu-list="menuList" :menu-config="menuConfig"/>
+      <slot name="menuList"></slot>
     </div>
     <div :class="[menuConfig.isCollapse?'collapse-right-content':'unfold-right-content','right-content']">
       <div :class="[menuConfig.isCollapse?'collapse-right-content-header':'unfold-right-content-header','right-content-header']">
@@ -10,10 +10,10 @@
              class="iconfont collapse-icon hover-pointer"
              @click="onClickCollapseBtn"
           ></i>
-          <breadCrumb></breadCrumb>
+          <slot name="breadCrumb"></slot>
         </div>
         <div class="asset-nav-operator-box">
-          <NavOperator class='asset-nav-operator' :showGoback="true"/>
+          <slot name="navOperator" :style="{float: 'right'}"></slot>
         </div>
       </div>
       <router-view class="router-view"></router-view>
@@ -22,44 +22,16 @@
 </template>
 
 <script>
-  import Sidebar from '../../../components/commonMenu/SideBar'
-  import NavOperator from '../../digitalPark/coms/navOperator'
-  import breadCrumb from '@/components/breadCrumb'
   export default {
     name: 'CommonIndexLayout',
-    props:['menuList','menuConfig'],
-    components: {
-      Sidebar,
-      NavOperator,
-      breadCrumb
-    },
-    data () {
-      return {
-      }
-    },
-    computed:{
-    },
+    props:['menuConfig'],
+    data () {return {}},
+    computed:{},
     watch:{
     },
     methods:{
-      onClickNav(item){
-        this.$router.push(item.path)
-      },
-      handleOpen(key){
-        this.$router.push(key)
-      },
-      handleClose(key){
-        this.$router.push(key)
-      },
       onClickCollapseBtn(){
-        this.menuConfig.isCollapse=!this.menuConfig.isCollapse
-        this.$store.commit('digitalPark/menuIsCollapse',this.menuConfig.isCollapse)
-      },
-      handleSelect(index,indexPath){
-        console.log(index,indexPath)
-        if(index && index!=2){
-          this.$router.push(index)
-        }
+        this.$emit('onclickcollapsebtn')
       }
     },
     mounted(){
@@ -136,9 +108,6 @@
       float: right;
       width: 40%;
       line-height: 70px;
-    }
-    .asset-nav-operator{
-      float: right;
     }
     .el-menu{
       border-right: none;

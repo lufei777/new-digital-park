@@ -1,5 +1,5 @@
 <template>
-  <div class="add-user">
+  <div class="add-user radius-shadow">
     <div class="tip flex-align">
       <span class="icon"></span>
       <span>{{tipText}}</span>
@@ -23,11 +23,8 @@
       <el-form-item label="Email" prop="mail">
         <el-input v-model="userForm.mail"></el-input>
       </el-form-item>
-      <el-form-item label="所在部门" prop="department">
-        <el-select v-model="userForm.department">
-          <el-option v-for="item in departmentList" :key="item.id" :label="item.name" :value="item.id">
-          </el-option>
-        </el-select>
+      <el-form-item label="所在部门" prop="departmentName">
+        <el-input v-model="userForm.departmentName" @focus="onShowModal"></el-input>
       </el-form-item>
       <el-form-item label="用户身份" prop="rid">
         <el-select v-model="userForm.rid">
@@ -40,16 +37,19 @@
         <el-button @click="goBack" class="go-back">返回</el-button>
       </el-form-item>
     </el-form>
+    <TreeModal :tree-modal-config="treeModalConfig"></TreeModal>
   </div>
 </template>
 
 <script>
   import CommonApi from '../../../service/api/commonApi'
+  import TreeModal from '../../../components/treeModal/index'
   export default {
     name: 'AddUser',
     components: {
+      TreeModal
     },
-    props:['curUserId','isEdit'],
+    // props:['curUserId','isEdit'],
     data () {
       let that = this
       let checkRePwd=function(rule,value,callback){
@@ -84,6 +84,7 @@
           mail:'',
           phone:'',
           department:'',
+          departmentName:'',
           rid:'',
           id:''
         },
@@ -103,12 +104,24 @@
         },
         roleList:[],
         showDialog:false,
-        departmentList:[]
+        departmentList:[],
+        treeModalConfig:{
+          treeList:[],
+          treeConfig:{
+            defaultExpandedkeys:[],
+          },
+          showModal:false,
+          onClickSureBtnCallback:this.onClickModalSureBtn,
+          onClickCancelBtnCallback:this.onClickModalCancelBtn
+        }
       }
     },
     computed:{
       tipText(){
-        return this.isEdit?'编辑用户':'添加用户'
+        return this.curUserId?'编辑用户':'添加用户'
+      },
+      curUserId(){
+        return this.$route.query.curUserId
       }
     },
     watch:{
@@ -127,6 +140,7 @@
           mail:res.mail,
           phone:res.phone,
           department:res.department,
+          departmentName:res.deptName?null:res.department,
           rid:res.rlist[0].id,
         }
       },
@@ -147,32 +161,44 @@
       },
       async addUser(){
         let res
-        if(this.isEdit){
+        if(this.curUserId){
            res = await CommonApi.editUser(this.userForm)
         }else{
            res = await CommonApi.addUser(this.userForm)
         }
           this.$message({
             type: 'success',
-            message: this.isEdit?'修改成功！':'添加成功！',
+            message: this.curUserId?'修改成功！':'添加成功！',
             duration:1000
           });
-          this.$parent.showAdd=false
-          this.$parent.getUserList()
+          if(res){
+            this.$router.push('./userManage')
+          }
       },
       goBack(){
-        this.$parent.showAdd=false
+        history.go(-1)
       },
       async getDepartmentList(){
-        let res = await CommonApi.getDepartmentList()
-        this.departmentList=res
-        this.userForm.department=res[0] && res[0].id
+        this.treeModalConfig.treeList = await CommonApi.getDeptTree()
+        this.userForm.departmentName= this.treeModalConfig.treeList[0].text
+        this.treeModalConfig.treeConfig.defaultExpandedkeys=[this.treeModalConfig.treeList[0].id]
+      },
+      onShowModal(){
+        this.treeModalConfig.showModal=true
+      },
+      onClickModalSureBtn(val){
+        this.userForm.department=val.id
+        this.userForm.departmentName=val.text
+        this.treeModalConfig.showModal=false
+      },
+      onClickModalCancelBtn(){
+        this.treeModalConfig.showModal=false
       }
     },
     mounted(){
        this.getRoleList()
        this.getDepartmentList()
-       if(this.isEdit){
+       if(this.curUserId){
         this.getItemUser()
       }
     }
@@ -182,10 +208,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
   .add-user{
-    width:83%;
     padding:10px;
-    float: right;
-    box-sizing: border-box;
     background: @white;
     .el-form{
       width:50%;
@@ -195,9 +218,6 @@
       width:60%;
     }
     .go-back{
-      background: #ecf5ff;
-      color:#3a8ee6;
-      border-color:#c6e2ff;
     }
     .el-input{
       width:280px;

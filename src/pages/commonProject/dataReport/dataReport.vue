@@ -74,7 +74,7 @@
         curDateType:'monthly',
         dateTypeList:dateTypeList,
         pickerType:'month',
-        startTime:moment(new Date(new Date().getTime()-((30*24*60*60*1000)*12))).format('YYYY-MM'),
+        startTime:moment(new Date(new Date().getTime()-((30*24*60*60*1000)*11))).format('YYYY-MM'),
         endTime:moment(new Date(new Date().getTime()-((30*24*60*60*1000)*9))).format('YYYY-MM'),
         energyList:energyList,
         curEnergy:'electricity',
