@@ -3,8 +3,8 @@
     <div class="flex-align-between condition-box">
       <div class="item-group block">
         <span class="demonstration">建筑群：</span>
-        <el-select v-model="energy" placeholder="请选择">
-          <el-option label="" value="1"></el-option>
+        <el-select v-model="energyA3" placeholder="请选择">
+          <el-option label="A3" value="1"></el-option>
         </el-select>
       </div>
       <div class="item-group block">
@@ -76,7 +76,7 @@ export default {
     let _this = this;
     return {
       curEnergy: "0", //楼层检索
-      energy: "1", //建筑群
+      energyA3: "1", //建筑群
       energySubentry: "", //能源分项
       indexEnergy: "1", //指标选择
       energySubentryData: [],
@@ -109,9 +109,6 @@ export default {
     };
   },
   computed: {
-    // ...mapState({
-    //   energySaveFlag: state => state.energySavingSelect.energySaveFlag
-    // }),
     tabTitle() {
       activeNav =
         Cookies.get("activeNav") && JSON.parse(Cookies.get("activeNav"));
@@ -127,7 +124,7 @@ export default {
     commonParams() {
       return {
         moment: this.startTime,
-        lou: this.energy,
+        lou: this.energyA3,
         standard: this.indexEnergy,
         type: this.energySubentry,
         parent: this.curEnergy,
@@ -154,28 +151,11 @@ export default {
     },
     async getList() {
       let res;
-      // if (activeNav.childIndex == 0 || activeNav.childIndex == 2) {
-      //   res = await EnergyApi.getEnergySavingElec(this.commonParams);
-      // } else {
-      //   res = await EnergyApi.getEnergySavingNight(this.commonParams);
-      // }
-
       if (this.energySaveFlag == 1 || this.energySaveFlag == 3) {
         res = await EnergyApi.getEnergySavingElec(this.commonParams);
       } else if (this.energySaveFlag == 2 || this.energySaveFlag == 4) {
         res = await EnergyApi.getEnergySavingNight(this.commonParams);
       }
-      // if (res && res.value) {
-      //   var title = ["建筑楼层", "参考指标"];
-      //   res.value[0].map((item, index) => {
-      //     if (index < res.value[0].length - 2) title.push(index + 1 + "日");
-      //   });
-      //   res.title = title;
-      //   this.tableData.total = res.total;
-      //   this.tableData = res;
-      // } else {
-      //   this.tableData.total = 0;
-      // }
       if (res && res.value) {
         var title = ["建筑楼层", "参考指标"];
         res.value[0].map((item, index) => {
@@ -214,12 +194,6 @@ export default {
     },
     async exportList() {
       let url;
-      // if (activeNav.childIndex == 0 || activeNav.childIndex == 2) {
-      //   url = `/vibe-web/energyCount/energy/elec/export?`;
-      // } else {
-      //   url = `/vibe-web/energyCount/energy/night/export?`;
-      // }
-
       if (this.energySaveFlag == 1 || this.energySaveFlag == 3) {
         url = `/vibe-web/energyCount/energy/elec/export?`;
       } else if (this.energySaveFlag == 2 || this.energySaveFlag == 4) {
