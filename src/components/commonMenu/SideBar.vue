@@ -106,7 +106,7 @@ export default {
         if (key.indexOf("null") != -1) {
           this.$router.push("/digitalPark/defaultPage");
         } else if (key.indexOf("@") != -1) {
-          commonFun.loadOldPage(key, true);
+          commonFun.loadOldPage(key);
         } else {
           key = key.slice(key.indexOf("/"));
           this.$router.push(key);

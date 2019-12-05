@@ -44,7 +44,7 @@ class commonFun {
     messageRelease
   }
   //this,删除的id,没有id时的提示信息，点击确定的回调函数
-  deleteTip(that, deleteId, msgTip, sureCallBack,cancelCallBack) {
+  deleteTip(that, deleteId, msgTip, sureCallBack, cancelCallBack) {
     if (!deleteId) {
       that.$message({
         type: 'warning',
@@ -490,7 +490,12 @@ class commonFun {
       sessionStorage.setItem('park_home_Page', location.href);
       location.href = OLDPROJECTHOME + '?forward=' + item.split('@')[1];
     } else {
-      sessionStorage.setItem('vibe_menuList', JSON.stringify(item));
+      if (_.isObject(item)) {
+        localStorage.setItem('show_menu', item.routeAddress)
+      } else {
+        localStorage.setItem('show_menu', item)
+      }
+      console.log('load', item);
       router.push('/vibe-web')
     }
   }

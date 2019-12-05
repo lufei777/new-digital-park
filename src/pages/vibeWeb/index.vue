@@ -39,18 +39,19 @@ export default {
   },
   data() {
     let _this = this;
-    let menuList = JSON.parse(sessionStorage.getItem("vibe_menuList"));
+    let menuList = JSON.parse(localStorage.getItem("menuList"));
+    let show_menu = localStorage.getItem("show_menu");
 
     return {
       iframeConfig: {
-        src: menuList.routeAddress.replace("@", "")
+        src: show_menu.split("@")[1]
       },
-      menuList: JSON.parse(sessionStorage.getItem("vibe_menuList")).childNode,
+      menuList: menuList,
       menuConfig: {
         bgColor: "#394562",
         textColor: "#B7BAC4",
         isCollapse: false,
-        activeIndex: menuList.routeAddress,
+        activeIndex: show_menu.substring(show_menu.indexOf("@")),
         moduleName: menuList.name,
         moduleLogo: "iconnengyuanguanli",
         handleSelect(key, keyPath, curDom) {
