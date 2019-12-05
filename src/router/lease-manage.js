@@ -10,9 +10,9 @@ export default [{
         meta: { title: '房产管理' },
         component: () => import('@/pages/leaseManage/housePropertyManage')
     }, {
-        path: '/leasemanage/addhouseproperty',
+        path: 'addhouseproperty',
         name: 'addhouseproperty',
         meta: { title: '添加房产' },
-        component: () => import('@/pages/leaseManage'),
+        component: () => import('@/pages/leaseManage/addHouseProperty'),
     }],
 }]

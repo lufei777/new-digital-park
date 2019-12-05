@@ -11,11 +11,16 @@ import CommonFun from "../../utils/commonFun";
 
 const MenuList = [
   {
-    routeAddress: "$1",
-    name: "房产管理",
-    childNode: [],
     id: 1,
-    icon: "iconwodezichan"
+    name: "房产管理",
+    routeAddress: "/leasemanage/housepropertymanage",
+    icon: "iconwodezichan",
+    childNode: [
+      {
+        name: "添加房产",
+        routeAddress: "/leasemanage/addhouseproperty"
+      }
+    ]
   },
   {
     routeAddress: "",
@@ -29,7 +34,7 @@ const MenuList = [
     name: "租赁合同",
     childNode: [],
     id: 3,
-    icon: "iconrengongcaiji",
+    icon: "iconrengongcaiji"
   }
 ];
 
