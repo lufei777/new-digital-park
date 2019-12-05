@@ -9,7 +9,7 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {
+    proxyTable: {  
       '/vibe-web': {
         target:'http://192.168.1.108:9003',//后端接口地址
         // changeOrigin: true,//是否允许跨越
