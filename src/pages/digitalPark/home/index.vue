@@ -29,7 +29,7 @@
         <div class="product-module">
           <div class="flex-align-between module-title">
             <h3>功能模块</h3>
-            <span class="hover-pointer more-btn" @click="onShowMoreProduct">{{$t('more')}}</span>
+            <span class="hover-pointer more-btn" @click="onShowMoreProduct">{{showMoreProduct?$t('fold'):$t('more')}}</span>
           </div>
           <ul class="flex-align-around production-list" :style="showMoreProduct?'':{height:'120px'}">
             <li v-for="(item,index) in productList"
@@ -356,7 +356,7 @@
       padding:10px 0;
       width:100%;
       h3{
-        font-size: 22px;
+        font-size: 18px;
       }
       .more-btn{
         font-size: 14px;

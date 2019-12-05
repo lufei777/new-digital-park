@@ -14,5 +14,6 @@ module.exports = {
     signOut:'Sign Out'
   },
   proEntry:'Product Entry',
-  more:'More'
+  more:'More',
+  fold:'Fold'
 }

@@ -1,5 +1,5 @@
 <template>
-  <div :style="setPx(parentOption.formSize,'100%')">
+  <div class="el-form-wrapper" :style="setPx(parentOption.formSize,'100%')">
     <el-form
       ref="form"
       label-suffix=":"
@@ -28,6 +28,8 @@
               :key="column.prop"
               :span="column.span || itemSpanDefault"
               :offset="column.offset || 0"
+              :push="column.push || 0"
+              :pull="column.pull || 0"
               :xs="24"
               v-if="vaildDisplay(column)"
             >
