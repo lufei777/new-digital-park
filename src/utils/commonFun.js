@@ -82,7 +82,7 @@ class commonFun {
       "id": 11,
       "parent": 1,
       "name2": "space",
-      "name": "首页",
+      "name": "概览",
       "catalog": null,
       "routeAddress": "/energy/homePage",
       "sequence": 1,
@@ -335,7 +335,7 @@ class commonFun {
       "id": 6,
       "parent": 1,
       "name2": "space",
-      "name": "设备表记",
+      "name": "设备表计",
       "catalog": null,
       "routeAddress": "/deviceRecord",
       "sequence": 5,
@@ -393,7 +393,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/userManage",
         "sequence": 1,
-        "icon": 'iconshouye',
+        "icon": '',
         "permisionList": ["用户查看", "添加用户", "修改用户", "重置密码", "导出用户信息"],
         "childNode": []
       }, {
@@ -404,7 +404,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/roleManage",
         "sequence": 2,
-        "icon": 'iconshouye',
+        "icon": '',
         "permisionList": ["角色查询", "角色修改", "角色添加", "角色删除"],
         "childNode": []
       }, {
@@ -415,7 +415,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/departmentManage",
         "sequence": 3,
-        "icon": 'iconshouye',
+        "icon": '',
         "permisionList": ["组织机构查看", "组织机构添加", "组织机构修改", "组织机构删除"],
         "childNode": []
       }, {
@@ -426,7 +426,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/spaceManage",
         "sequence": 4,
-        "icon": 'iconshouye',
+        "icon": '',
         "permisionList": ["空间查看", "空间添加", "空间修改", "空间删除"],
         "childNode": []
       }, {
@@ -437,7 +437,7 @@ class commonFun {
         "catalog": null,
         "routeAddress": "/operatorLog",
         "sequence": 6,
-        "icon": 'iconshouye',
+        "icon": '',
         "permisionList": ["日志查看"],
         "childNode": []
       }]

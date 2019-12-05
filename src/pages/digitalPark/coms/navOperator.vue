@@ -5,6 +5,11 @@
           <i class="iconfont iconshouye"></i>&nbsp;返回园区首页</span>
           <i>|</i>
       </span>
+     <!--<span class="nav-right-item long-text" v-if="showGoback" @click="onClickGoBack">-->
+        <!--<span style="color:#fff">-->
+          <!--<i class="iconfont iconshouye"></i>&nbsp;返回园区首页</span>-->
+          <!--<i style="color:#fff">|</i>-->
+      <!--</span>-->
       <span class="nav-right-item"><span style="color:#ED6C01">{{$t('homeHeader.news')}}</span><i>|</i></span>
       <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoback">
           <el-select v-model="langValue" placeholder="切换语言" @change="onClickChangeLang">
