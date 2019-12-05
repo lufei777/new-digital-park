@@ -33,6 +33,7 @@
           :key="menu.id"
           :item="menu"
           :specialRoute="menuConfig.specialRoute"
+          :menuList="menuList"
         />
       </el-menu>
       <div class="iconfont iconkuaijierukou hover-pointer shortcut-btn" @click="onClickShortcutBtn"></div>
@@ -82,6 +83,25 @@ export default {
   },
   methods: {
     handleSelect(key, keyPath) {
+      console.log(key,keyPath)
+      if(this.menuConfig.specialRoute){
+        let firstMenu = this.menuList.find((first)=>{
+          return first.id==keyPath[0]
+        })
+        let secondPath=keyPath[1].split("/")[0]
+        if(secondPath.indexOf("@")!=-1){
+          secondPath = secondPath.split("@")[0]
+        }
+        let secondMenu = firstMenu.childNode.length && firstMenu.childNode.find((second)=>{
+          return second.id==secondPath
+        })
+        localStorage.setItem('menuList',JSON.stringify(secondMenu.childNode))
+        let tmpArr=key.split("/")
+        tmpArr.shift()
+        let activeMenu=tmpArr.join("/")
+        console.log(activeMenu)
+        Cookies.set('activeMenuIndex',"/"+activeMenu)
+      }
       if (key) {
         if (key.indexOf("null") != -1) {
           this.$router.push("/digitalPark/defaultPage");
@@ -90,7 +110,6 @@ export default {
         } else {
           key = key.slice(key.indexOf("/"));
           this.$router.push(key);
-          Cookies.set("activeMenuIndex", key);
         }
       }
     },

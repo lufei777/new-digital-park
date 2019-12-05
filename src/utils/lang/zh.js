@@ -18,6 +18,7 @@ let obj = {
     signOut:'退出'
   },
   proEntry:'产品入口',
-  more:"更多"
+  more:"更多",
+  fold:'收起'
 }
 export default obj

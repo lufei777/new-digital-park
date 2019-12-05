@@ -1,10 +1,12 @@
 <template>
   <div class="hello">
-    <img src="../../../static/image/digitalPark/login_bg.png" alt="">
+    <!--<img src="../../../static/image/digitalPark/login_bg.png" alt="">-->
+    <el-button type="primary" @click="onClickBtn">change</el-button>
   </div>
 </template>
 
 <script>
+  import {mapState} from 'vuex'
   export default {
     name: 'HelloWorld',
     components: {
@@ -14,7 +16,22 @@
         msg: 'Welcome to my basic vue demo'
       }
     },
+    computed:{
+      ...mapState({
+        articleNew:state=>state.test.articleNew
+      })
+    },
+    watch:{
+      articleNew(){
+        if(this.articleNew){
+          console.log('lalalala')
+        }
+      }
+    },
     methods: {
+      onClickBtn(){
+        this.$store.commit('test/articleNew',true)
+      }
     },
     mounted(){
     }
