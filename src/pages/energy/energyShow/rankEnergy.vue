@@ -141,15 +141,16 @@
           {label:'总用电量',prop:'elecSum',sortable:'custom'},
           {label:'照明用电',prop:'zmElec',sortable:'custom'},
           {label:'空调用电',prop:'zmElec',sortable:'custom'},
-          {label:'特殊用电',prop:'tsElec',sortable:'custom'},
-          {label:'其他用电',prop:'tsElec',sortable:'custom'},
-          {label:'动力用电',prop:'dlElec',sortable:'custom'},
-          {label:'总用水量',prop:'waterSum',sortable:'custom'},
-          {label:'生活用水',prop:'shWater',sortable:'custom'},
-          {label:'生活污水',prop:'wsWater',sortable:'custom'},
-          {label:'空调用水',prop:'ktWater',sortable:'custom'},
-          {label:'消防用水',prop:'xfWater',sortable:'custom'},
-          {label:'其他用水',prop:'qtWater',sortable:'custom'}]
+          // {label:'特殊用电',prop:'tsElec',sortable:'custom'},
+          // {label:'其他用电',prop:'tsElec',sortable:'custom'},
+          // {label:'动力用电',prop:'dlElec',sortable:'custom'},
+          // {label:'总用水量',prop:'waterSum',sortable:'custom'},
+          // {label:'生活用水',prop:'shWater',sortable:'custom'},
+          // {label:'生活污水',prop:'wsWater',sortable:'custom'},
+          // {label:'空调用水',prop:'ktWater',sortable:'custom'},
+          // {label:'消防用水',prop:'xfWater',sortable:'custom'},
+          // {label:'其他用水',prop:'qtWater',sortable:'custom'}
+          ]
          this.tableConfig.data=res.value
          this.tableConfig.uiConfig.pagination.total = res.total
       },
