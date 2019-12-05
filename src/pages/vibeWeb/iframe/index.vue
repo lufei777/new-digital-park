@@ -28,7 +28,10 @@ export default {
   },
   computed: {
     computedSrc() {
-      return vibeWebUrl + '/' + this.iframeConfig.src;
+      if (this.iframeConfig.src === "digitalPark/defaultPage") {
+        return `${window.top.location.host}/#/${this.iframeConfig.src}`;
+      }
+      return vibeWebUrl + "/" + this.iframeConfig.src;
     }
   }
 };
