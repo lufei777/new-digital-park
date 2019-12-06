@@ -16,6 +16,7 @@
         </template>
       </miForm>
     </div>
+
     <div class="table">
       <miTable :ref="leaseManageTable.ref" :tableConfig="leaseManageTable">
         <template slot="custom-top" slot-scope="obj">
@@ -32,6 +33,7 @@
         </template>
       </miTable>
     </div>
+    
   </div>
 </template>
 <script>
@@ -189,7 +191,7 @@ export default {
           }
         ],
         uiConfig: {
-          height: "400",
+          height: "auto",
           selection: true
         }
       }
