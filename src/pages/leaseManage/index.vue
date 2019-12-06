@@ -13,9 +13,13 @@ const MenuList = [
   {
     id: 1,
     name: "房产管理",
-    routeAddress: "/leasemanage/housepropertymanage",
+    routeAddress: "",
     icon: "iconwodezichan",
     childNode: [
+      {
+        name: "租赁管理",
+        routeAddress: "/leasemanage/housepropertymanage"
+      },
       {
         name: "添加房产",
         routeAddress: "/leasemanage/addhouseproperty"
@@ -23,17 +27,17 @@ const MenuList = [
     ]
   },
   {
+    id: 2,
     routeAddress: "/leasemanage/tenantManage",
     name: "租户管理",
     childNode: [],
-    id: 2,
     icon: "iconzichantaizhang"
   },
   {
-    routeAddress: "",
+    id: 3,
+    routeAddress: "2",
     name: "租赁合同",
     childNode: [],
-    id: 3,
     icon: "iconrengongcaiji"
   }
 ];

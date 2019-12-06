@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="form">
+    <div class="form radius-shadow">
       <miForm
         :ref="leaseManageForm.ref"
         :options="leaseManageForm"
@@ -625,10 +625,9 @@ export default {
 <style lang='less' scoped>
 .form,
 .table {
-  background-color: #fff;
+  background-color: @white;
   box-sizing: border-box;
   padding: 20px;
-  border-radius: 10px;
 }
 .form {
   margin-bottom: 20px;

@@ -122,7 +122,6 @@
         },
         curTableData:{},
         showEdit:false,
-        isdeleteAll:1,
         deleteId:'',
         showAdd:false,
         isEdit:false,
@@ -187,14 +186,12 @@
       },
       deleteRow(data){
         console.log("data",data)
-        this.isdeleteAll=1
         this.deleteId=data.id
         this.deleteTip()
       },
       async sureDelete(){
          await CommonApi.deleteMeter({
-          id:this.deleteId,
-          isdeleteAll:this.isdeleteAll
+          ids:this.deleteId,
         })
         this.$message({
               type: 'success',
@@ -203,7 +200,6 @@
          this.getMeterTable()
       },
       handleSelectionChange(val){
-        this.isdeleteAll=2
         let tmp=val.map((item)=>item.id)
         this.deleteId=tmp
       },
@@ -237,6 +233,8 @@
       },
       onClickMultipleDelBtn(){
         let res = this.$refs[this.tableConfig.ref].getSelectedData()
+        this.deleteId = res.map((item)=>item.id).join(",")
+        this.deleteTip()
         console.log(res)
       },
       async getMeterTree(){

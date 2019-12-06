@@ -5,14 +5,14 @@
       <span>编辑表计</span>
     </div>
     <el-form ref="meterForm" :rules="rules" :model="meterForm" label-position="right" label-width="120px" >
-      <el-form-item label="标题">
-        <el-input v-model="meterForm.caption"></el-input>
+      <el-form-item label="表名称" prop="caption">
+        <el-input v-model="meterForm.caption" ></el-input>
       </el-form-item>
-      <el-form-item label="名称">
+      <el-form-item label="工程名称" prop="name">
         <el-input v-model="meterForm.name"></el-input>
       </el-form-item>
       <el-form-item label="描述">
-        <el-input v-model="meterForm.memo"></el-input>
+        <el-input v-model="meterForm.memo" ></el-input>
       </el-form-item>
       <el-form-item label="监控类型" prop="region">
         <el-select v-model="meterForm.catalogId" @change="onEnergyChange">
@@ -26,7 +26,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="监控位置">
+      <el-form-item label="监控位置" prop="parentMeter">
         <el-input v-model="meterForm.monitorName" @focus="showTreeModal(1)"></el-input>
       </el-form-item>
       <el-form-item label="监测间隔" prop="time_interval">
@@ -38,15 +38,15 @@
       <el-form-item label="警告条件表达式">
         <el-input v-model="meterForm.warn_cond" placeholder="如 '#R > 400'"></el-input>
       </el-form-item>
-      <el-form-item label="安装位置">
+      <el-form-item label="安装位置" prop="parentId">
         <el-input v-model="meterForm.floorName" @focus="showTreeModal(2)"></el-input>
       </el-form-item>
       <el-form-item label="分项表达式">
         <el-input v-model="meterForm.itemizeExpression"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('meterForm')">确定</el-button>
         <el-button @click="goBack" class="go-back">返回</el-button>
+        <el-button type="primary" @click="submitForm('meterForm')">确定</el-button>
       </el-form-item>
     </el-form>
     <TreeModal :tree-modal-config="treeModalConfig"/>
@@ -79,11 +79,20 @@
           warn_cond:'',
           itemizeType:'',
           itemizeExpression:'',
+          kind:'PROBE',
+          meterType:this.$route.query.meterType,
+          typeName:this.$route.query.typeName,
+          parentMeter:'',
+          monitorName:'',
+          parentId:'',
           floorName:'',
-          monitorName:''
         },
         rules: {
-          time_interval:[{validator: timeValidate, trigger: 'blur' }]
+          caption:[{required:true,trigger: 'blur',message:'请输入表名称'}],
+          name: [{ required: true, message: '请输入工程名称', trigger: 'blur' }],
+          time_interval:[{required: true,validator: timeValidate, trigger: 'blur' }],
+          parentMeter:[{required: true, message: '请选择监测类型', trigger: 'blur' }],
+          parentId:[{required: true, message: '请选择安装位置',trigger:'blur'}]
         },
         meterDetail:{},
         energyList:[],
@@ -105,6 +114,9 @@
     computed:{
       curMeterId(){
         return this.$route.query.meterId
+      },
+      meterType(){
+        return this.$route.query.meterType
       }
     },
     watch:{
@@ -115,13 +127,15 @@
           id:this.curMeterId
         })
         this.meterForm={
+          id:this.meterDetail.id,
           caption:this.meterDetail.caption,
           name:this.meterDetail.name,
           memo:this.meterDetail.memo,
           catalogId:this.meterDetail.catalogId,
+          parentId:this.meterDetail.parentId,
+          parentMeter:this.meterDetail.parentMeter,
           time_interval:this.meterDetail.time_interval,
           warn_cond:this.meterDetail.warn_cond,
-          parentId:this.meterDetail.parentId,
           itemizeType:this.meterDetail.itemizeType,
           itemizeExpression:this.meterDetail.itemizeExpression
         }
@@ -149,7 +163,7 @@
       },
       async getAssetAllTree(){
         let res =  await CommonApi.getAssetAllTree({
-          flag: "space",
+          flag: "device",
           locationRoot: 1
         })
         this.spaceList = res
@@ -157,7 +171,7 @@
       async getMeterTree(){
         let res = await CommonApi.getMeterTree({
           parentMeter: 0,
-          catalogId:this.enegyId
+          catalogId:this.meterForm.catalogId
         })
         this.monitorList=res
       },
@@ -187,7 +201,11 @@
       },
       async submitForm(){
         console.log(this.meterForm)
-        let res = await CommonApi.updateMeter(this.meterForm)
+        if(this.curMeterId){
+          let res = await CommonApi.updateMeter(this.meterForm)
+        }else{
+          let res = await CommonApi.addMeter(this.meterForm)
+        }
       },
       goBack(){
         history.go(-1)

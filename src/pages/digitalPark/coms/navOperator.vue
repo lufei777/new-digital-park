@@ -6,12 +6,12 @@
           <i>|</i>
       </span>
       <span class="nav-right-item"><span style="color:#ED6C01">{{$t('homeHeader.news')}}</span><i>|</i></span>
-      <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoback">
-          <el-select v-model="langValue" placeholder="切换语言" @change="onClickChangeLang">
-              <el-option label="中文" value="zh"></el-option>
-              <el-option label="English" value="en"></el-option>
-           </el-select><i>|</i>
-      </span>
+      <!--<span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoback">-->
+          <!--<el-select v-model="langValue" placeholder="切换语言" @change="onClickChangeLang">-->
+              <!--<el-option label="中文" value="zh"></el-option>-->
+              <!--<el-option label="English" value="en"></el-option>-->
+           <!--</el-select><i>|</i>-->
+      <!--</span>-->
       <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoback">
          <el-select v-model="myModuleType" placeholder="切换模式" @change="onClickChangeModel">
             <el-option :label="$t('homeHeader.waterfall')" value="2"></el-option>
@@ -22,7 +22,7 @@
          <el-select v-model="setupValue" placeholder="设置" @change="onClickSetup">
              <el-option :label="$t('homeHeader.setup')" value="0" hidden></el-option>
              <el-option :label="$t('homeHeader.moduleConfig')" value="1"></el-option>
-             <el-option :label="$t('homeHeader.skin')" value="2"></el-option>
+             <!--<el-option :label="$t('homeHeader.skin')" value="2"></el-option>-->
          </el-select><i>|</i>
      </span>
      <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
@@ -144,6 +144,16 @@
     }
     .long-text span{
       width:120px;
+    }
+  }
+  @media screen and (min-width: 1280px) and(max-width: 1415px) {
+    .digital-nav-operator .nav-right-item{
+      .el-select{
+        width:90px;
+      }
+      .el-input__suffix{
+        right:-25px;
+      }
     }
   }
 </style>

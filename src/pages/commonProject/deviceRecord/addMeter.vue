@@ -12,12 +12,14 @@
         </el-form-item>
         <el-form-item label="表计名称">
           <el-select v-model="addForm.kind" @change="onSelectChange">
-            <el-option label="实表" value="1"></el-option>
-            <el-option label="末端虚表" value="2"></el-option>
-            <el-option label="累加虚表" value="3"></el-option>
+            <el-option label="实表" value="0"></el-option>
+            <el-option label="末端虚表" value="1"></el-option>
+            <el-option label="累加虚表" value="2"></el-option>
+            <!--<el-option label="相减虚表" value="12"></el-option>-->
+            <!--<el-option label="变化量虚表" value="16"></el-option>-->
           </el-select>
         </el-form-item>
-        <el-form-item label="表计类型" v-if="addForm.kind==1">
+        <el-form-item label="表计类型" v-if="addForm.kind==0">
           <el-select v-model="addForm.typeName">
             <el-option v-for="item in typeList" :key="item.id" :label="item.text" :value="item.name">
             </el-option>
@@ -44,7 +46,7 @@
     data () {
       return {
         addForm:{
-          kind:"1",
+          kind:"0",
           typeName:'',
         },
         rules: {
@@ -68,7 +70,7 @@
       onClickNextBtn(){
         // this.$parent.showEdit=true
         // this.$parent.showAdd=false
-        this.$router.push(`/editDevice?typeName=${this.addForm.typeName}&&kind=PROBE`)
+        this.$router.push(`/editDevice?typeName=${this.addForm.typeName}&&kind=PROBE&meterType=${this.addForm.kind}`)
       },
       goBack(){
         // this.$parent.showAdd=false
