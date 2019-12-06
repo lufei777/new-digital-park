@@ -1,6 +1,6 @@
 <template>
   <div class="el-table-wrapper" :style="{height:wrapperHeight}">
-    <div ref="customTop" :style="{textAlign:'left',height:'auto',padding:'0 20px 20px'}">
+    <div ref="customTop" :style="{textAlign:uiConfig.customTopPosition,height:'auto',padding:'0 20px 20px'}">
       <slot
         :name="topSlotName"
         :size="uiConfig.size"
@@ -132,6 +132,7 @@
 // import tableColumn from "./tableColumn";
 import pagination from "./pagination";
 import dropDown from "./dropDown";
+import props from "./common/props";
 
 // 默认log
 const LOG = {
@@ -196,6 +197,7 @@ const setDefaultValue = (defaultOptions, options) => {
 };
 
 export default {
+  mixins: [props()],
   props: {
     tableConfig: {
       type: Object,
@@ -260,6 +262,7 @@ export default {
      */
     _tableInit(reload) {
       //服务器模式处理
+      console.log(this.currentPage, this.pageSize);
       if (this.isServerMode) {
         this._loadServerMode(this.isServerMode.data);
       } else {
@@ -319,8 +322,8 @@ export default {
         //如果采用服务端分页模式
         if (this.isServerMode) {
           this._loadServerMode({
-            pageSize: pageSize,
-            pageNum: currentPage
+            [this.pageSizeKey]: pageSize,
+            [this.pageNumKey]: currentPage
           });
         } else {
           //如果不是服务器模式
@@ -344,6 +347,7 @@ export default {
     },
     // 加载服务端数据
     _loadServerMode(sendData) {
+      let _this = this;
       //加载中开始
       this.loading = true;
 
@@ -354,8 +358,8 @@ export default {
         //如果使用方法来进行分页请求
         url(sendData)
           .then(res => {
-            this._setTableData(res.list);
-            this.setPaginationTotal(res.total);
+            this._setTableData(res[this.listKey]);
+            this.setPaginationTotal(res[this.totalKey]);
           })
           .finally(() => {
             //加载中结束
@@ -375,8 +379,8 @@ export default {
         this.$axios[type](url, config)
           .then(res => {
             res = res.data;
-            this._setTableData(res.data);
-            this.setPaginationTotal(res.total);
+            this._setTableData(res[this.resKey]);
+            this.setPaginationTotal(res[this.totalKey]);
           })
           .catch(err => {
             throw err;
@@ -458,6 +462,8 @@ export default {
         this.tableData = data;
       }
       this.allData = data;
+      // 设置总页数为null，这样在数据更新后没有手动设置total，会自动读取数据长度
+      // this.setPaginationTotal(null);
     },
     //分页模式，每页显示数量变化时触发
     _handleSizeChange(pageSize) {
@@ -680,6 +686,7 @@ export default {
         if (typeof operation === "boolean") {
           this.tableConfig.btnConfig = defaultBtnConfig;
         } else if (typeof operation === "object") {
+          // 设置默认值
           setDefaultValue(defaultBtnConfig, operation);
           this.tableConfig.btnConfig = operation;
         }
