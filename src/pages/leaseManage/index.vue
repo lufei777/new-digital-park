@@ -23,7 +23,7 @@ const MenuList = [
     ]
   },
   {
-    routeAddress: "",
+    routeAddress: "/leasemanage/tenantManage",
     name: "租户管理",
     childNode: [],
     id: 2,
