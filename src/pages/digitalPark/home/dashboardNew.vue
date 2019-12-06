@@ -50,10 +50,10 @@
         <img v-if="pageFlag==2" src="../../../../static/image/digitalPark/unity_priview.png"
              class="unity_priview"
              alt="">
-        <iframe v-if="pageFlag==1"
-                src="../../../../static/HomePage/index.html"
-                frameborder="0"
-                class="unity-frame"></iframe>
+        <!--<iframe v-if="pageFlag==1"-->
+                <!--src="../../../../static/HomePage/index.html"-->
+                <!--frameborder="0"-->
+                <!--class="unity-frame"></iframe>-->
 
       </div>
       <div class="dashboard-right">
@@ -84,7 +84,7 @@
         </draggable>
         <div class="fixed-prod-module">
           <span>{{$t('proEntry')}}</span>
-          <div class="flex-wrap-align-center product-list">
+          <div class="product-list">
             <el-tooltip v-for="(item) in fixedProList" :key="item.id"
                         effect="dark" :content="item.name" placement="top-end">
               <div class="fixed-pro-item hover-pointer"
@@ -510,10 +510,12 @@
       }
     }
     .fixed-pro-item{
-      width:20%;
+      width:23%;
       font-size: 12px;
       padding:10px 0;
       flex-shrink: 0;
+      float:left;
+      margin:2.5px 1%;
       background-repeat: no-repeat;
       background-size: 100% 100%;
       overflow: hidden;

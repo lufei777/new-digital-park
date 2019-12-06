@@ -1,7 +1,9 @@
 <template>
-  <div class="hello">
+  <div class="hello flex-column">
     <!--<img src="../../../static/image/digitalPark/login_bg.png" alt="">-->
-    <el-button type="primary" @click="onClickBtn">change</el-button>
+    <!--<el-button type="primary" @click="onClickBtn">change</el-button>-->
+    <div class="div1"></div>
+    <div class="div2"></div>
   </div>
 </template>
 
@@ -42,10 +44,13 @@
 <style lang="less">
   .hello{
     height:100%;
-    img{
-      width:100%;
-      height:100%;
+    .div1{
+       height:50px;
+       background: yellow;
     }
-
+    .div2{
+       flex-grow: 1;
+       background: pink;
+    }
   }
 </style>

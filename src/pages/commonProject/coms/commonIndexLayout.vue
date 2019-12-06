@@ -106,7 +106,7 @@
     .asset-nav-operator-box{
       /*flex-grow: 1;*/
       float: right;
-      width: 40%;
+      /*width: 40%;*/
       line-height: 70px;
     }
     .el-menu{
