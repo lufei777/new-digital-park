@@ -102,6 +102,9 @@ export default {
   name: "mi-input",
   mixins: [props(), events()],
   props: {
+    rawtype: {
+      type: String
+    },
     minlength: {
       type: Number
     },
@@ -334,6 +337,7 @@ export default {
   },
   computed: {
     typeParam: function() {
+      if (this.rawtype) return this.rawtype;
       switch (this.type) {
         case "textarea":
           return "textarea";
@@ -428,7 +432,7 @@ export default {
   position: fixed;
   z-index: 2001;
   overflow: hidden;
-  .el-scrollbar__wrap{
+  .el-scrollbar__wrap {
     overflow-x: hidden;
   }
 }
