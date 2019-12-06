@@ -8,6 +8,15 @@
         @submit="submit"
         @reset-change="resetChange"
       >
+        <template slot="zj" slot-scope="obj">
+          <div>
+            <el-input style="width:75%;" v-model="model.zj" :placeholder="obj.column.placeholder"></el-input>
+            <el-select style="width:24% !important;" v-model="model.dw">
+              <el-option label="元/天" value="￥/day"></el-option>
+              <el-option label="元/月" value="￥/month"></el-option>
+            </el-select>
+          </div>
+        </template>
         <template slot="btn" slot-scope="obj">
           <div>
             <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">搜索</el-button>
@@ -519,8 +528,10 @@ export default {
             span: 12
           },
           {
-            type: "number",
+            type: "input",
+            rawtype: "number",
             label: "面积",
+            dataType: "number",
             prop: "mj",
             append: "m²",
             clearable: true,
@@ -544,10 +555,10 @@ export default {
             prop: "zj",
             clearable: true,
             span: 12,
-            append: "元/天",
+            formslot: true,
             rules: {
               required: true,
-              message: "必填",
+              message: "必填，请填写总价",
               trigger: "blur"
             }
           },
@@ -557,6 +568,7 @@ export default {
             prop: "gcmc",
             clearable: true,
             span: 12,
+            row: true,
             rules: {
               required: true,
               message: "必填",
@@ -570,8 +582,8 @@ export default {
             clearable: true,
             span: 12,
             maxlength: 255,
-            minRows: 10,
-            showWordLimit:true
+            minRows: 8,
+            showWordLimit: true
           },
           {
             type: "upload",
@@ -593,8 +605,8 @@ export default {
   },
   methods: {
     submit(model, hide) {
-        console.log(model);
-        hide();
+      console.log(model);
+      hide();
     },
     resetChange() {},
     search(...args) {
