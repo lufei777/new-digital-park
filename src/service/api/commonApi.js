@@ -228,6 +228,10 @@ class CommonApi {
   @url('/vibe-web/role/updateRole')
   @post
   updateRole(){}
+
+  @url("/vibe-web/energy/addMeter")
+  @get
+  addMeter(){}
 }
 
 export default new CommonApi()
