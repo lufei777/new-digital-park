@@ -1,5 +1,5 @@
 <template>
-  <div class="el-form-wrapper" :style="setPx(parentOption.formSize,'100%')">
+  <div class="el-form_wrapper" :style="setPx(parentOption.formSize,'100%')">
     <el-form
       ref="form"
       label-suffix=":"
@@ -16,6 +16,7 @@
     >
       <el-row :span="24">
         <div
+          class="mi-form__group"
           v-for="(item,index) in columnOption"
           :key="item.prop"
           :display="item.display"
@@ -34,6 +35,7 @@
               v-if="vaildDisplay(column)"
             >
               <el-form-item
+                :class="[_.isEmpty(column.label)?'el-form-item_emptylabel' : '']"
                 :label="column.label"
                 :prop="column.prop"
                 :required="column.required"
@@ -417,18 +419,38 @@ export default {
   }
 };
 </script>
-<style lang='less' scoped>
-.form_line {
-  display: inline-block;
-  height: 42px;
-}
-.form_menu-center {
-  text-align: center;
-}
-.form_menu-left {
-  text-align: left;
-}
-.form_menu-right {
-  text-align: right;
+<style lang='less'>
+.el-form_wrapper {
+  .mi-input-number,
+  .el-cascader,
+  .el-date-editor.el-input,
+  .el-date-editor.el-input__inner,
+  .el-select {
+    width: 100% !important;
+  }
+  .mi-form__group {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    height: auto;
+  }
+  .form_line {
+    display: inline-block;
+    height: 42px;
+  }
+  .form_menu-center {
+    text-align: center;
+  }
+  .form_menu-left {
+    text-align: left;
+  }
+  .form_menu-right {
+    text-align: right;
+  }
 }
 </style>
