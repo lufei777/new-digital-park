@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="form">
+    <div class="form radius-shadow">
       <miForm
         :ref="leaseManageForm.ref"
         :options="leaseManageForm"
@@ -17,7 +17,7 @@
       </miForm>
     </div>
 
-    <div class="table">
+    <div class="table radius-shadow">
       <miTable :ref="leaseManageTable.ref" :tableConfig="leaseManageTable">
         <template slot="custom-top" slot-scope="obj">
           <el-button :size="obj.size" type="primary" @click="add(obj)">新增</el-button>
@@ -240,10 +240,9 @@ export default {
 <style lang='less' scoped>
 .form,
 .table {
-  background-color: #fff;
+  background-color: @white;
   box-sizing: border-box;
   padding: 20px;
-  border-radius: 10px;
 }
 .form {
   margin-bottom: 20px;
