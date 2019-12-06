@@ -33,12 +33,12 @@
         </template>
       </miTable>
     </div>
-    
   </div>
 </template>
 <script>
 import miForm from "@/components/Form";
 import miTable from "@/components/Table";
+import leaseManageApi from "@/service/api/leaseManageApi";
 
 export default {
   components: { miForm, miTable },
@@ -122,19 +122,23 @@ export default {
       },
       leaseManageTable: {
         ref: "leaseManageTable",
-        /* serverMode: {
-          url: "/vibe-web/oaApi/house/listInfo",
-          type: "get",
-          dataSrc: "data",
+        serverMode: {
+          url: leaseManageApi.getHouseList,
           data: {
             pageNum: 1,
             pageSize: 10
+          },
+          props: {
+            listKey: "list",
+            total: "total",
+            pageSize: "pageSize",
+            pageNum: "pageNum"
           }
-        }, */
+        },
         operation: {
           width: 200
         },
-        data: [
+        /* data: [
           {
             houseNumber: "FC-183283123341",
             isRent: 1,
@@ -152,7 +156,7 @@ export default {
             housePrice: 1231,
             spaceName: "2444燃气管井"
           }
-        ],
+        ], */
         columnConfig: [
           {
             prop: "houseNumber",
@@ -192,6 +196,7 @@ export default {
         ],
         uiConfig: {
           height: "auto",
+          customTopPosition: "right",
           selection: true
         }
       }
