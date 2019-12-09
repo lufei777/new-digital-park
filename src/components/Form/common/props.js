@@ -93,10 +93,6 @@ export default function () {
                 type: Boolean,
                 default: false
             },
-            remoteOptions: {
-                type: Object,
-                default: () => ({})
-            },
             size: {
                 type: String,
                 default: ''

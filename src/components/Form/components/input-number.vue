@@ -1,7 +1,7 @@
 <template>
   <el-input-number
     v-model="text"
-    class="avue-input-number"
+    class="mi-input-number"
     @click.native="handleClick"
     @focus="handleFocus"
     @blur="handleBlur"

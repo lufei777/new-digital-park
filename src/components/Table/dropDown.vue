@@ -12,9 +12,11 @@
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item
           v-for="item in dropDown.menus"
-          :carryData="carryData"
+          :carryData="carryData || item.carryData"
           :key="item.label"
           :command="item.handler"
+          :disabled="item.disabled"
+          :divided="item.divided"
         >{{item.label}}</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
@@ -30,7 +32,13 @@ export default {
     carryData: {}
   },
   data() {
-    return {};
+    return {
+      btns: {
+        label: "",
+        icon: "el-icon-more",
+        showMore: false
+      }
+    };
   },
   methods: {
     //列操作下拉方法

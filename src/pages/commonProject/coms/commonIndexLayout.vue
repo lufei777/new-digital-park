@@ -16,7 +16,7 @@
           <slot name="navOperator" :style="{float: 'right'}"></slot>
         </div>
       </div>
-      <router-view class="router-view"></router-view>
+      <slot name="content"></slot>
     </div>
   </div>
 </template>

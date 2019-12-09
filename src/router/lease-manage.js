@@ -14,5 +14,10 @@ export default [{
         name: 'addhouseproperty',
         meta: { title: '添加房产' },
         component: () => import('@/pages/leaseManage/addHouseProperty'),
+    },{
+        path: 'tenantManage',
+        name: 'tenantManage',
+        meta: { title: '添加房产' },
+        component: () => import('@/pages/leaseManage/tenantManage'),
     }],
 }]

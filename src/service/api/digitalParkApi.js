@@ -37,6 +37,10 @@ class DigitalParkApi {
   @url("/oaApi/user/getNowUser")
   @get
   getUserInfo(){}
+
+  @url('/oaApi/tenant/tenantList')
+  @get
+  tenantList(){}
 }
 
 export default new DigitalParkApi()

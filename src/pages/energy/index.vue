@@ -16,14 +16,15 @@ export default {
     commonIndex
   },
   data() {
+    let localStorageMenuList = JSON.parse(localStorage.menuList);
     return {
-      menuList:JSON.parse(localStorage.menuList), //CommonFun.menuData.childNode,// JSON.parse(localStorage.menuList),
+      menuList:localStorageMenuList.childNode, //CommonFun.menuData.childNode,// JSON.parse(localStorage.menuList),
       menuConfig: {
         bgColor: "#394562",
         textColor: "#B7BAC4",
         isCollapse: false,
-        activeIndex: "",
-        moduleName: "能源管理",
+        activeIndex: localStorageMenuList.routeAddress,
+        moduleName: localStorageMenuList.name,
         moduleLogo: "iconnengyuanguanli"
       }
     };
