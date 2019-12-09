@@ -26,7 +26,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="监控位置" prop="parentMeter">
+      <el-form-item label="父级表" prop="parentMeter">
         <el-input v-model="meterForm.monitorName" @focus="showTreeModal(1)"></el-input>
       </el-form-item>
       <el-form-item label="监测间隔" prop="time_interval">

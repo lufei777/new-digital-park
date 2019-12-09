@@ -5,13 +5,13 @@
         <div class="header-nav-left">
           <h3 class="title">{{$t('homeHeader.title')}}</h3>
         </div>
-        <el-input class="search-input">
-          <el-button
-            slot="append"
-            icon="el-icon-search"
-            class="search-icon"
-          >{{$t('homeHeader.searchText')}}</el-button>
-        </el-input>
+        <!--<el-input class="search-input">-->
+          <!--<el-button-->
+            <!--slot="append"-->
+            <!--icon="el-icon-search"-->
+            <!--class="search-icon"-->
+          <!--&gt;{{$t('homeHeader.searchText')}}</el-button>-->
+        <!--</el-input>-->
         <NavOperator :moduleType.sync="moduleType" />
       </div>
       <div class="sidebar-container">
