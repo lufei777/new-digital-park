@@ -17,7 +17,12 @@ export default [{
     },{
         path: 'tenantManage',
         name: 'tenantManage',
-        meta: { title: '添加房产' },
+        meta: { title: '租户管理' },
         component: () => import('@/pages/leaseManage/tenantManage'),
+    },{
+        path: '/addTenantManage',
+        name: 'addTenantManage',
+        meta: { title: '编辑租户' },
+        component: () => import('@/pages/leaseManage/addTenantManage'),
     }],
 }]

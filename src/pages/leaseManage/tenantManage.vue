@@ -47,25 +47,24 @@ export default {
   data() {
     return {
       model: {
-        contractNumber: "",
+        tenantNumber: "",
         tenantName: "",
         contactMethod: "",
-        tenantHouse: "",
         tenantTime: "",
-        maturityTime: ""
+        tenantHouseNumber: ""
       },
       tenantManageForm: {
         ref: "tenantManageForm",
         labelWidth: "100",
-        size: "small",
+        size: "medium",
         menuPosition: "right",
         submitBtn: false,
         emptyBtn: false,
         forms: [
           {
             type: "input",
-            label: "合同编号",
-            prop: "contractNumber",
+            label: "租户编号",
+            prop: "tenantNumber",
             placeholder: "请输入",
             clearable: true,
             span: 6,
@@ -93,16 +92,8 @@ export default {
             span: 6
           },
           {
-            type: "select",
-            label: "所租房产",
-            prop: "tenantHouse",
-            placeholder: "请输入",
-            clearable: true,
-            span: 6
-          },
-          {
             type: "datetime",
-            label: "签租时间",
+            label: "签约时间",
             prop: "tenantTime",
             placeholder: "选择日期时间",
             // clearable: true,
@@ -110,15 +101,13 @@ export default {
             format: "yyyy-MM-dd hh:mm:ss",
             valueFormat: "timestamp"
           },
-          {
-            type: "datetime",
-            label: "到期时间",
-            prop: "maturityTime",
-            placeholder: "选择日期时间",
-            // clearable: true,
-            span: 6,
-            format: "yyyy-MM-dd hh:mm:ss",
-            valueFormat: "timestamp"
+           {
+            type: "select",
+            label: "所租房产编号",
+            prop: "tenantHouseNumber",
+            placeholder: "请输入",
+            clearable: true,
+            span: 6
           },
           {
             prop: "btn",
@@ -150,7 +139,7 @@ export default {
       console.log(obj);
     },
     addTenant() {
-      // this.$router.push('/')
+      this.$router.push('/addTenantManage')
     },
     batchDels(obj) {
       console.log(obj);
@@ -223,5 +212,8 @@ export default {
       }
     }
   }
+  // .el-input {
+  //   width: 180px!important;
+  // }
 }
 </style>
