@@ -69,6 +69,7 @@
                     :upload-after="uploadAfter"
                     :disabled="column.disabled"
                   >
+                    <!-- 自定义表单里内容 -->
                     <template
                       :slot="`${column.prop}Type`"
                       slot-scope="{item,labelKey,valueKey}"
@@ -86,7 +87,7 @@
                 </el-tooltip>
               </el-form-item>
             </el-col>
-
+            <!-- 用作空行填充 -->
             <el-col
               :key="cindex"
               tag="div"
@@ -94,13 +95,6 @@
               :span="column.count"
               v-if="column.row && column.span!==24 && column.count"
             ></el-col>
-
-            <!-- <div
-              class="form_line"
-              :key="cindex"
-              :style="{width:`${column.count/24*100}%`}"
-              v-if="column.row && column.span!==24 && column.count"
-            ></div>-->
           </template>
         </div>
 
@@ -134,7 +128,6 @@
 <script>
 import formTemp from "./formtemp";
 import { deepClone, vaildData, setPx, filterDefaultParams } from "./utils/util";
-import init from "./common/init";
 import { validatenull } from "./utils/validate";
 import { detail } from "./utils/detail";
 import {
@@ -143,6 +136,7 @@ import {
   getPlaceholder,
   formInitVal
 } from "./utils/dataformat";
+import init from "./common/init";
 import Vue from "vue";
 import clickout from "./directive/clickout";
 
@@ -153,10 +147,6 @@ export default {
   props: {
     uploadBefore: Function,
     uploadAfter: Function,
-    disabled: {
-      type: Boolean,
-      default: false
-    },
     value: {
       type: Object,
       required: true,
@@ -325,7 +315,7 @@ export default {
               )
             );
           } else {
-            return reject(valid);
+            console.error("验证失败，请检查表单");
           }
         });
       } else {
@@ -340,7 +330,7 @@ export default {
                 )
               );
             } else {
-              return reject(valid);
+              console.error("验证失败，请检查表单");
             }
           });
         });
@@ -366,7 +356,7 @@ export default {
         });
       }
       delete option.forms;
-      console.log("parentOption", option);
+      // console.log("parentOption", option);
       return option;
     },
     columnOption() {
@@ -383,7 +373,7 @@ export default {
         //处理级联属性
         ele.forms = calcCascader(ele.forms);
       });
-      console.log("columnOption", list);
+      // console.log("columnOption", list);
       return list;
     },
     menuPosition() {
@@ -398,6 +388,7 @@ export default {
       deep: true,
       handler(newVal, oldVal) {
         // console.log("formTemp model change");
+        // console.log("*******", _.cloneDeep(newVal), _.cloneDeep(oldVal));
         if (!this.formCreate) {
           this.$emit("input", this.model);
           this.$emit("change", this.model);

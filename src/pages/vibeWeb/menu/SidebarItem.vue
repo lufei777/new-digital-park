@@ -22,8 +22,6 @@
       class="nest-menu"
     />
   </el-submenu>
-
-  <!--</div>-->
 </template>
 
 <script>
@@ -34,30 +32,10 @@ export default {
       type: Object,
       required: true
     },
-    specialRoute: {
-      // type:Boolean,
-      // required:false
-    }
+    specialRoute: {}
   },
-  mounted() {
-    // console.log(this.item);
-  }
+  mounted() {}
 };
 </script>
 <style lang="less">
-/*.menu-item {*/
-/*float: left;*/
-/*}*/
-/*.nest-menu {*/
-/*float: none;*/
-/*.el-submenu__icon-arrow {*/
-/*position: absolute !important;*/
-/*}*/
-/*}*/
-/*.el-menu--horizontal .el-submenu__icon-arrow {*/
-/*position: static;*/
-/*vertical-align: middle;*/
-/*margin-left: 8px;*/
-/*margin-top: -3px;*/
-/*}*/
 </style>

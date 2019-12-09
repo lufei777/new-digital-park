@@ -115,6 +115,10 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
             })
         }
     }
+    // 数字处理
+    if (type === 'number' || curentForm.rawtype === 'number') {
+        value = parseFloat(value);
+    }
     return value;
 };
 /**
@@ -189,7 +193,13 @@ export const formInitVal = (list = []) => {
             }
         }
         // 表单默认值设置
-        if (!validatenull(ele.valueDefault)) tableForm[ele.prop] = ele.valueDefault;
+        if (!validatenull(ele.valueDefault)) {
+            if (ele.dataType === 'number') {
+                tableForm[ele.prop] = Number(ele.valueDefault);
+            } else {
+                tableForm[ele.prop] = ele.valueDefault;
+            }
+        }
         // 搜索表单默认值设置
         if (!validatenull(ele.searchDefault)) {
             searchForm[ele.prop] = ele.searchDefault;

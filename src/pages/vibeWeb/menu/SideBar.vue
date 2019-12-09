@@ -92,17 +92,8 @@ export default {
         }
       }
     },
-    handleOpen(key) {
-      // if(key=='/assetMaintenance'){
-      //   this.$router.push(key)
-      // }
-    },
-    handleClose(key) {
-      // console.log(key)
-      // if(key=='/assetMaintenance'){
-      //   this.$router.push(key)
-      // }
-    },
+    handleOpen(key) {},
+    handleClose(key) {},
     async getProModules() {
       let res = await DigitalParkApi.getProductList({
         lang: Cookies.get("lang")
