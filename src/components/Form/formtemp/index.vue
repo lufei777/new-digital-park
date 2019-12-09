@@ -7,6 +7,7 @@
     :allow-create="column.allowCreate"
     :autocomplete="column.autocomplete"
     :autofocus="column.autofocus"
+    :autoUpload="column.autoUpload"
     :accept="column.accept"
     :border="column.border"
     :button="column.button"

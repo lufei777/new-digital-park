@@ -1,24 +1,35 @@
 <template>
   <div v-loading.lock="loading">
+    <template v-if="0">
+      <el-upload
+        action="https://jsonplaceholder.typicode.com/posts/"
+        list-type="picture-card"
+        :auto-upload="false"
+      >
+        <i class="el-icon-plus"></i>
+      </el-upload>
+    </template>
     <el-upload
+      v-else
       :class="{'picture-list':listType=='picture-img'}"
-      @click.native="handleClick"
       :action="action"
       :accept="elAccept"
+      :auto-upload="autoUpload"
+      :list-type="listType"
       :on-remove="handleRemove"
+      :on-preview="handlePictureCardPreview"
       :before-remove="beforeRemove"
       :multiple="multiple"
-      :on-preview="handlePictureCardPreview"
       :limit="limit"
-      :http-request="httpRequest"
+      :http-request="autoUpload ? httpRequest : undefined"
+      :disabled="disabled"
+      :file-list="fileList"
       :drag="drag"
       :readonly="readonly"
       :show-file-list="isPictureImg?false:showFileList"
-      :list-type="listType"
       :on-change="handleChange"
       :on-exceed="handleExceed"
-      :disabled="disabled"
-      :file-list="fileList"
+      @click.native="handleClick"
     >
       <template v-if="listType=='picture-card'">
         <i class="el-icon-plus"></i>
@@ -62,7 +73,8 @@ export default {
       dialogImgType: true,
       dialogVisible: false,
       text: [],
-      file: {}
+      file: {},
+      testfileList: []
     };
   },
   props: {
@@ -113,6 +125,10 @@ export default {
     action: {
       type: String,
       default: ""
+    },
+    autoUpload: {
+      type: Boolean,
+      default: true
     },
     uploadBefore: Function,
     uploadAfter: Function
@@ -178,7 +194,11 @@ export default {
         this.click({ value: this.text, column: this.column });
     },
     handleChange(file, fileList) {
-      fileList.splice(fileList.length - 1, 1);
+      if (this.autoUpload) {
+        fileList.splice(fileList.length - 1, 1);
+      } else {
+        this.show(file);
+      }
       if (typeof this.change === "function")
         this.change({ value: this.text, column: this.column });
     },
@@ -284,7 +304,7 @@ export default {
                   },
                   this.column
                 );
-              } else this.hide(error);
+              } else this.hide(error.response.statusText);
             });
         };
         if (typeof this.uploadBefore === "function") {

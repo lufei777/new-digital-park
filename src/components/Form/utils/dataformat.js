@@ -115,6 +115,10 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
             })
         }
     }
+    // 数字处理
+    if (type === 'number' || curentForm.rawtype === 'number') {
+        value = parseFloat(value);
+    }
     return value;
 };
 /**
