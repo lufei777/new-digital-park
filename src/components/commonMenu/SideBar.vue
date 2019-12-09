@@ -57,7 +57,6 @@ export default {
     },
     menuConfig: {}
   },
-
   data() {
     return {
       shortCutList: [],
@@ -68,10 +67,13 @@ export default {
     isCollapse() {
       return this.menuConfig.isCollapse;
     },
-    activeMenuIndex(){
+    activeMenuIndex() {
       //当前激活的菜单，顺序是cookie拿到的、父级传递的、默认的父级没传时使用菜单第一个
-      return this.menuConfig.specialRoute?'':
-        (Cookies.get('activeMenuIndex') || this.menuConfig.activeIndex || this.menuList[0].routeAddress)
+      return this.menuConfig.specialRoute
+        ? ""
+        : Cookies.get("activeMenuIndex") ||
+            this.menuConfig.activeIndex ||
+            this.menuList[0].routeAddress;
     }
   },
   watch: {
@@ -83,34 +85,38 @@ export default {
   },
   methods: {
     handleSelect(key, keyPath) {
-      console.log(key,keyPath)
-      if(this.menuConfig.specialRoute){
-        let firstMenu = this.menuList.find((first)=>{
-          return first.id==keyPath[0]
-        })
-        let secondPath=keyPath[1].split("/")[0]
-        if(secondPath.indexOf("@")!=-1){
-          secondPath = secondPath.split("@")[0]
+      // console.log(key,keyPath)
+      if (this.menuConfig.specialRoute) {
+        let firstMenu = this.menuList.find(first => {
+          return first.id == keyPath[0];
+        });
+        let secondPath = keyPath[1].split("/")[0];
+        if (secondPath.indexOf("@") != -1) {
+          secondPath = secondPath.split("@")[0];
         }
-        let secondMenu = firstMenu.childNode.length && firstMenu.childNode.find((second)=>{
-          return second.id==secondPath
-        })
-        localStorage.setItem('menuList',JSON.stringify(secondMenu.childNode))
-        let tmpArr=key.split("/")
-        tmpArr.shift()
-        let activeMenu=tmpArr.join("/")
-        console.log(activeMenu)
-        Cookies.set('activeMenuIndex',"/"+activeMenu)
+        let secondMenu =
+          firstMenu.childNode.length &&
+          firstMenu.childNode.find(second => {
+            return second.id == secondPath;
+          });
+        localStorage.setItem("menuList", JSON.stringify(secondMenu));
+        let tmpArr = key.split("/");
+        tmpArr.shift();
+        let activeMenu = tmpArr.join("/");
+        Cookies.set("activeMenuIndex", "/" + activeMenu);
       }
       if (key) {
-        if (key.indexOf("null") != -1) {
-          this.$router.push("/digitalPark/defaultPage");
-        } else if (key.indexOf("@") != -1) {
-          commonFun.loadOldPage(key);
-        } else {
-          key = key.slice(key.indexOf("/"));
-          this.$router.push(key);
-        }
+        this.loadPage(key);
+      }
+    },
+    loadPage(key) {
+      if (key.indexOf("null") != -1) {
+        this.$router.push("/digitalPark/defaultPage");
+      } else if (key.indexOf("@") != -1) {
+        commonFun.loadOldPage(key);
+      } else {
+        key = key.slice(key.indexOf("/"));
+        this.$router.push(key);
       }
     },
     handleOpen(key) {

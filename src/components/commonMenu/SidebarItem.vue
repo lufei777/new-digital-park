@@ -4,6 +4,7 @@
   <el-menu-item
     v-if="_.isEmpty(item.childNode) || item.childNode.length == 0"
     :index="specialRoute?item.id + item.routeAddress:item.routeAddress"
+    :parentMenu="parentMenu"
   >
     <i v-if="item.icon" :class="['iconfont',item.icon]"></i>
     <span slot="title">{{item.name}}</span>
@@ -12,8 +13,9 @@
   <!--<template v-else>-->
   <el-submenu
     v-else
+    :parentMenu="parentMenu"
     :index="specialRoute?item.id + item.routeAddress:item.routeAddress"
-    @click.native="onClickSubmenu(item)"
+    @click.native="onClickSubmenu(item,parentMenu)"
   >
     <template slot="title">
       <i v-if="item.icon" :class="['iconfont',item.icon]"></i>
@@ -27,6 +29,7 @@
       :key="child.id"
       :specialRoute="specialRoute"
       :menuList="menuList"
+      :parentMenu="item.level === 1 ? child : item.level === 2 ? item : {}"
     />
   </el-submenu>
   <!--</template>-->
@@ -49,42 +52,47 @@ export default {
     },
     menuList: {
       type: Array
-    }
+    },
+    parentMenu: {}
   },
   methods: {
-    onClickSubmenu(item) {
-      if (!this.specialRoute) return;
-      console.log(this.menuList);
-      if (item.level == 1) {
-        return;
+    onClickSubmenu(item, menuList) {
+      // 获取level = 2的菜单列表
+      if (!_.isEmpty(menuList)) {
+        localStorage.setItem("menuList", JSON.stringify(menuList));
       } else {
-        Cookies.set("moduleType", 2);
-        if (item.level == 2) {
-          localStorage.setItem("menuList", JSON.stringify(item.childNode));
+        if (!this.specialRoute) return;
+        if (item.level == 1) {
+          return;
         } else {
-          let firstMenu = this.menuList.find(first => {
-            return first.id == item.firstMenuId;
-          });
-          let secondMenu = firstMenu.childNode.find(second => {
-            return second.id == item.secondMenuId;
-          });
-          localStorage.setItem(
-            "menuList",
-            JSON.stringify(secondMenu.childNode)
-          );
-          Cookies.set("activeMenuIndex", item.routeAddress);
-        }
-        if (item.routeAddress) {
-          if (item.routeAddress.indexOf("@") != -1) {
-            CommonFun.loadOldPage(item);
+          Cookies.set("moduleType", 2);
+          if (item.level == 2) {
+            localStorage.setItem("menuList", JSON.stringify(item.childNode));
           } else {
-            setTimeout(() => {
-              this.$router.push(item.routeAddress);
-            }, 500);
+            let firstMenu = this.menuList.find(first => {
+              return first.id == item.firstMenuId;
+            });
+            let secondMenu = firstMenu.childNode.find(second => {
+              return second.id == item.secondMenuId;
+            });
+            localStorage.setItem("menuList", JSON.stringify(secondMenu));
+            Cookies.set("activeMenuIndex", item.routeAddress);
           }
-        } else {
-          this.$router.push("/digitalPark/defaultPage?type=2");
         }
+      }
+      this.loadPage(item);
+    },
+    loadPage(item) {
+      if (item.routeAddress) {
+        if (item.routeAddress.indexOf("@") != -1) {
+          CommonFun.loadOldPage(item);
+        } else {
+          setTimeout(() => {
+            this.$router.push(item.routeAddress);
+          }, 500);
+        }
+      } else {
+        this.$router.push("/digitalPark/defaultPage?type=2");
       }
     }
   },
