@@ -10,7 +10,7 @@
       <el-tree
         :data="floorList"
         :props="treeProps"
-        node-key="floorId"
+         node-key="floorId"
         :show-checkbox="isMultiple"
         :default-expanded-keys="[1]"
         :highlight-current="true"
@@ -56,6 +56,9 @@
     watch:{
       searchText(val) {
         this.$refs.navTree.filter(val);
+      },
+      defaultChecked(){
+        this.$refs.navTree.setCurrentKey(this.defaultChecked[0].id)
       }
     },
     methods: {

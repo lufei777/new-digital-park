@@ -27,7 +27,7 @@
      </span>
      <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
           <el-select v-model="userValue" placeholder="" @change="onClickUserConfigure">
-              <el-option label="admin" value="0" hidden></el-option>
+              <el-option :label="userInfo.fullName" value="0" hidden></el-option>
               <el-option :label="$t('homeHeader.personalCenter')" value="1"></el-option>
               <el-option :label="$t('homeHeader.changePassword')" value="2"></el-option>
               <el-option :label="$t('homeHeader.signOut')" value="3"></el-option>
@@ -90,10 +90,8 @@
       onClickGoBack(){
         if(Cookies.get('moduleType')==2){
           this.$router.push('/digitalPark/homePage')
-          // location.href='/#/digitalPark/homePage'
         }else{
           this.$router.push('/digitalPark/dashboardHomePage')
-          // location.href='/#/digitalPark/dashboardHomePage'
         }
         Cookies.remove('activeMenuIndex')
       },
