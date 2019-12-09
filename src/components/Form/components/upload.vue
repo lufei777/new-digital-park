@@ -1,16 +1,6 @@
 <template>
   <div v-loading.lock="loading">
-    <template v-if="0">
-      <el-upload
-        action="https://jsonplaceholder.typicode.com/posts/"
-        list-type="picture-card"
-        :auto-upload="false"
-      >
-        <i class="el-icon-plus"></i>
-      </el-upload>
-    </template>
     <el-upload
-      v-else
       :class="{'picture-list':listType=='picture-img'}"
       :action="action"
       :accept="elAccept"
