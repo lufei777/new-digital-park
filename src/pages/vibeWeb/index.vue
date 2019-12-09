@@ -1,31 +1,21 @@
 <template>
-  <div class="common-index-layout">
-    <div :class="menuConfig.isCollapse?'collapse-my-el-menu':'unfold-my-el-menu'">
-      <Sidebar :menu-list="menuList" :menu-config="menuConfig" />
-    </div>
-    <div
-      :class="[menuConfig.isCollapse?'collapse-right-content':'unfold-right-content','right-content']"
-    >
-      <div
-        :class="[menuConfig.isCollapse?'collapse-right-content-header':'unfold-right-content-header','right-content-header']"
-      >
-        <div class="flex-align asset-bread-crumb">
-          <i
-            :class="menuConfig.isCollapse?'iconzhankai':'iconshouqi'"
-            class="iconfont collapse-icon hover-pointer"
-            @click="onClickCollapseBtn"
-          ></i>
-        </div>
-        <div class="asset-nav-operator-box">
-          <NavOperator class="asset-nav-operator" :showGoback="true" />
-        </div>
-      </div>
-      <myIframe :iframeConfig="iframeConfig" class="router-view"></myIframe>
-    </div>
+  <div class="common-index-layout asset-manage">
+    <commonIndexLayout :menuConfig="menuConfig" @onclickcollapsebtn="onClickCollapseBtn">
+      <template slot="menuList">
+        <Sidebar :menu-list="menuList" :menu-config="menuConfig" />
+      </template>
+      <template slot="navOperator" slot-scope="obj">
+        <NavOperator :style="obj.style" class="asset-nav-operator" :showGoback="true" />
+      </template>
+      <template slot="content">
+        <myIframe :iframeConfig="iframeConfig" class="router-view"></myIframe>
+      </template>
+    </commonIndexLayout>
   </div>
 </template>
 
 <script>
+import commonIndexLayout from "../commonProject/coms/commonIndexLayout";
 import Sidebar from "./menu/SideBar";
 import NavOperator from "../digitalPark/coms/navOperator";
 import myIframe from "./iframe";
@@ -33,6 +23,7 @@ import myIframe from "./iframe";
 export default {
   name: "CommonIndexLayout",
   components: {
+    commonIndexLayout,
     Sidebar,
     NavOperator,
     myIframe

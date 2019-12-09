@@ -479,7 +479,7 @@ export default {
           {
             type: "input",
             label: "房产编号",
-            prop: "fcbh",
+            prop: "houseNumber",
             readonly: true,
             clearable: true,
             valueDefault: "FC-19112810000001",
@@ -512,7 +512,7 @@ export default {
           {
             type: "radio",
             label: "是否可出租",
-            prop: "cz",
+            prop: "houseStatus",
             dicData: [
               {
                 label: "是",
@@ -532,7 +532,7 @@ export default {
             rawtype: "number",
             label: "面积",
             dataType: "number",
-            prop: "mj",
+            prop: "houseArea",
             append: "m²",
             clearable: true,
             span: 12
@@ -540,7 +540,7 @@ export default {
           {
             type: "input",
             label: "房产名称",
-            prop: "fcmc",
+            prop: "houseName",
             clearable: true,
             span: 12,
             rules: {
@@ -552,7 +552,7 @@ export default {
           {
             type: "input",
             label: "总价",
-            prop: "zj",
+            prop: "housePrice",
             clearable: true,
             span: 12,
             formslot: true,
@@ -602,6 +602,9 @@ export default {
         ]
       }
     };
+  },
+  mounted() {
+    this.model = this.$route.query;
   },
   methods: {
     submit(model, hide) {
