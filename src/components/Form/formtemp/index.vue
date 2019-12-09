@@ -88,6 +88,8 @@
     :typeslot="column.typeslot"
     :typeformat="column.typeformat"
     :rawtype="column.rawtype"
+    :prependslot="column.prependslot"
+    :appendslot="column.appendslot"
     :tags="column.tags"
     :upload-before="uploadBefore"
     :upload-after="uploadAfter"

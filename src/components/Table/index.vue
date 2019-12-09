@@ -1,6 +1,6 @@
 <template>
   <div class="el-table-wrapper" :style="{height:wrapperHeight}">
-    <div ref="customTop" :style="{textAlign:uiConfig.customTopPosition,height:'auto',padding:'0 20px 20px'}">
+    <div ref="customTop" :style="{textAlign:'left',height:'auto',padding:'0 20px 20px'}">
       <slot
         :name="topSlotName"
         :size="uiConfig.size"
@@ -163,7 +163,7 @@ const defaultUiConfig = {
   }
 };
 
-// 默认按钮配置
+// 默认btnConfig
 const defaultBtnConfig = {
   prop: "operation",
   label: "操作",
@@ -262,7 +262,7 @@ export default {
      */
     _tableInit(reload) {
       //服务器模式处理
-      console.log(this.currentPage, this.pageSize);
+      // console.log(this.currentPage, this.pageSize);
       if (this.isServerMode) {
         this._loadServerMode(this.isServerMode.data);
       } else {
@@ -709,7 +709,7 @@ export default {
       let layoutHeight = this.layoutHeight.reduce((last, next) => {
         return last + (next ? parseFloat(next) : 0);
       }, 0);
-      console.log(layoutHeight + "px");
+      // console.log(layoutHeight + "px");
       return layoutHeight + "px";
     },
     paginationObj() {

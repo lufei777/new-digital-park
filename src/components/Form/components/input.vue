@@ -18,46 +18,48 @@
         :readonly="true"
         @click.native="disabled?'':open()"
       />
-      <div class="el-input_tree_box" v-if="box" :style="treeStyle">
-        <div></div>
-        <el-input
-          size="mini"
-          style="margin-bottom:8px;"
-          placeholder="输入关键字进行过滤"
-          v-model="filterText"
-          v-if="filter"
-        ></el-input>
-        <el-scrollbar style="height:180px;overflow-x:hidden !important;">
-          <el-tree
-            :data="dicList"
-            :node-key="valueKey"
-            :accordion="accordion"
-            :show-checkbox="multiple"
-            :props="props"
-            :check-strictly="checkStrictly"
-            ref="tree"
-            highlight-current
-            :current-node-key="multiple?'':text"
-            @check="checkChange"
-            :filter-node-method="filterNode"
-            :default-expanded-keys="defaultExpandedKeys?defaultExpandedKeys:(defaultExpandAll?keysList:[])"
-            :default-checked-keys="defaultCheckedKeys?defaultCheckedKeys:keysList"
-            :default-expand-all="defaultExpandAll"
-            @node-click.self="handleNodeClick"
-          >
-            <div style="width:100%;padding-right:10px;" slot-scope="{ data }">
-              <slot
-                :name="prop+'Type'"
-                :label="labelKey"
-                :value="valueKey"
-                :item="data"
-                v-if="typeslot"
-              ></slot>
-              <span v-else>{{data[labelKey]}}</span>
-            </div>
-          </el-tree>
-        </el-scrollbar>
-      </div>
+      <transition name="el-zoom-in-top">
+        <div class="el-input_tree_box" v-if="box" :style="treeStyle">
+          <div></div>
+          <el-input
+            size="mini"
+            style="margin-bottom:8px;"
+            placeholder="输入关键字进行过滤"
+            v-model="filterText"
+            v-if="filter"
+          ></el-input>
+          <el-scrollbar style="height:180px;overflow-x:hidden !important;">
+            <el-tree
+              :data="dicList"
+              :node-key="valueKey"
+              :accordion="accordion"
+              :show-checkbox="multiple"
+              :props="props"
+              :check-strictly="checkStrictly"
+              ref="tree"
+              highlight-current
+              :current-node-key="multiple?'':text"
+              @check="checkChange"
+              :filter-node-method="filterNode"
+              :default-expanded-keys="defaultExpandedKeys?defaultExpandedKeys:(defaultExpandAll?keysList:[])"
+              :default-checked-keys="defaultCheckedKeys?defaultCheckedKeys:keysList"
+              :default-expand-all="defaultExpandAll"
+              @node-click.self="handleNodeClick"
+            >
+              <div style="width:100%;padding-right:10px;" slot-scope="{ data }">
+                <slot
+                  :name="prop+'Type'"
+                  :label="labelKey"
+                  :value="valueKey"
+                  :item="data"
+                  v-if="typeslot"
+                ></slot>
+                <span v-else>{{getLabelText(data)}}</span>
+              </div>
+            </el-tree>
+          </el-scrollbar>
+        </div>
+      </transition>
     </div>
     <el-input
       v-else
@@ -228,8 +230,9 @@ export default {
       let bottom = this.$el.getBoundingClientRect().bottom;
 
       this.treeStyle = {
-        top: `${top + height}px`,
-        left: `${left}px`,
+        // top: `${top + height}px`,
+        top: `${height}px`,
+        left: `${0}px`,
         width: `${width}px`
       };
       this.box = true;
@@ -318,21 +321,6 @@ export default {
         this.$emit("change", result);
         callback();
       }
-    },
-    handleClick() {
-      const result =
-        this.isString && this.multiple ? this.text.join(",") : this.text;
-      if (typeof this.click === "function")
-        this.click({ value: result, column: this.column });
-    },
-    handleChange(value) {
-      let text = this.text;
-      const result = this.isString && this.multiple ? value.join(",") : value;
-      if (typeof this.change === "function") {
-        this.change({ value: result, column: this.column });
-      }
-      this.$emit("input", result);
-      this.$emit("change", result);
     }
   },
   computed: {
@@ -429,7 +417,7 @@ export default {
   min-width: 150px;
   max-height: 250px;
   background-color: #fff;
-  position: fixed;
+  position: absolute;
   z-index: 2001;
   overflow: hidden;
   .el-scrollbar__wrap {
