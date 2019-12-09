@@ -68,6 +68,9 @@ import commonApi from '../../../service/api/commonApi';
           selection: true,
           pagination: {
             layout: "total,->, prev, pager, next, jumper",
+            handler(pageSize,val) {
+              _this.handleCurrentChange(val)
+            }
           }
         },
         btnConfig:{
@@ -164,7 +167,11 @@ import commonApi from '../../../service/api/commonApi';
       },
       onClickAddBtn(){
          this.$router.push('/addCollect')
-      }
+      },
+      handleCurrentChange(val){
+        this.curPage=val
+        this.getManMadeCollectList()
+      },
     },
     mounted(){
       this.getManMadeCollectList()

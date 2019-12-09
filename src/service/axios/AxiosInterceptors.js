@@ -73,6 +73,7 @@ axios.interceptors.response.use(
     } else if (!data.successful && data.code) {
       // 错误提示
       console.error(data);
+      if(router.currentRoute.path=='/login') return;
       Message({
         message: data.message || data.errorMessage,
         type: 'error'

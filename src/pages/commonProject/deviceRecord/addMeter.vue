@@ -26,8 +26,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onClickNextBtn('meterForm')">下一步</el-button>
           <el-button @click="goBack" class="go-back">返回</el-button>
+          <el-button type="primary" @click="onClickNextBtn('meterForm')">下一步</el-button>
         </el-form-item>
       </el-form>
     <!--</div>-->

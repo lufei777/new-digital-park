@@ -64,6 +64,9 @@
             height: "auto",
             pagination: {
               layout: "total,->, prev, pager, next, jumper",
+              handler(pageSize,val) {
+                _this.handleCurrentChange(val)
+              }
             }
           },
           tableMethods: {
