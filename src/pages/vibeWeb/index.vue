@@ -37,7 +37,7 @@ export default {
       iframeConfig: {
         src: show_menu.split("@")[1]
       },
-      menuList: menuList,
+      menuList: menuList.childNode,
       menuConfig: {
         bgColor: "#394562",
         textColor: "#B7BAC4",
