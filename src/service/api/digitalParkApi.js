@@ -41,6 +41,16 @@ class DigitalParkApi {
   @url('/oaApi/tenant/tenantList')
   @get
   tenantList(){}
+
+  @url('/oaApi/tenant/addTenant')
+  @post
+  addTenant(){}
+
+  @url('/oaApi/tenant/createTenNum')
+  @get
+  createTenNum(){}
+
+  
 }
 
 export default new DigitalParkApi()
