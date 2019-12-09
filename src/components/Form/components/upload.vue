@@ -269,8 +269,9 @@ export default {
           this.$axios
             .post(url, param, { headers })
             .then(res => {
-              let list = {};
-              list = _.get(res, this.resKey, {});
+              let list = res;
+              /* let list = {};
+              list = _.get(res, this.resKey, {}); */
               if (typeof this.uploadAfter === "function") {
                 this.uploadAfter(
                   list,
