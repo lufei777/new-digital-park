@@ -220,8 +220,12 @@ export default {
     xiangqing(obj) {
       console.log(obj);
     },
-    edit(obj) {
-      console.log(obj);
+    edit({ scopeRow: { $index, row, _self } }) {
+      this.$router.push({
+        path: "/leasemanage/addhouseproperty",
+        query: _.cloneDeep(row)
+      });
+      console.log($index, row, _self);
     },
     del(obj) {
       console.log(obj);
