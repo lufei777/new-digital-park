@@ -15,10 +15,10 @@
           </div>
         </template>
         <template slot="licenseImageText">
-            <h3>营业执照/企业经营许可证</h3>
+          <h3>营业执照/企业经营许可证</h3>
         </template>
         <template slot="otherImageText">
-            <h3>其他证明</h3>
+          <h3>其他证明</h3>
         </template>
       </miForm>
     </div>
@@ -31,17 +31,35 @@ import miForm from "@/components/Form";
 import miTable from "@/components/Table";
 export default {
   components: { miForm, miTable },
+  //
   data() {
+    let validID = (rule, value, callback) => {
+      if (value == "" || value == undefined) {
+        callback();
+      } else {
+        let reg = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+        if (!reg.test(value)) {
+          callback(new Error("身份证号码不正确"));
+        }
+      }
+    };
+    let telephone = (rule, value, callback) => {
+      if (value == "" || value == undefined) {
+        callback();
+      } else {
+        let reg = /^1[3|4|5|7|8]\d{9}$/;
+        if (!reg.test(value)) {
+          callback(new Error("电话号码不正确"));
+        }
+      }
+    };
+    
     return {
       model: {
         // tenantNumber: "",
         tenantName: "",
         contactMethod: "",
-        contactIdNumber: "",
-        licenseDialogImageUrl: "",
-        licenseDialogVisible: false,
-        otherDialogVisible:false,
-        otherDialogImageUrl:""
+        idCard: "",
       },
       addTenantManageForm: {
         ref: "addTenantManageForm",
@@ -72,7 +90,12 @@ export default {
             prop: "tenantName",
             placeholder: "请输入",
             clearable: true,
-            span: 6
+            span: 6,
+            rules: {
+              required: true,
+              message: "请输入租户名称",
+              trigger: "blur"
+            }
           },
           {
             prop: "",
@@ -85,16 +108,28 @@ export default {
             prop: "contactMethod",
             placeholder: "请输入",
             clearable: true,
-            span: 6
+            span: 6,
+            rules: {
+              required: true,
+              validator:telephone,
+              message: "电话号码不正确",
+              trigger: "blur"
+            }
           },
 
           {
             type: "input",
             label: "身份证号",
-            prop: "contactIdNumber",
+            prop: "idCard",
             placeholder: "请输入",
             clearable: true,
-            span: 6
+            span: 6,
+            rules: {
+              required: true,
+              validator:validID,
+              message: "身份证号码不正确",
+              trigger: "blur"
+            }
           },
           {
             prop: "licenseImageText",
@@ -102,14 +137,21 @@ export default {
             pull: 6,
             formslot: true
           },
-           {
+          {
             type: "upload",
             listType: "picture-card",
             label: "",
             prop: "licenseImage",
             span: 24,
-            action: "https://jsonplaceholder.typicode.com/posts/",
+            action: "/oaApi/image/upload",
+            accept: ["jpg", "jpeg", "png"],
+            props: {
+              label: "tenantPictureName",
+              value: "tenantPictureUrl"
+            },
             propsHttp: {
+              name: "fileName",
+              url: "fileUrl",
               res: "data"
             }
           },
@@ -125,8 +167,15 @@ export default {
             label: "",
             prop: "otherImage",
             span: 24,
-            action: "https://jsonplaceholder.typicode.com/posts/",
+            action: "/oaApi/image/upload",
+            accept: ["jpg", "jpeg", "png"],
+            props: {
+              label: "tenantPictureName",
+              value: "tenantPictureUrl"
+            },
             propsHttp: {
+              name: "fileName",
+              url: "fileUrl",
               res: "data"
             }
           },
@@ -140,51 +189,45 @@ export default {
       }
     };
   },
-  computed:{
+  computed: {
     commonParams() {
       return {
-        tenantNumber:this.tenantNumber,
-        tenantName:this.tenantName,
-        telephone:this.contactMethod,
-        idCard:this.contactIdNumber,
-        businessLicense:'',
-        otherProof:''
-      }
+        tenantNumber: this.model.tenantNumber,
+        tenantName: this.model.tenantName,
+        telephone: this.model.contactMethod,
+        idCard: this.model.idCard,
+        businessLicense: "",
+        otherProof: ""
+      };
     }
   },
   methods: {
-    licenseHandleRemove(file, fileList) {
-      // debugger
-      console.log(file, fileList);
-    },
-    licenseHandlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
-    },
     submit() {},
     resetChange() {},
-    search(...args) {
+    async search(...args) {
       this.$refs[this.addTenantManageForm.ref].getFormModel(res => {
         console.log("model", res);
       });
       console.log("搜索", ...args);
+      let res = await DigitalParkApi.addTenant(this.commonParams);
+      console.log(78788, res);
     },
     back() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
     async addTenant() {
-      let res = await DigitalParkApi.addTenant(this.commonParams)
-      console.log(78788,res)
+      let res = await DigitalParkApi.addTenant(this.commonParams);
+      console.log(78788, res);
     },
-    async createTenNum(){
+    async createTenNum() {
       let res = await DigitalParkApi.createTenNum({
-        numType:2
-      })
-      this.model.tenantNumber = res
+        numType: 2
+      });
+      this.model.tenantNumber = res;
     }
   },
   mounted() {
-    this.createTenNum()
+    this.createTenNum();
   }
 };
 </script>
