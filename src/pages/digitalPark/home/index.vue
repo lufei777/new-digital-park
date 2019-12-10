@@ -3,7 +3,7 @@
     <div class="home-header" v-show="!hideHeader">
       <div class="home-header-inner flex-align-between">
         <div class="header-nav-left">
-          <h3 class="title">{{$t('homeHeader.title')}}</h3>
+          <h3 class="title">{{title}}</h3>
         </div>
         <!--<el-input class="search-input">-->
           <!--<el-button-->
@@ -45,7 +45,7 @@
               v-for="(item,index) in productList"
               :key="index"
               @click="onClickItemProduct(item)"
-              :style="{backgroundImage:'url('+item.productBgUrl+')'}"
+              :style="getItemBg(item)"
             >
               <span>{{item.name}}</span>
             </li>
@@ -178,13 +178,15 @@ export default {
       let res = await DigitalParkApi.getMenuTree({
         language: Cookies.get("lang")
       });
+      this.title=res[0].name
       this.menuList = res[0].childNode;
+      localStorage.setItem('menuTree',JSON.stringify(res))
     },
     getItemBg(item) {
       return {
         backgroundImage:
           "url(" +
-          require("../../../../static/image/digitalPark/" + item.id + ".png") +
+          require("../../../../static/image/digitalPark/" + item.productBgUrl + ".png") +
           ")"
       };
     },

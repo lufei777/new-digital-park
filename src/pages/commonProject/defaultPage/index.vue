@@ -1,7 +1,7 @@
 <template>
   <div class="default-page">
     <img src="../../../../static/image/digitalPark/default_page.png" alt="">
-    <div class="go-back hover-pointer" @click="onClickGoBack">返回园区首页</div>
+    <!--<div class="go-back hover-pointer" @click="onClickGoBack">返回园区首页</div>-->
   </div>
 </template>
 
@@ -32,12 +32,12 @@
 
 <style lang="less">
   .default-page{
-    width:100%;
-    height:100%;
+    /*width:100%;*/
+    /*height:100%;*/
     overflow: hidden;
     img{
       width:100%;
-      height:100%;
+      /*height:100%;*/
     }
     .go-back{
       position: absolute;

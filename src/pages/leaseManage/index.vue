@@ -50,7 +50,7 @@ export default {
   },
   data() {
     return {
-      menuList: MenuList, //CommonFun.menuData.childNode,// JSON.parse(localStorage.menuList),
+      menuList: JSON.parse(localStorage.menuList).childNode, //CommonFun.menuData.childNode,// JSON.parse(localStorage.menuList),
       menuConfig: {
         bgColor: "#394562",
         textColor: "#B7BAC4",

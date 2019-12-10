@@ -17,7 +17,7 @@ let obj = {
     changePassword:'修改密码',
     signOut:'退出'
   },
-  proEntry:'产品入口',
+  proEntry:'功能模块入口',
   more:"更多",
   fold:'收起'
 }
