@@ -2,8 +2,8 @@
   <div class="tenant-manage">
     <div class="condition-box radius-shadow">
       <miForm
-        :ref="tenantManageForm.ref"
-        :options="tenantManageForm"
+        :ref="addTenantManageForm.ref"
+        :options="addTenantManageForm"
         v-model="model"
         @submit="submit"
         @reset-change="resetChange"
@@ -11,8 +11,14 @@
         <template slot="btn" slot-scope="obj">
           <div>
             <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">保存</el-button>
-            <el-button :disabled="obj.disabled" @click="clearForm(obj)">返回</el-button>
+            <el-button :disabled="obj.disabled" @click="back(obj)">返回</el-button>
           </div>
+        </template>
+        <template slot="licenseImageText">
+            <h3>营业执照/企业经营许可证</h3>
+        </template>
+        <template slot="otherImageText">
+            <h3>其他证明</h3>
         </template>
       </miForm>
     </div>
@@ -20,7 +26,7 @@
 </template>
 
 <script>
-import DigitalParkApi from '../../service/api/digitalParkApi'
+import DigitalParkApi from "../../service/api/digitalParkApi";
 import miForm from "@/components/Form";
 import miTable from "@/components/Table";
 export default {
@@ -28,29 +34,37 @@ export default {
   data() {
     return {
       model: {
-        contractNumber: "",
+        // tenantNumber: "",
         tenantName: "",
         contactMethod: "",
-        tenantHouse: "",
-        tenantTime: "",
-        maturityTime: ""
+        contactIdNumber: "",
+        licenseDialogImageUrl: "",
+        licenseDialogVisible: false,
+        otherDialogVisible:false,
+        otherDialogImageUrl:""
       },
-      tenantManageForm: {
-        ref: "tenantManageForm",
+      addTenantManageForm: {
+        ref: "addTenantManageForm",
         labelWidth: "100",
-        size: "small",
+        size: "medium",
         menuPosition: "right",
         submitBtn: false,
         emptyBtn: false,
         forms: [
           {
             type: "input",
-            label: "合同编号",
-            prop: "contractNumber",
-            placeholder: "请输入",
+            label: "租户编号",
+            prop: "tenantNumber",
             clearable: true,
+            readonly: true,
+            // valueDefault: "ZH-1911281000009819",
             span: 6,
-            minRows: 0
+            tip: "该编号自动生成",
+            rules: {
+              required: true,
+              message: "如果没有自动生成，请联系管理员",
+              trigger: "change"
+            }
           },
           {
             type: "input",
@@ -61,6 +75,11 @@ export default {
             span: 6
           },
           {
+            prop: "",
+            formslot: true,
+            span: 12
+          },
+          {
             type: "input",
             label: "联系方式",
             prop: "contactMethod",
@@ -68,38 +87,48 @@ export default {
             clearable: true,
             span: 6
           },
+
           {
-            prop: "",
-            formslot: true,
-            span: 6
-          },
-          {
-            type: "select",
-            label: "所租房产",
-            prop: "tenantHouse",
+            type: "input",
+            label: "身份证号",
+            prop: "contactIdNumber",
             placeholder: "请输入",
             clearable: true,
             span: 6
           },
           {
-            type: "datetime",
-            label: "签租时间",
-            prop: "tenantTime",
-            placeholder: "选择日期时间",
-            // clearable: true,
-            span: 6,
-            format: "yyyy-MM-dd hh:mm:ss",
-            valueFormat: "timestamp"
+            prop: "licenseImageText",
+            span: 24,
+            pull: 6,
+            formslot: true
+          },
+           {
+            type: "upload",
+            listType: "picture-card",
+            label: "",
+            prop: "licenseImage",
+            span: 24,
+            action: "https://jsonplaceholder.typicode.com/posts/",
+            propsHttp: {
+              res: "data"
+            }
           },
           {
-            type: "datetime",
-            label: "到期时间",
-            prop: "maturityTime",
-            placeholder: "选择日期时间",
-            // clearable: true,
-            span: 6,
-            format: "yyyy-MM-dd hh:mm:ss",
-            valueFormat: "timestamp"
+            prop: "otherImageText",
+            span: 24,
+            pull: 6,
+            formslot: true
+          },
+          {
+            type: "upload",
+            listType: "picture-card",
+            label: "",
+            prop: "otherImage",
+            span: 24,
+            action: "https://jsonplaceholder.typicode.com/posts/",
+            propsHttp: {
+              res: "data"
+            }
           },
           {
             prop: "btn",
@@ -108,66 +137,54 @@ export default {
             formslot: true
           }
         ]
-      },
+      }
     };
   },
+  computed:{
+    commonParams() {
+      return {
+        tenantNumber:this.tenantNumber,
+        tenantName:this.tenantName,
+        telephone:this.contactMethod,
+        idCard:this.contactIdNumber,
+        businessLicense:'',
+        otherProof:''
+      }
+    }
+  },
   methods: {
+    licenseHandleRemove(file, fileList) {
+      // debugger
+      console.log(file, fileList);
+    },
+    licenseHandlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
     submit() {},
     resetChange() {},
-    selectAll(obj) {
-      console.log(obj);
-    },
-    addTenant() {
-      // this.$router.push('/')
-    },
-    batchDels(obj) {
-      console.log(obj);
-    },
-    batchEdits(obj) {
-      console.log(obj);
-    },
-    detailTenant(obj) {
-      console.log(obj);
-    },
-    editRow(obj) {
-      console.log(obj);
-    },
-    delRow(obj) {
-      console.log(obj);
-    },
     search(...args) {
-      this.$refs[this.leaseManageForm.ref].getFormModel(res => {
+      this.$refs[this.addTenantManageForm.ref].getFormModel(res => {
         console.log("model", res);
       });
       console.log("搜索", ...args);
     },
-    clearForm(...args) {
-      console.log("清空", ...args);
-      this.$refs[this.leaseManageForm.ref].resetForm();
+    back() {
+      this.$router.go(-1)
     },
-    async tenantList() {
-       let labelList = [{ label: "序号", prop: "columnNumber"},
-        { label: "合同编号", prop: "tenantNumber"},
-        { label: "合同名称", prop: "elecAndWaterSum"},
-        { label: "所租房产", prop: ""},
-        { label: "租户名称", prop: "tenantName"},
-        { label: "联系方式", prop: "telephone"},
-        { label: "签约时间", prop: ""},
-        { label: "到期时间", prop: ""}];
-      this.tenantManageTable.columnConfig = labelList;
-      let res = await DigitalParkApi.tenantList()
-      console.log('res',res)
-      res.map((item,index)=>{
-        item.columnNumber = index+1
+    async addTenant() {
+      let res = await DigitalParkApi.addTenant(this.commonParams)
+      console.log(78788,res)
+    },
+    async createTenNum(){
+      let res = await DigitalParkApi.createTenNum({
+        numType:2
       })
-      if (res) {
-        this.tenantManageTable.data = res;
-        // this.tenantManageTable.uiConfig.pagination.total = res.total;
-      }
+      this.model.tenantNumber = res
     }
   },
   mounted() {
-    this.tenantList()
+    this.createTenNum()
   }
 };
 </script>

@@ -20,22 +20,23 @@
     <div class="table radius-shadow">
       <miTable :ref="leaseManageTable.ref" :tableConfig="leaseManageTable">
         <template slot="custom-top" slot-scope="obj">
-          <el-button :size="obj.size" type="primary" @click="add(obj)">新增</el-button>
-          <el-button :size="obj.size" type="primary" @click="importExcel(obj)">批量导入</el-button>
-          <el-button :size="obj.size" type="primary" @click="dels(obj)">批量删除</el-button>
-          <el-button :size="obj.size" type="primary" @click="edits(obj)">批量编辑</el-button>
+          <el-button :size="obj.size" type="primary" @click="addedProperty(obj)">新增</el-button>
+          <el-button :size="obj.size" type="primary" @click="bulkImport(obj)">批量导入</el-button>
+          <el-button :size="obj.size" type="primary" @click="bulkDel(obj)">批量删除</el-button>
+          <el-button :size="obj.size" type="primary" @click="bulkEdit(obj)">批量编辑</el-button>
         </template>
         <template slot="operation" slot-scope="obj">
-          <el-button type="text" @click="xiangqing(obj)">详情</el-button>
-          <el-button type="text" @click="edit(obj)">编辑</el-button>
-          <el-button type="text" @click="del(obj)">删除</el-button>
-          <el-button type="text" @click="dingwei(obj)">定位</el-button>
+          <el-button type="text" @click="propertyDetail(obj)">详情</el-button>
+          <el-button type="text" @click="propertyEdit(obj)">编辑</el-button>
+          <el-button type="text" @click="propertyDel(obj)">删除</el-button>
+          <el-button type="text" @click="propertyLocation(obj)">定位</el-button>
         </template>
       </miTable>
     </div>
   </div>
 </template>
 <script>
+import { LeaseManageDic } from "@/utils/dic/leaseManage";
 import miForm from "@/components/Form";
 import miTable from "@/components/Table";
 import leaseManageApi from "@/service/api/leaseManageApi";
@@ -138,25 +139,6 @@ export default {
         operation: {
           width: 200
         },
-        /* data: [
-          {
-            houseNumber: "FC-183283123341",
-            isRent: 1,
-            houseName: "菜单变动有点大",
-            houseStatus: "1",
-            houseArea: "120m²",
-            spaceName: "5号楼顶楼"
-          },
-          {
-            houseNumber: "FC-18328388282",
-            isRent: 1,
-            houseName: "小何房产1号",
-            houseStatus: "1",
-            houseArea: "120m²",
-            housePrice: 1231,
-            spaceName: "2444燃气管井"
-          }
-        ], */
         columnConfig: [
           {
             prop: "houseNumber",
@@ -174,7 +156,13 @@ export default {
             prop: "houseStatus",
             label: "房产状态",
             formatter: function(row, column) {
-              return row[column.property] === "1" ? "已租" : "未租";
+              let val = row[column.property];
+              return LeaseManageDic.HouseStatus.forEach(item => {
+                console.log(item, val);
+                if (item.value === val) {
+                  return item.label;
+                }
+              });
             }
           },
           {
@@ -205,32 +193,34 @@ export default {
   methods: {
     submit() {},
     resetChange() {},
-    add(obj) {
-      console.log(obj);
-    },
-    importExcel(obj) {
-      console.log(obj);
-    },
-    dels(obj) {
-      console.log(obj);
-    },
-    edits(obj) {
-      console.log(obj);
-    },
-    xiangqing(obj) {
-      console.log(obj);
-    },
-    edit({ scopeRow: { $index, row, _self } }) {
+    addedProperty(obj) {
       this.$router.push({
-        path: "/leasemanage/addhouseproperty",
-        query: _.cloneDeep(row)
+        name: "addhouseproperty"
       });
-      console.log($index, row, _self);
     },
-    del(obj) {
+    bulkImport(obj) {
       console.log(obj);
     },
-    dingwei(obj) {
+    bulkDel(obj) {
+      console.log(obj);
+    },
+    bulkEdit(obj) {
+      console.log(obj);
+    },
+    propertyDetail(obj) {
+      console.log(obj);
+    },
+    propertyEdit({ scopeRow: { $index, row, _self } }) {
+      this.$router.push({
+        name: "addhouseproperty",
+        params: _.cloneDeep(row)
+      });
+      console.log(row);
+    },
+    propertyDel(obj) {
+      console.log(obj);
+    },
+    propertyLocation(obj) {
       console.log(obj);
     },
     search(...args) {
