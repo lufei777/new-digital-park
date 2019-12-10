@@ -12,7 +12,7 @@ import StatisAnalysis from './commonRouter/statisAnalysis'
 import SystemManage from './commonRouter/systemManage'
 import DeviceRecord from './commonRouter/deviceRecord'
 import TmpRouter from '../pages/commonProject/coms/tmpRouterBox'
-import DefaultPage from '../pages/digitalPark/defaultPage/index'
+import DefaultPage from '../pages/commonProject/defaultPage/index'
 
 import Collect from './commonRouter/collect'
 import DataReport from './commonRouter/dataReport'

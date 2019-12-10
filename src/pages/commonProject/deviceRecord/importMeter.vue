@@ -2,7 +2,7 @@
   <div class="import-meter radius-shadow">
     <div class="import-box">
       <span>批量导入设备</span>
-      <el-input type="file" />
+      <el-input type="file" @change="onFileChange" id="file" name="file" accept=".xlsx"/>
       <div class="operator-box">
         <el-button type="primary"  @click="onClickSureBtn">确定</el-button>
         <el-button type="default"  @click="goBack">返回</el-button>
@@ -20,6 +20,7 @@
     },
     data () {
       return {
+        formData:[]
       }
     },
     computed:{
@@ -30,7 +31,11 @@
       goBack(){
         history.go(-1)
       },
-      onClickSureBtn(){}
+      async onClickSureBtn(){
+        // await CommonApi.importDevice()
+      },
+      onFileChange(val){
+      }
     },
     mounted(){
     }

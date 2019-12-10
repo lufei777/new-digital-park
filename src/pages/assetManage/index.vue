@@ -137,13 +137,14 @@ export default {
   name: "AssetManage",
   components: { commonIndex },
   data() {
+    let menuData=JSON.parse(localStorage.menuList)
     return {
-      menuList: menuList,
+      menuList: menuData.childNode,
       menuConfig: {
         bgColor: "#394562",
         textColor: "#B7BAC4",
         isCollapse: false,
-        moduleName: "资产管理",
+        moduleName: menuData.name,
         moduleLogo: "iconzichanguanli"
       }
     };

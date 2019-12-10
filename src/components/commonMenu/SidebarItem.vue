@@ -1,9 +1,10 @@
 <template>
   <!--<div class="menu-item">-->
   <!--<template >-->
+  <!--:index="specialRoute?item.id + item.routeAddress:item.routeAddress"-->
   <el-menu-item
     v-if="_.isEmpty(item.childNode) || item.childNode.length == 0"
-    :index="specialRoute?item.id + item.routeAddress:item.routeAddress"
+    :index="item.id + item.routeAddress"
     :parentMenu="parentMenu"
   >
     <i v-if="item.icon" :class="['iconfont',item.icon]"></i>
@@ -14,7 +15,7 @@
   <el-submenu
     v-else
     :parentMenu="parentMenu"
-    :index="specialRoute?item.id + item.routeAddress:item.routeAddress"
+    :index="item.id + item.routeAddress"
     @click.native="onClickSubmenu(item,parentMenu)"
   >
     <template slot="title">

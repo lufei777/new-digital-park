@@ -160,12 +160,12 @@
     height: 100%;
     .left-type-tree{
       float: left;
-      width:25%;
+      /*width:25%;*/
       color:@white;
       background: #3a8ee6;
     }
     .right-content{
-      width: 75%;
+      /*width: 75%;*/
       padding:0 20px;
       box-sizing: border-box;
     }

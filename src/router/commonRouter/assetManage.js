@@ -3,6 +3,7 @@ import AssetMaintenance from '../../pages/assetManage/assetMaintenance'
 import AssetGroup from '../../pages/assetManage/assetGroup'
 import AssetType from '../../pages/assetManage/assetType'
 import AssetAdd from '../../pages/assetManage/addAsset'
+import DefaultPage from '../../pages/commonProject/defaultPage/index'
 export default [{
   path: '/assetManage',
   name: 'AssetManage',
@@ -29,5 +30,10 @@ export default [{
     name: 'AssetAdd',
     meta: { title: "资产编辑" },
     component: AssetAdd,
+  }, {
+    path: '/digitalPark/defaultPage',
+    name: 'DefaultPage',
+    component: DefaultPage,
+    meta: { title: "建设中" },
   }]
 }]

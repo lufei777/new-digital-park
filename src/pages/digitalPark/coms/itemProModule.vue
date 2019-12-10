@@ -53,6 +53,7 @@
     },
     data () {
       return {
+        menuTree:JSON.parse(localStorage.getItem('menuTree'))
       }
     },
     methods: {
@@ -117,6 +118,14 @@
          console.log(item)
       },
       onClickMoreBtn(){
+        console.log(this.menuTree)
+        this.menuTree[0].childNode.map((item)=>{
+          item.childNode.map((child)=>{
+             if(child.id==this.moduleData.menuId){
+               localStorage.setItem("menuList",JSON.stringify(child))
+             }
+          })
+        })
         let routeAddress = this.moduleData.routeAddress
         console.log(this.moduleData)
         if(routeAddress){
