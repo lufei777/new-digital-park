@@ -7,6 +7,7 @@
         :columnConfig="columnConfig"
         :allData="allData"
         :tableShowData="tableShowData"
+        :selectedData="selectedData"
       ></slot>
     </div>
 
@@ -43,6 +44,7 @@
         type="index"
         :index="uiConfig.showIndex.handler"
         width="37"
+        :selectable="_selectable"
       ></el-table-column>
 
       <!-- 正常列 -->
@@ -213,6 +215,7 @@ export default {
     return {
       topSlotName: "custom-top",
       operationSlotName: "operation",
+      selectedData: [], //表格当前多选数据
       allData: [], //保存数组原始数据，用来复原数据
       tableData: [], //表格传入数据，用作分页使用
       tableShowData: [], //表格实际展示数据
@@ -479,6 +482,14 @@ export default {
       this.uiConfig.pagination.handler &&
         this.uiConfig.pagination.handler(pageSize, currentPage, this);
     },
+    // 当前行是否可多选
+    _selectable: function(row, index) {
+      if (typeof this.tableMethods.selectable == "function") {
+        return this.tableMethods.selectable(row, index);
+      } else {
+        return true;
+      }
+    },
 
     /**
      * table触发方法
@@ -594,6 +605,7 @@ export default {
     },
     // 当选择项发生变化时触发该事件
     selectionChange(selection) {
+      this.selectedData = selection;
       if (this.tableMethods.selectionChange) {
         this.tableMethods.selectionChange(selection, this);
       }
@@ -618,7 +630,7 @@ export default {
     // 获取表格多选框选中数据
     getSelectedData() {
       //多选获取当前选中值
-      return this.$refs.dataBaseTable.selection;
+      return this.selectedData;
     },
     // 获取当前表格单击选中数据
     getCurrentRowData() {
