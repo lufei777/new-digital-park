@@ -62,16 +62,14 @@ axios.interceptors.response.use(
     // 最起码返回了响应头
     if (error.response) {
       let response = error.response;
-      let redirect = error.response.headers["X-SSO-Redirect"] || error.response.headers["x-sso-redirect"];
+      // let redirect = error.response.headers["X-SSO-Redirect"] || error.response.headers["x-sso-redirect"];
       // 响应头状态匹配
       switch (response.status) {
         case 401:
           router.push('/login');
           break;
-        default: break;
-      }
-      if (error.response && error.response.status == 401 && redirect) {
-        router.push('/login');
+        default:
+          break;
       }
     } else {
       if (!window.navigator.onLine) {
