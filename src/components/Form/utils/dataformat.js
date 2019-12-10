@@ -176,7 +176,11 @@ export const formInitVal = (list = []) => {
             ele.range ||
             ele.dataType === 'array'
         ) {
-            tableForm[ele.prop] = [];
+            if (ele.dataType === 'string') {
+                tableForm[ele.prop] = "";
+            } else {
+                tableForm[ele.prop] = [];
+            }
             if (ele.search) searchForm[ele.prop] = [];
         } else if (
             ['number', 'rate', 'slider'].includes(ele.type) ||
