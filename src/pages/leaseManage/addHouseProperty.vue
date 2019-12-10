@@ -8,9 +8,13 @@
         @submit="submit"
         @reset-change="resetChange"
       >
-        <template slot="zj" slot-scope="obj">
+        <template slot="housePrice" slot-scope="obj">
           <div>
-            <el-input style="width:75%;" v-model="model.zj" :placeholder="obj.column.placeholder"></el-input>
+            <el-input
+              style="width:75%;"
+              v-model="model.housePrice"
+              :placeholder="obj.column.placeholder"
+            ></el-input>
             <el-select style="width:24% !important;" v-model="model.dw">
               <el-option label="元/天" value="￥/day"></el-option>
               <el-option label="元/月" value="￥/month"></el-option>
@@ -23,6 +27,9 @@
             <el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>
           </div>
         </template>
+        <template slot-scope="scope" slot="menuBtn">
+          <el-button :size="scope.size" @click="back(scope)">返回</el-button>
+        </template>
       </miForm>
     </div>
   </div>
@@ -30,7 +37,7 @@
 <script>
 const space = [
   {
-    id: "group-0a783b6cdb7c49e5a2ca463996597647",
+    id: 1,
     name: "IT设备",
     pid: "0",
     level: 0,
@@ -41,7 +48,7 @@ const space = [
     delFlag: null,
     childNode: [
       {
-        id: "group-45016a1d644f43e3a2a40b9eba91ff1f",
+        id: 1,
         name: "笔记本电脑",
         pid: "group-0a783b6cdb7c49e5a2ca463996597647",
         level: 2,
@@ -52,7 +59,7 @@ const space = [
         delFlag: null,
         childNode: [
           {
-            id: "group-8e0b8a2d5f5b4c6ea0cd6c4e0cc73fe1",
+            id: 1,
             name: "新增节点",
             pid: "group-45016a1d644f43e3a2a40b9eba91ff1f",
             level: 3,
@@ -66,7 +73,7 @@ const space = [
         ]
       },
       {
-        id: "group-ee590fea885d4d848d80fa46b3bfac2c",
+        id: 1,
         name: "新增节点",
         pid: "group-0a783b6cdb7c49e5a2ca463996597647",
         level: 2,
@@ -80,7 +87,7 @@ const space = [
     ]
   },
   {
-    id: "group-207acaf6dff1408eaa33d0316ce18d38",
+    id: 1,
     name: "新增节点",
     pid: "0",
     level: 0,
@@ -91,7 +98,7 @@ const space = [
     delFlag: null,
     childNode: [
       {
-        id: "group-9d8a3632a77243bbaca7f3607d5e6703",
+        id: 1,
         name: "新增节点",
         pid: "group-207acaf6dff1408eaa33d0316ce18d38",
         level: 2,
@@ -103,7 +110,7 @@ const space = [
         childNode: []
       },
       {
-        id: "group-baacbd3341654d2fa6df23a304c178d6",
+        id: 1,
         name: "新增节点",
         pid: "group-207acaf6dff1408eaa33d0316ce18d38",
         level: 2,
@@ -117,7 +124,7 @@ const space = [
     ]
   },
   {
-    id: "group-2ec01debd145400a93241a4fe7ff1141",
+    id: 1,
     name: "新增节点",
     pid: "0",
     level: 0,
@@ -129,7 +136,7 @@ const space = [
     childNode: []
   },
   {
-    id: "group-6151b9652c0a4a6bbaacd3f926b65e34",
+    id: 1,
     name: "新增节点",
     pid: "0",
     level: 0,
@@ -141,7 +148,7 @@ const space = [
     childNode: []
   },
   {
-    id: "group-6cfb6d6484a94541a87743b5d9f32080",
+    id: 1,
     name: "新增节点",
     pid: "0",
     level: 0,
@@ -153,7 +160,7 @@ const space = [
     childNode: []
   },
   {
-    id: "group-7ad429c0a563439f9e613a34d5044fd9",
+    id: 1,
     name: "新增节点",
     pid: "0",
     level: 0,
@@ -165,7 +172,7 @@ const space = [
     childNode: []
   },
   {
-    id: "group-a2ab42dba36643cc8909063d6f9641ca",
+    id: 1,
     name: "新增节点",
     pid: "0",
     level: 0,
@@ -177,7 +184,7 @@ const space = [
     childNode: []
   },
   {
-    id: "group-a4316be9c60f48ea817bf223ccdc03dd",
+    id: 1,
     name: "新增节点",
     pid: "0",
     level: 0,
@@ -188,7 +195,7 @@ const space = [
     delFlag: null,
     childNode: [
       {
-        id: "group-3655e87fb17b4522bb44e2470839606c",
+        id: 1,
         name: "新增节点",
         pid: "group-a4316be9c60f48ea817bf223ccdc03dd",
         level: 2,
@@ -199,7 +206,7 @@ const space = [
         delFlag: null,
         childNode: [
           {
-            id: "group-6bae0e669c874277b7c3d5013a275592",
+            id: 1,
             name: "新增节点",
             pid: "group-3655e87fb17b4522bb44e2470839606c",
             level: 3,
@@ -210,7 +217,7 @@ const space = [
             delFlag: null,
             childNode: [
               {
-                id: "group-793e284e6e874658872766e16b5deaa2",
+                id: 1,
                 name: "新增节点",
                 pid: "group-6bae0e669c874277b7c3d5013a275592",
                 level: 4,
@@ -228,7 +235,7 @@ const space = [
     ]
   },
   {
-    id: "group-b902985a668543bb86a33edd371bab74",
+    id: 1,
     name: "新增节点",
     pid: "0",
     level: 0,
@@ -240,7 +247,7 @@ const space = [
     childNode: []
   },
   {
-    id: "group-e4cca11a11cf4466aad4e9b8765994ce",
+    id: 1,
     name: "A3大楼",
     pid: "0",
     level: 0,
@@ -251,7 +258,7 @@ const space = [
     delFlag: null,
     childNode: [
       {
-        id: "group-2368946ab299465099fcbf62690d5e6e",
+        id: 1,
         name: "一层",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: 1,
@@ -262,7 +269,7 @@ const space = [
         delFlag: null,
         childNode: [
           {
-            id: "group-755067b4928145f6b391667ea207e989",
+            id: 1,
             name: "新增节点",
             pid: "group-2368946ab299465099fcbf62690d5e6e",
             level: 3,
@@ -274,7 +281,7 @@ const space = [
             childNode: []
           },
           {
-            id: "group-9b88eeae633b4d10ab05f0270a310063",
+            id: 1,
             name: "101会议室",
             pid: "group-2368946ab299465099fcbf62690d5e6e",
             level: 2,
@@ -286,7 +293,7 @@ const space = [
             childNode: []
           },
           {
-            id: "group-deb8ce652a9a405b994e219bf1fd9195",
+            id: 1,
             name: "走廊",
             pid: "group-2368946ab299465099fcbf62690d5e6e",
             level: 2,
@@ -298,7 +305,7 @@ const space = [
             childNode: []
           },
           {
-            id: "group-eb2ef94e65b1410b8017c2b3cd69c4b7",
+            id: 1,
             name: "厨房",
             pid: "group-2368946ab299465099fcbf62690d5e6e",
             level: 2,
@@ -310,7 +317,7 @@ const space = [
             childNode: []
           },
           {
-            id: "group-f21e35788fde4d78880db4f6fed2cee8",
+            id: 1,
             name: "机房",
             pid: "group-2368946ab299465099fcbf62690d5e6e",
             level: 2,
@@ -324,7 +331,7 @@ const space = [
         ]
       },
       {
-        id: "group-450712573eb347b2a6d58a28b3e015cf",
+        id: 1,
         name: "test",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: null,
@@ -336,7 +343,7 @@ const space = [
         childNode: []
       },
       {
-        id: "group-5a24ce30ca5f44b08034e22567b62e6f",
+        id: 1,
         name: "三层",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: 1,
@@ -348,7 +355,7 @@ const space = [
         childNode: []
       },
       {
-        id: "group-67374f5706e643f5b800cdafcc529a22",
+        id: 1,
         name: "七层",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: 1,
@@ -360,7 +367,7 @@ const space = [
         childNode: []
       },
       {
-        id: "group-688a461b94ca4c8495a0e4b87a7afb01",
+        id: 1,
         name: "四层",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: 1,
@@ -372,7 +379,7 @@ const space = [
         childNode: []
       },
       {
-        id: "group-907e714c121a441d9f939d9c26175776",
+        id: 1,
         name: "二层",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: 1,
@@ -383,7 +390,7 @@ const space = [
         delFlag: null,
         childNode: [
           {
-            id: "group-4e668abbeaf84a5bb10a575a6dcd7f2c",
+            id: 1,
             name: "新增节点",
             pid: "group-907e714c121a441d9f939d9c26175776",
             level: 3,
@@ -397,7 +404,7 @@ const space = [
         ]
       },
       {
-        id: "group-a0e23c519db14f1ab0e8d9efdd887e2b",
+        id: 1,
         name: "五层",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: 1,
@@ -409,7 +416,7 @@ const space = [
         childNode: []
       },
       {
-        id: "group-b6711341244b4ca2a677fbfa9ebca592",
+        id: 1,
         name: "八层",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: 1,
@@ -421,7 +428,7 @@ const space = [
         childNode: []
       },
       {
-        id: "group-ec30d92610664ab1a5a6892ce2d706b8",
+        id: 1,
         name: "六层",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: 1,
@@ -433,7 +440,7 @@ const space = [
         childNode: []
       },
       {
-        id: "group-f280039cda8d41d5a74cf7baab643532",
+        id: 1,
         name: "test2",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: 2,
@@ -444,7 +451,7 @@ const space = [
         delFlag: null,
         childNode: [
           {
-            id: "group-0540adf4f7c14fbc8c7f30738d7c883b",
+            id: 1,
             name: "新增节点",
             pid: "group-f280039cda8d41d5a74cf7baab643532",
             level: 3,
@@ -478,6 +485,12 @@ export default {
         forms: [
           {
             type: "input",
+            prop: "houseId",
+            readonly: true,
+            display: false
+          },
+          {
+            type: "input",
             label: "房产编号",
             prop: "houseNumber",
             readonly: true,
@@ -494,7 +507,7 @@ export default {
           {
             type: "tree",
             label: "空间位置",
-            prop: "space",
+            prop: "spaceId",
             clearable: true,
             span: 12,
             dicData: space,
@@ -512,7 +525,7 @@ export default {
           {
             type: "radio",
             label: "是否可出租",
-            prop: "houseStatus",
+            prop: "isRent",
             dicData: [
               {
                 label: "是",
@@ -520,7 +533,7 @@ export default {
               },
               {
                 label: "否",
-                value: 0
+                value: 2
               }
             ],
             valueDefault: 1,
@@ -529,10 +542,10 @@ export default {
           },
           {
             type: "input",
-            rawtype: "number",
             label: "面积",
-            dataType: "number",
             prop: "houseArea",
+            rawtype: "number",
+            dataType: "number",
             append: "m²",
             clearable: true,
             span: 12
@@ -565,7 +578,7 @@ export default {
           {
             type: "input",
             label: "工程名称",
-            prop: "gcmc",
+            prop: "projectName",
             clearable: true,
             span: 12,
             row: true,
@@ -578,7 +591,7 @@ export default {
           {
             type: "textarea",
             label: "描述",
-            prop: "ms",
+            prop: "description",
             clearable: true,
             span: 12,
             maxlength: 255,
@@ -589,27 +602,49 @@ export default {
             type: "upload",
             listType: "picture-card",
             label: "房屋照片",
-            prop: "wuzp",
+            prop: "housePictureVOList",
             span: 24,
-            tip: "只能上传jpg/png文件，且不超过500kb",
-            action: "https://jsonplaceholder.typicode.com/posts/",
+            tip: "只能上传jpg/png文件。",
+            // action: "https://jsonplaceholder.typicode.com/posts/",
+            action: "/oaApi/image/upload",
+            accept: ["jpg", "jpeg", "png"],
+            props: {
+              label: "housePictureName",
+              value: "housePictureUrl"
+            },
             propsHttp: {
+              name: "fileName",
+              url: "fileUrl",
               res: "data"
             }
-            // accept: ["jpg", "png"],
-            // filesize: 500
           }
         ]
       }
     };
   },
-  mounted() {
-    this.model = this.$route.query;
+  created() {
+    Cookies.set("activeMenuIndex", this.$route.path);
+    if (this.$route.query || this.$route.params) {
+      console.log("params", this.$route.params);
+      this.model = { ...this.model, ...this.$route.params };
+    }
   },
   methods: {
     submit(model, hide) {
       console.log(model);
-      hide();
+      this.$axios
+        .post("/oaApi//house/addHouse", model)
+        .then(
+          res => {
+            console.log(res);
+          },
+          err => {
+            console.error(err);
+          }
+        )
+        .finally(msg => {
+          hide();
+        });
     },
     resetChange() {},
     search(...args) {
@@ -621,6 +656,9 @@ export default {
     clearForm(...args) {
       console.log("清空", ...args);
       this.$refs[this.leaseManageForm.ref].resetForm();
+    },
+    back() {
+      this.$router.back();
     }
   }
 };
