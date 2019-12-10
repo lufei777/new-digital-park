@@ -1,6 +1,10 @@
 <template>
   <div>
     <div class="form radius-shadow">
+      <span class="tip frist-tip flex-align">
+        <span class="icon"></span>
+        <span>{{pageConfig.title}}</span>
+      </span>
       <miForm
         :ref="leaseManageForm.ref"
         :options="leaseManageForm"
@@ -15,9 +19,10 @@
               v-model="model.housePrice"
               :placeholder="obj.column.placeholder"
             ></el-input>
-            <el-select style="width:24% !important;" v-model="model.dw">
-              <el-option label="元/天" value="￥/day"></el-option>
-              <el-option label="元/月" value="￥/month"></el-option>
+            <el-select style="width:24% !important;" v-model="model.priceType">
+              <template v-for="item in LeaseManageDic.PriceType">
+                <el-option :key="item.label" :label="item.label" :value="item.value"></el-option>
+              </template>
             </el-select>
           </div>
         </template>
@@ -468,13 +473,28 @@ const space = [
   }
 ];
 
+import { LeaseManageDic } from "@/utils/dic/leaseManage";
 import miForm from "@/components/Form";
+import leaseManageApi from "@/service/api/leaseManageApi";
+
+const apiConfig = {
+  add: {
+    title: "新增房产",
+    api: leaseManageApi.addHouse
+  },
+  edit: {
+    title: "编辑房产",
+    api: leaseManageApi.editHouse
+  }
+};
 
 export default {
   components: { miForm },
   data() {
     return {
-      model: {},
+      model: {
+        priceType: LeaseManageDic.PriceType[0].value
+      },
       leaseManageForm: {
         ref: "leaseManageForm",
         labelWidth: "100",
@@ -526,16 +546,7 @@ export default {
             type: "radio",
             label: "是否可出租",
             prop: "isRent",
-            dicData: [
-              {
-                label: "是",
-                value: 1
-              },
-              {
-                label: "否",
-                value: 2
-              }
-            ],
+            dicData: LeaseManageDic.isRent,
             valueDefault: 1,
             clearable: true,
             span: 12
@@ -619,29 +630,28 @@ export default {
             }
           }
         ]
-      }
+      },
+      LeaseManageDic,
+      pageConfig: apiConfig.add
     };
   },
   created() {
-    Cookies.set("activeMenuIndex", this.$route.path);
     if (this.$route.query || this.$route.params) {
-      console.log("params", this.$route.params);
-      this.model = { ...this.model, ...this.$route.params };
+      let params = this.$route.params;
+      if (!_.isEmpty(params.model)) {
+        this.pageConfig = apiConfig.edit;
+        this.model = { ...this.model, ...params.model };
+      }
     }
   },
   methods: {
-    submit(model, hide) {
-      console.log(model);
-      this.$axios
-        .post("/oaApi//house/addHouse", model)
-        .then(
-          res => {
-            console.log(res);
-          },
-          err => {
-            console.error(err);
-          }
-        )
+    async submit(model, hide) {
+      let res = await this.pageConfig
+        .api(model)
+        .then(res => {
+          console.log(res);
+          this.$router.back();
+        })
         .finally(msg => {
           hide();
         });
@@ -653,8 +663,7 @@ export default {
       });
       console.log("搜索", ...args);
     },
-    clearForm(...args) {
-      console.log("清空", ...args);
+    clearForm() {
       this.$refs[this.leaseManageForm.ref].resetForm();
     },
     back() {
@@ -673,5 +682,19 @@ export default {
 .form {
   margin-bottom: 20px;
   padding-bottom: 0;
+  .tip {
+    margin: 20px 0;
+    .icon {
+      width: 4px;
+      height: 16px;
+      background: @mainBgColor;
+      border-radius: 2px;
+      margin-right: 10px;
+    }
+    span {
+      font-size: 16px;
+      color: @mainBgColor;
+    }
+  }
 }
 </style>

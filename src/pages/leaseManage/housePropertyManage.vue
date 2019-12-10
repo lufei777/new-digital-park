@@ -156,13 +156,18 @@ export default {
             prop: "houseStatus",
             label: "房产状态",
             formatter: function(row, column) {
-              let val = row[column.property];
-              return LeaseManageDic.HouseStatus.forEach(item => {
-                console.log(item, val);
-                if (item.value === val) {
-                  return item.label;
-                }
+              let HouseStatus = LeaseManageDic.HouseStatus;
+              let rowValue = row[column.property];
+              let res = _.find(HouseStatus, (cur, key, obj) => {
+                return cur.value === rowValue;
               });
+              return res ? res.label : "";
+              /* if (value === HouseStatus.Rented.value) {
+                return HouseStatus.Rented.label;
+              }
+              if (value === HouseStatus.BeRent.value) {
+                return HouseStatus.BeRent.label;
+              } */
             }
           },
           {
@@ -195,7 +200,7 @@ export default {
     resetChange() {},
     addedProperty(obj) {
       this.$router.push({
-        name: "addhouseproperty"
+        name: "editHouseProperty"
       });
     },
     bulkImport(obj) {
@@ -212,8 +217,10 @@ export default {
     },
     propertyEdit({ scopeRow: { $index, row, _self } }) {
       this.$router.push({
-        name: "addhouseproperty",
-        params: _.cloneDeep(row)
+        name: "editHouseProperty",
+        params: {
+          model: _.cloneDeep(row)
+        }
       });
       console.log(row);
     },
