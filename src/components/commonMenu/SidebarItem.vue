@@ -58,6 +58,8 @@ export default {
   },
   methods: {
     onClickSubmenu(item, menuList) {
+      Cookies.set("moduleType", 2);
+      Cookies.set("activeMenuIndex", item.childNode[0].id+item.routeAddress);
       // 获取level = 2的菜单列表
       if (!_.isEmpty(menuList)) {
         localStorage.setItem("menuList", JSON.stringify(menuList));
@@ -66,9 +68,8 @@ export default {
         if (item.level == 1) {
           return;
         } else {
-          Cookies.set("moduleType", 2);
           if (item.level == 2) {
-            localStorage.setItem("menuList", JSON.stringify(item.childNode));
+            localStorage.setItem("menuList", JSON.stringify(item));
           } else {
             let firstMenu = this.menuList.find(first => {
               return first.id == item.firstMenuId;
@@ -77,7 +78,6 @@ export default {
               return second.id == item.secondMenuId;
             });
             localStorage.setItem("menuList", JSON.stringify(secondMenu));
-            Cookies.set("activeMenuIndex", item.routeAddress);
           }
         }
       }

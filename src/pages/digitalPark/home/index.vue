@@ -45,7 +45,7 @@
               v-for="(item,index) in productList"
               :key="index"
               @click="onClickItemProduct(item)"
-              :style="{backgroundImage:'url('+item.productBgUrl+')'}"
+              :style="getItemBg(item)"
             >
               <span>{{item.name}}</span>
             </li>
@@ -186,7 +186,7 @@ export default {
       return {
         backgroundImage:
           "url(" +
-          require("../../../../static/image/digitalPark/" + item.id + ".png") +
+          require("../../../../static/image/digitalPark/" + item.productBgUrl + ".png") +
           ")"
       };
     },
