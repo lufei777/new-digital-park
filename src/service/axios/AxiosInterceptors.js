@@ -52,7 +52,7 @@ axios.interceptors.response.use(
         type: 'error'
       });
       console.error(res);
-      return Promise.reject(res);
+      return;//Promise.reject(res);
     } else {
       // 兼容旧接口
       return res;
