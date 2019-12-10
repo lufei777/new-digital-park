@@ -16,7 +16,9 @@
           <slot name="navOperator" :style="{float: 'right'}"></slot>
         </div>
       </div>
-      <slot name="content"></slot>
+      <transition name="fade-transform" mode="out-in" appear>
+        <slot name="content"></slot>
+      </transition>
     </div>
   </div>
 </template>

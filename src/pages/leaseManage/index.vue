@@ -21,8 +21,8 @@ const MenuList = [
         routeAddress: "/leasemanage/housepropertymanage"
       },
       {
-        name: "添加房产",
-        routeAddress: "/leasemanage/addhouseproperty"
+        name: "编辑房产",
+        routeAddress: "/leasemanage/editHouseProperty"
       }
     ]
   },

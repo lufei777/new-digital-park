@@ -9,17 +9,6 @@ export const LeaseManageDic = {
             value: 2
         }
     ],
-    // 房屋出租状态
-    HouseStatus: [
-        {
-            label: '已租',
-            value: 1
-        },
-        {
-            label: '待租',
-            value: 2
-        }
-    ],
     // 总价单位
     PriceType: [
         {
@@ -30,5 +19,16 @@ export const LeaseManageDic = {
             label: '元/天',
             value: 2
         }
-    ]
+    ],
+    HouseStatus: {
+        // 房屋出租状态
+        Rented: {
+            label: '已租',
+            value: 1
+        },
+        BeRent: {
+            label: '待租',
+            value: 2
+        }
+    }
 }
