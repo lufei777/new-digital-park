@@ -1,41 +1,25 @@
 import axiosOrigin from "axios";
 import router from '@/router'
-// import { Loading } from 'element-ui'
-// 服务端不需loading
 const Message = require("element-ui").Message
-const Loading = require("element-ui").Loading
 
-let loadingInstance = "";
-let loadingCount = 0;
-
-let resetLoading = function () {
-  loadingInstance && loadingInstance.close();
-  loadingInstance = "";
-  loadingCount = 0;
+var config = {
+  // baseURL:"",
+  timeout: 10000
 };
-
-var config = {};
-
-// config.baseURL ='/api'
-
 var axios = axiosOrigin.create(config);
 
 axios.defaults.headers.get["Content-Type"] = "application/x-www-form-urlencoded";
 axios.defaults.headers.post["Content-Type"] = "application/json";
-let redirectHref = sessionStorage.getItem('logout')?location.origin+'/#/digitalPark/homePage':window.location.href
+
+let redirectHref = sessionStorage.getItem('logout') ? location.origin + '/#/digitalPark/homePage' : window.location.href
 axios.interceptors.request.use(
   function (config) {
     if (sessionStorage.token) {
       config.headers['X-SSO-Token'] = sessionStorage.token;
     }
     config.headers['X-Requested-With'] = 'XMLHttpRequest';
-    config.headers['X-Requested-InPage'] =redirectHref;
-    //  try {
-    //   loadingInstance = Loading.service({});
-    //   loadingCount++;
-    // } catch (err) {
-    //   resetLoading();
-    // }
+    config.headers['X-Requested-InPage'] = redirectHref;
+
     return config;
   },
   function (error) {
@@ -44,54 +28,60 @@ axios.interceptors.request.use(
 );
 
 axios.interceptors.response.use(
-  async function (response) {
-    // loading处理
-    //  try {
-    //   loadingCount--;
-    //   if (loadingCount == 0) loadingInstance.close();
-    //   setTimeout(function () {
-    //     resetLoading();
-    //   }, 5000);
-    // } catch (err) {
-    //   resetLoading();
-    // }
-
-    // Do something with response data
+  function (response) {
+    // 服务端打印日志
     if (response && process.server && response.config) {
-      // 服务端打印日志
-      console.log("=====================seperate line=====================");
+      console.log("======seperate line======");
       console.log("axios from server url:", response.config.url);
     }
-    let data = response.data
-    if (data.successful) {
+    // 结果处理
+    let res = response.data;
+    if (res.successful) {
+      // 服务端打印日志
       if (process.server) {
-        // 服务端打印日志
-        console.log("response:", JSON.stringify(data));
+        console.log("response:", res);
       }
-      if (typeof data == 'undefined') return "";
-      return data.data;
-    } else if (!data.successful && data.code) {
-      // 错误提示
-      console.error(data);
-      if(router.currentRoute.path=='/login') return;
+      // 如果没有则返回空对象
+      if (typeof res == 'undefined') return {};
+      return res.data;
+    } else if (res.code) {
+      // 如果是登陆页面，则不进行message提示
+      if (router.currentRoute.path == '/login') return;
       Message({
-        message: data.message || data.errorMessage,
+        message: `${res.message || res.errorMessage}，错误代码:${res.code}`,
         type: 'error'
       });
-      return;
+      console.error(res);
+      return Promise.reject(res);
     } else {
-      return data   //兼容旧接口
+      // 兼容旧接口
+      return res;
     }
   },
   function (error) {
-    try {
-      let redirect = error.response.headers["X-SSO-Redirect"] || error.response.headers["x-sso-redirect"];
-      if (error.response && error.response.status == 401 && redirect) {
-           router.push('/login');
+    // 最起码返回了响应头
+    if (error.response) {
+      let response = error.response;
+      // let redirect = error.response.headers["X-SSO-Redirect"] || error.response.headers["x-sso-redirect"];
+      // 响应头状态匹配
+      switch (response.status) {
+        case 401:
+          router.push('/login');
+          break;
+        default:
+          break;
       }
-      // resetLoading();
-      return Promise.reject(error);
-    } catch (err) { }
+    } else {
+      if (!window.navigator.onLine) {
+        // 断网处理
+        Message({
+          message: `网络好像出了点问题~`,
+          type: 'error'
+        });
+      }
+    }
+
+    return Promise.reject(error);
   }
 );
 
