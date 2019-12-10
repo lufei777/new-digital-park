@@ -13,8 +13,8 @@ const MenuList = [
   {
     id: 1,
     name: "房产管理",
-    routeAddress: "",
     icon: "iconwodezichan",
+    routeAddress: "/leasemanage/housepropertymanage",
     childNode: [
       {
         name: "租赁管理",
@@ -55,7 +55,7 @@ export default {
         bgColor: "#394562",
         textColor: "#B7BAC4",
         isCollapse: false,
-        activeIndex: "",
+        activeIndex: MenuList[0].routeAddress,
         moduleName: "租赁管理",
         moduleLogo: "iconnengyuanguanli"
       }
