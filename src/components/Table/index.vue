@@ -56,7 +56,6 @@
           :width="col.width"
           :fixed="col.fixed"
           :sortable="col.sortable || false"
-          :formatter="col.formatter || _globalColumnFormatter"
           :align="col.align || 'left'"
           show-overflow-tooltip
         >
