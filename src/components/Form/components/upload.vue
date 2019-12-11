@@ -17,7 +17,7 @@
       :file-list="fileList"
       :drag="drag"
       :readonly="readonly"
-      :show-file-list="(isPictureImg || isLimit)?false:showFileList"
+      :show-file-list="isPictureImg?false:showFileList"
       :on-change="handleChange"
       :on-exceed="handleExceed"
       @click.native="handleClick"
@@ -173,14 +173,6 @@ export default {
         return accept.substring(0, accept.length);
       }
       return "*";
-    },
-    // 是否已经达到上传数量限制
-    isLimit() {
-      if (typeof this.limit === "number") {
-        return this.limit === this.fileList.length;
-      } else {
-        return false;
-      }
     }
   },
   created() {},
@@ -349,7 +341,7 @@ export default {
       );
     },
     handlePictureCardPreview(file) {
-      if (this.disabled) return;
+      // if (this.disabled) return;
       //判断是否为图片
       this.dialogImageUrl = file.url;
       if (!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)/.test(file.url)) {
