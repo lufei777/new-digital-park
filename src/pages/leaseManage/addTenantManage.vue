@@ -1,26 +1,31 @@
 <template>
   <div class="tenant-manage">
     <div class="condition-box radius-shadow">
-      <miForm
-        :ref="addTenantManageForm.ref"
-        :options="addTenantManageForm"
-        v-model="model"
-        @submit="submit"
-        @reset-change="resetChange"
-      >
-        <template slot="btn" slot-scope="obj">
-          <div>
-            <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">保存</el-button>
-            <el-button :disabled="obj.disabled" @click="back(obj)">返回</el-button>
-          </div>
-        </template>
-        <template slot="licenseImageText">
-          <h3>营业执照/企业经营许可证</h3>
-        </template>
-        <template slot="otherImageText">
-          <h3>其他证明</h3>
-        </template>
-      </miForm>
+      <div class="tenant-box">
+        <miForm
+          :ref="addTenantManageForm.ref"
+          :options="addTenantManageForm"
+          v-model="model"
+          @submit="submit"
+          @reset-change="resetChange"
+        >
+          <!-- <template slot="btn" slot-scope="obj">
+            <div>
+              <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">保存</el-button>
+              <el-button :disabled="obj.disabled" @click="back(obj)">返回</el-button>
+            </div>
+          </template> -->
+          <template slot-scope="scope" slot="menuBtn">
+            <el-button :size="scope.size" @click="back(scope)">返回</el-button>
+          </template>
+          <template slot="licenseImageText">
+            <h3>营业执照/企业经营许可证</h3>
+          </template>
+          <template slot="otherImageText">
+            <h3>其他证明</h3>
+          </template>
+        </miForm>
+      </div>
     </div>
   </div>
 </template>
@@ -34,39 +39,30 @@ export default {
   //
   data() {
     let validID = (rule, value, callback) => {
-      if (value == "" || value == undefined) {
+      let reg = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+      if (reg.test(value)) {
         callback();
       } else {
-        let reg = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
-        if (!reg.test(value)) {
-          callback(new Error("身份证号码不正确"));
-        }
+        callback(new Error("请输入正确的身份证号"));
       }
     };
     let telephone = (rule, value, callback) => {
-      if (value == "" || value == undefined) {
+      let reg = /^1[3|4|5|7|8]\d{9}$/;
+      if (reg.test(value)) {
         callback();
       } else {
-        let reg = /^1[3|4|5|7|8]\d{9}$/;
-        if (!reg.test(value)) {
-          callback(new Error("电话号码不正确"));
-        }
+        callback(new Error("请输入正确的电话号码"));
       }
     };
-    
     return {
-      model: {
-        // tenantNumber: "",
-        tenantName: "",
-        contactMethod: "",
-        idCard: "",
-      },
+      model: {},
       addTenantManageForm: {
         ref: "addTenantManageForm",
-        labelWidth: "100",
+        labelWidth: "150",
         size: "medium",
-        menuPosition: "right",
-        submitBtn: false,
+        menuPosition: "left",
+        submitText: "保存",
+        // submitBtn: false,
         emptyBtn: false,
         forms: [
           {
@@ -75,8 +71,7 @@ export default {
             prop: "tenantNumber",
             clearable: true,
             readonly: true,
-            // valueDefault: "ZH-1911281000009819",
-            span: 6,
+            span: 12,
             tip: "该编号自动生成",
             rules: {
               required: true,
@@ -90,30 +85,30 @@ export default {
             prop: "tenantName",
             placeholder: "请输入",
             clearable: true,
-            span: 6,
+            span: 12,
             rules: {
               required: true,
               message: "请输入租户名称",
               trigger: "blur"
             }
           },
-          {
-            prop: "",
-            formslot: true,
-            span: 12
-          },
+          // {
+          //   prop: "",
+          //   formslot: true,
+          //   span: 12
+          // },
           {
             type: "input",
             label: "联系方式",
-            prop: "contactMethod",
-            placeholder: "请输入",
+            prop: "telephone",
+            placeholder: "请输入电话号码",
             clearable: true,
-            span: 6,
+            span: 12,
             rules: {
               required: true,
-              validator:telephone,
-              message: "电话号码不正确",
-              trigger: "blur"
+              validator: telephone,
+              message: "请输入正确的电话号码",
+              trigger: "change"
             }
           },
 
@@ -121,14 +116,14 @@ export default {
             type: "input",
             label: "身份证号",
             prop: "idCard",
-            placeholder: "请输入",
+            placeholder: "请输入身份证号",
             clearable: true,
-            span: 6,
+            span: 12,
             rules: {
               required: true,
-              validator:validID,
-              message: "身份证号码不正确",
-              trigger: "blur"
+              validator: validID,
+              message: "请输入正确的身份证号",
+              trigger: "change"
             }
           },
           {
@@ -141,7 +136,9 @@ export default {
             type: "upload",
             listType: "picture-card",
             label: "",
-            prop: "licenseImage",
+            prop: "businessLicense",
+            dataType: "string",
+            limit: 1,
             span: 24,
             action: "/oaApi/image/upload",
             accept: ["jpg", "jpeg", "png"],
@@ -165,8 +162,10 @@ export default {
             type: "upload",
             listType: "picture-card",
             label: "",
-            prop: "otherImage",
+            prop: "otherProof",
             span: 24,
+            dataType: "string",
+            limit: 1,
             action: "/oaApi/image/upload",
             accept: ["jpg", "jpeg", "png"],
             props: {
@@ -179,12 +178,6 @@ export default {
               res: "data"
             }
           },
-          {
-            prop: "btn",
-            span: 6,
-            pull: 6,
-            formslot: true
-          }
         ]
       }
     };
@@ -194,51 +187,96 @@ export default {
       return {
         tenantNumber: this.model.tenantNumber,
         tenantName: this.model.tenantName,
-        telephone: this.model.contactMethod,
+        telephone: this.model.telephone,
         idCard: this.model.idCard,
-        businessLicense: "",
-        otherProof: ""
+        businessLicense: this.model.businessLicense,
+        otherProof: this.model.otherProof
       };
+    },
+    tenantId() {
+      return this.$route.query.tenantId;
     }
   },
   methods: {
-    submit() {},
+    async submit(model, hide) {
+      console.log('mdel',model)
+      let res;
+      let params = {
+        ...model,
+        ...{
+          tenantId: this.tenantId
+        }
+      };
+      if (this.tenantId) {
+        res = await DigitalParkApi.editTenant(params);
+      } else {
+        res = await DigitalParkApi.addTenant(model);
+      }
+      if (res) {
+        this.$message({
+          type: "success",
+          message: res
+        });
+      }
+      this.$router.go(-1);
+    },
     resetChange() {},
     async search(...args) {
       this.$refs[this.addTenantManageForm.ref].getFormModel(res => {
         console.log("model", res);
       });
       console.log("搜索", ...args);
-      let res = await DigitalParkApi.addTenant(this.commonParams);
-      console.log(78788, res);
     },
     back() {
       this.$router.go(-1);
-    },
-    async addTenant() {
-      let res = await DigitalParkApi.addTenant(this.commonParams);
-      console.log(78788, res);
     },
     async createTenNum() {
       let res = await DigitalParkApi.createTenNum({
         numType: 2
       });
       this.model.tenantNumber = res;
+    },
+    async tenantDetail() {
+      let res = await DigitalParkApi.tenantDetail({
+        tenantId: this.tenantId
+      });
+      this.model.tenantNumber = res.tenantNumber;
+      this.model.tenantName = res.tenantName;
+      this.model.telephone = res.telephone;
+      this.model.idCard = res.idCard;
+      if (res.businessLicense) {
+        this.model.businessLicense = res.businessLicense;
+      }
+      if (res.otherProof) {
+        this.model.otherProof = res.otherProof;
+      }
     }
   },
   mounted() {
     this.createTenNum();
+    if (this.tenantId) {
+      this.tenantDetail();
+    }
   }
 };
 </script>
 
 <style lang="less">
 .tenant-manage {
+  // .tenant-manage-box {
+  //   width: 60%;
+  // }
   .condition-box {
     margin-bottom: 20px;
     background: @white;
     padding: 20px;
     // background: pink;
+    .tenant-box {
+      width: 50%;
+      margin-top: 20px;
+      // background: pink;
+      margin-left: 25%;
+    }
   }
   .tenant-manage-table {
     background: @white;
