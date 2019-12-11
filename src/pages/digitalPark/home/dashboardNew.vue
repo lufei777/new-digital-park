@@ -294,19 +294,32 @@
           if(this.hideHeader) return ; //配置页不进行后续操作
           let routeAddress = item.routeAddress;
           localStorage.setItem('menuList',JSON.stringify(item.childNode))
-          if(item.name=="综合安防" ||item.name=="机房动环" || item.name=="智能建筑"){//目前先写死
-            Client.SkipToSigleBuild(item.name);
-            return ;
-          }
-          if(routeAddress){
-            // 如果带有@字符，则跳转旧项目
-            if(routeAddress.indexOf('@') != -1){
-              CommonFun.loadOldPage(item);
-            }else{
-              this.$router.push(item.routeAddress+'?type=1');
+          if (
+            item.name == "安防管理" ||
+            item.name == "机房动环" ||
+            item.name == "智能建筑" ||
+            item.name == "建筑监控" ||
+            item.name == "消防管理"
+          ) {
+            let clientName = item.name;
+            if (item.name === "安防管理") {
+              clientName = "综合安防";
             }
-          }else{
-            this.$router.push('/digitalPark/defaultPage?type=1')
+            //目前先写死
+            Client.SkipToSigleBuild(clientName);
+            return;
+          }
+          if (routeAddress) {
+            // 如果带有@字符，则跳转旧项目
+            if (routeAddress.indexOf("@") != -1) {
+              CommonFun.loadOldPage(item);
+            } else {
+              setTimeout(() => {
+                this.$router.push(item.routeAddress + "?type=2");
+              }, 500);
+            }
+          } else {
+            this.$router.push("/digitalPark/defaultPage?type=2");
           }
           Cookies.set('moduleType',1)
         },
