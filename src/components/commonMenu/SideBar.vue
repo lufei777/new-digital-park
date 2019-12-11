@@ -73,7 +73,7 @@ export default {
         ? ""
         : Cookies.get("activeMenuIndex") ||
             this.menuConfig.activeIndex ||
-            this.menuList[0].routeAddress;
+            this.menuList[0].id+this.menuList[0].routeAddress;
     }
   },
   watch: {
@@ -85,7 +85,7 @@ export default {
   },
   methods: {
     handleSelect(key, keyPath) {
-      // console.log(key,keyPath)
+      console.log(key,keyPath)
       if (this.menuConfig.specialRoute) {
         let firstMenu = this.menuList.find(first => {
           return first.id == keyPath[0];
@@ -110,6 +110,7 @@ export default {
       }
     },
     loadPage(key) {
+      Cookies.set("activeMenuIndex", key);
       if (key.indexOf("null") != -1) {
         this.$router.push("/digitalPark/defaultPage");
       } else if (key.indexOf("@") != -1) {

@@ -1,5 +1,6 @@
 <template>
-  <div v-loading.lock="loading">
+  <!-- v-loading.lock="loading" -->
+  <div>
     <el-upload
       :class="{'picture-list':listType=='picture-img'}"
       :action="action"
@@ -321,10 +322,11 @@ export default {
     },
     setVal() {
       let result = "";
+      if (this.isPictureImg) {
+        result = this.text[0];
+      }
       if (this.isString) {
         result = this.text.join(",");
-      } else if (this.isPictureImg) {
-        result = this.text[0];
       } else {
         result = this.text;
       }
@@ -339,7 +341,7 @@ export default {
       );
     },
     handlePictureCardPreview(file) {
-      if (this.disabled) return;
+      // if (this.disabled) return;
       //判断是否为图片
       this.dialogImageUrl = file.url;
       if (!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)/.test(file.url)) {

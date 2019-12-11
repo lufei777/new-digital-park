@@ -6,7 +6,6 @@
       status-icon
       :rules="formRules"
       :model="model"
-      :disabled="parentOption.disabled || allDisabled"
       :size="controlSize"
       :label-width="setPx(parentOption.labelWidth,90)"
       :label-position="parentOption.labelPosition"
@@ -43,7 +42,7 @@
                 :show-message="column.showMessage"
                 :inline-message="column.inlineMessage"
                 :size="column.size || controlSize"
-                :label-width="column.width"
+                :label-width="setPx(column.width,parentOption.labelWidth || 90)"
               >
                 <el-tooltip
                   :disabled="!column.tip || column.type==='upload'"
@@ -51,14 +50,14 @@
                   :placement="column.tipPlacement"
                 >
                   <slot
+                    v-if="column.formslot"
+                    :name="column.prop"
                     :value="model[column.prop]"
                     :column="column"
                     :label="model['$'+column.prop]"
                     :size="column.size || controlSize"
-                    :disabled="column.disabled"
+                    :disabled="column.disabled || allDisabled"
                     :dic="DIC[column.prop]"
-                    :name="column.prop"
-                    v-if="column.formslot"
                   ></slot>
                   <form-temp
                     v-else
@@ -67,21 +66,28 @@
                     :dic="DIC[column.prop]"
                     :upload-before="uploadBefore"
                     :upload-after="uploadAfter"
-                    :disabled="column.disabled"
+                    :disabled="column.disabled || allDisabled"
                   >
                     <!-- 自定义表单里内容 -->
                     <template
                       :slot="`${column.prop}Type`"
-                      slot-scope="{item,labelKey,valueKey}"
+                      slot-scope="{item,labelkey,valuekey}"
                       v-if="column.typeslot"
                     >
                       <slot
                         :name="`${column.prop}Type`"
                         :size="column.size || controlSize"
                         :item="item"
-                        :labelKey="labelKey"
-                        :valueKey="valueKey"
+                        :labelkey="labelkey"
+                        :valuekey="valuekey"
                       ></slot>
+                    </template>
+                    <!-- input的slot处理 -->
+                    <template :slot="column.prependslot">
+                      <slot :name="column.prependslot" :disabled="column.disabled || allDisabled"></slot>
+                    </template>
+                    <template :slot="column.appendslot">
+                      <slot :name="column.appendslot" :disabled="column.disabled || allDisabled"></slot>
                     </template>
                   </form-temp>
                 </el-tooltip>
@@ -97,7 +103,6 @@
             ></el-col>
           </template>
         </div>
-
         <el-col :span="24" v-if="vaildData(parentOption.menuBtn,true)">
           <el-form-item>
             <!-- 菜单按钮组 -->
@@ -406,6 +411,22 @@ export default {
           this.formCreate = false;
         }
       }
+    },
+    "this.options.disabled": {
+      immediate: true,
+      handler() {
+        if (typeof this.options.disabled === "boolean") {
+          this.allDisabled = this.options.disabled;
+        }
+      }
+    },
+    disabled: {
+      immediate: true,
+      handler() {
+        if (typeof this.disabled === "boolean") {
+          this.allDisabled = this.disabled;
+        }
+      }
     }
   }
 };
@@ -442,6 +463,11 @@ export default {
   }
   .form_menu-right {
     text-align: right;
+  }
+  .el-input-number__decrease,
+  .el-input-number__increase {
+    border: none !important;
+    background: none;
   }
 }
 </style>

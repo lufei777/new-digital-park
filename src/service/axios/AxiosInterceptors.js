@@ -51,8 +51,7 @@ axios.interceptors.response.use(
         message: `${res.message || res.errorMessage}，错误代码:${res.code}`,
         type: 'error'
       });
-      console.error(res);
-      return;//Promise.reject(res);
+      return Promise.reject(res);
     } else {
       // 兼容旧接口
       return res;

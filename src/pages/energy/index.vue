@@ -23,7 +23,6 @@ export default {
         bgColor: "#394562",
         textColor: "#B7BAC4",
         isCollapse: false,
-        activeIndex: localStorageMenuList.routeAddress,
         moduleName: localStorageMenuList.name,
         moduleLogo: "iconnengyuanguanli"
       }

@@ -1,7 +1,6 @@
 import DigitalHomePage from '../pages/digitalPark/home/index'
 import DashBoardHomePage from '../pages/digitalPark/home/dashboardNew'
 import ModuleConfigure from '../pages/digitalPark/moduleConfigure/index'
-import DefaultPage from '../pages/digitalPark/defaultPage/index'
 import Login from '../pages/digitalPark/login/index'
 import HelloWorld from '../pages/helloWorld/helloWorld'
 export default [{
@@ -26,10 +25,6 @@ export default [{
   path: '/digitalPark/moduleConfigure',
   name: 'ModuleConfigure',
   component: ModuleConfigure,
-},{
-  path: '/digitalPark/defaultPage',
-  name: 'DefaultPage',
-  component: DefaultPage,
 },{
   path:'/test',
   name:'HelloWorld',

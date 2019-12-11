@@ -1,9 +1,10 @@
 <template>
   <!--<div class="menu-item">-->
   <!--<template >-->
+  <!--:index="specialRoute?item.id + item.routeAddress:item.routeAddress"-->
   <el-menu-item
     v-if="_.isEmpty(item.childNode) || item.childNode.length == 0"
-    :index="specialRoute?item.id + item.routeAddress:item.routeAddress"
+    :index="item.id + item.routeAddress"
     :parentMenu="parentMenu"
   >
     <i v-if="item.icon" :class="['iconfont',item.icon]"></i>
@@ -14,7 +15,7 @@
   <el-submenu
     v-else
     :parentMenu="parentMenu"
-    :index="specialRoute?item.id + item.routeAddress:item.routeAddress"
+    :index="item.id + item.routeAddress"
     @click.native="onClickSubmenu(item,parentMenu)"
   >
     <template slot="title">
@@ -57,6 +58,8 @@ export default {
   },
   methods: {
     onClickSubmenu(item, menuList) {
+      Cookies.set("moduleType", 2);
+      Cookies.set("activeMenuIndex", item.childNode[0].id+item.routeAddress);
       // 获取level = 2的菜单列表
       if (!_.isEmpty(menuList)) {
         localStorage.setItem("menuList", JSON.stringify(menuList));
@@ -65,9 +68,8 @@ export default {
         if (item.level == 1) {
           return;
         } else {
-          Cookies.set("moduleType", 2);
           if (item.level == 2) {
-            localStorage.setItem("menuList", JSON.stringify(item.childNode));
+            localStorage.setItem("menuList", JSON.stringify(item));
           } else {
             let firstMenu = this.menuList.find(first => {
               return first.id == item.firstMenuId;
@@ -76,7 +78,6 @@ export default {
               return second.id == item.secondMenuId;
             });
             localStorage.setItem("menuList", JSON.stringify(secondMenu));
-            Cookies.set("activeMenuIndex", item.routeAddress);
           }
         }
       }
