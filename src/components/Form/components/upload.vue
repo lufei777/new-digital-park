@@ -1,5 +1,6 @@
 <template>
-  <div v-loading.lock="loading">
+  <!-- v-loading.lock="loading" -->
+  <div>
     <el-upload
       :class="{'picture-list':listType=='picture-img'}"
       :action="action"
@@ -16,7 +17,7 @@
       :file-list="fileList"
       :drag="drag"
       :readonly="readonly"
-      :show-file-list="isPictureImg?false:showFileList"
+      :show-file-list="(isPictureImg || isLimit)?false:showFileList"
       :on-change="handleChange"
       :on-exceed="handleExceed"
       @click.native="handleClick"
@@ -172,6 +173,14 @@ export default {
         return accept.substring(0, accept.length);
       }
       return "*";
+    },
+    // 是否已经达到上传数量限制
+    isLimit() {
+      if (typeof this.limit === "number") {
+        return this.limit === this.fileList.length;
+      } else {
+        return false;
+      }
     }
   },
   created() {},
@@ -321,10 +330,11 @@ export default {
     },
     setVal() {
       let result = "";
+      if (this.isPictureImg) {
+        result = this.text[0];
+      }
       if (this.isString) {
         result = this.text.join(",");
-      } else if (this.isPictureImg) {
-        result = this.text[0];
       } else {
         result = this.text;
       }
