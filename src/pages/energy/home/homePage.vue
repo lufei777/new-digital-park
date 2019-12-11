@@ -183,17 +183,17 @@ export default {
       rankType: "elecAndWaterSum",
       rank: "asc",
       homePageTableConfig: {
-        ref:"homePageTable",
-        data:[],
-        columnConfig:[],
-         uiConfig: {
+        ref: "homePageTable",
+        data: [],
+        columnConfig: [],
+        uiConfig: {
           height: "auto", //"", //高度
           pagination: {
             //是否分页，分页是否自定义
             layout: "total,->, prev, pager, next, jumper",
             pageSizes: [10, 20, 50],
             handler(pageSize, currentPage, table) {
-               _this.handleCurrentChange(currentPage)
+              _this.handleCurrentChange(currentPage);
             }
           }
         },
@@ -225,12 +225,13 @@ export default {
       this.createCharts(res);
     },
     async rankingList() {
-      let labelList = [{ label: "排名", prop: "xulie", sortable: false },
+      let labelList = [
+        { label: "排名", prop: "xulie", sortable: false },
         { label: "建筑楼层", prop: "floor", sortable: false },
         { label: "综合耗能", prop: "elecAndWaterSum", sortable: "custom" },
         { label: "总用电量", prop: "elecSum", sortable: "custom" },
         { label: "照明用电", prop: "zmElec", sortable: "custom" },
-        { label: "空调用电", prop: "zmElec", sortable: "custom" },
+        { label: "空调用电", prop: "zmElec", sortable: "custom" }
         // { label: "特殊用电", prop: "tsElec", sortable: "custom" },
         // { label: "其他用电", prop: "tsElec", sortable: "custom" },
         // { label: "动力用电", prop: "dlElec", sortable: "custom" },
@@ -240,7 +241,7 @@ export default {
         // { label: "空调用水", prop: "ktWater", sortable: "custom" },
         // { label: "消防用水", prop: "xfWater", sortable: "custom" },
         // { label: "其他用水", prop: "qtWater", sortable: "custom" }
-        ];
+      ];
       this.homePageTableConfig.columnConfig = labelList;
       let res = await EnergyApi.getEnergyRanking({
         redioType: 0,
@@ -264,8 +265,13 @@ export default {
       let resData = res.value;
       let myChart = echarts.init(this.$refs.myChart);
       let xAxis = resData.map(item => item.date);
-      let legendData=['2018', '2019', '综合能耗同比增长率', '综合能耗环比增长率']
-      let series= [
+      let legendData = [
+        "2018",
+        "2019",
+        "综合能耗同比增长率",
+        "综合能耗环比增长率"
+      ];
+      let series = [
         {
           name: "2018",
           type: "bar",
@@ -310,13 +316,13 @@ export default {
           }
         },
         {
-          name: '综合能耗环比增长率',
-          type: 'line',
+          name: "综合能耗环比增长率",
+          type: "line",
           yAxisIndex: 1,
           data: resData.map(item => item.hbzz),
           itemStyle: {
             normal: {
-              color: '#5AD15B', //圈圈的颜色
+              color: "#5AD15B", //圈圈的颜色
               // lineStyle:{
               //     color:'#FF9900'  //线的颜色
               // }
@@ -333,13 +339,14 @@ export default {
         legendData,
         xAxis,
         series,
-        showSecondY:true
-      }
-      let option={
-        yAxis: [{
-          type: 'value',
-          name: '能耗(kwh)',
-          axisLabel: {
+        showSecondY: true
+      };
+      let option = {
+        yAxis: [
+          {
+            type: "value",
+            name: "能耗(kwh)",
+            axisLabel: {
               formatter: "{value} kwh"
             }
           },

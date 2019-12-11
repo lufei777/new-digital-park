@@ -50,6 +50,18 @@ class DigitalParkApi {
   @get
   createTenNum(){}
 
+  @url('/oaApi/tenant/delTenant')
+  @get
+  delTenant(){}
+
+  @url('/oaApi/tenant/tenantDetail')
+  @get
+  tenantDetail(){}
+
+  @url('/oaApi/tenant/editTenant')
+  @post
+  editTenant(){}
+
   
 }
 
