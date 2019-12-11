@@ -51,14 +51,14 @@
                   :placement="column.tipPlacement"
                 >
                   <slot
+                    v-if="column.formslot"
+                    :name="column.prop"
                     :value="model[column.prop]"
                     :column="column"
                     :label="model['$'+column.prop]"
                     :size="column.size || controlSize"
                     :disabled="column.disabled"
                     :dic="DIC[column.prop]"
-                    :name="column.prop"
-                    v-if="column.formslot"
                   ></slot>
                   <form-temp
                     v-else
@@ -72,16 +72,23 @@
                     <!-- 自定义表单里内容 -->
                     <template
                       :slot="`${column.prop}Type`"
-                      slot-scope="{item,labelKey,valueKey}"
+                      slot-scope="{item,labelkey,valuekey}"
                       v-if="column.typeslot"
                     >
                       <slot
                         :name="`${column.prop}Type`"
                         :size="column.size || controlSize"
                         :item="item"
-                        :labelKey="labelKey"
-                        :valueKey="valueKey"
+                        :labelkey="labelkey"
+                        :valuekey="valuekey"
                       ></slot>
+                    </template>
+                    <!-- input的slot处理 -->
+                    <template :slot="column.prependslot">
+                      <slot :name="column.prependslot"></slot>
+                    </template>
+                    <template :slot="column.appendslot">
+                      <slot :name="column.appendslot"></slot>
                     </template>
                   </form-temp>
                 </el-tooltip>
@@ -97,7 +104,6 @@
             ></el-col>
           </template>
         </div>
-
         <el-col :span="24" v-if="vaildData(parentOption.menuBtn,true)">
           <el-form-item>
             <!-- 菜单按钮组 -->
@@ -442,6 +448,11 @@ export default {
   }
   .form_menu-right {
     text-align: right;
+  }
+  .el-input-number__decrease,
+  .el-input-number__increase {
+    border: none !important;
+    background: none;
   }
 }
 </style>

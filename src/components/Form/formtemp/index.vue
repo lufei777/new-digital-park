@@ -63,7 +63,10 @@
     :placeholder="getPlaceholder(column,column.type)"
     :precision="column.precision"
     :prefixIcon="column.prefixIcon"
+    :prefix="column.prefix"
     :prepend="column.prepend"
+    :prependslot="column.prependslot"
+    :appendslot="column.appendslot"
     :prop="column.prop"
     :props="column.props || props"
     :propsHttp="column.propsHttp || propsHttp"
@@ -80,6 +83,7 @@
     :size="column.size || size"
     :startPlaceholder="column.startPlaceholder"
     :step="column.step"
+    :suffix="column.suffix"
     :suffixIcon="column.suffixIcon"
     :showWordLimit="column.showWordLimit"
     :separator="column.separator"
@@ -89,8 +93,6 @@
     :typeslot="column.typeslot"
     :typeformat="column.typeformat"
     :rawtype="column.rawtype"
-    :prependslot="column.prependslot"
-    :appendslot="column.appendslot"
     :tags="column.tags"
     :upload-before="uploadBefore"
     :upload-after="uploadAfter"
@@ -109,8 +111,19 @@
     :prependClick="column.prependClick"
     :nodeClick="column.nodeClick"
   >
-    <template :slot="column.prop+'Type'" slot-scope="{item,label,value}" v-if="column.typeslot">
-      <slot :name="column.prop+'Type'" :item="item" :value="value" :label="label"></slot>
+    <template
+      :slot="column.prop+'Type'"
+      slot-scope="{item,labelkey,valuekey}"
+      v-if="column.typeslot"
+    >
+      <slot :name="column.prop+'Type'" :item="item" :valuekey="valuekey" :labelkey="labelkey"></slot>
+    </template>
+    <!-- input的slot处理 -->
+    <template :slot="column.prependslot">
+      <slot :name="column.prependslot"></slot>
+    </template>
+    <template :slot="column.appendslot">
+      <slot :name="column.appendslot"></slot>
     </template>
   </component>
 </template>
