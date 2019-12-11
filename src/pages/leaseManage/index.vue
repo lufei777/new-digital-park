@@ -14,21 +14,21 @@ const MenuList = [
     id: 1,
     name: "房产管理",
     icon: "iconwodezichan",
-    routeAddress: "/leasemanage/housepropertymanage",
+    routeAddress: "/leasemanage",
     childNode: [
       {
         name: "租赁管理",
-        routeAddress: "/leasemanage/housepropertymanage"
+        routeAddress: "/housepropertymanage"
       },
       {
         name: "编辑房产",
-        routeAddress: "/leasemanage/editHouseProperty"
+        routeAddress: "/editHouseProperty"
       }
     ]
   },
   {
     id: 2,
-    routeAddress: "/leasemanage/tenantManage",
+    routeAddress: "/tenantManage",
     name: "租户管理",
     childNode: [],
     icon: "iconzichantaizhang"
@@ -49,14 +49,15 @@ export default {
     commonIndex
   },
   data() {
+    let menuList = JSON.parse(localStorage.menuList);
     return {
-      menuList: JSON.parse(localStorage.menuList).childNode, //CommonFun.menuData.childNode,// JSON.parse(localStorage.menuList),
+      menuList: menuList.childNode, //CommonFun.menuData.childNode,// JSON.parse(localStorage.menuList),
       menuConfig: {
         bgColor: "#394562",
         textColor: "#B7BAC4",
         isCollapse: false,
-        activeIndex: MenuList[0].routeAddress,
-        moduleName: "租赁管理",
+        activeIndex: menuList.childNode[0].routeAddress,
+        moduleName: menuList.name,
         moduleLogo: "iconnengyuanguanli"
       }
     };
