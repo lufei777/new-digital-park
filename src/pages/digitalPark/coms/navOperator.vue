@@ -25,14 +25,28 @@
              <!--<el-option :label="$t('homeHeader.skin')" value="2"></el-option>-->
          </el-select><i>|</i>
      </span>
-     <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
-          <el-select v-model="userValue" placeholder="" @change="onClickUserConfigure">
-              <el-option :label="userInfo.fullName" value="0" hidden></el-option>
-              <el-option :label="$t('homeHeader.personalCenter')" value="1"></el-option>
-              <el-option :label="$t('homeHeader.changePassword')" value="2"></el-option>
-              <el-option :label="$t('homeHeader.signOut')" value="3"></el-option>
-           </el-select>
-      </span>
+    <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
+        <el-dropdown @command="onClickUserConfigure">
+            <div class="flex-align user-config hover-pointer">
+              <div class="user-name">{{userInfo.fullName}}</div>
+              <img class="avatar-img" :src="avatar" alt="">
+            </div>
+                <el-dropdown-menu slot="dropdown" >
+                  <el-dropdown-item command="1">{{$t('homeHeader.personalCenter')}}</el-dropdown-item>
+                  <el-dropdown-item command="2">{{$t('homeHeader.changePassword')}}</el-dropdown-item>
+                  <el-dropdown-item command="3">{{$t('homeHeader.signOut')}}</el-dropdown-item>
+                </el-dropdown-menu>
+        </el-dropdown>
+    </span>
+     <!--<span class="nav-right-item user-config" :class="moduleType==1?'dashboard-nav':''">-->
+          <!--<el-select v-model="userValue" placeholder="" @change="onClickUserConfigure">-->
+              <!--<el-option :label="userInfo.fullName" value="0" hidden></el-option>-->
+              <!--<el-option :label="$t('homeHeader.personalCenter')" value="1"></el-option>-->
+              <!--<el-option :label="$t('homeHeader.changePassword')" value="2"></el-option>-->
+              <!--<el-option :label="$t('homeHeader.signOut')" value="3"></el-option>-->
+           <!--</el-select>-->
+           <!--<img class="avatar-img" src="../../../../static/image/digitalPark/default_avatar.png" alt="">-->
+      <!--</span>-->
   </div>
 </template>
 
@@ -48,7 +62,8 @@
         langValue:Cookies.get('lang') || 'zh',
         userValue:'0',
         setupValue:'0',
-        userInfo:{}
+        userInfo:{},
+        avatar:'../../../../static/image/digitalPark/default_avatar.png'
       }
     },
     computed:{
@@ -80,7 +95,15 @@
           sessionStorage.removeItem('token')
           await DigitalParkApi.logOut()
           this.$router.push('/login')
+        }else if(val==1){
+          this.$router.push('/personalInformation')
+          Cookies.set('activeMenuIndex','/personalInformation')
+          localStorage.setItem('show_menu','/personalInformation')
+        }else if(val==2){
+          this.$router.push('/modifyPassword')
+          Cookies.set('activeMenuIndex','/personalInformation')
         }
+        this.userValue='0'
       },
       onClickSetup(val){
         if(val==1){
@@ -97,6 +120,7 @@
       },
       async getUserInfo(){
         this.userInfo = await DigitalParkApi.getUserInfo()
+        localStorage.setItem("userInfo",JSON.stringify(this.userInfo))
       }
     },
     mounted(){
@@ -139,9 +163,28 @@
      .el-input__inner{
         color:@white;
       }
+      .user-name{
+        color:@white;
+      }
     }
     .long-text span{
       width:120px;
+    }
+    .user-config{
+      /*width:150px;*/
+      /*display: flex;*/
+      /*align-items: center;*/
+      /*flex-direction: row;*/
+      margin-left: 15px;
+    }
+    .avatar-img{
+      width:30px;
+      height:30px;
+      display: block;
+      background: #DBDBDB;
+      border-radius: 50%;
+      border:1px solid @white;
+      margin-left: 10px;
     }
   }
   @media screen and (min-width: 1280px) and(max-width: 1415px) {

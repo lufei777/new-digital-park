@@ -568,7 +568,6 @@
     }
     .news-box,.digital-title,.dashboard-nav-operator{
       flex: 1;
-
     }
     .dashboard-nav-operator{
       .digital-nav-operator{
