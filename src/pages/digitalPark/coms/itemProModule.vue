@@ -118,7 +118,7 @@
          console.log(item)
       },
       onClickMoreBtn(){
-        console.log(this.menuTree)
+        Cookies.set('moduleType',2)
         this.menuTree[0].childNode.map((item)=>{
           item.childNode.map((child)=>{
              if(child.id==this.moduleData.menuId){

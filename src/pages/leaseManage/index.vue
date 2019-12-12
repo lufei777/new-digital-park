@@ -56,7 +56,6 @@ export default {
         bgColor: "#394562",
         textColor: "#B7BAC4",
         isCollapse: false,
-        activeIndex: menuList.childNode[0].routeAddress,
         moduleName: menuList.name,
         moduleLogo: "iconnengyuanguanli"
       }

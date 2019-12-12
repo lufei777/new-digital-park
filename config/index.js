@@ -10,14 +10,16 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {  
       '/vibe-web': {
-        target:'http://192.168.1.129:8008',//后端接口地址
+        // target:'http://192.168.1.129:8008',//后端接口地址
+        target:'http://39.98.130.147:8008',//后端接口地址
         // changeOrigin: true,//是否允许跨越
         // pathRewrite: {
         //   '^/api': '',//重写,
         // }
       },
       '/oaApi': {
-        target:'http://192.168.1.129:8002',//后端接口地址
+        // target:'http://192.168.1.129:8002',//后端接口地址
+        target:'http://39.98.130.147:8002'
         // changeOrigin: true,//是否允许跨越
         // pathRewrite: {
         //   '^/oaApi': '',//重写,
@@ -27,7 +29,7 @@ module.exports = {
 
     // Various Dev Server settings
     host: '0.0.0.0', // can be overwritten by process.env.HOST
-    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 8081, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
 
