@@ -10,9 +10,14 @@ export default [{
         meta: { title: '房产管理' },
         component: () => import('@/pages/leaseManage/housePropertyManage')
     }, {
+        path: '/bulkimporthouseproperty',
+        name: 'bulkimporthouseproperty',
+        meta: { title: '导入房产' },
+        component: () => import('@/pages/leaseManage/bulkImportHouseProperty'),
+    }, {
         path: '/editHouseProperty',
         name: 'editHouseProperty',
-        meta: { title: '编辑房产' },
+        meta: { title: '房产维护' },
         component: () => import('@/pages/leaseManage/editHouseProperty'),
     },{
         path: '/tenantManage',
