@@ -110,7 +110,7 @@
         this.treeModalConfig.showModal=true
       },
       onClickModalSureBtn(val){
-        this.deptForm.parentId=val.id
+        this.deptForm.parent=val.id
         this.deptForm.parentName=val.text
         this.treeModalConfig.showModal=false
       },

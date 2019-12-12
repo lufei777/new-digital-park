@@ -8,6 +8,8 @@ import AddSpace from '../../pages/commonProject/systemManage/addSpace'
 import AddUser from '../../pages/commonProject/systemManage/addUser'
 import AddDept from '../../pages/commonProject/systemManage/addDept'
 import AddRole from '../../pages/commonProject/systemManage/addRole'
+import PersonalInformation from '../../pages/commonProject/systemManage/personal/personalInformation'
+import ModifyPassword from '../../pages/commonProject/systemManage/personal/modifyPassword'
 export default [{
   path:'/tmpRouter',
   redirect:'/userManage',
@@ -58,5 +60,22 @@ export default [{
     name:'AddRole',
     component:AddRole,
     meta:{title:'角色编辑'},
+  },{
+    path:'/personalTmpRouter',
+    name:'TmpRouter',
+    component:TmpRouter,
+    meta:{title:'个人中心'},
+    redirect:'/personalInformation',
+    children:[{
+      path:'/personalInformation',
+      name:'PersonalInformation',
+      component:PersonalInformation,
+      meta:{title:'个人信息'},
+    },{
+      path:'/modifyPassword',
+      name:'ModifyPassword',
+      component:ModifyPassword,
+      meta:{title:'修改密码'},
+    }]
   }]
 }]
