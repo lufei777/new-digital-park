@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="form radius-shadow">
+    <div id="houseproperty-form" class="panel">
       <miForm
         :ref="leaseManageForm.ref"
         :options="leaseManageForm"
@@ -17,7 +17,7 @@
       </miForm>
     </div>
 
-    <div class="table radius-shadow">
+    <div class="table panel">
       <miTable :ref="leaseManageTable.ref" :tableConfig="leaseManageTable">
         <template slot="custom-top" slot-scope="obj">
           <el-button :size="obj.size" type="primary" @click="addedProperty(obj)">新增</el-button>
@@ -51,8 +51,7 @@ export default {
         ref: "leaseManageForm",
         size: "small",
         menuPosition: "right",
-        submitBtn: false,
-        emptyBtn: false,
+        menuBtn: false,
         forms: [
           {
             type: "input",
@@ -183,33 +182,34 @@ export default {
   methods: {
     submit() {},
     resetChange() {},
+    deleteRow(ids) {
+      leaseManageApi.removeHouse({ houseIds: ids }).then(res => {
+        this.refreshTable();
+      });
+    },
     addedProperty(obj) {
       this.$router.push({
         name: "editHouseProperty"
       });
     },
     bulkImport(obj) {
-      console.log(obj);
+      this.$router.push({ name: "bulkimporthouseproperty" });
     },
     bulkDel({ selectedData }) {
       if (!selectedData.length) return;
-      let ids = "";
-      ids = _.reduce(
+      let ids = _.reduce(
         selectedData,
         (result, cur, curindex) => {
-          return result + ',' + cur.houseId;
+          return result + "," + cur.houseId;
         },
-        ids
+        ""
       );
       commonFun.deleteTip(
         this,
         true,
         "确定要删除吗?",
         () => {
-          leaseManageApi.removeHouse({ houseIds: row.houseId }).then(res => {
-            this.refreshTable();
-            console.log(res);
-          });
+          this.deleteRow(ids);
         },
         () => {}
       );
@@ -244,10 +244,7 @@ export default {
         true,
         "确定要删除吗?",
         () => {
-          leaseManageApi.removeHouse({ houseIds: row.houseId }).then(res => {
-            this.refreshTable();
-            console.log(res);
-          });
+          this.deleteRow(row.houseId);
         },
         () => {}
       );
@@ -271,15 +268,8 @@ export default {
   }
 };
 </script>
-<style lang='less' scoped>
-.form,
-.table {
-  background-color: @white;
-  box-sizing: border-box;
-  padding: 20px;
-}
-.form {
-  margin-bottom: 20px;
-  padding-bottom: 0;
+<style lang='less'>
+#houseproperty-form .el-form-item {
+  margin-bottom: 0;
 }
 </style>
