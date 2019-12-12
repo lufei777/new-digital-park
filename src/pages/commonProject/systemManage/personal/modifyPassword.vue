@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import miForm from "@/components/form";
+  import miForm from "@/components/Form";
   export default {
     name: 'ModifyPassword',
     components: {
