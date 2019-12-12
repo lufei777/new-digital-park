@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="form radius-shadow">
+    <div class="form panel">
       <span class="tip frist-tip flex-align">
         <span class="icon"></span>
         <span>{{pageConfig.title}}</span>
@@ -639,6 +639,10 @@ export default {
         ...this.leaseManageForm,
         ...params.extraOptions
       };
+      // 如果有disabled属性，则为查看详情
+      if(this.leaseManageForm.disabled){
+        this.pageConfig.title = '房产详情';
+      }
     }
   },
   methods: {
@@ -668,15 +672,7 @@ export default {
 };
 </script>
 <style lang='less' scoped>
-.form,
-.table {
-  background-color: @white;
-  box-sizing: border-box;
-  padding: 20px;
-}
 .form {
-  margin-bottom: 20px;
-  padding-bottom: 0;
   .tip {
     margin: 20px 0;
     .icon {
@@ -689,11 +685,6 @@ export default {
     span {
       font-size: 16px;
       color: @mainBgColor;
-    }
-  }
-  .empty-icon {
-    .el-input__suffix i {
-      display: none !important;
     }
   }
 }
