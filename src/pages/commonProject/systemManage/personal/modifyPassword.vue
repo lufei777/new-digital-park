@@ -1,22 +1,22 @@
 <template>
   <div class="modify-password">
     <div class="form-box">
-      <miForm
-        :ref="formData.ref"
-        :options="formData"
-        v-model="model"
-        @submit="submit"
-      ></miForm>
+      <!--<miForm-->
+        <!--:ref="formData.ref"-->
+        <!--:options="formData"-->
+        <!--v-model="model"-->
+        <!--@submit="submit"-->
+      <!--&gt;</miForm>-->
     </div>
   </div>
 </template>
 
 <script>
-  import miForm from "@/components/form";
+  // import miForm from "@/components/form";
   export default {
     name: 'ModifyPassword',
     components: {
-      miForm
+      // miForm
     },
     data () {
       return {

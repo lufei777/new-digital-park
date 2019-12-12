@@ -13,7 +13,7 @@ let obj = {
     dashboard:'仪表盘',
     setup:'设置',
     moduleConfig:'模块设置',
-    personalCenter:'个人中心',
+    personalCenter:'个人信息',
     changePassword:'修改密码',
     signOut:'退出'
   },

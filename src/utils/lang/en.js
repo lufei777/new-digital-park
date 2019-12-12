@@ -9,7 +9,7 @@ module.exports = {
     dashboard:'Dashboard',
     setup:'Setup',
     moduleConfig:'ModuleConfig',
-    personalCenter:'Personal Center',
+    personalCenter:'Personal Information',
     changePassword:'Change Password',
     signOut:'Sign Out'
   },

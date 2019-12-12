@@ -1,49 +1,47 @@
 <template>
   <div class="personal-information radius-shadow">
     <div class="form-box">
-      <miForm
-        :ref="formData.ref"
-        :options="formData"
-        v-model="model"
-        @submit="submit"
-      ></miForm>
+      <!--<miForm-->
+        <!--:ref="formData.ref"-->
+        <!--:options="formData"-->
+        <!--v-model="model"-->
+        <!--@submit="submit"-->
+      <!--&gt;</miForm>-->
     </div>
   </div>
 </template>
 
 <script>
-  import miForm from "@/components/Form";
+  // import miForm from "../../../../components/Form/index";
   export default {
     name: 'PersonalInformation',
     components: {
-      miForm
+      // miForm
     },
     data () {
       return {
         model:{
           sex:0,
-          name:'124'
+          name:'',
+          avatar:'',
+          mail:'',
+          telephone:''
         },
         formData: {
           ref: "formRef",
-          // labelWidth: "80",
           size: "medium",
-          menuPosition: "center",
-          // submitText: "确定",
-          emptyText:'取消',
-          // emptyBtn: false,
+          menuPosition: "left",
           forms: [
             {
               type: "input",
               label: "姓名",
               prop: "name",
               clearable: true,
-              readonly: true,
               span: 24,
               rules: {
                 required: true,
-                message: "如果没有自动生成，请联系管理员",
-                trigger: "change"
+                message: "请输入姓名",
+                trigger: "blur"
               }
             },
             {
@@ -110,8 +108,7 @@
                 message: "请输入正确的电话号码",
                 trigger: "change"
               }
-            },
-          ]
+            }]
         }
       }
     },
@@ -125,8 +122,8 @@
 <style lang="less">
   .personal-information{
      .form-box{
-       padding:20px;
-       width:25%;
+       padding:20px 0;
+       width:350px;
        margin:0 auto;
      }
   }
