@@ -240,6 +240,10 @@ class CommonApi {
   @url("/vibe-web/dept/deptAdd")
   @get
   addDept(){}
+
+  @url("/vibe-web/dept/deptEdit")
+  @get
+  editDept(){}
 }
 
 export default new CommonApi()
