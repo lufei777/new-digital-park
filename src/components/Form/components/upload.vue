@@ -240,17 +240,7 @@ export default {
       this.loading = true;
       let file = config.file;
       this.file = config.file;
-      // 验证文件类型和大小
-      const accept = file.type.split("/")[1];
-      const filesize = file.size;
-      let acceptList = Array.isArray(this.accept) ? this.accept : [this.accept];
-      acceptList = this.validatenull(acceptList[0]) ? undefined : acceptList;
-      if (!this.validatenull(acceptList) && !acceptList.includes(accept)) {
-        this.hide("文件类型不符合");
-        return;
-      }
-      if (!this.validatenull(filesize) && filesize / 1024 > this.filesize) {
-        this.hide("文件太大不符合");
+      if (!this.validateFile(file)) {
         return;
       }
       // 设置额外头部
@@ -319,6 +309,25 @@ export default {
       } else {
         done();
       }
+    },
+    validateFile(file) {
+      // 验证文件类型和大小
+      // const accept = file.type.split("/")[1];
+      const nameSplit = file.name.split(".");
+      const accept = nameSplit[nameSplit.length - 1];
+      const filesize = file.size;
+      let acceptList = Array.isArray(this.accept) ? this.accept : [this.accept];
+      acceptList = this.validatenull(acceptList[0]) ? undefined : acceptList;
+
+      if (!this.validatenull(acceptList) && !acceptList.includes(accept)) {
+        this.hide("文件类型不符合");
+        return false;
+      }
+      if (!this.validatenull(filesize) && filesize / 1024 > this.filesize) {
+        this.hide("文件太大不符合");
+        return false;
+      }
+      return true;
     },
     setVal() {
       let result = "";
