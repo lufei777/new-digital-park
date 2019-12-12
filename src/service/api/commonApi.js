@@ -233,9 +233,17 @@ class CommonApi {
   @get
   addMeter(){}
 
-  @url("vibe-web/energy/imEnergyMeter")
+  @url("/vibe-web/energy/imEnergyMeter")
   @get
   importDevice(){}
+
+  @url("/vibe-web/dept/deptAdd")
+  @get
+  addDept(){}
+
+  @url("/vibe-web/dept/deptEdit")
+  @get
+  editDept(){}
 }
 
 export default new CommonApi()

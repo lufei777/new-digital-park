@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="form radius-shadow">
+    <div class="form panel">
       <span class="tip frist-tip flex-align">
         <span class="icon"></span>
         <span>{{pageConfig.title}}</span>
@@ -10,21 +10,13 @@
         :options="leaseManageForm"
         v-model="model"
         @submit="submit"
-        @reset-change="resetChange"
       >
-        <template slot="housePrice" slot-scope="obj">
-          <div>
-            <el-input
-              style="width:75%;"
-              v-model="model.housePrice"
-              :placeholder="obj.column.placeholder"
-            ></el-input>
-            <el-select style="width:24% !important;" v-model="model.priceType">
-              <template v-for="item in LeaseManageDic.PriceType">
-                <el-option :key="item.label" :label="item.label" :value="item.value"></el-option>
-              </template>
-            </el-select>
-          </div>
+        <template slot="housepriceappend" slot-scope="obj">
+          <el-select :disabled="obj.disabled" class="empty-icon" style="width:80px !important;" v-model="model.priceType">
+            <template v-for="item in LeaseManageDic.PriceType">
+              <el-option :key="item.label" :label="item.label" :value="item.value"></el-option>
+            </template>
+          </el-select>
         </template>
         <template slot="btn" slot-scope="obj">
           <div>
@@ -32,8 +24,8 @@
             <el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>
           </div>
         </template>
-        <template slot-scope="scope" slot="menuBtn">
-          <el-button :size="scope.size" @click="back(scope)">返回</el-button>
+        <template slot="menuBtn" slot-scope="scope">
+          <el-button @click="back(scope)">返回</el-button>
         </template>
       </miForm>
     </div>
@@ -579,7 +571,7 @@ export default {
             prop: "housePrice",
             clearable: true,
             span: 12,
-            formslot: true,
+            appendslot: "housepriceappend",
             rules: {
               required: true,
               message: "必填，请填写总价",
@@ -616,7 +608,6 @@ export default {
             prop: "housePictureVOList",
             span: 24,
             tip: "只能上传jpg/png文件。",
-            // action: "https://jsonplaceholder.typicode.com/posts/",
             action: "/oaApi/image/upload",
             accept: ["jpg", "jpeg", "png"],
             props: {
@@ -638,15 +629,25 @@ export default {
   created() {
     if (this.$route.query || this.$route.params) {
       let params = this.$route.params;
+      // 传递过来的数据
       if (!_.isEmpty(params.model)) {
         this.pageConfig = apiConfig.edit;
         this.model = { ...this.model, ...params.model };
       }
+      // 传递过来额外的配置
+      this.leaseManageForm = {
+        ...this.leaseManageForm,
+        ...params.extraOptions
+      };
+      // 如果有disabled属性，则为查看详情
+      if(this.leaseManageForm.disabled){
+        this.pageConfig.title = '房产详情';
+      }
     }
   },
   methods: {
-    async submit(model, hide) {
-      let res = await this.pageConfig
+    submit(model, hide) {
+      this.pageConfig
         .api(model)
         .then(res => {
           console.log(res);
@@ -656,12 +657,10 @@ export default {
           hide();
         });
     },
-    resetChange() {},
     search(...args) {
       this.$refs[this.leaseManageForm.ref].getFormModel(res => {
-        console.log("model", res);
+        console.log("搜索", res);
       });
-      console.log("搜索", ...args);
     },
     clearForm() {
       this.$refs[this.leaseManageForm.ref].resetForm();
@@ -673,15 +672,7 @@ export default {
 };
 </script>
 <style lang='less' scoped>
-.form,
-.table {
-  background-color: @white;
-  box-sizing: border-box;
-  padding: 20px;
-}
 .form {
-  margin-bottom: 20px;
-  padding-bottom: 0;
   .tip {
     margin: 20px 0;
     .icon {

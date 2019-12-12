@@ -59,12 +59,20 @@ class commonFun {
       type: 'warning'
     }).then(() => {
       sureCallBack()
-    }).catch(() => {
-      that.$message({
-        type: 'info',
-        message: '已取消删除',
-      });
-      cancelCallBack()
+    }).catch((err) => {
+      if (err === 'cancel') {
+        that.$message({
+          type: 'info',
+          message: '已取消删除',
+        });
+        cancelCallBack()
+      } else {
+        that.$message({
+          type: 'error',
+          message: '出错,请在控制台查看错误信息',
+        });
+        console.error(err);
+      }
     });
   }
 

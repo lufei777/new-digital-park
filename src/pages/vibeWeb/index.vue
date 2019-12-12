@@ -100,9 +100,14 @@ export default {
             keyPath[0].substring(0, keyPath[0].lastIndexOf("/")) + keyPath[1];
         }
       }
-      key = key.replace("@", "");
+      if(key.indexOf("@")!=-1){
+        key = key.replace("@", "");
 
-      this.iframeConfig.src = key;
+        this.iframeConfig.src = key;
+      }else{
+        this.$router.push(key)
+      }
+
     }
   },
   mounted() {}

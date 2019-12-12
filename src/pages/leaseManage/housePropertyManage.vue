@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="form radius-shadow">
+    <div id="houseproperty-form" class="panel">
       <miForm
         :ref="leaseManageForm.ref"
         :options="leaseManageForm"
@@ -17,7 +17,7 @@
       </miForm>
     </div>
 
-    <div class="table radius-shadow">
+    <div class="table panel">
       <miTable :ref="leaseManageTable.ref" :tableConfig="leaseManageTable">
         <template slot="custom-top" slot-scope="obj">
           <el-button :size="obj.size" type="primary" @click="addedProperty(obj)">新增</el-button>
@@ -40,84 +40,67 @@ import { LeaseManageDic } from "@/utils/dic/leaseManage";
 import miForm from "@/components/Form";
 import miTable from "@/components/Table";
 import leaseManageApi from "@/service/api/leaseManageApi";
+import commonFun from "@/utils/commonFun.js";
 
 export default {
   components: { miForm, miTable },
   data() {
     return {
-      model: {
-        fcbh: "",
-        fcmc: "",
-        zj: "",
-        fczt: "",
-        mj: ""
-        // ptwf: [2, 4]
-      },
+      model: {},
       leaseManageForm: {
         ref: "leaseManageForm",
-        labelWidth: "100",
         size: "small",
         menuPosition: "right",
-        submitBtn: false,
-        emptyBtn: false,
+        menuBtn: false,
         forms: [
           {
             type: "input",
             label: "房产编号",
-            prop: "fcbh",
+            prop: "houseNumber",
             placeholder: "请输入",
             clearable: true,
-            span: 8
+            span: 4
           },
           {
             type: "input",
             label: "房产名称",
-            prop: "fcmc",
+            prop: "houseName",
             placeholder: "请输入",
             clearable: true,
-            span: 8
+            span: 4
           },
           {
             type: "number",
             label: "总价",
-            prop: "zj",
+            prop: "housePrice",
             placeholder: "请输入",
             clearable: true,
-            span: 8,
+            span: 4,
             minRows: 0
           },
           {
             type: "select",
             label: "房产状态",
-            prop: "fczt",
+            prop: "houseStatus",
             placeholder: "请输入",
             clearable: true,
-            span: 8,
-            dicData: [
-              {
-                label: "租",
-                value: 0
-              },
-              {
-                label: "已租",
-                value: 1
-              }
-            ]
+            span: 4,
+            dicData: Object.values(LeaseManageDic.HouseStatus)
           },
           {
             type: "number",
             label: "面积",
-            prop: "mj",
+            prop: "houseArea",
             placeholder: "请输入",
             clearable: true,
-            span: 8,
+            span: 4,
             minRows: 0
           },
           {
             prop: "btn",
-            span: 8,
-            pull: 6,
-            formslot: true
+            span: 4,
+            formslot: true,
+            width: 55
           }
         ]
       },
@@ -142,7 +125,8 @@ export default {
         columnConfig: [
           {
             prop: "houseNumber",
-            label: "房产编号"
+            label: "房产编号",
+            width: 200
           },
           {
             prop: "houseName",
@@ -175,7 +159,7 @@ export default {
             label: "面积"
           },
           {
-            prop: "zj",
+            prop: "housePrice",
             label: "总价"
           },
           {
@@ -198,22 +182,53 @@ export default {
   methods: {
     submit() {},
     resetChange() {},
+    deleteRow(ids) {
+      leaseManageApi.removeHouse({ houseIds: ids }).then(res => {
+        this.refreshTable();
+      });
+    },
     addedProperty(obj) {
       this.$router.push({
         name: "editHouseProperty"
       });
     },
     bulkImport(obj) {
-      console.log(obj);
+      this.$router.push({ name: "bulkimporthouseproperty" });
     },
-    bulkDel(obj) {
-      console.log(obj);
+    bulkDel({ selectedData }) {
+      if (!selectedData.length) return;
+      let ids = _.reduce(
+        selectedData,
+        (result, cur, curindex) => {
+          return result + "," + cur.houseId;
+        },
+        ""
+      );
+      commonFun.deleteTip(
+        this,
+        true,
+        "确定要删除吗?",
+        () => {
+          this.deleteRow(ids);
+        },
+        () => {}
+      );
     },
     bulkEdit(obj) {
       console.log(obj);
     },
-    propertyDetail(obj) {
-      console.log(obj);
+    propertyDetail({ scopeRow: { $index, row, _self } }) {
+      leaseManageApi.houseDetails(row).then(res => {
+        this.$router.push({
+          name: "editHouseProperty",
+          params: {
+            extraOptions: {
+              disabled: true
+            },
+            model: _.cloneDeep(res)
+          }
+        });
+      });
     },
     propertyEdit({ scopeRow: { $index, row, _self } }) {
       this.$router.push({
@@ -222,10 +237,17 @@ export default {
           model: _.cloneDeep(row)
         }
       });
-      console.log(row);
     },
-    propertyDel(obj) {
-      console.log(obj);
+    propertyDel({ scopeRow: { $index, row, _self } }) {
+      commonFun.deleteTip(
+        this,
+        true,
+        "确定要删除吗?",
+        () => {
+          this.deleteRow(row.houseId);
+        },
+        () => {}
+      );
     },
     propertyLocation(obj) {
       console.log(obj);
@@ -239,19 +261,15 @@ export default {
     clearForm(...args) {
       console.log("清空", ...args);
       this.$refs[this.leaseManageForm.ref].resetForm();
+    },
+    refreshTable() {
+      this.$refs[this.leaseManageTable.ref].refreshTable();
     }
   }
 };
 </script>
-<style lang='less' scoped>
-.form,
-.table {
-  background-color: @white;
-  box-sizing: border-box;
-  padding: 20px;
-}
-.form {
-  margin-bottom: 20px;
-  padding-bottom: 0;
+<style lang='less'>
+#houseproperty-form .el-form-item {
+  margin-bottom: 0;
 }
 </style>

@@ -2,8 +2,8 @@
   <div class="el-form_wrapper" :style="setPx(parentOption.formSize,'100%')">
     <el-form
       ref="form"
-      label-suffix=":"
       status-icon
+      :label-suffix="parentOption.labelSuffix || '：'"
       :rules="formRules"
       :model="model"
       :size="controlSize"
@@ -108,20 +108,20 @@
             <!-- 菜单按钮组 -->
             <div :class="`form_menu-${menuPosition}`">
               <el-button
+                icon="el-icon-check"
                 type="primary"
                 @click="submit"
                 :size="controlSize"
-                icon="el-icon-check"
                 :loading="allDisabled"
                 v-if="vaildData(parentOption.submitBtn,true)"
-              >{{vaildData(parentOption.submitText,'提 交')}}</el-button>
+              >{{vaildData(parentOption.submitText,'确 认')}}</el-button>
               <el-button
                 icon="el-icon-delete"
                 :size="controlSize"
                 :loading="allDisabled"
                 v-if="vaildData(parentOption.emptyBtn,true)"
                 @click="resetForm"
-              >{{vaildData(parentOption.emptyText,'清 空')}}</el-button>
+              >{{vaildData(parentOption.emptyText,'取 消')}}</el-button>
               <slot name="menuBtn" :size="controlSize"></slot>
             </div>
           </el-form-item>

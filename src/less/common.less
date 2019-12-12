@@ -1,51 +1,74 @@
-
 @mainBg: #013b4e;
-@tableBorder:#ebeef5;
-@navFontColor:#deeaee;
-@navChildColor:#22dbfc;
+@tableBorder: #ebeef5;
+@navFontColor: #deeaee;
+@navChildColor: #22dbfc;
 @white: #fff;
-@black:#000;
+@black: #000;
 
 
 //数字园区
-@parkMainTextColor:#002063;
-@mainBgColor:#008DEA;
-@mainHoverColor:#3CB2FF;
+@parkMainTextColor: #002063;
+@mainBgColor: #008DEA;
+@mainHoverColor: #3CB2FF;
 
-@menuWidth:250px;
-@collapseMenuWidth:80px;
-.hover-pointer{
-  &:hover{
+@menuWidth: 250px;
+@collapseMenuWidth: 80px;
+
+.hover-pointer {
+  &:hover {
     cursor: pointer;
   }
 }
-.radius-shadow{
+
+.radius-shadow {
   border-radius: 8px;
   box-shadow:0 0 14px 0 rgba(0, 0, 0, 0.1);
+  background: @white;
 }
-.item-group{
+
+.item-group {
   margin-right: 40px;
-  label{
+
+  label {
     margin-right: 5px;
   }
 }
+
+.panel {
+  .radius-shadow;
+  box-sizing: border-box;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: @white;
+
+  &:last-child {
+    margin-bottom: 0px;
+  }
+}
+
+.no-border {
+  border: none;
+}
+
 //空间导航折叠与展开样式
-.unload-left-zoom-nav,.collapse-left-zoom-nav{
-  width:@menuWidth;
+.unload-left-zoom-nav,
+.collapse-left-zoom-nav {
+  width: @menuWidth;
   float: left;
   position: fixed;
   height: 100%;
-  left:@menuWidth+20px;
+  left: @menuWidth+20px;
   box-sizing: border-box;
   overflow: hidden;
 }
-.collapse-left-zoom-nav{
-  left:@collapseMenuWidth+20px;
+
+.collapse-left-zoom-nav {
+  left: @collapseMenuWidth+20px;
 }
+
 //子内容
-.right-content{
+.right-content {
   background: #f2f2f2;
   margin-left: @menuWidth+20px;
   box-sizing: border-box;
 }
-

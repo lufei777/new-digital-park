@@ -37,16 +37,17 @@
       <!-- 多选 -->
       <el-table-column fixed="left" v-if="uiConfig.selection" type="selection" width="37"></el-table-column>
 
-      <!-- 索引 -->
+     <!-- 索引 -->
       <el-table-column
         fixed="left"
         v-if="uiConfig.showIndex"
         type="index"
         :index="uiConfig.showIndex.handler"
-        width="37"
-        :selectable="_selectable"
-      ></el-table-column>
-
+        :width="uiConfig.showIndex.width || 40"
+      >
+        <template slot="header">{{uiConfig.showIndex.label || "序号"}}</template>
+      </el-table-column>
+      
       <!-- 正常列 -->
       <!-- <tableColumn :columnConfig="columnConfig" /> -->
       <template v-for="col in columnConfig">
