@@ -1,36 +1,13 @@
 <template>
-  <div class="cleaning-index">
+  <div class="receive-support-index">
     <commonIndex :menuList="menuList" :menuConfig="menuConfig"></commonIndex>
   </div>
 </template>
 
 <script>
 import commonIndex from "../commonProject/coms/commonIndex";
-const MenuList = [
-  {
-    id: 1,
-    name: "保洁记录",
-    icon: "",
-    routeAddress: "/cleaningManage/cleaningRecord",
-  },
-  {
-    id: 2,
-    routeAddress: "1",
-    name: "任务设定",
-    childNode: [],
-    icon: ""
-  },
-  {
-    id: 3,
-    routeAddress: "2",
-    name: "区域设定",
-    childNode: [],
-    icon: ""
-  }
-];
-
 export default {
-  name: "CleaningManage",
+  name: "ReceiveSupportManage",
   components: {
     commonIndex
   },
@@ -41,7 +18,7 @@ export default {
         bgColor: "#394562",
         textColor: "#B7BAC4",
         isCollapse: false,
-        moduleName: "保洁管理",
+        moduleName: "收支管理",
         moduleLogo: "iconnengyuanguanli"
       }
     };

@@ -484,6 +484,518 @@ class commonFun {
     value: 300,
   }]
 
+  cleaningManageData = [{
+    taskName: "活动区打扫",
+    tasktId: 1,
+    taskType: "园区保洁",
+    executeMethod:"临时保洁",
+    completeStatus:"待完成",
+    principal:"李祥祥",
+    startTime:"2019-12-12",
+    remark:"2019.12.12已完成"
+  },{
+    taskName: "办公室打扫",
+    tasktId: 2,
+    taskType: "房屋保洁",
+    executeMethod:"周期保洁",
+    completeStatus:"待完成",
+    principal:"关艳爽",
+    startTime:"2019-12-12",
+    remark:"2019.12.12已完成"
+  },{
+    taskName: "显示器打扫",
+    tasktId: 3,
+    taskType: "设备保洁",
+    executeMethod:"周期保洁",
+    completeStatus:"待完成",
+    principal:"李祥祥",
+    startTime:"2019-12-12",
+    remark:"2019.12.12已完成"
+  },{
+    taskName: "显示器打扫",
+    tasktId: 4,
+    taskType: "设备保洁",
+    executeMethod:"周期保洁",
+    completeStatus:"待完成",
+    principal:"关艳爽",
+    startTime:"2019-12-12",
+    remark:"2019.12.12已完成"
+  },{
+    taskName: "显示器打扫",
+    tasktId: 5,
+    taskType: "设备保洁",
+    executeMethod:"临时保洁",
+    completeStatus:"待完成",
+    principal:"关艳爽",
+    startTime:"2019-12-12",
+    remark:"2019.12.12已完成"
+  },{
+    taskName: "办公室打扫",
+    tasktId: 6,
+    taskType: "房屋保洁",
+    executeMethod:"周期保洁",
+    completeStatus:"待完成",
+    principal:"关艳爽",
+    startTime:"2019-12-12",
+    remark:"2019.12.12已完成"
+  },{
+    taskName: "活动区打扫",
+    tasktId: 7,
+    taskType: "园区保洁",
+    executeMethod:"临时保洁",
+    completeStatus:"待完成",
+    principal:"李祥祥",
+    startTime:"2019-12-12",
+    remark:"2019.12.12已完成"
+  },{
+    taskName: "显示器打扫",
+    tasktId: 8,
+    taskType: "房屋保洁",
+    executeMethod:"临时保洁",
+    completeStatus:"待完成",
+    principal:"李祥祥",
+    startTime:"2019-12-12",
+    remark:"2019.12.12已完成"
+  },{
+    taskName: "办公室打扫",
+    tasktId: 9,
+    taskType: "房屋保洁",
+    executeMethod:"临时保洁",
+    completeStatus:"待完成",
+    principal:"小何",
+    startTime:"2019-12-12",
+    remark:"2019.12.12已完成"
+  },{
+    taskName: "显示器打扫",
+    tasktId: 10,
+    taskType: "设备保洁",
+    executeMethod:"临时保洁",
+    completeStatus:"待完成",
+    principal:"小何",
+    startTime:"2019-12-12",
+    remark:"2019.12.12已完成"
+  }]
+
+
+  regionSetData = [{
+    regionName: "办公室",
+    regionId: 1,
+    regionType: "房屋",
+    executeMethod:"周期保洁",
+    regionNature:"自有",
+    principal:"李祥祥",
+    startTime:"2019-12-12",
+    remark:"我是备注"
+  },{
+    regionName: "办公室",
+    regionId: 1,
+    regionType: "房屋",
+    executeMethod:"周期保洁",
+    regionNature:"自有",
+    principal:"李祥祥",
+    startTime:"2019-12-12",
+    remark:"我是备注"
+  },{
+    regionName: "办公室",
+    regionId: 1,
+    regionType: "房屋",
+    executeMethod:"周期保洁",
+    regionNature:"自有",
+    principal:"李祥祥",
+    startTime:"2019-12-12",
+    remark:"我是备注"
+  },{
+    regionName: "办公室",
+    regionId: 1,
+    regionType: "房屋",
+    executeMethod:"周期保洁",
+    regionNature:"自有",
+    principal:"李祥祥",
+    startTime:"2019-12-12",
+    remark:"我是备注"
+  },{
+    regionName: "办公室",
+    regionId: 1,
+    regionType: "房屋",
+    executeMethod:"周期保洁",
+    regionNature:"自有",
+    principal:"李祥祥",
+    startTime:"2019-12-12",
+    remark:"我是备注"
+  },{
+    regionName: "办公室",
+    regionId: 1,
+    regionType: "房屋",
+    executeMethod:"周期保洁",
+    regionNature:"自有",
+    principal:"李祥祥",
+    startTime:"2019-12-12",
+    remark:"我是备注"
+  },{
+    regionName: "办公室",
+    regionId: 1,
+    regionType: "房屋",
+    executeMethod:"周期保洁",
+    regionNature:"自有",
+    principal:"李祥祥",
+    startTime:"2019-12-12",
+    remark:"我是备注"
+  },{
+    regionName: "办公室",
+    regionId: 1,
+    regionType: "房屋",
+    executeMethod:"周期保洁",
+    regionNature:"自有",
+    principal:"李祥祥",
+    startTime:"2019-12-12",
+    remark:"我是备注"
+  },{
+    regionName: "办公室",
+    regionId: 1,
+    regionType: "房屋",
+    executeMethod:"周期保洁",
+    regionNature:"自有",
+    principal:"李祥祥",
+    startTime:"2019-12-12",
+    remark:"我是备注"
+  }]
+
+
+  costManageData = [{
+    costId:1,
+    costName:"十二月维修费",
+    costType:"维修费",
+    costSum:"1000元",
+    costStatus:"待审核",
+    reportTime:"2019-12-12",
+    costCause:"房屋维修",
+    reportPeople:"李祥祥",
+    approver:"柏乐",
+    operationTime:"2019-12-13"
+  },{
+    costId:2,
+    costName:"十二月打车费",
+    costType:"打车费",
+    costSum:"100元",
+    costStatus:"待拨付",
+    reportTime:"2019-10-12",
+    costCause:"加班打车",
+    reportPeople:"李祥祥",
+    approver:"柏乐",
+    operationTime:"2019-11-13"
+  },{
+    costId:3,
+    costName:"十二月住宿费",
+    costType:"住宿费",
+    costSum:"300元",
+    costStatus:"已驳回",
+    reportTime:"2019-12-05",
+    costCause:"出差住宿",
+    reportPeople:"景杰",
+    approver:"柏乐",
+    operationTime:"2019-12-20"
+  },{
+    costId:4,
+    costName:"十二月维修费",
+    costType:"维修费",
+    costSum:"1000元",
+    costStatus:"待拨付",
+    reportTime:"2019-12-01",
+    costCause:"房屋维修",
+    reportPeople:"李祥祥",
+    approver:"柏乐",
+    operationTime:"2019-12-28"
+  },{
+    costId:5,
+    costName:"十二月住宿费",
+    costType:"住宿费",
+    costSum:"300元",
+    costStatus:"已拨付",
+    reportTime:"2019-12-01",
+    costCause:"出差住宿",
+    reportPeople:"刘晓航",
+    approver:"刘振刚",
+    operationTime:"2019-12-15"
+  },{
+    costId:6,
+    costName:"十二月打车费",
+    costType:"打车费",
+    costSum:"50元",
+    costStatus:"待拨付",
+    reportTime:"2019-12-01",
+    costCause:"加班打车",
+    reportPeople:"宁盼盼",
+    approver:"陈秀军",
+    operationTime:"2019-12-15"
+  },{
+    costId:7,
+    costName:"十二月维修费",
+    costType:"维修费",
+    costSum:"1000元",
+    costStatus:"待审核",
+    reportTime:"2019-12-12",
+    costCause:"房屋维修",
+    reportPeople:"赵晓明",
+    approver:"陈秀军",
+    operationTime:"2019-12-13"
+  },{
+    costId:7,
+    costName:"十一月餐费",
+    costType:"餐费",
+    costSum:"6000元",
+    costStatus:"已拨付",
+    reportTime:"2019-11-01",
+    costCause:"公司餐费",
+    reportPeople:"程琳",
+    approver:"柳燕",
+    operationTime:"2019-12-13"
+  }]
+
+
+  budgetManageData=[{
+    budgetId:1,
+    budgetName:"十二月维修费",
+    budgetType:"维修费",
+    budgetSum:"1500元",
+    budgetStatus:"未审核",
+    reportTime:"2019-12-01",
+    budgetCause:"房屋维修",
+    reportPeople:"陈秀军",
+    approver:"柳燕",
+    operationTime:"2019-12-15"
+  },{
+    budgetId:2,
+    budgetName:"十二月打车费",
+    budgetType:"打车费",
+    budgetSum:"200元",
+    budgetStatus:"待拨付",
+    reportTime:"2019-12-05",
+    budgetCause:"加班打车",
+    reportPeople:"何炎东",
+    approver:"柳艳新",
+    operationTime:"2019-12-20"
+  },{
+    budgetId:3,
+    budgetName:"十二月住宿费",
+    budgetType:"住宿费",
+    budgetSum:"300元",
+    budgetStatus:"未审核",
+    reportTime:"2019-12-05",
+    budgetCause:"出差住宿",
+    reportPeople:"景杰",
+    approver:"程琳",
+    operationTime:"2019-12-20"
+  },{
+    budgetId:4,
+    budgetName:"十一月维修费",
+    budgetType:"维修费",
+    budgetSum:"3000元",
+    budgetStatus:"待审核",
+    reportTime:"2019-11-01",
+    budgetCause:"空调维修",
+    reportPeople:"程琳",
+    approver:"柳艳新",
+    operationTime:"2019-11-15"
+  },{
+    budgetId:5,
+    budgetName:"十一月住宿费",
+    budgetType:"住宿费",
+    budgetSum:"300元",
+    budgetStatus:"待审核",
+    reportTime:"2019-11-01",
+    budgetCause:"出差住宿",
+    reportPeople:"陈秀军",
+    approver:"程琳",
+    operationTime:"2019-11-15"
+  },{
+    budgetId:6,
+    budgetName:"十月打车费",
+    budgetType:"打车费",
+    budgetSum:"50元",
+    budgetStatus:"已拨付",
+    reportTime:"2019-10-01",
+    budgetCause:"加班打车",
+    reportPeople:"何炎东",
+    approver:"程琳",
+    operationTime:"2019-10-15"
+  },{
+    budgetId:7,
+    budgetName:"九月餐费",
+    budgetType:"餐费",
+    budgetSum:"6000元",
+    budgetStatus:"已拨付",
+    reportTime:"2019-08-30",
+    budgetCause:"公司餐费",
+    reportPeople:"程琳",
+    approver:"柳艳新",
+    operationTime:"2019-09-02"
+  }]
+  
+  invoiceManageData =[{
+    invoice:1,
+    invoiceName:"十二月打车费",
+    invoiceType:"打车费",
+    invoiceSum:"300元",
+    invoiceStatus:"待审核",
+    reportTime:"2019-12-01",
+    invoiceCause:"加班打车",
+    reportPeople:"李祥祥",
+    approver:"程琳",
+    operationTime:"2019-12-15"
+  },{
+    invoice:2,
+    invoiceName:"十一月餐费",
+    invoiceType:"餐费",
+    invoiceSum:"6000元",
+    invoiceStatus:"已拨付",
+    reportTime:"2019-10-25",
+    invoiceCause:"公司订餐",
+    reportPeople:"程琳",
+    approver:"柳艳新",
+    operationTime:"2019-11-01"
+  },{
+    invoice:3,
+    invoiceName:"十一月住宿费",
+    invoiceType:"住宿费",
+    invoiceSum:"200元",
+    invoiceStatus:"待拨付",
+    reportTime:"2019-11-01",
+    invoiceCause:"出差住宿",
+    reportPeople:"陈秀军",
+    approver:"程琳",
+    operationTime:"2019-11-15"
+  },{
+    invoice:4,
+    invoiceName:"十一月维修费",
+    invoiceType:"维修费",
+    invoiceSum:"1100元",
+    invoiceStatus:"已拨付",
+    reportTime:"2019-11-01",
+    invoiceCause:"空调维修",
+    reportPeople:"程琳",
+    approver:"柳艳新",
+    operationTime:"2019-11-15"
+  }]
+
+  receiveSupportManageData=[{
+    incomeId:1,
+    incomeName:"十一月房租",
+    incomeType:"房租",
+    incomeSum:"20000元",
+    creditTime:"2019-12-10",
+    payer:"李祥祥",
+    recorder:"程琳",
+    incomeCause:"缴纳的房租"
+  },{
+    incomeId:1,
+    incomeName:"十一月房租",
+    incomeType:"房租",
+    incomeSum:"23000元",
+    creditTime:"2019-12-10",
+    payer:"何炎东",
+    recorder:"程琳",
+    incomeCause:"缴纳的房租"
+  },{
+    incomeId:1,
+    incomeName:"十月房租",
+    incomeType:"房租",
+    incomeSum:"20000元",
+    creditTime:"2019-11-10",
+    payer:"李祥祥",
+    recorder:"程琳",
+    incomeCause:"缴纳的房租"
+  },{
+    incomeId:1,
+    incomeName:"十月房租",
+    incomeType:"房租",
+    incomeSum:"23000元",
+    creditTime:"2019-11-10",
+    payer:"何炎东",
+    recorder:"程琳",
+    incomeCause:"缴纳的房租"
+  },{
+    incomeId:1,
+    incomeName:"九月房租",
+    incomeType:"房租",
+    incomeSum:"20000元",
+    creditTime:"2019-10-10",
+    payer:"李祥祥",
+    recorder:"程琳",
+    incomeCause:"缴纳的房租"
+  }]
+
+  chargeManageData = [{
+    chargeId:1,
+    chargeName:"十一月房租",
+    chargeType:"房租",
+    chargeSum:"30000",
+    reportTime:"2019-12-10",
+    paymentStatus:"待缴费",
+    registerpeople:"李祥祥",
+    chargeCause:"缴纳的房租"
+  },{
+    chargeId:2,
+    chargeName:"十一月房租",
+    chargeType:"房租",
+    chargeSum:"20000",
+    reportTime:"2019-12-10",
+    paymentStatus:"待缴费",
+    registerpeople:"何炎东",
+    chargeCause:"缴纳的房租"
+  },{
+    chargeId:1,
+    chargeName:"十月房租",
+    chargeType:"房租",
+    chargeSum:"30000",
+    reportTime:"2019-11-10",
+    paymentStatus:"已缴费",
+    registerpeople:"李祥祥",
+    chargeCause:"缴纳的房租"
+  },{
+    chargeId:1,
+    chargeName:"十月房租",
+    chargeType:"房租",
+    chargeSum:"20000",
+    reportTime:"2019-11-10",
+    paymentStatus:"已缴费",
+    registerpeople:"何炎东",
+    chargeCause:"缴纳的房租"
+  }]
+
+  expensesBudgetData =[{
+    budgetId:1,
+    budgetName:"十二月维修费",
+    budgetType:"维修费",
+    budgetSum:"1000元",
+    budgetStatus:"未审核",
+    reportTime:"2019-12-10",
+    budgetCause:"房屋维修",
+    reportPeople:"李祥祥",
+    approver:"程琳",
+    operationTime:"2019-12-10"
+  },{
+    budgetId:1,
+    budgetName:"十二月维修费",
+    budgetType:"维修费",
+    budgetSum:"1000元",
+    budgetStatus:"未审核",
+    reportTime:"2019-12-10",
+    budgetCause:"房屋维修",
+    reportPeople:"李祥祥",
+    approver:"程琳",
+    operationTime:"2019-12-10"
+  },{
+    budgetId:1,
+    budgetName:"十二月维修费",
+    budgetType:"维修费",
+    budgetSum:"1000元",
+    budgetStatus:"未审核",
+    reportTime:"2019-12-10",
+    budgetCause:"房屋维修",
+    reportPeople:"李祥祥",
+    approver:"程琳",
+    operationTime:"2019-12-10"
+  }]
   // 跳转链接
   loadOldPage(item, routeOldProject) {
     if (routeOldProject) {

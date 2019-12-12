@@ -1,5 +1,5 @@
 <template>
-  <div class="cleaning-index">
+  <div class="cost-index">
     <commonIndex :menuList="menuList" :menuConfig="menuConfig"></commonIndex>
   </div>
 </template>
@@ -30,7 +30,7 @@ const MenuList = [
 ];
 
 export default {
-  name: "CleaningManage",
+  name: "CostManage",
   components: {
     commonIndex
   },
@@ -41,7 +41,7 @@ export default {
         bgColor: "#394562",
         textColor: "#B7BAC4",
         isCollapse: false,
-        moduleName: "保洁管理",
+        moduleName: "费用管理",
         moduleLogo: "iconnengyuanguanli"
       }
     };
