@@ -83,11 +83,21 @@
       @click.native="handleClick"
       @change="handleChange"
     >
-      <template slot="prepend" v-if="prepend">
-        <span @click="prependClick()">{{prepend}}</span>
+      <template slot="prepend" v-if="prepend || prependslot">
+        <!-- <span @click="prependClick()">{{prepend}}</span> -->
+        <div @click="prependClick()" v-html="prepend"></div>
+        <slot :name="prependslot"></slot>
       </template>
-      <template slot="append" v-if="append">
-        <span @click="appendClick()">{{append}}</span>
+      <template slot="append" v-if="append || appendslot">
+        <!-- <span @click="appendClick()">{{append}}</span> -->
+        <div @click="appendClick()" v-html="append"></div>
+        <slot :name="appendslot"></slot>
+      </template>
+      <template slot="suffix" v-if="suffix">
+        <div v-html="suffix"></div>
+      </template>
+      <template slot="prefix" v-if="prefix">
+        <div v-html="prefix"></div>
       </template>
     </el-input>
   </div>
@@ -149,6 +159,10 @@ export default {
     append: {
       type: String
     },
+    prependslot: String,
+    appendslot: String,
+    suffix: {},
+    prefix: {},
     autofocus: Boolean,
     // 以下为树
     filter: {

@@ -157,10 +157,7 @@ export default {
         res = await EnergyApi.getEnergySavingNight(this.commonParams);
       }
       if (res && res.value) {
-        var title = ["建筑楼层", "参考指标"];
-        res.value[0].map((item, index) => {
-          if (index < res.value[0].length - 2) title.push(index + 1 + "日");
-        });
+        var title = res.white
         let tmp = [];
         res.value.map(item => {
           let obj = {};
@@ -184,12 +181,16 @@ export default {
                   },
                })
           }
-          console.log('aaaaa',tmp)
           this.tableConfig.columnConfig = columnConfig;
           this.tableConfig.data = tmp;
           this.tableConfig.uiConfig.pagination.total = res.total;
+          this.tableData.total = res.total
+      } else {
+          this.tableConfig.columnConfig = [];
+          this.tableConfig.data = [];
+          this.tableConfig.uiConfig.pagination.total = 0;
+          this.tableData.total = 0
       }
-
      
     },
     async exportList() {

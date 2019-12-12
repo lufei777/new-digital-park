@@ -11,7 +11,7 @@ export default new class {
     houseDetails() { }
     // 删除房产，可删除多个  houseIds String
     @url('/oaApi/house/removeHouse')
-    @post
+    @get
     removeHouse() { }
     // 编辑房产  model
     @url('/oaApi/house/editHouse')

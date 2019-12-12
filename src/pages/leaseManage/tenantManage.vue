@@ -10,7 +10,7 @@
       >
         <template slot="btn" slot-scope="obj">
           <div>
-            <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">搜索</el-button>
+            <el-button :disabled="obj.disabled" type="primary" @click="onClickSearchBtn(obj)">搜索</el-button>
             <el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>
           </div>
         </template>
@@ -21,10 +21,8 @@
       <miTable :ref="tenantManageTable.ref" :tableConfig="tenantManageTable">
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">
-            <el-button :size="obj.size" type="primary" @click="batchEdits(obj)">批量删除</el-button>
-            <el-button :size="obj.size" type="primary" @click="batchDels(obj)">批量编辑</el-button>
+            <el-button :size="obj.size" type="primary" @click="batchDels(obj)">批量删除</el-button>
             <el-button :size="obj.size" type="primary" @click="addTenant(obj)">新增</el-button>
-            <el-button :size="obj.size" type="primary" @click="selectAll(obj)">全选</el-button>
           </div>
         </template>
 
@@ -39,19 +37,21 @@
 </template>
 
 <script>
-import DigitalParkApi from '../../service/api/digitalParkApi'
+import DigitalParkApi from "../../service/api/digitalParkApi";
 import miForm from "@/components/Form";
 import miTable from "@/components/Table";
+import CommonFun from "../../utils/commonFun";
 export default {
   components: { miForm, miTable },
   data() {
+    let _this = this;
     return {
       model: {
-        tenantNumber: "",
-        tenantName: "",
-        contactMethod: "",
-        tenantTime: "",
-        tenantHouseNumber: ""
+        // tenantNumber: "",
+        // tenantName: "",
+        // telephone: "",
+        // startTime: "",
+        // houseNumber: ""
       },
       tenantManageForm: {
         ref: "tenantManageForm",
@@ -67,7 +67,7 @@ export default {
             prop: "tenantNumber",
             placeholder: "请输入",
             clearable: true,
-            span: 6,
+            span: 4,
             minRows: 0
           },
           {
@@ -76,44 +76,46 @@ export default {
             prop: "tenantName",
             placeholder: "请输入",
             clearable: true,
-            span: 6
+            span: 4
           },
           {
             type: "input",
             label: "联系方式",
-            prop: "contactMethod",
+            prop: "telephone",
             placeholder: "请输入",
             clearable: true,
-            span: 6
+            span: 4
           },
+          // {
+          //   prop: "",
+          //   formslot: true,
+          //   span: 6
+          // },
           {
-            prop: "",
-            formslot: true,
-            span: 6
-          },
-          {
-            type: "datetime",
+            type: "date",
             label: "签约时间",
-            prop: "tenantTime",
+            prop: "startTime",
             placeholder: "选择日期时间",
             // clearable: true,
-            span: 6,
-            format: "yyyy-MM-dd hh:mm:ss",
+            span: 4,
+            format: "yyyy-MM-dd",
             valueFormat: "timestamp"
           },
-           {
-            type: "select",
+          {
+            type: "input",
             label: "所租房产编号",
-            prop: "tenantHouseNumber",
+            prop: "houseNumber",
             placeholder: "请输入",
             clearable: true,
-            span: 6
+            span: 4,
+            width:"120px"
           },
           {
             prop: "btn",
-            span: 6,
-            pull: 6,
-            formslot: true
+            span: 4,
+            pull: 4,
+            formslot: true,
+             width:"44px"
           }
         ]
       },
@@ -123,72 +125,126 @@ export default {
           width: 200
         },
         data: [],
-        columnConfig: [
-        ],
+        columnConfig: [],
         uiConfig: {
-          height: "auto",
-          selection: true
+          height: "auto", //"", //高度
+          selection: true, //是否多选
+          showIndex:true,
+          pagination: {
+            //是否分页，分页是否自定义
+            layout: "total,->, prev, pager, next, jumper",
+            pageSizes: [10, 20, 50],
+            handler(pageSize, currentPage, table) {
+              _this.handleCurrentChange(currentPage);
+            }
+          }
         }
-      }
+      },
+      currentPage: 1,
+      tenantIds: ""
     };
   },
   methods: {
     submit() {},
     resetChange() {},
-    selectAll(obj) {
-      console.log(obj);
-    },
     addTenant() {
-      this.$router.push('/addTenantManage')
+      this.$router.push("/addTenantManage");
     },
-    batchDels(obj) {
-      console.log(obj);
-    },
-    batchEdits(obj) {
-      console.log(obj);
-    },
+
     detailTenant(obj) {
       console.log(obj);
     },
-    editRow(obj) {
-      console.log(obj);
-    },
-    delRow(obj) {
-      console.log(obj);
-    },
-    search(...args) {
-      this.$refs[this.leaseManageForm.ref].getFormModel(res => {
-        console.log("model", res);
-      });
-      console.log("搜索", ...args);
+   
+     onClickSearchBtn2(){
+      this.curPage=1
+      this.$refs[this.assetsTableConfig.ref].setCurrentPage(1)
+      this.getAssetList()
     },
     clearForm(...args) {
       console.log("清空", ...args);
-      this.$refs[this.leaseManageForm.ref].resetForm();
+      this.$refs[this.tenantManageForm.ref].resetForm();
     },
     async tenantList() {
-       let labelList = [{ label: "序号", prop: "columnNumber"},
-        { label: "合同编号", prop: "tenantNumber"},
-        { label: "合同名称", prop: "elecAndWaterSum"},
-        { label: "所租房产", prop: ""},
-        { label: "租户名称", prop: "tenantName"},
-        { label: "联系方式", prop: "telephone"},
-        { label: "签约时间", prop: ""},
-        { label: "到期时间", prop: ""}];
+      let labelList = [
+        { label: "合同编号", prop: "tenantNumber" },
+        { label: "合同名称", prop: "elecAndWaterSum" },
+        { label: "所租房产", prop: "" },
+        { label: "租户名称", prop: "tenantName" },
+        { label: "联系方式", prop: "telephone" },
+        { label: "签约时间", prop: "" },
+        { label: "到期时间", prop: "" }
+      ];
       this.tenantManageTable.columnConfig = labelList;
-      let res = await DigitalParkApi.tenantList()
-      console.log('res',res)
-      res.map((item,index)=>{
-        item.columnNumber = index+1
-      })
-      if (res) {
-        this.tenantManageTable.data = res;
-        // this.tenantManageTable.uiConfig.pagination.total = res.total;
+      let res = await DigitalParkApi.tenantList({
+        pageNum: this.currentPage,
+        pageSize: 10,
+        tenantNumber:this.model.tenantNumber,
+        tenantName:this.model.tenantName,
+        telephone:this.model.telephone,
+        houseNumber:this.model.houseNumber
+      });
+      if (res && res.list) {
+        this.tenantManageTable.data = res.list;
+        this.tenantManageTable.uiConfig.pagination.total = res.total;
       }
+    },
+     onClickSearchBtn(...args) {
+      this.$refs[this.tenantManageForm.ref].getFormModel(res => {
+        console.log("model", res);
+      });
+      console.log("搜索", ...args);
+       this.curPcurrentPageage=1
+      // this.$refs[this.assetsTableConfig.ref].setCurrentPage(1)
+       this.tenantList()
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.tenantList();
+    },
+    showDeleteTip() {
+      CommonFun.deleteTip(
+        this,
+        this.tenantIds,
+        "请至少选择一条信息！",
+        this.sureDelete,
+        this.cancelDelete
+      );
+    },
+    async sureDelete() {
+      await DigitalParkApi.delTenant({
+        tenantIds: this.tenantIds
+      });
+      this.$message({
+        type: "success",
+        message: "删除成功!"
+      });
+      this.tenantIds = "";
+      this.tenantList();
+    },
+    cancelDelete() {
+      this.tenantIds = "";
+    },
+    delRow(obj) {
+      this.tenantIds = obj.scopeRow.row.tenantId;
+      this.showDeleteTip();
+    },
+    batchDels(obj) {
+      this.tenantIds =
+        this.$refs["tenantManageTable"].getSelectedData().length &&
+        this.$refs["tenantManageTable"]
+          .getSelectedData()
+          .map(item => item.tenantId)
+          .join(",");
+      this.showDeleteTip();
+    },
+    editRow(obj) {
+      this.$router.push(
+        `/addTenantManage?tenantId=${obj.scopeRow.row.tenantId}`
+      );
     }
   },
   mounted() {
-    this.tenantList()
+    this.tenantList();
   }
 };
 </script>

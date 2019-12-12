@@ -33,7 +33,7 @@
           :label="getLabelText(oitem)"
           :value="oitem[valueKey]"
         >
-          <slot :name="`${prop}Type`" :labelKey="labelKey" :valueKey="valueKey" :item="oitem"></slot>
+          <slot :name="`${prop}Type`" :labelkey="labelKey" :valuekey="valueKey" :item="oitem"></slot>
         </el-option>
       </el-option-group>
     </template>
@@ -45,7 +45,7 @@
         :label="getLabelText(oitem)"
         :value="oitem[valueKey]"
       >
-        <slot :name="`${prop}Type`" :labelKey="labelKey" :valueKey="valueKey" :item="oitem"></slot>
+        <slot :name="`${prop}Type`" :labelkey="labelKey" :valuekey="valueKey" :item="oitem"></slot>
       </el-option>
     </template>
   </el-select>
