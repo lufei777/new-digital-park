@@ -55,7 +55,7 @@ export default {
         bgColor: "#394562",
         textColor: "#B7BAC4",
         isCollapse: false,
-        activeIndex: MenuList[0].routeAddress,
+        // activeIndex: MenuList[0].routeAddress,
         moduleName: "租赁管理",
         moduleLogo: "iconnengyuanguanli"
       }

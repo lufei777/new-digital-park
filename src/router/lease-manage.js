@@ -3,19 +3,19 @@ export default [{
     name: 'leasemanage',
     meta: { title: '租赁管理' },
     component: () => import('@/pages/leaseManage'),
-    redirect: '/leasemanage/housepropertymanage',
+    redirect: '/housepropertymanage',
     children: [{
-        path: 'housepropertymanage',
+        path: '/housepropertymanage',
         name: 'housepropertymanage',
         meta: { title: '房产管理' },
         component: () => import('@/pages/leaseManage/housePropertyManage')
     }, {
-        path: 'editHouseProperty',
+        path: '/editHouseProperty',
         name: 'editHouseProperty',
         meta: { title: '编辑房产' },
         component: () => import('@/pages/leaseManage/editHouseProperty'),
     },{
-        path: 'tenantManage',
+        path: '/tenantManage',
         name: 'tenantManage',
         meta: { title: '租户管理' },
         component: () => import('@/pages/leaseManage/tenantManage'),

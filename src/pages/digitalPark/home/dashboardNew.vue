@@ -85,12 +85,20 @@
         <div class="fixed-prod-module">
           <span>{{$t('proEntry')}}</span>
           <div class="product-list">
-            <el-tooltip v-for="(item) in fixedProList" :key="item.id"
+            <el-tooltip v-for="(item) in showFixedProList" :key="item.id"
                         effect="dark" :content="item.name" placement="top-end">
               <div class="fixed-pro-item hover-pointer"
                    @click="onClickItemFixPro(item)"
               >{{item.name}}</div>
             </el-tooltip>
+          </div>
+          <div v-if="fixedProList.length>16" class="flex-align-between turn-page">
+            <span class="left-btn hover-pointer"
+                  :class="activeBtnIndex==1?'active-btn':''"
+                  @click="onClickTurnPageBtn(1)"
+            >＜</span>
+            <span class="right-btn hover-pointer" :class="activeBtnIndex==2?'active-btn':''"
+                  @click="onClickTurnPageBtn(2)">＞</span>
           </div>
         </div>
       </div>
@@ -133,11 +141,13 @@
           newsTimer: '',
           curNewsIndex: 0,
           fixedProList:[],
+          showFixedProList:[],
           moduleType:"1",
           loading:true,
           innerDragFlag:false,
           outDragFlag:false,
-          innerObj:{}
+          innerObj:{},
+          activeBtnIndex:2
         }
       },
       methods: {
@@ -221,6 +231,7 @@
             language:Cookies.get('lang')
           })
           this.fixedProList=res
+          this.showFixedProList=res.length>16?res.slice(0,16):res
         },
         getOptions(){
           return {draggable:'.item-drag-product',group:"out-product",disabled:this.outDragFlag}
@@ -356,6 +367,15 @@
           }
           this.$parent.setItemDragFlag &&
           this.$parent.setItemDragFlag([...this.proModuleList1,...this.proModuleList2])
+        },
+        onClickTurnPageBtn(flag){
+          if(flag==1){
+             this.showFixedProList=this.fixedProList.slice(0,16)
+             this.activeBtnIndex=2
+          }else{
+            this.showFixedProList=this.fixedProList.slice(16)
+            this.activeBtnIndex=1
+          }
         }
     },
     mounted(){
@@ -528,7 +548,7 @@
       padding:10px 0;
       flex-shrink: 0;
       float:left;
-      margin:2.5px 1%;
+      margin:10px 1% 5px 1%;
       background-repeat: no-repeat;
       background-size: 100% 100%;
       overflow: hidden;
@@ -561,6 +581,27 @@
     }
     .inner-drag-content{
       height:100%;
+    }
+    .turn-page{
+      margin-bottom: 10px;
+      span{
+        width:20px;
+        height:20px;
+        border-radius: 5px;
+        background:#4F89B2;
+        color:#333;
+        text-align: center;
+        line-height: 20px;
+      }
+      .active-btn{
+        color:#00bfee;
+        background:#012f46;
+        border:1px solid #00bfee;
+        box-sizing: border-box;
+      }
+      .left-btn{
+         margin-right:20px;
+      }
     }
   }
 </style>

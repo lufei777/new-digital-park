@@ -89,9 +89,9 @@
       async addSpace(){
         let res
         if(this.deptId){
-          res = await CommonApi.editSpace(this.deptForm)
+          res = await CommonApi.editDept(this.deptForm)
         }else{
-          res = await CommonApi.addSpace(this.deptForm)
+          res = await CommonApi.addDept(this.deptForm)
         }
         this.$message({
           type: 'success',
