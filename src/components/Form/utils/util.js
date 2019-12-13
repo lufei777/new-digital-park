@@ -8,7 +8,7 @@ export const miAjax = ({ axios = this.$axios || AXIOS, url, method = 'get', quer
     return new Promise((resolve, reject) => {
         if (typeof url === 'function') {
             url(query).then(res => {
-                resolve(_.get(res.data, resKey))
+                resolve(res);
             }).catch(err => {
                 resolve([]);
             })
