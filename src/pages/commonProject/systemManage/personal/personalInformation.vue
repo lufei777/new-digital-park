@@ -1,31 +1,42 @@
 <template>
   <div class="personal-information radius-shadow">
     <div class="form-box">
-      <!--<miForm-->
-        <!--:ref="formData.ref"-->
-        <!--:options="formData"-->
-        <!--v-model="model"-->
-        <!--@submit="submit"-->
-      <!--&gt;</miForm>-->
+      <miForm
+        :ref="formData.ref"
+        :options="formData"
+        v-model="formModel"
+        @submit="submit"
+      ></miForm>
     </div>
   </div>
 </template>
 
 <script>
-  // import miForm from "../../../../components/Form/index";
+  import miForm from "../../../../components/Form/index";
   export default {
     name: 'PersonalInformation',
     components: {
-      // miForm
+      miForm
     },
     data () {
+      let validTelephone = (rule, value, callback) => {
+        let reg = /^1[3|4|5|7|8]\d{9}$/;
+        if (reg.test(value) || value=="") {
+          callback();
+        } else {
+          callback(new Error("请输入正确的手机号"));
+        }
+      };
+      let validMail = (rule, value, callback) => {
+        let reg = /[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+        if (reg.test(value)) {
+          callback();
+        } else {
+          callback(new Error("请输入正确的邮箱"));
+        }
+      };
       return {
-        model:{
-          sex:0,
-          name:'',
-          avatar:'',
-          mail:'',
-          telephone:''
+        formModel:{
         },
         formData: {
           ref: "formRef",
@@ -35,7 +46,7 @@
             {
               type: "input",
               label: "姓名",
-              prop: "name",
+              prop: "fullName",
               clearable: true,
               span: 24,
               rules: {
@@ -68,55 +79,59 @@
               type: "radio",
               label: "性别",
               prop: "sex",
+              valueDefault: 0,
               span: 24,
-              dicData: [
-                {
-                  label: "男",
-                  value: 1
-                },
-                {
+              dicData: [{
+                label: "男",
+                value: 1
+               },{
                   label: "女",
                   value: 2
-                },
-                {
+                },{
                   label: "保密",
                   value: 0
-                }
-              ],
-              rules: {
-              }
+              }],
             },
             {
               type: "input",
               label: "邮箱",
-              prop: "mail",
+              prop: "email",
               clearable: true,
               span: 24,
               rules: {
+                validator: validMail,
+                trigger: "blur"
               }
             },
             {
               type: "input",
               label: "手机号",
               prop: "telephone",
-              placeholder: "请输入电话号码",
               clearable: true,
               span: 24,
               rules: {
-                required: true,
-                // validator: telephone,
-                message: "请输入正确的电话号码",
-                trigger: "change"
+                validator: validTelephone,
+                trigger:"blur",
               }
             }]
         }
+      }
+    },
+    computed:{
+      userInfo(){
+        return JSON.parse(localStorage.getItem('userInfo'))
       }
     },
     methods: {
       submit(){}
     },
     mounted(){
-    }
+
+    },
+    created(){
+      this.formModel = this.userInfo
+      this.formModel.sex=this.userInfo.sex=='男'?1:this.userInfo.sex=='女'?2:0
+    },
   }
 </script>
 <style lang="less">

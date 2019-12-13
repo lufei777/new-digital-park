@@ -32,7 +32,7 @@ export default [{
     component:HistoryStatis,
     meta:{title:'历史统计'}
   },{
-    path: '/tmpRouter',
+    path: '/tmpRouter2',
     component: TmpRouter,
     meta:{title:'能耗对比分析'},
     redirect:'/energy/zoomCompare',
