@@ -48,6 +48,20 @@
       "unicode_decimal": 59222
     },
     {
+      "icon_id": "1032144",
+      "name": "zuo",
+      "font_class": "zuo",
+      "unicode": "e697",
+      "unicode_decimal": 59031
+    },
+    {
+      "icon_id": "1032152",
+      "name": "you",
+      "font_class": "you",
+      "unicode": "e698",
+      "unicode_decimal": 59032
+    },
+    {
       "icon_id": "1063557",
       "name": "升序",
       "font_class": "iconasc",
@@ -1126,18 +1140,11 @@
       "unicode_decimal": 58947
     },
     {
-      "icon_id": "12313141",
-      "name": "下拉",
-      "font_class": "right_btn",
-      "unicode": "e7d3",
-      "unicode_decimal": 59347
-    },
-    {
-      "icon_id": "12313216",
-      "name": "下拉",
-      "font_class": "left_btn-copy",
-      "unicode": "e7d4",
-      "unicode_decimal": 59348
+      "icon_id": "12315634",
+      "name": "数字园区",
+      "font_class": "shuziyuanqu",
+      "unicode": "e696",
+      "unicode_decimal": 59030
     }
   ]
 }

@@ -93,11 +93,11 @@
             </el-tooltip>
           </div>
           <div v-if="fixedProList.length>16" class="flex-align-between turn-page">
-            <span class="left-btn hover-pointer iconfont iconleft_btn-copy"
+            <span class="left-btn hover-pointer iconfont iconzuo"
                   :class="activeBtnIndex==1?'active-btn':''"
                   @click="onClickTurnPageBtn(1)"
             ></span>
-            <span class="right-btn hover-pointer iconfont iconright_btn" :class="activeBtnIndex==2?'active-btn':''"
+            <span class="right-btn hover-pointer iconfont iconyou" :class="activeBtnIndex==2?'active-btn':''"
                   @click="onClickTurnPageBtn(2)"></span>
           </div>
         </div>
