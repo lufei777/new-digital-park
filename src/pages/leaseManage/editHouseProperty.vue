@@ -631,7 +631,7 @@ export default {
       let params = this.$route.params;
       // 传递过来的数据
       if (!_.isEmpty(params.model)) {
-        this.pageConfig = apiConfig.edit;
+        this.pageConfig = _.cloneDeep(apiConfig.edit);
         this.model = { ...this.model, ...params.model };
       }
       // 传递过来额外的配置
