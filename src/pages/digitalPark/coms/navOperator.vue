@@ -104,11 +104,9 @@
           if(val==1){
             this.$router.push('/personalInformation')
             Cookies.set('activeMenuIndex',`${thirdLevelTree.childNode[0].id}/personalInformation`)
-            localStorage.setItem('show_menu',`${thirdLevelTree.childNode[0].id}/personalInformation`)
           }else if(val==2){
             this.$router.push('/modifyPassword')
             Cookies.set('activeMenuIndex',`${thirdLevelTree.childNode[1].id}/modifyPassword`)
-            Cookies.set('show_menu',`${thirdLevelTree.childNode[1].id}/modifyPassword`)
           }
         }
         this.userValue='0'
