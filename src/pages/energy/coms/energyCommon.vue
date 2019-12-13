@@ -5,6 +5,7 @@
                     :isMultiple="isZoomMultiple"
                     :fromFlag="fromFlag"
                     :selectCallBack="selectZoomCallBack"
+                    :defaultExpandedKeys="defaultExpandedKeys"
     />
     <div class="right-content">
       <ConditionSelect :isGroup="isEnergyByGroup" :showEnergy="true" :fromFlag="fromFlag" :getDataFlag="getDataFlag"/>
@@ -62,6 +63,7 @@
         selectParams:{
           energy:[{name:''}]
         },
+        defaultExpandedKeys:[],
         tableConfig:{
           ref: "tableRef",
           data:[],
@@ -116,17 +118,20 @@
     methods: {
       async getAllFloor(){
         let res  = await CommonApi.getAllFloorOfA3()
-        let tmp=[res[0]]
-        tmp[0].disabled=true
-        res.shift()
-        tmp[0].nodes=res
-        this.floorList = tmp
+        // let tmp=[res[0]]
+        // tmp[0].disabled=true
+        // res.shift()
+        // tmp[0].nodes=res
+        this.floorList = res
         if(this.fromFlag==1){
-          this.defaultChecked =[{id:res[0].floorId,name:res[0].floor},
-                                {id:res[1].floorId,name:res[1].floor}]
-          this.checkedFloorList=[{id:res[0].floorId,name:res[0].floor},
-                                 {id:res[1].floorId,name:res[1].floor}]
+          res[0].disabled=true
+          let tmp =res[0].nodes[0].nodes
+          this.defaultExpandedKeys=[res[0].nodes[0].floorId]
+          this.defaultChecked =[{id:tmp[4].floorId,name:tmp[4].floor},
+                                {id:tmp[5].floorId,name:tmp[5].floor}]
+          this.checkedFloorList=this.defaultChecked
         }else{
+          this.defaultExpandedKeys=[res[0].floorId]
           this.checkedFloorList=[{id:res[0].floorId,name:res[0].floor}]
         }
         this.getDataFlag=true

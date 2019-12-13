@@ -39,7 +39,7 @@
       return {
         overViewData:{},
         rankType:'elecAndWaterSum',
-        rank:'asc',
+        rank:'desc',
         curPage:1,
         tableData:{},
         selectParams:{},

@@ -55,7 +55,7 @@ export default [{
       meta:{title:'能耗排名'}
     }]
   },{
-    path:'/tmpRouter',
+    path:'/tmpRouter2',
     redirect:'/energy/waterDiffer',
     component: TmpRouter,
     meta:{title:'节能诊断'},
