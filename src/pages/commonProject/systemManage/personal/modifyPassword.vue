@@ -1,44 +1,48 @@
 <template>
-  <div class="modify-password">
+  <div class="modify-password radius-shadow">
     <div class="form-box">
-      <!--<miForm-->
-        <!--:ref="formData.ref"-->
-        <!--:options="formData"-->
-        <!--v-model="model"-->
-        <!--@submit="submit"-->
-      <!--&gt;</miForm>-->
+      <miForm
+        :ref="formData.ref"
+        :options="formData"
+        v-model="formModel"
+        @submit="submit"
+      ></miForm>
     </div>
   </div>
 </template>
 
 <script>
-  // import miForm from "@/components/form";
+  import miForm from "@/components/Form";
   export default {
     name: 'ModifyPassword',
     components: {
-      // miForm
+      miForm
     },
     data () {
       return {
-        model:{
-          password:0,
-          name:'124'
+        formModel:{
         },
         formData: {
           ref: "formRef",
-          // labelWidth: "80",
           size: "medium",
           menuPosition: "center",
-          // submitText: "确定",
-          emptyText:'取消',
-          // emptyBtn: false,
+          labelWidth:150,
           forms: [
             {
               type: "input",
-              label: "姓名",
-              prop: "name",
-              clearable: true,
-              readonly: true,
+              label: "原密码",
+              prop: "password",
+              span: 24,
+              rules: {
+                required: true,
+                message: "请输入密码",
+                trigger: "blur"
+              }
+            },
+            {
+              type: "input",
+              label: "新密码",
+              prop: "rePassword",
               span: 24,
               rules: {
                 required: true,
@@ -47,62 +51,10 @@
               }
             },
             {
-              type: "upload",
-              listType: "picture-card",
-              label: "头像",
-              prop: "avatar",
-              dataType: "string",
-              limit: 1,
-              span: 24,
-              action: "/oaApi/image/upload",
-              accept: ["jpg", "jpeg", "png"],
-              props: {
-                label: "tenantPictureName",
-                value: "tenantPictureUrl"
-              },
-              propsHttp: {
-                name: "fileName",
-                url: "fileUrl",
-                res: "data"
-              }
-            },
-            {
-              type: "radio",
-              label: "性别",
-              prop: "sex",
-              span: 24,
-              dicData: [
-                {
-                  label: "男",
-                  value: 1
-                },
-                {
-                  label: "女",
-                  value: 2
-                },
-                {
-                  label: "保密",
-                  value: 0
-                }
-              ],
-              rules: {
-              }
-            },
-            {
               type: "input",
-              label: "邮箱",
-              prop: "mail",
-              clearable: true,
-              span: 24,
-              rules: {
-              }
-            },
-            {
-              type: "input",
-              label: "手机号",
-              prop: "telephone",
-              placeholder: "请输入电话号码",
-              clearable: true,
+              label: "再次输入新密码",
+              prop: "sureRepassword",
+              placeholder:'请再次输入新密码',
               span: 24,
               rules: {
                 required: true,
@@ -116,13 +68,20 @@
       }
     },
     methods: {
+      submit(){
+
+      }
     },
     mounted(){
     }
   }
 </script>
 <style lang="less">
-  .personal-information{
-
+  .modify-password{
+    .form-box{
+      width:400px;
+      margin:0 auto;
+      padding:20px 0;
+    }
   }
 </style>

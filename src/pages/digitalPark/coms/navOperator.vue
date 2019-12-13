@@ -95,13 +95,19 @@
           sessionStorage.removeItem('token')
           await DigitalParkApi.logOut()
           this.$router.push('/login')
-        }else if(val==1){
-          this.$router.push('/personalInformation')
-          Cookies.set('activeMenuIndex','/personalInformation')
-          localStorage.setItem('show_menu','/personalInformation')
-        }else if(val==2){
-          this.$router.push('/modifyPassword')
-          Cookies.set('activeMenuIndex','/personalInformation')
+        }else{
+           let menuTree = JSON.parse(localStorage.getItem('menuTree'))
+           let firstLevelTree = menuTree[0].childNode.find((item)=>item.name=="基础功能")
+           let secondLevelTree= firstLevelTree.childNode.find((item)=>item.name=="系统管理")
+           localStorage.setItem('menuList',JSON.stringify(secondLevelTree))
+           let thirdLevelTree = secondLevelTree.childNode.find((item)=>item.name=="个人中心")
+          if(val==1){
+            this.$router.push('/personalInformation')
+            Cookies.set('activeMenuIndex',`${thirdLevelTree.childNode[0].id}/personalInformation`)
+          }else if(val==2){
+            this.$router.push('/modifyPassword')
+            Cookies.set('activeMenuIndex',`${thirdLevelTree.childNode[1].id}/modifyPassword`)
+          }
         }
         this.userValue='0'
       },

@@ -68,6 +68,11 @@ export default {
       return this.menuConfig.isCollapse;
     },
     activeMenuIndex() {
+      //兼容旧项目嵌的vue项目
+      // let show_menu =localStorage.getItem("show_menu")
+      // let activeIndex = show_menu.indexOf("@")?show_menu.substring(show_menu.indexOf("@")):show_menu
+      // console.log(activeIndex)
+      // return activeIndex
       return this.menuConfig.activeIndex
     }
   },

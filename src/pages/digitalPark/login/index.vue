@@ -4,12 +4,12 @@
     <div class="login-box flex-column flex-align" v-loading="loading">
       <span class="login-title">数字园区综合管理平台</span>
       <div class="flex-item flex-align border-basic name-box">
-      <i class="iconfont iconzhanghao login-icon name-icon"></i>
-      <el-input v-model="name"
-                placeholder="请输入账号/用户名"
-                @focus="onInputChange(1,'focus')"
-                @blur="onInputChange(1,'blur')"
-      ></el-input>
+        <i class="iconfont iconzhanghao login-icon name-icon"></i>
+        <el-input v-model="name"
+                  placeholder="请输入账号/用户名"
+                  @focus="onInputChange(1,'focus')"
+                  @blur="onInputChange(1,'blur')"
+        ></el-input>
       </div>
       <div class="flex-item flex-align border-basic pwd-box">
         <i class="iconfont iconmima login-icon pwd-icon"></i>
@@ -20,6 +20,9 @@
                   @blur="onInputChange(2,'blur')"
                   @keyup.enter.native="onClickLoginBtn"
         ></el-input>
+      </div>
+      <div class="flex-item">
+        <el-checkbox v-model="checked">自动登录</el-checkbox>
       </div>
       <div class="flex-item login-btn" @click="onClickLoginBtn">登录</div>
       <div v-show="showErrTip" class="flex-item error-box">
@@ -41,7 +44,8 @@
         pwd:'',
         errTip:'',
         showErrTip:false,
-        loading:false
+        loading:false,
+        checked:''
       }
     },
     methods: {

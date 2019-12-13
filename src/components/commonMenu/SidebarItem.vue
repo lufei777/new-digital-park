@@ -7,7 +7,7 @@
     :index="item.id + item.routeAddress"
     :parentMenu="parentMenu"
   >
-    <i v-if="item.icon" :class="['iconfont',item.icon]"></i>
+    <i v-if="item.icon && !specialRoute" :class="['iconfont',item.icon]"></i>
     <span slot="title">{{item.name}}</span>
   </el-menu-item>
   <!--</template>-->
@@ -19,7 +19,7 @@
     @click.native="onClickSubmenu(item,parentMenu)"
   >
     <template slot="title">
-      <i v-if="item.icon" :class="['iconfont',item.icon]"></i>
+      <i v-if="item.icon && !specialRoute" :class="['iconfont',item.icon]"></i>
       <span>{{item.name}}</span>
     </template>
 
