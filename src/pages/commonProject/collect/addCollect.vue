@@ -152,7 +152,17 @@ export default {
           monitor: this.collectForm.deviceTableId
         }
       ];
-      let res = await CommonApi.insertHandInput(params);
+      let res;
+      if(this.rowData) {
+         res = await CommonApi.updateHandInput({
+           id:this.rowData.id,
+           lookTime: this.collectForm.time,
+           value: this.collectForm.positiveNumber,
+           monitor: this.collectForm.deviceTableId
+         });
+      } else {
+         res = await CommonApi.insertHandInput(params);
+      }
       if (res.result == true) {
         this.$message({
           type: "success",

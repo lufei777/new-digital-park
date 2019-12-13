@@ -46,7 +46,7 @@ export default {
       model: {},
       formData: {
         ref: "formData",
-        labelWidth: "80",
+        labelWidth: "100",
         size: "medium",
         menuPosition: "right",
         menuBtn: false,
@@ -78,6 +78,11 @@ export default {
             span: 4
           },
           {
+            prop: "",
+            formslot: true,
+            span: 12
+          },
+          {
             type: "input",
             label: "发票状态",
             prop: "invoiceStatus",
@@ -96,10 +101,9 @@ export default {
           },
           {
             prop: "btn",
-            span: 4,
+            span: 6,
             pull: 4,
             formslot: true,
-            width: "34px"
           }
         ]
       },

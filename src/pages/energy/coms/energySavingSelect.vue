@@ -1,14 +1,14 @@
 <template>
-  <div class="energy-saving-select radius-shadow">
-    <div class="flex-align-between condition-box">
+  <div class="energy-saving-select">
+    <div class="flex-align-between condition-box radius-shadow">
       <div class="item-group block">
-        <span class="demonstration">建筑群：</span>
+        <label>建筑群：</label>
         <el-select v-model="energyA3" placeholder="请选择">
-          <el-option label="A3" value="1"></el-option>
+          <el-option :label="energyA3Text" value="1"></el-option>
         </el-select>
       </div>
       <div class="item-group block">
-        <span class="demonstration">能源分项：</span>
+        <label>能源分项：</label>
         <el-select v-model="energySubentry" placeholder="请选择">
           <el-option
             v-for="item in energySubentryData"
@@ -19,26 +19,22 @@
         </el-select>
       </div>
       <div class="item-group block">
-        <span class="demonstration">指标选择：</span>
+        <label>指标选择：</label>
         <el-select v-model="indexEnergy" placeholder="请选择">
           <el-option label="参考标准" value="1"></el-option>
           <el-option label="国家标准" value="2" disabled></el-option>
         </el-select>
       </div>
-      <div class="item-group block">
-        <span class="demonstration">楼层检索：</span>
-        <el-select v-model="curEnergy" placeholder="请选择">
-          <el-option label="全部" value="0"></el-option>
-          <el-option
-            v-for="item in floorSelectData"
-            :key="item.floorId"
-            :label="item.floor"
-            :value="item.floorId"
-          ></el-option>
-        </el-select>
+      <div class="item-group block demonstrationFloor">
+        <label>楼层检索：</label>
+        <el-input v-model="curEnergy" @focus="onShowModal"></el-input>
+        <!-- <el-select v-model="indexEnergy" placeholder="请选择">
+          <el-option label="参考标准" value="1"></el-option>
+          <el-option label="国家标准" value="2" disabled></el-option>
+        </el-select> -->
       </div>
       <div class="item-group block">
-        <span class="demonstration">月份：</span>
+        <label>月份：</label>
         <el-date-picker
           v-model="startTime"
           type="month"
@@ -50,12 +46,13 @@
       <el-button type="primary" @click="getList">查询</el-button>
       <el-button type="primary" @click="exportList" v-if="tableData.total && tableData.total!=0">导出</el-button>
     </div>
-    <div class="tabulation">
+    <div class="tabulation radius-shadow">
       <div class="tab-title flex-align-between">
         <span>注:红色字体为超标</span>
         <em>{{tabTitle}}</em>
       </div>
       <Table :ref="tableConfig.ref" :tableConfig="tableConfig" ></Table>
+      <TreeModal :tree-modal-config="treeModalConfig"/>
     </div>
   </div>
 </template>
@@ -64,24 +61,28 @@
 import CommonApi from "../../../service/api/commonApi";
 import EnergyApi from "../../../service/api/energyApi";
 import Table from "../../../components/Table/index";
+import TreeModal from '../../../components/treeModal/index'
 import moment from "moment";
 let activeNav;
 export default {
   name: "EnergySavingSelect",
   components: {
-    Table
+    Table,
+    TreeModal
   },
   props: ["energySaveFlag"],
   data() {
     let _this = this;
     return {
-      curEnergy: "0", //楼层检索
+      curEnergy: "", //楼层检索
+      curEnergyId:"0",
+      energyA3Text:'',
       energyA3: "1", //建筑群
       energySubentry: "", //能源分项
       indexEnergy: "1", //指标选择
       energySubentryData: [],
       floorSelectData: "",
-      startTime: moment(new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000)).format("YYYY-MM"),
+      startTime: moment(new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000*10)).format("YYYY-MM"),
       page: 1,
       tableData: {
         total: 0
@@ -105,7 +106,20 @@ export default {
         tableMethods: {
           sortChange: _this.sortTable
         }
-      }
+      },
+      treeModalConfig:{
+          treeList:[],
+          treeConfig:{
+             treeProps:{
+              label:"floor",
+              children:'nodes'
+            },
+            defaultExpandedkeys:[],
+          },
+          showModal:false,
+          onClickSureBtnCallback:this.onClickModalSureBtn,
+          onClickCancelBtnCallback:this.onClickModalCancelBtn
+        }
     };
   },
   computed: {
@@ -127,7 +141,7 @@ export default {
         lou: this.energyA3,
         standard: this.indexEnergy,
         type: this.energySubentry,
-        parent: this.curEnergy,
+        parent: this.curEnergyId,
         page: this.page,
         size: 10
       };
@@ -146,8 +160,11 @@ export default {
       }
     },
     async getAllFloorOfA3() {
-      let res = await CommonApi.getAllFloorOfA3();
-      this.floorSelectData = res;
+      this.treeModalConfig.treeList = await CommonApi.getAllFloorOfA3()
+      this.curEnergyId = this.treeModalConfig.treeList[0].floorId
+      this.energyA3Text = this.treeModalConfig.treeList[0].floor
+      this.curEnergy = this.treeModalConfig.treeList[0].floor
+      this.treeModalConfig.treeConfig.defaultExpandedkeys=[this.treeModalConfig.treeList[0].floorId]
     },
     async getList() {
       let res;
@@ -171,13 +188,13 @@ export default {
                columnConfig.push({
                  label:key,
                  prop:key,
+                 width:120,
                  formatter:function(row,column){
                    if (row[column.property] > parseFloat(row.参考指标)) {
                      return `<span class="styleRed">${row[column.property]}</span>`;
                    } else {
-                     return `<span>${row[column.property]}</span>`;
+                     return `<span>${ row[column.property] ? row[column.property] : "--"}</span>`;
                    }
-                   
                   },
                })
           }
@@ -191,7 +208,6 @@ export default {
           this.tableConfig.uiConfig.pagination.total = 0;
           this.tableData.total = 0
       }
-     
     },
     async exportList() {
       let url;
@@ -206,6 +222,17 @@ export default {
       }
       location.href = url + params;
     },
+    onShowModal(){
+        this.treeModalConfig.showModal=true
+      },
+       onClickModalSureBtn(val){
+        this.curEnergyId = val.floorId
+        this.curEnergy = val.floor
+        this.treeModalConfig.showModal=false
+      },
+      onClickModalCancelBtn(){
+        this.treeModalConfig.showModal=false
+      },
     handleCurrentChange(value) {
       this.page = value;
       this.getList();
@@ -222,31 +249,39 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
 .energy-saving-select {
-  padding: 0 20px 20px 20px;
-  background: #fff;
   .styleRed {
     color: red;
   }
   .condition-box {
-    width: 100%;
-    padding: 20px 0;
-    .block {
+    margin-bottom: 20px;
+    background: @white;
+    padding: 20px;
+    // background: pink;
+  }
+  .tabulation {
+    background: @white;
+    padding: 20px;
+  }
+  .block {
       // padding: 0px 20px;
       // flex-shrink: 0;
       .el-select {
-        width: 140px !important;
+        width: 120px !important;
       }
     }
-    // .el-button {
-    //   //  margin-left: -40px;
-    //   width: 5%;
-    // }
-  }
-  .tabulation .tab-title {
+
+    .demonstrationFloor {
+      .el-input {
+        width: 70%;
+      }
+      // .el-input__inner {
+      //   width: 100px !important;
+      // }
+    }
+  .tab-title {
     width: 57%;
     height: 50px;
     line-height: 50px;
-
     span {
       color: red;
       font-size: 14px;
@@ -255,14 +290,6 @@ export default {
       font-style: normal;
       font-size: 20px;
     }
-  }
-  .dynamic-table-box .table-box {
-    border-radius: 0;
-    border: none;
-    margin-top: 0px;
-    padding: 0px;
-    background: #fff;
-    overflow: hidden;
   }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="income-record">
+  <div class="warehouse-manage">
     <div class="condition-box radius-shadow">
       <miForm
         :ref="formData.ref"
@@ -17,11 +17,12 @@
       </miForm>
     </div>
 
-    <div class="income-record-table radius-shadow">
+    <div class="warehouse-manage-table radius-shadow">
       <miTable :ref="tableData.ref" :tableConfig="tableData">
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">
             <el-button :size="obj.size" type="primary">批量删除</el-button>
+            <el-button :size="obj.size" type="primary">批量编辑</el-button>
             <el-button :size="obj.size" type="primary">导出</el-button>
             <el-button :size="obj.size" type="primary">导入</el-button>
             <el-button :size="obj.size" type="primary">新增</el-button>
@@ -37,7 +38,7 @@ import miForm from "@/components/Form";
 import miTable from "@/components/Table";
 import CommonFun from "../../utils/commonFun";
 export default {
-  name: "IncomeRecord",
+  name: "WarehouseManage",
   components: { miForm, miTable },
   data() {
     return {
@@ -52,8 +53,8 @@ export default {
         forms: [
           {
             type: "input",
-            label: "收入名称",
-            prop: "incomeName",
+            label: "物品名称",
+            prop: "goodsName",
             placeholder: "请输入",
             clearable: true,
             span: 4,
@@ -61,16 +62,16 @@ export default {
           },
           {
             type: "input",
-            label: "收入类型",
-            prop: "incomeType",
+            label: "物品类型",
+            prop: "goodsType",
             placeholder: "请输入",
             clearable: true,
             span: 4
           },
           {
             type: "input",
-            label: "收入金额",
-            prop: "invoiceSum",
+            label: "入库总数",
+            prop: "warehouseSum",
             placeholder: "请输入",
             clearable: true,
             span: 4
@@ -82,26 +83,40 @@ export default {
           },
           {
             type: "input",
-            label: "缴纳人",
-            prop: "payer",
-            placeholder: "请输入",
-            span: 4
-          },
-          {
-            type: "date",
-            label: "入账日期",
-            prop: "creditTime",
+            label: "入库日期",
+            prop: "warehouseTime",
             placeholder: "选择日期时间",
             // clearable: true,
             span: 4,
             format: "yyyy-MM-dd",
             valueFormat: "timestamp"
           },
+          // {
+          //   prop: "",
+          //   formslot: true,
+          //   span: 6
+          // },
+          {
+            type: "input",
+            label: "申请人",
+            prop: "applicant",
+            placeholder: "请输入",
+            span: 4
+          },
+          {
+            type: "input",
+            label: "经办人",
+            // offset:1,
+            prop: "handlePeople",
+            placeholder: "请输入",
+            span: 4
+          },
           {
             prop: "btn",
             span: 6,
             pull: 4,
-            formslot: true,
+            formslot: true
+            // width: "34px"
           }
         ]
       },
@@ -133,6 +148,10 @@ export default {
               handler: function(row) {}
             },
             {
+              label: "编辑",
+              handler: function(row) {}
+            },
+            {
               label: "删除",
               handler: function(row) {}
             }
@@ -155,15 +174,15 @@ export default {
       this.$refs[this.formData.ref].resetForm();
     },
     getCleaningList() {
-      let res = CommonFun.receiveSupportManageData;
+      let res = CommonFun.warehouseManageData;
       let labelList = [
-        { label: "收入名称", prop: "incomeName" },
-        { label: "收入类型", prop: "incomeType" },
-        { label: "收入金额", prop: "incomeSum" },
-        { label: "入账日期", prop: "creditTime" },
-        { label: "缴纳人", prop: "payer" },
-        { label: "记录人", prop: "recorder" },
-        { label: "费用事由", prop: "incomeCause" },
+        { label: "物品名称", prop: "goodsName" },
+        { label: "物品类型", prop: "goodsType" },
+        { label: "入库总数", prop: "warehouseSum" },
+        { label: "入库日期", prop: "warehouseTime" },
+        { label: "申请人", prop: "applicant" },
+        { label: "经办人", prop: "handlePeople" },
+        { label: "备注", prop: "remark" }
       ];
       this.tableData.columnConfig = labelList;
       this.tableData.data = res;
@@ -178,14 +197,14 @@ export default {
 </script>
 
 <style lang="less">
-.income-record {
+.warehouse-manage {
   .condition-box {
     margin-bottom: 20px;
     background: @white;
     padding: 20px;
     // background: pink;
   }
-  .income-record-table {
+  .warehouse-manage-table {
     background: @white;
     padding: 20px;
     .operator-box {
