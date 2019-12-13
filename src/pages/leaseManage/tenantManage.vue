@@ -110,15 +110,15 @@ export default {
             prop: "houseNumber",
             placeholder: "请输入",
             clearable: true,
-            span: 6,
-            width: "120px"
+            span: 4,
+            width: 120
           },
           {
             prop: "btn",
             span: 4,
             pull: 4,
             formslot: true,
-            width: "44px"
+            width: 20
           }
         ]
       },

@@ -44,7 +44,7 @@ export default {
       model: {},
       formData: {
         ref: "formData",
-        labelWidth: "80",
+        labelWidth: "100",
         size: "medium",
         menuPosition: "right",
         menuBtn: false,
@@ -75,7 +75,12 @@ export default {
             clearable: true,
             span: 4
           },
-        //   {
+          {
+            prop: "",
+            formslot: true,
+            span: 12
+          },
+        //  {
         //     prop: "",
         //     formslot: true,
         //     span: 6
@@ -90,6 +95,7 @@ export default {
             format: "yyyy-MM-dd",
             valueFormat: "timestamp"
           },
+          
           {
             type: "input",
             label: "负责人",
@@ -99,6 +105,7 @@ export default {
             span: 4
             // width: "110px"
           },
+          
           {
             type: "date",
             label: "执行日期",
@@ -111,10 +118,9 @@ export default {
           },
           {
             prop: "btn",
-            span: 4,
+            span: 6,
             pull: 4,
             formslot: true,
-            width: "34px"
           }
         ]
       },

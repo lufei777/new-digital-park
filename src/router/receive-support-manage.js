@@ -2,7 +2,7 @@ import ReceiveSupportManageIndex from '../pages/receiveSupportManage/index'
 import IncomeRecord from '../pages/receiveSupportManage/IncomeRecord'
 import ChargeManage from '../pages/receiveSupportManage/chargeManage'
 import ExpensesBudget from '../pages/receiveSupportManage/expensesBudget'
-
+import PayApplication from '../pages/receiveSupportManage/payApplication'
 export default [{
     path: '/',
     redirect: '/cleaningRecord',
@@ -23,5 +23,10 @@ export default [{
         name: 'ExpensesBudget',
         meta: { title: '支出预算' },
         component: ExpensesBudget,
+    },{
+        path: '/payApplication',
+        name: 'PayApplication',
+        meta: { title: '支付申请' },
+        component: PayApplication,
     }]
 }]

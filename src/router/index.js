@@ -14,12 +14,15 @@ import LeaseManage from './lease-manage'
 import CleaningManage from './cleaning-manage'
 import CostManage from './cost-manage'
 import ReceiveSupportManage from './receive-support-manage'
+import PurchaseManage from './purchase-manage'
+import StockManage from './stock-manage'
+
 
 
 import helloRouter from './hello-router'
 
 // 数字园区
-let DigitalRouters = flattenDeep([DigitalParkRouter, AssetManage, EnergyRouter, vibeWeb, LeaseManage,CleaningManage,CostManage,ReceiveSupportManage]);
+let DigitalRouters = flattenDeep([DigitalParkRouter, AssetManage, EnergyRouter, vibeWeb, LeaseManage,CleaningManage,CostManage,ReceiveSupportManage,PurchaseManage,StockManage]);
 
 // const routes = flattenDeep([DigitalRouters]);
 Vue.use(Router)
