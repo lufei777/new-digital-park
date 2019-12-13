@@ -44,7 +44,7 @@ export default {
       model: {},
       formData: {
         ref: "formData",
-        labelWidth: "80",
+        labelWidth: "100",
         size: "medium",
         menuPosition: "right",
         menuBtn: false,
@@ -76,6 +76,11 @@ export default {
             span: 4
           },
           {
+            prop: "",
+            formslot: true,
+            span: 12
+          },
+          {
             type: "input",
             label: "缴费状态",
             prop: "paymentStatus",
@@ -94,10 +99,9 @@ export default {
           },
           {
             prop: "btn",
-            span: 4,
+            span: 6,
             pull: 4,
-            formslot: true,
-            width: "34px"
+            formslot: true
           }
         ]
       },
@@ -159,7 +163,7 @@ export default {
         { label: "发起日期", prop: "reportTime" },
         { label: "缴费状态", prop: "paymentStatus" },
         { label: "登记人", prop: "registerpeople" },
-        { label: "费用事由", prop: "chargeCause" },
+        { label: "费用事由", prop: "chargeCause" }
       ];
       this.tableData.columnConfig = labelList;
       this.tableData.data = res;

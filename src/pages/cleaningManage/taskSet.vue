@@ -38,14 +38,14 @@ import miForm from "@/components/Form";
 import miTable from "@/components/Table";
 import CommonFun from "../../utils/commonFun";
 export default {
-  name:"TaskSet",
+  name: "TaskSet",
   components: { miForm, miTable },
   data() {
     return {
       model: {},
       formData: {
         ref: "formData",
-        labelWidth: "80",
+        labelWidth: "100",
         size: "medium",
         menuPosition: "right",
         menuBtn: false,
@@ -76,11 +76,11 @@ export default {
             clearable: true,
             span: 4
           },
-        //   {
-        //     prop: "",
-        //     formslot: true,
-        //     span: 6
-        //   },
+          {
+            prop: "",
+            formslot: true,
+            span: 12
+          },
           {
             type: "select",
             label: "完成情况",
@@ -112,10 +112,9 @@ export default {
           },
           {
             prop: "btn",
-            span: 4,
+            span: 6,
             pull: 4,
-            formslot: true,
-            width: "34px"
+            formslot: true
           }
         ]
       },
@@ -144,23 +143,19 @@ export default {
           btns: [
             {
               label: "详情",
-              handler: function(row) {
-              }
+              handler: function(row) {}
             },
             {
               label: "编辑",
-              handler: function(row) {
-              }
+              handler: function(row) {}
             },
             {
               label: "终止",
-              handler: function(row) {
-              }
+              handler: function(row) {}
             },
             {
               label: "删除",
-              handler: function(row) {
-              }
+              handler: function(row) {}
             }
           ]
         }
@@ -194,8 +189,8 @@ export default {
       this.tableData.columnConfig = labelList;
       this.tableData.data = res;
     },
-    batchDels(){},
-    addTenant(){}
+    batchDels() {},
+    addTenant() {}
   },
   mounted() {
     this.getCleaningList();

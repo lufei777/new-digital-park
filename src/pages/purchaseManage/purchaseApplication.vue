@@ -1,5 +1,5 @@
 <template>
-  <div class="income-record">
+  <div class="purchase-application">
     <div class="condition-box radius-shadow">
       <miForm
         :ref="formData.ref"
@@ -17,11 +17,13 @@
       </miForm>
     </div>
 
-    <div class="income-record-table radius-shadow">
+    <div class="purchase-application-table radius-shadow">
       <miTable :ref="tableData.ref" :tableConfig="tableData">
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">
             <el-button :size="obj.size" type="primary">批量删除</el-button>
+            <el-button :size="obj.size" type="primary">批量审核</el-button>
+            <el-button :size="obj.size" type="primary">批量编辑</el-button>
             <el-button :size="obj.size" type="primary">导出</el-button>
             <el-button :size="obj.size" type="primary">导入</el-button>
             <el-button :size="obj.size" type="primary">新增</el-button>
@@ -37,7 +39,7 @@ import miForm from "@/components/Form";
 import miTable from "@/components/Table";
 import CommonFun from "../../utils/commonFun";
 export default {
-  name: "IncomeRecord",
+  name: "PurchaseApplication",
   components: { miForm, miTable },
   data() {
     return {
@@ -52,8 +54,8 @@ export default {
         forms: [
           {
             type: "input",
-            label: "收入名称",
-            prop: "incomeName",
+            label: "申请名称",
+            prop: "applicationName",
             placeholder: "请输入",
             clearable: true,
             span: 4,
@@ -61,16 +63,16 @@ export default {
           },
           {
             type: "input",
-            label: "收入类型",
-            prop: "incomeType",
+            label: "采购类型",
+            prop: "purchaseType",
             placeholder: "请输入",
             clearable: true,
             span: 4
           },
           {
             type: "input",
-            label: "收入金额",
-            prop: "invoiceSum",
+            label: "采购金额",
+            prop: "purchaseSum",
             placeholder: "请输入",
             clearable: true,
             span: 4
@@ -82,15 +84,22 @@ export default {
           },
           {
             type: "input",
-            label: "缴纳人",
-            prop: "payer",
+            label: "采购状态",
+            prop: "purchaseStatus",
+            placeholder: "请输入",
+            span: 4
+          },
+          {
+            type: "input",
+            label: "采购人",
+            prop: "purchasePeople",
             placeholder: "请输入",
             span: 4
           },
           {
             type: "date",
-            label: "入账日期",
-            prop: "creditTime",
+            label: "提报日期",
+            prop: "reportTime",
             placeholder: "选择日期时间",
             // clearable: true,
             span: 4,
@@ -101,7 +110,7 @@ export default {
             prop: "btn",
             span: 6,
             pull: 4,
-            formslot: true,
+            formslot: true
           }
         ]
       },
@@ -133,6 +142,10 @@ export default {
               handler: function(row) {}
             },
             {
+              label: "编辑",
+              handler: function(row) {}
+            },
+            {
               label: "删除",
               handler: function(row) {}
             }
@@ -155,15 +168,16 @@ export default {
       this.$refs[this.formData.ref].resetForm();
     },
     getCleaningList() {
-      let res = CommonFun.receiveSupportManageData;
+      let res = CommonFun.purchaseApplicationData;
       let labelList = [
-        { label: "收入名称", prop: "incomeName" },
-        { label: "收入类型", prop: "incomeType" },
-        { label: "收入金额", prop: "incomeSum" },
-        { label: "入账日期", prop: "creditTime" },
-        { label: "缴纳人", prop: "payer" },
+        { label: "申请名称", prop: "applicationName" },
+        { label: "采购类型", prop: "purchaseType" },
+        { label: "采购金额", prop: "purchaseSum" },
+        { label: "采购状态", prop: "purchaseStatus" },
+        { label: "提报日期", prop: "reportTime" },
+        { label: "采购人", prop: "purchasePeople" },
         { label: "记录人", prop: "recorder" },
-        { label: "费用事由", prop: "incomeCause" },
+        { label: "备注", prop: "remark" }
       ];
       this.tableData.columnConfig = labelList;
       this.tableData.data = res;
@@ -178,14 +192,14 @@ export default {
 </script>
 
 <style lang="less">
-.income-record {
+.purchase-application {
   .condition-box {
     margin-bottom: 20px;
     background: @white;
     padding: 20px;
     // background: pink;
   }
-  .income-record-table {
+  .purchase-application-table {
     background: @white;
     padding: 20px;
     .operator-box {
