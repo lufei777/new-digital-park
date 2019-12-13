@@ -116,7 +116,7 @@ export default function () {
                 default: () => []
             },
             dicUrl: {
-                type: String,
+                // type: String || Function,
                 default: ''
             },
             dicMethod: {

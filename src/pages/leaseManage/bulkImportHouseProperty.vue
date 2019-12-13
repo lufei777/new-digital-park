@@ -19,27 +19,51 @@
                   <p>2、模板填写完毕后，请从右边上传。</p>
                 </el-col>
               </el-row>
+
+              <el-button round @click="back">返回</el-button>
             </el-row>
           </template>
         </importFrom>
-
-        <el-steps :active="stepsActive" align-center finish-status="success">
-          <el-step title="填写模板" description="请先下载模板，填写完成后上传"></el-step>
-          <el-step title="确认信息" description="请确认导入的信息是否正确"></el-step>
-          <el-step :title="stepsActive === allSteps ? '导入成功' : '导入中...'" description></el-step>
-        </el-steps>
       </div>
 
-      <div v-if="stepsActive === 1">
+      <div v-show="stepsActive === 1 ||stepsActive ===  2" v-loading.lock="tableloading">
         <importTable style="margin-bottom:20px;" :ref="tableConfig.ref" :tableConfig="tableConfig"></importTable>
-        <el-row type="flex" justify="space-around">
-          <el-col :span="8">
+        <el-row type="flex" justify="center">
+          <el-col class="is-justify-space-around el-row--flex" :span="8">
             <el-button type="primary" round @click="importProperty">导入</el-button>
-            <el-button round @click="stepLast">重传</el-button>
+            <el-button round @click="reUpload">重传</el-button>
             <el-button round @click="back">返回</el-button>
           </el-col>
         </el-row>
       </div>
+
+      <div v-show="stepsActive === 3">
+        <el-row type="flex" justify="center" style="height:200px;">
+          <el-col class="is-justify-center el-row--flex" :span="8">
+            <div
+              class="is-justify-center el-row--flex"
+              style="flex-direction:column;text-align:center;"
+            >
+              <i class="el-icon-success" style="font-size:100px;margin-top:20px;color:#3db103;"></i>
+              <p style="font-size:20px;font-weight:bold;">导入成功！</p>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row type="flex" justify="center">
+          <el-col class="is-justify-space-around el-row--flex" :span="8">
+            <el-button round @click="reUpload">重传</el-button>
+            <el-button round @click="back">返回</el-button>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
+
+    <div class="panel">
+      <el-steps :active="stepsActive" align-center finish-status="success">
+        <el-step title="填写模板" description="请先下载模板，填写完成后上传"></el-step>
+        <el-step title="确认信息" description="请确认导入的信息是否正确"></el-step>
+        <el-step :title="stepsActive === allSteps ? '导入成功' : '导入中...'" description></el-step>
+      </el-steps>
     </div>
   </div>
 </template>
@@ -58,6 +82,7 @@ export default {
       templateUrl: "123",
       allSteps: 3,
       stepsActive: 0,
+      tableloading: false,
       model: {},
       options: {
         menuBtn: false,
@@ -102,20 +127,20 @@ export default {
         data: [],
         columnConfig: [
           {
-            prop: "houseNumber",
+            prop: "houseNumber1",
             label: "房产编号",
             width: 200
           },
           {
-            prop: "houseName",
+            prop: "houseName1",
             label: "房产名称"
           },
           {
-            prop: "spaceName",
+            prop: "spaceName1",
             label: "空间位置"
           },
           {
-            prop: "houseStatus",
+            prop: "houseStatus1",
             label: "房产状态",
             formatter: function(row, column) {
               let HouseStatus = LeaseManageDic.HouseStatus;
@@ -133,26 +158,25 @@ export default {
             }
           },
           {
-            prop: "houseArea",
+            prop: "houseArea1",
             label: "面积"
           },
           {
-            prop: "housePrice",
+            prop: "housePrice1",
             label: "总价"
           },
           {
-            prop: "qysj",
+            prop: "qysj1",
             label: "签约时间"
           },
           {
-            prop: "zhxm",
+            prop: "zhxm1",
             label: "租户姓名"
           }
         ],
         uiConfig: {
           height: "auto",
-          customTopPosition: "right",
-          selection: true
+          customTopPosition: "right"
         }
       }
     };
@@ -164,6 +188,9 @@ export default {
     stepNext() {
       this.stepsActive < this.allSteps ? this.stepsActive++ : "";
     },
+    reUpload() {
+      this.stepsActive = 0;
+    },
     uploadAfter(res, done, hide, column) {
       if (_.isError(res)) {
         console.error(res);
@@ -174,7 +201,14 @@ export default {
       }
       hide();
     },
-    importProperty() {},
+    importProperty() {
+      this.stepNext();
+      this.tableloading = true;
+      setTimeout(() => {
+        this.stepNext();
+        this.tableloading = false;
+      }, 2000);
+    },
     back() {
       this.$router.back();
     }
