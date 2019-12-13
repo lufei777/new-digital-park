@@ -146,21 +146,23 @@ export default {
                 return cur.value === rowValue;
               });
               return res ? res.label : "";
-              /* if (value === HouseStatus.Rented.value) {
-                return HouseStatus.Rented.label;
-              }
-              if (value === HouseStatus.BeRent.value) {
-                return HouseStatus.BeRent.label;
-              } */
             }
           },
           {
             prop: "houseArea",
-            label: "面积"
+            label: "面积 m²"
           },
           {
             prop: "housePrice",
-            label: "总价"
+            label: "总价",
+            formatter(row, column) {
+              let pirceTypeLabel = "";
+              if (typeof row.priceType == "number") {
+                pirceTypeLabel =
+                  LeaseManageDic.PriceType[row.priceType - 1].label;
+              }
+              return `${row[column.property]} ${pirceTypeLabel}`;
+            }
           },
           {
             prop: "qysj",
@@ -196,7 +198,10 @@ export default {
       this.$router.push({ name: "bulkimporthouseproperty" });
     },
     bulkDel({ selectedData }) {
-      if (!selectedData.length) return;
+      if (!selectedData.length) {
+         commonFun.deleteTip(this,false,"请选择数据");
+         return;
+      };
       let ids = _.reduce(
         selectedData,
         (result, cur, curindex) => {
