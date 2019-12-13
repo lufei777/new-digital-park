@@ -58,7 +58,7 @@ export default {
         labelWidth: "100",
         size: "medium",
         menuPosition: "right",
-      
+
         submitBtn: false,
         emptyBtn: false,
 
@@ -70,8 +70,7 @@ export default {
             placeholder: "请输入",
             clearable: true,
             span: 4,
-            minRows: 0,
-              
+            minRows: 0
           },
           {
             type: "input",
@@ -132,7 +131,9 @@ export default {
         uiConfig: {
           height: "auto", //"", //高度
           selection: true, //是否多选
-          showIndex: true,
+          showIndex: {
+            width: 50
+          },
           pagination: {
             //是否分页，分页是否自定义
             layout: "total,->, prev, pager, next, jumper",
@@ -265,11 +266,13 @@ export default {
     padding: 20px;
     .operator-box {
       background: @white;
-      padding: 10px;
       .el-button {
         margin-left: 20px;
       }
     }
+  }
+  .el-form-item {
+    margin-bottom: 0;
   }
   // .el-input {
   //   width: 180px!important;

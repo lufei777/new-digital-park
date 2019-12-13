@@ -209,7 +209,6 @@ export default {
     padding: 20px;
     .operator-box {
       background: @white;
-      padding: 10px;
       .el-button {
         margin-left: 20px;
       }
