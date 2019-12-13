@@ -257,7 +257,7 @@ export default {
         let boxTop;
 
         if (bodyHeight - (top + height) < boxHeight) {
-          boxTop = top - boxHeight - 10;
+          boxTop = -boxHeight - 10;
           this.treeStyle.top = `${boxTop}px`;
         }
       });

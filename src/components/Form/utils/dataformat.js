@@ -75,7 +75,10 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
     ) {
         // 头像框特殊处理
         if (listType === 'picture-img' && type === 'upload') {
-            return [value];
+            if(typeof value === 'string' && value.trim().length > 0){
+                return [value];
+            }
+            return [];
         }
         if (Array.isArray(value)) return value;
         else if (!validatenull(value)) {
@@ -176,11 +179,7 @@ export const formInitVal = (list = []) => {
             ele.range ||
             ele.dataType === 'array'
         ) {
-            if (ele.dataType === 'string') {
-                tableForm[ele.prop] = "";
-            } else {
-                tableForm[ele.prop] = [];
-            }
+            tableForm[ele.prop] = [];
             if (ele.search) searchForm[ele.prop] = [];
         } else if (
             ['number', 'rate', 'slider'].includes(ele.type) ||

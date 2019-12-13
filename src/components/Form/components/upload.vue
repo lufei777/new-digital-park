@@ -1,5 +1,5 @@
 <template>
-  <div v-loading.lock="loading">
+  <div class="mi-form_upload" v-loading.lock="loading">
     <el-upload
       :class="{'picture-list':listType=='picture-img'}"
       :action="action"
@@ -25,8 +25,8 @@
         <i class="el-icon-plus"></i>
       </template>
       <template v-else-if="listType=='picture-img'">
-        <img v-if="imgUrl" :src="imgUrl" />
-        <i v-else class="el-icon-plus"></i>
+        <img v-if="imgUrl" :src="imgUrl" class="avatar" />
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </template>
       <template v-else-if="drag">
         <i class="el-icon-upload"></i>
@@ -63,8 +63,7 @@ export default {
       dialogImgType: true,
       dialogVisible: false,
       text: [],
-      file: {},
-      testfileList: []
+      file: {}
     };
   },
   props: {
@@ -330,11 +329,11 @@ export default {
     },
     setVal() {
       let result = "";
-      if (this.isPictureImg) {
-        result = this.text[0];
-      }
+
       if (this.isString) {
         result = this.text.join(",");
+      } else if (this.isPictureImg) {
+        result = this.text[0];
       } else {
         result = this.text;
       }
