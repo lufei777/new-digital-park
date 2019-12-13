@@ -58,8 +58,10 @@ export default {
         labelWidth: "100",
         size: "medium",
         menuPosition: "right",
+      
         submitBtn: false,
         emptyBtn: false,
+
         forms: [
           {
             type: "input",
@@ -68,7 +70,8 @@ export default {
             placeholder: "请输入",
             clearable: true,
             span: 4,
-            minRows: 0
+            minRows: 0,
+              
           },
           {
             type: "input",
@@ -107,15 +110,15 @@ export default {
             prop: "houseNumber",
             placeholder: "请输入",
             clearable: true,
-            span: 4,
-            width:"120px"
+            span: 6,
+            width: "120px"
           },
           {
             prop: "btn",
             span: 4,
             pull: 4,
             formslot: true,
-             width:"44px"
+            width: "44px"
           }
         ]
       },
@@ -129,7 +132,7 @@ export default {
         uiConfig: {
           height: "auto", //"", //高度
           selection: true, //是否多选
-          showIndex:true,
+          showIndex: true,
           pagination: {
             //是否分页，分页是否自定义
             layout: "total,->, prev, pager, next, jumper",
@@ -154,11 +157,11 @@ export default {
     detailTenant(obj) {
       console.log(obj);
     },
-   
-     onClickSearchBtn2(){
-      this.curPage=1
-      this.$refs[this.assetsTableConfig.ref].setCurrentPage(1)
-      this.getAssetList()
+
+    onClickSearchBtn2() {
+      this.curPage = 1;
+      this.$refs[this.assetsTableConfig.ref].setCurrentPage(1);
+      this.getAssetList();
     },
     clearForm(...args) {
       console.log("清空", ...args);
@@ -178,24 +181,24 @@ export default {
       let res = await DigitalParkApi.tenantList({
         pageNum: this.currentPage,
         pageSize: 10,
-        tenantNumber:this.model.tenantNumber,
-        tenantName:this.model.tenantName,
-        telephone:this.model.telephone,
-        houseNumber:this.model.houseNumber
+        tenantNumber: this.model.tenantNumber,
+        tenantName: this.model.tenantName,
+        telephone: this.model.telephone,
+        houseNumber: this.model.houseNumber
       });
       if (res && res.list) {
         this.tenantManageTable.data = res.list;
         this.tenantManageTable.uiConfig.pagination.total = res.total;
       }
     },
-     onClickSearchBtn(...args) {
+    onClickSearchBtn(...args) {
       this.$refs[this.tenantManageForm.ref].getFormModel(res => {
         console.log("model", res);
       });
       console.log("搜索", ...args);
-       this.curPcurrentPageage=1
+      this.curPcurrentPageage = 1;
       // this.$refs[this.assetsTableConfig.ref].setCurrentPage(1)
-       this.tenantList()
+      this.tenantList();
     },
     handleCurrentChange(val) {
       this.currentPage = val;

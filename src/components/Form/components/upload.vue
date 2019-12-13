@@ -1,6 +1,5 @@
 <template>
-  <!-- v-loading.lock="loading" -->
-  <div>
+  <div v-loading.lock="loading">
     <el-upload
       :class="{'picture-list':listType=='picture-img'}"
       :action="action"
@@ -286,7 +285,7 @@ export default {
                   },
                   this.column
                 );
-              } else this.hide(error.response.statusText);
+              } else this.hide(error);
             });
         };
         if (typeof this.uploadBefore === "function") {
