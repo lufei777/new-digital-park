@@ -181,7 +181,7 @@ export default {
       catalog: 34,
       currentPage: 1, //当前页
       rankType: "elecAndWaterSum",
-      rank: "asc",
+      rank: "desc", //edit
       homePageTableConfig: {
         ref: "homePageTable",
         data: [],

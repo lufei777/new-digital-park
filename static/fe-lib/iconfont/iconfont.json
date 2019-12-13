@@ -1124,6 +1124,20 @@
       "font_class": "biaojicaiji",
       "unicode": "e643",
       "unicode_decimal": 58947
+    },
+    {
+      "icon_id": "12313141",
+      "name": "下拉",
+      "font_class": "right_btn",
+      "unicode": "e7d3",
+      "unicode_decimal": 59347
+    },
+    {
+      "icon_id": "12313216",
+      "name": "下拉",
+      "font_class": "left_btn-copy",
+      "unicode": "e7d4",
+      "unicode_decimal": 59348
     }
   ]
 }

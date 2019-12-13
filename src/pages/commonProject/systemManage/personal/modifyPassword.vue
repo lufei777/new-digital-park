@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import miForm from "@/components/form";
+  import miForm from "@/components/Form";
   export default {
     name: 'ModifyPassword',
     components: {
@@ -32,7 +32,6 @@
               type: "input",
               label: "原密码",
               prop: "password",
-              clearable: true,
               span: 24,
               rules: {
                 required: true,
@@ -44,7 +43,6 @@
               type: "input",
               label: "新密码",
               prop: "rePassword",
-              clearable: true,
               span: 24,
               rules: {
                 required: true,
@@ -57,7 +55,6 @@
               label: "再次输入新密码",
               prop: "sureRepassword",
               placeholder:'请再次输入新密码',
-              clearable: true,
               span: 24,
               rules: {
                 required: true,

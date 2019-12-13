@@ -85,7 +85,6 @@ export default {
   },
   methods: {
     handleSelect(key, keyPath) {
-      console.log(key,keyPath)
       if (this.menuConfig.specialRoute) {
         let firstMenu = this.menuList.find(first => {
           return first.id == keyPath[0];

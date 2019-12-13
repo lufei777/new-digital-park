@@ -93,12 +93,12 @@
             </el-tooltip>
           </div>
           <div v-if="fixedProList.length>16" class="flex-align-between turn-page">
-            <span class="left-btn hover-pointer"
+            <span class="left-btn hover-pointer iconfont iconleft_btn-copy"
                   :class="activeBtnIndex==1?'active-btn':''"
                   @click="onClickTurnPageBtn(1)"
-            >＜</span>
-            <span class="right-btn hover-pointer" :class="activeBtnIndex==2?'active-btn':''"
-                  @click="onClickTurnPageBtn(2)">＞</span>
+            ></span>
+            <span class="right-btn hover-pointer iconfont iconright_btn" :class="activeBtnIndex==2?'active-btn':''"
+                  @click="onClickTurnPageBtn(2)"></span>
           </div>
         </div>
       </div>
@@ -548,7 +548,7 @@
       padding:10px 0;
       flex-shrink: 0;
       float:left;
-      margin:10px 1% 5px 1%;
+      margin:12px 1% 5px 1%;
       background-repeat: no-repeat;
       background-size: 100% 100%;
       overflow: hidden;
@@ -591,6 +591,7 @@
         color:#333;
         text-align: center;
         line-height: 20px;
+        font-size: 5px;
       }
       .active-btn{
         color:#00bfee;
@@ -600,6 +601,10 @@
       }
       .left-btn{
          margin-right:20px;
+      }
+      img{
+        width:10px;
+        height:10px;
       }
     }
   }

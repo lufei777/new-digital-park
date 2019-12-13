@@ -7,21 +7,23 @@
         v-model="searchText">
         <i class="iconfont iconsousuo search-icon" slot="suffix"></i>
       </el-input>
-      <el-tree
-        :data="floorList"
-        :props="treeProps"
-         node-key="floorId"
-        :show-checkbox="isMultiple"
-        :default-expanded-keys="[1]"
-        :highlight-current="true"
-        :default-checked-keys="defaultCheckedKey"
-        @check-change="handleCheckChange"
-        @check="handleCheck"
-        @node-click="onClickNode"
-        :filter-node-method="filterNode"
-        ref="navTree"
-      >
-      </el-tree>
+      <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
+        <el-tree
+          :data="floorList"
+          :props="treeProps"
+           node-key="floorId"
+          :show-checkbox="isMultiple"
+          :default-expanded-keys="defaultExpandedKeys|| [1]"
+          :highlight-current="true"
+          :default-checked-keys="defaultCheckedKey"
+          @check-change="handleCheckChange"
+          @check="handleCheck"
+          @node-click="onClickNode"
+          :filter-node-method="filterNode"
+          ref="navTree"
+        >
+        </el-tree>
+      </el-scrollbar>
     </div>
   </div>
 
@@ -35,7 +37,7 @@
     components: {
       ModuleTip
     },
-    props:['floorList','defaultChecked','isMultiple','fromFlag','selectCallBack'],
+    props:['floorList','defaultChecked','isMultiple','fromFlag','selectCallBack','defaultExpandedKeys'],
     data () {
       return {
         treeProps:{
