@@ -383,6 +383,7 @@
       width:98%;
       margin-left: 1%;
       overflow: hidden;
+      box-sizing: border-box;
     }
     .full-main-container{
       flex-grow: 1;
@@ -393,7 +394,6 @@
       text-align: center;
       .el-button{
         margin: 0 40px;
-        width:84px;
       }
     }
     .esc-full-btn{
@@ -410,8 +410,6 @@
       background-image: url('../../../../static/image/digitalPark/full_btn_bg.png');
     }
     .drag-shadow{
-      /*color:#fff;*/
-      /*border:10px solid red;*/
       background-image: url('../../../../static/image/digitalPark/content_bg.png');
       background-repeat: no-repeat;
     }
@@ -427,6 +425,22 @@
     .defaultBtn{
       border:1px solid #0257FF;
       color:#0257FF;
+    }
+    .left-module-list,.module-content-list,.preview-panel{
+      &::-webkit-scrollbar {/*滚动条整体样式*/
+        width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/
+        height: 1px;
+      }
+      &::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        background: #ccc;
+      }
+      &::-webkit-scrollbar-track {/*滚动条里面轨道*/
+        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        border-radius: 10px;
+        background: #EDEDED;
+      }
     }
   }
 

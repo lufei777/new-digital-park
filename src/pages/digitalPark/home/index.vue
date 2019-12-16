@@ -3,7 +3,10 @@
     <div class="home-header" v-show="!hideHeader">
       <div class="home-header-inner flex-align-between">
         <div class="header-nav-left">
-          <h3 class="title">{{title}}</h3>
+          <h3 class="title">
+            <i class="iconfont iconshuziyuanqu park-logo"></i>
+            <span>{{title}}</span>
+          </h3>
         </div>
         <!--<el-input class="search-input">-->
           <!--<el-button-->
@@ -422,15 +425,19 @@ export default {
     /*flex: auto;*/
     /*border:1px solid transparent;*/
   }
+  .product-module {
+    margin-top: 20px;
+  }
+  .park-logo{
+    font-size: 30px;
+    margin-right: 5px;
+  }
   .module-border {
     padding: 20px;
     border: 1px solid #ccc;
   }
   .el-carousel__container {
     margin-top: 130px;
-  }
-  .product-module {
-    margin-top: 20px;
   }
   .menu-item {
     float: left;
