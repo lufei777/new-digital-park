@@ -495,5 +495,10 @@ export default {
       display: block;
     }
   }
+  .el-input_tree {
+    .el-scrollbar__wrap {
+      overflow-x: hidden;
+    }
+  }
 }
 </style>
