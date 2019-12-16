@@ -10,7 +10,9 @@
           </ul>
         </div>
         <div class="digital-title">
-          <div class="digital-title-text">{{$t('homeHeader.title')}}</div>
+          <div class="digital-title-text">
+            {{title}}
+          </div>
         </div>
         <div class='dashboard-nav-operator'>
           <NavOperator  :moduleType.sync="moduleType" />
@@ -50,10 +52,10 @@
         <img v-if="pageFlag==2" src="../../../../static/image/digitalPark/unity_priview.png"
              class="unity_priview"
              alt="">
-        <iframe v-if="pageFlag==1"
-                src="../../../../static/HomePage/index.html"
-                frameborder="0"
-                class="unity-frame"></iframe>
+        <!--<iframe v-if="pageFlag==1"-->
+                <!--src="../../../../static/HomePage/index.html"-->
+                <!--frameborder="0"-->
+                <!--class="unity-frame"></iframe>-->
 
       </div>
       <div class="dashboard-right">
@@ -126,11 +128,11 @@
         return -this.curNewsIndex * 50 + 'px';
       },
       pageFlag(){
-        console.log(this.$route.path)
         return  this.$route.path=='/digitalPark/dashboardHomePage'?1:2
       }
     },
     data() {
+        let menuTree = JSON.parse(localStorage.getItem('menuTree'))
         return {
           proModuleList1: [],
           proModuleList2: [],
@@ -147,7 +149,8 @@
           innerDragFlag:false,
           outDragFlag:false,
           innerObj:{},
-          activeBtnIndex:2
+          activeBtnIndex:2,
+          title:menuTree[0].name
         }
       },
       methods: {
@@ -303,8 +306,9 @@
         },
         onClickItemFixPro(item){
           if(this.hideHeader) return ; //配置页不进行后续操作
+          Cookies.set('moduleType',1)
+          localStorage.setItem("menuList", JSON.stringify(item));
           let routeAddress = item.routeAddress;
-          localStorage.setItem('menuList',JSON.stringify(item.childNode))
           if (
             item.name == "安防管理" ||
             item.name == "机房动环" ||
@@ -332,7 +336,6 @@
           } else {
             this.$router.push("/digitalPark/defaultPage?type=2");
           }
-          Cookies.set('moduleType',1)
         },
         getInnerOptions(){
           return {draggable:'.inner-drag-content',disabled:!this.innerDragFlag,group:'product'}
@@ -518,7 +521,7 @@
 
     }
     .digital-title-text{
-      width:80%;
+      width:85%;
       margin:0 auto;
       /*text-align: center;*/
       background-repeat: no-repeat;

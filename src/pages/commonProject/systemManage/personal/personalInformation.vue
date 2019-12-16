@@ -57,7 +57,7 @@
             },
             {
               type: "upload",
-              listType: "picture-card",
+              listType: "picture-img",
               label: "头像",
               prop: "avatar",
               dataType: "string",
