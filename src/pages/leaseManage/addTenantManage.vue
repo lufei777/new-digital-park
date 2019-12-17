@@ -1,5 +1,5 @@
 <template>
-  <div class="tenant-manage">
+  <div class="add-tenant-manage">
     <div class="condition-box radius-shadow">
       <div class="tenant-box">
         <miForm
@@ -14,7 +14,7 @@
               <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">保存</el-button>
               <el-button :disabled="obj.disabled" @click="back(obj)">返回</el-button>
             </div>
-          </template> -->
+          </template>-->
           <template slot-scope="scope" slot="menuBtn">
             <el-button :size="scope.size" @click="back(scope)">返回</el-button>
           </template>
@@ -177,37 +177,40 @@ export default {
               url: "fileUrl",
               res: "data"
             }
-          },
+          }
         ]
       }
     };
   },
   computed: {
-    commonParams() {
-      return {
-        tenantNumber: this.model.tenantNumber,
-        tenantName: this.model.tenantName,
-        telephone: this.model.telephone,
-        idCard: this.model.idCard,
-        businessLicense: this.model.businessLicense,
-        otherProof: this.model.otherProof
-      };
+    // commonParams() {
+    //   return {
+    //     tenantNumber: this.model.tenantNumber,
+    //     tenantName: this.model.tenantName,
+    //     telephone: this.model.telephone,
+    //     idCard: this.model.idCard,
+    //     businessLicense: this.model.businessLicense,
+    //     otherProof: this.model.otherProof
+    //   };
+    // },
+    tenantIdEdit() {
+      return this.$route.params.tenantId;
     },
-    tenantId() {
-      return this.$route.query.tenantId;
+    tenantIdDetail() {
+      return this.$route.params.tenantId;
     }
   },
   methods: {
     async submit(model, hide) {
-      console.log('mdel',model)
+      console.log("mdel", model);
       let res;
       let params = {
         ...model,
         ...{
-          tenantId: this.tenantId
+          tenantId: this.tenantIdEdit
         }
       };
-      if (this.tenantId) {
+      if (this.tenantIdEdit) {
         res = await DigitalParkApi.editTenant(params);
       } else {
         res = await DigitalParkApi.addTenant(model);
@@ -218,7 +221,7 @@ export default {
           message: res
         });
       }
-      this.$router.go(-1);
+      this.$router.push("/tenantManage");
     },
     resetChange() {},
     async search(...args) {
@@ -228,7 +231,7 @@ export default {
       console.log("搜索", ...args);
     },
     back() {
-      this.$router.go(-1);
+      this.$router.push("/tenantManage");
     },
     async createTenNum() {
       let res = await DigitalParkApi.createTenNum({
@@ -236,9 +239,9 @@ export default {
       });
       this.model.tenantNumber = res;
     },
-    async tenantDetail() {
+    async tenantDetail(tenantIdEdit) {
       let res = await DigitalParkApi.tenantDetail({
-        tenantId: this.tenantId
+        tenantId: tenantIdEdit
       });
       this.model.tenantNumber = res.tenantNumber;
       this.model.tenantName = res.tenantName;
@@ -254,15 +257,24 @@ export default {
   },
   mounted() {
     this.createTenNum();
-    if (this.tenantId) {
-      this.tenantDetail();
+    if (this.tenantIdEdit) {
+      this.tenantDetail(this.tenantIdEdit);
     }
+    if (this.tenantIdDetail) {
+      this.tenantDetail(this.tenantIdDetail);
+    }
+  },
+  created() {
+    this.addTenantManageForm = {
+      ...this.addTenantManageForm,
+      ...this.$route.params.extraOptions
+    };
   }
 };
 </script>
 
 <style lang="less">
-.tenant-manage {
+.add-tenant-manage {
   // .tenant-manage-box {
   //   width: 60%;
   // }
