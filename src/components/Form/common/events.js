@@ -22,14 +22,23 @@ export default function () {
             },
             handleChange(value) {
                 let result = value;
+                this.text = result;
 
-                if ((this.isString || this.isNumber) && (this.multiple || ['checkbox', 'cascader', 'dynamic'].includes(this.type))) {
-                    result = value.join(',')
+                if (this.isString || this.isNumber) {
+                    if (this.multiple || ['checkbox', 'cascader', 'dynamic'].includes(this.type)) {
+                        result = value.join(',')
+                    } else if (this.isNumber) {
+                        result = parseFloat(result);
+                        if (isNaN(result)) {
+                            result = 0;
+                        }
+                    }
                 }
+
                 if (typeof this.change === 'function') {
                     this.change({ value: result, column: this.column, _self: this });
                 }
-                
+
                 this.$emit('input', result);
                 this.$emit('change', result);
             }
