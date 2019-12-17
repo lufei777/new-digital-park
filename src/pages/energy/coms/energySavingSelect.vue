@@ -256,27 +256,20 @@ export default {
     margin-bottom: 20px;
     background: @white;
     padding: 20px;
-    // background: pink;
   }
   .tabulation {
     background: @white;
     padding: 20px;
   }
   .block {
-      // padding: 0px 20px;
-      // flex-shrink: 0;
       .el-select {
         width: 120px !important;
       }
     }
-
     .demonstrationFloor {
       .el-input {
         width: 70%;
       }
-      // .el-input__inner {
-      //   width: 100px !important;
-      // }
     }
   .tab-title {
     width: 57%;
