@@ -154,11 +154,6 @@ export default {
     addTenant() {
       this.$router.push("/addTenantManage");
     },
-
-    detailTenant(obj) {
-      console.log(obj);
-    },
-
     onClickSearchBtn2() {
       this.curPage = 1;
       this.$refs[this.assetsTableConfig.ref].setCurrentPage(1);
@@ -198,7 +193,7 @@ export default {
       });
       console.log("搜索", ...args);
       this.curPcurrentPageage = 1;
-      // this.$refs[this.assetsTableConfig.ref].setCurrentPage(1)
+      // this.$refs[this.tenantManageTableConfig.ref].setCurrentPage(1)
       this.tenantList();
     },
     handleCurrentChange(val) {
@@ -242,9 +237,24 @@ export default {
       this.showDeleteTip();
     },
     editRow(obj) {
-      this.$router.push(
-        `/addTenantManage?tenantId=${obj.scopeRow.row.tenantId}`
-      );
+      this.$router.push({
+        name: "addTenantManage",
+        params: {
+          tenantId: obj.scopeRow.row.tenantId
+        }
+      });
+    },
+    detailTenant(obj) {
+      console.log(obj.scopeRow.row);
+      this.$router.push({
+        name: "addTenantManage",
+        params: {
+          extraOptions: {
+            disabled: true
+          },
+          tenantId: obj.scopeRow.row.tenantId
+        }
+      });
     }
   },
   mounted() {
