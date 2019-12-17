@@ -36,10 +36,13 @@
           :menuList="menuList"
         />
       </el-menu>
-      <div class="iconfont iconkuaijierukou hover-pointer shortcut-btn" @click="onClickShortcutBtn"></div>
-      <ul class="shortcut-list" v-show="showShortcutList">
-        <li v-for="(item,index) in shortCutList" :key="index">{{item.name}}</li>
-      </ul>
+      <div v-if="!menuConfig.specialRoute">
+        <div class="iconfont iconkuaijierukou hover-pointer shortcut-btn" @click="onClickShortcutBtn"></div>
+        <ul class="shortcut-list" v-show="showShortcutList">
+          <li v-for="(item,index) in shortCutList" :key="index">{{item.name}}</li>
+        </ul>
+      </div>
+
     </div>
   </el-scrollbar>
 </template>

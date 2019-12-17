@@ -177,10 +177,6 @@
       width:120px;
     }
     .user-config{
-      /*width:150px;*/
-      /*display: flex;*/
-      /*align-items: center;*/
-      /*flex-direction: row;*/
       margin-left: 15px;
     }
     .avatar-img{
