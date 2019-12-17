@@ -12,7 +12,12 @@
         @submit="submit"
       >
         <template slot="housepriceappend" slot-scope="obj">
-          <el-select :disabled="obj.disabled" class="empty-icon" style="width:80px !important;" v-model="model.priceType">
+          <el-select
+            :disabled="obj.disabled"
+            class="empty-icon"
+            style="width:80px !important;"
+            v-model="model.priceType"
+          >
             <template v-for="item in LeaseManageDic.PriceType">
               <el-option :key="item.label" :label="item.label" :value="item.value"></el-option>
             </template>
@@ -34,7 +39,7 @@
 <script>
 const space = [
   {
-    id: 1,
+    id: _.uniqueId("id_"),
     name: "IT设备",
     pid: "0",
     level: 0,
@@ -45,7 +50,7 @@ const space = [
     delFlag: null,
     childNode: [
       {
-        id: 1,
+        id: _.uniqueId("id_"),
         name: "笔记本电脑",
         pid: "group-0a783b6cdb7c49e5a2ca463996597647",
         level: 2,
@@ -56,7 +61,7 @@ const space = [
         delFlag: null,
         childNode: [
           {
-            id: 1,
+            id: _.uniqueId("id_"),
             name: "新增节点",
             pid: "group-45016a1d644f43e3a2a40b9eba91ff1f",
             level: 3,
@@ -70,7 +75,7 @@ const space = [
         ]
       },
       {
-        id: 1,
+        id: _.uniqueId("id_"),
         name: "新增节点",
         pid: "group-0a783b6cdb7c49e5a2ca463996597647",
         level: 2,
@@ -84,7 +89,7 @@ const space = [
     ]
   },
   {
-    id: 1,
+    id: _.uniqueId("id_"),
     name: "新增节点",
     pid: "0",
     level: 0,
@@ -95,7 +100,7 @@ const space = [
     delFlag: null,
     childNode: [
       {
-        id: 1,
+        id: _.uniqueId("id_"),
         name: "新增节点",
         pid: "group-207acaf6dff1408eaa33d0316ce18d38",
         level: 2,
@@ -107,7 +112,7 @@ const space = [
         childNode: []
       },
       {
-        id: 1,
+        id: _.uniqueId("id_"),
         name: "新增节点",
         pid: "group-207acaf6dff1408eaa33d0316ce18d38",
         level: 2,
@@ -121,7 +126,7 @@ const space = [
     ]
   },
   {
-    id: 1,
+    id: _.uniqueId("id_"),
     name: "新增节点",
     pid: "0",
     level: 0,
@@ -133,7 +138,7 @@ const space = [
     childNode: []
   },
   {
-    id: 1,
+    id: _.uniqueId("id_"),
     name: "新增节点",
     pid: "0",
     level: 0,
@@ -145,7 +150,7 @@ const space = [
     childNode: []
   },
   {
-    id: 1,
+    id: _.uniqueId("id_"),
     name: "新增节点",
     pid: "0",
     level: 0,
@@ -157,7 +162,7 @@ const space = [
     childNode: []
   },
   {
-    id: 1,
+    id: _.uniqueId("id_"),
     name: "新增节点",
     pid: "0",
     level: 0,
@@ -169,7 +174,7 @@ const space = [
     childNode: []
   },
   {
-    id: 1,
+    id: _.uniqueId("id_"),
     name: "新增节点",
     pid: "0",
     level: 0,
@@ -181,7 +186,7 @@ const space = [
     childNode: []
   },
   {
-    id: 1,
+    id: _.uniqueId("id_"),
     name: "新增节点",
     pid: "0",
     level: 0,
@@ -192,7 +197,7 @@ const space = [
     delFlag: null,
     childNode: [
       {
-        id: 1,
+        id: _.uniqueId("id_"),
         name: "新增节点",
         pid: "group-a4316be9c60f48ea817bf223ccdc03dd",
         level: 2,
@@ -203,7 +208,7 @@ const space = [
         delFlag: null,
         childNode: [
           {
-            id: 1,
+            id: _.uniqueId("id_"),
             name: "新增节点",
             pid: "group-3655e87fb17b4522bb44e2470839606c",
             level: 3,
@@ -214,7 +219,7 @@ const space = [
             delFlag: null,
             childNode: [
               {
-                id: 1,
+                id: _.uniqueId("id_"),
                 name: "新增节点",
                 pid: "group-6bae0e669c874277b7c3d5013a275592",
                 level: 4,
@@ -232,7 +237,7 @@ const space = [
     ]
   },
   {
-    id: 1,
+    id: _.uniqueId("id_"),
     name: "新增节点",
     pid: "0",
     level: 0,
@@ -244,7 +249,7 @@ const space = [
     childNode: []
   },
   {
-    id: 1,
+    id: _.uniqueId("id_"),
     name: "A3大楼",
     pid: "0",
     level: 0,
@@ -255,7 +260,7 @@ const space = [
     delFlag: null,
     childNode: [
       {
-        id: 1,
+        id: _.uniqueId("id_"),
         name: "一层",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: 1,
@@ -266,7 +271,7 @@ const space = [
         delFlag: null,
         childNode: [
           {
-            id: 1,
+            id: _.uniqueId("id_"),
             name: "新增节点",
             pid: "group-2368946ab299465099fcbf62690d5e6e",
             level: 3,
@@ -278,7 +283,7 @@ const space = [
             childNode: []
           },
           {
-            id: 1,
+            id: _.uniqueId("id_"),
             name: "101会议室",
             pid: "group-2368946ab299465099fcbf62690d5e6e",
             level: 2,
@@ -290,7 +295,7 @@ const space = [
             childNode: []
           },
           {
-            id: 1,
+            id: _.uniqueId("id_"),
             name: "走廊",
             pid: "group-2368946ab299465099fcbf62690d5e6e",
             level: 2,
@@ -302,7 +307,7 @@ const space = [
             childNode: []
           },
           {
-            id: 1,
+            id: _.uniqueId("id_"),
             name: "厨房",
             pid: "group-2368946ab299465099fcbf62690d5e6e",
             level: 2,
@@ -314,7 +319,7 @@ const space = [
             childNode: []
           },
           {
-            id: 1,
+            id: _.uniqueId("id_"),
             name: "机房",
             pid: "group-2368946ab299465099fcbf62690d5e6e",
             level: 2,
@@ -328,7 +333,7 @@ const space = [
         ]
       },
       {
-        id: 1,
+        id: _.uniqueId("id_"),
         name: "test",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: null,
@@ -340,7 +345,7 @@ const space = [
         childNode: []
       },
       {
-        id: 1,
+        id: _.uniqueId("id_"),
         name: "三层",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: 1,
@@ -352,7 +357,7 @@ const space = [
         childNode: []
       },
       {
-        id: 1,
+        id: _.uniqueId("id_"),
         name: "七层",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: 1,
@@ -364,7 +369,7 @@ const space = [
         childNode: []
       },
       {
-        id: 1,
+        id: _.uniqueId("id_"),
         name: "四层",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: 1,
@@ -376,7 +381,7 @@ const space = [
         childNode: []
       },
       {
-        id: 1,
+        id: _.uniqueId("id_"),
         name: "二层",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: 1,
@@ -387,7 +392,7 @@ const space = [
         delFlag: null,
         childNode: [
           {
-            id: 1,
+            id: _.uniqueId("id_"),
             name: "新增节点",
             pid: "group-907e714c121a441d9f939d9c26175776",
             level: 3,
@@ -401,7 +406,7 @@ const space = [
         ]
       },
       {
-        id: 1,
+        id: _.uniqueId("id_"),
         name: "五层",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: 1,
@@ -413,7 +418,7 @@ const space = [
         childNode: []
       },
       {
-        id: 1,
+        id: _.uniqueId("id_"),
         name: "八层",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: 1,
@@ -425,7 +430,7 @@ const space = [
         childNode: []
       },
       {
-        id: 1,
+        id: _.uniqueId("id_"),
         name: "六层",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: 1,
@@ -437,7 +442,7 @@ const space = [
         childNode: []
       },
       {
-        id: 1,
+        id: _.uniqueId("id_"),
         name: "test2",
         pid: "group-e4cca11a11cf4466aad4e9b8765994ce",
         level: 2,
@@ -448,7 +453,7 @@ const space = [
         delFlag: null,
         childNode: [
           {
-            id: 1,
+            id: _.uniqueId("id_"),
             name: "新增节点",
             pid: "group-f280039cda8d41d5a74cf7baab643532",
             level: 3,
@@ -640,8 +645,8 @@ export default {
         ...params.extraOptions
       };
       // 如果有disabled属性，则为查看详情
-      if(this.leaseManageForm.disabled){
-        this.pageConfig.title = '房产详情';
+      if (this.leaseManageForm.disabled) {
+        this.pageConfig.title = "房产详情";
       }
     }
   },

@@ -8,6 +8,7 @@ export const miAjax = ({ axios = this.$axios || AXIOS, url, method = 'get', quer
     return new Promise((resolve, reject) => {
         if (typeof url === 'function') {
             url(query).then(res => {
+                // _.get(res.data, resKey)
                 resolve(res);
             }).catch(err => {
                 resolve([]);
@@ -34,7 +35,7 @@ export const miAjax = ({ axios = this.$axios || AXIOS, url, method = 'get', quer
 export const getPasswordChar = (result = '', char) => {
     return result;
 };
-export const findByValue = (dic, value, props, isTree) => {
+export const findByValue = (dic, value, props, isTree, isGroup) => {
     // 如果为空直接返回
     if (validatenull(dic)) return value;
     let result = '';
@@ -46,7 +47,7 @@ export const findByValue = (dic, value, props, isTree) => {
             if (isTree) {
                 result.push(findLabelNode(dic, dicvalue, props) || dicvalue);
             } else {
-                result.push(findArrayLabel(dic, dicvalue, props));
+                result.push(findArrayLabel(dic, dicvalue, props, isGroup));
             }
         }
         result = result.join(DIC_SPLIT).toString();
@@ -75,12 +76,28 @@ export const findLabelNode = (dic, value, props) => {
     rev(dic, value, props);
     return result;
 };
-export const findArrayLabel = (dic, value, props) => {
+export const findArrayLabel = (dic, value, props, isGroup) => {
     const valueKey = props.value || DIC_PROPS.value;
     const labelKey = props.label || DIC_PROPS.label;
-    for (let i = 0; i < dic.length; i++) {
-        if (dic[i][valueKey] === value) {
-            return dic[i][labelKey];
+    const groupsKey = props.groups || DIC_PROPS.groups;
+
+    if (!isGroup) {
+        for (let i = 0; i < dic.length; i++) {
+            if (dic[i][valueKey] === value) {
+                return dic[i][labelKey];
+            }
+        }
+    } else {
+        // 如果分组
+        for (let i = 0; i < dic.length; i++) {
+            const groups = dic[i][groupsKey];
+            const groupLabel = dic[i][labelKey];
+
+            for (let j = 0; j < groups.length; j++) {
+                if (groups[j][valueKey] === value) {
+                    return groups[j][labelKey];
+                }
+            }
         }
     }
     return value;

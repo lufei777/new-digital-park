@@ -75,7 +75,7 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
     ) {
         // 头像框特殊处理
         if (listType === 'picture-img' && type === 'upload') {
-            if(typeof value === 'string' && value.trim().length > 0){
+            if (typeof value === 'string' && value.trim().length > 0) {
                 return [value];
             }
             return [];
@@ -119,8 +119,11 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
         }
     }
     // 数字处理
-    if (type === 'number' || curentForm.rawtype === 'number') {
+    if (dataType === 'number' || curentForm.rawtype === 'number') {
         value = parseFloat(value);
+        if (isNaN(value)) {
+            value = undefined;
+        }
     }
     return value;
 };
@@ -198,7 +201,7 @@ export const formInitVal = (list = []) => {
         // 表单默认值设置
         if (!validatenull(ele.valueDefault)) {
             if (ele.dataType === 'number') {
-                tableForm[ele.prop] = Number(ele.valueDefault);
+                tableForm[ele.prop] = parseFloat(ele.valueDefault);
             } else {
                 tableForm[ele.prop] = ele.valueDefault;
             }

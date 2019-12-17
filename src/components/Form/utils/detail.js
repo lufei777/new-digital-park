@@ -27,7 +27,7 @@ export const detail = (row = {}, column = {}, option = {}, dic = []) => {
 
   // 字典处理
   if (!validatenull(dic)) {
-    result = findByValue(dic, result, column.props || option.props, ['cascader', 'tree'].includes(column.type));
+    result = findByValue(dic, result, column.props || option.props, ['cascader', 'tree'].includes(column.type), column.group);
   }
   return result;
 };

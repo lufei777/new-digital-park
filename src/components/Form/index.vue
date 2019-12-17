@@ -142,8 +142,6 @@ import {
   formInitVal
 } from "./utils/dataformat";
 import init from "./common/init";
-import Vue from "vue";
-import clickout from "./directive/clickout";
 
 export default {
   name: "miForm",
@@ -172,10 +170,6 @@ export default {
   },
   created() {
     console.log("form create");
-    // 绑定指令
-    if (this.formCreate) {
-      clickout(Vue);
-    }
     //初始化字典
     this.columnOption.forEach(ele => {
       this.handleLoadDic(ele).then(res => {
@@ -493,6 +487,11 @@ export default {
       width: 178px;
       height: 178px;
       display: block;
+    }
+  }
+  .el-input_tree {
+    .el-scrollbar__wrap {
+      overflow-x: hidden;
     }
   }
 }
