@@ -60,8 +60,6 @@
               listType: "picture-img",
               label: "头像",
               prop: "avatar",
-              dataType: "string",
-              limit: 1,
               span: 24,
               action: "/oaApi/image/upload",
               accept: ["jpg", "jpeg", "png"],
