@@ -43,14 +43,17 @@ moment.locale('zh-cn');//需要汉化
 import VueDND from 'awe-dnd'
 Vue.use(VueDND)
 
+import axios from '@/service/axios/AxiosInterceptors.js'
+Vue.prototype.$axios = axios;
+
+// install directives
+import installDirectives from '@/directives'
+installDirectives(Vue);
+
 // 语言包
 if (!Cookies.get('lang')) {
   Cookies.set('lang', 'zh')
 }
-
-import axios from '@/service/axios/AxiosInterceptors.js'
-Vue.prototype.$axios = axios;
-
 import VueI18n from 'vue-i18n'
 import LangEN from './utils/lang/en.js'
 import LangZH from './utils/lang/zh.js'
