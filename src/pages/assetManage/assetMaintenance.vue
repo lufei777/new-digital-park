@@ -200,7 +200,7 @@ export default {
             }
           }]
         let _this=this
-        this.assetsTableConfig.btnConfig={
+         this.assetsTableConfig.btnConfig={
             prop: "operation",
             label: "列操作",
             fixed: "right",

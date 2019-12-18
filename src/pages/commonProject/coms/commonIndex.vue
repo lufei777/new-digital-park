@@ -1,5 +1,5 @@
 <template>
-  <div class="asset-manage">
+  <div class="common-index-panel">
     <commonIndexLayout :menuConfig="menuConfig" @onclickcollapsebtn="onClickCollapseBtn">
       <template slot="menuList">
         <Sidebar :menu-list="menuList" :menu-config="menuConfig" />
@@ -52,4 +52,7 @@ export default {
 </script>
 
 <style lang="less">
+  .common-index-panel{
+    height:100%;
+  }
 </style>

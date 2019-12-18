@@ -41,7 +41,7 @@
       ConditionSelect,
       Table,
     },
-    //fromFlag 1:空间管理 2:同比环比分析 3:能耗对比 4:分时能耗 5:分项能耗
+    //fromFlag 1:空间对比 2:同比环比分析 3:能耗对比 4:分时能耗 5:分项能耗
     props:['isZoomMultiple','fromFlag','isEnergyByGroup'],
     data () {
       let _this = this
@@ -63,6 +63,7 @@
         selectParams:{
           energy:[{name:''}]
         },
+        commonParams:{},
         defaultExpandedKeys:[],
         tableConfig:{
           ref: "tableRef",
@@ -170,7 +171,7 @@
               floorId: this.floorId,
               catalog:params.energy[0].parent,
               ids:params.energy.map((item)=>item.id).join(','),
-              parent:1 //必传代表
+              parent:1 //必传代表A3
             },...params
           }
           this.getTypeChart()
@@ -574,7 +575,6 @@
         }
       },
       async onClickExportBtn(){
-        debugger
         let url
         if(this.fromFlag==1){
           url=`/vibe-web/energyCount/energy/energy_speceExcle?`
@@ -591,7 +591,17 @@
         for(let key in this.commonParams){
           params+=key+'='+this.commonParams[key]+'&'
         }
-        params+='rankType='+this.rankType+'&rank='+this.rank+'&seq='+this.seq
+        params+='rankType='+this.rankType+'&rank='+this.rank+'&seq='+this.seq+'&page='+this.curPage+'size=10'
+        // if(this.fromFlag==1){
+        //   params+='&ids='+this.floorId+'&catalog='+params.energy.map((item)=>item.id).join(',')
+        // }else if(this.fromFlag==2){
+        //   params+='&floorId='+this.floorId+'&catalog='+params.energy.map((item)=>item.id).join(',')
+        // }else if(this.fromFlag==3){
+        //   params+='&floorId='+this.floorId+'&catalog='+params.energy[0].parent+
+        //     '&ids='+params.energy.map((item)=>item.id).join(',')+'&parent=1'
+        // }else if(this.fromFlag==4 ||this.fromFlag==5){
+        //   params+='&floor='+this.floorId+'&catalog='+params.energy[0].id
+        // }
         location.href=url+params
       },
       handleFloorCanCheck(checkNode){

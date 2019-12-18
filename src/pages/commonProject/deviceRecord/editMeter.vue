@@ -45,8 +45,8 @@
         <el-input v-model="meterForm.itemizeExpression"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button @click="goBack" class="go-back">返回</el-button>
         <el-button type="primary" @click="submitForm('meterForm')">确定</el-button>
+        <el-button @click="goBack" class="go-back">返回</el-button>
       </el-form-item>
     </el-form>
     <TreeModal :tree-modal-config="treeModalConfig"/>

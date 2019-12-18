@@ -65,7 +65,7 @@ class commonFun {
           type: 'info',
           message: '已取消删除',
         });
-        cancelCallBack()
+        cancelCallBack && cancelCallBack()
       } else {
         that.$message({
           type: 'error',
