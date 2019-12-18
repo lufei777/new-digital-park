@@ -20,10 +20,12 @@ export default {
   },
   methods: {
     changeMobsfIframe() {
-      const mobsf = document.getElementById("myIframe");
       const deviceWidth = document.body.clientWidth;
       const deviceHeight = document.body.clientHeight;
-      mobsf.style.height = Number(deviceHeight) - 85 + "px"; //数字是页面布局高度差
+      const mobsf = document.getElementById("myIframe");
+      mobsf.onload = () => {
+        mobsf.style.height = 1200 + "px";
+      };
     }
   },
   computed: {
