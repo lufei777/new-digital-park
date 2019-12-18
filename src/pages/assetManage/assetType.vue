@@ -1,23 +1,25 @@
 <template>
   <div class="asset-type">
-    <div class="left-type-tree">
+    <div class="left-type-tree radius-shadow fixed-tree">
       <!--<div class="type-title">资产类型</div>-->
-      <CustomTree :treeList="typeTree" :addNodeCallback="addNode"
-                  :delNodeCallback="deleteAssetType"
-                  :editCallback="editAssetType"
-                  :clickNodeCallback="clickNode"
-                  :defaultExpandedKey="defaultExpandedKey"
-      />
+        <CustomTree :treeList="typeTree" :addNodeCallback="addNode"
+                    :delNodeCallback="deleteAssetType"
+                    :editCallback="editAssetType"
+                    :clickNodeCallback="clickNode"
+                    :defaultExpandedKey="defaultExpandedKey"
+        />
     </div>
     <div class="right-content">
-      <div class="flex-align-between type-operator-box">
-        <span class="attr-table-tip">属性列表</span>
-        <div>
+      <div class="table-box radius-shadow">
+        <div class="type-operator-box">
+          <el-button type="primary" @click="onClickMultiDelBtn">批量删除</el-button>
           <el-button type="primary" @click="onAddTypeAttr">新建</el-button>
-          <el-button type="primary" @click="showDeleteTip">批量删除</el-button>
         </div>
+        <Table :ref='tableConfig.ref' :table-config="tableConfig">
+
+        </Table>
       </div>
-      <CommonTable :table-obj="attrTableData" :cur-page="1"/>
+
     </div>
     <AddAssetTypeAttr :showAdd="showAdd" :is-edit="isEdit" :curType="curType" :curAttr="curAttr"/>
   </div>
@@ -25,7 +27,7 @@
 
 <script>
   import AddAssetTypeAttr from '../commonProject/coms/addAssetTypeAttr'
-  import CommonTable from '../../components/commonTable'
+  import Table from '../../components/Table/index'
   import AssetManageApi from '../../service/api/assetManageApi'
   import CommonFun from '../../utils/commonFun'
   import CustomTree from '../../components/customTree/slotTree'
@@ -33,10 +35,11 @@
     name: 'AssetType',
     components: {
       AddAssetTypeAttr,
-      CommonTable,
+      Table,
       CustomTree
     },
     data () {
+      let _this = this
       return {
         showAdd:false,
         isEdit:false,
@@ -50,7 +53,25 @@
         attrTableData:{},
         curAttr:'',
         defaultExpandedKey:[],
-        delAttrIds:''
+        delAttrIds:'',
+        tableConfig: {
+          ref: "tableRef",
+          data:[],
+          columnConfig:[],
+          btnConfig:[],
+          uiConfig: {
+            height: "auto",//"", //高度
+            selection: true, //是否多选
+            pagination:{
+              handler:function(size,page){
+                _this.handleCurrentChange(page)
+              },
+              currentPage:1
+            }
+          },
+          tableMethods: {
+          },
+        },
       }
     },
     methods:{
@@ -132,21 +153,22 @@
             typeId:this.curType.id
           })
           //后台没有做分页
-         res.map((item)=>{
-           item.requiredText=item.required=='1'?'是':'否'
-         })
-         let obj={}
-         obj.labelList=[{name:'',prop:'',type:'selection'},
-           {name:'属性名',prop:'attrName'},
-           {name:'描述',prop:'description'},
-           {name:'是否必填',prop:'requiredText'}]
-         obj.dataList=res
-         obj.showOperator=true
-         this.attrTableData=obj
+         this.tableConfig.columnConfig=[{label:'属性名',prop:'attrName'},
+           {label:'描述',prop:'description'},
+           {label:'是否必填',prop:'requiredText',
+             formatter:function(row,column){
+               return row[column.property] =='1'?'是':'否'
+             },}]
+          this.tableConfig.data=res
       },
       onAddTypeAttr(){
         this.isEdit=false
         this.showAdd=true
+      },
+      onClickMultiDelBtn(){
+         let res =this.$refs.tableRef.getSelectedData()
+         this.delAttrIds=res.map((item)=>item.id).join(",")
+         this.showDeleteTip()
       }
     },
     mounted(){
@@ -159,40 +181,24 @@
   .asset-type{
     height: 100%;
     .left-type-tree{
-      float: left;
-      /*width:25%;*/
-      color:@white;
-      background: #3a8ee6;
-    }
-    .right-content{
-      /*width: 75%;*/
-      padding:0 20px;
-      box-sizing: border-box;
+      width:@menuWidth;
+      position: fixed;
+      padding:20px 0;
+      bottom:20px;
+      top:90px;
     }
     .type-operator-box{
-      padding-bottom:20px;
+      display: flex;
+      flex-direction: row-reverse;
+      .el-button{
+        margin-left: 20px;
+      }
     }
     .attr-table-tip{
       font-weight: bold;
     }
-    .custom-tree{
-      .el-tree{
-        background:#3a8ee6;
-        font-size: 14px;
-        color:@white;
-        padding-bottom: 20px;
-      }
-      .el-tree-node__content{
-        padding:12px 0;
-      }
-      .el-tree-node__content:hover{
-        color:@white;
-        background: #3a8ee6;
-      }
-      .el-tree-node:focus>.el-tree-node__content{
-        color:#3a8ee6;
-        background: @white;
-      }
+    .table-box{
+      padding:20px;
     }
   }
 </style>
