@@ -11,7 +11,8 @@
         </div>
         <div class="digital-title">
           <div class="digital-title-text">
-            {{title}}
+            <i class="iconfont iconshuziyuanqu park-logo"></i>
+            <span>{{title}}</span>
           </div>
         </div>
         <div class='dashboard-nav-operator'>
@@ -52,10 +53,10 @@
         <img v-if="pageFlag==2" src="../../../../static/image/digitalPark/unity_priview.png"
              class="unity_priview"
              alt="">
-        <!--<iframe v-if="pageFlag==1"-->
-                <!--src="../../../../static/HomePage/index.html"-->
-                <!--frameborder="0"-->
-                <!--class="unity-frame"></iframe>-->
+        <iframe v-if="pageFlag==1"
+                src="../../../../static/HomePage/index.html"
+                frameborder="0"
+                class="unity-frame"></iframe>
 
       </div>
       <div class="dashboard-right">
@@ -609,6 +610,10 @@
         width:10px;
         height:10px;
       }
+    }
+    .park-logo{
+      font-size: 30px;
+      margin-right: 5px;
     }
   }
 </style>

@@ -72,7 +72,10 @@
           username:this.name,
           password:this.pwd
         }
-        let res  = await DigitalPark.login(params)
+        let res  = await DigitalPark.login(params).catch(err => {
+          this.loading=false;
+          console.error(err);
+        })
         if(res){
           sessionStorage.token=res
           Cookies.set('username',this.name)
