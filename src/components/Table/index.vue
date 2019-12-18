@@ -37,7 +37,7 @@
       <!-- 多选 -->
       <el-table-column fixed="left" v-if="uiConfig.selection" type="selection" width="37"></el-table-column>
 
-     <!-- 索引 -->
+      <!-- 索引 -->
       <el-table-column
         fixed="left"
         v-if="uiConfig.showIndex"
@@ -47,7 +47,7 @@
       >
         <template slot="header">{{uiConfig.showIndex.label || "序号"}}</template>
       </el-table-column>
-      
+
       <!-- 正常列 -->
       <!-- <tableColumn :columnConfig="columnConfig" /> -->
       <template v-for="col in columnConfig">
@@ -827,10 +827,16 @@ export default {
         color: @headerTextColor;
         font-weight: bold;
       }
+      button {
+        width: auto !important;
+      }
     }
     .el-table-cell {
       color: #666;
       font-weight: 400;
+      button {
+        width: auto !important;
+      }
     }
     // 当前行
     .current-row {

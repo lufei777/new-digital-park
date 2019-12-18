@@ -12,15 +12,14 @@
     },
     data () {
       return {
-        msg: 'Welcome to my basic vue demo'
       }
     },
     methods: {
     },
     mounted(){
-         $("img").css({
-           height:$('#app').height()-110+'px'
-         })
+        //  $("img").css({
+        //    height:$('#elec-analysis').height()-110+'px'
+        //  })
     }
   }
 </script>
@@ -30,9 +29,10 @@
   .elec-analysis{
      width:100%;
      height:100%;
-     overflow: hidden;
+    //  overflow: hidden;
     img{
       width:100%;
+      height: 100%;
       display: block;
     }
   }
