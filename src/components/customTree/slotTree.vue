@@ -7,12 +7,14 @@
 			size="small" 
 			@click="handleAddTop">添加顶级节点</el-button>
 		<!-- tree -->
-		<el-tree ref="SlotTree"
+    <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
+		    <el-tree ref="SlotTree"
 			:data="treeList"
 			:props="defaultProps"
 			:expand-on-click-node="false"
 			:node-key="NODE_KEY"
       :default-expanded-keys="defaultExpandedKey"
+      accordion
       @node-click="onClickNode">
 				<div class="comp-tr-node" slot-scope="{ node, data }">
 					<!-- 编辑状态 -->
@@ -35,29 +37,26 @@
 						<!-- 按钮 -->
 						<span :class="[data.status==5?'hide-comp-tr-node--btns':'comp-tr-node--btns']">
 							<!-- 新增 -->
-							<el-button icon="el-icon-plus" 
+							<el-button class="operator-btn" icon="el-icon-plus"
 								size="mini"
-
-
 								@click.stop="handleAdd(node, data)"></el-button>
 
 							<!-- 编辑 -->
-							<el-button icon="el-icon-edit" 
+							<el-button class="operator-btn" icon="el-icon-edit"
 								size="mini"
-
 								type="info"
 								@click.stop="handleEdit(node, data)"></el-button>
 
 							<!-- 删除 -->
-							<el-button icon="el-icon-delete" 
+							<el-button class="operator-btn" icon="el-icon-delete"
 								size="mini"
-
 								type="danger"
 								@click.stop="handleDelete(node, data)"></el-button>
 						</span>
 					</template>
 				</div>
 			</el-tree>
+    </el-scrollbar>
 	</div>
 </template>
 
@@ -185,7 +184,7 @@ export default{
 		height: 100%;
 		// 顶部按钮
 		.comp-tr-top{
-			margin:20px;
+			margin:0 0 20px 20px;
 		}
 		// 自定义节点
 		.comp-tr-node{
@@ -253,6 +252,12 @@ export default{
 		}
     .el-tree{
       position: static;
+    }
+    .operator-btn{
+      width:25px;
+      height:25px;
+      border-radius: 50%;
+      margin-right: 10px;
     }
 	}
 </style>

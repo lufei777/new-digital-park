@@ -1,7 +1,7 @@
 <template>
   <div class="asset-group">
-    <div class="left-group-tree">
-      <div class="group-title">资产组</div>
+    <div class="left-group-tree radius-shadow">
+      <!--<div class="group-title">资产组</div>-->
       <CustomTree  :treeList="groupTree" :addNodeCallback='addNode'
                   :delNodeCallback="deleteAssetGroup"
                   :editCallback="updateAssetGroup"
@@ -92,30 +92,12 @@
     height: 100%;
     padding:20px;
     .left-group-tree{
-      // float: left;
       margin: 0 auto;
       width:25%;
       color:@white;
-      background: #3a8ee6;
-      border-radius: 6px;
+      padding:20px 0;
+      height:600px;
     }
-    .el-tree{
-      background:#3a8ee6;
-      font-size: 16px;
-      color:@white;
-      /*font-weight: 600;*/
-    }
-    .el-tree-node__content{
-      padding:12px 0;
-    }
-    .el-tree-node__content:hover{
-      color:@white;
-      background: #3a8ee6;
-    }
-    .el-tree-node:focus>.el-tree-node__content{
-        color:#3a8ee6;
-        background: @white;
-      }
   }
 </style>
 
