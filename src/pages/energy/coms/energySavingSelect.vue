@@ -22,16 +22,12 @@
         <label>指标选择：</label>
         <el-select v-model="indexEnergy" placeholder="请选择">
           <el-option label="参考标准" value="1"></el-option>
-          <el-option label="国家标准" value="2" disabled></el-option>
+          <el-option label="国家标准" value="2"></el-option>
         </el-select>
       </div>
       <div class="item-group block demonstrationFloor">
         <label>楼层检索：</label>
         <el-input v-model="curEnergy" @focus="onShowModal"></el-input>
-        <!-- <el-select v-model="indexEnergy" placeholder="请选择">
-          <el-option label="参考标准" value="1"></el-option>
-          <el-option label="国家标准" value="2" disabled></el-option>
-        </el-select> -->
       </div>
       <div class="item-group block">
         <label>月份：</label>
