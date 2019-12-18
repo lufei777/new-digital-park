@@ -388,7 +388,7 @@ export default {
   font-size: 14px;
   .choose-box {
     overflow: hidden;
-    padding: 10px 20px;
+    padding: 20px;
     background-color: @white;
     border-radius: 10px;
     margin-bottom: 20px;
@@ -396,7 +396,6 @@ export default {
   .block {
     margin-right: 40px;
     display: flex;
-
     span {
       flex-shrink: 0;
       margin-right: 10px;
@@ -408,12 +407,11 @@ export default {
     text-align: right;
   }
   .operator-box {
-    padding: 20px 0;
+    clear: both;
     display: flex;
     flex-direction: row-reverse;
-
     .el-button {
-      margin: 0 5px;
+      margin-left: 20px;
     }
   }
   .more-btn {

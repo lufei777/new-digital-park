@@ -105,7 +105,7 @@ export default {
   },
   computed: {
     tipText(){
-      return this.rowData?'编辑用户':'添加用户'
+      return this.rowData?'编辑采集':'添加采集'
     },
     rowData() {
       return this.$route.query.rowData;
