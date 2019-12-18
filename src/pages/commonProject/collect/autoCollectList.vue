@@ -1,5 +1,5 @@
 <template>
-  <div class="man-made-list">
+  <div class="auto-collect-list">
     <div class="flex condition-box radius-shadow">
       <div class="block">
         <span class="">能源：</span>
@@ -112,7 +112,7 @@
 </script>
 
 <style lang="less">
-  .man-made-list{
+  .auto-collect-list{
     .condition-box{
       padding:20px;
       background: @white;
@@ -123,13 +123,6 @@
     }
     .demonstration{
       margin-right: 5px;
-    }
-    .operator-box{
-      clear: both;
-      padding:10px 0;
-      .el-button{
-        margin-right: 20px;
-      }
     }
     .table-box{
       padding:20px;
