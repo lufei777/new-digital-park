@@ -39,7 +39,7 @@
           labelWidth:150,
           forms: [
             {
-              type: "input",
+              type: "password",
               label: "原密码",
               prop: "oldPassword",
               span: 24,
@@ -50,18 +50,18 @@
               }
             },
             {
-              type: "input",
+              type: "password",
               label: "新密码",
               prop: "newPassword1",
               span: 24,
               rules: {
                 required: true,
                 message: "请输入新密码",
-                trigger: "change"
+                trigger: "blur"
               }
             },
             {
-              type: "input",
+              type: "password",
               label: "再次输入新密码",
               prop: "newPassword2",
               placeholder:'请再次输入新密码',
@@ -77,8 +77,17 @@
       }
     },
     methods: {
-      async submit(){
-       await DigitalPark.modifyPwd(this.formModel)
+      async submit(model,hide){
+       await DigitalPark.modifyPwd(this.formModel).then(res => {
+           this.$message({
+             type: "success",
+             message: res
+           });
+           this.$router.push('/login')
+       })
+       .finally(msg => {
+         hide();
+       });
       }
     },
     mounted(){

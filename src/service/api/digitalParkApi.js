@@ -65,7 +65,10 @@ class DigitalParkApi {
   @url('/oaApi/user/password')
   @put
   modifyPwd(){}
-  
+
+  @url('/oaApi/user')
+  @put
+  editPersonInformation(){}
 }
 
 export default new DigitalParkApi()

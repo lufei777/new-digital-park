@@ -7,7 +7,6 @@ var czClient = (function (window, document) {
         isClient();
         sessionStorage.setItem('token', token);
     }
-
     return {
         setTokenByClient: setTokenByClient
     }

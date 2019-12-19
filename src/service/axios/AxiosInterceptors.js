@@ -65,7 +65,11 @@ axios.interceptors.response.use(
       // 响应头状态匹配
       switch (response.status) {
         case 401:
-          router.push('/login');
+          if(window._3DClient) {//如果是客户端
+            window.goBackClientLogin()
+          }else{
+            router.push('/login');
+          }
           break;
         default:
           break;
