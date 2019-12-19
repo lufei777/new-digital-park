@@ -24,10 +24,10 @@
 
     <el-carousel height="360px" :interval="6000" v-if="!hideHeader">
       <el-carousel-item>
-        <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo1.jpg" alt />
+        <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo1.png" alt />
       </el-carousel-item>
       <el-carousel-item>
-        <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo2.jpg" alt />
+        <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo2.png" alt />
       </el-carousel-item>
     </el-carousel>
     <div class="home-header-wrapper">
@@ -42,7 +42,7 @@
           </div>
           <ul
             class="flex-align-around production-list"
-            :style="showMoreProduct?'':{height:'120px'}"
+            :style="showMoreProduct?'':{height:'160px'}"
           >
             <li
               v-for="(item,index) in productList"
@@ -158,7 +158,8 @@ export default {
           clientName = "综合安防";
         }
         //目前先写死
-        Client.SkipToSigleBuild(clientName);
+        // Client.SkipToSigleBuild(clientName);
+        window.goToClientPage(item)
         return;
       }
       if (routeAddress) {
@@ -380,7 +381,7 @@ export default {
     background: @white;
   }
   .home-center {
-    width: 80%;
+    width: 1500px;
     margin: 0 auto;
   }
   .item-module {
@@ -404,16 +405,16 @@ export default {
     flex-wrap: wrap;
     overflow: hidden;
     li {
-      width: 16%;
-      height: 80px;
-      padding: 20px 0;
+      width: 15.5%;
+      height: 150px;
+      padding: 2px 0;
       color: @white;
       font-size: 26px;
       text-align: center;
-      line-height: 80px;
+      line-height: 150px;
       background-repeat: no-repeat;
       background-size: 100% 100%;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
     }
     span:hover {
       cursor: pointer;

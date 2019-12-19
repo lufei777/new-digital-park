@@ -13,6 +13,9 @@
 
 <script>
   import miForm from "../../../../components/Form/index";
+  import DigitalPark from '../../../../service/api/digitalParkApi'
+  import { CommonDic } from '../../../../utils/dictionary'
+  import {mapState} from 'vuex'
   export default {
     name: 'PersonalInformation',
     components: {
@@ -59,14 +62,10 @@
               type: "upload",
               listType: "picture-img",
               label: "头像",
-              prop: "avatar",
+              prop: "headUrl",
               span: 24,
               action: "/oaApi/image/upload",
               accept: ["jpg", "jpeg", "png"],
-              props: {
-                label: "tenantPictureName",
-                value: "tenantPictureUrl"
-              },
               propsHttp: {
                 name: "fileName",
                 url: "fileUrl",
@@ -77,18 +76,9 @@
               type: "radio",
               label: "性别",
               prop: "sex",
-              valueDefault: 0,
+              valueDefault: '1',
               span: 24,
-              dicData: [{
-                label: "男",
-                value: 1
-               },{
-                  label: "女",
-                  value: 2
-                },{
-                  label: "保密",
-                  value: 0
-              }],
+              dicData:CommonDic.sexDic
             },
             {
               type: "input",
@@ -116,19 +106,41 @@
       }
     },
     computed:{
-      userInfo(){
-        return JSON.parse(localStorage.getItem('userInfo'))
-      }
+    },
+    watch:{
+      updateUserInfo(){}
     },
     methods: {
-      submit(){}
+      async submit(model,hide){
+        await DigitalPark.editPersonInformation(this.formModel)
+             .then(res=>{
+                 this.$message({
+                   type: "success",
+                   message: res
+                 });
+                  this.$store.commit('digitalPark/updateUserInfo',true)
+             }).finally(e=>{
+               hide()
+          })
+      },
+      async getUserInfo(){
+        let res =  await DigitalPark.getUserInfo()
+        this.formModel = res
+      },
+      cancel(){
+        if(Cookies.get('moduleType')==2){
+          this.$router.push('/digitalPark/homePage')
+        }else{
+          this.$router.push('/digitalPark/dashboardHomePage')
+        }
+      }
     },
+
     mounted(){
 
     },
     created(){
-      this.formModel = this.userInfo
-      this.formModel.sex=this.userInfo.sex=='男'?1:this.userInfo.sex=='女'?2:0
+      this.getUserInfo()
     },
   }
 </script>
