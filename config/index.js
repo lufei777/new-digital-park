@@ -8,11 +8,12 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {  
+    proxyTable: {
       '/vibe-web': {
         // target:'http://192.168.1.130:8008',//后端接口地址
         target:'http://192.168.1.129:8008',//后端接口地址
         // target:'http://39.98.130.147:8008',//后端接口地址
+        // target:'http://192.168.1.129:8008',//后端接口地址
         // changeOrigin: true,//是否允许跨越
         // pathRewrite: {
         //   '^/api': '',//重写,
@@ -21,7 +22,7 @@ module.exports = {
       '/oaApi': {
         // target:'http://192.168.1.130:8002',//后端接口地址
         target:'http://192.168.1.129:8002',//后端接口地址
-        // target:'http://39.98.130.147:8002'
+        // target:'http://192.168.1.129:8002',//后端接口地址
         // changeOrigin: true,//是否允许跨越
         // pathRewrite: {
         //   '^/oaApi': '',//重写,

@@ -1,5 +1,5 @@
 var czClient = (function (window, document) {
-    window.isClient = false;
+    window._3DClient = false;
     function isClient() {
         window._3DClient = true;
     }
