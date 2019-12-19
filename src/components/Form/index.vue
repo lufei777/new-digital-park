@@ -116,14 +116,14 @@
                 :size="controlSize"
                 :loading="allDisabled"
                 v-if="vaildData(parentOption.submitBtn,true)"
-              >{{vaildData(parentOption.submitText,'确 认')}}</el-button>
+              >{{vaildData(parentOption.submitText,'确 定')}}</el-button>
               <el-button
                 icon="el-icon-delete"
                 :size="controlSize"
                 :loading="allDisabled"
                 v-if="vaildData(parentOption.emptyBtn,true)"
                 @click="resetForm"
-              >{{vaildData(parentOption.emptyText,'取 消')}}</el-button>
+              >{{vaildData(parentOption.emptyText,'清 空')}}</el-button>
               <slot name="menuBtn" :size="controlSize"></slot>
             </div>
           </el-form-item>
