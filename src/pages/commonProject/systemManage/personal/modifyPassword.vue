@@ -13,12 +13,22 @@
 
 <script>
   import miForm from "@/components/Form";
+  import DigitalPark from '../../../../service/api/digitalParkApi'
   export default {
     name: 'ModifyPassword',
     components: {
       miForm
     },
     data () {
+      let rePasswordVaild =(rule, value, callback) => {
+        if (value.trim()=="") {
+          callback(new Error("请再次输入新密码"));
+        } else if(value!=this.formModel.newPassword1){
+          callback(new Error("两次新密码不一致"));
+        }else{
+          callback();
+        }
+      };
       return {
         formModel:{
         },
@@ -29,38 +39,37 @@
           labelWidth:150,
           forms: [
             {
-              type: "input",
+              type: "password",
               label: "原密码",
-              prop: "password",
+              prop: "oldPassword",
               span: 24,
               rules: {
                 required: true,
-                message: "请输入密码",
+                message: "请输入原密码",
                 trigger: "blur"
               }
             },
             {
-              type: "input",
+              type: "password",
               label: "新密码",
-              prop: "rePassword",
+              prop: "newPassword1",
               span: 24,
               rules: {
                 required: true,
-                message: "如果没有自动生成，请联系管理员",
-                trigger: "change"
+                message: "请输入新密码",
+                trigger: "blur"
               }
             },
             {
-              type: "input",
+              type: "password",
               label: "再次输入新密码",
-              prop: "sureRepassword",
+              prop: "newPassword2",
               placeholder:'请再次输入新密码',
               span: 24,
               rules: {
-                required: true,
-                // validator: telephone,
-                message: "请输入正确的电话号码",
-                trigger: "change"
+                required:true,
+                validator: rePasswordVaild,
+                trigger: "blur"
               }
             },
           ]
@@ -68,8 +77,17 @@
       }
     },
     methods: {
-      submit(){
-
+      async submit(model,hide){
+       await DigitalPark.modifyPwd(this.formModel).then(res => {
+           this.$message({
+             type: "success",
+             message: res
+           });
+           this.$router.push('/login')
+       })
+       .finally(msg => {
+         hide();
+       });
       }
     },
     mounted(){
