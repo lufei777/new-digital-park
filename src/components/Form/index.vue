@@ -44,7 +44,9 @@
                 :size="column.size || controlSize"
                 :label-width="setPx(column.width,parentOption.labelWidth || 90)"
               >
+                <!-- 如果是禁用tooltip，则tabindex 为 -1 -->
                 <el-tooltip
+                  :tabindex="!column.tip || column.type==='upload' ? -1 : 0"
                   :disabled="!column.tip || column.type==='upload'"
                   :content="vaildData(column.tip,getPlaceholder(column))"
                   :placement="column.tipPlacement"
