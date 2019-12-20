@@ -79,6 +79,7 @@
         if(res){
           sessionStorage.token=res
           Cookies.set('username',this.name)
+          Cookies.set('moduleType',2)
           this.$router.push("/digitalPark/homePage")
         }else{
           this.errTip='用户名或密码错误'

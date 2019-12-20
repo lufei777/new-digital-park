@@ -2,7 +2,7 @@
   <div class="digital-nav-operator flex-align">
       <span class="nav-right-item long-text" v-if="showGoback" @click="onClickGoBack">
         <span style="color:#008DEA">
-          <i class="iconfont iconshouye"></i>&nbsp;返回园区首页</span>
+          <i class="iconfont iconshouye"></i>&nbsp;返回首页</span>
           <i>|</i>
       </span>
       <span class="nav-right-item"><span style="color:#ED6C01">{{$t('homeHeader.news')}}</span><i>|</i></span>
@@ -103,7 +103,7 @@
       },
       async onClickUserConfigure(val){
         if(val==3){
-          if(window._3DClient){//如果是客户端
+          if(Cookies.get('_3DClient')){//如果是客户端
             window.goBackClientLogin()
           }else{
             sessionStorage.removeItem('token')

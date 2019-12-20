@@ -158,8 +158,8 @@ export default {
           clientName = "综合安防";
         }
         //目前先写死
-        Client.SkipToSigleBuild(clientName);
-        // window.goToClientPage(item)
+        // Client.SkipToSigleBuild(clientName);
+        window.goToClientPage && window.goToClientPage(item)
         return;
       }
       if (routeAddress) {

@@ -1,12 +1,11 @@
 <template>
   <div class="modify-password radius-shadow">
     <div class="form-box">
-      <miForm
-        :ref="formData.ref"
-        :options="formData"
-        v-model="formModel"
-        @submit="submit"
-      ></miForm>
+      <miForm :ref="formData.ref" :options="formData" v-model="formModel" @submit="submit">
+        <template slot="menuBtn" slot-scope="scope">
+          <el-button @click="goBack(scope)">返回</el-button>
+        </template>
+      </miForm>
     </div>
   </div>
 </template>
@@ -37,6 +36,7 @@
           size: "medium",
           menuPosition: "center",
           labelWidth:150,
+          emptyBtn:false,
           forms: [
             {
               type: "password",
@@ -88,6 +88,13 @@
        .finally(msg => {
          hide();
        });
+      },
+      goBack(){
+        if(Cookies.get('moduleType')==2){
+          this.$router.push('/digitalPark/homePage')
+        }else{
+          this.$router.push('/digitalPark/dashboardHomePage')
+        }
       }
     },
     mounted(){

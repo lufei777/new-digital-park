@@ -552,7 +552,7 @@
       padding:10px 0;
       flex-shrink: 0;
       float:left;
-      margin:12px 1% 5px 1%;
+      margin:15px 1% 1%;
       background-repeat: no-repeat;
       background-size: 100% 100%;
       overflow: hidden;

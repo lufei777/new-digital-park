@@ -58,13 +58,24 @@ export default {
   },
   methods: {
     onClickSubmenu(item, menuList) {
+      if (!this.specialRoute) return;
       Cookies.set("moduleType", 2);
       Cookies.set("activeMenuIndex", item.childNode[0].id+item.routeAddress);
+      if (
+        item.name == "安防管理" || item.name == "机房动环" ||
+        item.name == "智能建筑" || item.name == "建筑监控" ||
+        item.name == "消防管理") {
+        let clientName = item.name;
+        if (item.name === "安防管理") {
+          clientName = "综合安防";
+        }
+        Client.SkipToSigleBuild(clientName);
+        return;
+      }
       // 获取level = 2的菜单列表
       if (!_.isEmpty(menuList)) {
         localStorage.setItem("menuList", JSON.stringify(menuList));
       } else {
-        if (!this.specialRoute) return;
         if (item.level == 1) {
           return;
         } else {
