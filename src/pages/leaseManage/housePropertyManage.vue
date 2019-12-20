@@ -199,9 +199,9 @@ export default {
     },
     bulkDel({ selectedData }) {
       if (!selectedData.length) {
-         commonFun.deleteTip(this,false,"请选择数据");
-         return;
-      };
+        commonFun.deleteTip(this, false, "请选择数据");
+        return;
+      }
       let ids = _.reduce(
         selectedData,
         (result, cur, curindex) => {
@@ -222,8 +222,11 @@ export default {
     bulkEdit(obj) {
       console.log(obj);
     },
+    getPropertyDetail(row) {
+      return leaseManageApi.houseDetails(row);
+    },
     propertyDetail({ scopeRow: { $index, row, _self } }) {
-      leaseManageApi.houseDetails(row).then(res => {
+      this.getPropertyDetail(row).then(res => {
         this.$router.push({
           name: "editHouseProperty",
           params: {
@@ -236,11 +239,13 @@ export default {
       });
     },
     propertyEdit({ scopeRow: { $index, row, _self } }) {
-      this.$router.push({
-        name: "editHouseProperty",
-        params: {
-          model: _.cloneDeep(row)
-        }
+      this.getPropertyDetail(row).then(res => {
+        this.$router.push({
+          name: "editHouseProperty",
+          params: {
+            model: _.cloneDeep(res)
+          }
+        });
       });
     },
     propertyDel({ scopeRow: { $index, row, _self } }) {
