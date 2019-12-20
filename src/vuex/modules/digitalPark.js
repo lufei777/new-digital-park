@@ -1,6 +1,7 @@
 const state = {
   dragFlag:true,
-  menuIsCollapse:false
+  menuIsCollapse:false,
+  updateUserInfo:false
 }
 
 const mutations={
@@ -9,6 +10,9 @@ const mutations={
   },
   menuIsCollapse(state,data) {
     state.menuIsCollapse = data
+  },
+  updateUserInfo(state,data) {
+    state.updateUserInfo = data
   }
 }
 

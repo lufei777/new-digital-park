@@ -2,7 +2,7 @@
   <div class="digital-nav-operator flex-align">
       <span class="nav-right-item long-text" v-if="showGoback" @click="onClickGoBack">
         <span style="color:#008DEA">
-          <i class="iconfont iconshouye"></i>&nbsp;返回园区首页</span>
+          <i class="iconfont iconshouye"></i>&nbsp;返回首页</span>
           <i>|</i>
       </span>
       <span class="nav-right-item"><span style="color:#ED6C01">{{$t('homeHeader.news')}}</span><i>|</i></span>
@@ -29,7 +29,7 @@
         <el-dropdown @command="onClickUserConfigure">
             <div class="flex-align user-config hover-pointer">
               <div class="user-name">{{userInfo.fullName}}</div>
-              <img class="avatar-img" :src="avatar" alt="">
+              <img class="avatar-img" :src="userInfo.headUrl" alt="">
             </div>
                 <el-dropdown-menu slot="dropdown" >
                   <el-dropdown-item command="1">{{$t('homeHeader.personalCenter')}}</el-dropdown-item>
@@ -52,6 +52,7 @@
 
 <script>
   import DigitalParkApi from '../../../service/api/digitalParkApi'
+  import {mapState} from 'vuex'
   export default {
     name: 'DigitalNavOperator',
     components: {
@@ -74,6 +75,16 @@
         get(){
           return this.moduleType
         }
+      },
+      ...mapState({
+         updateUserInfo:state=>state.digitalPark.updateUserInfo
+      })
+    },
+    watch:{
+      updateUserInfo(){
+        if(this.updateUserInfo){
+          this.getUserInfo()
+        }
       }
     },
     methods: {
@@ -92,9 +103,13 @@
       },
       async onClickUserConfigure(val){
         if(val==3){
-          sessionStorage.removeItem('token')
-          await DigitalParkApi.logOut()
-          this.$router.push('/login')
+          if(Cookies.get('_3DClient')){//如果是客户端
+            window.goBackClientLogin()
+          }else{
+            sessionStorage.removeItem('token')
+            await DigitalParkApi.logOut()
+            this.$router.push('/login')
+          }
         }else{
            let menuTree = JSON.parse(localStorage.getItem('menuTree'))
            let firstLevelTree = menuTree[0].childNode.find((item)=>item.name=="基础功能")
@@ -127,6 +142,7 @@
       async getUserInfo(){
         this.userInfo = await DigitalParkApi.getUserInfo()
         localStorage.setItem("userInfo",JSON.stringify(this.userInfo))
+        this.$store.commit('digitalPark/updateUserInfo',false)
       }
     },
     mounted(){
@@ -185,7 +201,6 @@
       display: block;
       background: #DBDBDB;
       border-radius: 50%;
-      border:1px solid @white;
       margin-left: 10px;
     }
   }

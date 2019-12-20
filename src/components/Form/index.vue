@@ -44,7 +44,9 @@
                 :size="column.size || controlSize"
                 :label-width="setPx(column.width,parentOption.labelWidth || 90)"
               >
+                <!-- 如果是禁用tooltip，则tabindex 为 -1 -->
                 <el-tooltip
+                  :tabindex="!column.tip || column.type==='upload' ? -1 : 0"
                   :disabled="!column.tip || column.type==='upload'"
                   :content="vaildData(column.tip,getPlaceholder(column))"
                   :placement="column.tipPlacement"
@@ -108,20 +110,20 @@
             <!-- 菜单按钮组 -->
             <div :class="`form_menu-${menuPosition}`">
               <el-button
-                icon="el-icon-check"
                 type="primary"
                 @click="submit"
                 :size="controlSize"
+                icon="el-icon-check"
                 :loading="allDisabled"
                 v-if="vaildData(parentOption.submitBtn,true)"
-              >{{vaildData(parentOption.submitText,'确 认')}}</el-button>
+              >{{vaildData(parentOption.submitText,'确 定')}}</el-button>
               <el-button
                 icon="el-icon-delete"
                 :size="controlSize"
                 :loading="allDisabled"
                 v-if="vaildData(parentOption.emptyBtn,true)"
                 @click="resetForm"
-              >{{vaildData(parentOption.emptyText,'取 消')}}</el-button>
+              >{{vaildData(parentOption.emptyText,'清 空')}}</el-button>
               <slot name="menuBtn" :size="controlSize"></slot>
             </div>
           </el-form-item>
@@ -132,7 +134,13 @@
 </template>
 <script>
 import formTemp from "./formtemp";
-import { deepClone, vaildData, setPx, filterDefaultParams } from "./utils/util";
+import {
+  deepClone,
+  vaildData,
+  setPx,
+  filterDefaultParams,
+  findArray
+} from "./utils/util";
 import { validatenull } from "./utils/validate";
 import { detail } from "./utils/detail";
 import {
@@ -142,6 +150,18 @@ import {
   formInitVal
 } from "./utils/dataformat";
 import init from "./common/init";
+
+// 设置默认值
+const _objKeysForeach = function(obj, cb) {
+  Object.keys(obj).forEach(function(key, index) {
+    cb(key, obj[key], index);
+  });
+};
+const setDefaultValue = function(defaultOptions, options, vm) {
+  _objKeysForeach(defaultOptions, function(key, value, index) {
+    vm.$set(options, key, value);
+  });
+};
 
 export default {
   name: "miForm",
@@ -154,6 +174,10 @@ export default {
       type: Object,
       required: true,
       default: () => {}
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -185,6 +209,7 @@ export default {
     vaildData,
     getPlaceholder,
     setPx,
+    findArray,
     dataFormat() {
       // 页面初始化
       let modelDefault = formInitVal(this.propOption);
@@ -225,6 +250,28 @@ export default {
         this.$set(this.modelTranslate, `$${column.prop}`, result);
       }
       return result;
+    },
+    //搜索指定的属性配置
+    findColumnIndex(prop, group = false) {
+      let list = [];
+      let result;
+      this.columnOption.forEach((column, index) => {
+        const val = this.findArray(column.forms, prop, "prop");
+        if (val !== -1) {
+          list.push(index);
+          list.push(val);
+          result = val;
+        }
+      });
+      return group ? list : result;
+    },
+    // 根据prop设置属性
+    setColumnByProp(prop, setOptions) {
+      let forms = this.options.forms;
+      let formsOption = forms[this.findColumnIndex(prop)];
+      setDefaultValue(setOptions, formsOption, this);
+
+      this.options.forms = [...forms];
     },
     // 验证表单是否显隐
     vaildDisplay(column) {
@@ -489,6 +536,7 @@ export default {
       display: block;
     }
   }
+  // 下拉树的样式调整
   .el-input_tree {
     .el-scrollbar__wrap {
       overflow-x: hidden;

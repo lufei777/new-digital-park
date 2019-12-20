@@ -1,12 +1,16 @@
 <template>
   <div class="face-recognition">
-    <span class="nav-right-item long-text face-recognition-back" @click="onClickGoBack">
+    <span
+      v-show="back"
+      class="nav-right-item long-text face-recognition-back"
+      @click="onClickGoBack"
+    >
       <span style="color:#008DEA">
         <i class="iconfont iconshouye"></i>&nbsp;返回园区首页
       </span>
     </span>
     <iframe
-      src="http://vt.fothing.com/deviceauth"
+      src="http://site-facr.loiot.com"
       id="iframe"
       frameborder="0"
       width="100%"
@@ -20,7 +24,16 @@
 export default {
   name: "FaceRecognition",
   data() {
-    return {};
+    return {
+      back: false
+    };
+  },
+  mounted() {
+    document.querySelector("#iframe").onload = () => {
+      this.back = true;
+      let iWin = document.querySelector("#iframe").contentWindow;
+      console.log(iWin);
+    };
   },
   methods: {
     onClickGoBack() {
@@ -48,15 +61,15 @@ export default {
     top: 25px;
     z-index: 555555555555;
   }
-  .nav-right-item{
-      span{
-        // width:90px;
-        display: inline-block;
-        text-align: center;
-        &:hover{
-          cursor: pointer;
-        }
+  .nav-right-item {
+    span {
+      // width:90px;
+      display: inline-block;
+      text-align: center;
+      &:hover {
+        cursor: pointer;
       }
     }
+  }
 }
 </style>

@@ -105,7 +105,7 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
                     return date;
                 }
             });
-        } else if (typeof value === "string") {
+        } else if (typeof value === "string" && value.length != 0) {
             value = new Date(value);
         }
     }

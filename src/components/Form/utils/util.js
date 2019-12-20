@@ -102,6 +102,15 @@ export const findArrayLabel = (dic, value, props, isGroup) => {
     }
     return value;
 };
+export const findArray = (dic, value, valueKey) => {
+    valueKey = valueKey || DIC_PROPS.value;
+    for (let i = 0; i < dic.length; i++) {
+        if (dic[i][valueKey] === value) {
+            return i;
+        }
+    }
+    return -1;
+};
 export const vaildData = (val, dafult) => {
     if (typeof val === 'boolean') {
         return val;

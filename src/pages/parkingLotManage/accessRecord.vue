@@ -19,12 +19,6 @@
 
     <div class="table panel">
       <miTable :ref="leaseManageTable.ref" :tableConfig="leaseManageTable">
-        <template slot="custom-top" slot-scope="obj">
-          <el-button :size="obj.size" type="primary" @click="addedProperty(obj)">新增</el-button>
-          <el-button :size="obj.size" type="primary" @click="bulkImport(obj)">批量导入</el-button>
-          <el-button :size="obj.size" type="primary" @click="bulkDel(obj)">批量删除</el-button>
-          <el-button :size="obj.size" type="primary" @click="bulkEdit(obj)">批量编辑</el-button>
-        </template>
         <template slot="operation" slot-scope="obj">
           <el-button type="text" @click="propertyDetail(obj)">详情</el-button>
           <el-button type="text" @click="propertyEdit(obj)">编辑</el-button>
@@ -55,46 +49,34 @@ export default {
         forms: [
           {
             type: "input",
-            label: "房产编号",
+            label: "车牌号码",
             prop: "houseNumber",
             placeholder: "请输入",
             clearable: true,
             span: 4
           },
           {
-            type: "input",
-            label: "房产名称",
+            type: "datetime",
+            label: "入场时间",
             prop: "houseName",
-            placeholder: "请输入",
             clearable: true,
             span: 4
           },
           {
-            type: "number",
-            label: "总价",
+            type: "datetime",
+            label: "出场时间",
             prop: "housePrice",
-            placeholder: "请输入",
             clearable: true,
-            span: 4,
-            minRows: 0
+            span: 4
           },
           {
-            type: "select",
-            label: "房产状态",
+            type: "input",
+            label: "停车场名称",
             prop: "houseStatus",
             placeholder: "请输入",
             clearable: true,
-            span: 4,
-            dicData: Object.values(LeaseManageDic.HouseStatus)
-          },
-          {
-            type: "number",
-            label: "面积",
-            prop: "houseArea",
-            placeholder: "请输入",
-            clearable: true,
-            span: 4,
-            minRows: 0
+            width: 100,
+            span: 4
           },
           {
             prop: "btn",
@@ -106,80 +88,80 @@ export default {
       },
       leaseManageTable: {
         ref: "leaseManageTable",
-        customTopPosition: "right",
-        serverMode: {
-          url: leaseManageApi.getHouseList,
-          data: {
-            pageNum: 1,
-            pageSize: 10
-          },
-          props: {
-            listKey: "list",
-            total: "total",
-            pageSize: "pageSize",
-            pageNum: "pageNum"
+        data: [
+          {
+            clhm: "京A00000",
+            tczt: "停车",
+            kh: 1657842564521,
+            tccmc: "数字园区1号停车场",
+            yhlb: "个人",
+            tccsfje: 500,
+            rcfs: "开车",
+            ccfs: "开车",
+            rcsj: "2015-08-09 12:05",
+            ccsj: "2015-08-09 16:12",
+            rcdztdmc: "一号闸"
           }
-        },
-        operation: {
-          width: 200
-        },
+        ],
         columnConfig: [
           {
-            prop: "houseNumber",
-            label: "房产编号",
-            width: 200
+            prop: "clhm",
+            label: "车辆号码",
+            fixed: "left"
           },
           {
-            prop: "houseName",
-            label: "房产名称"
+            prop: "tczt",
+            label: "停车状态",
+            fixed: "left"
           },
           {
-            prop: "spaceName",
-            label: "空间位置"
+            prop: "kh",
+            label: "卡号",
+            fixed: "left"
           },
           {
-            prop: "houseStatus",
-            label: "房产状态",
-            formatter: function(row, column) {
-              let HouseStatus = LeaseManageDic.HouseStatus;
-              let rowValue = row[column.property];
-              let res = _.find(HouseStatus, (cur, key, obj) => {
-                return cur.value === rowValue;
-              });
-              return res ? res.label : "";
-            }
+            prop: "tccmc",
+            label: "停车场名称",
+            fixed: "left"
           },
           {
-            prop: "houseArea",
-            label: "面积 m²"
+            prop: "yhlb",
+            label: "用户类别",
+            fixed: "left"
           },
           {
-            prop: "housePrice",
-            label: "总价",
-            formatter(row, column) {
-              let pirceTypeLabel = "";
-              if (typeof row.priceType == "number") {
-                pirceTypeLabel =
-                  LeaseManageDic.PriceType[row.priceType - 1].label;
-              }
-              return row[column.property]
-                ? `${row[column.property]} ${pirceTypeLabel}`
-                : "";
-            }
+            prop: "tccsfje",
+            label: "停车场收费金额(元)",
+            fixed: "left",
+            width: 150
           },
           {
-            prop: "qysj",
-            label: "签约时间"
+            prop: "rcfs",
+            label: "入场方式"
           },
           {
-            prop: "zhxm",
-            label: "租户姓名"
+            prop: "ccfs",
+            label: "出场方式"
+          },
+          {
+            prop: "rcsj",
+            label: "入场时间"
+          },
+          {
+            prop: "ccsj",
+            label: "出场时间"
+          },
+          {
+            prop: "rcdztdmc",
+            label: "入场道闸通道名称",
+            width: 150
           }
         ],
         uiConfig: {
           height: "auto",
           customTopPosition: "right",
-          selection: true
+          selection: true,
+          showIndex: true
         }
       }
     };
@@ -225,11 +207,8 @@ export default {
     bulkEdit(obj) {
       console.log(obj);
     },
-    getPropertyDetail(row) {
-      return leaseManageApi.houseDetails(row);
-    },
     propertyDetail({ scopeRow: { $index, row, _self } }) {
-      this.getPropertyDetail(row).then(res => {
+      leaseManageApi.houseDetails(row).then(res => {
         this.$router.push({
           name: "editHouseProperty",
           params: {
@@ -242,13 +221,11 @@ export default {
       });
     },
     propertyEdit({ scopeRow: { $index, row, _self } }) {
-      this.getPropertyDetail(row).then(res => {
-        this.$router.push({
-          name: "editHouseProperty",
-          params: {
-            model: _.cloneDeep(res)
-          }
-        });
+      this.$router.push({
+        name: "editHouseProperty",
+        params: {
+          model: _.cloneDeep(row)
+        }
       });
     },
     propertyDel({ scopeRow: { $index, row, _self } }) {

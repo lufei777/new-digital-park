@@ -473,6 +473,7 @@ const space = [
 import { LeaseManageDic } from "@/utils/dic/leaseManage";
 import miForm from "@/components/Form";
 import leaseManageApi from "@/service/api/leaseManageApi";
+import commonApi from "@/service/api/commonApi";
 
 const apiConfig = {
   add: {
@@ -488,6 +489,7 @@ const apiConfig = {
 export default {
   components: { miForm },
   data() {
+    let _this = this;
     return {
       model: {
         priceType: LeaseManageDic.PriceType[0].value
@@ -527,11 +529,11 @@ export default {
             prop: "spaceId",
             clearable: true,
             span: 12,
-            dicData: space,
+            dicData: [],
             props: {
-              label: "name",
-              value: "id",
-              children: "childNode"
+              label: "floor",
+              value: "floorId",
+              children: "nodes"
             },
             rules: {
               required: true,
@@ -546,7 +548,8 @@ export default {
             dicData: LeaseManageDic.isRent,
             valueDefault: 1,
             clearable: true,
-            span: 12
+            span: 12,
+            change: _this.isRendChange
           },
           {
             type: "input",
@@ -567,7 +570,7 @@ export default {
             rules: {
               required: true,
               message: "必填",
-              trigger: "blur"
+              trigger: "change"
             }
           },
           {
@@ -593,7 +596,7 @@ export default {
             rules: {
               required: true,
               message: "必填",
-              trigger: "blur"
+              trigger: "change"
             }
           },
           {
@@ -649,6 +652,14 @@ export default {
         this.pageConfig.title = "房产详情";
       }
     }
+    // 空间
+    /* let spaceIdIndex = this.$refs[this.leaseManageForm.ref].findColumnIndex(
+      "spaceId"
+    ); */
+    commonApi.getAllFloorOfA3().then(res => {
+      console.log("spaceId", res);
+      this.leaseManageForm.forms[2].dicData = res;
+    });
   },
   methods: {
     submit(model, hide) {
@@ -672,8 +683,24 @@ export default {
     },
     back() {
       this.$router.back();
+    },
+    isRendChange({ column, value }) {
+      if (value === column.dicData[1].value) {
+        this.$refs[this.leaseManageForm.ref].setColumnByProp("housePrice", {
+          rules: []
+        });
+      } else {
+        this.$refs[this.leaseManageForm.ref].setColumnByProp("housePrice", {
+          rules: {
+            required: true,
+            message: "必填，请填写总价",
+            trigger: "blur"
+          }
+        });
+      }
     }
-  }
+  },
+  watch: {}
 };
 </script>
 <style lang='less' scoped>

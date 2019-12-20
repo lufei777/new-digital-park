@@ -1,6 +1,9 @@
 <template>
   <div class="el-table-wrapper" :style="{height:wrapperHeight}">
-    <div ref="customTop" :style="{textAlign:'left',height:'auto',padding:'0 20px 20px'}">
+    <div
+      ref="customTop"
+      :style="{textAlign:tableConfig.customTopPosition||'left',height:'auto',padding:'0 20px 20px'}"
+    >
       <slot
         :name="topSlotName"
         :size="uiConfig.size"
@@ -43,7 +46,7 @@
         v-if="uiConfig.showIndex"
         type="index"
         :index="uiConfig.showIndex.handler"
-        :width="uiConfig.showIndex.width || 40"
+        :width="uiConfig.showIndex.width || 55"
       >
         <template slot="header">{{uiConfig.showIndex.label || "序号"}}</template>
       </el-table-column>
@@ -82,7 +85,7 @@
         :prop="btnConfig.prop"
         :label="btnConfig.label"
         :width="btnConfig.width"
-        :align="'left'"
+        :align="btnConfig.align || 'left'"
       >
         <!-- 搜索框 -->
         <template v-if="uiConfig.searchable" slot="header">
