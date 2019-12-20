@@ -1220,6 +1220,81 @@ class commonFun {
     handlePeople:"程琳",
     remark:"电子设备"
   }]
+
+  stockInCheck = [{
+    warehouseId:1,
+    goodsName:"显示屏",
+    goodsType:"电子设备",
+    warehouseSum:"5",
+    warehouseTime:"2019-12-10",
+    applicant:"通过",
+    handlePeople:"程琳",
+    remark:"电子设备"
+  },{
+    warehouseId:2,
+    goodsName:"电脑桌",
+    goodsType:"办公用品",
+    warehouseSum:"2",
+    warehouseTime:"2019-10-10",
+    applicant:"通过",
+    handlePeople:"程琳",
+    remark:"办公用品"
+  },{
+    warehouseId:3,
+    goodsName:"鼠标",
+    goodsType:"电子设备",
+    warehouseSum:"1",
+    warehouseTime:"2019-2-10",
+    applicant:"通过",
+    handlePeople:"程琳",
+    remark:"电子设备"
+  },{
+    warehouseId:4,
+    goodsName:"网线",
+    goodsType:"电子设备",
+    warehouseSum:"6",
+    warehouseTime:"2019-12-10",
+    applicant:"通过",
+    handlePeople:"程琳",
+    remark:"电子设备"
+  }]
+   stockOut= [{
+    warehouseId:1,
+    goodsName:"显示屏",
+    goodsType:"电子设备",
+    warehouseSum:"5",
+    warehouseTime:"2019-12-10",
+    applicant:"程琳",
+    handlePeople:"程琳",
+    remark:"电子设备"
+  },{
+    warehouseId:2,
+    goodsName:"电脑桌",
+    goodsType:"办公用品",
+    warehouseSum:"2",
+    warehouseTime:"2019-10-10",
+    applicant:"程琳",
+    handlePeople:"程琳",
+    remark:"办公用品"
+  },{
+    warehouseId:3,
+    goodsName:"鼠标",
+    goodsType:"电子设备",
+    warehouseSum:"1",
+    warehouseTime:"2019-2-10",
+    applicant:"程琳",
+    handlePeople:"程琳",
+    remark:"电子设备"
+  },{
+    warehouseId:4,
+    goodsName:"网线",
+    goodsType:"电子设备",
+    warehouseSum:"6",
+    warehouseTime:"2019-12-10",
+    applicant:"程琳",
+    handlePeople:"程琳",
+    remark:"电子设备"
+  }]
   // 跳转链接
   loadOldPage(item, routeOldProject) {
     if (routeOldProject) {
