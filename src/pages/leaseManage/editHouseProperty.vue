@@ -489,6 +489,7 @@ const apiConfig = {
 export default {
   components: { miForm },
   data() {
+    let _this = this;
     return {
       model: {
         priceType: LeaseManageDic.PriceType[0].value
@@ -547,7 +548,8 @@ export default {
             dicData: LeaseManageDic.isRent,
             valueDefault: 1,
             clearable: true,
-            span: 12
+            span: 12,
+            change: _this.isRendChange
           },
           {
             type: "input",
@@ -568,7 +570,7 @@ export default {
             rules: {
               required: true,
               message: "必填",
-              trigger: "blur"
+              trigger: "change"
             }
           },
           {
@@ -577,12 +579,7 @@ export default {
             prop: "housePrice",
             clearable: true,
             span: 12,
-            appendslot: "housepriceappend",
-            rules: {
-              required: true,
-              message: "必填，请填写总价",
-              trigger: "blur"
-            }
+            appendslot: "housepriceappend"
           },
           {
             type: "input",
@@ -594,7 +591,7 @@ export default {
             rules: {
               required: true,
               message: "必填",
-              trigger: "blur"
+              trigger: "change"
             }
           },
           {
@@ -681,8 +678,24 @@ export default {
     },
     back() {
       this.$router.back();
+    },
+    isRendChange({ column, value }) {
+      if (value === column.dicData[1].value) {
+        this.$refs[this.formConfig.ref].setColumnByProp("housePrice", {
+          rules: []
+        });
+      } else {
+        this.$refs[this.leaseManageForm.ref].setColumnByProp("housePrice", {
+          rules: {
+            required: true,
+            message: "必填，请填写总价",
+            trigger: "blur"
+          }
+        });
+      }
     }
-  }
+  },
+  watch: {}
 };
 </script>
 <style lang='less' scoped>

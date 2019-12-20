@@ -106,6 +106,7 @@ export default {
       },
       leaseManageTable: {
         ref: "leaseManageTable",
+        customTopPosition: "right",
         serverMode: {
           url: leaseManageApi.getHouseList,
           data: {
@@ -161,7 +162,9 @@ export default {
                 pirceTypeLabel =
                   LeaseManageDic.PriceType[row.priceType - 1].label;
               }
-              return `${row[column.property]} ${pirceTypeLabel}`;
+              return row[column.property]
+                ? `${row[column.property]} ${pirceTypeLabel}`
+                : "";
             }
           },
           {

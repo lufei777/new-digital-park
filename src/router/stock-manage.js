@@ -1,15 +1,12 @@
-import StockManageIndex from '../pages/stockManage/index'
-import WarehouseManage from '../pages/stockManage/warehouseManage'
-
 export default [{
-    path: '/',
+    path: '/stockmanage',
     redirect: '/warehouseManage',
     meta: { title: '库存管理' },
-    component: StockManageIndex,
+    component: () => import('@/pages/stockManage/index'),
     children: [{
         path: '/warehouseManage',
         name: 'WarehouseManage',
         meta: { title: '入库管理' },
-        component: WarehouseManage,
+        component: () => import('@/pages/stockManage/warehouseManage')
     }]
 }]
