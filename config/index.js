@@ -18,6 +18,8 @@ module.exports = {
         // pathRewrite: {
         //   '^/api': '',//重写,
         // }
+
+
       },
       '/oaApi': {
         // target:'http://192.168.1.130:8002',//后端接口地址
