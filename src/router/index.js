@@ -16,12 +16,16 @@ import CostManage from './cost-manage'
 import ReceiveSupportManage from './receive-support-manage'
 import PurchaseManage from './purchase-manage'
 import StockManage from './stock-manage'
+// import visitorManage from './visitor-manage'
+import taskManage from './task-manage'
+
 import visitorManage from './visitor-manage'                  // 访客管理
 import ParkingLotManage from './parkinglot-manage'            // 停车场管理
 
 import helloRouter from './hello-router'
 
 // 数字园区
+// let DigitalRouters = flattenDeep([DigitalParkRouter, AssetManage, EnergyRouter, vibeWeb, LeaseManage,CleaningManage,CostManage,ReceiveSupportManage,PurchaseManage,StockManage,visitorManage,taskManage]);
 let DigitalRouters = flattenDeep(
   [
     DigitalParkRouter, AssetManage,
@@ -29,7 +33,8 @@ let DigitalRouters = flattenDeep(
     LeaseManage, CleaningManage,
     CostManage, ReceiveSupportManage,
     PurchaseManage, StockManage,
-    visitorManage, ParkingLotManage
+    visitorManage, ParkingLotManage,
+    taskManage
   ]
 );
 

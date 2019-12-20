@@ -60,8 +60,8 @@
       },
       filterNode(value, data) {
         if (!value) return true;
-        let tmp = data.floor || data.text || data.name  //兼容后端不同名称
-        return tmp.indexOf(value) !== -1;
+        let tmp = data.floor || data.text || data.name || data.label  //兼容后端不同名称
+        return data[this.treeConfig.treeProps.label].indexOf(value) !== -1;
       },
     },
     mounted(){
