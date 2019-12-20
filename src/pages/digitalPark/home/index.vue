@@ -159,7 +159,7 @@ export default {
         }
         //目前先写死
         // Client.SkipToSigleBuild(clientName);
-        window.goToClientPage(item)
+        window.goToClientPage && window.goToClientPage(item)
         return;
       }
       if (routeAddress) {

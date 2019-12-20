@@ -1,6 +1,6 @@
 <template>
   <div>
-    <iframe id="myIframe" :src="computedSrc" frameborder="0" scrolling="no" width="100%"></iframe>
+    <iframe id="myIframe" :src="computedSrc" frameborder="0"  width="100%"></iframe>
   </div>
 </template>
 <script>
@@ -20,12 +20,10 @@ export default {
   },
   methods: {
     changeMobsfIframe() {
+      const mobsf = document.getElementById("myIframe");
       const deviceWidth = document.body.clientWidth;
       const deviceHeight = document.body.clientHeight;
-      const mobsf = document.getElementById("myIframe");
-      mobsf.onload = () => {
-        mobsf.style.height = 1200 + "px";
-      };
+      mobsf.style.height = Number(deviceHeight) - 110 + "px";
     }
   },
   computed: {
@@ -39,4 +37,7 @@ export default {
 };
 </script>
 <style lang='less' scoped>
+  #myIframe{
+    overflow: auto;
+  }
 </style>

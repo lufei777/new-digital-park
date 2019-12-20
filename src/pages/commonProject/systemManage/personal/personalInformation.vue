@@ -1,12 +1,11 @@
 <template>
   <div class="personal-information radius-shadow">
     <div class="form-box">
-      <miForm
-        :ref="formData.ref"
-        :options="formData"
-        v-model="formModel"
-        @submit="submit"
-      ></miForm>
+      <miForm :ref="formData.ref" :options="formData" v-model="formModel" @submit="submit">
+        <template slot="menuBtn" slot-scope="scope">
+           <el-button @click="goBack(scope)">返回</el-button>
+        </template>
+      </miForm>
     </div>
   </div>
 </template>
@@ -22,10 +21,10 @@
       miForm
     },
     data () {
-      let validTelephone = (rule, value, callback) => {
+      let validTelephone = (rule, value, callgoBack) => {
         let reg = /^1[3|4|5|7|8]\d{9}$/;
         if (reg.test(value) || value=="") {
-          callback();
+          callgoBack();
         } else {
           callback(new Error("请输入正确的手机号"));
         }
@@ -45,6 +44,7 @@
           ref: "formRef",
           size: "medium",
           menuPosition: "left",
+          emptyBtn:false,
           forms: [
             {
               type: "input",
@@ -127,7 +127,7 @@
         let res =  await DigitalPark.getUserInfo()
         this.formModel = res
       },
-      cancel(){
+      goBack(){
         if(Cookies.get('moduleType')==2){
           this.$router.push('/digitalPark/homePage')
         }else{

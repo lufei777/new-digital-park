@@ -79,6 +79,7 @@
         if(res){
           sessionStorage.token=res
           Cookies.set('username',this.name)
+          Cookies.set('moduleType',2)
           this.$router.push("/digitalPark/homePage")
         }else{
           this.errTip='用户名或密码错误'
@@ -105,7 +106,7 @@
     overflow: hidden;
     .logo-img{
       display: block;
-      margin:60px 0 0 70px;
+      margin:20px 0 0 70px;
       float: left;
     }
     .login-box{
