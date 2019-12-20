@@ -105,7 +105,7 @@
     overflow: hidden;
     .logo-img{
       display: block;
-      margin:60px 0 0 70px;
+      margin:20px 0 0 70px;
       float: left;
     }
     .login-box{
