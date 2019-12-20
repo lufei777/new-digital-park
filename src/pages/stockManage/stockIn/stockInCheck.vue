@@ -36,7 +36,7 @@
 <script>
 import miForm from "@/components/Form";
 import miTable from "@/components/Table";
-import CommonFun from "../../utils/commonFun";
+import CommonFun from "../../../utils/commonFun";
 export default {
   name: "WarehouseManage",
   components: { miForm, miTable },
@@ -70,7 +70,7 @@ export default {
           },
           {
             type: "input",
-            label: "入库总数",
+            label: "验收总数",
             prop: "warehouseSum",
             placeholder: "请输入",
             clearable: true,
@@ -83,7 +83,7 @@ export default {
           },
           {
             type: "input",
-            label: "入库日期",
+            label: "验收状态",
             prop: "warehouseTime",
             placeholder: "选择日期时间",
             // clearable: true,
@@ -98,7 +98,7 @@ export default {
           // },
           {
             type: "input",
-            label: "申请人",
+            label: "验收日期",
             prop: "applicant",
             placeholder: "请输入",
             span: 4
@@ -174,13 +174,13 @@ export default {
       this.$refs[this.formData.ref].resetForm();
     },
     getCleaningList() {
-      let res = CommonFun.warehouseManageData;
+      let res = CommonFun.stockInCheck;
       let labelList = [
         { label: "物品名称", prop: "goodsName" },
         { label: "物品类型", prop: "goodsType" },
-        { label: "入库总数", prop: "warehouseSum" },
-        { label: "入库日期", prop: "warehouseTime" },
-        { label: "申请人", prop: "applicant" },
+        { label: "验收总数", prop: "warehouseSum" },
+        { label: "验收状态", prop: "applicant" },
+        { label: "验收日期", prop: "warehouseTime" },
         { label: "经办人", prop: "handlePeople" },
         { label: "备注", prop: "remark" }
       ];
