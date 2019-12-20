@@ -110,10 +110,10 @@
             <!-- 菜单按钮组 -->
             <div :class="`form_menu-${menuPosition}`">
               <el-button
-                icon="el-icon-check"
                 type="primary"
                 @click="submit"
                 :size="controlSize"
+                icon="el-icon-check"
                 :loading="allDisabled"
                 v-if="vaildData(parentOption.submitBtn,true)"
               >{{vaildData(parentOption.submitText,'确 定')}}</el-button>
@@ -134,7 +134,13 @@
 </template>
 <script>
 import formTemp from "./formtemp";
-import { deepClone, vaildData, setPx, filterDefaultParams } from "./utils/util";
+import {
+  deepClone,
+  vaildData,
+  setPx,
+  filterDefaultParams,
+  findArray
+} from "./utils/util";
 import { validatenull } from "./utils/validate";
 import { detail } from "./utils/detail";
 import {
@@ -144,6 +150,18 @@ import {
   formInitVal
 } from "./utils/dataformat";
 import init from "./common/init";
+
+// 设置默认值
+const _objKeysForeach = function(obj, cb) {
+  Object.keys(obj).forEach(function(key, index) {
+    cb(key, obj[key], index);
+  });
+};
+const setDefaultValue = function(defaultOptions, options, vm) {
+  _objKeysForeach(defaultOptions, function(key, value, index) {
+    vm.$set(options, key, value);
+  });
+};
 
 export default {
   name: "miForm",
@@ -156,6 +174,10 @@ export default {
       type: Object,
       required: true,
       default: () => {}
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -187,6 +209,7 @@ export default {
     vaildData,
     getPlaceholder,
     setPx,
+    findArray,
     dataFormat() {
       // 页面初始化
       let modelDefault = formInitVal(this.propOption);
@@ -241,6 +264,14 @@ export default {
         }
       });
       return group ? list : result;
+    },
+    // 根据prop设置属性
+    setColumnByProp(prop, setOptions) {
+      let forms = this.options.forms;
+      let formsOption = forms[this.findColumnIndex(prop)];
+      setDefaultValue(setOptions, formsOption, this);
+
+      this.options.forms = [...forms];
     },
     // 验证表单是否显隐
     vaildDisplay(column) {
@@ -505,6 +536,7 @@ export default {
       display: block;
     }
   }
+  // 下拉树的样式调整
   .el-input_tree {
     .el-scrollbar__wrap {
       overflow-x: hidden;
