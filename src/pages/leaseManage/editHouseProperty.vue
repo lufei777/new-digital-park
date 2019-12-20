@@ -473,6 +473,7 @@ const space = [
 import { LeaseManageDic } from "@/utils/dic/leaseManage";
 import miForm from "@/components/Form";
 import leaseManageApi from "@/service/api/leaseManageApi";
+import commonApi from "@/service/api/commonApi";
 
 const apiConfig = {
   add: {
@@ -527,11 +528,11 @@ export default {
             prop: "spaceId",
             clearable: true,
             span: 12,
-            dicData: space,
+            dicData: [],
             props: {
-              label: "name",
-              value: "id",
-              children: "childNode"
+              label: "floor",
+              value: "floorId",
+              children: "nodes"
             },
             rules: {
               required: true,
@@ -649,6 +650,14 @@ export default {
         this.pageConfig.title = "房产详情";
       }
     }
+    // 空间
+    /* let spaceIdIndex = this.$refs[this.leaseManageForm.ref].findColumnIndex(
+      "spaceId"
+    ); */
+    commonApi.getAllFloorOfA3().then(res => {
+      console.log("spaceId", res);
+      this.leaseManageForm.forms[2].dicData = res;
+    });
   },
   methods: {
     submit(model, hide) {

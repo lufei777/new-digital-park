@@ -228,6 +228,20 @@ export default {
       }
       return result;
     },
+    //搜索指定的属性配置
+    findColumnIndex(prop, group = false) {
+      let list = [];
+      let result;
+      this.columnOption.forEach((column, index) => {
+        const val = this.findArray(column.forms, prop, "prop");
+        if (val !== -1) {
+          list.push(index);
+          list.push(val);
+          result = val;
+        }
+      });
+      return group ? list : result;
+    },
     // 验证表单是否显隐
     vaildDisplay(column) {
       if (!this.validatenull(column.display)) {
