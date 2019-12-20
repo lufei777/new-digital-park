@@ -15,12 +15,12 @@ export default [{
     path:'/deviceAnalysis',
     name:'DeviceAnalysis',
     component:DeviceAnalysis,
-    meta:{title:'设备分析'}
+    meta:{title:'设备状态'}
   },{
     path:'/correlationAnalysis',
     name:'CorrelationAnalysis',
     component:CorrelationAnalysis,
-    meta:{title:'相关性分析'}
+    meta:{title:'相关分析'}
   },{
     path:'/statisCompare',
     name:'StatisCompare',
@@ -30,7 +30,7 @@ export default [{
     path:'/historyStatis',
     name:'HistoryStatis',
     component:HistoryStatis,
-    meta:{title:'历史统计'}
+    meta:{title:'往期对比'}
   },{
     path: '/tmpRouter2',
     component: TmpRouter,
