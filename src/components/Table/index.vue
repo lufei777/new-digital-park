@@ -43,7 +43,7 @@
         v-if="uiConfig.showIndex"
         type="index"
         :index="uiConfig.showIndex.handler"
-        :width="uiConfig.showIndex.width || 40"
+        :width="uiConfig.showIndex.width || 55"
       >
         <template slot="header">{{uiConfig.showIndex.label || "序号"}}</template>
       </el-table-column>
