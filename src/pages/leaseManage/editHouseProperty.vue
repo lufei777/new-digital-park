@@ -579,7 +579,12 @@ export default {
             prop: "housePrice",
             clearable: true,
             span: 12,
-            appendslot: "housepriceappend"
+            appendslot: "housepriceappend",
+            rules: {
+              required: true,
+              message: "必填，请填写总价",
+              trigger: "blur"
+            }
           },
           {
             type: "input",
@@ -681,7 +686,7 @@ export default {
     },
     isRendChange({ column, value }) {
       if (value === column.dicData[1].value) {
-        this.$refs[this.formConfig.ref].setColumnByProp("housePrice", {
+        this.$refs[this.leaseManageForm.ref].setColumnByProp("housePrice", {
           rules: []
         });
       } else {
