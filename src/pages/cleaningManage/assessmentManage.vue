@@ -1,5 +1,5 @@
 <template>
-  <div class="warehouse-manage">
+  <div class="assessment-manage">
     <div class="condition-box radius-shadow">
       <miForm
         :ref="formData.ref"
@@ -17,15 +17,13 @@
       </miForm>
     </div>
 
-    <div class="warehouse-manage-table radius-shadow">
+    <div class="assessment-manage-table radius-shadow">
       <miTable :ref="tableData.ref" :tableConfig="tableData">
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">
             <el-button :size="obj.size" type="primary">批量删除</el-button>
-            <el-button :size="obj.size" type="primary">批量编辑</el-button>
             <el-button :size="obj.size" type="primary">导出</el-button>
             <el-button :size="obj.size" type="primary">导入</el-button>
-            <el-button :size="obj.size" type="primary">新增</el-button>
           </div>
         </template>
       </miTable>
@@ -36,9 +34,9 @@
 <script>
 import miForm from "@/components/Form";
 import miTable from "@/components/Table";
-import CommonFun from "@/utils/commonFun";
+import CommonFun from "../../utils/commonFun";
 export default {
-  name: "goodsCheck",
+  name:"AssessmentManage",
   components: { miForm, miTable },
   data() {
     return {
@@ -53,8 +51,8 @@ export default {
         forms: [
           {
             type: "input",
-            label: "物品名称",
-            prop: "goodsName",
+            label: "任务名称",
+            prop: "taskName",
             placeholder: "请输入",
             clearable: true,
             span: 4,
@@ -62,16 +60,16 @@ export default {
           },
           {
             type: "input",
-            label: "物品类型",
-            prop: "goodsType",
+            label: "任务类型",
+            prop: "taskType",
             placeholder: "请输入",
             clearable: true,
             span: 4
           },
           {
             type: "input",
-            label: "入库总数",
-            prop: "warehouseSum",
+            label: "执行方式",
+            prop: "executeMethod",
             placeholder: "请输入",
             clearable: true,
             span: 4
@@ -81,48 +79,41 @@ export default {
             formslot: true,
             span: 12
           },
+        //  {
+        //     prop: "",
+        //     formslot: true,
+        //     span: 6
+        //   },
           {
-            type: "input",
-            label: "入库日期",
-            prop: "warehouseTime",
-            placeholder: "选择日期时间",
+            type: "select",
+            label: "完成日期",
+            prop: "completeDate",
+            placeholder: "请输入",
             // clearable: true,
             span: 4,
             format: "yyyy-MM-dd",
             valueFormat: "timestamp"
           },
-          // {
-          //   prop: "",
-          //   formslot: true,
-          //   span: 6
-          // },
+          
           {
             type: "input",
-            label: "申请人",
-            prop: "applicant",
+            label: "负责人",
+            prop: "principal",
             placeholder: "请输入",
+            clearable: true,
             span: 4
-          },
-          {
-            type: "input",
-            label: "经办人",
-            // offset:1,
-            prop: "handlePeople",
-            placeholder: "请输入",
-            span: 4
+            // width: "110px"
           },
           {
             prop: "btn",
             span: 6,
             pull: 4,
-            formslot: true
-            // width: "34px"
+            formslot: true,
           }
         ]
       },
       tableData: {
         ref: "tableData",
-        customTop: true,
         data: [],
         columnConfig: [],
         uiConfig: {
@@ -145,16 +136,19 @@ export default {
           width: 200,
           btns: [
             {
-              label: "详情",
-              handler: function(row) {}
+              label: "查看",
+              handler: function(row) {
+              }
             },
             {
               label: "编辑",
-              handler: function(row) {}
+              handler: function(row) {
+              }
             },
             {
-              label: "删除",
-              handler: function(row) {}
+              label: "考核",
+              handler: function(row) {
+              }
             }
           ]
         }
@@ -175,21 +169,22 @@ export default {
       this.$refs[this.formData.ref].resetForm();
     },
     getCleaningList() {
-      let res = CommonFun.warehouseManageData;
+      let res = CommonFun.assessmentManageData;
       let labelList = [
-        { label: "物品名称", prop: "goodsName" },
-        { label: "物品类型", prop: "goodsType" },
-        { label: "入库总数", prop: "warehouseSum" },
-        { label: "入库日期", prop: "warehouseTime" },
-        { label: "申请人", prop: "applicant" },
-        { label: "经办人", prop: "handlePeople" },
+        { label: "任务名称", prop: "taskName" },
+        { label: "任务类型", prop: "taskType" },
+        { label: "执行方式", prop: "executeMethod" },
+        { label: "负责人", prop: "principal" },
+        { label: "负责人", prop: "executor" },
+        { label: "完成日期", prop: "completeDate" },
         { label: "备注", prop: "remark" }
       ];
       this.tableData.columnConfig = labelList;
       this.tableData.data = res;
+      console.log("list", res);
     },
-    batchDels() {},
-    addTenant() {}
+    batchDels(){},
+    addTenant(){}
   },
   mounted() {
     this.getCleaningList();
@@ -198,14 +193,14 @@ export default {
 </script>
 
 <style lang="less">
-.warehouse-manage {
+.assessment-manage {
   .condition-box {
     margin-bottom: 20px;
     background: @white;
     padding: 20px;
     // background: pink;
   }
-  .warehouse-manage-table {
+  .assessment-manage-table {
     background: @white;
     padding: 20px;
     .operator-box {

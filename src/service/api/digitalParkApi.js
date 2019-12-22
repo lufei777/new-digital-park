@@ -46,6 +46,10 @@ class DigitalParkApi {
   @post
   addTenant(){}
 
+  @url('/oaApi/contract/contractList')
+  @get
+  contractList(){}
+
   @url('/oaApi/tenant/createTenNum')
   @get
   createTenNum(){}

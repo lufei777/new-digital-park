@@ -1,5 +1,5 @@
 <template>
-  <div class="warehouse-manage">
+  <div class="invoice-manage">
     <div class="condition-box radius-shadow">
       <miForm
         :ref="formData.ref"
@@ -17,15 +17,14 @@
       </miForm>
     </div>
 
-    <div class="warehouse-manage-table radius-shadow">
+    <div class="invoice-manage-table radius-shadow">
       <miTable :ref="tableData.ref" :tableConfig="tableData">
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">
             <el-button :size="obj.size" type="primary">批量删除</el-button>
-            <el-button :size="obj.size" type="primary">批量编辑</el-button>
             <el-button :size="obj.size" type="primary">导出</el-button>
             <el-button :size="obj.size" type="primary">导入</el-button>
-            <el-button :size="obj.size" type="primary">新增</el-button>
+            <el-button :size="obj.size" type="primary">上传</el-button>
           </div>
         </template>
       </miTable>
@@ -36,9 +35,9 @@
 <script>
 import miForm from "@/components/Form";
 import miTable from "@/components/Table";
-import CommonFun from "@/utils/commonFun";
+import CommonFun from "../../utils/commonFun";
 export default {
-  name: "goodsCheck",
+  name: "InvoiceManage",
   components: { miForm, miTable },
   data() {
     return {
@@ -53,8 +52,8 @@ export default {
         forms: [
           {
             type: "input",
-            label: "物品名称",
-            prop: "goodsName",
+            label: "报表名称",
+            prop: "reportName",
             placeholder: "请输入",
             clearable: true,
             span: 4,
@@ -62,16 +61,16 @@ export default {
           },
           {
             type: "input",
-            label: "物品类型",
-            prop: "goodsType",
+            label: "报表类型",
+            prop: "reportType",
             placeholder: "请输入",
             clearable: true,
             span: 4
           },
           {
             type: "input",
-            label: "入库总数",
-            prop: "warehouseSum",
+            label: "上传类型",
+            prop: "uploadType",
             placeholder: "请输入",
             clearable: true,
             span: 4
@@ -82,32 +81,19 @@ export default {
             span: 12
           },
           {
-            type: "input",
-            label: "入库日期",
-            prop: "warehouseTime",
+            type: "date",
+            label: "上传日期",
+            prop: "reportTime",
             placeholder: "选择日期时间",
             // clearable: true,
             span: 4,
             format: "yyyy-MM-dd",
             valueFormat: "timestamp"
           },
-          // {
-          //   prop: "",
-          //   formslot: true,
-          //   span: 6
-          // },
           {
             type: "input",
-            label: "申请人",
-            prop: "applicant",
-            placeholder: "请输入",
-            span: 4
-          },
-          {
-            type: "input",
-            label: "经办人",
-            // offset:1,
-            prop: "handlePeople",
+            label: "上传人",
+            prop: "uploadpeople",
             placeholder: "请输入",
             span: 4
           },
@@ -115,14 +101,12 @@ export default {
             prop: "btn",
             span: 6,
             pull: 4,
-            formslot: true
-            // width: "34px"
+            formslot: true,
           }
         ]
       },
       tableData: {
         ref: "tableData",
-        customTop: true,
         data: [],
         columnConfig: [],
         uiConfig: {
@@ -145,11 +129,7 @@ export default {
           width: 200,
           btns: [
             {
-              label: "详情",
-              handler: function(row) {}
-            },
-            {
-              label: "编辑",
+              label: "查看",
               handler: function(row) {}
             },
             {
@@ -175,15 +155,13 @@ export default {
       this.$refs[this.formData.ref].resetForm();
     },
     getCleaningList() {
-      let res = CommonFun.warehouseManageData;
+      let res = CommonFun.reportManageData;
       let labelList = [
-        { label: "物品名称", prop: "goodsName" },
-        { label: "物品类型", prop: "goodsType" },
-        { label: "入库总数", prop: "warehouseSum" },
-        { label: "入库日期", prop: "warehouseTime" },
-        { label: "申请人", prop: "applicant" },
-        { label: "经办人", prop: "handlePeople" },
-        { label: "备注", prop: "remark" }
+        { label: "报表名称", prop: "reportName" },
+        { label: "报表类型", prop: "reportType" },
+        { label: "上传类型", prop: "uploadType" },
+        { label: "上传日期", prop: "uploaddate" },
+        { label: "上传人", prop: "uploadpeople" }
       ];
       this.tableData.columnConfig = labelList;
       this.tableData.data = res;
@@ -198,14 +176,14 @@ export default {
 </script>
 
 <style lang="less">
-.warehouse-manage {
+.invoice-manage {
   .condition-box {
     margin-bottom: 20px;
     background: @white;
     padding: 20px;
     // background: pink;
   }
-  .warehouse-manage-table {
+  .invoice-manage-table {
     background: @white;
     padding: 20px;
     .operator-box {

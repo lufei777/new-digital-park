@@ -65,7 +65,8 @@ export default {
   data() {
     return {
       shortCutList: [],
-      showShortcutList: false
+      showShortcutList: false,
+      temporarilyHidden:false
     };
   },
   computed: {
