@@ -36,8 +36,6 @@
           :menuList="menuList"
         />
       </el-menu>
-      <div v-if="!menuConfig.specialRoute && temporarilyHidden">
-        <div class="iconfont iconkuaijierukou hover-pointer shortcut-btn" @click="onClickShortcutBtn"></div>
       <div v-if="!menuConfig.specialRoute">
         <div
           class="iconfont iconkuaijierukou hover-pointer shortcut-btn"
