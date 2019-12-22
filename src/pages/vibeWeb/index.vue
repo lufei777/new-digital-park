@@ -213,8 +213,8 @@ export default {
     background-color: #008dea !important;
     color: @white;
   }
-  .el-scrollbar__view {
+  /* .el-scrollbar__view {
     height: unset !important;
-  }
+  } */
 }
 </style>

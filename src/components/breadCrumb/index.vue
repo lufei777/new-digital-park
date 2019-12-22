@@ -35,13 +35,13 @@ export default {
         }
       });
       // 如果有默认建设页，则只保留改页面
-      if (hasDefaultPage) {
+      /* if (hasDefaultPage) {
         this.breadcrumb.length = 0;
         this.breadcrumb.push({
           title: "建设中",
           path: "/digitalPark/defaultPage"
         });
-      }
+      } */
       // 添加首页
       /* if (this.breadcrumb[0].title !== "首页") {
         this.breadcrumb = [
