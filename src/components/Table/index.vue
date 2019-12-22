@@ -1,6 +1,7 @@
 <template>
   <div class="el-table-wrapper" :style="{height:wrapperHeight}">
     <div
+      v-if="tableConfig.customTop"
       ref="customTop"
       :style="{textAlign:tableConfig.customTopPosition||'left',height:'auto',padding:'0 20px 20px'}"
     >
@@ -93,7 +94,7 @@
         </template>
         <!-- 按钮 -->
         <template slot-scope="scopeRow">
-          <slot :name="operationSlotName" :scopeRow="scopeRow"></slot>
+          <slot v-if="tableConfig.operation" :name="operationSlotName" :scopeRow="scopeRow"></slot>
           <template v-for="btn in btnConfig.btns">
             <!-- 基础模式，如删除，编辑。参数为scopeRow -->
             <el-button
@@ -799,6 +800,7 @@ export default {
 .el-table-wrapper {
   font-family: @TableFontFamily;
   font-size: @TableFontSize;
+  width: 100%;
   .el-table {
     .el-table__fixed-right-patch {
       background-color: @headerBgc;

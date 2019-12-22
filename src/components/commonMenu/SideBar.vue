@@ -38,11 +38,15 @@
       </el-menu>
       <div v-if="!menuConfig.specialRoute && temporarilyHidden">
         <div class="iconfont iconkuaijierukou hover-pointer shortcut-btn" @click="onClickShortcutBtn"></div>
+      <div v-if="!menuConfig.specialRoute">
+        <div
+          class="iconfont iconkuaijierukou hover-pointer shortcut-btn"
+          @click="onClickShortcutBtn"
+        ></div>
         <ul class="shortcut-list" v-show="showShortcutList">
           <li v-for="(item,index) in shortCutList" :key="index">{{item.name}}</li>
         </ul>
       </div>
-
     </div>
   </el-scrollbar>
 </template>
@@ -77,7 +81,7 @@ export default {
         ? ""
         : Cookies.get("activeMenuIndex") ||
             this.menuConfig.activeIndex ||
-            this.menuList[0].id+this.menuList[0].routeAddress;
+            this.menuList[0].id + this.menuList[0].routeAddress;
     }
   },
   watch: {
@@ -102,17 +106,6 @@ export default {
           firstMenu.childNode.find(second => {
             return second.id == secondPath;
           });
-        if (
-          item.name == "安防管理" || item.name == "机房动环" ||
-          item.name == "智能建筑" || item.name == "建筑监控" ||
-          item.name == "消防管理") {
-          let clientName = item.name;
-          if (item.name === "安防管理") {
-            clientName = "综合安防";
-          }
-          Client.SkipToSigleBuild(clientName);
-          return;
-        }
         localStorage.setItem("menuList", JSON.stringify(secondMenu));
         let tmpArr = key.split("/");
         tmpArr.shift();

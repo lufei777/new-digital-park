@@ -11,7 +11,7 @@
         <NavOperator :style="obj.style" class="asset-nav-operator" :showGoback="true" />
       </template>
       <template slot="content">
-        <router-view class="router-view"></router-view>
+        <router-view></router-view>
       </template>
     </commonIndexLayout>
   </div>

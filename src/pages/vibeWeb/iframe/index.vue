@@ -23,7 +23,7 @@ export default {
       const mobsf = document.getElementById("myIframe");
       const deviceWidth = document.body.clientWidth;
       const deviceHeight = document.body.clientHeight;
-      mobsf.style.height = Number(deviceHeight) - 110 + "px";
+      mobsf.style.height = Number(deviceHeight) - 113 + "px";
     }
   },
   computed: {

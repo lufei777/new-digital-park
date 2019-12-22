@@ -142,7 +142,6 @@ export default {
   },
   methods: {
     onClickItemProduct(item) {
-      console.log(item);
       Cookies.set("moduleType", 2);
       localStorage.setItem("menuList", JSON.stringify(item));
       // 192.168.1.69：9002/html
@@ -329,6 +328,7 @@ export default {
     z-index: 99;
     left: 0;
     right: 0;
+    box-shadow: @headerShadow;
     /*margin:auto;*/
   }
   .home-header-inner {

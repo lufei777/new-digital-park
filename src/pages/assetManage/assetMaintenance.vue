@@ -384,7 +384,6 @@ export default {
 <style lang="less">
 .asset-maintenance {
   height: 100%;
-  padding: 20px;
   font-size: 14px;
   .choose-box {
     overflow: hidden;
@@ -410,8 +409,9 @@ export default {
     clear: both;
     display: flex;
     flex-direction: row-reverse;
+    padding-bottom: 20px;
     .el-button {
-      margin-left: 20px;
+      margin-right: 20px;
     }
   }
   .more-btn {

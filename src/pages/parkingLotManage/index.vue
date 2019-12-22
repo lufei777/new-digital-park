@@ -43,7 +43,7 @@ export default {
     commonIndex
   },
   data() {
-    let menuList = MenuList;
+    let menuList = JSON.parse(localStorage.menuList);
     return {
       menuList: menuList.childNode, //CommonFun.menuData.childNode,// JSON.parse(localStorage.menuList),
       menuConfig: {

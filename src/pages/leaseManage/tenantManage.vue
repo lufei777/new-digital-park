@@ -1,6 +1,6 @@
 <template>
   <div class="tenant-manage">
-    <div class="condition-box radius-shadow">
+    <div class="condition-box panel">
       <miForm
         :ref="tenantManageForm.ref"
         :options="tenantManageForm"
@@ -17,7 +17,7 @@
       </miForm>
     </div>
 
-    <div class="tenant-manage-table radius-shadow">
+    <div class="tenant-manage-table panel">
       <miTable :ref="tenantManageTable.ref" :tableConfig="tenantManageTable">
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">
@@ -124,6 +124,8 @@ export default {
       },
       tenantManageTable: {
         ref: "tenantManageTable",
+        customTop: true,
+        customTopPosition: "right",
         operation: {
           width: 200
         },

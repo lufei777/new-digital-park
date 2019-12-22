@@ -16,9 +16,13 @@
           <slot name="navOperator" :style="{float: 'right'}"></slot>
         </div>
       </div>
-      <transition name="fade-transform" mode="out-in" appear>
-        <slot name="content"></slot>
-      </transition>
+        <div class="router-view">
+            <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
+              <transition name="fade-transform" mode="out-in" appear>
+                <slot name="content"></slot>
+              </transition>
+            </el-scrollbar>
+        </div>
     </div>
   </div>
 </template>
@@ -37,6 +41,10 @@
       }
     },
     mounted(){
+      let routerView = document.querySelector('.router-view');
+      const deviceWidth = document.body.clientWidth;
+      const deviceHeight = document.body.clientHeight;
+      routerView.style.height = Number(deviceHeight) - 110 + "px";
     }
   }
 </script>
@@ -83,7 +91,7 @@
       right:0;
     }
     .right-content-header{
-      box-shadow: 0 0 20px #ccc;
+      box-shadow: @headerShadow;
     }
     .collapse-right-content-header{
       left:80px;
