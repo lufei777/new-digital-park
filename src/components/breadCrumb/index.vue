@@ -21,10 +21,12 @@ export default {
   },
   methods: {
     getBreadCrumb() {
+      let hasDefaultPage = false;
       this.breadcrumb.length = 0;
       // 从路由中获取matched
       this.$route.matched.forEach((route, index) => {
         if (route.meta.title) {
+          if ((route.path = "/digitalPark/defaultPage")) hasDefaultPage = true;
           this.breadcrumb.push({
             title: route.meta.title,
             redirect: route.redirect,
@@ -32,6 +34,14 @@ export default {
           });
         }
       });
+      // 如果有默认建设页，则只保留改页面
+      if (hasDefaultPage) {
+        this.breadcrumb.length = 0;
+        this.breadcrumb.push({
+          title: "建设中",
+          path: "/digitalPark/defaultPage"
+        });
+      }
       // 添加首页
       /* if (this.breadcrumb[0].title !== "首页") {
         this.breadcrumb = [
