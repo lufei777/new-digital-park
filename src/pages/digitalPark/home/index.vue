@@ -327,6 +327,7 @@ export default {
     z-index: 99;
     left: 0;
     right: 0;
+    box-shadow: @headerShadow;
     /*margin:auto;*/
   }
   .home-header-inner {

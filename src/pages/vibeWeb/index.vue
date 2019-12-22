@@ -8,7 +8,7 @@
         <NavOperator :style="obj.style" class="asset-nav-operator" :showGoback="true" />
       </template>
       <template slot="content">
-        <myIframe :iframeConfig="iframeConfig" class="router-view"></myIframe>
+        <myIframe :iframeConfig="iframeConfig"></myIframe>
       </template>
     </commonIndexLayout>
   </div>
@@ -100,18 +100,16 @@ export default {
             keyPath[0].substring(0, keyPath[0].lastIndexOf("/")) + keyPath[1];
         }
       }
-      if(key.indexOf("@")!=-1){
+      if (key.indexOf("@") != -1) {
         key = key.replace("@", "");
 
         this.iframeConfig.src = key;
-      }else{
-        this.$router.push(key)
+      } else {
+        this.$router.push(key);
       }
-
     }
   },
-  mounted() {
-  }
+  mounted() {}
 };
 </script>
 

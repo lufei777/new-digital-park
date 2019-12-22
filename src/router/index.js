@@ -45,7 +45,7 @@ const router = new Router({
 })
 //
 
- router.beforeEach((to, from, next) => {
+/* router.beforeEach((to, from, next) => {
   if (typeof to.meta.loginCheck === 'boolean' && !to.meta.loginCheck) {
     next()
   } else {
@@ -55,5 +55,5 @@ const router = new Router({
 
     })
   }
-})
+}) */
 export default router
