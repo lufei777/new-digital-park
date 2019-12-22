@@ -141,7 +141,6 @@ export default {
   },
   methods: {
     onClickItemProduct(item) {
-      console.log(item);
       Cookies.set("moduleType", 2);
       localStorage.setItem("menuList", JSON.stringify(item));
       // 192.168.1.69：9002/html

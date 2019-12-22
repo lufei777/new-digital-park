@@ -37,7 +37,7 @@ import miForm from "@/components/Form";
 import miTable from "@/components/Table";
 import CommonFun from "../../utils/commonFun";
 export default {
-  name:"CleaningRecord",
+  name: "CleaningRecord",
   components: { miForm, miTable },
   data() {
     return {
@@ -80,11 +80,11 @@ export default {
             formslot: true,
             span: 12
           },
-        //  {
-        //     prop: "",
-        //     formslot: true,
-        //     span: 6
-        //   },
+          //  {
+          //     prop: "",
+          //     formslot: true,
+          //     span: 6
+          //   },
           {
             type: "select",
             label: "完成情况",
@@ -95,7 +95,7 @@ export default {
             format: "yyyy-MM-dd",
             valueFormat: "timestamp"
           },
-          
+
           {
             type: "input",
             label: "负责人",
@@ -105,7 +105,7 @@ export default {
             span: 4
             // width: "110px"
           },
-          
+
           {
             type: "date",
             label: "执行日期",
@@ -120,12 +120,13 @@ export default {
             prop: "btn",
             span: 6,
             pull: 4,
-            formslot: true,
+            formslot: true
           }
         ]
       },
       tableData: {
         ref: "tableData",
+        customTop: true,
         data: [],
         columnConfig: [],
         uiConfig: {
@@ -149,23 +150,19 @@ export default {
           btns: [
             {
               label: "详情",
-              handler: function(row) {
-              }
+              handler: function(row) {}
             },
             {
               label: "编辑",
-              handler: function(row) {
-              }
+              handler: function(row) {}
             },
             {
               label: "终止",
-              handler: function(row) {
-              }
+              handler: function(row) {}
             },
             {
               label: "删除",
-              handler: function(row) {
-              }
+              handler: function(row) {}
             }
           ]
         }
@@ -200,8 +197,8 @@ export default {
       this.tableData.data = res;
       console.log("list", res);
     },
-    batchDels(){},
-    addTenant(){}
+    batchDels() {},
+    addTenant() {}
   },
   mounted() {
     this.getCleaningList();

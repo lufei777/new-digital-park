@@ -17,7 +17,9 @@
         </div>
       </div>
       <transition name="fade-transform" mode="out-in" appear>
-        <slot name="content"></slot>
+        <div class="router-view">
+          <slot name="content"></slot>
+        </div>
       </transition>
     </div>
   </div>
@@ -37,6 +39,10 @@
       }
     },
     mounted(){
+      let routerView = document.querySelector('.router-view');
+      const deviceWidth = document.body.clientWidth;
+      const deviceHeight = document.body.clientHeight;
+      routerView.style.height = Number(deviceHeight) - 110 + "px";
     }
   }
 </script>

@@ -1306,7 +1306,6 @@ class commonFun {
       } else {
         localStorage.setItem('show_menu', item)
       }
-      console.log('load', item);
       router.push('/vibe-web')
     }
   }

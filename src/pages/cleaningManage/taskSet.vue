@@ -120,6 +120,7 @@ export default {
       },
       tableData: {
         ref: "tableData",
+        customTop: true,
         data: [],
         columnConfig: [],
         uiConfig: {

@@ -106,6 +106,7 @@ export default {
       },
       leaseManageTable: {
         ref: "leaseManageTable",
+        customTop: true,
         customTopPosition: "right",
         serverMode: {
           url: leaseManageApi.getHouseList,

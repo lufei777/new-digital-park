@@ -1,11 +1,6 @@
 <template>
   <div class="attendance-detail">
-    <!--<div ref="pieCharts"  class="my-chart" id="attendance-detail-chart"></div>-->
-    <!--<div class="my-chart">-->
-      <img
-        style="width:100%;height:85%;"
-        src="../../../../static/image/digitalPark/zhiban_tmp.png" alt="">
-    <!--</div>-->
+    <miTable :ref="leaseManageTable.ref" :tableConfig="leaseManageTable"></miTable>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -13,16 +8,64 @@
 <script>
 import CommonFun from "../../../utils/commonFun";
 import ChartUtils from "../../../utils/chartUtils";
+import miTable from "@/components/Table";
+
 export default {
   name: "AttendanceDetail",
-  components: {},
+  components: { miTable },
   props: ["moduleItem"],
   data() {
-    return {};
+    return {
+      leaseManageTable: {
+        ref: "leaseManageTable",
+        data: [
+          {
+            zbrq: "2019.11.6",
+            zbry: "李逵",
+            zbdd: "A座",
+            zbnr: "巡视",
+            jjry: "宋江"
+          },
+          {
+            zbrq: "2019.11.8",
+            zbry: "宋江",
+            zbdd: "B座",
+            zbnr: "巡视",
+            jjry: "李逵"
+          }
+        ],
+        columnConfig: [
+          {
+            prop: "zbrq",
+            label: "值班日期",
+            width: 200
+          },
+          {
+            prop: "zbry",
+            label: "值班人员"
+          },
+          {
+            prop: "zbdd",
+            label: "值班地点"
+          },
+          {
+            prop: "zbnr",
+            label: "值班内容"
+          },
+          {
+            prop: "jjry",
+            label: "交接人员"
+          }
+        ],
+        uiConfig: {
+          height: "auto"
+        }
+      }
+    };
   },
-  methods: {
-  },
+  methods: {},
   mounted() {
+    // this.$refs[this.leaseManageTable.ref].refreshTable();
   }
 };
 </script>
