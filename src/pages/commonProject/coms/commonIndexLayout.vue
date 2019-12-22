@@ -16,13 +16,13 @@
           <slot name="navOperator" :style="{float: 'right'}"></slot>
         </div>
       </div>
-        <div class="router-view">
-            <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
-              <transition name="fade-transform" mode="out-in" appear>
-                <slot name="content"></slot>
-              </transition>
-            </el-scrollbar>
-        </div>
+      <div class="router-view">
+        <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
+          <transition name="fade-transform" mode="out-in" appear>
+            <slot name="content"></slot>
+          </transition>
+        </el-scrollbar>
+      </div>
     </div>
   </div>
 </template>
@@ -33,18 +33,24 @@
     props:['menuConfig'],
     data () {return {}},
     computed:{},
-    watch:{
-    },
     methods:{
       onClickCollapseBtn(){
         this.$emit('onclickcollapsebtn')
+      },
+      computedHeight(){
+        this.routerView = document.querySelector('.router-view');
+        const deviceWidth = document.body.clientWidth;
+        const deviceHeight = document.body.clientHeight;
+        this.routerViewHeight = Number(deviceHeight) - 110;
+        this.routerView.style.height = this.routerViewHeight + "px";
+
+        if(this.routerView.querySelectorAll('.panel').length === 0){
+          this.routerView.querySelector('.el-scrollbar__view').style.height = 'auto';
+        }
       }
     },
     mounted(){
-      let routerView = document.querySelector('.router-view');
-      const deviceWidth = document.body.clientWidth;
-      const deviceHeight = document.body.clientHeight;
-      routerView.style.height = Number(deviceHeight) - 110 + "px";
+      this.computedHeight();
     }
   }
 </script>
@@ -112,6 +118,17 @@
       padding:20px;
       margin-top: 70px;
       overflow: hidden;
+      .el-scrollbar__view{
+        height: 100%;
+        &>div:first-child{
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+        }
+        .panel:last-child{
+          flex-grow: 1;
+        }
+      }
     }
     .asset-nav-operator-box{
       /*flex-grow: 1;*/
@@ -125,7 +142,7 @@
     .el-submenu__title,.el-menu-item{
       /*font-size: 18px;*/
       &:hover{
-        background-color: #008DEA !important;
+        background-color: #015f9c !important;
         color:@white !important;
         i{
           color:@white;
@@ -143,9 +160,6 @@
     .el-submenu.is-active{
       background-color: #008DEA !important;
       color:@white;
-    }
-    .el-scrollbar__view{
-      height: unset !important;
     }
   }
 </style>
