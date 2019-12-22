@@ -1,9 +1,9 @@
 <template>
-  <div class="tenant-manage">
+  <div class="lease-contract">
     <div class="condition-box radius-shadow">
       <miForm
-        :ref="tenantManageForm.ref"
-        :options="tenantManageForm"
+        :ref="leaseContractForm.ref"
+        :options="leaseContractForm"
         v-model="model"
         @submit="submit"
         @reset-change="resetChange"
@@ -17,8 +17,8 @@
       </miForm>
     </div>
 
-    <div class="tenant-manage-table radius-shadow">
-      <miTable :ref="tenantManageTable.ref" :tableConfig="tenantManageTable">
+    <div class="lease-contract-table radius-shadow">
+      <miTable :ref="leaseContractTable.ref" :tableConfig="leaseContractTable">
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">
             <el-button :size="obj.size" type="primary" @click="batchDels(obj)">批量删除</el-button>
@@ -42,7 +42,7 @@ import miForm from "@/components/Form";
 import miTable from "@/components/Table";
 import CommonFun from "../../utils/commonFun";
 export default {
-  name: "TenantManage",
+  name: "LeaseContract",
   components: { miForm, miTable },
   data() {
     let _this = this;
@@ -54,8 +54,8 @@ export default {
         // startTime: "",
         // houseNumber: ""
       },
-      tenantManageForm: {
-        ref: "tenantManageForm",
+      leaseContractForm: {
+        ref: "leaseContractForm",
         labelWidth: "100",
         size: "medium",
         menuPosition: "right",
@@ -66,11 +66,11 @@ export default {
         forms: [
           {
             type: "input",
-            label: "租户编号",
-            prop: "tenantNumber",
+            label: "合同编号",
+            prop: "contractNumber",
             placeholder: "请输入",
             clearable: true,
-            span: 4,
+            span: 6,
             minRows: 0
           },
           {
@@ -79,7 +79,7 @@ export default {
             prop: "tenantName",
             placeholder: "请输入",
             clearable: true,
-            span: 4
+            span: 6
           },
           {
             type: "input",
@@ -87,7 +87,7 @@ export default {
             prop: "telephone",
             placeholder: "请输入",
             clearable: true,
-            span: 4
+            span: 6
           },
           // {
           //   prop: "",
@@ -95,35 +95,44 @@ export default {
           //   span: 6
           // },
           {
-            type: "date",
-            label: "签约时间",
-            prop: "startTime",
+            type: "input",
+            label: "所租房产",
+            prop: "houseName",
+            placeholder: "请输入",
+            clearable: true,
+            span: 6
+          },
+          {
+            type: "input",
+            label: "签租时间",
+            prop: "contractTime",
             placeholder: "选择日期时间",
             // clearable: true,
-            span: 4,
+            span: 6,
             format: "yyyy-MM-dd",
             valueFormat: "timestamp"
           },
           {
             type: "input",
-            label: "所租房产编号",
-            prop: "houseNumber",
-            placeholder: "请输入",
-            clearable: true,
-            span: 4,
-            width: 120
+            label: "到期时间",
+            prop: "expireTime",
+            placeholder: "选择日期时间",
+            // clearable: true,
+            span: 6,
+            format: "yyyy-MM-dd",
+            valueFormat: "timestamp"
           },
           {
             prop: "btn",
-            span: 4,
-            pull: 4,
+            span: 6,
+            pull: 6,
             formslot: true,
-            width: 20
+            // width: 20
           }
         ]
       },
-      tenantManageTable: {
-        ref: "tenantManageTable",
+      leaseContractTable: {
+        ref: "leaseContractTable",
         operation: {
           width: 200
         },
@@ -162,39 +171,36 @@ export default {
     },
     clearForm(...args) {
       console.log("清空", ...args);
-      this.$refs[this.tenantManageForm.ref].resetForm();
+      this.$refs[this.leaseContractForm.ref].resetForm();
     },
     async tenantList() {
       let labelList = [
-        { label: "合同编号", prop: "tenantNumber" },
-        { label: "合同名称", prop: "elecAndWaterSum" },
-        { label: "所租房产", prop: "" },
+        { label: "合同编号", prop: "contractNumber" },
+        { label: "合同名称", prop: "contractName" },
+        { label: "所租房产", prop: "houseName" },
         { label: "租户名称", prop: "tenantName" },
         { label: "联系方式", prop: "telephone" },
-        { label: "签约时间", prop: "" },
-        { label: "到期时间", prop: "" }
+        { label: "签约时间", prop: "contractTime" },
+        { label: "到期时间", prop: "expireTime" }
       ];
-      this.tenantManageTable.columnConfig = labelList;
-      let res = await DigitalParkApi.tenantList({
+      this.leaseContractTable.columnConfig = labelList;
+      let res = await DigitalParkApi.contractList({
         pageNum: this.currentPage,
         pageSize: 10,
-        tenantNumber: this.model.tenantNumber,
-        tenantName: this.model.tenantName,
-        telephone: this.model.telephone,
-        houseNumber: this.model.houseNumber
       });
+      console.log('res',res)
       if (res && res.list) {
-        this.tenantManageTable.data = res.list;
-        this.tenantManageTable.uiConfig.pagination.total = res.total;
+        this.leaseContractTable.data = res.list;
+        this.leaseContractTable.uiConfig.pagination.total = res.total;
       }
     },
     onClickSearchBtn(...args) {
-      this.$refs[this.tenantManageForm.ref].getFormModel(res => {
+      this.$refs[this.leaseContractForm.ref].getFormModel(res => {
         console.log("model", res);
       });
       console.log("搜索", ...args);
       this.curPcurrentPageage = 1;
-      // this.$refs[this.tenantManageTableConfig.ref].setCurrentPage(1)
+      // this.$refs[this.leaseContractTableConfig.ref].setCurrentPage(1)
       this.tenantList();
     },
     handleCurrentChange(val) {
@@ -230,8 +236,8 @@ export default {
     },
     batchDels(obj) {
       this.tenantIds =
-        this.$refs["tenantManageTable"].getSelectedData().length &&
-        this.$refs["tenantManageTable"]
+        this.$refs["leaseContractTable"].getSelectedData().length &&
+        this.$refs["leaseContractTable"]
           .getSelectedData()
           .map(item => item.tenantId)
           .join(",");
@@ -265,14 +271,14 @@ export default {
 </script>
 
 <style lang="less">
-.tenant-manage {
+.lease-contract {
   .condition-box {
     margin-bottom: 20px;
     background: @white;
     padding: 20px;
     // background: pink;
   }
-  .tenant-manage-table {
+  .lease-contract-table {
     background: @white;
     padding: 20px;
     .operator-box {
@@ -281,9 +287,6 @@ export default {
         margin-left: 20px;
       }
     }
-  }
-  .el-form-item {
-    margin-bottom: 0;
   }
   // .el-input {
   //   width: 180px!important;

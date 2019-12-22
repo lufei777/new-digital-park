@@ -2,10 +2,11 @@ import CostManageIndex from '../pages/costManage/index'
 import CostDeclare from '../pages/costManage/costDeclare'
 import BudgetManage from '../pages/costManage/budgetManage'
 import InvoiceManage from '../pages/costManage/invoiceManage'
+import ReportManage from '../pages/costManage/reportManage'
 
 export default [{
     path: '/',
-    redirect: '/cleaningRecord',
+    redirect: '/costDeclare',
     meta: { title: '费用管理' },
     component: CostManageIndex,
     children: [{
@@ -23,5 +24,10 @@ export default [{
         name: 'InvoiceManage',
         meta: { title: '发票管理' },
         component: InvoiceManage,
+    },{
+        path: '/reportManage',
+        name: 'ReportManage',
+        meta: { title: '报表管理' },
+        component: ReportManage,
     }]
 }]

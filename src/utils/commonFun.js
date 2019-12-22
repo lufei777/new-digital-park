@@ -493,6 +493,15 @@ class commonFun {
   }]
 
   cleaningManageData = [{
+    taskName: "显示器打扫",
+    tasktId: 8,
+    taskType: "房屋保洁",
+    executeMethod:"临时保洁",
+    completeStatus:"待完成",
+    principal:"李祥祥",
+    startTime:"2019-12-12",
+    remark:"2019-12-12已完成"
+  },{
     taskName: "活动区打扫",
     tasktId: 1,
     taskType: "园区保洁",
@@ -500,7 +509,7 @@ class commonFun {
     completeStatus:"待完成",
     principal:"李祥祥",
     startTime:"2019-12-12",
-    remark:"2019.12.12已完成"
+    remark:"2019-12-12已完成"
   },{
     taskName: "办公室打扫",
     tasktId: 2,
@@ -509,7 +518,7 @@ class commonFun {
     completeStatus:"待完成",
     principal:"关艳爽",
     startTime:"2019-12-12",
-    remark:"2019.12.12已完成"
+    remark:"2019-12-12已完成"
   },{
     taskName: "显示器打扫",
     tasktId: 3,
@@ -518,7 +527,7 @@ class commonFun {
     completeStatus:"待完成",
     principal:"李祥祥",
     startTime:"2019-12-12",
-    remark:"2019.12.12已完成"
+    remark:"2019-12-12已完成"
   },{
     taskName: "显示器打扫",
     tasktId: 4,
@@ -527,7 +536,7 @@ class commonFun {
     completeStatus:"待完成",
     principal:"关艳爽",
     startTime:"2019-12-12",
-    remark:"2019.12.12已完成"
+    remark:"2019-12-12已完成"
   },{
     taskName: "显示器打扫",
     tasktId: 5,
@@ -536,7 +545,7 @@ class commonFun {
     completeStatus:"待完成",
     principal:"关艳爽",
     startTime:"2019-12-12",
-    remark:"2019.12.12已完成"
+    remark:"2019-12-12已完成"
   },{
     taskName: "办公室打扫",
     tasktId: 6,
@@ -545,7 +554,7 @@ class commonFun {
     completeStatus:"待完成",
     principal:"关艳爽",
     startTime:"2019-12-12",
-    remark:"2019.12.12已完成"
+    remark:"2019-12-12已完成"
   },{
     taskName: "活动区打扫",
     tasktId: 7,
@@ -554,16 +563,7 @@ class commonFun {
     completeStatus:"待完成",
     principal:"李祥祥",
     startTime:"2019-12-12",
-    remark:"2019.12.12已完成"
-  },{
-    taskName: "显示器打扫",
-    tasktId: 8,
-    taskType: "房屋保洁",
-    executeMethod:"临时保洁",
-    completeStatus:"待完成",
-    principal:"李祥祥",
-    startTime:"2019-12-12",
-    remark:"2019.12.12已完成"
+    remark:"2019-12-12已完成"
   },{
     taskName: "办公室打扫",
     tasktId: 9,
@@ -572,7 +572,7 @@ class commonFun {
     completeStatus:"待完成",
     principal:"小何",
     startTime:"2019-12-12",
-    remark:"2019.12.12已完成"
+    remark:"2019-12-12已完成"
   },{
     taskName: "显示器打扫",
     tasktId: 10,
@@ -581,7 +581,7 @@ class commonFun {
     completeStatus:"待完成",
     principal:"小何",
     startTime:"2019-12-12",
-    remark:"2019.12.12已完成"
+    remark:"2019-12-12已完成"
   }]
 
 
@@ -1295,6 +1295,358 @@ class commonFun {
     handlePeople:"程琳",
     remark:"电子设备"
   }]
+
+  reportManageData =[{
+    reportId:1,
+    reportName:"十一月考勤表",
+    reportType:"任务考核表",
+    uploadType:"周期保洁",
+    uploaddate:"2019-12-20",
+    uploadpeople:"李祥祥"
+  },{
+    reportId:2,
+    reportName:"十月报销表",
+    reportType:"报销表",
+    uploadType:"周期报销",
+    uploaddate:"2019-12-20",
+    uploadpeople:"程琳"
+  },{
+    reportId:3,
+    reportName:"十月考勤表",
+    reportType:"任务考核表",
+    uploadType:"周期保洁",
+    uploaddate:"2019-12-20",
+    uploadpeople:"程琳"
+  },{
+    reportId:4,
+    reportName:"九月报销表",
+    reportType:"报销表",
+    uploadType:"周期报销",
+    uploaddate:"2019-09-20",
+    uploadpeople:"程琳"
+  },{
+    reportId:5,
+    reportName:"八月考勤表",
+    reportType:"任务考核表",
+    uploadType:"周期保洁",
+    uploaddate:"2019-08-20",
+    uploadpeople:"程琳"
+  }]
+
+  assessmentManageData= [{
+    taskName: "办公室打扫",
+    tasktId: 2,
+    taskType: "房屋保洁",
+    executeMethod:"周期保洁",
+    principal:"关艳爽",
+    executor:"李祥祥",
+    completeDate:"2019-12-12",
+    remark:"2019-12-12已完成"
+  },{
+    taskName: "显示器打扫",
+    tasktId: 3,
+    taskType: "设备保洁",
+    executeMethod:"周期保洁",
+    principal:"李祥祥",
+    executor:"程琳",
+    completeDate:"2019-12-12",
+    remark:"2019-12-12已完成"
+  },{
+    taskName: "显示器打扫",
+    tasktId: 4,
+    taskType: "设备保洁",
+    executeMethod:"周期保洁",
+    principal:"关艳爽",
+    executor:"程琳",
+    completeDate:"2019-12-12",
+    remark:"2019-12-12已完成"
+  },{
+    taskName: "显示器打扫",
+    tasktId: 5,
+    taskType: "设备保洁",
+    executeMethod:"临时保洁",
+    principal:"关艳爽",
+    executor:"程琳",
+    completeDate:"2019-12-12",
+    remark:"2019-12-12已完成"
+  },{
+    taskName: "办公室打扫",
+    tasktId: 6,
+    taskType: "房屋保洁",
+    executeMethod:"周期保洁",
+    principal:"关艳爽",
+    executor:"程琳",
+    completeDate:"2019-12-12",
+    remark:"2019-12-12已完成"
+  },{
+    taskName: "活动区打扫",
+    tasktId: 7,
+    taskType: "园区保洁",
+    executeMethod:"临时保洁",
+    principal:"李祥祥",
+    executor:"程琳",
+    completeDate:"2019-12-12",
+    remark:"2019-12-12已完成"
+  },{
+    taskName: "显示器打扫",
+    tasktId: 8,
+    taskType: "房屋保洁",
+    executeMethod:"临时保洁",
+    principal:"李祥祥",
+    executor:"程琳",
+    completeDate:"2019-12-12",
+    remark:"2019-12-12已完成"
+  }]
+
+  batchStockInData = [{
+    batchStockInId:1,
+    applicationNumber:"RK-154678955789",
+    applicationName:"笔记本",
+    goodsSource:"采购",
+    applicant:"李祥祥",
+    handlePeople:"程琳",
+    stockInTime:"2019-12-15",
+    remark:"一台惠普笔记本"
+  },{
+    batchStockInId:2,
+    applicationNumber:"RK-157778958786",
+    applicationName:"鼠标",
+    goodsSource:"采购",
+    applicant:"何炎东",
+    handlePeople:"程琳",
+    stockInTime:"2019-12-15",
+    remark:"一个鼠标"
+  },{
+    batchStockInId:3,
+    applicationNumber:"RK-245789154645",
+    applicationName:"暖气片",
+    goodsSource:"采购",
+    applicant:"服务部",
+    handlePeople:"程琳",
+    stockInTime:"2019-12-15",
+    remark:"暖气片"
+  },{
+    batchStockInId:4,
+    applicationNumber:"RK-158976453214",
+    applicationName:"显示器",
+    goodsSource:"采购",
+    applicant:"软件部",
+    handlePeople:"程琳",
+    stockInTime:"2019-10-15",
+    remark:"开发需要"
+  },{
+    batchStockInId:5,
+    applicationNumber:"RK-987325642135",
+    applicationName:"电脑桌",
+    goodsSource:"采购",
+    applicant:"新同事",
+    handlePeople:"程琳",
+    stockInTime:"2019-11-15",
+    remark:"新同事需要"
+  }]
+
+  assetLedgerData=[{
+    assetLedgerId:1,
+    assetNumber:"ZC-154678955789",
+    assetName:"地下一层",
+    assetType:"房产",
+    assetStatus:"已出库",
+    handlePeople:"程琳",
+    operatingTime:"2019-11-15",
+    remark:"地下一层"
+  },{
+    assetLedgerId:2,
+    assetNumber:"ZC-157894563258",
+    assetName:"鼠标",
+    assetType:"固定资产",
+    assetStatus:"报废",
+    handlePeople:"程琳",
+    operatingTime:"2019-11-15",
+    remark:"联想鼠标"
+  }]
+
+  myAssetData=[{
+    myAssetId:1,
+    assetNumber:"ZC-154678955789",
+    assetName:"地下一层",
+    assetType:"房产",
+    assetStatus:"已出库",
+    handlePeople:"程琳",
+    operatingTime:"2019-11-15",
+    remark:"地下一层"
+  },{
+    assetLedgerId:2,
+    assetNumber:"ZC-157894563258",
+    assetName:"显示器",
+    assetType:"固定资产",
+    assetStatus:"维修",
+    handlePeople:"程琳",
+    operatingTime:"2019-09-15",
+    remark:"vator"
+  },{
+    assetLedgerId:3,
+    assetNumber:"ZC-157894563258",
+    assetName:"鼠标",
+    assetType:"固定资产",
+    assetStatus:"报废",
+    handlePeople:"程琳",
+    operatingTime:"2019-11-15",
+    remark:"联想鼠标"
+  }]
+
+  contractManageData=[{
+    contractManageId:1,
+    contractName:"租房合同",
+    contractType:"租赁",
+    contractStatus:"待审核",
+    signTime:"2019-12-22",
+    remark:"个人租赁"
+  },{
+    contractManageId:2,
+    contractName:"入职合同",
+    contractType:"个人",
+    contractStatus:"运行中",
+    signTime:"2019-05-22",
+    remark:"入职合同"
+  },{
+    contractManageId:3,
+    contractName:"劳动合同",
+    contractType:"个人",
+    contractStatus:"运行中",
+    signTime:"2019-05-22",
+    remark:"劳动合同"
+  }]
+
+  signatureManageData=[{
+    signatureManageId:1,
+    signatureNumber:"QZ-156789452365",
+    signatureName:"公章",
+    signatureType:"公章",
+    signatureStatus:"使用中",
+    signTime:"2019-01-15",
+    useTime:"2019-10-11",
+    remark:"对外事务处置",
+  },{
+    signatureManageId:2,
+    signatureNumber:"QZ-875493214596",
+    signatureName:"财务章",
+    signatureType:"财务章",
+    signatureStatus:"使用中",
+    signTime:"2019-03-15",
+    useTime:"2019-08-11",
+    remark:"公司票据出具",
+  },{
+    signatureManageId:3,
+    signatureNumber:"QZ-854698723154",
+    signatureName:"法人章",
+    signatureType:"法人章",
+    signatureStatus:"使用中",
+    signTime:"2017-01-01",
+    useTime:"2019-12-11",
+    remark:"银行小印鉴",
+  },{
+    signatureManageId:4,
+    signatureNumber:"QZ-845216478963",
+    signatureName:"合同专用章",
+    signatureType:"合同专用章",
+    signatureStatus:"使用中",
+    signTime:"2018-01-01",
+    useTime:"2019-12-11",
+    remark:"签署合同需求加盖",
+  },{
+    signatureManageId:5,
+    signatureNumber:"QZ-156789452365",
+    signatureName:"发票专用章",
+    signatureType:"发票专用章",
+    signatureStatus:"使用中",
+    signTime:"2018-02-01",
+    useTime:"2019-08-11",
+    remark:"开具发票需求加盖",
+  }]
+
+  templateManageData =[{
+    templateManageId:1,
+    templateNumber:"MB-548789456122",
+    templateName:"租赁合同",
+    templateType:"租赁",
+    templateStatus:"运行中",
+    signTime:"2019-01-01",
+    useTime:"2019-12-12",
+    remark:"租赁合同"
+  },{
+    templateManageId:2,
+    templateNumber:"MB-148595645878",
+    templateName:"借贷合同",
+    templateType:"借贷",
+    templateStatus:"运行中",
+    signTime:"2019-01-01",
+    useTime:"2019-12-12",
+    remark:"借贷合同"
+  },{
+    templateManageId:4,
+    templateNumber:"MB-458965467894",
+    templateName:"委托合同",
+    templateType:"委托合同",
+    templateStatus:"运行中",
+    signTime:"2019-01-01",
+    useTime:"2019-12-12",
+    remark:"委托合同"
+  }]
+
+  approvalManageData =[{
+    approvalManageId:1,
+    contractId:'HT-190225135238',
+    contractName:'中钢A座租房合同',
+    contractType:'租赁合同',
+    contractTime:'2020.02.01',
+    useTime:'2020.02.02',
+    manageUser:'程琳',
+    remark:"请主要查收相关的租房合同"
+  },{
+    approvalManageId:2,
+    contractId:'HT-190225192920',
+    contractName:'中钢B座租房合同',
+    contractType:'租赁合同',
+    contractTime:'2020.02.03',
+    useTime:'2020.03.02',
+    manageUser:'程琳',
+    remark:"B座相关的合同有变动，请注意"
+  },{
+    approvalManageId:3,
+    contractId:'HT-190232522920',
+    contractName:'中钢C座租房合同',
+    contractType:'租赁合同',
+    contractTime:'2020.05.03',
+    useTime:'2020.07.02',
+    manageUser:'程琳',
+    remark:"双务合同与单务合同"
+  }]
+  
+  billManageData = [{
+    billManageId:1,
+    billNumber:'ZD-190225135201',
+    billName:'中钢A座用水账单',
+    billStatus:'待审核',
+    tenantName:'程琳',
+    contractTime:'2020-01-12'
+  },
+  {
+    billManageId:2,
+    billNumber:'ZD-190225132201',
+    billName:'中钢B座用电账单',
+    billStatus:'待审核',
+    tenantName:'程琳',
+    contractTime:'2020-02-12'
+  },
+  {
+    billManageId:3,
+    billNumber:'ZD-190225135221',
+    billName:'中钢C座用电账单',
+    billStatus:'已审核',
+    tenantName:'程琳',
+    contractTime:'2019-02-01'
+  }]
+  
   // 跳转链接
   loadOldPage(item, routeOldProject) {
     if (routeOldProject) {

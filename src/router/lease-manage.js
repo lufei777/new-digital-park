@@ -29,5 +29,15 @@ export default [{
         name: 'addTenantManage',
         meta: { title: '编辑租户' },
         component: () => import('@/pages/leaseManage/addTenantManage'),
+    },{
+        path: '/leaseContract',
+        name: 'leaseContract',
+        meta: { title: '租赁合同' },
+        component: () => import('@/pages/leaseManage/leaseContract'),
+    },{
+        path: '/billManage',
+        name: 'billManage',
+        meta: { title: '账单管理' },
+        component: () => import('@/pages/leaseManage/billManage'),
     }],
 }]

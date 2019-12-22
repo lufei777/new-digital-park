@@ -1,5 +1,5 @@
 <template>
-  <div class="cost-index">
+  <div class="contract-manage-index">
     <commonIndex :menuList="menuList" :menuConfig="menuConfig"></commonIndex>
   </div>
 </template>
@@ -7,7 +7,7 @@
 <script>
 import commonIndex from "../commonProject/coms/commonIndex";
 export default {
-  name: "CostManage",
+  name: "ContractManage",
   components: {
     commonIndex
   },
@@ -18,7 +18,7 @@ export default {
         bgColor: "#394562",
         textColor: "#B7BAC4",
         isCollapse: false,
-        moduleName: "费用管理",
+        moduleName: "合同管理",
         moduleLogo: "iconnengyuanguanli"
       }
     };
@@ -31,4 +31,7 @@ export default {
 </script>
 
 <style lang="less">
+.contract-manage-index {
+    height: 100%;
+}
 </style>

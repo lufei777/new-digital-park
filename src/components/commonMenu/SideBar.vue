@@ -36,7 +36,7 @@
           :menuList="menuList"
         />
       </el-menu>
-      <div v-if="!menuConfig.specialRoute">
+      <div v-if="!menuConfig.specialRoute && temporarilyHidden">
         <div class="iconfont iconkuaijierukou hover-pointer shortcut-btn" @click="onClickShortcutBtn"></div>
         <ul class="shortcut-list" v-show="showShortcutList">
           <li v-for="(item,index) in shortCutList" :key="index">{{item.name}}</li>
@@ -63,7 +63,8 @@ export default {
   data() {
     return {
       shortCutList: [],
-      showShortcutList: false
+      showShortcutList: false,
+      temporarilyHidden:false
     };
   },
   computed: {

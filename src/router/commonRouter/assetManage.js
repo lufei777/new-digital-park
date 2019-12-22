@@ -4,6 +4,9 @@ import AssetGroup from '../../pages/assetManage/assetGroup'
 import AssetType from '../../pages/assetManage/assetType'
 import AssetAdd from '../../pages/assetManage/addAsset'
 import DefaultPage from '../../pages/commonProject/defaultPage/index'
+import AssetLedger from '../../pages/assetManage/assetLedger'
+import MyAsset from '../../pages/assetManage/myAsset'
+
 export default [{
   path: '/assetManage',
   name: 'AssetManage',
@@ -30,10 +33,21 @@ export default [{
     name: 'AssetAdd',
     meta: { title: "资产编辑" },
     component: AssetAdd,
-  }, {
+  },{
+    path: '/assetLedger',
+    name: 'AssetLedger',
+    component: AssetLedger,
+    meta: { title: "资产台账" },
+  },{
+    path: '/myAsset',
+    name: 'MyAsset',
+    component: MyAsset,
+    meta: { title: "我的资产" },
+  },{
     path: '/digitalPark/defaultPage',
     name: 'DefaultPage',
     component: DefaultPage,
     meta: { title: "建设中" },
   }]
+ 
 }]

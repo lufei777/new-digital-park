@@ -2,6 +2,8 @@ import CleaningManageIndex from '../pages/cleaningManage/index'
 import CleaningRecord from '../pages/cleaningManage/cleaningRecord'
 import TaskSet from '../pages/cleaningManage/taskSet'
 import RegionSet from '../pages/cleaningManage/regionSet'
+import AssessmentManage from '../pages/cleaningManage/assessmentManage'
+import AeportManage from '../pages/cleaningManage/reportManage'
 export default [{
     path: '/',
     redirect: '/cleaningRecord',
@@ -22,5 +24,15 @@ export default [{
         name: 'RegionSet',
         meta: { title: '区域设定' },
         component: RegionSet,
+    },{
+        path: '/assessmentManage',
+        name: 'AssessmentManage',
+        meta: { title: '考核管理' },
+        component: AssessmentManage,
+    },{
+        path: '/aeportManage',
+        name: 'AeportManage',
+        meta: { title: '报表管理' },
+        component: AeportManage,
     }]
 }]

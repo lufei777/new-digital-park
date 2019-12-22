@@ -77,6 +77,7 @@
         </draggable>
       </div>
     </div>
+    <div class="copyright">版权所有：©2019 京ICP备05080753号 京公网安备11010802013842号</div>
   </div>
 </template>
 
@@ -469,6 +470,15 @@ export default {
   }
   .scrollbar-wrapper.el-scrollbar__wrap {
     margin-bottom: 0 !important;
+  }
+  .copyright {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    text-align: center;
+    background:rgb(96, 98, 102);
+    color: #ccc;
   }
 }
 
