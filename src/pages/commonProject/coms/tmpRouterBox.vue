@@ -1,23 +1,17 @@
 <template>
-  <div class="tmp-router-box">
-    <router-view></router-view>
-  </div>
+  <router-view></router-view>
 </template>
 
 <script>
-  export default {
-    name: 'TmpRouterBox',
-    components: {
-    },
-    data () {
-      return {
-      }
-    },
-    methods: {
-    },
-    mounted(){
-    }
-  }
+export default {
+  name: "TmpRouterBox",
+  components: {},
+  data() {
+    return {};
+  },
+  methods: {},
+  mounted() {}
+};
 </script>
 <style lang="less">
 </style>

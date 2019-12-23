@@ -1,6 +1,6 @@
 <template>
-  <div class="energy-saving-select">
-    <div class="flex-align-between condition-box radius-shadow">
+  <div class="energy-saving-select panel-container">
+    <div class="flex-align-between condition-box panel">
       <div class="item-group block">
         <label>建筑群：</label>
         <el-select v-model="energyA3" placeholder="请选择">
@@ -42,7 +42,7 @@
       <el-button type="primary" @click="getList">查询</el-button>
       <el-button type="primary" @click="exportList" v-if="tableData.total && tableData.total!=0">导出</el-button>
     </div>
-    <div class="tabulation radius-shadow">
+    <div class="tabulation panel">
       <div class="tab-title flex-align-between">
         <span>注:红色字体为超标</span>
         <em>{{tabTitle}}</em>
@@ -182,10 +182,15 @@ export default {
         });
         let columnConfig=[]
           for(let key in tmp[0]){
+            console.log('hahhah',Object.keys(tmp[0]).length)
+            let widthSet
+            if(Object.keys(tmp[0]).length>14) {
+              widthSet = 110
+            }
                columnConfig.push({
                  label:key,
                  prop:key,
-                 width:120,
+                 width:widthSet,
                  formatter:function(row,column){
                    if (row[column.property] > parseFloat(row.参考指标)) {
                      return `<span class="styleRed">${row[column.property]}</span>`;

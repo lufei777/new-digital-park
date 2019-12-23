@@ -1,5 +1,5 @@
 <template>
-  <div class="tenant-manage">
+  <div class="tenant-manage panel-container">
     <div class="condition-box panel">
       <miForm
         :ref="tenantManageForm.ref"

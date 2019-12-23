@@ -1,5 +1,5 @@
 <template>
-  <div class="device-analysis radius-shadow">
+  <div class="device-analysis radius-shadow panel-container">
     <div class="chart-box"><div ref="myChart" class="my-chart"></div></div>
     <el-dialog
       :visible.sync="showDialog"
