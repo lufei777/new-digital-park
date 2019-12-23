@@ -1,5 +1,5 @@
 <template>
-  <div class="auto-collect-list">
+  <div class="auto-collect-list panel-container">
     <div class="flex condition-box radius-shadow">
       <div class="block">
         <span class="">能源：</span>
@@ -34,7 +34,7 @@
       </div>
       <el-button type="primary" @click="getAutoCollectList">确定</el-button>
     </div>
-    <div class="table-box radius-shadow">
+    <div class="table-box panel">
       <Table  :ref="tableConfig.ref" :table-config="tableConfig"/>
     </div>
   </div>

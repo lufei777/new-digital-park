@@ -1,38 +1,36 @@
 <template>
-  <div>
-    <div class="man-made-list">
-      <div class="flex condition-box radius-shadow">
-        <div class="block">
-          <span class="demonstration">开始时间</span>
-          <el-date-picker
-            v-model="startTime"
-            type="datetime"
-            placeholder="选择日期时间"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            @change="onTimeChange(-1)"
-            :clearable="false"
-          ></el-date-picker>
-        </div>
-        <div class="block">
-          <span class="demonstration">结束时间</span>
-          <el-date-picker
-            v-model="endTime"
-            type="datetime"
-            placeholder="选择日期时间"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            @change="onTimeChange(-1)"
-            :clearable="false"
-          ></el-date-picker>
-        </div>
-        <el-button type="primary" @click="getManMadeCollectList">确定</el-button>
+  <div class="man-made-list panel-container">
+    <div class="flex condition-box radius-shadow">
+      <div class="block">
+        <span class="demonstration">开始时间</span>
+        <el-date-picker
+          v-model="startTime"
+          type="datetime"
+          placeholder="选择日期时间"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          @change="onTimeChange(-1)"
+          :clearable="false"
+        ></el-date-picker>
       </div>
-      <div class="table-box radius-shadow">
-        <div class="operator-box">
-          <el-button type="primary" icon="el-icon-delete">删除记录</el-button>
-          <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
-        </div>
-        <Table :ref="tableConfig.ref" :table-config="tableConfig"></Table>
+      <div class="block">
+        <span class="demonstration">结束时间</span>
+        <el-date-picker
+          v-model="endTime"
+          type="datetime"
+          placeholder="选择日期时间"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          @change="onTimeChange(-1)"
+          :clearable="false"
+        ></el-date-picker>
       </div>
+      <el-button type="primary" @click="getManMadeCollectList">确定</el-button>
+    </div>
+    <div class="table-box panel">
+      <div class="operator-box">
+        <el-button type="primary" icon="el-icon-delete">删除记录</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
+      </div>
+      <Table :ref="tableConfig.ref" :table-config="tableConfig"></Table>
     </div>
   </div>
 </template>
@@ -188,6 +186,7 @@ export default {
   .operator-box {
     clear: both;
     display: flex;
+    margin-bottom: 20px;
     flex-direction: row-reverse;
     .el-button {
       margin-left: 20px;
