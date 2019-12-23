@@ -181,10 +181,15 @@ export default {
         });
         let columnConfig=[]
           for(let key in tmp[0]){
+            console.log('hahhah',Object.keys(tmp[0]).length)
+            let widthSet
+            if(Object.keys(tmp[0]).length>14) {
+              widthSet = 110
+            }
                columnConfig.push({
                  label:key,
                  prop:key,
-                 width:120,
+                 width:widthSet,
                  formatter:function(row,column){
                    if (row[column.property] > parseFloat(row.参考指标)) {
                      return `<span class="styleRed">${row[column.property]}</span>`;
