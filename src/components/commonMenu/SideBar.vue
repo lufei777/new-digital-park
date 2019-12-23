@@ -66,7 +66,7 @@ export default {
     return {
       shortCutList: [],
       showShortcutList: false,
-      temporarilyHidden:false
+      temporarilyHidden: false
     };
   },
   computed: {
@@ -95,16 +95,17 @@ export default {
         let firstMenu = this.menuList.find(first => {
           return first.id == keyPath[0];
         });
-        let secondPath = keyPath[1].split("/")[0];
-        if (secondPath.indexOf("@") != -1) {
-          secondPath = secondPath.split("@")[0];
-        }
+        let secondPath = keyPath[1].split("/")[0].split("@")[0];
         let secondMenu =
           firstMenu.childNode.length &&
           firstMenu.childNode.find(second => {
             return second.id == secondPath;
           });
         localStorage.setItem("menuList", JSON.stringify(secondMenu));
+        // 跳转三维
+        if (commonFun.loadThreeD(secondMenu)) {
+          return;
+        }
         let tmpArr = key.split("/");
         tmpArr.shift();
         let activeMenu = tmpArr.join("/");
