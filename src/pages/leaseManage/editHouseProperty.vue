@@ -548,8 +548,7 @@ export default {
             dicData: LeaseManageDic.isRent,
             valueDefault: 1,
             clearable: true,
-            span: 12,
-            change: _this.isRendChange
+            span: 12
           },
           {
             type: "input",
@@ -683,9 +682,11 @@ export default {
     },
     back() {
       this.$router.back();
-    },
-    isRendChange({ column, value }) {
-      if (value === column.dicData[1].value) {
+    }
+  },
+  watch: {
+    "model.isRent"(newVal, oldVal) {
+      if (newVal === LeaseManageDic.isRent[1].value) {
         this.$refs[this.leaseManageForm.ref].setColumnByProp("housePrice", {
           rules: []
         });
@@ -699,8 +700,7 @@ export default {
         });
       }
     }
-  },
-  watch: {}
+  }
 };
 </script>
 <style lang='less' scoped>

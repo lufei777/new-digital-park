@@ -29,10 +29,12 @@ export default {
     };
   },
   mounted() {
-    document.querySelector("#iframe").onload = () => {
+    const iframe =  document.querySelector("#iframe");
+    iframe.style.height = `${document.body.clientHeight}px`;
+    iframe.onload = () => {
       this.back = true;
-      let iWin = document.querySelector("#iframe").contentWindow;
-      console.log(iWin);
+      /* let iWin = iframe.contentWindow;
+      console.log(iWin); */
     };
   },
   methods: {
