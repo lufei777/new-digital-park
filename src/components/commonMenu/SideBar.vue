@@ -153,6 +153,7 @@ export default {
 </script>
 <style lang="less">
 .common-menu {
+  overflow: hidden;
   .el-menu-item,
   .el-submenu .el-submenu__title {
     font-size: 18px;
