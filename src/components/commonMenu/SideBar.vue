@@ -68,7 +68,7 @@ export default {
     return {
       shortCutList: [],
       showShortcutList: false,
-      temporarilyHidden: false
+      temporarilyHidden:false
     };
   },
   computed: {
@@ -77,8 +77,8 @@ export default {
     },
     activeMenuIndex() {
       //当前激活的菜单，顺序是cookie拿到的、父级传递的、默认的父级没传时使用菜单第一个
-      return this.menuConfig.specialRoute ? "" :
-            Cookies.get("activeMenuIndex") ||
+      return this.menuConfig.specialRoute ? ""
+        : Cookies.get("activeMenuIndex") ||
             this.menuConfig.activeIndex ||
             this.menuData.childNode[0].id + this.menuData.childNode[0].routeAddress;
     }
@@ -93,20 +93,24 @@ export default {
   methods: {
     handleSelect(key, keyPath) {
       if (this.menuConfig.specialRoute) {
-        let firstMenu = this.menuList.find(first => {
+        //找到第一层，例如无忧服务
+        let firstMenu = this.menuData.childNode.find(first => {
           return first.id == keyPath[0];
         });
-        let secondPath = keyPath[1].split("/")[0].split("@")[0];
+        let secondPath = keyPath[1].split("/")[0];
+        if (secondPath.indexOf("@") != -1) {
+          secondPath = secondPath.split("@")[0];
+        }
+        //找到第一层，例如能源管理
         let secondMenu =
           firstMenu.childNode.length &&
           firstMenu.childNode.find(second => {
             return second.id == secondPath;
           });
-        localStorage.setItem("menuList", JSON.stringify(secondMenu));
-        // 跳转三维
         if (commonFun.loadThreeD(secondMenu)) {
           return;
         }
+        localStorage.setItem("menuList", JSON.stringify(secondMenu));
         let tmpArr = key.split("/");
         tmpArr.shift();
         let activeMenu = tmpArr.join("/");
@@ -155,7 +159,6 @@ export default {
 </script>
 <style lang="less">
 .common-menu {
-  overflow: hidden;
   .el-menu-item,
   .el-submenu .el-submenu__title {
     font-size: 18px;
