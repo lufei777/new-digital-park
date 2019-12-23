@@ -16,11 +16,13 @@
           <slot name="navOperator" :style="{float: 'right'}"></slot>
         </div>
       </div>
-      <div class="router-view">
+      <div class="content">
         <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
-          <transition name="fade-transform" mode="out-in" appear>
-            <slot name="content"></slot>
-          </transition>
+          <div class="router-view">
+            <transition name="fade-transform" mode="out-in" appear>
+              <slot name="content"></slot>
+            </transition>
+          </div>
         </el-scrollbar>
       </div>
     </div>
@@ -38,15 +40,13 @@
         this.$emit('onclickcollapsebtn')
       },
       computedHeight(){
+        this.content = document.querySelector('.content');
         this.routerView = document.querySelector('.router-view');
         const deviceWidth = document.body.clientWidth;
         const deviceHeight = document.body.clientHeight;
         this.routerViewHeight = Number(deviceHeight) - 110;
         this.routerView.style.height = this.routerViewHeight + "px";
-
-        if(this.routerView.querySelectorAll('.panel').length === 0){
-          this.routerView.querySelector('.el-scrollbar__view').style.height = 'auto';
-        }
+        this.content.style.height = this.routerViewHeight + "px";
       }
     },
     mounted(){
@@ -114,19 +114,18 @@
       color:#969CA8;
       float: left;
     }
-    .router-view{
+    .content{
       padding:20px;
       margin-top: 70px;
       overflow: hidden;
-      .el-scrollbar__view{
-        height: 100%;
-        &>div:first-child{
+      .router-view{
+        .panel-container{
           height: 100%;
           display: flex;
           flex-direction: column;
-        }
-        .panel:last-child{
-          flex-grow: 1;
+          .panel:last-child{
+            flex-grow: 1;
+          }
         }
       }
     }

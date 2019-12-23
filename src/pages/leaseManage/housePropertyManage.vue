@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="panel-container">
     <div id="houseproperty-form" class="panel">
       <miForm
         :ref="leaseManageForm.ref"

@@ -1,6 +1,6 @@
 <template>
-  <div class="energy-saving-select">
-    <div class="flex-align-between condition-box radius-shadow">
+  <div class="energy-saving-select panel-container">
+    <div class="flex-align-between condition-box panel">
       <div class="item-group block">
         <label>建筑群：</label>
         <el-select v-model="energyA3" placeholder="请选择">
@@ -42,7 +42,7 @@
       <el-button type="primary" @click="getList">查询</el-button>
       <el-button type="primary" @click="exportList" v-if="tableData.total && tableData.total!=0">导出</el-button>
     </div>
-    <div class="tabulation radius-shadow">
+    <div class="tabulation panel">
       <div class="tab-title flex-align-between">
         <span>注:红色字体为超标</span>
         <em>{{tabTitle}}</em>
