@@ -383,7 +383,8 @@ export default {
     background: @white;
   }
   .home-center {
-    width: 1500px;
+    /*width: 1500px;*/
+    width:78%;
     margin: 0 auto;
   }
   .item-module {
