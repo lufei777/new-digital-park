@@ -29,11 +29,7 @@ export default {
     };
   },
   mounted() {
-    document.querySelector("#iframe").onload = () => {
-      this.back = true;
-      let iWin = document.querySelector("#iframe").contentWindow;
-      console.log(iWin);
-    };
+    document.querySelector("#iframe").style.height = `${document.body.clientHeight}px`
   },
   methods: {
     onClickGoBack() {

@@ -22,8 +22,8 @@ export default {
   color: #666;
   height: 100%;
   font-size: 14px;
-  .el-scrollbar__view{
+  /* .el-scrollbar__view{
     height:100%;
-  }
+  } */
 }
 </style>
