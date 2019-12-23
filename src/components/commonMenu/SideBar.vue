@@ -93,32 +93,18 @@ export default {
   methods: {
     handleSelect(key, keyPath) {
       if (this.menuConfig.specialRoute) {
-       //找到第一层,例如运维管理
-        let firstMenu = this.menuData.childNode.find(first => {
+        let firstMenu = this.menuList.find(first => {
           return first.id == keyPath[0];
         });
         let secondPath = keyPath[1].split("/")[0];
         if (secondPath.indexOf("@") != -1) {
           secondPath = secondPath.split("@")[0];
         }
-        //找到第二层,例如能源管理
-        let secondMenu = firstMenu.childNode.length &&
+        let secondMenu =
+          firstMenu.childNode.length &&
           firstMenu.childNode.find(second => {
             return second.id == secondPath;
           });
-        if (
-          secondMenu.name == "安防管理" || secondMenu.name == "机房动环" ||
-          secondMenu.name == "智能建筑" || secondMenu.name == "建筑监控" ||
-          secondMenu.name == "消防管理"
-        ) {
-          let clientName = secondMenu.name;
-          if (secondMenu.name === "安防管理") {
-            clientName = "综合安防";
-          }
-          Client.SkipToSigleBuild(clientName);
-          // window.goToClientPage && window.goToClientPage(item)
-          return;
-        }
         localStorage.setItem("menuList", JSON.stringify(secondMenu));
         let tmpArr = key.split("/");
         tmpArr.shift();
@@ -168,7 +154,6 @@ export default {
 </script>
 <style lang="less">
 .common-menu {
-  overflow: hidden;
   .el-menu-item,
   .el-submenu .el-submenu__title {
     font-size: 18px;

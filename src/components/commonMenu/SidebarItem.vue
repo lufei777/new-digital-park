@@ -60,18 +60,7 @@ export default {
     onClickSubmenu(item, menuList) {
       if (!this.specialRoute) return;
       Cookies.set("moduleType", 2);
-      Cookies.set("activeMenuIndex", item.childNode[0].id+item.routeAddress);
-      if (
-        item.name == "安防管理" || item.name == "机房动环" ||
-        item.name == "智能建筑" || item.name == "建筑监控" ||
-        item.name == "消防管理") {
-        let clientName = item.name;
-        if (item.name === "安防管理") {
-          clientName = "综合安防";
-        }
-        Client.SkipToSigleBuild(clientName);
-        return;
-      }
+      Cookies.set("activeMenuIndex", item.childNode[0].id + item.routeAddress);
       // 获取level = 2的菜单列表
       if (!_.isEmpty(menuList)) {
         localStorage.setItem("menuList", JSON.stringify(menuList));
@@ -91,6 +80,10 @@ export default {
             localStorage.setItem("menuList", JSON.stringify(secondMenu));
           }
         }
+      }
+      // 跳转三维
+      if (CommonFun.loadThreeD(JSON.parse(localStorage.getItem("menuList")))) {
+        return;
       }
       this.loadPage(item);
     },

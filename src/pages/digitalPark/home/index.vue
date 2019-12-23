@@ -9,11 +9,11 @@
           </h3>
         </div>
         <!--<el-input class="search-input">-->
-          <!--<el-button-->
-            <!--slot="append"-->
-            <!--icon="el-icon-search"-->
-            <!--class="search-icon"-->
-          <!--&gt;{{$t('homeHeader.searchText')}}</el-button>-->
+        <!--<el-button-->
+        <!--slot="append"-->
+        <!--icon="el-icon-search"-->
+        <!--class="search-icon"-->
+        <!--&gt;{{$t('homeHeader.searchText')}}</el-button>-->
         <!--</el-input>-->
         <NavOperator :moduleType.sync="moduleType" />
       </div>
@@ -152,22 +152,11 @@ export default {
       localStorage.setItem("menuList", JSON.stringify(item));
       // 192.168.1.69：9002/html
       let routeAddress = item.routeAddress;
-      if (
-        item.name == "安防管理" ||
-        item.name == "机房动环" ||
-        item.name == "智能建筑" ||
-        item.name == "建筑监控" ||
-        item.name == "消防管理"
-      ) {
-        let clientName = item.name;
-        if (item.name === "安防管理") {
-          clientName = "综合安防";
-        }
-        //目前先写死
-        Client.SkipToSigleBuild(clientName);
-        // window.goToClientPage && window.goToClientPage(item)
+      // 跳转三维
+      if (CommonFun.loadThreeD(item)) {
         return;
       }
+      // 跳转路由
       if (routeAddress) {
 
         // 如果带有@字符，则跳转旧项目
@@ -197,7 +186,9 @@ export default {
       return {
         backgroundImage:
           "url(" +
-          require("../../../../static/image/digitalPark/" + item.productBgUrl + ".png") +
+          require("../../../../static/image/digitalPark/" +
+            item.productBgUrl +
+            ".png") +
           ")"
       };
     },
@@ -442,7 +433,7 @@ export default {
   .product-module {
     margin-top: 20px;
   }
-  .park-logo{
+  .park-logo {
     font-size: 30px;
     margin-right: 5px;
   }
@@ -489,7 +480,7 @@ export default {
     line-height: 30px;
     font-size: 14px;
     text-align: center;
-    background:rgb(96, 98, 102);
+    background: rgb(96, 98, 102);
     color: #ccc;
   }
 }
