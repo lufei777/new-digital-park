@@ -2,7 +2,7 @@
   <div class="common-index-panel">
     <commonIndexLayout :menuConfig="menuConfig" @onclickcollapsebtn="onClickCollapseBtn">
       <template slot="menuList">
-        <Sidebar :menu-list="menuList" :menu-config="menuConfig" />
+        <Sidebar :menuData="menuData" :menuConfig="menuConfig"/>
       </template>
       <template slot="breadCrumb">
         <BreadCrumb></BreadCrumb>
@@ -26,7 +26,7 @@ import NavOperator from "../../digitalPark/coms/navOperator";
 
 export default {
   name: "commonIndex",
-  props: ["menuList", "menuConfig", "documentTitle"],
+  props: [],
   components: {
     commonIndexLayout,
     Sidebar,
@@ -34,19 +34,24 @@ export default {
     NavOperator
   },
   data() {
-    return {};
+    let localStorageMenuData = JSON.parse(localStorage.menuList);
+    return {
+      menuData:localStorageMenuData,
+      menuConfig:{
+        bgColor: "#394562",
+        textColor: "#B7BAC4",
+        isCollapse: false,
+      }
+    };
   },
   methods: {
     onClickCollapseBtn() {
       this.menuConfig.isCollapse = !this.menuConfig.isCollapse;
-      this.$store.commit(
-        "digitalPark/menuIsCollapse",
-        this.menuConfig.isCollapse
-      );
+      this.$store.commit("digitalPark/menuIsCollapse", this.menuConfig.isCollapse);
     }
   },
   mounted() {
-    document.title = this.menuConfig.moduleName;
+    document.title=this.menuData.name
   }
 };
 </script>

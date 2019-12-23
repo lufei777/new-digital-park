@@ -18,7 +18,7 @@
         <NavOperator :moduleType.sync="moduleType" />
       </div>
       <div class="sidebar-container">
-        <Sidebar :menuList="menuList" :menuConfig="menuConfig" />
+        <Sidebar :menu-data="menuData" :menuConfig="menuConfig" />
       </div>
     </div>
 
@@ -104,7 +104,7 @@ export default {
       productList: [],
       showMoreProduct: false,
       modelValue: "1",
-      menuList: [],
+      menuData:{},
       userProModuleList: [],
       moduleType: "2",
       loading: true,
@@ -113,7 +113,6 @@ export default {
         bgColor: "#fff",
         textColor: "#606266",
         specialRoute: true
-        // activeTextColor:'red'
       }
     };
   },
@@ -184,7 +183,7 @@ export default {
         language: Cookies.get("lang")
       });
       this.title=res[0].name
-      this.menuList = res[0].childNode;
+      this.menuData = res[0];
       localStorage.setItem('menuTree',JSON.stringify(res))
     },
     getItemBg(item) {

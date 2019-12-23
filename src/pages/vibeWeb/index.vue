@@ -44,7 +44,7 @@ export default {
         isCollapse: false,
         activeIndex: show_menu.substring(show_menu.indexOf("@")),
         moduleName: menuList.name,
-        moduleLogo: "iconnengyuanguanli",
+        moduleLogo: menuList.icon,
         handleSelect(key, keyPath, curDom) {
           _this.handleSelect(key, keyPath, curDom);
         },
