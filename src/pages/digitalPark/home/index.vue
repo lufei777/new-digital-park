@@ -22,12 +22,15 @@
       </div>
     </div>
 
-    <el-carousel height="360px" :interval="6000" v-if="!hideHeader">
-      <el-carousel-item>
+    <el-carousel height="360px" :interval="6000" v-if="!hideHeader" ref="carousel" @click.native="linkTo">
+      <!-- <el-carousel-item>
         <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo1.png" alt />
       </el-carousel-item>
       <el-carousel-item>
         <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo2.png" alt />
+      </el-carousel-item> -->
+      <el-carousel-item  v-for="item in imgs" v-bind:key="item.url" >
+        <img  class="carousel-img" :src="item.url"/>
       </el-carousel-item>
     </el-carousel>
     <div class="home-header-wrapper">
@@ -114,7 +117,11 @@ export default {
         textColor: "#606266",
         specialRoute: true
         // activeTextColor:'red'
-      }
+      },
+      imgs: [
+        {url: require('../../../../static/image/digitalPark/lunbo3.png'), link: '/announcement'},
+        {url: require('../../../../static/image/digitalPark/lunbo4.png'), link: '/news'},
+      ]
     };
   },
   computed: {
@@ -294,6 +301,10 @@ export default {
     },
     async sureUpdateUserProModules() {
       await DigitalParkApi.updateUserProModules(this.userProModuleList);
+    },
+    linkTo () {
+      let activeIndex = this.$refs.carousel.activeIndex
+      this.$router.push(this.imgs[activeIndex].link)
     }
   },
   mounted() {
