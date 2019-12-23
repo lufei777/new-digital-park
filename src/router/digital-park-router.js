@@ -3,6 +3,8 @@ import DashBoardHomePage from '../pages/digitalPark/home/dashboardNew'
 import ModuleConfigure from '../pages/digitalPark/moduleConfigure/index'
 import Login from '../pages/digitalPark/login/index'
 import HelloWorld from '../pages/helloWorld/helloWorld'
+import Announcement from '../pages/digitalPark/announcement'
+import News from '../pages/digitalPark/news'
 export default [{
   path: '/',
   redirect: '/digitalPark/homePage'
@@ -29,4 +31,12 @@ export default [{
   path:'/test',
   name:'HelloWorld',
   component:HelloWorld
+},{
+  path:'/announcement',
+  name:'Announcement',
+  component:Announcement
+},{
+  path:'/news',
+  name:'News',
+  component:News
 }]
