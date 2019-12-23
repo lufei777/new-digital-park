@@ -1,6 +1,6 @@
 <template>
   <div class="asset-manage-index">
-    <commonIndex :menuList="menuList" :menuConfig="menuConfig"></commonIndex>
+    <commonIndex></commonIndex>
   </div>
 </template>
 
@@ -10,16 +10,7 @@ export default {
   name: "AssetManage",
   components: { commonIndex },
   data() {
-    let menuData=JSON.parse(localStorage.menuList)
     return {
-      menuList: menuData.childNode,
-      menuConfig: {
-        bgColor: "#394562",
-        textColor: "#B7BAC4",
-        isCollapse: false,
-        moduleName: menuData.name,
-        moduleLogo: "iconzichanguanli"
-      }
     };
   },
   methods: {}

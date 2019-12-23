@@ -18,7 +18,7 @@
         <NavOperator :moduleType.sync="moduleType" />
       </div>
       <div class="sidebar-container">
-        <Sidebar :menuList="menuList" :menuConfig="menuConfig" />
+        <Sidebar :menu-data="menuData" :menuConfig="menuConfig" />
       </div>
     </div>
 
@@ -107,7 +107,7 @@ export default {
       productList: [],
       showMoreProduct: false,
       modelValue: "1",
-      menuList: [],
+      menuData:{},
       userProModuleList: [],
       moduleType: "2",
       loading: true,
@@ -116,7 +116,6 @@ export default {
         bgColor: "#fff",
         textColor: "#606266",
         specialRoute: true
-        // activeTextColor:'red'
       },
       imgs: [
         {url: require('../../../../static/image/digitalPark/lunbo3.png'), link: '/announcement'},
@@ -170,6 +169,7 @@ export default {
         return;
       }
       if (routeAddress) {
+
         // 如果带有@字符，则跳转旧项目
         if (routeAddress.indexOf("@") != -1) {
           CommonFun.loadOldPage(item);
@@ -190,7 +190,7 @@ export default {
         language: Cookies.get("lang")
       });
       this.title=res[0].name
-      this.menuList = res[0].childNode;
+      this.menuData = res[0];
       localStorage.setItem('menuTree',JSON.stringify(res))
     },
     getItemBg(item) {
@@ -393,7 +393,8 @@ export default {
     background: @white;
   }
   .home-center {
-    width: 1500px;
+    /*width: 1500px;*/
+    width:78%;
     margin: 0 auto;
   }
   .item-module {

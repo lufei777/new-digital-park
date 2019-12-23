@@ -1,6 +1,6 @@
 <template>
   <div class="energy-index">
-    <commonIndex :menuList="menuList" :menuConfig="menuConfig"></commonIndex>
+    <commonIndex />
   </div>
 </template>
 
@@ -16,16 +16,8 @@ export default {
     commonIndex
   },
   data() {
-    let localStorageMenuList = JSON.parse(localStorage.menuList);
     return {
-      menuList:localStorageMenuList.childNode, //CommonFun.menuData.childNode,// JSON.parse(localStorage.menuList),
-      menuConfig: {
-        bgColor: "#394562",
-        textColor: "#B7BAC4",
-        isCollapse: false,
-        moduleName: localStorageMenuList.name,
-        moduleLogo: "iconnengyuanguanli"
-      }
+
     };
   },
   watch: {

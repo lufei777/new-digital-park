@@ -34,6 +34,7 @@
   import ConditionSelect from '../../../components/conditionSelect'
   import ChartUtils from '../../../utils/chartUtils'
   import Table from '../../../components/Table'
+  import CommonFun from '../../../utils/commonFun'
   export default {
     name:'EnergyCommon',
     components: {
@@ -576,23 +577,28 @@
       },
       async onClickExportBtn(){
         let url
-        if(this.fromFlag==1){
-          url=`/vibe-web/energyCount/energy/energy_speceExcle?`
-        }else if(this.fromFlag==2){
-          url = `/vibe-web/energyCount/energy/energy_comseqExcel?`
-        }else if(this.fromFlag==3){
-          url=`/vibe-web/energyCount/energy/energy_typeBiaoExcel?`
-        }else if(this.fromFlag==4){
-          url = `/vibe-web/energyCount/energy/energy_fenshiBiaoExcel?`
-        }else if(this.fromFlag==5){
-          url = `/vibe-web/energyCount/energy/energy_fenxiangBiaoExcel?`
-        }
         let params=''
         for(let key in this.commonParams){
-          params+=key+'='+this.commonParams[key]+'&'
+          if(key!='energy'){
+            params+=key+'='+this.commonParams[key]+'&'
+          }
         }
-        params+='rankType='+this.rankType+'&rank='+this.rank+'&seq='+this.seq+'&page='+this.curPage+'size=10'
-        location.href=url+params
+        params+='rankType='+this.rankType+'&rank='+this.rank+'&seq='+this.seq+'&page='+this.curPage+'&size=10'
+        if(this.fromFlag==1){
+           url=`/vibe-web/energyCount/energy/energy_speceExcle`
+        }else if(this.fromFlag==2){
+          url = `/vibe-web/energyCount/energy/energy_comseqExcel`
+        }else if(this.fromFlag==3){
+          url=`/vibe-web/energyCount/energy/energy_typeBiaoExcel`
+        }else if(this.fromFlag==4){
+          url = `/vibe-web/energyCount/energy/energy_fenshiBiaoExcel`
+        }else if(this.fromFlag==5){
+          url = `/vibe-web/energyCount/energy/energy_fenxiangBiaoExcel`
+        }
+        CommonFun.exportMethod({
+          url,
+          params,
+        },this)
       },
       handleFloorCanCheck(checkNode){
         if(checkNode.length<4){

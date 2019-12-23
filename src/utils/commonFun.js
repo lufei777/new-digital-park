@@ -19,6 +19,7 @@ import saleStatistics from '../pages/digitalPark/coms/saleStatistics'
 import inventoryAnalysis from '../pages/digitalPark/coms/inventoryAnalysis'
 import messageRelease from '../pages/digitalPark/coms/messageRelease'
 import router from '@/router'
+import axios from 'axios'
 
 class commonFun {
   exportComs = {
@@ -1662,5 +1663,32 @@ class commonFun {
     }
   }
 
+  //导出
+  exportMethod(data,that) {
+    axios({
+      method: "get",
+      url: `${data.url}${data.params ? '?' + data.params : ''}`,
+      responseType: 'blob',
+
+    }).then((res) => {
+      console.log("res",res)
+      const link = document.createElement('a')
+      let blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
+      link.style.display = 'none'
+      link.href = URL.createObjectURL(blob)
+
+      link.download = decodeURIComponent(res.headers['content-disposition']) //下载后文件名
+      // link.download = data.fileName //下载的文件名
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }).catch(error => {
+      that.$message({
+        type: 'error',
+        message: error,
+      });
+      console.log(error)
+    })
+  }
 }
 export default new commonFun()

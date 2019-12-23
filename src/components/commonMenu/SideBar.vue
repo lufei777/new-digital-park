@@ -1,18 +1,18 @@
 <template>
   <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
     <div class="common-menu">
-      <div v-show="!menuConfig.isCollapse" class="title flex-align" v-if="!menuConfig.specialRoute">
-        <i :class="['iconfont',menuConfig.moduleLogo]"></i>
-        <span>&nbsp;&nbsp;{{menuConfig.moduleName}}</span>
+      <div v-show="!menuConfig.isCollapse && !menuConfig.specialRoute" class="title flex-align">
+        <i :class="['iconfont',menuData.icon]"></i>
+        <span>&nbsp;&nbsp;{{menuData.name}}</span>
       </div>
       <el-tooltip
         v-show="menuConfig.isCollapse"
         effect="dark"
-        :content="menuConfig.moduleName"
+        :content="menuData.icon"
         placement="right-start"
       >
         <div class="title">
-          <i :class="['iconfont',menuConfig.moduleLogo ,'hover-pointer']"></i>
+          <i :class="['iconfont',menuData.icon ,'hover-pointer']"></i>
         </div>
       </el-tooltip>
       <el-menu
@@ -29,11 +29,11 @@
         @close="handleClose"
       >
         <sidebar-item
-          v-for="menu in menuList"
+          v-for="menu in menuData.childNode"
           :key="menu.id"
           :item="menu"
           :specialRoute="menuConfig.specialRoute"
-          :menuList="menuList"
+          :menuList="menuData.childNode"
         />
       </el-menu>
       <div v-if="!menuConfig.specialRoute && temporarilyHidden">
@@ -56,11 +56,13 @@ export default {
   name: "Sidebar",
   components: { SidebarItem },
   props: {
-    menuList: {
-      type: Array,
+    menuData: {
+      type: Object,
       required: false
     },
-    menuConfig: {}
+    menuConfig: {
+      type:Object,
+    }
   },
   data() {
     return {
@@ -75,11 +77,10 @@ export default {
     },
     activeMenuIndex() {
       //当前激活的菜单，顺序是cookie拿到的、父级传递的、默认的父级没传时使用菜单第一个
-      return this.menuConfig.specialRoute
-        ? ""
-        : Cookies.get("activeMenuIndex") ||
+      return this.menuConfig.specialRoute ? "" :
+            Cookies.get("activeMenuIndex") ||
             this.menuConfig.activeIndex ||
-            this.menuList[0].id + this.menuList[0].routeAddress;
+            this.menuData.childNode[0].id + this.menuData.childNode[0].routeAddress;
     }
   },
   watch: {
