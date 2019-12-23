@@ -1,6 +1,6 @@
 <template>
   <div>
-    <iframe id="myIframe" :src="computedSrc" frameborder="0"  width="100%"></iframe>
+    <iframe id="myIframe" :src="computedSrc" frameborder="0" width="100%"></iframe>
   </div>
 </template>
 <script>
@@ -31,13 +31,14 @@ export default {
       if (this.iframeConfig.src === "digitalPark/defaultPage") {
         return `${window.top.location.host}/#/${this.iframeConfig.src}`;
       }
-      return vibeWebUrl + "/" + this.iframeConfig.src;
+
+      return `${window.top.location.origin}/vibe/${this.iframeConfig.src}`;
     }
   }
 };
 </script>
 <style lang='less' scoped>
-  #myIframe{
-    overflow: auto;
-  }
+#myIframe {
+  overflow: auto;
+}
 </style>
