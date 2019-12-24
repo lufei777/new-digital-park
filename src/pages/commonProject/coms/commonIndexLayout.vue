@@ -44,9 +44,9 @@
         this.routerView = document.querySelector('.router-view');
         const deviceWidth = document.body.clientWidth;
         const deviceHeight = document.body.clientHeight;
-        this.routerViewHeight = Number(deviceHeight) - 110;
-        this.routerView.style.height = this.routerViewHeight + "px";
-        this.content.style.height = this.routerViewHeight + "px";
+        this.routerViewHeight = Number(deviceHeight);
+        this.routerView.style.height = this.routerViewHeight - 110 + "px";
+        this.content.style.height = this.routerViewHeight - 70 + "px";
       }
     },
     mounted(){
@@ -116,11 +116,10 @@
       float: left;
     }
     .content{
-      padding:20px 0;
       margin-top: 70px;
       overflow: hidden;
       .router-view{
-        padding:0 20px;
+        padding:20px;
       }
     }
     .asset-nav-operator-box{
