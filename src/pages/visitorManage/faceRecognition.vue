@@ -6,7 +6,7 @@
       @click="onClickGoBack"
     >
       <span style="color:#008DEA">
-        <i class="iconfont iconshouye"></i>&nbsp;返回园区首页
+        <i class="iconfont iconshouye"></i>&nbsp;返回首页
       </span>
     </span>
     <iframe

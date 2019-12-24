@@ -1,12 +1,12 @@
 <template>
-  <div class="task-overview">
+  <div class="task-overview panel-container">
     <div
       :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
       class="energy-tree-box radius-shadow"
     >
       <Tree :tree-list="taskData" :tree-config="taskTreeConfig"></Tree>
     </div>
-    <div class="right-content">
+    <div class="right-content panel-container">
       <div class="task-sum-box radius-shadow flex-align-between">
         <div class="task-sum flex-align-center">
           <p>今日任务</p>
@@ -30,7 +30,7 @@
         </div>
       </div>
       <CommonSelect />
-      <div class="task-overview-table radius-shadow">
+      <div class="task-overview-table panel">
         <miTable :ref="tableData.ref" :tableConfig="tableData"></miTable>
       </div>
     </div>

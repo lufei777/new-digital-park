@@ -1,5 +1,5 @@
 <template>
-  <div class="expenditure-record">
+  <div class="expenditure-record panel-container">
     <div class="condition-box radius-shadow">
       <miForm
         :ref="formData.ref"
@@ -17,7 +17,7 @@
       </miForm>
     </div>
 
-    <div class="expenditure-record-table radius-shadow">
+    <div class="expenditure-record-table panel">
       <miTable :ref="tableData.ref" :tableConfig="tableData">
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">

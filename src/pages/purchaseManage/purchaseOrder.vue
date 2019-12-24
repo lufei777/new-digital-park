@@ -1,5 +1,5 @@
 <template>
-  <div class="purchase-order">
+  <div class="purchase-order panel-container">
     <div class="condition-box radius-shadow">
       <miForm
         :ref="formData.ref"
@@ -17,7 +17,7 @@
       </miForm>
     </div>
 
-    <div class="purchase-order-table radius-shadow">
+    <div class="purchase-order-table panel">
       <miTable :ref="tableData.ref" :tableConfig="tableData">
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">
