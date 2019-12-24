@@ -21,6 +21,7 @@ import taskManage from './task-manage'                        // 任务管理
 import visitorManage from './visitor-manage'                  // 访客管理
 import ParkingLotManage from './parkinglot-manage'            // 停车场管理
 import contractManage from './contract-manage'                // 合同管理
+import NewsManage from './news-manage'                        // 消息管理
 
 import helloRouter from './hello-router'
 
@@ -33,7 +34,7 @@ let DigitalRouters = flattenDeep(
     CostManage, ReceiveSupportManage,
     PurchaseManage, StockManage,
     visitorManage, ParkingLotManage,
-    taskManage, contractManage
+    taskManage, contractManage, NewsManage
   ]
 );
 
