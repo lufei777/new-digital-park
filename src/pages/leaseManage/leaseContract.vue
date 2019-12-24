@@ -188,7 +188,6 @@ export default {
         pageNum: this.currentPage,
         pageSize: 10,
       });
-      console.log('res',res)
       if (res && res.list) {
         this.leaseContractTable.data = res.list;
         this.leaseContractTable.uiConfig.pagination.total = res.total;

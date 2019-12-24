@@ -169,8 +169,8 @@ export default {
     async tenantList() {
       let labelList = [
         { label: "合同编号", prop: "tenantNumber" },
-        { label: "合同名称", prop: "elecAndWaterSum" },
-        { label: "所租房产", prop: "" },
+        { label: "合同名称", prop: "contractName" },
+        { label: "所租房产", prop: "houseName" },
         { label: "租户名称", prop: "tenantName" },
         { label: "联系方式", prop: "telephone" },
         { label: "签约时间", prop: "" },
