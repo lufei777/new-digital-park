@@ -3,8 +3,8 @@ import DashBoardHomePage from '../pages/digitalPark/home/dashboardNew'
 import ModuleConfigure from '../pages/digitalPark/moduleConfigure/index'
 import Login from '../pages/digitalPark/login/index'
 import HelloWorld from '../pages/helloWorld/helloWorld'
-import Announcement from '../pages/digitalPark/announcement'
-import News from '../pages/digitalPark/news'
+import Announcement from '../pages/digitalPark/carouselLink/announcement'
+import News from '../pages/digitalPark/carouselLink/news'
 export default [{
   path: '/',
   redirect: '/digitalPark/homePage'
