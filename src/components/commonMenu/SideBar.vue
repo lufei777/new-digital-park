@@ -107,6 +107,7 @@ export default {
           firstMenu.childNode.find(second => {
             return second.id == secondPath;
           });
+        //跳转三维
         if (commonFun.loadThreeD(secondMenu)) {
           return;
         }

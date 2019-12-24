@@ -1703,5 +1703,12 @@ class commonFun {
       console.log(error)
     })
   }
+
+  czClient={
+    isClient:true,
+    goToClientPage:function(){
+
+    }
+  }
 }
 export default new commonFun()
