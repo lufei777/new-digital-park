@@ -1,4 +1,4 @@
-import CostManageIndex from '../pages/costManage/index'
+// import CostManageIndex from '../pages/costManage/index'
 import CostDeclare from '../pages/costManage/costDeclare'
 import BudgetManage from '../pages/costManage/budgetManage'
 import InvoiceManage from '../pages/costManage/invoiceManage'
@@ -8,7 +8,7 @@ export default [{
     path: '/',
     redirect: '/costDeclare',
     meta: { title: '费用管理' },
-    component: CostManageIndex,
+    component: () => import('@/pages/commonProject/coms/commonIndex'),
     children: [{
         path: '/costDeclare',
         name: 'CostDeclare',

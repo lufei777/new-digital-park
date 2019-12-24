@@ -1,4 +1,4 @@
-import TaskManageIndex from '../pages/taskManage/index'
+// import TaskManageIndex from '../pages/taskManage/index'
 import TaskOverview from '../pages/taskManage/taskOverview'
 import NewTask from '../pages/taskManage/newTask'
 import WaitTask from '../pages/taskManage/waitTask'
@@ -7,7 +7,7 @@ export default [{
     path: '/',
     redirect: '/warehouseManage',
     meta: { title: '任务管理' },
-    component: TaskManageIndex,
+    component: () => import('@/pages/commonProject/coms/commonIndex'),
     children: [{
         path: '/taskOverview',
         name: 'TaskOverview',
