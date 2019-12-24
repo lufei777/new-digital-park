@@ -1,7 +1,7 @@
 <template>
   <div class="device-analysis panel-container">
     <div class="device-chart-box">
-      <div class="chart-box radius-shadow" style="margin-right:2%">
+      <div class="chart-box radius-shadow" style="margin-right:1%">
         <div ref="myChart" class="my-chart"></div>
       </div>
       <el-dialog :visible.sync="showDialog" width="30%">
@@ -169,7 +169,7 @@ export default {
   // background: @white;
   .chart-box {
     background: @white;
-    width: 49%;
+    width: 49.5%;
     height: 450px;
     // margin:0 auto;
     overflow: hidden;

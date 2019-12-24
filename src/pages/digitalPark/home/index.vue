@@ -80,7 +80,7 @@
         </draggable>
       </div>
     </div>
-    <div class="copyright">版权所有：©2019 京ICP备05080753号 京公网安备11010802013842号</div>
+    <div class="copyright" v-if="copyrightShow">版权所有：©2019 京ICP备05080753号 京公网安备11010802013842号</div>
   </div>
 </template>
 
@@ -120,7 +120,8 @@ export default {
       imgs: [
         {url: require('../../../../static/image/digitalPark/lunbo3.png'), link: '/announcement'},
         {url: require('../../../../static/image/digitalPark/lunbo4.png'), link: '/news'},
-      ]
+      ],
+      copyrightShow:false
     };
   },
   computed: {
@@ -307,6 +308,9 @@ export default {
     this.getMenuTree();
     this.getProductList();
     this.getModulesByType();
+    setTimeout(() => {
+      this.copyrightShow = true
+    }, 2000);
   }
 };
 </script>
