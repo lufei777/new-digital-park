@@ -244,6 +244,10 @@ class CommonApi {
   @url("/vibe-web/dept/deptEdit")
   @get
   editDept(){}
+
+  @url("/vibe-web/energyCount/energy/energy_speceExcle")
+  @get
+  exportZoomReport(){}
 }
 
 export default new CommonApi()

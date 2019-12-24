@@ -69,8 +69,8 @@
       async onClickLoginBtn(){
         this.loading=true
         let params={
-          username:this.name,
-          password:this.pwd
+          username:this.name.trim(),
+          password:this.pwd.trim()
         }
         let res  = await DigitalPark.login(params).catch(err => {
           this.loading=false;

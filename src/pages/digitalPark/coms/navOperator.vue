@@ -154,12 +154,8 @@ export default {
         );
       } else {
         let menuTree = JSON.parse(localStorage.getItem("menuTree"));
-        let firstLevelTree = menuTree[0].childNode.find(
-          item => item.name == "基础功能"
-        );
-        let secondLevelTree = firstLevelTree.childNode.find(
-          item => item.name == "系统管理"
-        );
+        let firstLevelTree = menuTree[0].childNode.find(item => item.name == "基础功能");
+        let secondLevelTree = firstLevelTree.childNode.find(item => item.name == "系统管理");
         localStorage.setItem("menuList", JSON.stringify(secondLevelTree));
         let thirdLevelTree = secondLevelTree.childNode.find(
           item => item.name == "个人中心"

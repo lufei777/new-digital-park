@@ -1,18 +1,18 @@
 <template>
   <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
     <div class="common-menu">
-      <div v-show="!menuConfig.isCollapse" class="title flex-align" v-if="!menuConfig.specialRoute">
-        <i :class="['iconfont',menuConfig.moduleLogo]"></i>
-        <span>&nbsp;&nbsp;{{menuConfig.moduleName}}</span>
+      <div v-show="!menuConfig.isCollapse && !menuConfig.specialRoute" class="title flex-align">
+        <i :class="['iconfont',menuData.icon]"></i>
+        <span>&nbsp;&nbsp;{{menuData.name}}</span>
       </div>
       <el-tooltip
         v-show="menuConfig.isCollapse"
         effect="dark"
-        :content="menuConfig.moduleName"
+        :content="menuData.icon"
         placement="right-start"
       >
         <div class="title">
-          <i :class="['iconfont',menuConfig.moduleLogo ,'hover-pointer']"></i>
+          <i :class="['iconfont',menuData.icon ,'hover-pointer']"></i>
         </div>
       </el-tooltip>
       <el-menu
@@ -29,11 +29,11 @@
         @close="handleClose"
       >
         <sidebar-item
-          v-for="menu in menuList"
+          v-for="menu in menuData.childNode"
           :key="menu.id"
           :item="menu"
           :specialRoute="menuConfig.specialRoute"
-          :menuList="menuList"
+          :menuList="menuData.childNode"
         />
       </el-menu>
       <div v-if="!menuConfig.specialRoute && temporarilyHidden">
@@ -56,11 +56,13 @@ export default {
   name: "Sidebar",
   components: { SidebarItem },
   props: {
-    menuList: {
-      type: Array,
+    menuData: {
+      type: Object,
       required: false
     },
-    menuConfig: {}
+    menuConfig: {
+      type:Object,
+    }
   },
   data() {
     return {
@@ -75,11 +77,10 @@ export default {
     },
     activeMenuIndex() {
       //当前激活的菜单，顺序是cookie拿到的、父级传递的、默认的父级没传时使用菜单第一个
-      return this.menuConfig.specialRoute
-        ? ""
+      return this.menuConfig.specialRoute ? ""
         : Cookies.get("activeMenuIndex") ||
             this.menuConfig.activeIndex ||
-            this.menuList[0].id + this.menuList[0].routeAddress;
+            this.menuData.childNode[0].id + this.menuData.childNode[0].routeAddress;
     }
   },
   watch: {
@@ -92,18 +93,24 @@ export default {
   methods: {
     handleSelect(key, keyPath) {
       if (this.menuConfig.specialRoute) {
-        let firstMenu = this.menuList.find(first => {
+        //找到第一层，例如无忧服务
+        let firstMenu = this.menuData.childNode.find(first => {
           return first.id == keyPath[0];
         });
         let secondPath = keyPath[1].split("/")[0];
         if (secondPath.indexOf("@") != -1) {
           secondPath = secondPath.split("@")[0];
         }
+        //找到第一层，例如能源管理
         let secondMenu =
           firstMenu.childNode.length &&
           firstMenu.childNode.find(second => {
             return second.id == secondPath;
           });
+        //跳转三维
+        if (commonFun.loadThreeD(secondMenu)) {
+          return;
+        }
         localStorage.setItem("menuList", JSON.stringify(secondMenu));
         let tmpArr = key.split("/");
         tmpArr.shift();
@@ -153,7 +160,6 @@ export default {
 </script>
 <style lang="less">
 .common-menu {
-  overflow: hidden;
   .el-menu-item,
   .el-submenu .el-submenu__title {
     font-size: 18px;

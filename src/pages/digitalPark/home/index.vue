@@ -9,16 +9,16 @@
           </h3>
         </div>
         <!--<el-input class="search-input">-->
-          <!--<el-button-->
-            <!--slot="append"-->
-            <!--icon="el-icon-search"-->
-            <!--class="search-icon"-->
-          <!--&gt;{{$t('homeHeader.searchText')}}</el-button>-->
+        <!--<el-button-->
+        <!--slot="append"-->
+        <!--icon="el-icon-search"-->
+        <!--class="search-icon"-->
+        <!--&gt;{{$t('homeHeader.searchText')}}</el-button>-->
         <!--</el-input>-->
         <NavOperator :moduleType.sync="moduleType" />
       </div>
       <div class="sidebar-container">
-        <Sidebar :menuList="menuList" :menuConfig="menuConfig" />
+        <Sidebar :menu-data="menuData" :menuConfig="menuConfig" />
       </div>
     </div>
 
@@ -107,7 +107,7 @@ export default {
       productList: [],
       showMoreProduct: false,
       modelValue: "1",
-      menuList: [],
+      menuData:{},
       userProModuleList: [],
       moduleType: "2",
       loading: true,
@@ -116,7 +116,6 @@ export default {
         bgColor: "#fff",
         textColor: "#606266",
         specialRoute: true
-        // activeTextColor:'red'
       },
       imgs: [
         {url: require('../../../../static/image/digitalPark/lunbo3.png'), link: '/announcement'},
@@ -153,23 +152,13 @@ export default {
       localStorage.setItem("menuList", JSON.stringify(item));
       // 192.168.1.69：9002/html
       let routeAddress = item.routeAddress;
-      if (
-        item.name == "安防管理" ||
-        item.name == "机房动环" ||
-        item.name == "智能建筑" ||
-        item.name == "建筑监控" ||
-        item.name == "消防管理"
-      ) {
-        let clientName = item.name;
-        if (item.name === "安防管理") {
-          clientName = "综合安防";
-        }
-        //目前先写死
-        Client.SkipToSigleBuild(clientName);
-        // window.goToClientPage && window.goToClientPage(item)
+      // 跳转三维
+      if (CommonFun.loadThreeD(item)) {
         return;
       }
+      // 跳转路由
       if (routeAddress) {
+
         // 如果带有@字符，则跳转旧项目
         if (routeAddress.indexOf("@") != -1) {
           CommonFun.loadOldPage(item);
@@ -190,14 +179,16 @@ export default {
         language: Cookies.get("lang")
       });
       this.title=res[0].name
-      this.menuList = res[0].childNode;
+      this.menuData = res[0];
       localStorage.setItem('menuTree',JSON.stringify(res))
     },
     getItemBg(item) {
       return {
         backgroundImage:
           "url(" +
-          require("../../../../static/image/digitalPark/" + item.productBgUrl + ".png") +
+          require("../../../../static/image/digitalPark/" +
+            item.productBgUrl +
+            ".png") +
           ")"
       };
     },
@@ -393,7 +384,8 @@ export default {
     background: @white;
   }
   .home-center {
-    width: 1500px;
+    /*width: 1500px;*/
+    width:78%;
     margin: 0 auto;
   }
   .item-module {
@@ -441,7 +433,7 @@ export default {
   .product-module {
     margin-top: 20px;
   }
-  .park-logo{
+  .park-logo {
     font-size: 30px;
     margin-right: 5px;
   }
@@ -488,7 +480,7 @@ export default {
     line-height: 30px;
     font-size: 14px;
     text-align: center;
-    background:rgb(96, 98, 102);
+    background: rgb(96, 98, 102);
     color: #ccc;
   }
 }

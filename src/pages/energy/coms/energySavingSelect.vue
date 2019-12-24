@@ -59,6 +59,7 @@ import EnergyApi from "../../../service/api/energyApi";
 import Table from "../../../components/Table/index";
 import TreeModal from '../../../components/treeModal/index'
 import moment from "moment";
+import CommonFun from '../../../utils/commonFun'
 let activeNav;
 export default {
   name: "EnergySavingSelect",
@@ -211,16 +212,19 @@ export default {
     },
     async exportList() {
       let url;
-      if (this.energySaveFlag == 1 || this.energySaveFlag == 3) {
-        url = `/vibe-web/energyCount/energy/elec/export?`;
-      } else if (this.energySaveFlag == 2 || this.energySaveFlag == 4) {
-        url = `/vibe-web/energyCount/energy/night/export?`;
-      }
       let params = "";
       for (let key in this.commonParams) {
         params += key + "=" + this.commonParams[key] + "&";
       }
-      location.href = url + params;
+      if (this.energySaveFlag == 1 || this.energySaveFlag == 3) {
+        url = `/vibe-web/energyCount/energy/elec/export`;
+      } else if (this.energySaveFlag == 2 || this.energySaveFlag == 4) {
+        url = `/vibe-web/energyCount/energy/night/export`;
+      }
+      CommonFun.exportMethod({
+        url,
+        params
+      },this)
     },
     onShowModal(){
         this.treeModalConfig.showModal=true
