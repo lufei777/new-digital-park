@@ -182,7 +182,6 @@ export default {
         });
         let columnConfig=[]
           for(let key in tmp[0]){
-            console.log('hahhah',Object.keys(tmp[0]).length)
             let widthSet
             if(Object.keys(tmp[0]).length>14) {
               widthSet = 110
