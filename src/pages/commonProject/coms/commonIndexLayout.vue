@@ -116,7 +116,7 @@
       float: left;
     }
     .content{
-      padding:20px 0;
+      padding:20px;
       margin-top: 70px;
       overflow: hidden;
       /* .router-view{
