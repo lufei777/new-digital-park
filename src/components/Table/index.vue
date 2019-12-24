@@ -3,7 +3,7 @@
     <div
       v-if="tableConfig.customTop"
       ref="customTop"
-      :style="{textAlign:tableConfig.customTopPosition||'left',height:'auto',padding:'0 20px 20px'}"
+      :style="{textAlign:tableConfig.customTopPosition || 'left',height:'auto',padding:'0 20px 20px'}"
     >
       <slot
         :name="topSlotName"
@@ -18,17 +18,17 @@
     <!-- stripe 
     border-->
     <el-table
+      highlight-current-row
+      header-row-class-name="el-table-header"
+      cell-class-name="el-table-cell"
       ref="dataBaseTable"
       row-key="id"
       :row-style="{height:'50px'}"
       :cell-style="{padding:'0px'}"
       :header-cell-style="{padding:'0px',height:'50px'}"
-      highlight-current-row
-      header-row-class-name="el-table-header"
-      cell-class-name="el-table-cell"
       :key="key"
       :data="tableShowData"
-      v-loading="loading || false"
+      :loading="loading || false"
       :height="tableHeight"
       :size="uiConfig.size"
       @row-click="rowClick"
@@ -39,15 +39,21 @@
       @select="select"
     >
       <!-- 多选 -->
-      <el-table-column fixed="left" v-if="uiConfig.selection" type="selection" width="37"></el-table-column>
+      <el-table-column
+        fixed="left"
+        type="selection"
+        width="37"
+        v-if="uiConfig.selection"
+        :selectable="_selectable"
+      ></el-table-column>
 
       <!-- 索引 -->
       <el-table-column
         fixed="left"
-        v-if="uiConfig.showIndex"
         type="index"
+        v-if="uiConfig.showIndex"
         :index="uiConfig.showIndex.handler"
-        :width="uiConfig.showIndex.width || 55"
+        :width="uiConfig.showIndex.width || 50"
       >
         <template slot="header">{{uiConfig.showIndex.label || "序号"}}</template>
       </el-table-column>
@@ -66,7 +72,13 @@
           :align="col.align || 'left'"
           show-overflow-tooltip
         >
+          <!-- 列标题slot -->
+          <template v-if="col.headerSlot" slot="header">
+            <slot :name="`${col.prop}Header`" :column="col"></slot>
+          </template>
           <template slot-scope="scopeRow">
+            <!-- 列内容slot -->
+            <slot v-if="col.slot" :name="col.prop" :scopeRow="scopeRow"></slot>
             <!-- <el-input
               class="edit-row-input"
               size="small"
@@ -74,7 +86,7 @@
               placeholder="请输入内容"
               @change="_handleRowEdit(scopeRow)"
             ></el-input>-->
-            <span v-html="_columnFormatter(scopeRow,col)"></span>
+            <span v-else v-html="_columnFormatter(scopeRow,col)"></span>
           </template>
         </el-table-column>
       </template>
@@ -94,6 +106,7 @@
         </template>
         <!-- 按钮 -->
         <template slot-scope="scopeRow">
+          <!-- 操作列的slot -->
           <slot v-if="tableConfig.operation" :name="operationSlotName" :scopeRow="scopeRow"></slot>
           <template v-for="btn in btnConfig.btns">
             <!-- 基础模式，如删除，编辑。参数为scopeRow -->
@@ -122,8 +135,9 @@
     </el-table>
 
     <!-- 分页 -->
-    <div ref="tablePagination" v-if="uiConfig.pagination" class="table-pagination">
+    <div :ref="paginationSlotName" v-if="uiConfig.pagination" class="table-pagination">
       <pagination
+        :key="`${tableConfig.ref}_pagination`"
         :paginationConfig="uiConfig.pagination"
         :currentPage="paginationObj.currentPage"
         :pageSize="paginationObj.pageSize"
@@ -220,6 +234,7 @@ export default {
     return {
       topSlotName: "custom-top",
       operationSlotName: "operation",
+      paginationSlotName: "tablePagination",
       selectedData: [], //表格当前多选数据
       allData: [], //保存数组原始数据，用来复原数据
       tableData: [], //表格传入数据，用作分页使用
@@ -447,14 +462,14 @@ export default {
     },
     // 全局初始化
     _globalColumnFormatter(row, column) {
-      if (typeof row[column.property] === "string") {
-        return row[column.property].trim().length === 0
-          ? "--"
-          : row[column.property];
-      } else if (row[column.property] === null) {
+      let value = row[column.property];
+      if (typeof value === "string" && value.trim().length === 0) {
         return "--";
       }
-      return row[column.property];
+      if (!value) {
+        return "--";
+      }
+      return value;
     },
     //set
     _setCurrentRowData(row) {

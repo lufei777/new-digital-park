@@ -18,11 +18,11 @@
       </div>
       <div class="content">
         <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
-          <div class="router-view">
+          <!-- <div class="router-view"> -->
             <transition name="fade-transform" mode="out-in" appear>
               <slot name="content"></slot>
             </transition>
-          </div>
+          <!-- </div> -->
         </el-scrollbar>
       </div>
     </div>
@@ -41,16 +41,17 @@
       },
       computedHeight(){
         this.content = document.querySelector('.content');
-        this.routerView = document.querySelector('.router-view');
+        // this.routerView = document.querySelector('.router-view');
         const deviceWidth = document.body.clientWidth;
         const deviceHeight = document.body.clientHeight;
         this.routerViewHeight = Number(deviceHeight) - 110;
-        this.routerView.style.height = this.routerViewHeight + "px";
+        // this.routerView.style.height = this.routerViewHeight + "px";
         this.content.style.height = this.routerViewHeight + "px";
       }
     },
     mounted(){
       this.computedHeight();
+      window.addEventListener('resize', this.computedHeight);
     }
   }
 </script>
@@ -118,9 +119,9 @@
       padding:20px;
       margin-top: 70px;
       overflow: hidden;
-      .router-view{
+      /* .router-view{
         
-      }
+      } */
     }
     .asset-nav-operator-box{
       /*flex-grow: 1;*/
