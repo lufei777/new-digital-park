@@ -119,14 +119,7 @@
       margin-top: 70px;
       overflow: hidden;
       .router-view{
-        .panel-container{
-          height: 100%;
-          display: flex;
-          flex-direction: column;
-          .panel:last-child{
-            flex-grow: 1;
-          }
-        }
+        
       }
     }
     .asset-nav-operator-box{

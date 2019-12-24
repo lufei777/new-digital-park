@@ -7,7 +7,7 @@
       <i>|</i>
     </span>
     <span class="nav-right-item">
-      <span style="color:#ED6C01">{{$t('homeHeader.news')}}</span>
+      <span @click="loadNews" style="color:#ED6C01">{{$t('homeHeader.news')}}</span>
       <i>|</i>
     </span>
     <!--<span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoback">-->
@@ -177,7 +177,7 @@ export default {
             `${thirdLevelTree.childNode[1].id}/modifyPassword`
           );
         }
-        this.setupValue = '0';
+        this.setupValue = "0";
       }
     },
     onClickGoBack() {
@@ -192,6 +192,10 @@ export default {
       this.userInfo = await DigitalParkApi.getUserInfo();
       localStorage.setItem("userInfo", JSON.stringify(this.userInfo));
       this.$store.commit("digitalPark/updateUserInfo", false);
+    },
+    loadNews() {
+      // loadNews TODO
+      this.$router.push({ name: "warningAlarmList" });
     }
   },
   mounted() {
