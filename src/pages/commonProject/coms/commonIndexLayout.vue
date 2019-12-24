@@ -115,10 +115,11 @@
       float: left;
     }
     .content{
-      padding:20px;
+      padding:20px 0;
       margin-top: 70px;
       overflow: hidden;
       .router-view{
+        padding:0 20px;
         .panel-container{
           height: 100%;
           display: flex;

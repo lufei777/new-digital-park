@@ -26,7 +26,7 @@ export default {
       // 从路由中获取matched
       this.$route.matched.forEach((route, index) => {
         if (route.meta.title) {
-          if ((route.path = "/digitalPark/defaultPage")) hasDefaultPage = true;
+          if ((route.path == "/digitalPark/defaultPage")) hasDefaultPage = true;
           this.breadcrumb.push({
             title: route.meta.title,
             redirect: route.redirect,
