@@ -1,14 +1,14 @@
 <template>
-  <div class="wait-task">
+  <div class="wait-task panel-container">
     <div
       :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
       class="energy-tree-box radius-shadow"
     >
       <Tree :tree-list="taskData" :tree-config="taskTreeConfig"></Tree>
     </div>
-    <div class="right-content">
+    <div class="right-content panel-container">
       <CommonSelect />
-      <div class="wait-task-table radius-shadow">
+      <div class="wait-task-table panel">
         <div class="operator-box flex-row-reverse">
             <el-button type="primary">刷新</el-button>
             <el-button type="primary">删除</el-button>

@@ -1,5 +1,5 @@
 <template>
-  <div class="lease-contract">
+  <div class="lease-contract panel-container">
     <div class="condition-box radius-shadow">
       <miForm
         :ref="leaseContractForm.ref"
@@ -17,7 +17,7 @@
       </miForm>
     </div>
 
-    <div class="lease-contract-table radius-shadow">
+    <div class="lease-contract-table panel">
       <miTable :ref="leaseContractTable.ref" :tableConfig="leaseContractTable">
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">
