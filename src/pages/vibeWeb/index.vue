@@ -32,7 +32,7 @@ export default {
     let _this = this;
     let menuList = JSON.parse(localStorage.getItem("menuList"));
     let show_menu = localStorage.getItem("show_menu");
-
+    console.log(menuList.childNode);
     return {
       iframeConfig: {
         src: show_menu.split("@")[1]
