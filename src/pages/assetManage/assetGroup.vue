@@ -6,6 +6,7 @@
                   :delNodeCallback="deleteAssetGroup"
                   :editCallback="updateAssetGroup"
                   />
+
     </div>
   </div>
 </template>
@@ -90,12 +91,14 @@
 <style lang="less">
   .asset-group{
     height: 100%;
-    padding:20px;
+    /*padding:20px;*/
+    background: url("../../../static/image/digitalPark/asset_type_bg.png");
     .left-group-tree{
-      margin: 0 auto;
-      width:25%;
-      color:@white;
+      /*margin: 0 auto;*/
       padding:20px 0;
+      width:350px;
+      color:@white;
+      margin:40px;
       height:600px;
     }
   }

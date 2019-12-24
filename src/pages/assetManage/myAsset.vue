@@ -1,6 +1,6 @@
 <template>
-  <div class="my-asset">
-    <div class="condition-box radius-shadow">
+  <div class="my-asset panel-container">
+    <div class="condition-box radius-shadow ">
       <miForm
         :ref="formData.ref"
         :options="formData"
@@ -17,7 +17,7 @@
       </miForm>
     </div>
 
-    <div class="my-asset-table radius-shadow">
+    <div class="my-asset-table radius-shadow panel">
       <miTable :ref="tableData.ref" :tableConfig="tableData">
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">

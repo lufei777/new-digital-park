@@ -193,6 +193,10 @@
       }
     },
     created(){
+      this.$store.dispatch("analysis/setDefaultNode");
+    },
+    beforeDestroy(){
+      this.$store.dispatch("analysis/resetStates"); //重置vuex
     },
     mounted(){
       setTimeout(()=>this.getCorrelationData(),500)

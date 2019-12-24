@@ -1,5 +1,5 @@
 <template>
-  <div class="personal-information radius-shadow">
+  <div class="personal-information radius-shadow panel-container">
     <div class="form-box">
       <miForm :ref="formData.ref" :options="formData" v-model="formModel" @submit="submit">
         <template slot="menuBtn" slot-scope="scope">
