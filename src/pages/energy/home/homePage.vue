@@ -443,10 +443,7 @@ export default {
 
 <style lang="less">
 .home-page {
-  // margin-top: 50px;
-  padding: 0 20px;
   background: rgb(242, 242, 242);
-  // overflow: hidden;
   .tip {
     margin: 20px 0;
     .icon {

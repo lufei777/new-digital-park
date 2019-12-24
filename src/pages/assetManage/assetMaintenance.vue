@@ -1,5 +1,5 @@
 <template>
-  <div class="asset-maintenance" v-loading="loading">
+  <div class="asset-maintenance panel-container" v-loading="loading">
     <div class="choose-box flex-align">
       <div class="block flex-align-center">
         <span>编号</span>
@@ -16,7 +16,7 @@
       <el-button type="primary" @click="onClickSearchBtn">搜索</el-button>
       <el-button  @click="onClickResetBtn">重置</el-button>
     </div>
-    <div class="asset-table">
+    <div class="asset-table panel">
       <div class="operator-box">
         <el-button type="primary" @click="onClickImportExcel">批量导入</el-button>
         <el-button type="primary" @click="onMultiDel">批量删除</el-button>
