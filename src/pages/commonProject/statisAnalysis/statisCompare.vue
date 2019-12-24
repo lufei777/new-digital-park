@@ -122,15 +122,13 @@
       }
     },
     created(){
+      this.$store.dispatch("analysis/setDefaultNode");
     },
     mounted(){
       setTimeout(()=>this.getStatisCompareData(),500)
     },
     beforeDestroy(){
-      let obj = echarts.getInstanceByDom(this.$refs.myChart1)
-      if (obj) {
-        echarts.dispose(obj)
-      }
+      this.$store.dispatch("analysis/resetStates"); //重置vuex
     }
   }
 </script>

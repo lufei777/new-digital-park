@@ -46,7 +46,7 @@
         const deviceHeight = document.body.clientHeight;
         this.routerViewHeight = Number(deviceHeight) - 110;
         this.routerView.style.height = this.routerViewHeight + "px";
-        this.content.style.height = this.routerViewHeight + "px";
+        this.content.style.height =this.routerViewHeight + "px";
       }
     },
     mounted(){
@@ -115,11 +115,20 @@
       float: left;
     }
     .content{
-      padding:20px;
+      padding:20px 0;
       margin-top: 70px;
       overflow: hidden;
       .router-view{
-        
+        margin:0 20px;
+        box-sizing: border-box;
+        .panel-container{
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          .panel:nth-last-child{
+            flex-grow: 1;
+          }
+        }
       }
     }
     .asset-nav-operator-box{

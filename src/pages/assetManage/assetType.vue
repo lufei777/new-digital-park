@@ -9,14 +9,13 @@
                     :defaultExpandedKey="defaultExpandedKey"
         />
     </div>
-    <div class="right-content">
-      <div class="table-box radius-shadow">
+    <div class="right-content panel-container">
+      <div class="table-box radius-shadow panel">
         <div class="type-operator-box">
           <el-button type="primary" @click="onClickMultiDelBtn">批量删除</el-button>
           <el-button type="primary" @click="onAddTypeAttr">新建</el-button>
         </div>
         <Table :ref='tableConfig.ref' :table-config="tableConfig">
-
         </Table>
       </div>
 
@@ -190,6 +189,7 @@
     .type-operator-box{
       display: flex;
       flex-direction: row-reverse;
+      margin-bottom: 20px;
       .el-button{
         margin-left: 20px;
       }

@@ -1,5 +1,5 @@
 <template>
-  <div class="add-asset radius-shadow">
+  <div class="add-asset radius-shadow panel-container">
       <el-form ref="assetAddForm" :rules="rules" :model="assetAddForm" :inline="true"
                label-position="right" label-width="120px">
         <el-col>
@@ -87,9 +87,9 @@
              @click="onClickDelCustomBtn(index)"></i>
         </el-col>
         <el-col>
-          <div class="operator-box">
-            <el-button @click="goBack" class="go-back">取消</el-button>
+          <div class="operator-box flex-align-center">
             <el-button type="primary" @click="submitForm('assetAddForm')">确定</el-button>
+            <el-button @click="goBack" class="go-back">取消</el-button>
           </div>
         </el-col>
       </el-form>
@@ -410,20 +410,19 @@
 
 <style lang="less">
   .add-asset{
-    margin:90px 20px 20px 20px !important;
-    padding-bottom:20px;
+    /*padding:20px;*/
     overflow: auto;
     background: @white;
     .el-form{
       width:60%;
-      margin:0 auto;
+      margin:20px auto;
     }
     .form-inner-tip{
       padding:10px 0;
       font-weight: bold;
     }
     .go-back{
-      margin-left:30%;
+      margin-left: 20px;
     }
     .el-col-my{
       width:42%;
