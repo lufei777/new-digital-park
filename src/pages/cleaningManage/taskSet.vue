@@ -1,5 +1,5 @@
 <template>
-  <div class="task-set">
+  <div class="task-set panel-container">
     <div class="condition-box radius-shadow">
       <miForm
         :ref="formData.ref"
@@ -17,7 +17,7 @@
       </miForm>
     </div>
 
-    <div class="task-set-table radius-shadow">
+    <div class="task-set-table panel">
       <miTable :ref="tableData.ref" :tableConfig="tableData">
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">

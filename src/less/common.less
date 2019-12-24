@@ -34,17 +34,28 @@
   }
 }
 
+.panel-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .panel {
   .radius-shadow;
   box-sizing: border-box;
   padding: 20px;
   margin-bottom: 20px;
   background-color: @white;
-
-  &:last-child {
-    margin-bottom: 0px;
-  }
 }
+
+.panel:last-child {
+  margin-bottom: 0px;
+  flex-grow: 1;
+}
+
+/* div.panel + div.panel {
+  flex-grow: 1;
+} */
 
 .no-border {
   border: none;

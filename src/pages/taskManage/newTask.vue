@@ -1,6 +1,6 @@
 <template>
-  <div class="new-task">
-    <div class="condition-box radius-shadow">
+  <div class="new-task panel-container">
+    <div class="condition-box panel">
       <div class="new-task-box">
         <miForm
           :ref="newTaskForm.ref"

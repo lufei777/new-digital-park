@@ -4,7 +4,7 @@ const Message = require("element-ui").Message
 
 var config = {
   // baseURL:"",
-  timeout: 30000
+  timeout: 100000
 };
 var axios = axiosOrigin.create(config);
 

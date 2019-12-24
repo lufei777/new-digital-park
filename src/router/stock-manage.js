@@ -1,4 +1,4 @@
-import StockManageIndex from '../pages/stockManage/index'
+// import StockManageIndex from '../pages/stockManage/index'
 import StockInApply from '../pages/stockManage/stockIn/stockInApply'
 import StockInCheck from '../pages/stockManage/stockIn/stockInCheck'
 import StockOut from '../pages/stockManage/stockOut/index'
@@ -8,7 +8,7 @@ export default [{
     path: '/',
     redirect: '/stockInApply',
     meta: { title: '库存管理' },
-    component:StockManageIndex,
+    component: () => import('@/pages/commonProject/coms/commonIndex'),
     children: [{
         path: '/stockInApply',
         name: 'StockInApply',

@@ -1,4 +1,4 @@
-import AssetManage from '../../pages/assetManage/index'
+// import AssetManage from '../../pages/assetManage/index'
 import AssetMaintenance from '../../pages/assetManage/assetMaintenance'
 import AssetGroup from '../../pages/assetManage/assetGroup'
 import AssetType from '../../pages/assetManage/assetType'
@@ -11,7 +11,7 @@ export default [{
   path: '/assetManage',
   name: 'AssetManage',
   meta: { title: "资产信息" },
-  component: AssetManage,
+  component: () => import('@/pages/commonProject/coms/commonIndex'),
   redirect: '/assetMaintenance',
   children: [{
     path: '/assetMaintenance',
@@ -33,21 +33,21 @@ export default [{
     name: 'AssetAdd',
     meta: { title: "资产编辑" },
     component: AssetAdd,
-  },{
+  }, {
     path: '/assetLedger',
     name: 'AssetLedger',
     component: AssetLedger,
     meta: { title: "资产台账" },
-  },{
+  }, {
     path: '/myAsset',
     name: 'MyAsset',
     component: MyAsset,
     meta: { title: "我的资产" },
-  },{
+  }, {
     path: '/digitalPark/defaultPage',
     name: 'DefaultPage',
     component: DefaultPage,
     meta: { title: "建设中" },
   }]
- 
+
 }]
