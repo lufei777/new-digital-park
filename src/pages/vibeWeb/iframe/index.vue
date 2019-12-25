@@ -31,8 +31,8 @@ export default {
       if (this.iframeConfig.src === "digitalPark/defaultPage") {
         return `${window.top.location.host}/#/${this.iframeConfig.src}`;
       }
-//${window.top.location.origin}
-      return `http://localhost:8090/vibe${this.iframeConfig.src}`;
+
+      return `${window.top.location.origin}/vibe${this.iframeConfig.src}`;
     }
   }
 };

@@ -58,7 +58,7 @@ export default {
           }
         ],
         uiConfig: {
-          height: "auto"
+          height: "280px"
         }
       }
     };
