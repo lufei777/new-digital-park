@@ -1,20 +1,18 @@
 <template>
-  <div class="news-manage common-index-panel">
-    <commonIndexLayout :menuConfig="menuConfig" @onclickcollapsebtn="onClickCollapseBtn">
-      <template slot="menuList">
-        <Sidebar :menuData="menuData" :menuConfig="menuConfig" />
-      </template>
-      <template slot="breadCrumb">
-        <BreadCrumb></BreadCrumb>
-      </template>
-      <template slot="navOperator" slot-scope="obj">
-        <NavOperator :style="obj.style" class="asset-nav-operator" :showGoback="true" />
-      </template>
-      <template slot="content">
-        <router-view></router-view>
-      </template>
-    </commonIndexLayout>
-  </div>
+  <commonIndexLayout :menuConfig="menuConfig" @onclickcollapsebtn="onClickCollapseBtn">
+    <template slot="menuList">
+      <Sidebar :menuData="menuData" :menuConfig="menuConfig" />
+    </template>
+    <template slot="breadCrumb">
+      <BreadCrumb></BreadCrumb>
+    </template>
+    <template slot="navOperator" slot-scope="obj">
+      <NavOperator :style="obj.style" class="asset-nav-operator" :showGoback="true" />
+    </template>
+    <template slot="content">
+      <router-view></router-view>
+    </template>
+  </commonIndexLayout>
 </template>
 
 <script>
@@ -44,7 +42,7 @@ export default {
     NavOperator
   },
   data() {
-    let localStorageMenuData = menuData //JSON.parse(localStorage.menuList);
+    let localStorageMenuData = menuData; //JSON.parse(localStorage.menuList);
     return {
       menuData: localStorageMenuData,
       menuConfig: {
