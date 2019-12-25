@@ -470,7 +470,7 @@ const space = [
   }
 ];
 
-import { LeaseManageDic } from "@/utils/dic/leaseManage";
+import { LeaseManageDic } from "@/utils/dictionary";
 import miForm from "@/components/Form";
 import leaseManageApi from "@/service/api/leaseManageApi";
 import commonApi from "@/service/api/commonApi";
