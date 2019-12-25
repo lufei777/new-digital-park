@@ -147,7 +147,7 @@ export default {
               let res = _.find(HouseStatus, (cur, key, obj) => {
                 return cur.value === rowValue;
               });
-              return res ? res.label : "";
+              return res ? res.label : "--";
             }
           },
           {
@@ -165,7 +165,7 @@ export default {
               }
               return row[column.property]
                 ? `${row[column.property]} ${pirceTypeLabel}`
-                : "";
+                : "--";
             }
           },
           {
