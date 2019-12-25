@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="content">
-        <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
+        <el-scrollbar wrap-class="scrollbar-wrapper" :native="true">
           <div class="router-view">
             <transition name="fade-transform" mode="out-in" appear>
               <slot name="content"></slot>
@@ -59,7 +59,7 @@ export default {
       const deviceHeight = document.body.clientHeight;
       this.routerViewHeight = Number(deviceHeight);
       this.routerView.style.height = this.routerViewHeight - 110 + "px";
-      this.content.style.height = this.routerViewHeight - 70 + "px";
+      this.content.style.height = this.routerViewHeight - 110 + "px";
     }
   },
   mounted() {
@@ -133,10 +133,11 @@ export default {
     float: left;
   }
   .content {
+    padding: 20px 0;
     margin-top: 70px;
     overflow: hidden;
     .router-view {
-      padding: 20px;
+      padding: 0 20px;
     }
   }
   .asset-nav-operator-box {

@@ -88,7 +88,20 @@ export default {
       tableConfig: {
         ref: "tableRef",
         data: [],
-        columnConfig: [],
+        columnConfig: [
+          {
+            label:'建筑楼层',
+            prop:'tempProp1'
+          },
+          {
+            label:'参考指标',
+            prop:'tempProp2'
+          },
+          {
+            label:'各时间指标',
+            prop:'tempProp3'
+          }
+        ],
         uiConfig: {
           height: "auto", //"", //高度
           pagination: {
@@ -127,9 +140,9 @@ export default {
         return item.id == this.energySubentry;
       });
       if (this.energySaveFlag == 1) {
-        return `${this.startTime}逐日全天${tmp && tmp.name}统计`;
+        return `${this.startTime || moment(new Date(),'YYYY-MM')}逐日全天${tmp ? tmp.name : '设备用量'}统计`;
       } else {
-        return `${this.startTime}逐日夜间${tmp && tmp.name}统计`;
+        return `${this.startTime || moment(new Date(),'YYYY-MM')}逐日夜间${tmp ? tmp.name : '设备用量'}统计`;
       }
     },
     commonParams() {
@@ -242,7 +255,7 @@ export default {
       this.getList();
     }
   },
-  async mounted() {
+  async created() {
     await this.getEnergyList();
     await this.getAllFloorOfA3();
     this.getList();
