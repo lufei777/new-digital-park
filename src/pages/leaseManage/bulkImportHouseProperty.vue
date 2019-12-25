@@ -70,7 +70,7 @@
 <script>
 import importFrom from "@/components/Form";
 import importTable from "@/components/Table";
-import { LeaseManageDic } from "@/utils/dic/leaseManage";
+import { LeaseManageDic } from "@/utils/dictionary";
 
 export default {
   components: {

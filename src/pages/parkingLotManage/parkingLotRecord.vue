@@ -30,7 +30,6 @@
   </div>
 </template>
 <script>
-import { LeaseManageDic } from "@/utils/dic/leaseManage";
 import miForm from "@/components/Form";
 import miTable from "@/components/Table";
 import leaseManageApi from "@/service/api/leaseManageApi";
