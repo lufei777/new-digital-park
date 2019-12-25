@@ -70,6 +70,11 @@ const i18n = new VueI18n({
 import _ from 'lodash';
 Vue.prototype._ = _;
 
+//默认返回瀑布流首页
+if(!Cookies.get('moduleType')){
+  Cookies.set('moduleType', 2)
+}
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

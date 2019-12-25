@@ -46,15 +46,6 @@
         </el-dropdown-menu>
       </el-dropdown>
     </span>
-    <!--<span class="nav-right-item user-config" :class="moduleType==1?'dashboard-nav':''">-->
-    <!--<el-select v-model="userValue" placeholder="" @change="onClickUserConfigure">-->
-    <!--<el-option :label="userInfo.fullName" value="0" hidden></el-option>-->
-    <!--<el-option :label="$t('homeHeader.personalCenter')" value="1"></el-option>-->
-    <!--<el-option :label="$t('homeHeader.changePassword')" value="2"></el-option>-->
-    <!--<el-option :label="$t('homeHeader.signOut')" value="3"></el-option>-->
-    <!--</el-select>-->
-    <!--<img class="avatar-img" src="../../../../static/image/digitalPark/default_avatar.png" alt="">-->
-    <!--</span>-->
   </div>
 </template>
 
@@ -111,10 +102,12 @@ export default {
     },
     async onClickUserConfigure(val) {
       if (val == 3) {
-        if (Cookies.get("_3DClient")) {
-          //如果是客户端
-          window.goBackClientLogin();
+        //如果是客户端
+        if (czClient.isClient) {
+          console.log("lalala")
+          goBackClientLogin();
         } else {
+          console.log('jajjajhaha')
           sessionStorage.removeItem("token");
           await DigitalParkApi.logOut();
           this.$router.push("/login");
