@@ -179,7 +179,6 @@ export default {
         ],
         uiConfig: {
           height: "auto",
-          customTopPosition: "right",
           selection: true
         }
       }
