@@ -32,7 +32,7 @@ export default {
         return `${window.top.location.host}/#/${this.iframeConfig.src}`;
       }
 
-      return `${window.top.location.origin}/vibe/${this.iframeConfig.src}`;
+      return `${window.top.location.origin}/vibe${this.iframeConfig.src}`;
     }
   }
 };

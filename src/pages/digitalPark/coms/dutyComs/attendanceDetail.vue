@@ -1,7 +1,7 @@
 <template>
   <div class="attendance-detail">
     <miTable :ref="leaseManageTable.ref" :tableConfig="leaseManageTable"></miTable>
-    <div>{{moduleItem.moduleName}}</div>
+    <div style="margin-bottom:10px;">{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
@@ -58,7 +58,7 @@ export default {
           }
         ],
         uiConfig: {
-          height: "auto"
+          // height: "210px"
         }
       }
     };

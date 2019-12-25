@@ -1,7 +1,7 @@
 <template>
   <!--<div class="menu-item">-->
   <el-menu-item
-    v-if="item.childNode.length == 0"
+    v-if="_.isEmpty(item.childNode) || item.childNode.length == 0"
     :index="specialRoute ? (item.id + item.routeAddress) : item.routeAddress"
   >
     <i v-if="item.icon" :class="['iconfont',item.icon]"></i>

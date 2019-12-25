@@ -1,37 +1,80 @@
 <template>
   <div class="emergencies">
-    <!--<div ref="pieCharts" class="my-chart" id="task-person-task-chart"></div>-->
-    <!--<div class="my-chart">-->
-    <img
-      style="width:100%;height:85%;"
-      src="../../../../../static/image/digitalPark/tgsj_tmp.png" alt="">
-  <!--</div>-->
-    <div>{{moduleItem.moduleName}}</div>
+    <miTable :ref="Emergencies.ref" :tableConfig="Emergencies"></miTable>
+    <div style="margin-bottom:10px;">{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
 <script>
-import CommonFun from "../../../../utils/commonFun";
-import ChartUtils from "../../../../utils/chartUtils";
+import miTable from "@/components/Table";
 export default {
   name: "Emergencies",
-  components: {},
+  components: { miTable },
   props: ["moduleItem"],
   data() {
-    return {};
+    return {
+      Emergencies: {
+        ref: "Emergencies",
+        data: [
+          {
+            zbrq: "火灾",
+            zbry: "2019.11.6",
+            zbdd: "因厨房用火不当，导致火灾发生",
+            zbnr: "已处理"
+          },
+          {
+            zbrq: "入侵",
+            zbry: "2019.11.5",
+            zbdd: "园区东门发现人员入侵，疑似有计划有组织的入侵",
+            zbnr: "待处理"
+          },
+          {
+            zbrq: "火灾",
+            zbry: "2019.11.6",
+            zbdd: "因厨房用火不当，导致火灾发生",
+            zbnr: "已处理"
+          },
+          {
+            zbrq: "入侵",
+            zbry: "2019.11.5",
+            zbdd: "园区东门发现人员入侵，疑似有计划有组织的入侵",
+            zbnr: "待处理"
+          }
+        ],
+        columnConfig: [
+          {
+            prop: "zbrq",
+            label: "事件类别"
+          },
+          {
+            prop: "zbry",
+            label: "事件时间",
+            width: 95
+          },
+          {
+            prop: "zbdd",
+            label: "事件描述",
+            width: 300
+          },
+          {
+            prop: "zbnr",
+            label: "处理结果"
+          }
+        ],
+        uiConfig: {
+          // height: "210px"
+        }
+      }
+    };
   },
-  methods: {
-  },
-  mounted() {
-  }
+  methods: {},
+  mounted() {}
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-.building-status-proportion {
-  .pie-charts {
-    height: 95%;
-  }
-}
+  .emergencies{
+    /*overflow: auto;*/
+   }
 </style>
