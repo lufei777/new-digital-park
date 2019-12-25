@@ -1,20 +1,20 @@
 <template>
-  <div class="escapeRoutes">
+  <div class="saleStatistics">
     <!--<div ref="pieCharts" class="my-chart" id="task-person-task-chart"></div>-->
-    <!--<div class="my-chart">-->
+    <div class="my-chart">
     <img
-      style="width:90%;height:85%;"
-      src="../../../../static/image/digitalPark/tslx.jpg" alt="">
-  <!--</div>-->
+      style="width:100%;height:auto;"
+      src="../../../../../static/image/digitalPark/xstj.png" alt="">
+  </div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
 <script>
-import CommonFun from "../../../utils/commonFun";
-import ChartUtils from "../../../utils/chartUtils";
+import CommonFun from "../../../../utils/commonFun";
+import ChartUtils from "../../../../utils/chartUtils";
 export default {
-  name: "EscapeRoutes",
+  name: "SaleStatistics",
   components: {},
   props: ["moduleItem"],
   data() {

@@ -1,20 +1,20 @@
 <template>
-  <div class="task-person-task">
+  <div class="inventoryAnalysis">
     <!--<div ref="pieCharts" class="my-chart" id="task-person-task-chart"></div>-->
     <!--<div class="my-chart">-->
     <img
-      style="width:100%;height:auto;"
-      src="../../../../static/image/digitalPark/renwu1_tmp.png" alt="">
+      style="width:100%;height:85%;"
+      src="../../../../../static/image/digitalPark/kcje.jpg" alt="">
   <!--</div>-->
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
 <script>
-import CommonFun from "../../../utils/commonFun";
-import ChartUtils from "../../../utils/chartUtils";
+import CommonFun from "../../../../utils/commonFun";
+import ChartUtils from "../../../../utils/chartUtils";
 export default {
-  name: "TaskPersonTask",
+  name: "InventoryAnalysis",
   components: {},
   props: ["moduleItem"],
   data() {

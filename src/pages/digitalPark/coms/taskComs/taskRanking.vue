@@ -1,20 +1,20 @@
 <template>
-  <div class="emergencies">
-    <!--<div ref="pieCharts" class="my-chart" id="task-person-task-chart"></div>-->
+  <div class="task-ranking" >
+    <!--<div ref="pieCharts" class="my-chart" id="task-ranking-chart"></div>-->
     <!--<div class="my-chart">-->
     <img
-      style="width:100%;height:85%;"
-      src="../../../../static/image/digitalPark/tgsj_tmp.png" alt="">
+      style="width:100%;height:auto;"
+      src="../../../../../static/image/digitalPark/renwu2_tmp.png" alt="">
   <!--</div>-->
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
 <script>
-import CommonFun from "../../../utils/commonFun";
-import ChartUtils from "../../../utils/chartUtils";
+import CommonFun from "../../../../utils/commonFun";
+import ChartUtils from "../../../../utils/chartUtils";
 export default {
-  name: "Emergencies",
+  name: "taskRanking",
   components: {},
   props: ["moduleItem"],
   data() {

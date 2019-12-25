@@ -6,8 +6,8 @@
 </template>
 
 <script>
-  import EnergyApi from "../../../service/api/energyApi";
-  import ChartUtils from '../../../utils/chartUtils'
+  import EnergyApi from "../../../../service/api/energyApi";
+  import ChartUtils from '../../../../utils/chartUtils'
   export default {
     name: 'EnergyElectricityProportion',
     components: {
