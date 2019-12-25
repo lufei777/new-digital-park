@@ -217,6 +217,12 @@ export default {
       });
       this.userProModuleList = res;
       this.loading = false;
+      console.log("2222222")
+      // 客户端loading消失
+      if(localStorage.getItem('isCZClient')){
+        console.log("lalalalala")
+        hideClientLoading && window.hideClientLoading()
+      }
     },
     async onDragChange(evt) {
       console.log("out-moudle-change", evt);

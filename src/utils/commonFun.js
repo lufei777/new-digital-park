@@ -1648,6 +1648,56 @@ class commonFun {
     contractTime: '2019-02-01'
   }]
 
+  messageDevice=[{
+    id:'TradeCode21',
+    name:'设备名称',
+    type:'大屏',
+    status:'待审核',
+    date1:'2019-12-24',
+    date2:'2019-12-28',
+    remark:'备注'
+  },{
+    id:'TradeCode22',
+    name:'设备名称',
+    type:'大屏',
+    status:'待审核',
+    date1:'2019-12-24',
+    date2:'2019-12-28',
+    remark:'备注'
+  },{
+    id:'TradeCode23',
+    name:'设备名称',
+    type:'大屏',
+    status:'待审核',
+    date1:'2019-12-24',
+    date2:'2019-12-28',
+    remark:'备注'
+  },{
+    id:'TradeCode24',
+    name:'设备名称',
+    type:'大屏',
+    status:'待审核',
+    date1:'2019-12-24',
+    date2:'2019-12-28',
+    remark:'备注'
+  },{
+    id:'TradeCode25',
+    name:'设备名称',
+    type:'大屏',
+    status:'待审核',
+    date1:'2019-12-24',
+    date2:'2019-12-28',
+    remark:'备注'
+  },{
+    id:'TradeCode26',
+    name:'设备名称',
+    type:'大屏',
+    status:'待审核',
+    date1:'2019-12-24',
+    date2:'2019-12-28',
+    remark:'备注'
+  }]
+
   // 跳转链接
   loadOldPage(item, routeOldProject) {
     if (routeOldProject) {
@@ -1668,8 +1718,8 @@ class commonFun {
     if (loadNames.includes(item.name)) {
       let clientName = item.name === "安防管理" ? "综合安防" : item.name;
       try {
-        Client.SkipToSigleBuild(clientName);
-        // window.goToClientPage && window.goToClientPage(item)
+        // Client.SkipToSigleBuild(clientName);
+        window.goToClientPage && window.goToClientPage(item)
       } catch (error) { console.error(error); }
       return true;
     }
