@@ -1,18 +1,12 @@
 <template>
   <div class="emergencies">
-    <!-- <img
-      style="width:100%;height:85%;"
-    src="../../../../static/image/digitalPark/tgsj_tmp.png" alt="">-->
     <miTable :ref="Emergencies.ref" :tableConfig="Emergencies"></miTable>
-    <div>{{moduleItem.moduleName}}</div>
+    <div style="margin-bottom:10px;">{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
 <script>
-import CommonFun from "../../../utils/commonFun";
-import ChartUtils from "../../../utils/chartUtils";
 import miTable from "@/components/Table";
-
 export default {
   name: "Emergencies",
   components: { miTable },
@@ -68,7 +62,7 @@ export default {
           }
         ],
         uiConfig: {
-          height: "280px"
+          // height: "210px"
         }
       }
     };
@@ -80,9 +74,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-.building-status-proportion {
-  .pie-charts {
-    height: 95%;
-  }
-}
+  .emergencies{
+    /*overflow: auto;*/
+   }
 </style>

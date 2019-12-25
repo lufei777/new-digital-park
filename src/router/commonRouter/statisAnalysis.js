@@ -3,9 +3,9 @@ import CorrelationAnalysis from '../../pages/commonProject/statisAnalysis/correl
 import StatisCompare from '../../pages/commonProject/statisAnalysis/statisCompare'
 import HistoryStatis from '../../pages/commonProject/statisAnalysis/historyStatis'
 import TmpRouter from '../../pages/commonProject/coms/tmpRouterBox'
-import ZoomCompare from '../../pages/energy/energyCompare/zoomCompare.vue'
-import TbhbAnalysis from '../../pages/energy/energyCompare/tbhbAnalysis.vue'
-import TypeCompare from '../../pages/energy/energyCompare/typeCompare.vue'
+import ZoomCompare from '../../pages/energyManage/energyCompare/zoomCompare.vue'
+import TbhbAnalysis from '../../pages/energyManage/energyCompare/tbhbAnalysis.vue'
+import TypeCompare from '../../pages/energyManage/energyCompare/typeCompare.vue'
 export default [{
   path:'/energy/energyShow',
   redirect:'/deviceAnalysis',

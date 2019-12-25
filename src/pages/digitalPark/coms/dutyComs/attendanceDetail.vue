@@ -1,13 +1,13 @@
 <template>
   <div class="attendance-detail">
     <miTable :ref="leaseManageTable.ref" :tableConfig="leaseManageTable"></miTable>
-    <div>{{moduleItem.moduleName}}</div>
+    <div style="margin-bottom:10px;">{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
 <script>
-import CommonFun from "../../../utils/commonFun";
-import ChartUtils from "../../../utils/chartUtils";
+import CommonFun from "../../../../utils/commonFun";
+import ChartUtils from "../../../../utils/chartUtils";
 import miTable from "@/components/Table";
 
 export default {
@@ -58,7 +58,7 @@ export default {
           }
         ],
         uiConfig: {
-          height: "280px"
+          // height: "210px"
         }
       }
     };

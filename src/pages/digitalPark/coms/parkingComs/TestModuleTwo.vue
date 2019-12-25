@@ -1,15 +1,15 @@
 <template>
-  <div class="asset-growth-statistics">
-    <div ref="myChart" class="my-chart" id="asset-growth-statistics-chart"></div>
+  <div class="test-module-two">
+    <div ref="myChart"  class="my-chart" id="test-module-two-chart"></div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
 <script>
-import CommonFun from "../../../utils/commonFun";
-import ChartUtils from "../../../utils/chartUtils";
+import CommonFun from "../../../../utils/commonFun";
+import ChartUtils from "../../../../utils/chartUtils";
 export default {
-  name: "AssetGrowthStatistics",
+  name: "TestModuleTwo",
   components: {},
   props: ["moduleItem"],
   data() {
@@ -17,7 +17,8 @@ export default {
   },
   methods: {
     initChart(){
-      let myChart = echarts.init(this.$refs.myChart || document.getElementById('asset-growth-statistics-chart'));
+      //this.$refs.myChart ||
+      let myChart = echarts.init(this.$refs.myChart || document.getElementById('test-module-two-chart'));
       let option = {
         xAxis: {
           type: 'category',

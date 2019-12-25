@@ -6,9 +6,9 @@
 </template>
 
 <script>
-import CommonFun from "../../../utils/commonFun";
-import ChartUtils from "../../../utils/chartUtils";
-import EnergyApi from "../../../service/api/energyApi";
+import CommonFun from "../../../../utils/commonFun";
+import ChartUtils from "../../../../utils/chartUtils";
+import EnergyApi from "../../../../service/api/energyApi";
 export default {
   name: "TestModuleOne",
   components: {},

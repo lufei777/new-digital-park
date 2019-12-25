@@ -1,28 +1,27 @@
 <template>
-  <div class="test-module-one">
-    <div ref="myChart"  class="my-chart" id="test-module-one-chart"></div>
+  <div class="building-status-proportion">
+    <div ref="myChart" class="my-chart" id="building-status-proportion-chart"></div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
 <script>
-import CommonFun from "../../../utils/commonFun";
-import ChartUtils from "../../../utils/chartUtils";
+import CommonFun from "../../../../utils/commonFun";
+import ChartUtils from "../../../../utils/chartUtils";
 export default {
-  name: "TestModuleOne",
+  name: "BuildingStatusProportion",
   components: {},
   props: ["moduleItem"],
   data() {
     return {};
   },
   methods: {
-    async getDeviceStatusList() {
-      let res = await CommonFun.deviceStatusList;
+     getDeviceStatusList() {
+      let res =  CommonFun.deviceStatusList;
       this.createPieCharts(res);
     },
     createPieCharts(res) {
-      //this.$refs.pieCharts
-      let myPieChart = echarts.init(this.$refs.myChart || document.getElementById('test-module-one-chart'));
+      let myPieChart = echarts.init(this.$refs.myChart || document.getElementById('building-status-proportion-chart'));
       let legendData = [];
       let legend = "right";
       let color = ["#F7B87F", "#B6A2DE", "#56C7C9", "#5AB1EF"];
@@ -49,11 +48,11 @@ export default {
       //   myPieChart.resize()
       // }) ;
       let resizeBox=$("#energy-electricity-proportion-chart").parents('.item-product-coms')
-      ChartUtils.handlePieChart(myPieChart, data,resizeBox);
+      ChartUtils.handlePieChart(myPieChart, data);
     }
   },
   mounted() {
-    this.getDeviceStatusList()
+      this.getDeviceStatusList()
   }
 };
 </script>
@@ -61,8 +60,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
 .building-status-proportion {
-  .pie-charts {
-    height: 95%;
-  }
+  
 }
 </style>

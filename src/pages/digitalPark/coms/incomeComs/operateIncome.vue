@@ -19,8 +19,8 @@
 </template>
 
 <script>
-  import CommonFun from "../../../utils/commonFun";
-  import ChartUtils from "../../../utils/chartUtils";
+  import CommonFun from "../../../../utils/commonFun";
+  import ChartUtils from "../../../../utils/chartUtils";
   export default {
     name: "OperateIncome",
     components: {},
@@ -89,7 +89,7 @@
         return {
           backgroundImage:
             "url(" +
-            require("../../../../static/image/digitalPark/module_bg.png") +
+            require("../../../../../static/image/digitalPark/module_bg.png") +
             ")"
         };
       }
@@ -110,7 +110,7 @@
     .el-button {
       border: none;
       //  background: none;
-      background: url("../../../../static/image/digitalPark/tag_bg.png") no-repeat
+      background: url("../../../../../static/image/digitalPark/tag_bg.png") no-repeat
       center;
       background-size: 100% 100%;
     }
