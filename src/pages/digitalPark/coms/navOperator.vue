@@ -88,7 +88,6 @@ export default {
   },
   methods: {
     onClickChangeModel(val) {
-      // this.$parent.changeModel(val)
       if (val == 1) {
         this.$router.replace("/digitalPark/dashboardHomePage");
       } else {
@@ -100,14 +99,13 @@ export default {
       Cookies.set("lang", val);
       this.$parent.handleLangChange && this.$parent.handleLangChange();
     },
-    async onClickUserConfigure(val) {
+    async onClickUserConfigure(val) { //点击用户
+      Cookies.set('moduleType',this.moduleType)
       if (val == 3) {
         //如果是客户端
-        if (czClient.isClient) {
-          console.log("lalala")
+        if (localStorage.isClient=="true") {
           goBackClientLogin();
         } else {
-          console.log('jajjajhaha')
           sessionStorage.removeItem("token");
           await DigitalParkApi.logOut();
           this.$router.push("/login");
@@ -140,7 +138,8 @@ export default {
       }
       this.userValue = "0";
     },
-    onClickSetup(val) {
+    onClickSetup(val) { //点击设置
+      Cookies.set('moduleType',this.moduleType)
       if (val == 1) {
         this.$router.push(
           `/digitalPark/moduleConfigure?type=${this.moduleType}&updateDragFlag=true`
@@ -173,7 +172,7 @@ export default {
         this.setupValue = "0";
       }
     },
-    onClickGoBack() {
+    onClickGoBack() { //点击返回首页
       if (Cookies.get("moduleType") == 2) {
         this.$router.push("/digitalPark/homePage");
       } else {
@@ -186,7 +185,8 @@ export default {
       localStorage.setItem("userInfo", JSON.stringify(this.userInfo));
       this.$store.commit("digitalPark/updateUserInfo", false);
     },
-    loadNews() {
+    loadNews() {  //点击消息
+      Cookies.set('moduleType',this.moduleType)
       // loadNews TODO
       localStorage.setItem("show_menu", "@/html/alarm/alarm_index.html");
       localStorage.setItem(
