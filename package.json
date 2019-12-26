@@ -18,7 +18,7 @@
     "babel-polyfill": "^6.26.0",
     "echarts": "^4.2.1",
     "element-resize-detector": "^1.1.15",
-    "element-ui": "^2.10.1",
+    "element-ui": "latest",
     "js-cookie": "^2.2.0",
     "json-bigint-string": "^1.0.0",
     "less": "^3.9.0",
