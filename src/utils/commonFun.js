@@ -1754,11 +1754,5 @@ class commonFun {
     })
   }
 
-  czClient={
-    isClient:true,
-    goToClientPage:function(){
-
-    }
-  }
 }
 export default new commonFun()
