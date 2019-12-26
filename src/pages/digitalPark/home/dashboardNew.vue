@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class='dashboard-nav-operator'>
-          <NavOperator  :moduleType.sync="moduleType" />
+          <NavOperator  :moduleType.sync="moduleType" :show-goback="showGoBack"/>
         </div>
       </div>
     <div class="dashboard-content-panel">
@@ -88,14 +88,16 @@
         <div class="fixed-prod-module">
           <span>{{$t('proEntry')}}</span>
           <div class="product-list">
-            <el-tooltip v-for="(item) in showFixedProList" :key="item.id"
-                        effect="dark" :content="item.name" placement="top-end">
-              <div class="fixed-pro-item hover-pointer"
-                   @click="onClickItemFixPro(item)"
-              >{{item.name}}</div>
-            </el-tooltip>
+            <!--<el-tooltip v-for="(item) in showFixedProList" :key="item.id"-->
+                        <!--effect="dark" :content="item.name" placement="top-end">-->
+            <!---->
+            <!--</el-tooltip>-->
+            <div class="fixed-pro-item hover-pointer"
+                 v-for="(item) in showFixedProList" :key="item.id"
+                 @click="onClickItemFixPro(item)"
+            >{{item.name}}</div>
           </div>
-          <div v-if="fixedProList.length>16" class="flex-align-between turn-page">
+          <div v-if="fixedProList.length>16" class="flex-align-center turn-page">
             <span class="left-btn hover-pointer iconfont iconzuo"
                   :class="activeBtnIndex==1?'active-btn':''"
                   @click="onClickTurnPageBtn(1)"
@@ -124,14 +126,6 @@
       NavOperator,
       ItemProModule
     },
-    computed: {
-      top() {
-        return -this.curNewsIndex * 50 + 'px';
-      },
-      pageFlag(){
-        return  this.$route.path=='/digitalPark/dashboardHomePage'?1:2
-      }
-    },
     data() {
         let menuTree = JSON.parse(localStorage.getItem('menuTree'))
         return {
@@ -151,19 +145,36 @@
           outDragFlag:false,
           innerObj:{},
           activeBtnIndex:2,
+          clientMenu:{},
           title:menuTree[0].name
         }
+      },
+     computed: {
+        top() {
+          return -this.curNewsIndex * 50 + 'px';
+        },
+        pageFlag(){
+          return  this.$route.path=='/digitalPark/dashboardHomePage'?1:2
+        },
+        productId(){
+          return this.$route.query.productId
+        },
+        showGoBack(){
+          return this.$route.query.productId?true:false
+        },
+     },
+      watch:{
+        productId(){
+          this.getProductList()
+          let menuTree = JSON.parse(localStorage.getItem('menuTree'))
+          if(!this.productId){
+            this.title = menuTree[0].name
+          }
+        },
       },
       methods: {
         async onLeftChange (evt) {
           // console.log('change1', evt)
-          // console.log($(".draggable-box1").height())
-          // $(".item-drag-product").eq(0).css({
-          //   marginBottom: $(".draggable-box1").height()*0.02+'px',
-          // })
-          // $(".item-drag-product").eq(1).css({
-          //   marginBottom: $(".draggable-box1").height()*0.02+'px'
-          // })
           if(evt.moved && !this.curProModule){ //只要有curProModule就代表是配置页，因为此处是仪表盘首页拖动而非配置页
             this.sureUpdateUserProModules()
           }else if (evt.removed) {
@@ -234,8 +245,14 @@
           let res = await DigitalParkApi.getProductList({
             language:Cookies.get('lang')
           })
-          this.fixedProList=res
-          this.showFixedProList=res.length>16?res.slice(0,16):res
+          if(this.productId){
+            this.clientMenu = res.find((item)=>item.id==this.productId)
+            this.fixedProList= this.clientMenu.childNode
+            this.title=this.clientMenu.name
+          }else{
+            this.fixedProList=res
+          }
+          this.showFixedProList=this.fixedProList.length>16?this.fixedProList.slice(0,16):this.fixedProList
         },
         getOptions(){
           return {draggable:'.item-drag-product',group:"out-product",disabled:this.outDragFlag}
@@ -248,12 +265,6 @@
         },
         onLeftMove(evt){
           console.log('move',evt)
-          // console.log(evt.draggedContext.element.position-1,evt.relatedContext.element.position-1,
-          //   this.proModuleList2[evt.relatedContext.element.position-1-3])
-          // if(evt.to.className=="draggable-box2"){
-          //   this.proModuleList1.splice(evt.draggedContext.element.position-1,0,
-          //     this.proModuleList2[evt.relatedContext.element.position-1-3])
-          // }
         },
         onLeftEnd(){
           this.$parent.setContentListDragFlag &&
@@ -312,6 +323,11 @@
           //跳转三维客户端
           if(CommonFun.loadThreeD(item)){
             return;
+          }
+          if(this.productId){
+            console.log(this.clientMenu,item)
+            goToClientPage(this.clientMenu,item)
+
           }
           localStorage.setItem("menuList", JSON.stringify(item));
           let routeAddress = item.routeAddress;
@@ -380,27 +396,6 @@
       this.scrollNews()
       this.getModulesByType()
       this.getProductList()
-      // $(".draggable-box1").css({
-      //   height:($(".dashboard-content-panel").height())+'px'
-      // })
-      // $(".dashboard-right").css({
-      //   height:($(".dashboard-content-panel").height())+'px'
-      // })
-      // let height=$(".dashboard-content-panel").height()-$(".fixed-prod-module").height()
-      // $(".draggable-box2").css({
-      //   height:height+'px'
-      // })
-      // console.log("box2",$(".dashboard-content-panel").height(),$(".fixed-prod-module").height(),height)
-      // console.log($(".draggable-box2").height())
-      // setTimeout(()=>{
-      //   $(".item-drag-product").eq(0).css({
-      //     marginBottom: $(".draggable-box1").height()*0.02+'px'
-      //   })
-      //   $(".item-drag-product").eq(1).css({
-      //     marginBottom: $(".draggable-box1").height()*0.02+'px'
-      //   })
-      // },1000)
-      // console.log($(".draggable-box1").height())
     }
   }
 </script>
@@ -477,7 +472,6 @@
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      align-items: center;
       span{
         /*margin-bottom: 10px;*/
       }

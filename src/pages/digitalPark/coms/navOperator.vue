@@ -103,7 +103,7 @@ export default {
       Cookies.set('moduleType',this.moduleType)
       if (val == 3) {
         //如果是客户端
-        if (localStorage.isClient=="true") {
+        if (localStorage.isCZClient=="true") {
           goBackClientLogin();
         } else {
           sessionStorage.removeItem("token");
@@ -124,15 +124,11 @@ export default {
         );
         if (val == 1) {
           this.$router.push("/personalInformation");
-          Cookies.set(
-            "activeMenuIndex",
-            `${thirdLevelTree.childNode[0].id}/personalInformation`
+          Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[0].id}/personalInformation`
           );
         } else if (val == 2) {
           this.$router.push("/modifyPassword");
-          Cookies.set(
-            "activeMenuIndex",
-            `${thirdLevelTree.childNode[1].id}/modifyPassword`
+          Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[1].id}/modifyPassword`
           );
         }
       }
