@@ -207,7 +207,7 @@ const _objKeysForeach = (obj, cb) => {
 const setDefaultValue = (defaultOptions, options) => {
   _objKeysForeach(defaultOptions, (key, value, index) => {
     if (!options.hasOwnProperty(key)) {
-      options[key] = value;
+      options[key] = _.cloneDeep(value);
     } else {
       if (typeof value === "object") {
         setDefaultValue(value, options[key]);
@@ -725,7 +725,7 @@ export default {
       return this.tableConfig.btnConfig ? this.tableConfig.btnConfig : false;
     },
     uiConfig() {
-      let uiConfig = this.tableConfig.uiConfig || {};
+      let uiConfig = this.tableConfig.uiConfig || Object.create({});
       // 设置默认值
       setDefaultValue(defaultUiConfig, uiConfig);
       // 初始化currentPage和pageSize
