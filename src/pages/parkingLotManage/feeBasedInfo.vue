@@ -141,8 +141,7 @@ export default {
           {
             prop: "tccsfje",
             label: "实收金额(元)",
-            fixed: "left",
-            width: 150
+            fixed: "left"
           },
           {
             prop: "sfgz",
@@ -158,7 +157,8 @@ export default {
           },
           {
             prop: "sfsj",
-            label: "收费时间"
+            label: "收费时间",
+            width: 150
           },
           {
             prop: "bz",
@@ -170,7 +170,9 @@ export default {
           height: "auto",
           customTopPosition: "right",
           selection: true,
-          showIndex: true
+          showIndex: {
+            label: "序号"
+          }
         }
       }
     };
