@@ -14,11 +14,11 @@
           <span>资产组</span>
           <el-input v-model="groupName" @focus="onShowGroup" />
         </div>
-        <el-button type="primary" @click="onClickSearchBtn">搜索</el-button>
+        <el-button type="primary" @click="onClickSearchBtn" class="search-btn">搜索</el-button>
         <el-button  @click="onClickResetBtn">重置</el-button>
       </div>
       <div class="asset-table panel">
-        <div class="operator-box">
+        <div class="operator-btn-box flex-row-reverse">
           <el-button type="primary" @click="onClickImportExcel">批量导入</el-button>
           <el-button type="primary" @click="onMultiDel">批量删除</el-button>
 
@@ -134,6 +134,7 @@ export default {
         data:[],
         columnConfig:[],
         btnConfig:[],
+        customTop: true,
         uiConfig: {
           height: "auto",//"", //高度
           selection: true, //是否多选
@@ -407,18 +408,6 @@ export default {
     width: 80px;
     text-align: right;
   }
-  .operator-box {
-    clear: both;
-    display: flex;
-    flex-direction: row-reverse;
-    padding-bottom: 20px;
-    .el-button {
-      margin-right: 20px;
-    }
-  }
-  .more-btn {
-    position: relative;
-  }
   .more-operator-box {
     position: absolute;
     top: 20px;
@@ -443,6 +432,9 @@ export default {
     background-color: @white;
     overflow: hidden;
     padding:20px;
+  }
+  .search-btn{
+    margin-right: 10px;
   }
 }
 .upload-excel {
