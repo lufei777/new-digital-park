@@ -53,10 +53,10 @@
         <img v-if="pageFlag==2" src="../../../../static/image/digitalPark/unity_priview.png"
              class="unity_priview"
              alt="">
-        <!--<iframe v-if="pageFlag==1"-->
-                <!--src="../../../../static/HomePage/index.html"-->
-                <!--frameborder="0"-->
-                <!--class="unity-frame"></iframe>-->
+        <iframe v-if="pageFlag==1"
+                src="../../../../static/HomePage/index.html"
+                frameborder="0"
+                class="unity-frame"></iframe>
 
       </div>
       <div class="dashboard-right">
@@ -88,12 +88,14 @@
         <div class="fixed-prod-module">
           <span>{{$t('proEntry')}}</span>
           <div class="product-list">
-            <el-tooltip v-for="(item) in showFixedProList" :key="item.id"
-                        effect="dark" :content="item.name" placement="top-end">
-              <div class="fixed-pro-item hover-pointer"
-                   @click="onClickItemFixPro(item)"
-              >{{item.name}}</div>
-            </el-tooltip>
+            <!--<el-tooltip v-for="(item) in showFixedProList" :key="item.id"-->
+                        <!--effect="dark" :content="item.name" placement="top-end">-->
+            <!---->
+            <!--</el-tooltip>-->
+            <div class="fixed-pro-item hover-pointer"
+                 v-for="(item) in showFixedProList" :key="item.id"
+                 @click="onClickItemFixPro(item)"
+            >{{item.name}}</div>
           </div>
           <div v-if="fixedProList.length>16" class="flex-align-center turn-page">
             <span class="left-btn hover-pointer iconfont iconzuo"
@@ -323,7 +325,9 @@
             return;
           }
           if(this.productId){
-            // goToClientPage(this.clientMenu,item)
+            console.log(this.clientMenu,item)
+            goToClientPage(this.clientMenu,item)
+
           }
           localStorage.setItem("menuList", JSON.stringify(item));
           let routeAddress = item.routeAddress;

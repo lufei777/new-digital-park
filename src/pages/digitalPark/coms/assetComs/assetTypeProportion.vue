@@ -36,11 +36,41 @@ export default {
         },
         xAxis: {
           type: 'value',
-          boundaryGap: [0, 0.01]
+          boundaryGap: [0, 0.01],
+          axisLabel: {
+            textStyle: {
+              color: "#4F89B2"
+            }
+          },
+          axisLine: {
+            lineStyle: {
+              color: "#4F89B2"
+            }
+          },
+          splitLine: {     //网格线
+            "show": false
+          },
         },
         yAxis: {
           type: 'category',
-          data: ['服务器','办公桌','显示屏','主机','椅子']
+          data: ['服务器','办公桌','显示屏','主机','椅子'],
+          axisLabel: {
+            textStyle: {
+              color: "#4F89B2"
+            }
+          },
+          axisLine: {
+            show: false
+          },
+          axisTick:{       //y轴刻度线
+            "show":false
+          },
+          splitLine: {     //网格线
+            "show": false
+          },
+          nameTextStyle: {
+            color: "#4F89B2"
+          }
         },
         series: [
           {
