@@ -66,7 +66,10 @@ export default {
     this.$nextTick(() => {
       this.computedHeight();
     });
-    window.addEventListener("resize", _.throttle(this.computedHeight, 200));
+    window.addEventListener(
+      "resize",
+      _.throttle(this.computedHeight, 200).call(this)
+    );
   }
 };
 </script>
