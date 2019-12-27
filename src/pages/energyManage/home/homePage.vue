@@ -345,9 +345,9 @@ export default {
         yAxis: [
           {
             type: "value",
-            name: "能耗(kwh)",
+            name: res.unit,
             axisLabel: {
-              formatter: "{value} kwh"
+              formatter: "{value}"
             }
           },
           {
