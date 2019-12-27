@@ -173,8 +173,8 @@ export default {
         { label: "所租房产", prop: "houseName" },
         { label: "租户名称", prop: "tenantName" },
         { label: "联系方式", prop: "telephone" },
-        { label: "签约时间", prop: "" },
-        { label: "到期时间", prop: "" }
+        { label: "签约时间", prop: "contractTime" },
+        { label: "到期时间", prop: "expireTime" }
       ];
       this.tenantManageTable.columnConfig = labelList;
       let res = await DigitalParkApi.tenantList({

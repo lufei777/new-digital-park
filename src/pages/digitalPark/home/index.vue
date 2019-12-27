@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <el-carousel height="360px" :interval="6000" v-if="!hideHeader" ref="carousel" @click.native="linkTo">
+    <el-carousel height="360px" :interval="6000" v-if="!hideHeader"  ref="carousel" @click.native="linkTo">
       <!-- <el-carousel-item>
         <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo1.png" alt />
       </el-carousel-item>
@@ -328,6 +328,7 @@ export default {
   .carousel-img {
     width: 100%;
     height: 360px;
+    cursor: pointer;
   }
   .home-header {
     width: 100%;
