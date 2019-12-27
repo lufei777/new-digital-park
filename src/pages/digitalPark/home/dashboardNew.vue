@@ -320,7 +320,7 @@
           if(this.hideHeader) return ; //配置页不进行后续操作
           Cookies.set('moduleType',1)
 
-          // 跳转三维客户端
+          //跳转三维客户端
           if(CommonFun.loadThreeD(item)){
             return;
           }
