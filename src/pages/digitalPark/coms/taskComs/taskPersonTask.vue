@@ -3,7 +3,7 @@
     <!--<div ref="pieCharts" class="my-chart" id="task-person-task-chart"></div>-->
     <!--<div class="my-chart">-->
     <img
-      style="width:100%;height:auto;"
+      style="width:96%;height:auto;"
       src="../../../../../static/image/digitalPark/renwu1_tmp.png" alt="">
   <!--</div>-->
     <div>{{moduleItem.moduleName}}</div>

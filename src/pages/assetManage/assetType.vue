@@ -16,6 +16,10 @@
           <el-button type="primary" @click="onAddTypeAttr">新建</el-button>
         </div>
         <Table :ref='tableConfig.ref' :table-config="tableConfig">
+          <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
+            <el-button type="text" @click="editRow(row)">编辑</el-button>
+            <el-button type="text" @click="deleteRow(row)">删除</el-button>
+          </template>
         </Table>
       </div>
 
@@ -57,7 +61,7 @@
           ref: "tableRef",
           data:[],
           columnConfig:[],
-          btnConfig:[],
+          operation:true,
           uiConfig: {
             height: "auto",//"", //高度
             selection: true, //是否多选
@@ -86,10 +90,12 @@
         this.getAttributeByType()
       },
       deleteRow(row){
+        console.log(row,row.id)
         this.delAttrIds=row.id
         this.showDeleteTip()
       },
       editRow(row){
+        console.log(row)
         this.curAttr=row
         this.isEdit=true
         this.showAdd=true

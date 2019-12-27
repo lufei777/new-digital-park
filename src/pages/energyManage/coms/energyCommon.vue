@@ -317,17 +317,14 @@
         let option={
           yAxis: [{
             type: 'value',
-            name: '能耗(kwh)',
-            axisLabel: {
-              formatter: '{value} kwh'
-            }
+            name: res.unit,
           },
             {
               show: true,
               type: 'value',
               name: '增长率',
-              min: -100,
-              max: 100,
+              min: -150,
+              max: 150,
               axisLabel: {
                 formatter: '{value} %'
               }

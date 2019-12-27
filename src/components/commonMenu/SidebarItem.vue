@@ -7,7 +7,7 @@
     :index="item.id + item.routeAddress"
     :parentMenu="parentMenu"
   >
-    <i v-if="item.icon && !specialRoute" :class="['iconfont',item.icon]"></i>
+    <div v-if="item.icon && !specialRoute" class="menu-icon"><i :class="['iconfont',item.icon]"></i></div>
     <span slot="title">{{item.name}}</span>
   </el-menu-item>
   <!--</template>-->
@@ -19,7 +19,9 @@
     @click.native="onClickSubmenu(item,parentMenu)"
   >
     <template slot="title">
-      <i v-if="item.icon && !specialRoute" :class="['iconfont',item.icon]"></i>
+      <div class="menu-icon">
+        <i v-if="item.icon && !specialRoute" :class="['iconfont',item.icon]"></i>
+      </div>
       <span>{{item.name}}</span>
     </template>
 
@@ -107,19 +109,16 @@ export default {
 };
 </script>
 <style lang="less">
-/*.menu-item {*/
-/*float: left;*/
-/*}*/
-/*.nest-menu {*/
-/*float: none;*/
-/*.el-submenu__icon-arrow {*/
-/*position: absolute !important;*/
-/*}*/
-/*}*/
-/*.el-menu--horizontal .el-submenu__icon-arrow {*/
-/*position: static;*/
-/*vertical-align: middle;*/
-/*margin-left: 8px;*/
-/*margin-top: -3px;*/
-/*}*/
+.menu-icon{
+  display: inline-block;
+  /*width:25px;*/
+  /*height:25px;*/
+  /*margin-right:2px;*/
+  /*text-align: center;*/
+  /*line-height: 25px;*/
+  /*background: pink;*/
+  i{
+    font-size: 18px;
+  }
+}
 </style>

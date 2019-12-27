@@ -113,6 +113,7 @@
       background: url("../../../../../static/image/digitalPark/tag_bg.png") no-repeat
       center;
       background-size: 100% 100%;
+      color:#FFFEFE;
     }
     .select-box{
       width:100%;
