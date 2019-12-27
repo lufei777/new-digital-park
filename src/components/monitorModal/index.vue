@@ -58,7 +58,9 @@
      },
     methods: {
       async getMonitorTree(){
-        let res =  await CommonApi.getMonitorTree()
+        let res =  await CommonApi.getMonitorTree({
+          flag:'total'
+        })
         this.monitorTree=res
       },
       onClickSureBtn(){

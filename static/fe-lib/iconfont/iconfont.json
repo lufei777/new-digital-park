@@ -1420,13 +1420,6 @@
       "unicode_decimal": 59106
     },
     {
-      "icon_id": "12370753",
-      "name": "发票管理",
-      "font_class": "fapiaoguanli",
-      "unicode": "e6e3",
-      "unicode_decimal": 59107
-    },
-    {
       "icon_id": "12371109",
       "name": "收入记录",
       "font_class": "shourujilu",
@@ -1621,6 +1614,13 @@
       "font_class": "xitongguanli",
       "unicode": "e6ff",
       "unicode_decimal": 59135
+    },
+    {
+      "icon_id": "12567083",
+      "name": "发票管理",
+      "font_class": "fapiaoguanli",
+      "unicode": "e69a",
+      "unicode_decimal": 59034
     }
   ]
 }

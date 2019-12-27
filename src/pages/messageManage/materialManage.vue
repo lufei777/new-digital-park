@@ -156,8 +156,8 @@
         let res = CommonFun.messageDevice;
         let labelList = [
           { label: "素材编号", prop: "id" },
-          { label: "素材名称", prop: "name" },
-          { label: "素材类型", prop: "type" },
+          { label: "素材名称", prop: "name3" },
+          { label: "素材类型", prop: "type2" },
           { label: "素材状态", prop: "status" },
           { label: "上传日期", prop: "date1" },
           { label: "使用日期", prop: "date2" },
