@@ -260,7 +260,7 @@ export default {
         //  delFlag:1
        }
      }
-      let res = await TaskManageApi.taskAdd(params);
+      let res = await TaskManageApi.taskAdd(this.paramsData);
       if (res) {
         this.$message({
           type: "success",

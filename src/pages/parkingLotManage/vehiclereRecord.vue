@@ -94,9 +94,18 @@ export default {
             kh: "2015-08-09 12:05",
             tccmc: "左侧",
             yhlb: "出",
-            rcdztdmc: "数字园区二号停车场",
+            rcdztdmc: "数字园区一号停车场",
             cdh: "5号",
-            kkxjtdmc: "123"
+            kkxjtdmc: "一号闸"
+          },{
+            clhm: "京A00800",
+            tczt: "红色",
+            kh: "2015-08-09 12:05",
+            tccmc: "左侧",
+            yhlb: "出",
+            rcdztdmc: "数字园区二号停车场",
+            cdh: "8号",
+            kkxjtdmc: "一号闸"
           }
         ],
         columnConfig: [
