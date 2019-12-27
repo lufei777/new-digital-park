@@ -321,12 +321,12 @@
           Cookies.set('moduleType',1)
 
           //跳转三维客户端
-          if(CommonFun.loadThreeD(item)){
-            return;
-          }
+          // if(CommonFun.loadThreeD(item)){
+          //   return;
+          // }
           if(this.productId){
             console.log(this.clientMenu,item)
-            goToClientPage(this.clientMenu,item)
+            goToClientPage(JSON.stringify(this.clientMenu),item.id)
 
           }
           localStorage.setItem("menuList", JSON.stringify(item));

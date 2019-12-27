@@ -1,10 +1,8 @@
 <template>
-  <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
-       class="zoom-navigation radius-shadow">
-    <div class="tree-box">
-      <el-input
-        placeholder="请输入"
-        v-model="searchText">
+  <!--<div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"-->
+       <!--class="zoom-navigation radius-shadow">-->
+    <div class="tree-box radius-shadow zoom-navigation">
+      <el-input placeholder="请输入" v-model="searchText">
         <i class="iconfont iconsousuo search-icon" slot="suffix"></i>
       </el-input>
       <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
@@ -25,7 +23,7 @@
         </el-tree>
       </el-scrollbar>
     </div>
-  </div>
+  <!--</div>-->
 
 </template>
 
@@ -111,7 +109,7 @@
         return data.floor.indexOf(value) !== -1;
       },
       fixTree(){
-        $(".zoom-navigation").css({
+        $(".tree-box").css({
           height:($(document).height()-110)+'px'
         })
       }
@@ -127,19 +125,15 @@
 
 <style lang="less">
   .zoom-navigation{
-   .zoom-title{
-     font-size: 20px;
-     font-weight: 700;
-     height:40px;
-     text-align: left;
-     line-height: 40px;
-     margin: 20px 0 0 20px;
-   }
-    .tree-box{
       padding:20px 0;
       background: @white;
-      height:100%;
-    }
+      /*height:100%;*/
+      width:250px;
+      position: fixed;
+      top:90px;
+      bottom:20px;
+      box-sizing: border-box;
+      overflow: hidden;
     .el-input__inner{
         border:none;
         background: #F4F5F7;

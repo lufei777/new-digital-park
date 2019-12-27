@@ -156,7 +156,7 @@
         let res = CommonFun.messageDevice;
         let labelList = [
           { label: "区域编号", prop: "id" },
-          { label: "区域名称", prop: "name" },
+          { label: "区域名称", prop: "name2" },
           { label: "区域类型", prop: "type" },
           { label: "区域状态", prop: "status" },
           { label: "添加日期", prop: "date1" },

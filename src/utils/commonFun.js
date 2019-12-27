@@ -20,7 +20,6 @@ import inventoryAnalysis from '../pages/digitalPark/coms/stockComs/inventoryAnal
 import messageRelease from '../pages/digitalPark/coms/messageComs/messageRelease'
 import router from '@/router'
 import axios from 'axios'
-
 class commonFun {
   exportComs = {
     energyProportionAnalysis,
@@ -1449,12 +1448,12 @@ class commonFun {
   assetLedgerData = [{
     assetLedgerId: 1,
     assetNumber: "ZC-154678955789",
-    assetName: "地下一层",
-    assetType: "房产",
+    assetName: "笔记本",
+    assetType: "服务器",
     assetStatus: "已出库",
     handlePeople: "程琳",
     operatingTime: "2019-11-15",
-    remark: "地下一层"
+    remark: "无"
   }, {
     assetLedgerId: 2,
     assetNumber: "ZC-157894563258",
@@ -1469,12 +1468,12 @@ class commonFun {
   myAssetData = [{
     myAssetId: 1,
     assetNumber: "ZC-154678955789",
-    assetName: "地下一层",
-    assetType: "房产",
+    assetName: "笔记本",
+    assetType: "服务器",
     assetStatus: "已出库",
     handlePeople: "程琳",
     operatingTime: "2019-11-15",
-    remark: "地下一层"
+    remark: "服务部借出"
   }, {
     assetLedgerId: 2,
     assetNumber: "ZC-157894563258",
@@ -1650,52 +1649,70 @@ class commonFun {
 
   messageDevice=[{
     id:'TradeCode21',
-    name:'设备名称',
+    name:'室内广告机',
     type:'大屏',
-    status:'待审核',
+    status:'播放中',
     date1:'2019-12-24',
     date2:'2019-12-28',
-    remark:'备注'
+    remark:'备注',
+    name2:'官网首页',
+    name3:'公司宣传视频',
+    type2:'视频'
   },{
     id:'TradeCode22',
-    name:'设备名称',
+    name:'门店海报机',
     type:'大屏',
-    status:'待审核',
+    status:'播放中',
     date1:'2019-12-24',
     date2:'2019-12-28',
-    remark:'备注'
+    remark:'备注',
+    name2:'数字园区首页',
+    name3:'公司宣传视频',
+    type2:'视频',
   },{
     id:'TradeCode23',
-    name:'设备名称',
+    name:'展览大屏幕',
     type:'大屏',
-    status:'待审核',
+    status:'已通过',
     date1:'2019-12-24',
     date2:'2019-12-28',
-    remark:'备注'
+    remark:'备注',
+    name2:'数字园区首页',
+    name3:'新年祝福文字',
+    type2:'文字'
   },{
     id:'TradeCode24',
-    name:'设备名称',
+    name:'门外广告机',
     type:'大屏',
     status:'待审核',
     date1:'2019-12-24',
     date2:'2019-12-28',
-    remark:'备注'
+    remark:'备注',
+    name2:'公众号首页',
+    name3:'团建活动图片',
+    type2:'图片'
   },{
     id:'TradeCode25',
-    name:'设备名称',
+    name:'门外广告机',
     type:'大屏',
     status:'待审核',
     date1:'2019-12-24',
     date2:'2019-12-28',
-    remark:'备注'
-  },{
+    remark:'备注',
+    name2:'公众号首页',
+    name3:'团建活动图片',
+    type2:'图片'
+  },,{
     id:'TradeCode26',
-    name:'设备名称',
+    name:'展览大屏幕',
     type:'大屏',
     status:'待审核',
     date1:'2019-12-24',
     date2:'2019-12-28',
-    remark:'备注'
+    remark:'备注',
+    name2:'公众号首页',
+    name3:'团建活动图片',
+    type2:'图片'
   }]
 
   // 跳转链接
@@ -1730,10 +1747,12 @@ class commonFun {
   //导出
   exportMethod(data, that) {
     axios({
+      headers:{
+        'X-SSO-Token':sessionStorage.getItem('token')
+      },
       method: "get",
       url: `${data.url}${data.params ? '?' + data.params : ''}`,
       responseType: 'blob',
-
     }).then((res) => {
       console.log("res", res)
       const link = document.createElement('a')
