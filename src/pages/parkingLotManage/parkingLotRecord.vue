@@ -51,6 +51,7 @@ export default {
             label: "停车场名称",
             prop: "houseNumber",
             placeholder: "请输入",
+            width: 100,
             clearable: true,
             span: 4
           },
