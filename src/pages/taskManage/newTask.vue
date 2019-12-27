@@ -91,8 +91,8 @@ export default {
   data() {
     return {
       model: {
-        type:1,
-        priority:1
+        taskType:1,
+        urgent:1
       },
       newTaskForm: {
         ref: "newTaskForm",
@@ -118,7 +118,7 @@ export default {
           {
             type: "select",
             label: "工单类型",
-            prop: "type",
+            prop: "taskType",
             placeholder: "请输入",
             clearable: true,
             offset: 2,
@@ -172,7 +172,7 @@ export default {
           {
             type: "select",
             label: "优先级",
-            prop: "priority",
+            prop: "urgent",
             placeholder: "请选择",
             clearable: true,
             offset: 2,
@@ -207,14 +207,14 @@ export default {
             type: "upload",
             listType: "picture-card",
             label: "添加图片",
-            prop: "housePictureVOList",
+            prop: "taskPicList",
             span: 24,
             // tip: "只能上传jpg/png文件。",
             action: "/oaApi/image/upload",
             accept: ["jpg", "jpeg", "png"],
             props: {
-              label: "housePictureName",
-              value: "housePictureUrl"
+              label: "fileName",
+              value: "fileUrl"
             },
             propsHttp: {
               name: "fileName",
@@ -246,8 +246,8 @@ export default {
         designatorName:this.designatorName,
         description:this.model.description,
         type:this.model.taskType,
-        priority:this.model.priority,
-        img:this.model.img
+        urgent:this.model.urgent,
+        taskPicList:this.model.taskPicList
       }
     }
   },
@@ -261,6 +261,13 @@ export default {
        }
      }
       let res = await TaskManageApi.taskAdd(params);
+      if (res) {
+        this.$message({
+          type: "success",
+          message: res
+        });
+      }
+      this.$router.push("/taskOverview");
     },
     resetChange() {},
     // 递归判断列表，把最后的children设为undefined
@@ -294,7 +301,6 @@ export default {
       let res = await TaskManageApi.listBy({
         deptId: valueData
       });
-      // console.log(7777777,this.newTaskForm.forms[7].dicData)
       // this.newTaskForm.forms[7].dicData.push(res)
       this.assignList = res;
     },
@@ -310,7 +316,6 @@ export default {
   mounted() {
     this.deptTreeList();
     this.createPeople = JSON.parse(localStorage.getItem('userInfo')).fullName
-    console.log('ppppppp',JSON.parse(localStorage.getItem('userInfo')).fullName)
   }
 };
 </script>

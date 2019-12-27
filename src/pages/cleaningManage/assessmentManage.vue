@@ -79,11 +79,6 @@ export default {
             formslot: true,
             span: 12
           },
-        //  {
-        //     prop: "",
-        //     formslot: true,
-        //     span: 6
-        //   },
           {
             type: "select",
             label: "完成日期",
@@ -100,7 +95,7 @@ export default {
             label: "负责人",
             prop: "principal",
             placeholder: "请输入",
-            clearable: true,
+            // clearable: true,
             span: 4
             // width: "110px"
           },
@@ -114,6 +109,7 @@ export default {
       },
       tableData: {
         ref: "tableData",
+        customTop: true,
         data: [],
         columnConfig: [],
         uiConfig: {
@@ -175,13 +171,12 @@ export default {
         { label: "任务类型", prop: "taskType" },
         { label: "执行方式", prop: "executeMethod" },
         { label: "负责人", prop: "principal" },
-        { label: "负责人", prop: "executor" },
+        { label: "执行人", prop: "executor" },
         { label: "完成日期", prop: "completeDate" },
         { label: "备注", prop: "remark" }
       ];
       this.tableData.columnConfig = labelList;
       this.tableData.data = res;
-      console.log("list", res);
     },
     batchDels(){},
     addTenant(){}
