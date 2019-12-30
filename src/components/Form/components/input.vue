@@ -103,7 +103,6 @@
   </div>
 </template>
 <script>
-import { initVal } from "../utils/dataformat";
 import { validatenull } from "../utils/validate";
 import props from "../common/props";
 import events from "../common/events";
