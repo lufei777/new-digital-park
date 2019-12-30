@@ -19,6 +19,7 @@
     :canvasOption="column.canvasOption"
     :controls-position="column.controlsPosition"
     :checkStrictly="column.checkStrictly"
+    :collapseTags="column.collapseTags"
     :data="column.data"
     :dataType="column.dataType"
     :defaultCheckedKeys="column.defaultCheckedKeys"
@@ -143,21 +144,15 @@ import miSlider from "../components/slider";
 import miSwitch from "../components/switch";
 import miInputNumber from "../components/input-number";
 import miUpload from "../components/upload";
+import miCascader from "../components/cascader";
 
 export default {
   name: "form-temp",
   components: {
-    miInput,
-    miSelect,
-    miRadio,
-    miCheckbox,
-    miDate,
-    miTime,
-    miTree,
-    miSlider,
-    miSwitch,
-    miInputNumber,
-    miUpload
+    miInput,miSelect,miRadio,
+    miCheckbox,miDate,miTime,
+    miTree,miSlider,miSwitch,
+    miInputNumber,miUpload,miCascader
   },
   props: {
     value: [Array, String, Number, Object, Boolean, Date],
