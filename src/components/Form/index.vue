@@ -73,7 +73,7 @@
                     <!-- 自定义表单里内容 -->
                     <template
                       :slot="`${column.prop}Type`"
-                      slot-scope="{item,labelkey,valuekey}"
+                      slot-scope="{item,labelkey,valuekey,childrenkey,node}"
                       v-if="column.typeslot"
                     >
                       <slot
@@ -82,13 +82,15 @@
                         :item="item"
                         :labelkey="labelkey"
                         :valuekey="valuekey"
+                        :childrenkey="childrenkey"
+                        :node="node"
                       ></slot>
                     </template>
                     <!-- input的slot处理 -->
-                    <template :slot="column.prependslot">
+                    <template v-if="column.prependslot" :slot="column.prependslot">
                       <slot :name="column.prependslot" :disabled="column.disabled || allDisabled"></slot>
                     </template>
-                    <template :slot="column.appendslot">
+                    <template v-if="column.appendslot" :slot="column.appendslot">
                       <slot :name="column.appendslot" :disabled="column.disabled || allDisabled"></slot>
                     </template>
                   </form-temp>

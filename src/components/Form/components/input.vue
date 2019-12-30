@@ -49,8 +49,8 @@
               <div style="width:100%;padding-right:10px;" slot-scope="{ data }">
                 <slot
                   :name="prop+'Type'"
-                  :label="labelKey"
-                  :value="valueKey"
+                  :labelkey="labelKey"
+                  :valuekey="valueKey"
                   :item="data"
                   v-if="typeslot"
                 ></slot>

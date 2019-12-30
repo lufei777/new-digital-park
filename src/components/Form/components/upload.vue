@@ -25,7 +25,7 @@
         <i class="el-icon-plus"></i>
       </template>
       <template v-else-if="listType=='picture-img'">
-        <img v-if="imgUrl" :src="imgUrl" class="avatar" />
+        <img v-if="imgUrl" :src="imgUrl" class="avatar"/>
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </template>
       <template v-else-if="drag">
@@ -125,12 +125,6 @@ export default {
   computed: {
     fileName() {
       return this.propsHttp.fileName || "file";
-    },
-    isAliOss() {
-      return this.oss === "ali";
-    },
-    isQiniuOss() {
-      return this.oss === "qiniu";
     },
     isPictureImg() {
       return this.listType === "picture-img";
@@ -238,9 +232,7 @@ export default {
       this.loading = true;
       let file = config.file;
       this.file = config.file;
-      if (!this.validateFile(file)) {
-        return;
-      }
+      this.validateFile(file);
       // 设置额外头部
       const headers = Object.assign(this.headers, {
         "Content-Type": "multipart/form-data"
@@ -258,6 +250,7 @@ export default {
           this.$axios
             .post(url, param, { headers })
             .then(res => {
+              // 兼容项目，axios经过处理，返回的就是数据
               let list = res;
               /* let list = {};
               list = _.get(res, this.resKey, {}); */
@@ -319,13 +312,12 @@ export default {
 
       if (!this.validatenull(acceptList) && !acceptList.includes(accept)) {
         this.hide("文件类型不符合");
-        return false;
+        return;
       }
       if (!this.validatenull(filesize) && filesize / 1024 > this.filesize) {
         this.hide("文件太大不符合");
-        return false;
+        return;
       }
-      return true;
     },
     setVal() {
       let result = "";

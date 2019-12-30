@@ -1,6 +1,7 @@
 <template>
   <div class="mi-form_cascader">
-    <el-cascader
+    <component
+      :is="componentId"
       v-model="text"
       :options="dic"
       :props="props"
@@ -18,7 +19,20 @@
       @blue="handleBlur"
       @focus="handleFocus"
       @click.native="handleClick"
-    ></el-cascader>
+    >
+      <template slot-scope="{ node, data }">
+        <slot
+          v-if="typeslot"
+          :name="`${prop}Type`"
+          :node="node"
+          :item="data"
+          :labelkey="labelKey"
+          :valuekey="valueKey"
+          :childrenkey="childrenKey"
+        ></slot>
+        <span v-else>{{ data[labelKey] }}</span>
+      </template>
+    </component>
   </div>
 </template>
 <script>
@@ -32,7 +46,8 @@ export default {
   data() {
     return {
       defaultDic: [],
-      netDic: []
+      netDic: [],
+      componentId: "el-cascader"
     };
   },
   props: {
@@ -74,8 +89,9 @@ export default {
     if (typeof this.multiple != "undefined") {
       this.props.multiple = this.multiple;
     }
+    if (this.type === "cascader-panel") {
+      this.componentId = "el-cascader-panel";
+    }
   }
 };
 </script>
-<style lang='scss' scoped>
-</style>

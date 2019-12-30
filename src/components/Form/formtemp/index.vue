@@ -114,16 +114,23 @@
   >
     <template
       :slot="column.prop+'Type'"
-      slot-scope="{item,labelkey,valuekey}"
+      slot-scope="{item,labelkey,valuekey,childrenkey,node}"
       v-if="column.typeslot"
     >
-      <slot :name="column.prop+'Type'" :item="item" :valuekey="valuekey" :labelkey="labelkey"></slot>
+      <slot
+        :name="column.prop+'Type'"
+        :node="node"
+        :item="item"
+        :valuekey="valuekey"
+        :labelkey="labelkey"
+        :childrenkey="childrenkey"
+      ></slot>
     </template>
     <!-- input的slot处理 -->
-    <template :slot="column.prependslot">
+    <template v-if="column.prependslot" :slot="column.prependslot">
       <slot :name="column.prependslot"></slot>
     </template>
-    <template :slot="column.appendslot">
+    <template v-if="column.appendslot" :slot="column.appendslot">
       <slot :name="column.appendslot"></slot>
     </template>
   </component>
@@ -149,10 +156,18 @@ import miCascader from "../components/cascader";
 export default {
   name: "form-temp",
   components: {
-    miInput,miSelect,miRadio,
-    miCheckbox,miDate,miTime,
-    miTree,miSlider,miSwitch,
-    miInputNumber,miUpload,miCascader
+    miInput,
+    miSelect,
+    miRadio,
+    miCheckbox,
+    miDate,
+    miTime,
+    miTree,
+    miSlider,
+    miSwitch,
+    miInputNumber,
+    miUpload,
+    miCascader
   },
   props: {
     value: [Array, String, Number, Object, Boolean, Date],

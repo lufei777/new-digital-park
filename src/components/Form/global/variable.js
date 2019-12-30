@@ -15,5 +15,6 @@ export const DIC_HTTP_PROPS = {
     fileName: 'file',
     res: 'data'
 };
+export const DIC_GROUP_SPLIT = ' -> ';
 export const DIC_SPLIT = ' | ';
 export const DATE_RANGE_SPLIT = '-';

@@ -1,5 +1,5 @@
 import { validatenull } from "./validate"
-import { DIC_PROPS, DIC_SPLIT, DIC_HTTP_PROPS } from '../global/variable'
+import { DIC_PROPS, DIC_SPLIT, DIC_HTTP_PROPS, DIC_GROUP_SPLIT } from '../global/variable'
 import AXIOS from 'axios'
 export const deepClone = (value) => {
     return _.cloneDeep(value)
