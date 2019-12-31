@@ -9,7 +9,7 @@
     :remote="remote"
     :readonly="readonly"
     :remote-method="handleRemoteMethod"
-    :collapse-tags="tags"
+    :collapse-tags="collapseTags"
     :placeholder="placeholder"
     :multiple-limit="limit"
     :allow-create="allowCreate"
@@ -69,9 +69,9 @@ export default {
       type: Boolean,
       default: false
     },
-    tags: {
+    collapseTags: {
       type: Boolean,
-      default: false
+      default: true
     },
     limit: {
       type: Number,

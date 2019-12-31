@@ -14,8 +14,7 @@
       :inline-message="parentOption.inlineMessage"
     >
       <el-row :span="24">
-        <div
-          class="mi-form__group"
+        <mi-group
           v-for="(item,index) in columnOption"
           :key="item.prop"
           :display="item.display"
@@ -23,90 +22,95 @@
           :card="parentOption.card"
           :label="item.label"
         >
-          <template v-for="(column, cindex) in item.forms">
-            <el-col
-              :key="column.prop"
-              :span="column.span || itemSpanDefault"
-              :offset="column.offset || 0"
-              :push="column.push || 0"
-              :pull="column.pull || 0"
-              :xs="24"
-              v-if="vaildDisplay(column)"
-            >
-              <el-form-item
-                :class="[_.isEmpty(column.label)?'el-form-item_emptylabel' : '']"
-                :label="column.label"
-                :prop="column.prop"
-                :required="column.required"
-                :error="column.error"
-                :show-message="column.showMessage"
-                :inline-message="column.inlineMessage"
-                :size="column.size || controlSize"
-                :label-width="setPx(column.width,parentOption.labelWidth || 90)"
-              >
-                <!-- 如果是禁用tooltip，则tabindex 为 -1 -->
-                <el-tooltip
-                  :tabindex="!column.tip || column.type==='upload' ? -1 : 0"
-                  :disabled="!column.tip || column.type==='upload'"
-                  :content="vaildData(column.tip,getPlaceholder(column))"
-                  :placement="column.tipPlacement"
-                >
-                  <slot
-                    v-if="column.formslot"
-                    :name="column.prop"
-                    :value="model[column.prop]"
-                    :column="column"
-                    :label="model['$'+column.prop]"
-                    :size="column.size || controlSize"
-                    :disabled="column.disabled || allDisabled"
-                    :dic="DIC[column.prop]"
-                  ></slot>
-                  <form-temp
-                    v-else
-                    v-model="model[column.prop]"
-                    :column="column"
-                    :dic="DIC[column.prop]"
-                    :upload-before="uploadBefore"
-                    :upload-after="uploadAfter"
-                    :disabled="column.disabled || allDisabled"
-                  >
-                    <!-- 自定义表单里内容 -->
-                    <template
-                      :slot="`${column.prop}Type`"
-                      slot-scope="{item,labelkey,valuekey,childrenkey,node}"
-                      v-if="column.typeslot"
-                    >
-                      <slot
-                        :name="`${column.prop}Type`"
-                        :size="column.size || controlSize"
-                        :item="item"
-                        :labelkey="labelkey"
-                        :valuekey="valuekey"
-                        :childrenkey="childrenkey"
-                        :node="node"
-                      ></slot>
-                    </template>
-                    <!-- input的slot处理 -->
-                    <template v-if="column.prependslot" :slot="column.prependslot">
-                      <slot :name="column.prependslot" :disabled="column.disabled || allDisabled"></slot>
-                    </template>
-                    <template v-if="column.appendslot" :slot="column.appendslot">
-                      <slot :name="column.appendslot" :disabled="column.disabled || allDisabled"></slot>
-                    </template>
-                  </form-temp>
-                </el-tooltip>
-              </el-form-item>
-            </el-col>
-            <!-- 用作空行填充 -->
-            <el-col
-              :key="cindex"
-              tag="div"
-              style="display:inline-block;height:42px;"
-              :span="column.count"
-              v-if="column.row && column.span!==24 && column.count"
-            ></el-col>
+          <template slot="header" v-if="$slots[item.prop+'Header']">
+            <slot :name="`${item.prop}Header`"></slot>
           </template>
-        </div>
+          <div class="mi-form_group">
+            <template v-for="(column, cindex) in item.forms">
+              <el-col
+                :key="column.prop"
+                :span="column.span || itemSpanDefault"
+                :offset="column.offset || 0"
+                :push="column.push || 0"
+                :pull="column.pull || 0"
+                :xs="24"
+                v-if="vaildDisplay(column)"
+              >
+                <el-form-item
+                  :class="[_.isEmpty(column.label)?'el-form-item_emptylabel' : '']"
+                  :label="column.label"
+                  :prop="column.prop"
+                  :required="column.required"
+                  :error="column.error"
+                  :show-message="column.showMessage"
+                  :inline-message="column.inlineMessage"
+                  :size="column.size || controlSize"
+                  :label-width="setPx(column.width,parentOption.labelWidth || 90)"
+                >
+                  <!-- 如果是禁用tooltip，则tabindex 为 -1 -->
+                  <el-tooltip
+                    :tabindex="!column.tip || column.type==='upload' ? -1 : 0"
+                    :disabled="!column.tip || column.type==='upload'"
+                    :content="vaildData(column.tip,getPlaceholder(column))"
+                    :placement="column.tipPlacement"
+                  >
+                    <slot
+                      v-if="column.formslot"
+                      :name="column.prop"
+                      :value="model[column.prop]"
+                      :column="column"
+                      :label="model['$'+column.prop]"
+                      :size="column.size || controlSize"
+                      :disabled="column.disabled || allDisabled"
+                      :dic="DIC[column.prop]"
+                    ></slot>
+                    <form-temp
+                      v-else
+                      v-model="model[column.prop]"
+                      :column="column"
+                      :dic="DIC[column.prop]"
+                      :upload-before="uploadBefore"
+                      :upload-after="uploadAfter"
+                      :disabled="column.disabled || allDisabled"
+                    >
+                      <!-- 自定义表单里内容 -->
+                      <template
+                        :slot="`${column.prop}Type`"
+                        slot-scope="{item,labelkey,valuekey,childrenkey,node}"
+                        v-if="column.typeslot"
+                      >
+                        <slot
+                          :name="`${column.prop}Type`"
+                          :size="column.size || controlSize"
+                          :item="item"
+                          :labelkey="labelkey"
+                          :valuekey="valuekey"
+                          :childrenkey="childrenkey"
+                          :node="node"
+                        ></slot>
+                      </template>
+                      <!-- input的slot处理 -->
+                      <template v-if="column.prependslot" :slot="column.prependslot">
+                        <slot :name="column.prependslot" :disabled="column.disabled || allDisabled"></slot>
+                      </template>
+                      <template v-if="column.appendslot" :slot="column.appendslot">
+                        <slot :name="column.appendslot" :disabled="column.disabled || allDisabled"></slot>
+                      </template>
+                    </form-temp>
+                  </el-tooltip>
+                </el-form-item>
+              </el-col>
+              <!-- 用作空行填充 -->
+              <el-col
+                :key="cindex"
+                tag="div"
+                style="display:inline-block;height:42px;"
+                :span="column.count"
+                v-if="column.row && column.span!==24 && column.count"
+              ></el-col>
+            </template>
+          </div>
+        </mi-group>
         <el-col :span="24" v-if="vaildData(parentOption.menuBtn,true)">
           <el-form-item>
             <!-- 菜单按钮组 -->
@@ -135,6 +139,7 @@
   </div>
 </template>
 <script>
+import miGroup from "./components/group";
 import formTemp from "./formtemp";
 import {
   deepClone,
@@ -167,7 +172,7 @@ const setDefaultValue = function(defaultOptions, options, vm) {
 
 export default {
   name: "miForm",
-  components: { formTemp },
+  components: { formTemp, miGroup },
   mixins: [init()],
   props: {
     uploadBefore: Function,
@@ -195,7 +200,7 @@ export default {
     };
   },
   created() {
-    console.log("form create");
+    // console.log("form create");
     //初始化字典
     this.columnOption.forEach(ele => {
       this.handleLoadDic(ele).then(res => {
@@ -241,8 +246,10 @@ export default {
       this.$emit("input", this.model);
     },
     forEachLabel() {
-      this.options.forms.forEach(column => {
-        this.handleShowLabel(column, this.DIC[column.prop]);
+      this.columnOption.forEach(group => {
+        group.forms.forEach(column => {
+          this.handleShowLabel(column, this.DIC[column.prop]);
+        });
       });
     },
     handleShowLabel(column, DIC) {
@@ -398,10 +405,14 @@ export default {
     parentOption() {
       let option = this.deepClone(this.tableOption);
       let group = option.group;
+      let forms = option.forms;
       if (!group) {
         option = Object.assign(option, {
           group: [this.deepClone(option)]
         });
+      }
+      if (group && forms) {
+        option.group.unshift({ forms });
       }
       delete option.forms;
       // console.log("parentOption", option);
@@ -543,6 +554,18 @@ export default {
     .el-scrollbar__wrap {
       overflow-x: hidden;
     }
+  }
+  // 分组
+  .mi-form_group {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    height: auto;
   }
 }
 </style>
