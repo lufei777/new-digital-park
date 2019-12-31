@@ -7,7 +7,7 @@ export default [{
   path:'/tmpRouter',
   name: 'TmpRouter',
   component:TmpRouter,
-  meta:{title: '设备表记'},
+  meta:{title: '设备表计'},
   redirect:"/deviceRecord",
   children:[{
     path: '/deviceRecord',

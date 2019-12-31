@@ -13,9 +13,12 @@
           :node-key="treeConfig.nodeKey || 'id'"
           :default-expanded-keys="treeConfig.defaultExpandedkeys"
           :ref="treeConfig.ref || 'treeRef'"
-          highlight-current
-          @node-click="onClickNode"
+          :show-checkbox="treeConfig.showCheckbox"
+          :default-checked-keys="treeConfig.defaultCheckedKeys"
           :filter-node-method="filterNode"
+          @node-click="onClickNode"
+          @check="handleCheck"
+          highlight-current
         >
         </el-tree>
       </el-scrollbar>
@@ -24,7 +27,6 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
   export default {
     name:'Tree',
     components: {
@@ -40,9 +42,9 @@
       }
     },
     computed: {
-      ...mapState({
-        menuIsCollapse:state=>state.digitalPark.menuIsCollapse
-      })
+      nodeKey(){
+        return this.treeConfig.nodeKey || 'id'
+      }
     },
     watch:{
       searchText(val) {
@@ -50,17 +52,32 @@
       }
     },
     methods: {
-      handleCheckChange(val){
-
+      handleCheck(){
+        let checkedNode = this.$refs[this.treeConfig.ref ||'treeRef'].getCheckedNodes()
+        this.treeConfig.onCheckTreeNodeCallBack && this.treeConfig.onCheckTreeNodeCallBack(checkedNode)
       },
-      handleCheck(val){
-      },
-      onClickNode(node){
-        this.treeConfig.onClickTreeNodeCallBack && this.treeConfig.onClickTreeNodeCallBack(node)
+      onClickNode(node,value){
+        if(value.disabled){
+          return ;
+        }
+        if(this.treeConfig.showCheckbox){
+          //如果显示复选框则点击节点也同步复选框
+          let arr= this.$refs[this.treeConfig.ref ||'treeRef'].getCheckedNodes()
+          console.log(arr,node)
+          if(!value.checked){
+            arr.push(node)
+          }else{
+            let index= arr.findIndex((item)=> item[this.nodeKey]==node[this.nodeKey])
+            arr.splice(index,1)
+          }
+          this.$refs[this.treeConfig.ref ||'treeRef'].setCheckedNodes(arr)
+          this.treeConfig.onCheckTreeNodeCallBack && this.treeConfig.onCheckTreeNodeCallBack(arr)
+        }else{
+          this.treeConfig.onClickTreeNodeCallBack && this.treeConfig.onClickTreeNodeCallBack(node)
+        }
       },
       filterNode(value, data) {
         if (!value) return true;
-        let tmp = data.floor || data.text || data.name || data.label  //兼容后端不同名称
         return data[this.treeConfig.treeProps.label].indexOf(value) !== -1;
       },
     },
@@ -71,7 +88,7 @@
 
 <style lang="less">
   .common-tree{
-      padding:20px 0;
+      /*padding:20px 0;*/
       background: @white;
       height:100%;
       box-sizing: border-box;

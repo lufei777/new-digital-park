@@ -160,9 +160,9 @@
           //后台没有做分页
          this.tableConfig.columnConfig=[{label:'属性名',prop:'attrName'},
            {label:'描述',prop:'description'},
-           {label:'是否必填',prop:'requiredText',
+           {label:'是否必填',prop:'required',
              formatter:function(row,column){
-               return row[column.property] =='1'?'是':'否'
+               return row.required =='1'?'是':'否'
              },}]
           this.tableConfig.data=res
       },

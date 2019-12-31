@@ -14,7 +14,6 @@
           :default-expanded-keys="defaultExpandedKeys|| [1]"
           :highlight-current="true"
           :default-checked-keys="defaultCheckedKey"
-          @check-change="handleCheckChange"
           @check="handleCheck"
           @node-click="onClickNode"
           :filter-node-method="filterNode"
@@ -90,7 +89,6 @@
         if(value.disabled){
           return ;
         }
-        // console.log(this.$refs.navTree.getCheckedNodes(),node,value)
         let arr=this.$refs.navTree.getCheckedNodes()
         if(this.fromFlag==1){
           if(!value.checked){
@@ -130,8 +128,8 @@
       /*height:100%;*/
       width:250px;
       position: fixed;
-      top:90px;
-      bottom:20px;
+      /*top:90px;*/
+      /*bottom:20px;*/
       box-sizing: border-box;
       overflow: hidden;
     .el-input__inner{

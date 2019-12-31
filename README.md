@@ -84,16 +84,39 @@
   2）addNodeCallback/delNodeCallback/editCallback/clickNodeCallback------添加/删除/编辑/点击 节点回调
   3）defaultExpandedKey 默认展开的节点
   
-三）login组件---老系统中所有的登录都是一样的，重构时可使用此组件。
-    参数说明：
-  1）url --- 成功后跳转到的页面路由
-  
+三）tree组件---支持搜索、多选、单选
+    参数说明
+  1）treeList---渲染的tree列表
+  2）treeConfig:{  //tree配置
+      ref:'treeRef' //默认不传为treeRef
+      treeProps:{                         
+        label:'floor',
+        children: 'nodes',
+      },                   
+      nodeKey:'floorId', //默认不传为id
+      defaultExpandedkeys:[], //默认展开的节点
+      defaultCheckedKeys:[],   //默认选中的复选框
+      showCheckbox:false,  //是否显示复选框,默认不传则不显示
+      showSearch:false,//是否显示搜索框，默认不传则不显示
+      onClickTreeNodeCallBack:this.onClickTreeNode, //点击节点的回调
+      onCheckTreeNodeCallBack:this.onClickTreeNode,  //点击复选框的回调
+  } 
+  //treeConfig的treeProps默认不传为：
+  {
+    label:'text',
+    children: 'nodes',
+  }
 四）treeModal---树形弹框
     参数说明
-  1）tip---提示信息
-  2）showTree ---弹框的关闭显示控制
-  3）cancelCallback---点击取消时的回调
-  3）sureCallback ---点击确定时的回调
+   1）treeModalConfig:{
+       treeList:[], //同tree组件配置
+       treeConfig:{ //同tree组件配置
+        defaultExpandedkeys:[],
+       },
+      showModal:false, //是否显示模态框
+      onClickSureBtnCallback:this.onClickModalSureBtn, //点击确定按钮时的回调
+      onClickCancelBtnCallback:this.onClickModalCancelBtn //点击取消按钮的回调
+   }
 
 五）、自定义表格Table组件封装
 -  功能说明
@@ -234,18 +257,16 @@
    
 六）通用导航菜单 commonMenu
    1.传递参数
-    1)menuList ：菜单列表
+    1)menuData ：菜单列表
     2)menuConfig,示例：{
              mode:'horizontal', //默认垂直模式
              bgColor:'#fff', //菜单背景色
              textColor:'#606266', //字体颜色
              specialRoute:true, // 此字段是数字园区首页使用。数字园区导航跳转的路由特殊处理，默认不传
              isCollapse:false, //默认不传即展开
-             moduleName:'资产管理' , //模块名称
-             moduleLogo:'iconzichanguanli' //模块logo
              activeIndex:'1' //当前激活菜单，不传默认第一个
             }
-            
+         
 七）
             
             
