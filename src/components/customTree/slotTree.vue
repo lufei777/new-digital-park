@@ -15,6 +15,7 @@
 			:node-key="NODE_KEY"
       :default-expanded-keys="defaultExpandedKey"
       accordion
+      highlight-current
       @node-click="onClickNode">
 				<div class="comp-tr-node" slot-scope="{ node, data }">
 					<!-- 编辑状态 -->

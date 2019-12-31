@@ -1,11 +1,11 @@
 // import AssetManage from '../../pages/assetManage/index'
-import AssetMaintenance from '../../pages/assetManage/assetMaintenance'
-import AssetGroup from '../../pages/assetManage/assetGroup'
-import AssetType from '../../pages/assetManage/assetType'
-import AssetAdd from '../../pages/assetManage/addAsset'
-import DefaultPage from '../../pages/commonProject/defaultPage/index'
-import AssetLedger from '../../pages/assetManage/assetLedger'
-import MyAsset from '../../pages/assetManage/myAsset'
+import AssetMaintenance from '../pages/assetManage/assetMaintenance'
+import AssetGroup from '../pages/assetManage/assetGroup'
+import AssetType from '../pages/assetManage/assetType'
+import AssetAdd from '../pages/assetManage/addAsset'
+import DefaultPage from '../pages/commonProject/defaultPage'
+import AssetLedger from '../pages/assetManage/assetLedger'
+import MyAsset from '../pages/assetManage/myAsset'
 
 export default [{
   path: '/assetManage',

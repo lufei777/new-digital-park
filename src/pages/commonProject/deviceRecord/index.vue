@@ -1,8 +1,6 @@
 <template>
   <div class="device-record">
-
-    <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
-         class="energy-tree-box radius-shadow">
+    <div class="common-tree-box monitor-tree radius-shadow">
        <el-select  v-model="curEnergy" placeholder="请选择" @change="onEnergyChange">
         <el-option label="电" value="1002"></el-option>
         <el-option label="水" value="4000"></el-option>
@@ -254,7 +252,7 @@
         })
       },
       fixTree(){
-        $(".energy-tree-box").css({
+        $(".common-tree-box").css({
           height:($(document).height()-110)+'px'
         })
       },
@@ -321,11 +319,7 @@
       margin-bottom:20px;
       font-weight: bold;
     }
-    .energy-tree-box{
-      height: 100%;
-      padding:20px 0;
-      background: @white;
-      bottom:20px;
+    .monitor-tree{
       .el-select{
         width:120px;
         margin:0 0 20px 65px;

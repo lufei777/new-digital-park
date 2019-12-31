@@ -88,6 +88,7 @@ export default {
   },
   methods: {
     onClickChangeModel(val) {
+      Cookies.set('moduleType',val)
       if (val == 1) {
         this.$router.replace("/digitalPark/dashboardHomePage");
       } else {
@@ -100,7 +101,7 @@ export default {
       this.$parent.handleLangChange && this.$parent.handleLangChange();
     },
     async onClickUserConfigure(val) { //点击用户
-      Cookies.set('moduleType',this.moduleType)
+      Cookies.set('moduleType',this.moduleType || Cookies.get('moduleType'))
       if (val == 3) {
         //如果是客户端
         if (localStorage.isCZClient=="true") {
@@ -123,11 +124,13 @@ export default {
           item => item.name == "个人中心"
         );
         if (val == 1) {
-          this.$router.push("/personalInformation");
+          this.$router.push("/vibe-web")
+          // this.$router.push("/personalInformation");
           Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[0].id}/personalInformation`
           );
         } else if (val == 2) {
-          this.$router.push("/modifyPassword");
+          this.$router.push("/vibe-web")
+          // this.$router.push("/modifyPassword");
           Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[1].id}/modifyPassword`
           );
         }

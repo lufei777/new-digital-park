@@ -1735,9 +1735,9 @@ class commonFun {
     if (loadNames.includes(item.name)) {
       let clientName = item.name === "安防管理" ? "综合安防" : item.name;
       try {
-        // Client.SkipToSigleBuild(clientName);
+        Client.SkipToSigleBuild(clientName);
         // window.goToClientPage && window.goToClientPage(item)
-        router.push(`/digitalPark/dashboardHomePage?productId=${item.id}`)
+        // router.push(`/digitalPark/dashboardHomePage?productId=${item.id}`)
       } catch (error) { console.error(error); }
       return true;
     }
