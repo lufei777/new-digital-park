@@ -93,8 +93,8 @@ function createdDic(option) {
     } else if (!validatenull(dicUrl)) {
       ajaxdic.push({
         url: dicUrl || url,
-        method: ele.dicMethod,
-        query: ele.dicQuery,
+        method: ele.dicMethod || "get",
+        query: ele.dicQuery || {},
         name: dicData || prop,
         props: ele.props,
         dataType: ele.dataType,
