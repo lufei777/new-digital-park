@@ -77,7 +77,10 @@ export default {
     },
     ...mapState({
       updateUserInfo: state => state.digitalPark.updateUserInfo
-    })
+    }),
+    cookieModuleType(){
+     return this.moduleType || Cookies.get('moduleType')
+    }
   },
   watch: {
     updateUserInfo() {
@@ -101,7 +104,7 @@ export default {
       this.$parent.handleLangChange && this.$parent.handleLangChange();
     },
     async onClickUserConfigure(val) { //点击用户
-      Cookies.set('moduleType',this.moduleType || Cookies.get('moduleType'))
+      Cookies.set('moduleType',this.cookieModuleType)
       if (val == 3) {
         //如果是客户端
         if (localStorage.isCZClient=="true") {
@@ -138,7 +141,7 @@ export default {
       this.userValue = "0";
     },
     onClickSetup(val) { //点击设置
-      Cookies.set('moduleType',this.moduleType)
+      Cookies.set('moduleType',this.cookieModuleType)
       if (val == 1) {
         this.$router.push(
           `/digitalPark/moduleConfigure?type=${this.moduleType}&updateDragFlag=true`
@@ -185,7 +188,7 @@ export default {
       this.$store.commit("digitalPark/updateUserInfo", false);
     },
     loadNews() {  //点击消息
-      Cookies.set('moduleType',this.moduleType)
+      Cookies.set('moduleType',this.cookieModuleType)
       // loadNews TODO
       localStorage.setItem("show_menu", "@/html/alarm/alarm_index.html");
       localStorage.setItem(
@@ -206,6 +209,7 @@ export default {
   },
   mounted() {
     this.getUserInfo();
+    window.goToPersonal = this.onClickUserConfigure
   }
 };
 </script>

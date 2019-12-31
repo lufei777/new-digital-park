@@ -8,7 +8,7 @@
         :model="assetAddForm"
         :inline="true"
         label-position="right"
-        label-width="120px"
+        label-width="100px"
       >
         <el-row>
           <el-col :span="9" :offset="3">
@@ -111,11 +111,13 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="1" :pull="2">
-            <el-button type="primary" @click="addCustomAttr">自定义</el-button>
+
+        </el-row>
+        <el-row>
+          <el-col :span="1" :offset="3">
+            <el-button type="primary" @click="addCustomAttr" class="mgt10">自定义</el-button>
           </el-col>
         </el-row>
-
         <el-row v-for="(item,index) in assetAddForm.customAttrList" :key="item.key">
           <el-col :span="9" :offset="3">
             <el-form-item
@@ -126,13 +128,13 @@
               <el-input v-model="item.attrName"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="5">
             <el-form-item
               label="属性值"
               :prop="'customAttrList.'+index+'.attrValue'"
               :rules="{required:true,message:'请输入属性值',trigger: 'blur'}"
             >
-              <el-input v-model="item.attrValue" class="mgr10"></el-input>
+              <el-input v-model="item.attrValue"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="1">
@@ -143,13 +145,11 @@
           </el-col>
         </el-row>
 
-        <el-row type="flex" justify="center">
-          <el-col :span="8">
-            <el-row type="flex" justify="space-around">
-              <el-button type="primary" @click="submitForm('assetAddForm')">确定</el-button>
-              <el-button @click="goBack" class="go-back">取消</el-button>
-            </el-row>
-          </el-col>
+        <el-row type="flex" justify="space-around">
+          <div style="margin-left: -50px;">
+            <el-button type="primary" @click="submitForm('assetAddForm')">确定</el-button>
+            <el-button @click="goBack" class="go-back">取消</el-button>
+          </div>
         </el-row>
       </el-form>
     </div>
@@ -377,8 +377,10 @@ export default {
     },
     async getDepartmentTree() {
       let res = await AssetManageApi.getDepartmentTree();
-      this.assetAddForm.departmentId = res[0].id;
-      this.assetAddForm.departmentName = res[0].name;
+      if(!this.assetIds || !this.assetId){
+        this.assetAddForm.departmentId = res[0].id;
+        this.assetAddForm.departmentName = res[0].name;
+      }
       this.deptTree = res;
     },
     onShowDept() {
@@ -508,8 +510,8 @@ export default {
     color: red;
     margin-top: 10px;
   }
-  .mgr10 {
-    margin-right: 10px;
+  .mgt10 {
+    margin-bottom: 10px;
   }
   .remark-el-form .el-form-item__content {
     width: 70%;
