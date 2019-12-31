@@ -49,8 +49,8 @@
               <div style="width:100%;padding-right:10px;" slot-scope="{ data }">
                 <slot
                   :name="prop+'Type'"
-                  :label="labelKey"
-                  :value="valueKey"
+                  :labelkey="labelKey"
+                  :valuekey="valueKey"
                   :item="data"
                   v-if="typeslot"
                 ></slot>
@@ -103,7 +103,6 @@
   </div>
 </template>
 <script>
-import { initVal } from "../utils/dataformat";
 import { validatenull } from "../utils/validate";
 import props from "../common/props";
 import events from "../common/events";

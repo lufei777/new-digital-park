@@ -18,6 +18,7 @@ let typeMap = {
     "radio": "radio",
     "checkbox": "checkbox",
     "cascader": "cascader",
+    "cascader-panel": "cascader",
     "rate": "rate",
     "upload": "upload",
     "slider": "slider",
@@ -119,7 +120,7 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
         }
     }
     // 数字处理
-    if (dataType === 'number' || curentForm.rawtype === 'number') {
+    if (type === 'number' || curentForm.rawtype === 'number') {
         value = parseFloat(value);
         if (isNaN(value)) {
             value = undefined;
@@ -200,7 +201,7 @@ export const formInitVal = (list = []) => {
         }
         // 表单默认值设置
         if (!validatenull(ele.valueDefault)) {
-            if (ele.dataType === 'number') {
+            if (ele.type === 'number' || ele.dataType === 'number') {
                 tableForm[ele.prop] = parseFloat(ele.valueDefault);
             } else {
                 tableForm[ele.prop] = ele.valueDefault;
