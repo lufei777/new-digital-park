@@ -324,11 +324,11 @@
           if(CommonFun.loadThreeD(item)){
             return;
           }
-          // if(this.productId){
-          //   console.log(this.clientMenu,item)
-          //   goToClientPage(JSON.stringify(this.clientMenu),item.id)
-          //
-          // }
+          if(this.productId){
+            console.log(this.clientMenu,item)
+            goToClientPage(JSON.stringify(this.clientMenu),item.id)
+            return ;
+          }
           localStorage.setItem("menuList", JSON.stringify(item));
           let routeAddress = item.routeAddress;
           if (routeAddress) {

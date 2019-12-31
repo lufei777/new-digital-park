@@ -60,6 +60,7 @@
           defaultExpandedkeys:[],
           defaultCheckedKeys:[],
           showCheckbox:this.fromFlag==1?true:false,
+          currentKey:'',
           onClickTreeNodeCallBack:this.onClickTreeNode,
           onCheckTreeNodeCallBack:this.onClickTreeNode,
         },
@@ -140,11 +141,12 @@
           let tmp =res[0].nodes[0].nodes
           this.treeConfig.defaultExpandedkeys=[res[0].nodes[0].floorId]
           this.treeConfig.defaultCheckedKeys =[tmp[4].floorId,tmp[5].floorId]
-          this.checkedFloorList=[{floorId:tmp[4].floorId,name:tmp[4].floor},
-            {floorId:tmp[5].floorId,name:tmp[5].floor}]
+          this.checkedFloorList=[{floorId:tmp[4].floorId,floor:tmp[4].floor},
+            {floorId:tmp[5].floorId,floor:tmp[5].floor}]
         }else{
           this.treeConfig.defaultExpandedkeys=[res[0].floorId]
-          this.checkedFloorList=[{floorId:res[0].floorId,name:res[0].floor}]
+          this.treeConfig.currentKey=res[0].floorId
+          this.checkedFloorList=[{floorId:res[0].floorId,floor:res[0].floor}]
         }
         this.getDataFlag=true
       },

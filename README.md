@@ -96,6 +96,7 @@
       nodeKey:'floorId', //默认不传为id
       defaultExpandedkeys:[], //默认展开的节点
       defaultCheckedKeys:[],   //默认选中的复选框
+      currentKey:'', //默认当前选中的key
       showCheckbox:false,  //是否显示复选框,默认不传则不显示
       showSearch:false,//是否显示搜索框，默认不传则不显示
       onClickTreeNodeCallBack:this.onClickTreeNode, //点击节点的回调

@@ -44,7 +44,7 @@
     computed: {
       nodeKey(){
         return this.treeConfig.nodeKey || 'id'
-      }
+      },
     },
     watch:{
       searchText(val) {
@@ -63,7 +63,7 @@
         if(this.treeConfig.showCheckbox){
           //如果显示复选框则点击节点也同步复选框
           let arr= this.$refs[this.treeConfig.ref ||'treeRef'].getCheckedNodes()
-          console.log(arr,node)
+          // console.log(arr,node)
           if(!value.checked){
             arr.push(node)
           }else{
@@ -82,6 +82,10 @@
       },
     },
     mounted(){
+      setTimeout(()=>{
+        this.$refs[this.treeConfig.ref ||'treeRef'].setCurrentKey(this.treeConfig.currentKey)
+      },500)
+
     }
   }
 </script>
