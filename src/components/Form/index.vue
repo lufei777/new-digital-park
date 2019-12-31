@@ -200,7 +200,7 @@ export default {
     };
   },
   created() {
-    console.log("form create");
+    // console.log("form create");
     //初始化字典
     this.columnOption.forEach(ele => {
       this.handleLoadDic(ele).then(res => {
@@ -415,7 +415,7 @@ export default {
         option.group.unshift({ forms });
       }
       delete option.forms;
-      console.log("parentOption", option);
+      // console.log("parentOption", option);
       return option;
     },
     columnOption() {
@@ -432,7 +432,7 @@ export default {
         //处理级联属性
         ele.forms = calcCascader(ele.forms);
       });
-      console.log("columnOption", list);
+      // console.log("columnOption", list);
       return list;
     },
     menuPosition() {

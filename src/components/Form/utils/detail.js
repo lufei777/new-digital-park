@@ -1,6 +1,5 @@
 import { validatenull } from './validate';
 import { getPasswordChar, findByValue } from './util';
-import dayjs from 'dayjs';
 import moment from 'moment';
 
 export const detail = (row = {}, column = {}, option = {}, dic = []) => {
@@ -17,7 +16,7 @@ export const detail = (row = {}, column = {}, option = {}, dic = []) => {
     // 日期处理
     if (['date', 'time', 'datetime'].includes(type) && column.format) {
       const format = column.format.replace('dd', 'DD').replace('yyyy', 'YYYY');
-      result = dayjs(result).format(format);
+      result = moment(result).format(format);
     }
   }
 
