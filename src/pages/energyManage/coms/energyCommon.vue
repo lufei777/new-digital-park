@@ -1,12 +1,15 @@
 <template>
   <div class="energy-common">
-    <ZoomNavigation :floorList="floorList"
-                    :defaultChecked="defaultChecked"
-                    :isMultiple="isZoomMultiple"
-                    :fromFlag="fromFlag"
-                    :selectCallBack="selectZoomCallBack"
-                    :defaultExpandedKeys="defaultExpandedKeys"
-    />
+    <!--<ZoomNavigation :floorList="floorList"-->
+                    <!--:defaultChecked="defaultChecked"-->
+                    <!--:isMultiple="isZoomMultiple"-->
+                    <!--:fromFlag="fromFlag"-->
+                    <!--:selectCallBack="selectZoomCallBack"-->
+                    <!--:defaultExpandedKeys="defaultExpandedKeys"-->
+    <!--/>-->
+    <div class="common-tree-box radius-shadow">
+      <Tree :tree-list="floorList" :tree-config="treeConfig"/>
+    </div>
     <div class="right-content">
       <ConditionSelect :isGroup="isEnergyByGroup" :showEnergy="true" :fromFlag="fromFlag" :getDataFlag="getDataFlag"/>
       <div ref="myChart" :class="fromFlag==5?'hide':'my-chart radius-shadow'"></div>
@@ -30,7 +33,7 @@
   import {mapState} from 'vuex'
   import CommonApi from '../../../service/api/commonApi'
   import EnergyApi from '../../../service/api/energyApi'
-  import ZoomNavigation from '../../../components/zoomNavigation'
+  import Tree from '../../../components/tree'
   import ConditionSelect from '../../../components/conditionSelect'
   import ChartUtils from '../../../utils/chartUtils'
   import Table from '../../../components/Table'
@@ -38,7 +41,7 @@
   export default {
     name:'EnergyCommon',
     components: {
-      ZoomNavigation,
+      Tree,
       ConditionSelect,
       Table,
     },
@@ -48,6 +51,18 @@
       let _this = this
       return {
         floorList:[],
+        treeConfig:{
+          treeProps:{
+            label:'floor',
+            children: 'nodes',
+          },
+          nodeKey:'floorId',
+          defaultExpandedkeys:[],
+          defaultCheckedKeys:[],
+          showCheckbox:this.fromFlag==1?true:false,
+          onClickTreeNodeCallBack:this.onClickTreeNode,
+          onCheckTreeNodeCallBack:this.onClickTreeNode,
+        },
         curPage:1,
         rankType:'dqzh',
         myChart:'',
@@ -65,7 +80,6 @@
           energy:[{name:''}]
         },
         commonParams:{},
-        defaultExpandedKeys:[],
         tableConfig:{
           ref: "tableRef",
           data:[],
@@ -90,7 +104,7 @@
     },
     computed: {
       floorNameList() {
-        return this.checkedFloorList.map((item)=>item.name).join('、')
+        return this.checkedFloorList.map((item)=>item.floor).join('、')
       },
       energyNameList(){
         return this.selectParams.energy.map((item)=>item.name).join('、')
@@ -106,7 +120,7 @@
         }
       },
       floorId(){
-        return this.checkedFloorList.map((item)=>item.id).join(',')
+        return this.checkedFloorList.map((item)=>item.floorId).join(',')
       },
       tmpCommonTip(){
         return `${this.floorNameList}${this.selectParams.startTime}`+
@@ -120,21 +134,17 @@
     methods: {
       async getAllFloor(){
         let res  = await CommonApi.getAllFloorOfA3()
-        // let tmp=[res[0]]
-        // tmp[0].disabled=true
-        // res.shift()
-        // tmp[0].nodes=res
         this.floorList = res
         if(this.fromFlag==1){
           res[0].disabled=true
           let tmp =res[0].nodes[0].nodes
-          this.defaultExpandedKeys=[res[0].nodes[0].floorId]
-          this.defaultChecked =[{id:tmp[4].floorId,name:tmp[4].floor},
-                                {id:tmp[5].floorId,name:tmp[5].floor}]
-          this.checkedFloorList=this.defaultChecked
+          this.treeConfig.defaultExpandedkeys=[res[0].nodes[0].floorId]
+          this.treeConfig.defaultCheckedKeys =[tmp[4].floorId,tmp[5].floorId]
+          this.checkedFloorList=[{floorId:tmp[4].floorId,name:tmp[4].floor},
+            {floorId:tmp[5].floorId,name:tmp[5].floor}]
         }else{
-          this.defaultExpandedKeys=[res[0].floorId]
-          this.checkedFloorList=[{id:res[0].floorId,name:res[0].floor}]
+          this.treeConfig.defaultExpandedkeys=[res[0].floorId]
+          this.checkedFloorList=[{floorId:res[0].floorId,name:res[0].floor}]
         }
         this.getDataFlag=true
       },
@@ -599,30 +609,49 @@
       },
       handleFloorCanCheck(checkNode){
         if(checkNode.length<4){
-          console.log(1)
           this.floorList[0].nodes.map((item)=>{
             item.disabled=false
-          })
-        }else{
-          console.log(2)
-          this.floorList[0].nodes.map((item)=>{
-            item.disabled=true
-            checkNode.map((check)=>{
-              if(item.floorId==check.floorId){
-                item.disabled=false
-              }
+            item.nodes.length && item.nodes.map((child)=>{
+              child.disabled=false
             })
           })
+        }else{
+          this.floorList[0].nodes.map((item)=>{
+            item.disabled=true
+            item.nodes.length && item.nodes.map((child)=>{
+              child.disabled=true
+              checkNode.map((check)=>{
+                if(child.floorId==check.floorId){
+                  child.disabled=false
+                }
+              })
+            })
+          })
+          console.log(this.floorList)
           return;
         }
       },
-      selectZoomCallBack(val){
-         this.checkedFloorList=val
+      onClickTreeNode(val){
+        if(this.fromFlag==1){
+          this.handleFloorCanCheck(val)
+          this.checkedFloorList=val
+        }else{
+          this.checkedFloorList=[val]
+        }
       },
+      fixTree(){
+        $(".common-tree-box").css({
+          height:($(document).height()-110)+'px'
+        })
+      }
     },
     async mounted(){
       await this.getAllFloor()
       // this.getData()
+      this.fixTree()
+      $(window).resize(()=>{
+        this.fixTree()
+      })
     }
   }
 </script>

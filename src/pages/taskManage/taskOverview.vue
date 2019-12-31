@@ -1,9 +1,6 @@
 <template>
   <div class="task-overview panel-container">
-    <div
-      :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
-      class="energy-tree-box radius-shadow"
-    >
+    <div class="common-tree-box radius-shadow">
       <Tree :tree-list="taskData" :tree-config="taskTreeConfig"></Tree>
     </div>
     <div class="right-content panel-container">
@@ -192,7 +189,7 @@ export default {
       }
     },
     fixTree() {
-      $(".energy-tree-box").css({
+      $(".common-tree-box").css({
         height: $(document).height() - 110 + "px"
       });
     }

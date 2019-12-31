@@ -94,7 +94,6 @@
     :typeslot="column.typeslot"
     :typeformat="column.typeformat"
     :rawtype="column.rawtype"
-    :tags="column.tags"
     :upload-before="uploadBefore"
     :upload-after="uploadAfter"
     :value-format="column.valueFormat"

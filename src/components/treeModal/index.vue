@@ -54,6 +54,7 @@
       },
       onClickTreeNodeCallBack(val){
          this.curNode=val
+
       }
     },
     mounted(){

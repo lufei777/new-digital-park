@@ -1,6 +1,5 @@
 import { validatenull } from './validate';
 import { getPasswordChar, findByValue } from './util';
-// import dayjs from 'dayjs';
 import moment from 'moment';
 
 export const detail = (row = {}, column = {}, option = {}, dic = []) => {

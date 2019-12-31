@@ -73,7 +73,7 @@ export default {
     },
     collapseTags: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   methods: {},
@@ -86,7 +86,7 @@ export default {
     }
   },
   created() {
-    if (typeof this.multiple != "undefined") {
+    if (this.multiple) {
       this.props.multiple = this.multiple;
     }
     if (this.type === "cascader-panel") {

@@ -8,7 +8,7 @@
       <el-tooltip
         v-show="menuConfig.isCollapse"
         effect="dark"
-        :content="menuData.icon"
+        :content="menuData.name"
         placement="right-start"
       >
         <div class="title">

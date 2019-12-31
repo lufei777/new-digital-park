@@ -109,7 +109,13 @@ export default {
       }
     }
   },
-  mounted() {}
+  mounted() {
+    if(Cookies.get('activeMenuIndex').indexOf('/personalInformation')!=-1){
+      this.$router.push("/personalInformation")
+    }else if(Cookies.get('activeMenuIndex').indexOf('/modifyPassword')!=-1){
+      this.$router.push("/modifyPassword")
+    }
+  }
 };
 </script>
 
