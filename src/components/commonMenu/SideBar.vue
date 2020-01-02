@@ -62,7 +62,8 @@ export default {
     return {
       shortCutList: [],
       showShortcutList: false,
-      temporarilyHidden:false
+      temporarilyHidden:false,
+      activeTmp:''
     };
   },
   computed: {
@@ -70,11 +71,11 @@ export default {
       return this.menuConfig.isCollapse;
     },
     activeMenuIndex() {
+      this.getActiveIndex(this.menuData.childNode)
       //当前激活的菜单，顺序是cookie拿到的、父级传递的、默认的父级没传时使用菜单第一个
       return this.menuConfig.specialRoute ? ""
         : Cookies.get("activeMenuIndex") ||
-            this.menuConfig.activeIndex ||
-            this.menuData.childNode[0].id + this.menuData.childNode[0].routeAddress;
+            this.menuConfig.activeIndex || this.getActiveIndex(this.menuData.childNode)
     }
   },
   watch: {
@@ -118,7 +119,6 @@ export default {
       }
     },
     loadPage(key) {
-      console.log("key",key)
       Cookies.set("activeMenuIndex", key);
       if (key.indexOf("null") != -1) {
         this.$router.push("/digitalPark/defaultPage");
@@ -126,19 +126,28 @@ export default {
         commonFun.loadOldPage(key);
       } else {
         key = key.slice(key.indexOf("/"));
-        console.log("key1",key)
         this.$router.push(key);
       }
     },
     findCurNode(menu,id){
+      let tmp
       for(let item of menu.childNode){
         if(item.id==id){
-          return item;
+          tmp = item;
         }else{
           this.findCurNode(item,id)
         }
       }
-      return false;
+      return tmp;
+    },
+    getActiveIndex(menu){
+      if(!menu) return ;
+      if(menu[0].childNode.length!=0){
+        this.getActiveIndex(menu[0].childNode)
+      }else{
+        this.activeTmp = menu[0].id+menu[0].routeAddress
+      }
+      return this.activeTmp;
     },
     getMenuId(item){
       let menuId = item.split("/")[0];
@@ -169,7 +178,10 @@ export default {
     }
   },
   mounted() {
+
+
     this.getProModules();
+    // this.getActiveIndex(this.menuData.childNode)
   }
 };
 </script>

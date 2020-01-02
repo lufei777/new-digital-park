@@ -41,6 +41,7 @@ export default {
 .announcement {
   width: 100%;
   height: 100%;
+  background: #fff;
   .nav-style {
     padding: 0 20px;
     height: 70px;
