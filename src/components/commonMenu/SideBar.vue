@@ -92,30 +92,31 @@ export default {
   },
   methods: {
     handleSelect(key, keyPath) {
+      // console.log(key,keyPath)
       if (this.menuConfig.specialRoute) {
         //找到第一层，例如无忧服务
         let firstMenu = this.menuData.childNode.find(first => {
           return first.id == keyPath[0];
         });
-        let secondPath = keyPath[1].split("/")[0];
-        if (secondPath.indexOf("@") != -1) {
-          secondPath = secondPath.split("@")[0];
-        }
-        //找到第一层，例如能源管理
-        let secondMenu =
-          firstMenu.childNode.length &&
-          firstMenu.childNode.find(second => {
-            return second.id == secondPath;
-          });
+        //找到第二层，例如能源管理
+        let secondId = this.getMenuId(keyPath[1])
+        let secondMenu
+        firstMenu.childNode.length &&firstMenu.childNode.map((second) => {
+          if(second.id == secondId){
+            secondMenu=second
+          }
+        });
+        // console.log("firstMenu",firstMenu,secondMenu,secondId)
+        //找到当前点击的节点
+        let curNodeId=this.getMenuId(key)
+        console.log("secondMenu",secondMenu)
+        let curNode  = this.findCurNode(secondMenu,curNodeId)
+        console.log("curNode",curNode)
         //跳转三维
-        if (commonFun.loadThreeD(secondMenu)) {
+        if (commonFun.loadThreeD(curNode,secondMenu)) {
           return;
         }
         localStorage.setItem("menuList", JSON.stringify(secondMenu));
-        let tmpArr = key.split("/");
-        tmpArr.shift();
-        let activeMenu = tmpArr.join("/");
-        Cookies.set("activeMenuIndex", "/" + activeMenu);
       }
       if (key) {
         this.loadPage(key);
@@ -131,6 +132,24 @@ export default {
         key = key.slice(key.indexOf("/"));
         this.$router.push(key);
       }
+    },
+    findCurNode(menu,id){
+      console.log("menu",menu,id)
+      for(let item of menu.childNode){
+        console.log(item)
+        if(item.id==id){
+          return item;
+        }else{
+          this.findCurNode(item,id)
+        }
+      }
+    },
+    getMenuId(item){
+      let menuId = item.split("/")[0];
+      if (menuId.indexOf("@") != -1) {
+        menuId = menuId.split("@")[0];
+      }
+      return menuId
     },
     handleOpen(key) {
       // if(key=='/assetMaintenance'){

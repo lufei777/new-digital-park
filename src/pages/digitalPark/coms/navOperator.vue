@@ -127,16 +127,11 @@ export default {
           item => item.name == "个人中心"
         );
         if (val == 1) {
-          this.$router.push("/vibe-web")
-          // this.$router.push("/personalInformation");
-          Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[0].id}/personalInformation`
-          );
+          Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[0].id}/personalInformation`);
         } else if (val == 2) {
-          this.$router.push("/vibe-web")
-          // this.$router.push("/modifyPassword");
-          Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[1].id}/modifyPassword`
-          );
+          Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[1].id}/modifyPassword`);
         }
+        this.$router.push("/vibe-web")
       }
       this.userValue = "0";
     },
@@ -159,18 +154,11 @@ export default {
           item => item.name == "个人中心"
         );
         if (val == 2) {
-          this.$router.push("/personalInformation");
-          Cookies.set(
-            "activeMenuIndex",
-            `${thirdLevelTree.childNode[0].id}/personalInformation`
-          );
+          Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[0].id}/personalInformation`);
         } else if (val == 3) {
-          this.$router.push("/modifyPassword");
-          Cookies.set(
-            "activeMenuIndex",
-            `${thirdLevelTree.childNode[1].id}/modifyPassword`
-          );
+          Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[1].id}/modifyPassword`);
         }
+        this.$router.push("/vibe-web")
         this.setupValue = "0";
       }
     },
@@ -209,7 +197,10 @@ export default {
   },
   mounted() {
     this.getUserInfo();
-    window.goToPersonal = this.onClickUserConfigure
+    window.CZClient={
+      goToPersonal:this.onClickUserConfigure,  //跳转个人中心
+      goBack:this.onClickGoBack    //返回首页
+    }
   }
 };
 </script>
