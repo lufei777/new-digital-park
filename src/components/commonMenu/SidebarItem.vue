@@ -82,7 +82,8 @@ export default {
         }
       }
       // 跳转三维
-      if (CommonFun.loadThreeD(JSON.parse(localStorage.getItem("menuList")))) {
+      console.log(item,JSON.parse(localStorage.getItem("menuList")))
+      if (CommonFun.loadThreeD(item,JSON.parse(localStorage.getItem("menuList")))) {
         return;
       }
       this.loadPage(item);

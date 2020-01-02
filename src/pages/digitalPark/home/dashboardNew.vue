@@ -53,10 +53,10 @@
         <img v-if="pageFlag==2" src="../../../../static/image/digitalPark/unity_priview.png"
              class="unity_priview"
              alt="">
-        <iframe v-if="pageFlag==1"
-                src="../../../../static/HomePage/index.html"
-                frameborder="0"
-                class="unity-frame"></iframe>
+        <!--<iframe v-if="pageFlag==1"-->
+                <!--src="../../../../static/HomePage/index.html"-->
+                <!--frameborder="0"-->
+                <!--class="unity-frame"></iframe>-->
 
       </div>
       <div class="dashboard-right">
@@ -318,17 +318,11 @@
         },
         onClickItemFixPro(item){
           if(this.hideHeader) return ; //配置页不进行后续操作
-          Cookies.set('moduleType',1)
-
           //跳转三维客户端
-          if(CommonFun.loadThreeD(item)){
+          if(CommonFun.loadThreeD(item,this.clientMenu)){
             return;
           }
-          if(this.productId){
-            console.log(this.clientMenu,item)
-            goToClientPage(JSON.stringify(this.clientMenu),item.id)
-            return ;
-          }
+          Cookies.set('moduleType',1)
           localStorage.setItem("menuList", JSON.stringify(item));
           let routeAddress = item.routeAddress;
           if (routeAddress) {
