@@ -82,9 +82,9 @@
       },
     },
     mounted(){
-      setTimeout(()=>{
-        this.$refs[this.treeConfig.ref ||'treeRef'].setCurrentKey(this.treeConfig.currentKey)
-      },500)
+      // setTimeout(()=>{
+      //   this.$refs[this.treeConfig.ref ||'treeRef'].setCurrentKey(this.treeConfig.currentKey)
+      // },500)
 
     }
   }
