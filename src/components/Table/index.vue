@@ -78,15 +78,19 @@
           </template>
           <template slot-scope="scopeRow">
             <!-- 列内容slot -->
+            <!-- 自定义列 -->
             <slot v-if="col.slot" :name="col.prop" :scopeRow="scopeRow"></slot>
-            <!-- <el-input
+            <!-- 格式化列 -->
+            <template v-else>
+              <!-- <el-input
               class="edit-row-input"
               size="small"
               v-model="scope.row[col.prop]"
               placeholder="请输入内容"
               @change="_handleRowEdit(scopeRow)"
-            ></el-input>-->
-            <span v-else v-html="_columnFormatter(scopeRow,col)"></span>
+              ></el-input>-->
+              <span v-html="_columnFormatter(scopeRow,col)"></span>
+            </template>
           </template>
         </el-table-column>
       </template>
@@ -150,8 +154,8 @@
 </template>
 <script>
 // import tableColumn from "./tableColumn";
-import pagination from "./pagination";
-import dropDown from "./dropDown";
+import pagination from "./components/pagination";
+import dropDown from "./components/dropDown";
 import props from "./common/props";
 
 // 默认log
@@ -725,7 +729,7 @@ export default {
       return this.tableConfig.btnConfig ? this.tableConfig.btnConfig : false;
     },
     uiConfig() {
-      let uiConfig = this.tableConfig.uiConfig || Object.create({});
+      let uiConfig = this.tableConfig.uiConfig || {};
       // 设置默认值
       setDefaultValue(defaultUiConfig, uiConfig);
       // 初始化currentPage和pageSize
