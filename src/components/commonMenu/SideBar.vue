@@ -28,23 +28,17 @@
         @open="handleOpen"
         @close="handleClose"
       >
-        <sidebar-item
-          v-for="menu in menuData.childNode"
-          :key="menu.id"
-          :item="menu"
-          :specialRoute="menuConfig.specialRoute"
-          :menuList="menuData.childNode"
-        />
+        <sidebar-item :menuData="menuData" :specialRoute="menuConfig.specialRoute" :first="true"/>
       </el-menu>
-      <div v-if="!menuConfig.specialRoute && temporarilyHidden">
-        <div
-          class="iconfont iconkuaijierukou hover-pointer shortcut-btn"
-          @click="onClickShortcutBtn"
-        ></div>
-        <ul class="shortcut-list" v-show="showShortcutList">
-          <li v-for="(item,index) in shortCutList" :key="index">{{item.name}}</li>
-        </ul>
-      </div>
+      <!--<div v-if="!menuConfig.specialRoute">-->
+        <!--<div-->
+          <!--class="iconfont iconkuaijierukou hover-pointer shortcut-btn"-->
+          <!--@click="onClickShortcutBtn"-->
+        <!--&gt;</div>-->
+        <!--<ul class="shortcut-list" v-show="showShortcutList">-->
+          <!--<li v-for="(item,index) in shortCutList" :key="index">{{item.name}}</li>-->
+        <!--</ul>-->
+      <!--</div>-->
     </div>
   </el-scrollbar>
 </template>
@@ -92,6 +86,7 @@ export default {
   },
   methods: {
     handleSelect(key, keyPath) {
+      // debugger
       // console.log(key,keyPath)
       if (this.menuConfig.specialRoute) {
         //找到第一层，例如无忧服务
@@ -123,6 +118,7 @@ export default {
       }
     },
     loadPage(key) {
+      console.log("key",key)
       Cookies.set("activeMenuIndex", key);
       if (key.indexOf("null") != -1) {
         this.$router.push("/digitalPark/defaultPage");
@@ -130,19 +126,19 @@ export default {
         commonFun.loadOldPage(key);
       } else {
         key = key.slice(key.indexOf("/"));
+        console.log("key1",key)
         this.$router.push(key);
       }
     },
     findCurNode(menu,id){
-      console.log("menu",menu,id)
       for(let item of menu.childNode){
-        console.log(item)
         if(item.id==id){
           return item;
         }else{
           this.findCurNode(item,id)
         }
       }
+      return false;
     },
     getMenuId(item){
       let menuId = item.split("/")[0];
