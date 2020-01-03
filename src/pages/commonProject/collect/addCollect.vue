@@ -20,7 +20,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="分项类别" prop="region">
+      <el-form-item label="分项类别" prop="region" @change="onChildChange">
         <el-select v-model="collectForm.childId">
           <el-option
             v-for="(item,index) in childEnergyList"
@@ -117,25 +117,23 @@ export default {
       let res = await CommonApi.getEnergyListAll({
         catalogId: 2200
       });
-      let tmp = [];
-      res.map(item => {
-        tmp.push(item);
-      });
       this.energyList = res;
       this.childEnergyList = res[0].nodes;
       this.collectForm.catalogId = res[0].id;
       this.collectForm.childId = res[0].nodes[0].id;
     },
-    async getProbe(val) {
+    async getProbe() {
       let res = await CommonApi.getProbe({
-        type: val
+        type: this.collectForm.tableRadio,
+        energyType: this.collectForm.catalogId,
+        subitemType: this.collectForm.childId
       });
       if (res) {
         this.deviceTableList = res;
       }
     },
     agreeChange: function() {
-      this.getProbe(this.collectForm.tableRadio);
+      this.getProbe();
     },
     onEnergyChange(val) {
       let tmp = this.energyList.find(item => {
@@ -143,6 +141,9 @@ export default {
       });
       this.childEnergyList = tmp.nodes;
       this.collectForm.childId = tmp.nodes ? tmp.nodes[0].id : "";
+    },
+    onChildChange(){
+      this.getEnergyList()
     },
     async insertHandInput() {
       let params = [
@@ -192,9 +193,9 @@ export default {
       }
     }
   },
-  mounted() {
-    this.getEnergyList();
-    this.getProbe(0);
+ async mounted() {
+    await this.getEnergyList();
+    await this.getProbe();
     this.editList();
   }
 };
