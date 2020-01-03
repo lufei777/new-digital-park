@@ -43,6 +43,7 @@
     },
     computed: {
       nodeKey(){
+        this.$refs[this.treeConfig.ref ||'treeRef'].setCurrentKey(this.treeConfig.currentKey)
         return this.treeConfig.nodeKey || 'id'
       },
     },
@@ -82,10 +83,10 @@
       },
     },
     mounted(){
-      // setTimeout(()=>{
-      //   this.$refs[this.treeConfig.ref ||'treeRef'].setCurrentKey(this.treeConfig.currentKey)
-      // },500)
-
+      console.log(this.$refs.treeRef,this.treeConfig,this.treeList)
+      setTimeout(()=>{
+        this.$refs[this.treeConfig.ref ||'treeRef'].setCurrentKey(this.treeConfig.currentKey)
+      },500)
     }
   }
 </script>

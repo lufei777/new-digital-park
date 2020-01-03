@@ -21,8 +21,8 @@
 </template>
 
 <script>
-  import CommonApi from '../../../service/api/commonApi'
-  import CommonTable from '../../../components/commonTable/index'
+  import CommonApi from '@/service/api/commonApi'
+  import CommonTable from '@/components/commonTable/index'
   export default {
     name: 'UserManage',
     components: {
@@ -141,7 +141,7 @@
 </script>
 
 <style lang="less">
-  @import '../less/dataDetailRow.less';
+  @import '../commonProject/less/dataDetailRow.less';
   .role-manage{
     .role-list{
       padding:20px;

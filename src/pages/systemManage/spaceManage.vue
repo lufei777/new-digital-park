@@ -43,10 +43,10 @@
 
 <script>
   import { mapState } from 'vuex'
-  import CommonApi from '../../../service/api/commonApi'
-  import CommonTable from '../../../components/commonTable/index'
+  import CommonApi from '@/service/api/commonApi'
+  import CommonTable from '@/components/commonTable/index'
   import AddSpace from './addSpace'
-  import Tree from '../../../components/tree/index'
+  import Tree from '@/components/tree/index'
   export default {
     name: 'SpaceManage',
     components: {
@@ -194,7 +194,7 @@
 </script>
 
 <style lang="less">
-  @import '../less/dataDetailRow.less';
+  @import '../commonProject/less/dataDetailRow.less';
   .space-manage{
     .choose-box{
       padding:20px;
