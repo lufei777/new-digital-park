@@ -38,8 +38,6 @@
 <script>
 import CommonApi from "../../../service/api/commonApi";
 import Table from "../../../components/Table/index";
-import commonApi from "../../../service/api/commonApi";
-
 export default {
   name: "ManMadeCollectList",
   components: {

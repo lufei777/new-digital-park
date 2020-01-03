@@ -36,7 +36,26 @@ export default {
       btns: {
         label: "",
         icon: "el-icon-more",
-        showMore: false
+        showMore: false,
+        handler(row) {
+          console.log(row);
+        },
+        menus: [
+          {
+            label: "租用",
+            handler: function(row) {
+              console.log("租用", row);
+              console.log("zuyong");
+            }
+          },
+          {
+            label: "借用",
+            handler: function(row) {
+              console.log("借用", row);
+              console.log("jieyong");
+            }
+          }
+        ]
       }
     };
   },
@@ -49,5 +68,3 @@ export default {
   }
 };
 </script>
-<style lang='less' scoped>
-</style>

@@ -5,59 +5,54 @@ export default function () {
         data() { },
         computed: {
             listKey() {
-                let propName = 'list';
                 if (this.tableConfig.serverMode) {
                     let props = this.tableConfig.serverMode.props
                     if (props) {
-                        return props[propName] || DIC_HTTP_PROPS[propName];
+                        return props.list || DIC_HTTP_PROPS.list;
                     }
-                    return DIC_HTTP_PROPS[propName];
+                    return DIC_HTTP_PROPS.list;
                 }
-                return DIC_HTTP_PROPS[propName];
+                return DIC_HTTP_PROPS.list;
             },
             pageNumKey() {
-                let propName = 'pageNum';
                 if (this.tableConfig.serverMode) {
                     let props = this.tableConfig.serverMode.props
                     if (props) {
-                        return props[propName] || DIC_HTTP_PROPS[propName];
+                        return props.pageNum || DIC_HTTP_PROPS.pageNum;
                     }
-                    return DIC_HTTP_PROPS[propName];
+                    return DIC_HTTP_PROPS.pageNum;
                 }
-                return DIC_HTTP_PROPS[propName];
+                return DIC_HTTP_PROPS.pageNum;
             },
             pageSizeKey() {
-                let propName = 'pageSize';
                 if (this.tableConfig.serverMode) {
                     let props = this.tableConfig.serverMode.props
                     if (props) {
-                        return props[propName] || DIC_HTTP_PROPS[propName];
+                        return props.pageSize || DIC_HTTP_PROPS.pageSize;
                     }
-                    return DIC_HTTP_PROPS[propName];
+                    return DIC_HTTP_PROPS.pageSize;
                 }
-                return DIC_HTTP_PROPS[propName];
+                return DIC_HTTP_PROPS.pageSize;
             },
             totalKey() {
-                let propName = 'total';
                 if (this.tableConfig.serverMode) {
                     let props = this.tableConfig.serverMode.props
                     if (props) {
-                        return props[propName] || DIC_HTTP_PROPS[propName];
+                        return props.total || DIC_HTTP_PROPS.total;
                     }
-                    return DIC_HTTP_PROPS[propName];
+                    return DIC_HTTP_PROPS.total;
                 }
-                return DIC_HTTP_PROPS[propName];
+                return DIC_HTTP_PROPS.total;
             },
             resKey() {
-                let propName = 'res';
                 if (this.tableConfig.serverMode) {
                     let props = this.tableConfig.serverMode.props
                     if (props) {
-                        return props[propName] || DIC_HTTP_PROPS[propName];
+                        return props.res || DIC_HTTP_PROPS.res;
                     }
-                    return DIC_HTTP_PROPS[propName];
+                    return DIC_HTTP_PROPS.res;
                 }
-                return DIC_HTTP_PROPS[propName];
+                return DIC_HTTP_PROPS.res;
             }
         },
     }

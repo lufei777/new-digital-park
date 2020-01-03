@@ -15,5 +15,6 @@ export const DIC_HTTP_PROPS = {
     total: 'total',
     pageSize: 'pageSize',
     list: 'list',
-    pageNum:'pageNum'
+    pageNum: 'pageNum'
 };
+export const KEY_COMPONENT_NAME = 'mi-';
