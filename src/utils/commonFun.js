@@ -1730,15 +1730,17 @@ class commonFun {
     }
   }
 
-  loadThreeD(item) {
-    const loadNames = ["安防管理", "机房动环", "智能建筑", "建筑监控", "消防管理"];
-    if (loadNames.includes(item.name)) {
-      let clientName = item.name === "安防管理" ? "综合安防" : item.name;
-      try {
-        Client.SkipToSigleBuild(clientName);
-        // window.goToClientPage && window.goToClientPage(item)
-        // router.push(`/digitalPark/dashboardHomePage?productId=${item.id}`)
-      } catch (error) { console.error(error); }
+  loadThreeD(item,clientMenu) {
+    // const loadNames = ["安防管理", "机房动环", "智能建筑", "建筑监控", "消防管理"];
+    // if (loadNames.includes(item.name)) {
+    //   let clientName = item.name === "安防管理" ? "综合安防" : item.name;
+    //   Client.SkipToSigleBuild(clientName);
+    // }
+    if(item.level==2 && item.clientType==1){
+      router.push(`${item.routeAddress}?productId=${item.id}`)
+      return true;
+    }else if(item.level!=2 && item.clientType==1){
+      window.goToClientPage(JSON.stringify(clientMenu),item.id)
       return true;
     }
     return false;

@@ -28,23 +28,17 @@
         @open="handleOpen"
         @close="handleClose"
       >
-        <sidebar-item
-          v-for="menu in menuData.childNode"
-          :key="menu.id"
-          :item="menu"
-          :specialRoute="menuConfig.specialRoute"
-          :menuList="menuData.childNode"
-        />
+        <sidebar-item :menuData="menuData" :specialRoute="menuConfig.specialRoute" :first="true"/>
       </el-menu>
-      <div v-if="!menuConfig.specialRoute && temporarilyHidden">
-        <div
-          class="iconfont iconkuaijierukou hover-pointer shortcut-btn"
-          @click="onClickShortcutBtn"
-        ></div>
-        <ul class="shortcut-list" v-show="showShortcutList">
-          <li v-for="(item,index) in shortCutList" :key="index">{{item.name}}</li>
-        </ul>
-      </div>
+      <!--<div v-if="!menuConfig.specialRoute">-->
+        <!--<div-->
+          <!--class="iconfont iconkuaijierukou hover-pointer shortcut-btn"-->
+          <!--@click="onClickShortcutBtn"-->
+        <!--&gt;</div>-->
+        <!--<ul class="shortcut-list" v-show="showShortcutList">-->
+          <!--<li v-for="(item,index) in shortCutList" :key="index">{{item.name}}</li>-->
+        <!--</ul>-->
+      <!--</div>-->
     </div>
   </el-scrollbar>
 </template>
@@ -68,7 +62,8 @@ export default {
     return {
       shortCutList: [],
       showShortcutList: false,
-      temporarilyHidden:false
+      temporarilyHidden:false,
+      activeTmp:''
     };
   },
   computed: {
@@ -76,11 +71,11 @@ export default {
       return this.menuConfig.isCollapse;
     },
     activeMenuIndex() {
+      this.getActiveIndex(this.menuData.childNode)
       //当前激活的菜单，顺序是cookie拿到的、父级传递的、默认的父级没传时使用菜单第一个
       return this.menuConfig.specialRoute ? ""
         : Cookies.get("activeMenuIndex") ||
-            this.menuConfig.activeIndex ||
-            this.menuData.childNode[0].id + this.menuData.childNode[0].routeAddress;
+            this.menuConfig.activeIndex || this.getActiveIndex(this.menuData.childNode)
     }
   },
   watch: {
@@ -92,30 +87,32 @@ export default {
   },
   methods: {
     handleSelect(key, keyPath) {
+      // debugger
+      // console.log(key,keyPath)
       if (this.menuConfig.specialRoute) {
         //找到第一层，例如无忧服务
         let firstMenu = this.menuData.childNode.find(first => {
           return first.id == keyPath[0];
         });
-        let secondPath = keyPath[1].split("/")[0];
-        if (secondPath.indexOf("@") != -1) {
-          secondPath = secondPath.split("@")[0];
-        }
-        //找到第一层，例如能源管理
-        let secondMenu =
-          firstMenu.childNode.length &&
-          firstMenu.childNode.find(second => {
-            return second.id == secondPath;
-          });
+        //找到第二层，例如能源管理
+        let secondId = this.getMenuId(keyPath[1])
+        let secondMenu
+        firstMenu.childNode.length &&firstMenu.childNode.map((second) => {
+          if(second.id == secondId){
+            secondMenu=second
+          }
+        });
+        // console.log("firstMenu",firstMenu,secondMenu,secondId)
+        //找到当前点击的节点
+        let curNodeId=this.getMenuId(key)
+        console.log("secondMenu",secondMenu)
+        let curNode  = this.findCurNode(secondMenu,curNodeId)
+        console.log("curNode",curNode)
         //跳转三维
-        if (commonFun.loadThreeD(secondMenu)) {
+        if (commonFun.loadThreeD(curNode,secondMenu)) {
           return;
         }
         localStorage.setItem("menuList", JSON.stringify(secondMenu));
-        let tmpArr = key.split("/");
-        tmpArr.shift();
-        let activeMenu = tmpArr.join("/");
-        Cookies.set("activeMenuIndex", "/" + activeMenu);
       }
       if (key) {
         this.loadPage(key);
@@ -131,6 +128,33 @@ export default {
         key = key.slice(key.indexOf("/"));
         this.$router.push(key);
       }
+    },
+    findCurNode(menu,id){
+      let tmp
+      for(let item of menu.childNode){
+        if(item.id==id){
+          tmp = item;
+        }else{
+          this.findCurNode(item,id)
+        }
+      }
+      return tmp;
+    },
+    getActiveIndex(menu){
+      if(!menu) return ;
+      if(menu[0].childNode.length!=0){
+        this.getActiveIndex(menu[0].childNode)
+      }else{
+        this.activeTmp = menu[0].id+menu[0].routeAddress
+      }
+      return this.activeTmp;
+    },
+    getMenuId(item){
+      let menuId = item.split("/")[0];
+      if (menuId.indexOf("@") != -1) {
+        menuId = menuId.split("@")[0];
+      }
+      return menuId
     },
     handleOpen(key) {
       // if(key=='/assetMaintenance'){
@@ -154,7 +178,10 @@ export default {
     }
   },
   mounted() {
+
+
     this.getProModules();
+    // this.getActiveIndex(this.menuData.childNode)
   }
 };
 </script>

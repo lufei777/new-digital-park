@@ -23,12 +23,6 @@
     </div>
 
     <el-carousel height="360px" :interval="6000" v-if="!hideHeader"  ref="carousel" @click.native="linkTo">
-      <!-- <el-carousel-item>
-        <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo1.png" alt />
-      </el-carousel-item>
-      <el-carousel-item>
-        <img class="carousel-img" src="../../../../static/image/digitalPark/lunbo2.png" alt />
-      </el-carousel-item> -->
       <el-carousel-item  v-for="item in imgs" v-bind:key="item.url" >
         <img  class="carousel-img" :src="item.url"/>
       </el-carousel-item>
@@ -159,7 +153,6 @@ export default {
       }
       // 跳转路由
       if (routeAddress) {
-
         // 如果带有@字符，则跳转旧项目
         if (routeAddress.indexOf("@") != -1) {
           CommonFun.loadOldPage(item);

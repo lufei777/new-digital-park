@@ -1,43 +1,27 @@
 <template>
-  <!--<div class="menu-item">-->
-  <!--<template >-->
-  <!--:index="specialRoute?item.id + item.routeAddress:item.routeAddress"-->
-  <el-menu-item
-    v-if="_.isEmpty(item.childNode) || item.childNode.length == 0"
-    :index="item.id + item.routeAddress"
-    :parentMenu="parentMenu"
-  >
-    <div v-if="item.icon && !specialRoute" class="menu-icon"><i :class="['iconfont',item.icon]"></i></div>
-    <span slot="title">{{item.name}}</span>
-  </el-menu-item>
-  <!--</template>-->
-  <!--<template v-else>-->
-  <el-submenu
-    v-else
-    :parentMenu="parentMenu"
-    :index="item.id + item.routeAddress"
-    @click.native="onClickSubmenu(item,parentMenu)"
-  >
-    <template slot="title">
-      <div class="menu-icon">
+  <div :class="specialRoute && first?'horizonal-menu':''">
+    <template v-for="item in menuData.childNode">
+
+      <el-menu-item :key="item.id" v-if="item.childNode.length == 0" :index="item.id + item.routeAddress">
         <i v-if="item.icon && !specialRoute" :class="['iconfont',item.icon]"></i>
-      </div>
-      <span>{{item.name}}</span>
+        <span slot="title">{{item.name}}</span>
+      </el-menu-item>
+
+      <el-submenu v-else :key="item.id" :index="item.id + item.routeAddress" @click.native="onClickSubmenu(item)">
+        <template slot="title">
+          <i v-if="item.icon && !specialRoute" :class="['iconfont',item.icon]"></i>
+          <span>{{item.name}}</span>
+        </template>
+        <sidebar-item
+          class="nest-menu"
+          :menu-data="item"
+          :specialRoute="specialRoute"
+          :first="false"
+        />
+      </el-submenu>
+
     </template>
-
-    <sidebar-item
-      class="nest-menu"
-      v-for="child in item.childNode"
-      :item="child"
-      :key="child.id"
-      :specialRoute="specialRoute"
-      :menuList="menuList"
-      :parentMenu="item.level === 1 ? child : item.level === 2 ? item : {}"
-    />
-  </el-submenu>
-  <!--</template>-->
-
-  <!--</div>-->
+  </div>
 </template>
 
 <script>
@@ -45,51 +29,47 @@ import CommonFun from "../../utils/commonFun";
 export default {
   name: "SidebarItem",
   props: {
-    item: {
-      type: Object,
-      required: true
-    },
     specialRoute: {
-      // type:Boolean,
-      // required:false
+      type: Boolean,
+      required: false
     },
-    menuList: {
-      type: Array
-    },
-    parentMenu: {}
+    menuData: {},
+    first: {}
+  },
+  computed: {
+    menuList() {
+      return JSON.parse(localStorage.getItem("menuTree"))[0].childNode;
+    }
   },
   methods: {
-    onClickSubmenu(item, menuList) {
-      if (!this.specialRoute) return;
-      Cookies.set("moduleType", 2);
-      Cookies.set("activeMenuIndex", item.childNode[0].id + item.routeAddress);
-      // 获取level = 2的菜单列表
-      if (!_.isEmpty(menuList)) {
-        localStorage.setItem("menuList", JSON.stringify(menuList));
+    onClickSubmenu(item) {
+      if (!this.specialRoute || item.level == 1) {
+        return;
       } else {
-        if (item.level == 1) {
-          return;
+        if (item.level == 2) {
+          localStorage.setItem("menuList", JSON.stringify(item));
         } else {
-          if (item.level == 2) {
-            localStorage.setItem("menuList", JSON.stringify(item));
-          } else {
-            let firstMenu = this.menuList.find(first => {
-              return first.id == item.firstMenuId;
-            });
-            let secondMenu = firstMenu.childNode.find(second => {
-              return second.id == item.secondMenuId;
-            });
-            localStorage.setItem("menuList", JSON.stringify(secondMenu));
-          }
+          let firstMenu = this.menuList.find(first => {
+            return first.id == item.firstMenuId;
+          });
+          let secondMenu = firstMenu.childNode.find(second => {
+            return second.id == item.secondMenuId;
+          });
+          localStorage.setItem("menuList", JSON.stringify(secondMenu));
         }
       }
       // 跳转三维
-      if (CommonFun.loadThreeD(JSON.parse(localStorage.getItem("menuList")))) {
+      console.log(item, JSON.parse(localStorage.getItem("menuList")));
+      if (
+        CommonFun.loadThreeD(item, JSON.parse(localStorage.getItem("menuList")))
+      ) {
         return;
       }
       this.loadPage(item);
     },
     loadPage(item) {
+      Cookies.set("moduleType", 2);
+      Cookies.set("activeMenuIndex", item.childNode[0].id + item.routeAddress);
       if (item.routeAddress) {
         if (item.routeAddress.indexOf("@") != -1) {
           CommonFun.loadOldPage(item);
@@ -109,16 +89,10 @@ export default {
 };
 </script>
 <style lang="less">
-.menu-icon{
-  display: inline-block;
-  /*width:25px;*/
-  /*height:25px;*/
-  /*margin-right:2px;*/
-  /*text-align: center;*/
-  /*line-height: 25px;*/
-  /*background: pink;*/
-  i{
-    font-size: 18px;
+.horizonal-menu {
+  display: flex;
+  &:focus {
+    outline: unset !important;
   }
 }
 </style>
