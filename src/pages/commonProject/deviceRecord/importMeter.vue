@@ -2,7 +2,8 @@
   <div class="import-meter radius-shadow">
     <div class="import-box">
       <span>批量导入设备</span>
-      <el-input type="file" @change="onFileChange" id="file" name="file" accept=".xlsx"/>
+      <!--<Upload></Upload>-->
+      <el-input type="file"></el-input>
       <div class="operator-box">
         <el-button type="primary"  @click="onClickSureBtn">确定</el-button>
         <el-button type="default"  @click="goBack">返回</el-button>
@@ -14,13 +15,16 @@
 
 <script>
   import CommonApi from '../../../service/api/commonApi'
+  // import Upload from  '@/components/Form/compoents/upload'
   export default {
     name: 'ImportMeter',
     components: {
+      // Upload
     },
     data () {
       return {
-        formData:[]
+        headers:{},
+        fileList:[]
       }
     },
     computed:{
@@ -35,6 +39,20 @@
         // await CommonApi.importDevice()
       },
       onFileChange(val){
+      },
+      uploadSuccess(res){
+        console.log("res",res)
+        if (res.code=="SUCCESS") {
+          this.$message.success("导入成功!");
+          this.$router.push("/main/channelApply");
+        } else {
+          this.$message.error("导入失败!");
+
+        }
+      },
+      uploadFalse(response, file, fileList) {
+        this.$message.error("文件上传失败！");
+
       }
     },
     mounted(){

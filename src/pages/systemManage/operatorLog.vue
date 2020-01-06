@@ -42,8 +42,8 @@
 
 <script>
   import moment from 'moment'
-  import CommonApi from '../../../service/api/commonApi'
-  import CommonTable from '../../../components/commonTable/index'
+  import CommonApi from '@/service/api/commonApi'
+  import CommonTable from '@/components/commonTable/index'
   export default {
     name: 'OperatorLog',
     components: {
