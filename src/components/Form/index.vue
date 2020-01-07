@@ -477,7 +477,10 @@ export default {
     disabled: {
       immediate: true,
       handler() {
-        if (typeof this.disabled === "boolean") {
+        if (
+          typeof this.disabled === "boolean" &&
+          typeof this.options.disabled != "boolean"
+        ) {
           this.allDisabled = this.disabled;
         }
       }

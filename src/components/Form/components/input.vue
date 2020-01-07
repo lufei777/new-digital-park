@@ -201,7 +201,8 @@ export default {
       node: {},
       filterText: "",
       box: false,
-      labelText: this.multiple ? [] : ""
+      labelText: this.multiple ? [] : "",
+      dicTimer: null
     };
   },
   mounted() {
@@ -269,40 +270,36 @@ export default {
         } else {
           this.labelText = "";
         }
-        const check = setInterval(() => {
-          if (validatenull(this.dic)) {
-            this.labelText = "";
-            clearInterval(check);
-            return;
+        if (validatenull(this.dic)) {
+          this.labelText = "";
+          return;
+        }
+        //是否禁止父类
+        !this.parent && this.disabledParentNode(this.dic);
+        if (this.multiple) {
+          this.labelText = [];
+          if (!validatenull(this.text)) {
+            this.text.forEach(ele => {
+              //特殊处理0
+              ele = validatenull(ele) ? 0 : ele;
+              const label = findLabelNode(this.dic, ele, this.props) || ele;
+              this.labelText.push(label);
+            });
           }
-          //是否禁止父类
-          !this.parent && this.disabledParentNode(this.dic);
-          if (this.multiple) {
-            this.labelText = [];
-            if (!validatenull(this.text)) {
-              this.text.forEach(ele => {
-                //特殊处理0
-                ele = validatenull(ele) ? 0 : ele;
-                const label = findLabelNode(this.dic, ele, this.props) || ele;
-                this.labelText.push(label);
-              });
-            }
-          } else {
-            this.labelText = "";
-            if (!validatenull(this.text)) {
-              this.labelText = this.text;
-              const label =
-                findLabelNode(this.dic, this.text, this.props) || this.text;
-              this.node = {};
-              this.node[this.labelKey] = label;
-              this.labelText = label;
-            }
+        } else {
+          this.labelText = "";
+          if (!validatenull(this.text)) {
+            this.labelText = this.text;
+            const label =
+              findLabelNode(this.dic, this.text, this.props) || this.text;
+            this.node = {};
+            this.node[this.labelKey] = label;
+            this.labelText = label;
           }
-          setTimeout(() => {
-            this.$partent && this.$partent.$parent.clearValidate();
-          }, 0);
-          clearInterval(check);
-        }, 500);
+        }
+        setTimeout(() => {
+          this.$partent && this.$partent.$parent.clearValidate();
+        }, 0);
       }
     },
     disabledParentNode(dic) {
@@ -404,6 +401,12 @@ export default {
           this.isFirst = false;
         }
       }
+    },
+    dic() {
+      clearTimeout(this.dicTimer);
+      this.dicTimer = setTimeout(() => {
+        this.init();
+      }, 0);
     },
     value() {
       this.init();
