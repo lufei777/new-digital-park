@@ -3,7 +3,7 @@
     <div
       v-if="tableConfig.customTop"
       ref="customTop"
-      :style="{textAlign:tableConfig.customTopPosition || 'left',height:'auto',padding:'0 20px 20px'}"
+      :style="{textAlign:tableConfig.customTopPosition || 'right',height:'auto',padding:'0 20px 20px'}"
     >
       <slot
         :name="topSlotName"
@@ -54,6 +54,7 @@
         v-if="uiConfig.showIndex"
         :index="uiConfig.showIndex.handler"
         :width="uiConfig.showIndex.width || 50"
+        :align="uiConfig.showIndex.align || 'center'"
       >
         <template slot="header">{{uiConfig.showIndex.label || "序号"}}</template>
       </el-table-column>
