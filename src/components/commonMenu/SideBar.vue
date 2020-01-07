@@ -28,7 +28,7 @@
         @open="handleOpen"
         @close="handleClose"
       >
-        <sidebar-item :menuData="menuData" :specialRoute="menuConfig.specialRoute" :first="true"/>
+        <sidebar-item :menuData="menuData" :specialRoute="menuConfig.specialRoute"/>
       </el-menu>
       <!--<div v-if="!menuConfig.specialRoute">-->
         <!--<div-->

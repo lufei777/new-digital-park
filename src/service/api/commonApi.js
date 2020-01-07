@@ -248,6 +248,10 @@ class CommonApi {
   @url("/vibe-web/energyCount/energy/energy_speceExcle")
   @get
   exportZoomReport(){}
+
+  @url("/vibe-web/homeInterfaceEnvironment")
+  @get
+  getEnvironmentData(){}
 }
 
 export default new CommonApi()

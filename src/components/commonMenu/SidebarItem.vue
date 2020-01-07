@@ -25,7 +25,6 @@
           class="nest-menu"
           :menu-data="item"
           :specialRoute="specialRoute"
-          :first="false"
         />
       </el-submenu>
     </template>
@@ -42,7 +41,6 @@ export default {
       required: false
     },
     menuData: {},
-    first: {}
   },
   computed: {
     menuList() {

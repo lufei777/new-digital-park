@@ -1,23 +1,23 @@
-import energyProportionAnalysis from '../pages/digitalPark/coms/energyComs/energyProportionAnalysis'
-import energyElectricityProportion from '../pages/digitalPark/coms/energyComs/energyElectricityProportion'
-import operateIncome from '../pages/digitalPark/coms/incomeComs/operateIncome'
-import buildingStatusProportion from '../pages/digitalPark/coms/statisComs/buildingStatusProportion'
-import assetTypeProportion from '../pages/digitalPark/coms/assetComs/assetTypeProportion'
-import energyConsumptionRanking from '../pages/digitalPark/coms/energyComs/energyConsumptionRanking'
-import buildingEarlyWarningAlarm from '../pages/digitalPark/coms/alarmComs/buildingEarlyWarningAlarm'
-import operateExpenditure from '../pages/digitalPark/coms/incomeComs/operateExpenditure'
-import assetGrowthStatistics from '../pages/digitalPark/coms/assetComs/assetGrowthStatistics'
-import taskRanking from '../pages/digitalPark/coms/taskComs/taskRanking'
-import attendanceDetail from '../pages/digitalPark/coms/dutyComs/attendanceDetail'
-import taskPersonTask from '../pages/digitalPark/coms/taskComs/taskPersonTask'
-import TestModuleOne from '../pages/digitalPark/coms/energyComs/TestModuleOne'
-import TestModuleTwo from '../pages/digitalPark/coms/parkingComs/TestModuleTwo'
-import TestModuleThree from '../pages/digitalPark/coms/energyComs/TestModuleThree'
-import emergencies from '../pages/digitalPark/coms/alarmComs/emergencies'
-import escapeRoutes from '../pages/digitalPark/coms/alarmComs/escapeRoutes'
-import saleStatistics from '../pages/digitalPark/coms/statisComs/saleStatistics'
-import inventoryAnalysis from '../pages/digitalPark/coms/stockComs/inventoryAnalysis'
-import messageRelease from '../pages/digitalPark/coms/messageComs/messageRelease'
+import energyProportionAnalysis from '../pages/digitalPark/coms/energy/energyProportionAnalysis'
+import energyElectricityProportion from '../pages/digitalPark/coms/energy/energyElectricityProportion'
+import operateIncome from '../pages/digitalPark/coms/income/operateIncome'
+import buildingStatusProportion from '../pages/digitalPark/coms/statis/buildingStatusProportion'
+import assetTypeProportion from '../pages/digitalPark/coms/asset/assetTypeProportion'
+import energyConsumptionRanking from '../pages/digitalPark/coms/energy/energyConsumptionRanking'
+import buildingEarlyWarningAlarm from '../pages/digitalPark/coms/alarm/buildingEarlyWarningAlarm'
+import operateExpenditure from '../pages/digitalPark/coms/income/operateExpenditure'
+import assetGrowthStatistics from '../pages/digitalPark/coms/asset/assetGrowthStatistics'
+import taskRanking from '../pages/digitalPark/coms/task/taskRanking'
+import attendanceDetail from '../pages/digitalPark/coms/duty/attendanceDetail'
+import taskPersonTask from '../pages/digitalPark/coms/task/taskPersonTask'
+import TestModuleOne from '../pages/digitalPark/coms/energy/TestModuleOne'
+import TestModuleTwo from '../pages/digitalPark/coms/parking/TestModuleTwo'
+import TestModuleThree from '../pages/digitalPark/coms/energy/TestModuleThree'
+import emergencies from '../pages/digitalPark/coms/alarm/emergencies'
+import escapeRoutes from '../pages/digitalPark/coms/alarm/escapeRoutes'
+import saleStatistics from '../pages/digitalPark/coms/statis/saleStatistics'
+import inventoryAnalysis from '../pages/digitalPark/coms/stock/inventoryAnalysis'
+import messageRelease from '../pages/digitalPark/coms/message/messageRelease'
 import router from '@/router'
 import axios from 'axios'
 class commonFun {
@@ -1756,14 +1756,12 @@ class commonFun {
       url: `${data.url}${data.params ? '?' + data.params : ''}`,
       responseType: 'blob',
     }).then((res) => {
-      console.log("res", res)
       const link = document.createElement('a')
       let blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
       link.style.display = 'none'
       link.href = URL.createObjectURL(blob)
 
       link.download = decodeURIComponent(res.headers['content-disposition']) //下载后文件名
-      // link.download = data.fileName //下载的文件名
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
@@ -1772,7 +1770,6 @@ class commonFun {
         type: 'error',
         message: error,
       });
-      console.log(error)
     })
   }
 
