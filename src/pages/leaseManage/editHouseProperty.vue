@@ -120,11 +120,16 @@ export default {
             type: "input",
             label: "面积",
             prop: "houseArea",
-            rawtype: "number",
+            // rawtype: "number",
             dataType: "number",
             append: "m²",
             clearable: true,
-            span: 12
+            span: 12,
+            rules: {
+              type: "number",
+              message: "请输入数字",
+              trigger: "change"
+            }
           },
           {
             type: "input",
