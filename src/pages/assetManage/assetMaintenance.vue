@@ -27,6 +27,10 @@
         </div>
 
         <Table :ref="assetsTableConfig.ref" :tableConfig="assetsTableConfig">
+          <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
+            <el-button type="text" @click="rowClick(row)">编辑</el-button>
+            <el-button type="text" @click="deleteRow(row)">删除</el-button>
+          </template>
         </Table>
       </div>
     </div>
@@ -135,6 +139,7 @@ export default {
         columnConfig:[],
         btnConfig:[],
         customTop: true,
+        operation: true,
         uiConfig: {
           height: "auto",//"", //高度
           selection: true, //是否多选
@@ -179,73 +184,12 @@ export default {
         this.assetsTableConfig.columnConfig=[
           {label:'编号',prop:'coding',sortable:'custom'},
           {label:'名称',prop:'name',sortable:'custom',width:200 },
+          {label:'单位',prop:'unit'},
+          {label:'品牌',prop:'brand'},
+          {label:'价格',prop:'price'},
+          {label:'单独核算',prop:'singleCount'},
           {label:'资产组',prop:'groupName'},
-          {label:'供应商',prop:'providerName'},
-          {label:'资产类型',prop:'typeName'},
-          {label:'当前保管人',prop:'currentCustodian'},
-          {label:'规格型号',prop:'specification'},
-          {label:'状态',prop:'statusText',
-            formatter: function(row, column) {
-              switch (row[column.property]) {
-                case 1:
-                  return "闲置";
-                  break;
-                case 2:
-                  return "在用";
-                  break;
-                case 3:
-                  return "报修";
-                  break;
-                default:
-                  return "报废";
-                  break;
-              }
-            }
-          }]
-        let _this=this
-         this.assetsTableConfig.btnConfig={
-            prop: "operation",
-            label: "列操作",
-            fixed: "right",
-            width: 150,
-            btns: [{
-                label: "变更",
-                handler: function(row) {
-                  // this.tableEdit(row);
-                }
-              },
-              {
-                label: "调拨",
-                handler: function(row) {
-                  // this.tableDel(row);
-                }
-              },
-              {
-                type: "dropDown",
-                icon: "el-icon-more",
-                showMore: false,
-                menus: [
-                  {
-                    label: "报修",
-                    handler: function(row) {
-                      console.log("报修", row);
-                    }
-                  },
-                  {
-                    label: "报废",
-                    handler: function(row) {
-                      console.log("报废", row);
-                    }
-                  },
-                  {
-                    label: "删除",
-                    handler: function(data){
-                      _this.deleteRow(data.row)
-                    }
-                  }]
-          }
-        ]
-      },
+          {label:'资产类型',prop:'typeName'}]
          this.assetsTableConfig.data=res.list
          this.assetsTableConfig.uiConfig.pagination.total=res.total
          this.loading=false

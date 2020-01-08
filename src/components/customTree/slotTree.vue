@@ -36,7 +36,8 @@
 						</span>
 						
 						<!-- 按钮 -->
-						<span :class="[data.status==5?'hide-comp-tr-node--btns':'comp-tr-node--btns']">
+						<!--<span :class="[data.status==5?'hide-comp-tr-node&#45;&#45;btns':'comp-tr-node&#45;&#45;btns']">-->
+            <span class="comp-tr-node--btns">
 							<!-- 新增 -->
 							<el-button class="operator-btn" icon="el-icon-plus"
 								size="mini"
@@ -119,7 +120,8 @@ export default{
 			}
 		},
 		handleEdit(_node, _data){// 编辑节点
-			console.log(_node, _data)
+		  // debugger
+			console.log(_node, _data,this.$refs['slotTreeInput'+_data[this.NODE_KEY]])
 			// 设置编辑状态
 			if(!_node.isEdit){
 				this.$set(_node, 'isEdit', true)
@@ -133,7 +135,7 @@ export default{
 			})
 		},
 		handleAdd(_node, _data){// 新增节点
-			console.log(_node, _data)
+			// console.log(_node, _data)
 			// 判断层级
 			if(_node.level >= this.MAX_LEVEL){
 				this.$message.warning("当前已达到"+ this.MAX_LEVEL + "级，无法新增！")
@@ -153,6 +155,7 @@ export default{
 			if(!_node.expanded){
 				_node.expanded = true
 			}
+			this.handleEdit({},obj)
 		},
 		handleAddTop(){// 添加顶部节点
 			let obj = JSON.parse(JSON.stringify(this.initParam));// copy参数

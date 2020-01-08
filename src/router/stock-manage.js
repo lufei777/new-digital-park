@@ -10,15 +10,21 @@ export default [{
     meta: { title: '库存管理' },
     component: () => import('@/pages/commonProject/coms/commonIndex'),
     children: [{
+      path: '/tmpRouter',
+      name: 'TmpRouter',
+      component:() => import('@/pages/commonProject/coms/tmpRouterBox'),
+      meta: { title: '入库管理' },
+      children:[{
         path: '/stockInApply',
         name: 'StockInApply',
         component: StockInApply,
         meta: { title: '入库申请' },
-    },{
-      path: '/stockInCheck',
-      name: 'StockInCheck',
-      component: StockInCheck,
-      meta: { title: '入库验收' },
+      },{
+        path: '/stockInCheck',
+        name: 'StockInCheck',
+        component: StockInCheck,
+        meta: { title: '入库验收' },
+      }]
     },{
       path: '/stockOut',
       name: 'StockOut',

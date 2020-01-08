@@ -308,6 +308,7 @@ export default {
     setTimeout(() => {
       this.copyrightShow = true
     }, 2000);
+    localStorage.setItem("home",true)
   }
 };
 </script>

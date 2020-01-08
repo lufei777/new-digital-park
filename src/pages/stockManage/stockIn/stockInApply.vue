@@ -1,35 +1,41 @@
 <template>
-  <div class="warehouse-manage panel-container">
-    <div class="condition-box radius-shadow">
-      <miForm
-        :ref="formData.ref"
-        :options="formData"
-        v-model="model"
-        @submit="submit"
-        @reset-change="resetChange"
-      >
-        <template slot="btn" slot-scope="obj">
-          <div>
-            <el-button :disabled="obj.disabled" type="primary" @click="onClickSearchBtn(obj)">搜索</el-button>
-            <el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>
-          </div>
-        </template>
-      </miForm>
-    </div>
+  <div class="stock-in-apply panel-container">
+    <!--<div class="condition-box radius-shadow">-->
+      <!--<miForm-->
+        <!--:ref="formData.ref"-->
+        <!--:options="formData"-->
+        <!--v-model="model"-->
+        <!--@submit="submit"-->
+        <!--@reset-change="resetChange"-->
+      <!--&gt;-->
+        <!--<template slot="btn" slot-scope="obj">-->
+          <!--<div>-->
+            <!--<el-button :disabled="obj.disabled" type="primary" @click="onClickSearchBtn(obj)">搜索</el-button>-->
+            <!--<el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>-->
+          <!--</div>-->
+        <!--</template>-->
+      <!--</miForm>-->
+    <!--</div>-->
 
-    <div class="warehouse-manage-table panel">
-      <miTable :ref="tableData.ref" :tableConfig="tableData">
-        <template slot="custom-top" slot-scope="obj">
-          <div class="operator-box flex-row-reverse">
-            <el-button :size="obj.size" type="primary">批量删除</el-button>
-            <el-button :size="obj.size" type="primary">批量编辑</el-button>
-            <el-button :size="obj.size" type="primary">导出</el-button>
-            <el-button :size="obj.size" type="primary">导入</el-button>
-            <el-button :size="obj.size" type="primary">新增</el-button>
-          </div>
-        </template>
-      </miTable>
-    </div>
+    <!--<div class="warehouse-manage-table panel">-->
+      <!--<miTable :ref="tableData.ref" :tableConfig="tableData">-->
+        <!--<template slot="custom-top" slot-scope="obj">-->
+          <!--<div class="operator-box flex-row-reverse">-->
+            <!--<el-button :size="obj.size" type="primary">批量删除</el-button>-->
+            <!--<el-button :size="obj.size" type="primary">批量编辑</el-button>-->
+            <!--<el-button :size="obj.size" type="primary">导出</el-button>-->
+            <!--<el-button :size="obj.size" type="primary">导入</el-button>-->
+            <!--<el-button :size="obj.size" type="primary">新增</el-button>-->
+          <!--</div>-->
+        <!--</template>-->
+      <!--</miTable>-->
+    <!--</div>-->
+    <el-tabs type="border-card">
+      <el-tab-pane label="入库申请">
+        <Apply />
+      </el-tab-pane>
+      <el-tab-pane label="申请记录"></el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
@@ -37,9 +43,13 @@
 import miForm from "@/components/Form";
 import miTable from "@/components/Table";
 import CommonFun from "../../../utils/commonFun";
+import Apply from '../coms/apply'
 export default {
   name: "WarehouseManage",
-  components: { miForm, miTable },
+  components: {
+    miForm,
+    miTable,
+    Apply},
   data() {
     return {
       model: {},
@@ -198,22 +208,9 @@ export default {
 </script>
 
 <style lang="less">
-.warehouse-manage {
-  .condition-box {
-    margin-bottom: 20px;
-    background: @white;
-    padding: 20px;
-    // background: pink;
-  }
-  .warehouse-manage-table {
-    background: @white;
-    padding: 20px;
-    .operator-box {
-      background: @white;
-      .el-button {
-        margin-left: 20px;
-      }
-    }
+.stock-in-apply {
+  .el-tabs{
+    height:100%;
   }
 }
 </style>
