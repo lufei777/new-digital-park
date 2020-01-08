@@ -12,14 +12,14 @@
       >
         <el-row>
           <el-col :span="9" :offset="3">
-            <el-form-item label="名称" prop="name">
-              <el-input v-model="assetAddForm.name"></el-input>
+            <el-form-item label="编号" prop="coding">
+              <el-input v-model="assetAddForm.coding"></el-input>
             </el-form-item>
           </el-col>
 
-          <el-col :span="12">
-            <el-form-item label="编号" prop="coding">
-              <el-input v-model="assetAddForm.coding"></el-input>
+          <el-col :span="12" >
+            <el-form-item label="名称" prop="name">
+              <el-input v-model="assetAddForm.name"></el-input>
             </el-form-item>
           </el-col>
 
@@ -29,34 +29,28 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="12">
+          <el-col  :span="12">
             <el-form-item label="品牌" prop="brand">
               <el-input v-model="assetAddForm.brand"></el-input>
             </el-form-item>
           </el-col>
 
-          <el-col :span="9" :offset="3">
-            <el-form-item label="供应商" prop="providerId">
-              <el-select
-                v-model="assetAddForm.providerId"
-                placeholder="请选择"
-                @change="onProviderChange"
-              >
-                <el-option
-                  v-for="item in providerList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item label="资产组" prop="groupName">
-              <el-input v-model="assetAddForm.groupName" @focus="onShowGroup"></el-input>
-            </el-form-item>
-          </el-col>
+          <!--<el-col :span="9" :offset="3">-->
+            <!--<el-form-item label="供应商" prop="providerId">-->
+              <!--<el-select-->
+                <!--v-model="assetAddForm.providerId"-->
+                <!--placeholder="请选择"-->
+                <!--@change="onProviderChange"-->
+              <!--&gt;-->
+                <!--<el-option-->
+                  <!--v-for="item in providerList"-->
+                  <!--:key="item.id"-->
+                  <!--:label="item.name"-->
+                  <!--:value="item.id"-->
+                <!--&gt;</el-option>-->
+              <!--</el-select>-->
+            <!--</el-form-item>-->
+          <!--</el-col>-->
 
           <el-col :span="9" :offset="3">
             <el-form-item label="价格" prop="price">
@@ -65,28 +59,41 @@
           </el-col>
 
           <el-col :span="12">
-            <el-form-item label="所在部门" prop="departmentId">
-              <el-input v-model="assetAddForm.departmentName" @focus="onShowDept"></el-input>
+            <el-form-item label="单独核算" prop="singleCount">
+              <el-radio v-model="assetAddForm.singleCount" label="1">是</el-radio>
+              <el-radio v-model="assetAddForm.singleCount" label="0">否</el-radio>
             </el-form-item>
           </el-col>
 
-          <el-col :span="9" :offset="3">
-            <el-form-item label="当前保管人" prop="currentCustodian">
-              <el-input v-model="assetAddForm.currentCustodian"></el-input>
+          <el-col  :span="21" :offset="3">
+            <el-form-item label="资产组" prop="groupName">
+              <el-input v-model="assetAddForm.groupName" @focus="onShowGroup"></el-input>
             </el-form-item>
           </el-col>
 
-          <el-col :span="12">
-            <el-form-item label="前期保管人" prop="previousCustodian">
-              <el-input v-model="assetAddForm.previousCustodian"></el-input>
-            </el-form-item>
-          </el-col>
+          <!--<el-col :span="12">-->
+            <!--<el-form-item label="所在部门" prop="departmentId">-->
+              <!--<el-input v-model="assetAddForm.departmentName" @focus="onShowDept"></el-input>-->
+            <!--</el-form-item>-->
+          <!--</el-col>-->
 
-          <el-col :span="9" :offset="3">
-            <el-form-item label="数量" prop="quantity" v-if="status==5">
-              <el-input v-model="assetAddForm.quantity"></el-input>
-            </el-form-item>
-          </el-col>
+          <!--<el-col :span="9" :offset="3">-->
+            <!--<el-form-item label="当前保管人" prop="currentCustodian">-->
+              <!--<el-input v-model="assetAddForm.currentCustodian"></el-input>-->
+            <!--</el-form-item>-->
+          <!--</el-col>-->
+
+          <!--<el-col :span="12">-->
+            <!--<el-form-item label="前期保管人" prop="previousCustodian">-->
+              <!--<el-input v-model="assetAddForm.previousCustodian"></el-input>-->
+            <!--</el-form-item>-->
+          <!--</el-col>-->
+
+          <!--<el-col :span="9" :offset="3">-->
+            <!--<el-form-item label="数量" prop="quantity" v-if="status==5">-->
+              <!--<el-input v-model="assetAddForm.quantity"></el-input>-->
+            <!--</el-form-item>-->
+          <!--</el-col>-->
 
           <template v-for="(item,index) in assetAddForm.ownAttrList">
             <div
@@ -113,37 +120,37 @@
 
 
         </el-row>
-        <el-row>
-          <el-col :span="1" :offset="3">
-            <el-button type="primary" @click="addCustomAttr" class="mgt10">自定义</el-button>
-          </el-col>
-        </el-row>
-        <el-row v-for="(item,index) in assetAddForm.customAttrList" :key="item.key">
-          <el-col :span="9" :offset="3">
-            <el-form-item
-              label="属性名称"
-              :prop="'customAttrList.'+index+'.attrName'"
-              :rules="{required:true,message:'请输入属性名称',trigger: 'blur'}"
-            >
-              <el-input v-model="item.attrName"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5">
-            <el-form-item
-              label="属性值"
-              :prop="'customAttrList.'+index+'.attrValue'"
-              :rules="{required:true,message:'请输入属性值',trigger: 'blur'}"
-            >
-              <el-input v-model="item.attrValue"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="1">
-            <i
-              class="el-icon-delete del-custom-btn hover-pointer"
-              @click="onClickDelCustomBtn(index)"
-            ></i>
-          </el-col>
-        </el-row>
+        <!--<el-row>-->
+          <!--<el-col :span="1" :offset="3">-->
+            <!--<el-button type="primary" @click="addCustomAttr" class="mgt10">自定义</el-button>-->
+          <!--</el-col>-->
+        <!--</el-row>-->
+        <!--<el-row v-for="(item,index) in assetAddForm.customAttrList" :key="item.key">-->
+          <!--<el-col :span="9" :offset="3">-->
+            <!--<el-form-item-->
+              <!--label="属性名称"-->
+              <!--:prop="'customAttrList.'+index+'.attrName'"-->
+              <!--:rules="{required:true,message:'请输入属性名称',trigger: 'blur'}"-->
+            <!--&gt;-->
+              <!--<el-input v-model="item.attrName"></el-input>-->
+            <!--</el-form-item>-->
+          <!--</el-col>-->
+          <!--<el-col :span="5">-->
+            <!--<el-form-item-->
+              <!--label="属性值"-->
+              <!--:prop="'customAttrList.'+index+'.attrValue'"-->
+              <!--:rules="{required:true,message:'请输入属性值',trigger: 'blur'}"-->
+            <!--&gt;-->
+              <!--<el-input v-model="item.attrValue"></el-input>-->
+            <!--</el-form-item>-->
+          <!--</el-col>-->
+          <!--<el-col :span="1">-->
+            <!--<i-->
+              <!--class="el-icon-delete del-custom-btn hover-pointer"-->
+              <!--@click="onClickDelCustomBtn(index)"-->
+            <!--&gt;</i>-->
+          <!--</el-col>-->
+        <!--</el-row>-->
 
         <el-row type="flex" justify="space-around">
           <div style="margin-left: -50px;">
@@ -178,31 +185,32 @@ export default {
       assetAddForm: {
         name: "",
         brand: "",
-        providerId: "",
-        providerName: "",
+        // providerId: "",
+        // providerName: "",
         groupId: "",
         groupName: "",
         coding: "",
         unit: "",
-        currentCustodian: "",
-        previousCustodian: "",
-        departmentId: "",
-        departmentName: "",
+        // currentCustodian: "",
+        // previousCustodian: "",
+        // departmentId: "",
+        // departmentName: "",
         price: "",
         remark: "",
-        quantity: "1",
+        // quantity: "1",
         ownAttrList: [],
-        customAttrList: []
+        customAttrList: [],
+        singleCount:'1'
       },
       rules: {
         name: [{ required: true, message: "请输入资产名称", trigger: "blur" }],
         groupName: [
           { required: true, message: "请选择资产组", trigger: "blur" }
         ],
-        quantity: [
-          { required: true, message: "请输入数量", trigger: "blur" },
-          { validator: checkQuantity, trigger: "blur" }
-        ]
+        // quantity: [
+        //   { required: true, message: "请输入数量", trigger: "blur" },
+        //   { validator: checkQuantity, trigger: "blur" }
+        // ]
       },
       providerList: [],
       groupTree: [],
@@ -471,7 +479,7 @@ export default {
     }
   },
   mounted() {
-    this.getProviderList();
+    // this.getProviderList();
     this.getAssetGroupTree();
     this.getDepartmentTree();
     if (this.assetId || this.assetIds) {

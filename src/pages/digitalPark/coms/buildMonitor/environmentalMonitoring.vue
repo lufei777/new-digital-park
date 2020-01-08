@@ -1,22 +1,19 @@
 <template>
   <div class="environmental-monitoring">
-    <!--<vCharts :chartConfig="chartConfig" />-->
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
 <script>
   import CommonApi from '@/server/api/commonApi'
-  import vCharts from '@/components/vCharts'
   export default {
     name: "environmentalMonitoring",
     components: {
-      vCharts
     },
     props: ["moduleItem"],
     data() {
       return {
-        chartConfig:{}
+
       };
     },
     methods: {
@@ -26,7 +23,6 @@
         let res = await CommonApi.getEnvironmentData({
           homeId:this.moduleItem.id
         })
-        this.initChart(res)
       },
     },
     mounted() {
