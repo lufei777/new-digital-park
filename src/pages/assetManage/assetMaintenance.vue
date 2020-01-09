@@ -183,11 +183,15 @@ export default {
         })
         this.assetsTableConfig.columnConfig=[
           {label:'编号',prop:'coding',sortable:'custom'},
-          {label:'名称',prop:'name',sortable:'custom',width:200 },
+          {label:'名称',prop:'name',sortable:'custom'},
           {label:'单位',prop:'unit'},
           {label:'品牌',prop:'brand'},
           {label:'价格',prop:'price'},
-          {label:'单独核算',prop:'singleCount'},
+          {label:'单独核算',prop:'singleCount',
+            formatter:function(row,column){
+               return row.singleCount==1?'是':'否'
+            }
+          },
           {label:'资产组',prop:'groupName'},
           {label:'资产类型',prop:'typeName'}]
          this.assetsTableConfig.data=res.list

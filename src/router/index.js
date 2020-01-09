@@ -45,15 +45,15 @@ const router = new Router({
   "routes": DigitalRouters
 })
 
-router.beforeEach((to, from, next) => {
-  if (typeof to.meta.loginCheck === 'boolean' && !to.meta.loginCheck) {
-    next()
-  } else {
-    axois.get('/oaApi/user/login').then(() => {
-      next()
-    }).catch(() => {
-
-    })
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   if (typeof to.meta.loginCheck === 'boolean' && !to.meta.loginCheck) {
+//     next()
+//   } else {
+//     axois.get('/oaApi/user/login').then(() => {
+//       next()
+//     }).catch(() => {
+//
+//     })
+//   }
+// })
 export default router

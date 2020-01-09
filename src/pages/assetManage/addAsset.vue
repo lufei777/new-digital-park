@@ -8,22 +8,22 @@
         :model="assetAddForm"
         :inline="true"
         label-position="right"
-        label-width="100px"
+        label-width="80px"
       >
         <el-row>
-          <el-col :span="9" :offset="3">
-            <el-form-item label="编号" prop="coding">
-              <el-input v-model="assetAddForm.coding"></el-input>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12" >
+          <el-col :span="formUi.span1" :offset="formUi.offset" >
             <el-form-item label="名称" prop="name">
               <el-input v-model="assetAddForm.name"></el-input>
             </el-form-item>
           </el-col>
 
-          <el-col :span="9" :offset="3">
+          <el-col :span="12">
+            <el-form-item label="编号" prop="coding">
+              <el-input v-model="assetAddForm.coding"></el-input>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="formUi.span1" :offset="formUi.offset">
             <el-form-item label="单位" prop="unit">
               <el-input v-model="assetAddForm.unit"></el-input>
             </el-form-item>
@@ -52,20 +52,22 @@
             <!--</el-form-item>-->
           <!--</el-col>-->
 
-          <el-col :span="9" :offset="3">
+          <el-col :span="formUi.span1" :offset="formUi.offset">
             <el-form-item label="价格" prop="price">
-              <el-input v-model="assetAddForm.price"></el-input>
+              <el-input v-model="assetAddForm.price">
+                <template slot="append">元</template>
+              </el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="单独核算" prop="singleCount">
-              <el-radio v-model="assetAddForm.singleCount" label="1">是</el-radio>
-              <el-radio v-model="assetAddForm.singleCount" label="0">否</el-radio>
+              <el-radio v-model="assetAddForm.singleCount" :label="1">是</el-radio>
+              <el-radio v-model="assetAddForm.singleCount" :label="0">否</el-radio>
             </el-form-item>
           </el-col>
 
-          <el-col  :span="21" :offset="3">
+          <el-col  :span="21" :offset="formUi.offset">
             <el-form-item label="资产组" prop="groupName">
               <el-input v-model="assetAddForm.groupName" @focus="onShowGroup"></el-input>
             </el-form-item>
@@ -112,7 +114,7 @@
             </div>
           </template>
 
-          <el-col :span="19" :offset="3">
+          <el-col :span="19" :offset="3" v-if="fromFlag!=1">
             <el-form-item label="备注" prop="remark" class="el-col-24 remark-el-form">
               <el-input v-model="assetAddForm.remark" type="textarea" :rows="4"></el-input>
             </el-form-item>
@@ -152,7 +154,7 @@
           <!--</el-col>-->
         <!--</el-row>-->
 
-        <el-row type="flex" justify="space-around">
+        <el-row type="flex" justify="space-around" v-if="fromFlag!=1">
           <div style="margin-left: -50px;">
             <el-button type="primary" @click="submitForm('assetAddForm')">确定</el-button>
             <el-button @click="goBack" class="go-back">取消</el-button>
@@ -172,11 +174,29 @@ export default {
   components: {
     TreeModal
   },
-  props: [],
+  props:{
+    formUi:{
+      default(){
+        return{
+          span1:9,
+          offset:3
+        }
+      },
+      required:false,
+    },
+    fromFlag:{} // 1代表入库申请
+  },
   data() {
     let checkQuantity = (rule, value, callback) => {
       if (value < 1) {
         callback(new Error("数量最小为1"));
+      } else {
+        callback();
+      }
+    };
+    let validPrice = (rule, value, callback) => {
+      if ((!Number(value) || value<0) && value!="") {
+        callback(new Error("请输入正数"));
       } else {
         callback();
       }
@@ -200,13 +220,14 @@ export default {
         // quantity: "1",
         ownAttrList: [],
         customAttrList: [],
-        singleCount:'1'
+        singleCount:1
       },
       rules: {
         name: [{ required: true, message: "请输入资产名称", trigger: "blur" }],
         groupName: [
           { required: true, message: "请选择资产组", trigger: "blur" }
         ],
+        price:[{  validator: validPrice, trigger:"blur", }]
         // quantity: [
         //   { required: true, message: "请输入数量", trigger: "blur" },
         //   { validator: checkQuantity, trigger: "blur" }
@@ -230,7 +251,7 @@ export default {
         modalTip: "",
         onClickSureBtnCallback: this.onClickTreeModalSureBtn,
         onClickCancelBtnCallback: this.hideTreeModal
-      }
+      },
     };
   },
   computed: {
@@ -276,18 +297,19 @@ export default {
         //不可直接res赋值
         name: res.name,
         brand: res.brand,
-        providerId: res.providerId,
-        providerName: res.providerName,
+        // providerId: res.providerId,
+        // providerName: res.providerName,
         groupId: res.groupId,
         groupName: res.groupName,
         coding: res.coding,
         unit: res.unit,
-        currentCustodian: res.currentCustodian,
-        previousCustodian: res.previousCustodian,
-        departmentId: res.departmentId,
-        departmentName: res.departmentName,
+        // currentCustodian: res.currentCustodian,
+        // previousCustodian: res.previousCustodian,
+        // departmentId: res.departmentId,
+        // departmentName: res.departmentName,
         price: res.price,
         remark: res.remark,
+        singleCount:res.singleCount,
         ownAttrList: [],
         customAttrList: []
       };
@@ -320,7 +342,6 @@ export default {
       let res = await AssetManageApi.getAttributeByType({
         typeId: this.typeId
       });
-      console.log(res);
       let arr = [];
       for (let i = 0; i < res.length; i++) {
         let tmp = [];
@@ -330,7 +351,6 @@ export default {
         res.shift();
         // res.shift()
       }
-      console.log(arr);
       this.assetAddForm.ownAttrList = arr;
     },
     async getProviderList() {
@@ -481,11 +501,11 @@ export default {
   mounted() {
     // this.getProviderList();
     this.getAssetGroupTree();
-    this.getDepartmentTree();
+    // this.getDepartmentTree();
     if (this.assetId || this.assetIds) {
       this.getAssetDetail();
     }
-    if (this.typeId) {
+    if (this.typeId && !(this.assetId || this.assetIds)) {
       this.getAttributeByType();
     }
   }
@@ -494,26 +514,12 @@ export default {
 
 <style lang="less">
 .add-asset {
-  // margin: 90px 20px 20px 20px !important;
   box-sizing: border-box;
-  // padding: 20px;
   overflow: auto;
-  /* background: @white;
-  .el-form {
-    width: 65%;
-    margin: 0 auto;
-  } */
   .form-inner-tip {
     padding: 10px 0;
     font-weight: bold;
   }
-  /* .go-back {
-    margin-left: 30%;
-  } */
-  /*   .el-col-my {
-    width: 42%;
-    text-align: right;
-  } */
   .del-custom-btn {
     color: red;
     margin-top: 10px;
@@ -523,6 +529,9 @@ export default {
   }
   .remark-el-form .el-form-item__content {
     width: 70%;
+  }
+  .el-form-item__content .el-input{
+    width:200px;
   }
 }
 </style>
