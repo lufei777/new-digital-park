@@ -29,6 +29,15 @@ class taskManageApi {
     @url("/oaApi/user/listBy")
     @get
     listBy() { }
+
+    @url("/oaApi/task/close")
+    @get
+    closeTask() { }
+
+    @url("/oaApi/task/detail")
+    @get
+    detailTask() { }
+
 }
 
 export default new taskManageApi()

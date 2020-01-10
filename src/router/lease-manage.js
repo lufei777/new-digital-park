@@ -35,6 +35,11 @@ export default [{
         meta: { title: '租赁合同' },
         component: () => import('@/pages/leaseManage/leaseContract/leaseContract'), 
     }, {
+        path: '/addContract',
+        name: 'AddContract',
+        meta: { title: '新增合同' },
+        component: () => import('@/pages/leaseManage/leaseContract/addContract'), 
+    }, {
         path: '/billManage',
         name: 'billManage',
         meta: { title: '账单管理' },
