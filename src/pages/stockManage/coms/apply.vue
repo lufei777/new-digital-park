@@ -1,32 +1,26 @@
 <template>
   <div class="apply-coms">
-    <div class="tip">基本信息：</div>
-    <div class="form-box">
-      <miForm :ref="formConfig.ref" :options="formConfig" v-model="model"/>
+    <div v-if="!showAddModal">
+      <div class="tip">基本信息：</div>
+      <div class="form-box">
+        <miForm :ref="formConfig.ref" :options="formConfig" v-model="model"/>
+      </div>
+      <div class="tip">入库明细：</div>
+      <div class="operator-btn-box flex-row-reverse">
+        <el-button type="primary">批量删除</el-button>
+        <el-button type="primary" @click="onClickAddBtn">添加明细</el-button>
+      </div>
+      <miTable :ref="tableConfig.ref" :tableConfig="tableConfig">
+        <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
+          <el-button type="text" @click="editRow($index)">编辑</el-button>
+          <el-button type="text" @click="deleteRow($index)">删除</el-button>
+        </template>
+      </miTable>
     </div>
-    <div class="tip">入库明细：</div>
-    <div class="operator-btn-box flex-row-reverse">
-      <el-button type="primary">批量删除</el-button>
-      <el-button type="primary" @click="onClickAddBtn">添加明细</el-button>
-    </div>
-    <miTable :ref="tableConfig.ref" :tableConfig="tableConfig">
-      <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
-        <el-button type="text" @click="rowClick(row)">编辑</el-button>
-        <el-button type="text" @click="deleteRow(row)">删除</el-button>
-      </template>
-    </miTable>
-    <el-dialog
-      title="添加入库明细"
-      :visible.sync="showAddModal"
-      width="40%"
-     >
-      <AddAsset :form-ui="formUi" :fromFlag="1"/>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="showAddModal = false">取 消</el-button>
-        <el-button type="primary" @click="showAddModal = false">确 定</el-button>
-      </span>
-    </el-dialog>
 
+    <div v-if="showAddModal">
+      <AddAsset fromFlag="stockApply" :curDetail="curDetail"/>
+    </div>
   </div>
 </template>
 
@@ -105,27 +99,30 @@
           ref:'tableRef',
           customTop:true,
           operation:true,
+          data:[],
           columnConfig:[
             {label:'编号',prop:'coding'},
             {label:'名称',prop:'name'},
             {label:'单位',prop:'unit'},
             {label:'品牌',prop:'brand'},
             {label:'价格',prop:'price'},
-            {label:'单独核算',prop:'singleCount'},
+            {label:'单独核算',prop:'singleCount',
+              formatter:function (row) {
+                return row.singleCount==1?'是':'否'
+              }
+            },
             {label:'资产组',prop:'groupName'},
             {label:'资产类型',prop:'typeName'},
-            {label:'数量',prop:'typeName'},
-            {label:'入库部门',prop:'typeName'}],
+            {label:'数量',prop:'quantity'},
+            {label:'入库部门',prop:'departmentName'}],
           uiConfig:{
             height:'auto',
             selection: true,
           }
         },
         showAddModal:false,
-        formUi:{
-          span1:12,
-          offset:0
-        }
+        curDetail:{},
+        showModal2:false
       };
     },
     methods: {
@@ -145,7 +142,20 @@
         });
       },
       onClickAddBtn(){
+        this.curDetail={}
         this.showAddModal=true
+
+      },
+      addStockDetail(obj){
+        this.tableConfig.data.push(obj)
+        this.showAddModal=false
+      },
+      deleteRow(index){
+        this.tableConfig.data.splice(index,1)
+      },
+      editRow(index){
+        this.showAddModal=true
+        this.curDetail=this.tableConfig.data[index]
       }
     },
     mounted() {
@@ -165,6 +175,9 @@
   .form-box{
     width:800px;
     margin:0 auto;
+  }
+  .add-modal{
+    height:100%
   }
 }
 </style>

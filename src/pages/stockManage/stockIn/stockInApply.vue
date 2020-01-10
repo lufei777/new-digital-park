@@ -49,7 +49,8 @@ export default {
   components: {
     miForm,
     miTable,
-    Apply},
+    Apply
+  },
   data() {
     return {
       model: {},
