@@ -10,8 +10,8 @@ export default [{
     meta: { title: '库存管理' },
     component: () => import('@/pages/commonProject/coms/commonIndex'),
     children: [{
-      path: '/tmpRouter',
-      name: 'TmpRouter',
+      path: '/stockInApplyTmpRouter',
+      name: 'stockInApplyTmpRouter',
       component:() => import('@/pages/commonProject/coms/tmpRouterBox'),
       meta: { title: '入库管理' },
       children:[{
