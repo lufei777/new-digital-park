@@ -34,7 +34,7 @@
     </div>
     <div class="table-box panel">
       <div class="operator-box">
-        <el-button type="primary" icon="el-icon-plus" @click="handleExport">导出</el-button>
+        <el-button type="primary" @click="handleExport">导出</el-button>
       </div>
       <Table :ref="tableConfig.ref" :table-config="tableConfig" />
     </div>

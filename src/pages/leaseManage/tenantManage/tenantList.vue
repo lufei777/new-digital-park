@@ -37,10 +37,10 @@
 </template>
 
 <script>
-import DigitalParkApi from "../../service/api/digitalParkApi";
+import LeaseManageApi from "../../../service/api/leaseManageApi";
 import miForm from "@/components/Form";
 import miTable from "@/components/Table";
-import CommonFun from "../../utils/commonFun";
+import CommonFun from "../../../utils/commonFun";
 export default {
   name: "TenantManage",
   components: { miForm, miTable },
@@ -48,21 +48,14 @@ export default {
     let _this = this;
     return {
       model: {
-        // tenantNumber: "",
-        // tenantName: "",
-        // telephone: "",
-        // startTime: "",
-        // houseNumber: ""
       },
       tenantManageForm: {
         ref: "tenantManageForm",
         labelWidth: "100",
         size: "medium",
         menuPosition: "right",
-
         submitBtn: false,
         emptyBtn: false,
-
         forms: [
           {
             type: "input",
@@ -177,7 +170,7 @@ export default {
         { label: "到期时间", prop: "expireTime" }
       ];
       this.tenantManageTable.columnConfig = labelList;
-      let res = await DigitalParkApi.tenantList({
+      let res = await LeaseManageApi.tenantList({
         pageNum: this.currentPage,
         pageSize: 10,
         tenantNumber: this.model.tenantNumber,
@@ -213,7 +206,7 @@ export default {
       );
     },
     async sureDelete() {
-      await DigitalParkApi.delTenant({
+      await LeaseManageApi.delTenant({
         tenantIds: this.tenantIds
       });
       this.$message({

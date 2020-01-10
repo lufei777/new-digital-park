@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import DigitalParkApi from "../../service/api/digitalParkApi";
+import LeaseManageApi from "../../../service/api/leaseManageApi";
 import miForm from "@/components/Form";
 import miTable from "@/components/Table";
 export default {
@@ -211,9 +211,9 @@ export default {
         }
       };
       if (this.tenantIdEdit) {
-        res = await DigitalParkApi.editTenant(params);
+        res = await LeaseManageApi.editTenant(params);
       } else {
-        res = await DigitalParkApi.addTenant(model);
+        res = await LeaseManageApi.addTenant(model);
       }
       if (res) {
         this.$message({
@@ -234,13 +234,13 @@ export default {
       this.$router.push("/tenantManage");
     },
     async createTenNum() {
-      let res = await DigitalParkApi.createTenNum({
+      let res = await LeaseManageApi.createTenNum({
         numType: 2
       });
       this.model.tenantNumber = res;
     },
     async tenantDetail(tenantIdEdit) {
-      let res = await DigitalParkApi.tenantDetail({
+      let res = await LeaseManageApi.tenantDetail({
         tenantId: tenantIdEdit
       });
       this.model.tenantNumber = res.tenantNumber;

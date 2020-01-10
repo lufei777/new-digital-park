@@ -22,12 +22,12 @@
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">
             <el-button :size="obj.size" type="primary" @click="batchDels(obj)">批量删除</el-button>
-            <el-button :size="obj.size" type="primary" @click="addTenant(obj)">新增</el-button>
+            <el-button :size="obj.size" type="primary" @click="addContract(obj)">新增</el-button>
           </div>
         </template>
 
         <template slot="operation" slot-scope="obj">
-          <el-button type="text" @click="detailTenant(obj)">详情</el-button>
+          <el-button type="text" @click="detailContract(obj)">详情</el-button>
           <el-button type="text" @click="editRow(obj)">编辑</el-button>
           <el-button type="text" @click="delRow(obj)">删除</el-button>
         </template>
@@ -37,10 +37,10 @@
 </template>
 
 <script>
-import DigitalParkApi from "../../service/api/digitalParkApi";
+import LeaseManageApi from "@/service/api/leaseManageApi";
 import miForm from "@/components/Form";
 import miTable from "@/components/Table";
-import CommonFun from "../../utils/commonFun";
+import CommonFun from "@/utils/commonFun";
 export default {
   name: "LeaseContract",
   components: { miForm, miTable },
@@ -48,21 +48,14 @@ export default {
     let _this = this;
     return {
       model: {
-        // tenantNumber: "",
-        // tenantName: "",
-        // telephone: "",
-        // startTime: "",
-        // houseNumber: ""
       },
       leaseContractForm: {
         ref: "leaseContractForm",
         labelWidth: "100",
         size: "medium",
         menuPosition: "right",
-
         submitBtn: false,
         emptyBtn: false,
-
         forms: [
           {
             type: "input",
@@ -107,7 +100,6 @@ export default {
             label: "签租时间",
             prop: "contractTime",
             placeholder: "选择日期时间",
-            // clearable: true,
             span: 6,
             format: "yyyy-MM-dd",
             valueFormat: "timestamp"
@@ -117,7 +109,6 @@ export default {
             label: "到期时间",
             prop: "expireTime",
             placeholder: "选择日期时间",
-            // clearable: true,
             span: 6,
             format: "yyyy-MM-dd",
             valueFormat: "timestamp"
@@ -126,13 +117,14 @@ export default {
             prop: "btn",
             span: 6,
             pull: 6,
-            formslot: true,
+            formslot: true
             // width: 20
           }
         ]
       },
       leaseContractTable: {
         ref: "leaseContractTable",
+        customTop: true,
         operation: {
           width: 200
         },
@@ -161,8 +153,8 @@ export default {
   methods: {
     submit() {},
     resetChange() {},
-    addTenant() {
-      this.$router.push("/addTenantManage");
+    addContract() {
+      this.$router.push("/addLeaseContract");
     },
     onClickSearchBtn2() {
       this.curPage = 1;
@@ -184,9 +176,9 @@ export default {
         { label: "到期时间", prop: "expireTime" }
       ];
       this.leaseContractTable.columnConfig = labelList;
-      let res = await DigitalParkApi.contractList({
+      let res = await LeaseManageApi.contractList({
         pageNum: this.currentPage,
-        pageSize: 10,
+        pageSize: 10
       });
       if (res && res.list) {
         this.leaseContractTable.data = res.list;
@@ -216,7 +208,7 @@ export default {
       );
     },
     async sureDelete() {
-      await DigitalParkApi.delTenant({
+      await LeaseManageApi.delTenant({
         tenantIds: this.tenantIds
       });
       this.$message({
@@ -250,7 +242,7 @@ export default {
         }
       });
     },
-    detailTenant(obj) {
+    detailContract(obj) {
       console.log(obj.scopeRow.row);
       this.$router.push({
         name: "addTenantManage",

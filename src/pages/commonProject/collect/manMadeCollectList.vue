@@ -27,10 +27,10 @@
     </div>
     <div class="table-box panel">
       <div class="operator-box">
-        <el-button type="primary" icon="el-icon-delete">删除记录</el-button>
+        <el-button type="primary" icon="el-icon-delete" @click="onMultiDel">删除记录</el-button>
         <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
       </div>
-      <Table :ref="tableConfig.ref" :table-config="tableConfig"></Table>
+      <Table :ref="collectTableConfig.ref" :table-config="collectTableConfig"></Table>
     </div>
   </div>
 </template>
@@ -38,6 +38,7 @@
 <script>
 import CommonApi from "../../../service/api/commonApi";
 import Table from "../../../components/Table/index";
+import CommonFun from "../../../utils/commonFun";
 export default {
   name: "ManMadeCollectList",
   components: {
@@ -49,8 +50,8 @@ export default {
       startTime: "",
       endTime: "",
       curPage: 1,
-      tableConfig: {
-        ref: "tableRef",
+      collectTableConfig: {
+        ref: "collectTable",
         data: [],
         columnConfig: [],
         uiConfig: {
@@ -80,7 +81,7 @@ export default {
               type: "basic",
               label: "删除",
               handler: function(data) {
-                _this.tableDel(data.row);
+                _this.deleteRow(data.row);
               }
             }
           ]
@@ -100,14 +101,14 @@ export default {
         rows: 10
       };
       let res = await CommonApi.getManMadeCollectList(params);
-      this.tableConfig.columnConfig = [
+      this.collectTableConfig.columnConfig = [
         { label: "监测器名称", prop: "monitorStr" },
         { label: "录入时间", prop: "lookTime" },
         { label: "用户名", prop: "person" },
         { label: "表值", prop: "value" }
       ];
-      this.tableConfig.data = res.data;
-      this.tableConfig.uiConfig.pagination.total = res.total;
+      this.collectTableConfig.data = res.data;
+      this.collectTableConfig.uiConfig.pagination.total = res.total;
       if (res && res.data) {
         res.data.map(item => {
           this.deviceId = item.id;
@@ -115,8 +116,6 @@ export default {
       }
     },
     tableEdit(data) {
-      // this.$router.push('/addCollect')
-      console.log("data", data);
       this.$router.push({
         path: "addCollect",
         query: {
@@ -124,35 +123,32 @@ export default {
         }
       });
     },
-    async deviceDel() {
-      await commonApi.deleteHandInput({
+    showDeleteTip() {
+      CommonFun.deleteTip(this, this.deviceId, "请至少选择一条设备！", this.sureDelete,this.cancelDelete);
+    },
+    async sureDelete() {
+      console.log(this.deviceId);
+       await CommonApi.deleteHandInput({
         idStr: this.deviceId
       });
       this.$message({
         type: "success",
         message: "删除成功!"
       });
+      this.deviceId = ''
       this.getManMadeCollectList();
     },
-    tableDel(data) {
-      this.deviceId = data.id;
-      this.deleteTip();
+    cancelDelete(){
+      this.deviceId = ''
     },
-    deleteTip() {
-      this.$confirm("确定要删除吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.deviceDel();
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
+    deleteRow(val) {
+      this.deviceId = val.id;
+      this.showDeleteTip()
+    },
+     onMultiDel(){
+      this.deviceId=this.$refs['collectTable'].getSelectedData().length &&
+      this.$refs['collectTable'].getSelectedData().map((item)=>item.id).join(",")
+      this.showDeleteTip()
     },
     onClickAddBtn() {
       this.$router.push("/addCollect");
