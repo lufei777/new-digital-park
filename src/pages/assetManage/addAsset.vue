@@ -11,27 +11,27 @@
         label-width="80px"
       >
         <el-row>
-          <el-col :span="formUi.span1" :offset="formUi.offset" >
+          <el-col :span="9" :offset="3">
             <el-form-item label="名称" prop="name">
-              <el-input v-model="assetAddForm.name"></el-input>
+              <el-input v-model="assetAddForm.name"  @focus="onFocusName"></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="编号" prop="coding">
-              <el-input v-model="assetAddForm.coding"></el-input>
+              <el-input v-model="assetAddForm.coding" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
 
-          <el-col :span="formUi.span1" :offset="formUi.offset">
+          <el-col :span="9" :offset="3">
             <el-form-item label="单位" prop="unit">
-              <el-input v-model="assetAddForm.unit"></el-input>
+              <el-input v-model="assetAddForm.unit" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
 
           <el-col  :span="12">
             <el-form-item label="品牌" prop="brand">
-              <el-input v-model="assetAddForm.brand"></el-input>
+              <el-input v-model="assetAddForm.brand" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
 
@@ -52,50 +52,32 @@
             <!--</el-form-item>-->
           <!--</el-col>-->
 
-          <el-col :span="formUi.span1" :offset="formUi.offset">
-            <el-form-item label="价格" prop="price">
+          <el-col :span="9" :offset="3">
+            <el-form-item :label="fromFlag=='stockApply'?'实际价格':'价格'" prop="price">
               <el-input v-model="assetAddForm.price">
                 <template slot="append">元</template>
               </el-input>
             </el-form-item>
           </el-col>
 
+          <el-col  :span="12">
+            <el-form-item label="规格型号" prop="specification">
+              <el-input v-model="assetAddForm.specification" :disabled="disabled"></el-input>
+            </el-form-item>
+          </el-col>
+
+          <el-col  :span="9" :offset="3">
+            <el-form-item label="资产组" prop="groupName">
+              <el-input v-model="assetAddForm.groupName" @focus="onShowGroup" :disabled="disabled"></el-input>
+            </el-form-item>
+          </el-col>
+
           <el-col :span="12">
             <el-form-item label="单独核算" prop="singleCount">
-              <el-radio v-model="assetAddForm.singleCount" :label="1">是</el-radio>
-              <el-radio v-model="assetAddForm.singleCount" :label="0">否</el-radio>
+              <el-radio v-model="assetAddForm.singleCount" :label="1" :disabled="disabled">是</el-radio>
+              <el-radio v-model="assetAddForm.singleCount" :label="0" :disabled="disabled">否</el-radio>
             </el-form-item>
           </el-col>
-
-          <el-col  :span="21" :offset="formUi.offset">
-            <el-form-item label="资产组" prop="groupName">
-              <el-input v-model="assetAddForm.groupName" @focus="onShowGroup"></el-input>
-            </el-form-item>
-          </el-col>
-
-          <!--<el-col :span="12">-->
-            <!--<el-form-item label="所在部门" prop="departmentId">-->
-              <!--<el-input v-model="assetAddForm.departmentName" @focus="onShowDept"></el-input>-->
-            <!--</el-form-item>-->
-          <!--</el-col>-->
-
-          <!--<el-col :span="9" :offset="3">-->
-            <!--<el-form-item label="当前保管人" prop="currentCustodian">-->
-              <!--<el-input v-model="assetAddForm.currentCustodian"></el-input>-->
-            <!--</el-form-item>-->
-          <!--</el-col>-->
-
-          <!--<el-col :span="12">-->
-            <!--<el-form-item label="前期保管人" prop="previousCustodian">-->
-              <!--<el-input v-model="assetAddForm.previousCustodian"></el-input>-->
-            <!--</el-form-item>-->
-          <!--</el-col>-->
-
-          <!--<el-col :span="9" :offset="3">-->
-            <!--<el-form-item label="数量" prop="quantity" v-if="status==5">-->
-              <!--<el-input v-model="assetAddForm.quantity"></el-input>-->
-            <!--</el-form-item>-->
-          <!--</el-col>-->
 
           <template v-for="(item,index) in assetAddForm.ownAttrList">
             <div
@@ -114,12 +96,30 @@
             </div>
           </template>
 
-          <el-col :span="19" :offset="3" v-if="fromFlag!=1">
-            <el-form-item label="备注" prop="remark" class="el-col-24 remark-el-form">
-              <el-input v-model="assetAddForm.remark" type="textarea" :rows="4"></el-input>
+          <el-col  :span="9" :offset="3" v-if="fromFlag=='stockApply'">
+            <el-form-item label="数量" prop="quantity">
+              <el-input v-model="assetAddForm.quantity"></el-input>
             </el-form-item>
           </el-col>
 
+          <el-col :span="12" v-if="fromFlag=='stockApply'">
+            <el-form-item label="入库部门" prop="departmentId">
+               <!--<el-input v-model="assetAddForm.departmentName" @focus="onShowDept"></el-input>-->
+              <el-select v-model="assetAddForm.departmentId" @change="onDeptChange">
+                <el-option v-for="item in deptTree" :key="item.id"
+                           :label="item.name" :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="19" :offset="3">
+            <el-form-item :label="fromFlag=='stockApply'?'入库备注':'备注'"
+                          prop="remark" class="el-col-24 remark-el-form"
+            >
+              <el-input v-model="assetAddForm.remark" type="textarea" :rows="4"></el-input>
+            </el-form-item>
+          </el-col>
 
         </el-row>
         <!--<el-row>-->
@@ -154,7 +154,7 @@
           <!--</el-col>-->
         <!--</el-row>-->
 
-        <el-row type="flex" justify="space-around" v-if="fromFlag!=1">
+        <el-row type="flex" justify="space-around">
           <div style="margin-left: -50px;">
             <el-button type="primary" @click="submitForm('assetAddForm')">确定</el-button>
             <el-button @click="goBack" class="go-back">取消</el-button>
@@ -163,29 +163,22 @@
       </el-form>
     </div>
     <TreeModal :tree-modal-config="treeModalConfig" />
+    <SearchAssetModal :showSearchModal="showSearchModal"/>
+
   </div>
 </template>
 
 <script>
 import AssetManageApi from "../../service/api/assetManageApi";
 import TreeModal from "../../components/treeModal/index";
+import SearchAssetModal from '../stockManage/coms/searchAsset'
 export default {
   name: "AddAsset",
   components: {
-    TreeModal
+    TreeModal,
+    SearchAssetModal
   },
-  props:{
-    formUi:{
-      default(){
-        return{
-          span1:9,
-          offset:3
-        }
-      },
-      required:false,
-    },
-    fromFlag:{} // 1代表入库申请
-  },
+  props:['fromFlag','curDetail'],
   data() {
     let checkQuantity = (rule, value, callback) => {
       if (value < 1) {
@@ -205,33 +198,29 @@ export default {
       assetAddForm: {
         name: "",
         brand: "",
-        // providerId: "",
-        // providerName: "",
         groupId: "",
         groupName: "",
         coding: "",
         unit: "",
-        // currentCustodian: "",
-        // previousCustodian: "",
-        // departmentId: "",
-        // departmentName: "",
         price: "",
         remark: "",
-        // quantity: "1",
         ownAttrList: [],
         customAttrList: [],
-        singleCount:1
+        singleCount:1,
+        specification:'',
+        //以下为入库申请需要的字段
+        quantity:'',
+        departmentId: "",
+        departmentName:''
       },
       rules: {
-        name: [{ required: true, message: "请输入资产名称", trigger: "blur" }],
+        name: [{ required: true, message: "请输入资产名称", trigger: "change" }],
         groupName: [
           { required: true, message: "请选择资产组", trigger: "blur" }
         ],
-        price:[{  validator: validPrice, trigger:"blur", }]
-        // quantity: [
-        //   { required: true, message: "请输入数量", trigger: "blur" },
-        //   { validator: checkQuantity, trigger: "blur" }
-        // ]
+        price:[{  validator: validPrice, trigger:"blur", }],
+        quantity: [{ required: true, message: "请输入数量", trigger: "blur" },
+          { validator: checkQuantity, trigger: "blur" }]
       },
       providerList: [],
       groupTree: [],
@@ -252,6 +241,7 @@ export default {
         onClickSureBtnCallback: this.onClickTreeModalSureBtn,
         onClickCancelBtnCallback: this.hideTreeModal
       },
+      showSearchModal:false
     };
   },
   computed: {
@@ -269,6 +259,13 @@ export default {
       return (
         this.$route.query.assetIds && this.$route.query.assetIds.split(",")
       );
+    },
+    // fromFlag(){
+    //   //stockApply ->代表入库申请
+    //   return this.$route.query.fromFlag
+    // },
+    disabled(){
+      return this.fromFlag=="stockApply"?true:false
     }
   },
   watch: {},
@@ -284,7 +281,11 @@ export default {
       });
     },
     goBack() {
-      this.$router.push("/assetMaintenance");
+      if(this.fromFlag=="stockApply"){
+        this.$parent.showAddModal=false
+      }else{
+        history.go(-1)
+      }
     },
     hideTreeModal() {
       this.treeModalConfig.showModal = false;
@@ -297,14 +298,10 @@ export default {
         //不可直接res赋值
         name: res.name,
         brand: res.brand,
-        // providerId: res.providerId,
-        // providerName: res.providerName,
         groupId: res.groupId,
         groupName: res.groupName,
         coding: res.coding,
         unit: res.unit,
-        // currentCustodian: res.currentCustodian,
-        // previousCustodian: res.previousCustodian,
         // departmentId: res.departmentId,
         // departmentName: res.departmentName,
         price: res.price,
@@ -387,14 +384,15 @@ export default {
         this.assetAddForm.groupName = val.name;
       } else if (this.modalFlag == 1) {
         this.assetAddForm.departmentId = val.id;
-        this.assetAddForm.departmentName = val.name;
       }
     },
     addAsset() {
       if (this.assetIds) {
         this.multiEditAsset();
-      } else {
+      } else if(this.assetId){
         this.addSingleAsset();
+      }else if(this.fromFlag=='stockApply'){
+        this.$parent.addStockDetail &&  this.$parent.addStockDetail(this.assetAddForm)
       }
     },
     onProviderChange(val) {
@@ -406,19 +404,19 @@ export default {
     async getDepartmentTree() {
       let res = await AssetManageApi.getDepartmentTree();
       if(!this.assetIds || !this.assetId){
-        this.assetAddForm.departmentId = res[0].id;
-        this.assetAddForm.departmentName = res[0].name;
+        this.assetAddForm.departmentId = res[0].childNode[0].id;
+        this.assetAddForm.departmentName = res[0].childNode[0].name;
       }
-      this.deptTree = res;
+      this.deptTree = res[0].childNode.map((item)=>{return {id:item.id,name:item.name}});
     },
     onShowDept() {
       this.treeModalConfig.treeList = this.deptTree;
       this.treeModalConfig.modalTip = "选择部门";
       this.modalFlag = 1;
       this.treeModalConfig.showModal = true;
-      this.treeModalConfig.treeConfig.defaultExpandedkeys = [
-        this.deptTree[0].id
-      ];
+      // this.treeModalConfig.treeConfig.defaultExpandedkeys = [
+      //   this.deptTree[0].id
+      // ];
     },
     onClickDelCustomBtn(index) {
       this.assetAddForm.customAttrList.splice(index, 1);
@@ -496,17 +494,43 @@ export default {
       setTimeout(() => {
         this.$router.replace("/assetMaintenance");
       }, 1000);
+    },
+    onFocusName(){
+      if(this.fromFlag=="stockApply"){
+        this.showSearchModal=true
+      }
+    },
+    onGetAssetDetail(row){
+      let tmp={
+        departmentId:  this.assetAddForm.departmentId,
+        departmentName:  this.assetAddForm.departmentName,
+        remark:this.assetAddForm.remark,
+        price:this.assetAddForm.price,
+        quantity:this.assetAddForm.quantity
+      }
+      this.assetAddForm={...row,...tmp}
+      this.showSearchModal=false
+    },
+    onDeptChange(val){
+      console.log(111,val)
+      let tmp = this.deptTree.find((item)=>item.id==val)
+      this.assetAddForm.departmentName=tmp.name
     }
   },
   mounted() {
     // this.getProviderList();
     this.getAssetGroupTree();
-    // this.getDepartmentTree();
     if (this.assetId || this.assetIds) {
       this.getAssetDetail();
     }
     if (this.typeId && !(this.assetId || this.assetIds)) {
       this.getAttributeByType();
+    }
+    if(this.fromFlag=="stockApply"){
+      this.getDepartmentTree();
+    }
+    if(this.curDetail){
+      this.assetAddForm=this.curDetail
     }
   }
 };

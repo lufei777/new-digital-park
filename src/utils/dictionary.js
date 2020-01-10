@@ -55,3 +55,13 @@ export const StockDic = {
     value:2
   }]
 }
+
+export const AssetDic = {
+  singleCount:[{
+    label:'是',
+    value:1
+  },{
+    label:'否',
+    value:0
+  }]
+}
