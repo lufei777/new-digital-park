@@ -8,36 +8,36 @@ export default [{
         path: '/housepropertymanage',
         name: 'housepropertymanage',
         meta: { title: '房产管理' },
-        component: () => import('@/pages/leaseManage/housePropertyManage')
+        component: () => import('@/pages/leaseManage/houseManage/housePropertyManage')
     }, {
         path: '/bulkimporthouseproperty',
         name: 'bulkimporthouseproperty',
         meta: { title: '导入房产' },
-        component: () => import('@/pages/leaseManage/bulkImportHouseProperty'),
+        component: () => import('@/pages/leaseManage/houseManage/bulkImportHouseProperty'),
     }, {
         path: '/editHouseProperty',
         name: 'editHouseProperty',
         meta: { title: '房产维护' },
-        component: () => import('@/pages/leaseManage/editHouseProperty'),
+        component: () => import('@/pages/leaseManage/houseManage/editHouseProperty'),
     }, {
         path: '/tenantManage',
         name: 'tenantManage',
         meta: { title: '租户管理' },
-        component: () => import('@/pages/leaseManage/tenantManage'),
+        component: () => import('@/pages/leaseManage/tenantManage/tenantList'),
     }, {
         path: '/addTenantManage',
         name: 'addTenantManage',
         meta: { title: '编辑租户' },
-        component: () => import('@/pages/leaseManage/addTenantManage'),
+        component: () => import('@/pages/leaseManage/tenantManage/addTenant'),
     }, {
         path: '/leaseContract',
         name: 'leaseContract',
         meta: { title: '租赁合同' },
-        component: () => import('@/pages/leaseManage/leaseContract'),
+        component: () => import('@/pages/leaseManage/leaseContract/leaseContract'), 
     }, {
         path: '/billManage',
         name: 'billManage',
         meta: { title: '账单管理' },
-        component: () => import('@/pages/leaseManage/billManage'),
+        component: () => import('@/pages/leaseManage/billManage/billManage'),
     }],
 }]

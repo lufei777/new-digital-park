@@ -66,6 +66,10 @@ class DigitalParkApi {
   @post
   editTenant(){}
 
+  @url('/contract/addContract')
+  @post
+  addContract(){}
+
   @url('/oaApi/user/password')
   @put
   modifyPwd(){}
