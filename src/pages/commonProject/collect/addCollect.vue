@@ -20,8 +20,8 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="分项类别" prop="region" @change="onChildChange">
-        <el-select v-model="collectForm.childId">
+      <el-form-item label="分项类别" prop="region">
+        <el-select v-model="collectForm.childId" @change="onChildChange">
           <el-option
             v-for="(item,index) in childEnergyList"
             :label="item.text"
@@ -56,7 +56,7 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="数值" prop="positiveNumber">
-        <el-input v-model="collectForm.positiveNumber" placeholder="请输入正数"></el-input>
+        <el-input v-model.number="collectForm.positiveNumber" placeholder="请输入正数"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('collectForm')">确定</el-button>
@@ -84,7 +84,7 @@ export default {
       },
       rules: {
         positiveNumber: [
-          { min: 0, message: "请输入正数", trigger: "blur" },
+          { type: "number", min: 0, message: "请输入正数", trigger: "blur" },
           {
             validator(rule, value, callback) {
               let regNumer = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/;
@@ -100,18 +100,18 @@ export default {
       },
       energyList: [],
       childEnergyList: [],
-      deviceTableList: []
+      deviceTableList: [],
+      deviceFalg: true
     };
   },
   computed: {
-    tipText(){
-      return this.rowData?'编辑采集':'添加采集'
+    tipText() {
+      return this.rowData ? "编辑采集" : "添加采集";
     },
     rowData() {
       return this.$route.query.rowData;
     }
   },
-  watch: {},
   methods: {
     async getEnergyList() {
       let res = await CommonApi.getEnergyListAll({
@@ -128,9 +128,33 @@ export default {
         energyType: this.collectForm.catalogId,
         subitemType: this.collectForm.childId
       });
-      if (res) {
+      // if(res){
+
+      // }
+      if (res && res.length > 0) {
         this.deviceTableList = res;
+        if (!this.rowData) {
+          this.collectForm.deviceTableId = res[0].id;
+        } else if (this.rowData && this.deviceFalg == false) {
+          this.collectForm.deviceTableId = res[0].id;
+        }
+      } else {
+        this.deviceTableList = [];
+        this.collectForm.deviceTableId = "";
       }
+    },
+    async findHandInputById() {
+      let res = await CommonApi.findHandInputById({
+        id: this.rowData.id
+      });
+      if (res && this.deviceFalg == true) {
+        this.collectForm.catalogId = res.parentId;
+        this.collectForm.childId = res.childId;
+        this.collectForm.deviceTableId = res.monitor;
+        this.collectForm.time = res.lookTime;
+        this.collectForm.positiveNumber = res.value;
+      }
+      this.getEnergyList();
     },
     agreeChange: function() {
       this.getProbe();
@@ -141,9 +165,11 @@ export default {
       });
       this.childEnergyList = tmp.nodes;
       this.collectForm.childId = tmp.nodes ? tmp.nodes[0].id : "";
+      this.getProbe();
     },
-    onChildChange(){
-      this.getEnergyList()
+    onChildChange(val) {
+      this.deviceFalg = false
+      this.getProbe();
     },
     async insertHandInput() {
       let params = [
@@ -154,20 +180,20 @@ export default {
         }
       ];
       let res;
-      if(this.rowData) {
-         res = await CommonApi.updateHandInput({
-           id:this.rowData.id,
-           lookTime: this.collectForm.time,
-           value: this.collectForm.positiveNumber,
-           monitor: this.collectForm.deviceTableId
-         });
+      if (this.rowData) {
+        res = await CommonApi.updateHandInput({
+          id: this.rowData.id,
+          lookTime: this.collectForm.time,
+          value: this.collectForm.positiveNumber,
+          monitor: this.collectForm.deviceTableId
+        });
       } else {
-         res = await CommonApi.insertHandInput(params);
+        res = await CommonApi.insertHandInput(params);
       }
       if (res.result == true) {
         this.$message({
           type: "success",
-          message: this.rowData?'修改成功！':'添加成功！'
+          message: this.rowData ? "修改成功！" : "添加成功！"
         });
         this.$router.go(-1);
       }
@@ -184,19 +210,15 @@ export default {
     },
     goBack() {
       this.$router.go(-1);
-    },
-    editList() {
-      if (this.rowData) {
-        this.collectForm.time = this.rowData.lookTime;
-        this.collectForm.positiveNumber = this.rowData.value;
-        this.collectForm.deviceTableId = this.rowData.monitor;
-      }
     }
   },
- async mounted() {
-    await this.getEnergyList();
+  async mounted() {
+    if (this.rowData) {
+      await this.findHandInputById();
+    } else {
+      await this.getEnergyList();
+    }
     await this.getProbe();
-    this.editList();
   }
 };
 </script>

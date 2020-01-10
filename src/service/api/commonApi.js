@@ -205,6 +205,10 @@ class CommonApi {
   @get
   getProbe(){}
 
+  @url('/vibe-web/findHandInputById')
+  @get
+  findHandInputById(){}
+
   @url('/vibe-web/insertHandInput')
   @post
   insertHandInput(){}
