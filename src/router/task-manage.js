@@ -3,6 +3,7 @@ import TaskOverview from '../pages/taskManage/taskOverview'
 import NewTask from '../pages/taskManage/newTask'
 import WaitTask from '../pages/taskManage/waitTask'
 import AlreadyTask from '../pages/taskManage/alreadyTask'
+import AboutMe from '../pages/taskManage/aboutMe'
 export default [{
     path: '/',
     redirect: '/warehouseManage',
@@ -28,5 +29,10 @@ export default [{
         name: 'AlreadyTask',
         meta: { title: '已办任务' },
         component: AlreadyTask,
+    },{
+        path: '/aboutMe',
+        name: 'AboutMe',
+        meta: { title: '与我相关' },
+        component: AboutMe,
     }]
 }]

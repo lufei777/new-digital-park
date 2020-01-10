@@ -35,9 +35,7 @@
             </div>
           </template>
           <template slot="createBy">
-            <div>
-              {{createPeople}}
-            </div>
+            <div>{{createPeople}}</div>
           </template>
           <template slot="btn" slot-scope="obj">
             <div>
@@ -45,7 +43,7 @@
               <el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>
             </div>
           </template>
-           <template slot-scope="scope" slot="menuBtn">
+          <template slot-scope="scope" slot="menuBtn">
             <el-button :size="scope.size" @click="back(scope)">返回</el-button>
           </template>
         </miForm>
@@ -55,34 +53,38 @@
 </template>
 
 <script>
-let workOrderType= [
-        {
-          value: 1,
-          label: "巡检"
-        },
-        {
-          value: 2,
-          label: "审批"
-        },
-        {
-          value: 3,
-          label: "调试"
-        },
-        {
-          value: 4,
-          label: "其他"
-        }
-      ]
-  let priorityType = [{
-    value:1,
-    label:"正常",
-  },{
-    value:2,
-    label:"重要",
-  },{
-    value:3,
-    label:"紧急",
-  }]    
+let workOrderType = [
+  {
+    value: 1,
+    label: "巡检"
+  },
+  {
+    value: 2,
+    label: "审批"
+  },
+  {
+    value: 3,
+    label: "调试"
+  },
+  {
+    value: 4,
+    label: "其他"
+  }
+];
+let priorityType = [
+  {
+    value: 1,
+    label: "正常"
+  },
+  {
+    value: 2,
+    label: "重要"
+  },
+  {
+    value: 3,
+    label: "紧急"
+  }
+];
 import miForm from "@/components/Form";
 import TaskManageApi from "../../service/api/taskManageApi";
 export default {
@@ -91,8 +93,8 @@ export default {
   data() {
     return {
       model: {
-        taskType:1,
-        urgent:1
+        taskType: 1,
+        urgent: 1
       },
       newTaskForm: {
         ref: "newTaskForm",
@@ -128,7 +130,7 @@ export default {
               message: "请选择工单类型",
               trigger: "change"
             },
-            dicData:workOrderType
+            dicData: workOrderType
           },
           {
             type: "datetime",
@@ -177,13 +179,15 @@ export default {
             clearable: true,
             offset: 2,
             span: 10,
-            dicData:priorityType
+            dicData: priorityType
           },
           {
             label: "部门",
             prop: "department",
             span: 10,
-            formslot: true
+            formslot: true,
+            hide: true
+            // display:false,
           },
           {
             label: "指派",
@@ -231,35 +235,38 @@ export default {
       },
       departmentList: [],
       assignList: [],
-      designatorName:"",
-      createPeople:""
+      designatorName: "",
+      createPeople: ""
     };
   },
-  computed:{
-    paramsData(){
-      return{
-        taskName:this.model.taskName,
-        createBy:this.model.createBy,
-        beginTime:this.model.beginTime,
-        endTime:this.model.endTime,
-        designatorId:this.model.assign,
-        designatorName:this.designatorName,
-        description:this.model.description,
-        type:this.model.taskType,
-        urgent:this.model.urgent,
-        taskPicList:this.model.taskPicList
-      }
+  computed: {
+    paramsData() {
+      return {
+        taskName: this.model.taskName,
+        createBy: this.model.createBy,
+        beginTime: this.model.beginTime,
+        endTime: this.model.endTime,
+        designatorId: this.model.assign,
+        designatorName: this.designatorName,
+        description: this.model.description,
+        type: this.model.taskType,
+        urgent: this.model.urgent,
+        taskPicList: this.model.taskPicList
+      };
+    },
+    taskId() {
+      return this.$route.params;
     }
   },
   methods: {
-   async submit(model) {
-     let params={
-       ...model,
-       ...{
-         designatorName:this.designatorName,
-        //  delFlag:1
-       }
-     }
+    async submit(model) {
+      let params = {
+        ...model,
+        ...{
+          designatorName: this.designatorName
+          //  delFlag:1
+        }
+      };
       let res = await TaskManageApi.taskAdd(this.paramsData);
       if (res) {
         this.$message({
@@ -304,18 +311,47 @@ export default {
       // this.newTaskForm.forms[7].dicData.push(res)
       this.assignList = res;
     },
-     assignChange(value) {
+    assignChange(value) {
       var obj = {};
       obj = this.assignList.find(item => {
         return item.id === value;
       });
       this.designatorName = obj.fullName;
     },
-
+    back() {
+      this.$router.push("aboutMe");
+    },
+    async detailTask() {
+      this.$refs[this.newTaskForm.ref].setColumnByProp("department", {
+        display: false
+      });
+      this.$refs[this.newTaskForm.ref].setColumnByProp("designatorId", {
+        offset: 0
+      });
+      let res = await TaskManageApi.detailTask({
+        taskId: this.taskId.id
+      });
+      console.log("res", res);
+      if (res) {
+        this.model.taskName = res.taskName;
+        this.model.createBy = res.createBy;
+        this.model.beginTime = res.beginTime;
+        this.model.endTime = res.endTime;
+        this.model.designatorId = res.username;
+        // this.designatorName = res.username;
+        this.model.description = res.description;
+        this.model.taskType = parseInt(res.type);
+        this.model.urgent = parseInt(res.urgent);
+        this.model.taskPicList = res.taskPics;
+      }
+    }
   },
   mounted() {
     this.deptTreeList();
-    this.createPeople = JSON.parse(localStorage.getItem('userInfo')).fullName
+    this.createPeople = JSON.parse(localStorage.getItem("userInfo")).fullName;
+    if (this.taskId.id) {
+      this.detailTask();
+    }
   }
 };
 </script>

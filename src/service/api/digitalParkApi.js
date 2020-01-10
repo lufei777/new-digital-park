@@ -38,38 +38,6 @@ class DigitalParkApi {
   @get
   getUserInfo(){}
 
-  @url('/oaApi/tenant/tenantList')
-  @get
-  tenantList(){}
-
-  @url('/oaApi/tenant/addTenant')
-  @post
-  addTenant(){}
-
-  @url('/oaApi/contract/contractList')
-  @get
-  contractList(){}
-
-  @url('/oaApi/tenant/createTenNum')
-  @get
-  createTenNum(){}
-
-  @url('/oaApi/tenant/delTenant')
-  @get
-  delTenant(){}
-
-  @url('/oaApi/tenant/tenantDetail')
-  @get
-  tenantDetail(){}
-
-  @url('/oaApi/tenant/editTenant')
-  @post
-  editTenant(){}
-
-  @url('/contract/addContract')
-  @post
-  addContract(){}
-
   @url('/oaApi/user/password')
   @put
   modifyPwd(){}
