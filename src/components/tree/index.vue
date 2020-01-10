@@ -83,7 +83,6 @@
       },
     },
     mounted(){
-      console.log(this.$refs.treeRef,this.treeConfig,this.treeList)
       setTimeout(()=>{
         this.$refs[this.treeConfig.ref ||'treeRef'].setCurrentKey(this.treeConfig.currentKey)
       },500)

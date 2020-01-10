@@ -192,7 +192,6 @@ export default {
       this.$emit("input", val);
     }
   },
-
   methods: {
     handleSubmit(form, done) {
       this.addFlag ? this.save(form, done) : this.update(form, done);

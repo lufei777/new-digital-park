@@ -45,3 +45,13 @@ export const LeaseManageDic = {
     }
   }
 }
+
+export const StockDic = {
+  stockInApply:[{
+    label:'采购入库',
+    value:1
+  },{
+    label:'其他入库',
+    value:2
+  }]
+}

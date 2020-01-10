@@ -70,8 +70,12 @@ const i18n = new VueI18n({
 import _ from 'lodash';
 Vue.prototype._ = _;
 
+//fragment
+import VueFragment from 'vue-fragment'
+Vue.use(VueFragment.Plugin);
+
 //默认返回瀑布流首页
-if(!Cookies.get('moduleType')){
+if (!Cookies.get('moduleType')) {
   Cookies.set('moduleType', 2)
 }
 

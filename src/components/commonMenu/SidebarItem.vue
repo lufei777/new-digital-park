@@ -1,27 +1,34 @@
 <template>
-  <div :class="specialRoute && first?'horizonal-menu':''">
+  <fragment>
     <template v-for="item in menuData.childNode">
-
-      <el-menu-item :key="item.id" v-if="item.childNode.length == 0" :index="item.id + item.routeAddress">
+      <el-menu-item
+        :key="item.id"
+        v-if="item.childNode.length == 0"
+        :index="item.id + item.routeAddress"
+      >
         <i v-if="item.icon && !specialRoute" :class="['iconfont',item.icon]"></i>
         <span slot="title">{{item.name}}</span>
       </el-menu-item>
 
-      <el-submenu v-else :key="item.id" :index="item.id + item.routeAddress" @click.native="onClickSubmenu(item)">
+      <el-submenu
+        v-else
+        :key="item.id"
+        :index="item.id + item.routeAddress"
+        @click.native="onClickSubmenu(item)"
+      >
         <template slot="title">
           <i v-if="item.icon && !specialRoute" :class="['iconfont',item.icon]"></i>
           <span>{{item.name}}</span>
         </template>
+
         <sidebar-item
           class="nest-menu"
           :menu-data="item"
           :specialRoute="specialRoute"
-          :first="false"
         />
       </el-submenu>
-
     </template>
-  </div>
+  </fragment>
 </template>
 
 <script>
@@ -34,7 +41,6 @@ export default {
       required: false
     },
     menuData: {},
-    first: {}
   },
   computed: {
     menuList() {

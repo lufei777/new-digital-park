@@ -14,7 +14,6 @@ export default function (type) {
     watch: {
       options: {
         handler() {
-          console.log('change');
           this.init();
         },
         deep: true
@@ -25,7 +24,8 @@ export default function (type) {
         DIC: {},
         cascaderDIC: {},
         tableOption: {},
-        isMobile: ''
+        isMobile: '',
+        initDicTimer: null
       };
     },
     created() {
@@ -63,10 +63,11 @@ export default function (type) {
             this.formRulesInit(ele.column);
           }); */
           this.formRulesInit();
-        }
-        setTimeout(() => {
+        };
+        clearTimeout(this.initDicTimer);
+        this.initDicTimer = setTimeout(() => {
           this.initDic();
-        }, 0);
+        }, 10);
       },
       //检测本地字典
       initDic() {

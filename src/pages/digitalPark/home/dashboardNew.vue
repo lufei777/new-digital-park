@@ -235,7 +235,8 @@
         async getModulesByType(){
           let res = await DigitalParkApi.getModulesByType({
             type:1,
-            language:Cookies.get('lang')
+            language:Cookies.get('lang'),
+            menuId:this.productId
           })
           this.proModuleList1 =res.slice(0,3)
           this.proModuleList2 =res.slice(3,5)

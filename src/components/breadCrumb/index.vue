@@ -1,11 +1,13 @@
 <template>
   <div class="bread-crumb">
     <el-breadcrumb separator="/">
-      <template v-for="(item) in breadcrumb">
-        <el-breadcrumb-item :key="item.path">
-          <a href="#" @click.prevent="toPath(item,$event)">{{item.title}}</a>
-        </el-breadcrumb-item>
-      </template>
+      <transition-group name="fade-transform" mode="out-in" appear>
+        <template v-for="(item) in breadcrumb">
+          <el-breadcrumb-item :key="item.path">
+            <a href="#" @click.prevent="toPath(item,$event)">{{item.title}}</a>
+          </el-breadcrumb-item>
+        </template>
+      </transition-group>
     </el-breadcrumb>
   </div>
 </template>
@@ -26,7 +28,7 @@ export default {
       // 从路由中获取matched
       this.$route.matched.forEach((route, index) => {
         if (route.meta.title) {
-          if ((route.path == "/digitalPark/defaultPage")) hasDefaultPage = true;
+          if (route.path == "/digitalPark/defaultPage") hasDefaultPage = true;
           this.breadcrumb.push({
             title: route.meta.title,
             redirect: route.redirect,

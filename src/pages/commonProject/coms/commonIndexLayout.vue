@@ -3,8 +3,7 @@
     <div :class="menuConfig.isCollapse?'collapse-my-el-menu':'unfold-my-el-menu'">
       <slot name="menuList"></slot>
     </div>
-    <div :class="[menuConfig.isCollapse? 'collapse-right-content':'unfold-right-content']"
-    >
+    <div :class="[menuConfig.isCollapse? 'collapse-right-content':'unfold-right-content']">
       <div
         :class="[menuConfig.isCollapse?
           'collapse-right-content-header':
@@ -137,16 +136,16 @@ export default {
     float: right;
     line-height: 70px;
   }
-  .common-tree-box{
-    padding:20px 0;
+  .common-tree-box {
+    padding: 20px 0;
     background: @white;
-    width:250px;
+    width: 250px;
     position: fixed;
     box-sizing: border-box;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    .common-tree{
+    .common-tree {
       flex-grow: 1;
       overflow: hidden;
     }
