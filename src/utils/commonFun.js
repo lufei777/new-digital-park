@@ -18,6 +18,10 @@ import escapeRoutes from '../pages/digitalPark/coms/alarm/escapeRoutes'
 import saleStatistics from '../pages/digitalPark/coms/statis/saleStatistics'
 import inventoryAnalysis from '../pages/digitalPark/coms/stock/inventoryAnalysis'
 import messageRelease from '../pages/digitalPark/coms/message/messageRelease'
+import environmentalMonitoring from '../pages/digitalPark/coms/buildMonitor/environmentalMonitoring'
+import waterSupplyAndDrainage from '../pages/digitalPark/coms/buildMonitor/waterSupplyAndDrainage'
+import hvac from '../pages/digitalPark/coms/buildMonitor/hvac'
+import elevatorMonitoring from '../pages/digitalPark/coms/buildMonitor/elevatorMonitoring'
 import router from '@/router'
 import axios from 'axios'
 class commonFun {
@@ -41,7 +45,11 @@ class commonFun {
     escapeRoutes,
     saleStatistics,
     inventoryAnalysis,
-    messageRelease
+    messageRelease,
+    environmentalMonitoring,
+    waterSupplyAndDrainage,
+    hvac,
+    elevatorMonitoring
   }
   //this,删除的id,没有id时的提示信息，点击确定的回调函数
   deleteTip(that, deleteId, msgTip, sureCallBack, cancelCallBack) {

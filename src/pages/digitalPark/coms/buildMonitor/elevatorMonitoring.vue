@@ -1,9 +1,6 @@
 <template>
   <div class="environmental-monitoring">
-    <div class="my-chart">
-      <img src="../../../../../static/image/digitalPark/home_environment.png" alt="">
-    </div>
-
+    <img src="../../../../../static/image/digitalPark/home_environment.png" alt="">
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -37,6 +34,9 @@
 </script>
 
 <style lang="less">
-  .environmental-monitoring {
+  .building-status-proportion {
+    .pie-charts {
+      height: 95%;
+    }
   }
 </style>

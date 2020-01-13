@@ -1,44 +1,25 @@
 <template>
-  <div class="warehouse-manage panel-container">
-    <div class="condition-box radius-shadow">
-      <miForm
-        :ref="formData.ref"
-        :options="formData"
-        v-model="model"
-        @submit="submit"
-        @reset-change="resetChange"
-      >
-        <template slot="btn" slot-scope="obj">
-          <div>
-            <el-button :disabled="obj.disabled" type="primary" @click="onClickSearchBtn(obj)">搜索</el-button>
-            <el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>
-          </div>
-        </template>
-      </miForm>
-    </div>
-
-    <div class="warehouse-manage-table panel">
-      <miTable :ref="tableData.ref" :tableConfig="tableData">
-        <template slot="custom-top" slot-scope="obj">
-          <div class="operator-box flex-row-reverse">
-            <el-button :size="obj.size" type="primary">批量删除</el-button>
-            <el-button :size="obj.size" type="primary">批量编辑</el-button>
-            <el-button :size="obj.size" type="primary">导出</el-button>
-            <el-button :size="obj.size" type="primary">导入</el-button>
-            <el-button :size="obj.size" type="primary">新增</el-button>
-          </div>
-        </template>
-      </miTable>
-    </div>
+  <div class="stock-in-check panel-container">
+    <el-tabs type="border-card">
+      <el-tab-pane label="验收申请">
+        <miTable :ref="tableConfig.ref" :tableConfig="tableConfig">
+          <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
+            <el-button type="text" @click="editRow($index)">验收</el-button>
+            <el-button type="text" @click="deleteRow($index)">作废</el-button>
+          </template>
+        </miTable>
+      </el-tab-pane>
+      <el-tab-pane label="验收记录">
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
 <script>
 import miForm from "@/components/Form";
 import miTable from "@/components/Table";
-import CommonFun from "../../../utils/commonFun";
 export default {
-  name: "WarehouseManage",
+  name: "StockCheck",
   components: { miForm, miTable },
   data() {
     return {
@@ -120,100 +101,35 @@ export default {
           }
         ]
       },
-      tableData: {
-        ref: "tableData",
+      tableConfig: {
+        ref: "tableRef",
         customTop: true,
+        operation:true,
         data: [],
-        columnConfig: [],
+        columnConfig: [
+          {label:'名称',prop:'name'},
+          {label:'规格型号',prop:'specification'},
+          {label:'单价',prop:'price'},
+          {label:'数量',prop:'quantity'},
+          {label:'申请时间',prop:'time'}],
         uiConfig: {
-          height: "auto", //"", //高度
-          selection: true, //是否多选
-          showIndex: true,
-          pagination: {
-            //是否分页，分页是否自定义
-            layout: "total,->, prev, pager, next, jumper",
-            pageSizes: [10, 20, 50],
-            handler(pageSize, currentPage, table) {
-              _this.handleCurrentChange(currentPage);
-            }
-          }
+          height: "auto",
+          selection: true,
         },
-        btnConfig: {
-          prop: "operation",
-          label: "操作",
-          fixed: "right",
-          width: 200,
-          btns: [
-            {
-              label: "详情",
-              handler: function(row) {}
-            },
-            {
-              label: "编辑",
-              handler: function(row) {}
-            },
-            {
-              label: "删除",
-              handler: function(row) {}
-            }
-          ]
-        }
       }
     };
   },
   methods: {
-    submit() {},
-    resetChange() {},
-    onClickSearchBtn(...args) {
-      this.$refs[this.formData.ref].getFormModel(res => {
-        console.log("model", res);
-      });
-      console.log("搜索", ...args);
-    },
-    clearForm(...args) {
-      console.log("清空", ...args);
-      this.$refs[this.formData.ref].resetForm();
-    },
-    getCleaningList() {
-      let res = CommonFun.stockInCheck;
-      let labelList = [
-        { label: "物品名称", prop: "goodsName" },
-        { label: "物品类型", prop: "goodsType" },
-        { label: "验收总数", prop: "warehouseSum" },
-        { label: "验收状态", prop: "applicant" },
-        { label: "验收日期", prop: "warehouseTime" },
-        { label: "经办人", prop: "handlePeople" },
-        { label: "备注", prop: "remark" }
-      ];
-      this.tableData.columnConfig = labelList;
-      this.tableData.data = res;
-    },
-    batchDels() {},
-    addTenant() {}
   },
   mounted() {
-    this.getCleaningList();
   }
 };
 </script>
 
 <style lang="less">
-.warehouse-manage {
-  .condition-box {
-    margin-bottom: 20px;
-    background: @white;
-    padding: 20px;
-    // background: pink;
-  }
-  .warehouse-manage-table {
-    background: @white;
-    padding: 20px;
-    .operator-box {
-      background: @white;
-      .el-button {
-        margin-left: 20px;
-      }
-    }
+.stock-in-check {
+  .el-tabs{
+    height:100%;
   }
 }
 </style>

@@ -7,7 +7,7 @@
       </div>
       <div class="tip">入库明细：</div>
       <div class="operator-btn-box flex-row-reverse">
-        <el-button type="primary">批量删除</el-button>
+        <el-button type="primary" @click="onClickMultiDelBtn">批量删除</el-button>
         <el-button type="primary" @click="onClickAddBtn">添加明细</el-button>
       </div>
       <miTable :ref="tableConfig.ref" :tableConfig="tableConfig">
@@ -30,10 +30,12 @@
   import {StockDic} from "@/utils/dictionary";
   import AssetManageApi from '@/service/api/assetManageApi'
   import AddAsset from '../../assetManage/addAsset'
+  import TaskManageApi from '@/service/api/taskManageApi'
   export default {
     name: "Apply",
     components: { miForm, miTable,AddAsset },
     data() {
+      let _this = this
       return {
         model: {},
         formConfig:{
@@ -53,13 +55,25 @@
             span: 10,
             offset:4
           },{
-            type: "tree",
+            type: "cascader",
             label: "采购人",
             prop: "buyer",
             props: {
               label: "name",
               value: "id",
-              children: "childNode"
+              children: "childNode",
+              lazy: true,
+              lazyLoad:async function (node, resolve) {
+                const { level,data } = node;
+                let nodes =[]
+                if(level==0 || data.childNode.length){
+                  resolve(nodes);
+                }else{
+                  let res =await _this.getUserList(node.data.id)
+                  nodes=res
+                }
+                resolve(nodes);
+              },
             },
             span: 10,
           },{
@@ -69,13 +83,25 @@
             span: 10,
             offset:4
           },{
-            type: "tree",
+            type: "cascader",
             label: "验收人",
             prop: "checker",
             props: {
               label: "name",
               value: "id",
-              children: "childNode"
+              children: "childNode",
+              lazy: true,
+              lazyLoad:async function (node, resolve) {
+                const { level,data } = node;
+                let nodes =[]
+                if(level==0 || data.childNode.length){
+                  resolve(nodes);
+                }else{
+                  let res =await _this.getUserList(node.data.id)
+                  nodes=res
+                }
+                resolve(nodes);
+              },
             },
             span: 10,
           },{
@@ -122,18 +148,19 @@
         },
         showAddModal:false,
         curDetail:{},
-        showModal2:false
+        deptTree:[],
       };
     },
     methods: {
       async getDepartmentTree() {
         let res = await AssetManageApi.getDepartmentTree();
         this.$refs[this.formConfig.ref].setColumnByProp("buyer", {
-          dicData: res
+          dicData: res[0].childNode
         });
         this.$refs[this.formConfig.ref].setColumnByProp("checker", {
-          dicData: res
+          dicData: res[0].childNode
         });
+       this.deptTree=res[0].childNode
       },
       async getProviderList() {
         let res = await AssetManageApi.getProviderList();
@@ -156,7 +183,28 @@
       editRow(index){
         this.showAddModal=true
         this.curDetail=this.tableConfig.data[index]
-      }
+      },
+      onClickMultiDelBtn(){
+        let delArr = this.$refs["tableRef"].getSelectedData()
+        let tmp = []
+        this.tableConfig.data.map((item)=>{
+          if(delArr.indexOf(item)==-1){
+            tmp.push(item)
+          }
+        })
+        this.tableConfig.data=tmp
+      },
+      async getUserList(id) {
+        let deptId = id
+        let res = await TaskManageApi.listBy({
+          deptId
+        })
+        res.map((item)=>{
+          item.name=item.fullName
+          item.leaf=true
+        })
+        return res
+      },
     },
     mounted() {
       this.getDepartmentTree();
