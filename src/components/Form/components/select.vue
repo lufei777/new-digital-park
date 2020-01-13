@@ -15,6 +15,7 @@
     :allow-create="allowCreate"
     :default-first-option="defaultFirstOption || allowCreate?true:false"
     :disabled="disabled"
+    @change="handleChange"
     @focus="handleFocus"
     @blur="handleBlur"
     @click.native="handleClick"
@@ -117,13 +118,14 @@ export default {
         this.netDic = val;
         this.defaultDic = val;
       }
-    },
+    }/* ,
     text: {
-      immediate: true,
+      // immediate: true,
       handler(value) {
+        console.log("watch text", value);
         this.handleChange(value);
       }
-    }
+    } */
   }
 };
 </script>
