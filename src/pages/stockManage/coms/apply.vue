@@ -61,14 +61,19 @@
             props: {
               label: "name",
               value: "id",
-              children: "childNode"
-            },
-            change:function(value){
-              console.log(111,value)
-              if(value.value.length){
-                _this.getUserList(value.value)
-              }
-
+              children: "childNode",
+              lazy: true,
+              lazyLoad:async function (node, resolve) {
+                const { level,data } = node;
+                let nodes =[]
+                if(level==0 || data.childNode.length){
+                  resolve(nodes);
+                }else{
+                  let res =await _this.getUserList(node.data.id)
+                  nodes=res
+                }
+                resolve(nodes);
+              },
             },
             span: 10,
           },{
@@ -78,13 +83,25 @@
             span: 10,
             offset:4
           },{
-            type: "tree",
+            type: "cascader",
             label: "验收人",
             prop: "checker",
             props: {
               label: "name",
               value: "id",
-              children: "childNode"
+              children: "childNode",
+              lazy: true,
+              lazyLoad:async function (node, resolve) {
+                const { level,data } = node;
+                let nodes =[]
+                if(level==0 || data.childNode.length){
+                  resolve(nodes);
+                }else{
+                  let res =await _this.getUserList(node.data.id)
+                  nodes=res
+                }
+                resolve(nodes);
+              },
             },
             span: 10,
           },{
@@ -137,20 +154,11 @@
     methods: {
       async getDepartmentTree() {
         let res = await AssetManageApi.getDepartmentTree();
-        // res[0].childNode.map((item)=>{
-        //   if(!item.childNode.length)  item.childNode=null
-        //   else{
-        //     item.childNode.map((child)=>{
-        //       if(!child.childNode.length)  child.childNode=null
-        //     })
-        //   }
-        // })
-        console.log(res)
         this.$refs[this.formConfig.ref].setColumnByProp("buyer", {
           dicData: res[0].childNode
         });
         this.$refs[this.formConfig.ref].setColumnByProp("checker", {
-          dicData: res
+          dicData: res[0].childNode
         });
        this.deptTree=res[0].childNode
       },
@@ -186,24 +194,16 @@
         })
         this.tableConfig.data=tmp
       },
-      async getUserList(value) {
-        let deptId = value[value.length - 1]
+      async getUserList(id) {
+        let deptId = id
         let res = await TaskManageApi.listBy({
           deptId
         })
-        let i=0
-        let findItem=this.deptTree
-        console.log(this.deptTree)
-        while(i<value.length){
-          this.
-          findItem.map((item)=>{
-            if(item.id==value[i]){
-              findItem=item.childNode
-            }
-          })
-          i++;
-        }
-        console.log("find",findItem)
+        res.map((item)=>{
+          item.name=item.fullName
+          item.leaf=true
+        })
+        return res
       },
     },
     mounted() {
