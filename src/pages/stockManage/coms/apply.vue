@@ -7,7 +7,7 @@
       </div>
       <div class="tip">入库明细：</div>
       <div class="operator-btn-box flex-row-reverse">
-        <el-button type="primary">批量删除</el-button>
+        <el-button type="primary" @click="onClickMultiDelBtn">批量删除</el-button>
         <el-button type="primary" @click="onClickAddBtn">添加明细</el-button>
       </div>
       <miTable :ref="tableConfig.ref" :tableConfig="tableConfig">
@@ -30,10 +30,12 @@
   import {StockDic} from "@/utils/dictionary";
   import AssetManageApi from '@/service/api/assetManageApi'
   import AddAsset from '../../assetManage/addAsset'
+  import TaskManageApi from '@/service/api/taskManageApi'
   export default {
     name: "Apply",
     components: { miForm, miTable,AddAsset },
     data() {
+      let _this = this
       return {
         model: {},
         formConfig:{
@@ -53,13 +55,20 @@
             span: 10,
             offset:4
           },{
-            type: "tree",
+            type: "cascader",
             label: "采购人",
             prop: "buyer",
             props: {
               label: "name",
               value: "id",
               children: "childNode"
+            },
+            change:function(value){
+              console.log(111,value)
+              if(value.value.length){
+                _this.getUserList(value.value)
+              }
+
             },
             span: 10,
           },{
@@ -122,18 +131,28 @@
         },
         showAddModal:false,
         curDetail:{},
-        showModal2:false
+        deptTree:[],
       };
     },
     methods: {
       async getDepartmentTree() {
         let res = await AssetManageApi.getDepartmentTree();
+        // res[0].childNode.map((item)=>{
+        //   if(!item.childNode.length)  item.childNode=null
+        //   else{
+        //     item.childNode.map((child)=>{
+        //       if(!child.childNode.length)  child.childNode=null
+        //     })
+        //   }
+        // })
+        console.log(res)
         this.$refs[this.formConfig.ref].setColumnByProp("buyer", {
-          dicData: res
+          dicData: res[0].childNode
         });
         this.$refs[this.formConfig.ref].setColumnByProp("checker", {
           dicData: res
         });
+       this.deptTree=res[0].childNode
       },
       async getProviderList() {
         let res = await AssetManageApi.getProviderList();
@@ -156,7 +175,36 @@
       editRow(index){
         this.showAddModal=true
         this.curDetail=this.tableConfig.data[index]
-      }
+      },
+      onClickMultiDelBtn(){
+        let delArr = this.$refs["tableRef"].getSelectedData()
+        let tmp = []
+        this.tableConfig.data.map((item)=>{
+          if(delArr.indexOf(item)==-1){
+            tmp.push(item)
+          }
+        })
+        this.tableConfig.data=tmp
+      },
+      async getUserList(value) {
+        let deptId = value[value.length - 1]
+        let res = await TaskManageApi.listBy({
+          deptId
+        })
+        let i=0
+        let findItem=this.deptTree
+        console.log(this.deptTree)
+        while(i<value.length){
+          this.
+          findItem.map((item)=>{
+            if(item.id==value[i]){
+              findItem=item.childNode
+            }
+          })
+          i++;
+        }
+        console.log("find",findItem)
+      },
     },
     mounted() {
       this.getDepartmentTree();

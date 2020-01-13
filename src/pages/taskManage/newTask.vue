@@ -19,6 +19,7 @@
                 :props="treeProps"
                 v-model="model.department"
                 @change="changelistBy"
+                @active-item-change="changelistBy2"
               ></el-cascader>
             </div>
           </template>
@@ -311,7 +312,9 @@ export default {
       });
       this.designatorName = obj.fullName;
     },
-
+    changelistBy2(val){
+     console.log("2222",val)
+    }
   },
   mounted() {
     this.deptTreeList();
