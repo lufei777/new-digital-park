@@ -3,7 +3,7 @@
     <component
       :is="componentId"
       v-model="text"
-      :options="dic"
+      :options="getTreeData(dic)"
       :props="props"
       :size="size"
       :placeholder="placeholder"
@@ -76,19 +76,45 @@ export default {
       default: true
     }
   },
-  methods: {},
+  methods: {
+    getTreeData(dic) {
+      // 递归将子节点为 空数组 置为 undefined
+      // 如果是远程请求，或者不是数组，则原样返回
+      if (this.props.lazy || !this.itemIsArray(dic)) {
+        return dic;
+      }
+      let data = dic;
+      // 循环遍历json数据
+      for (let i = 0, len = data.length; i < len; i++) {
+        let childrenNode = data[i][this.childrenKey];
+        if (this.itemIsArray(childrenNode) && childrenNode.length === 0) {
+          // children若为空数组，则将children设为undefined
+          data[i][this.childrenKey] = undefined;
+        } else {
+          // children若不为空数组，则继续 递归调用 本方法
+          this.getTreeData(childrenNode);
+        }
+      }
+      return data;
+    },
+    itemIsArray(item) {
+      return Object.prototype.toString.call(item) === "[object Array]";
+    }
+  },
   watch: {
-    text: {
+    /* text: {
       immediate: true,
       handler(value) {
+        console.log("watch text", value);
         this.handleChange(value);
       }
-    }
+    } */
   },
   created() {
     if (this.multiple) {
       this.props.multiple = this.multiple;
     }
+    // 级联面板
     if (this.type === "cascader-panel") {
       this.componentId = "el-cascader-panel";
     }
