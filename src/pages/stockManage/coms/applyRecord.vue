@@ -1,20 +1,27 @@
 <template>
   <div class="apply-record">
-    <miTable :ref="tableConfig.ref" :tableConfig="tableConfig">
+    <miTable :ref="tableConfig.ref" :tableConfig="tableConfig" v-if="!showDetail">
       <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
-        <el-button type="text" @click="editRow(row)">详情</el-button>
+        <el-button type="text" @click="onClickDetailBtn(row)">详情</el-button>
       </template>
     </miTable>
+    <div v-if="showDetail">
+      <div class="tip">入库申请记录详情</div>
+      <BasicInformation />
+      <div class="go-back"><el-button type="primary" @click="onClickBackBtn">返回</el-button></div>
+    </div>
+
   </div>
 </template>
 
 <script>
   import miTable from "@/components/Table";
   import {StockDic} from "@/utils/dictionary";
-  import AssetManageApi from '@/service/api/assetManageApi'
+  import StockManageApi from '@/service/api/stockManageApi'
+  import BasicInformation from '../coms/basicInformation'
   export default {
-    name: "Apply",
-    components: { miTable },
+    name: "ApplyRecord",
+    components: { miTable,BasicInformation },
     data() {
       return {
         model: {},
@@ -36,73 +43,41 @@
             height:'auto',
           }
         },
-        showAddModal:false,
-        curDetail:{},
-        showModal2:false
+        showDetail:false
       };
     },
     methods: {
-      async getDepartmentTree() {
-        let res = await AssetManageApi.getDepartmentTree();
-        this.$refs[this.formConfig.ref].setColumnByProp("buyer", {
-          dicData: res
-        });
-        this.$refs[this.formConfig.ref].setColumnByProp("checker", {
-          dicData: res
-        });
+      onClickDetailBtn(){
+        this.showDetail=true
       },
-      async getProviderList() {
-        let res = await AssetManageApi.getProviderList();
-        this.$refs[this.formConfig.ref].setColumnByProp("providerId", {
-          dicData: res
-        });
+      onClickBackBtn(){
+        this.showDetail=false
       },
-      onClickAddBtn(){
-        this.curDetail={}
-        this.showAddModal=true
-      },
-      addStockDetail(obj){
-        this.tableConfig.data.push(obj)
-        this.showAddModal=false
-      },
-      deleteRow(index){
-        this.tableConfig.data.splice(index,1)
-      },
-      editRow(index){
-        this.showAddModal=true
-        this.curDetail=this.tableConfig.data[index]
-      },
-      onClickMultiDelBtn(){
-        let delArr = this.$refs["tableRef"].getSelectedData()
-        let tmp = []
-        this.tableConfig.data.map((item)=>{
-          if(delArr.indexOf(item)==-1){
-            tmp.push(item)
-          }
+      async getRecordList(){
+        let res = await StockManageApi.getRecordList({
+          type:1
         })
-        this.tableConfig.data=tmp
       }
     },
     mounted() {
-      // this.getDepartmentTree();
-      // this.getProviderList()
+      this.tableConfig.data=[{
+        buyer:'战三', checker:'李四'}]
+      this.getRecordList()
     }
   };
 </script>
 
 <style lang="less">
-  .apply-coms {
-   .tip{
-     font-weight: bold;
-     font-size: 16px;
-     margin-bottom: 20px;
-   }
-  .form-box{
-    width:800px;
-    margin:0 auto;
+.apply-record {
+  .tip{
+    text-align: center;
+    margin:20px;
+    font-weight: bold;
+    font-size: 16px;
   }
-  .add-modal{
-    height:100%
+  .go-back{
+    text-align: center;
+    margin-top: 20px;
   }
 }
 </style>

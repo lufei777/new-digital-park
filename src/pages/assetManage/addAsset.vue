@@ -103,9 +103,9 @@
           </el-col>
 
           <el-col :span="12" v-if="fromFlag=='stockApply'">
-            <el-form-item label="入库部门" prop="departmentId">
+            <el-form-item label="入库部门" prop="deptId">
                <!--<el-input v-model="assetAddForm.departmentName" @focus="onShowDept"></el-input>-->
-              <el-select v-model="assetAddForm.departmentId" @change="onDeptChange">
+              <el-select v-model="assetAddForm.deptId" @change="onDeptChange">
                 <el-option v-for="item in deptTree" :key="item.id"
                            :label="item.name" :value="item.id">
                 </el-option>
@@ -210,7 +210,7 @@ export default {
         specification:'',
         //以下为入库申请需要的字段
         quantity:'',
-        departmentId: "",
+        deptId: "",
         departmentName:''
       },
       rules: {
@@ -302,7 +302,7 @@ export default {
         groupName: res.groupName,
         coding: res.coding,
         unit: res.unit,
-        // departmentId: res.departmentId,
+        // deptId: res.deptId,
         // departmentName: res.departmentName,
         price: res.price,
         remark: res.remark,
@@ -383,7 +383,7 @@ export default {
         this.assetAddForm.groupId = val.id;
         this.assetAddForm.groupName = val.name;
       } else if (this.modalFlag == 1) {
-        this.assetAddForm.departmentId = val.id;
+        this.assetAddForm.deptId = val.id;
       }
     },
     addAsset() {
@@ -392,7 +392,8 @@ export default {
       } else if(this.assetId){
         this.addSingleAsset();
       }else if(this.fromFlag=='stockApply'){
-        this.$parent.addStockDetail &&  this.$parent.addStockDetail(this.assetAddForm)
+        let obj={description:this.assetAddForm.remark}
+        this.$parent.addStockDetail &&  this.$parent.addStockDetail({...this.assetAddForm,...obj})
       }
     },
     onProviderChange(val) {
@@ -404,7 +405,7 @@ export default {
     async getDepartmentTree() {
       let res = await AssetManageApi.getDepartmentTree();
       if(!this.assetIds || !this.assetId){
-        this.assetAddForm.departmentId = res[0].childNode[0].id;
+        this.assetAddForm.deptId = res[0].childNode[0].id;
         this.assetAddForm.departmentName = res[0].childNode[0].name;
       }
       this.deptTree = res[0].childNode.map((item)=>{return {id:item.id,name:item.name}});
@@ -502,17 +503,16 @@ export default {
     },
     onGetAssetDetail(row){
       let tmp={
-        departmentId:  this.assetAddForm.departmentId,
+        deptId:  this.assetAddForm.deptId,
         departmentName:  this.assetAddForm.departmentName,
         remark:this.assetAddForm.remark,
-        price:this.assetAddForm.price,
-        quantity:this.assetAddForm.quantity
+        // price:this.assetAddForm.price,
+        quantity:this.assetAddForm.quantity,
       }
       this.assetAddForm={...row,...tmp}
       this.showSearchModal=false
     },
     onDeptChange(val){
-      console.log(111,val)
       let tmp = this.deptTree.find((item)=>item.id==val)
       this.assetAddForm.departmentName=tmp.name
     }

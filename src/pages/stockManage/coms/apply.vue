@@ -1,6 +1,6 @@
 <template>
   <div class="apply-coms">
-    <div v-if="!showAddModal">
+    <div v-show="!showAddModal">
       <div class="tip">基本信息：</div>
       <div class="form-box">
         <miForm :ref="formConfig.ref" :options="formConfig" v-model="model"/>
@@ -16,9 +16,12 @@
           <el-button type="text" @click="deleteRow($index)">删除</el-button>
         </template>
       </miTable>
+      <div class="operator-box">
+        <el-button type="primary" >提交</el-button>
+        <el-button type="primary" @click="onClickSaveBtn">保存</el-button>
+      </div>
     </div>
-
-    <div v-if="showAddModal">
+    <div v-show="showAddModal">
       <AddAsset fromFlag="stockApply" :curDetail="curDetail"/>
     </div>
   </div>
@@ -44,20 +47,20 @@
           forms: [{
             type: "select",
             label: "入库类型",
-            prop: "type",
+            prop: "stockType",
             dicData:StockDic.stockInApply,
             valueDefault:1,
             span: 10,
           },{
             type: "date",
             label: "购置日期",
-            prop: "buyDate",
+            prop: "buyTime",
             span: 10,
             offset:4
           },{
             type: "cascader",
             label: "采购人",
-            prop: "buyer",
+            prop: "buyId",
             props: {
               label: "name",
               value: "id",
@@ -79,13 +82,13 @@
           },{
             type: "date",
             label: "入库日期",
-            prop: "inDate",
+            prop: "stockTime",
             span: 10,
             offset:4
           },{
             type: "cascader",
             label: "验收人",
-            prop: "checker",
+            prop: "acceptId",
             props: {
               label: "name",
               value: "id",
@@ -127,18 +130,18 @@
           operation:true,
           data:[],
           columnConfig:[
-            {label:'编号',prop:'coding'},
+            // {label:'编号',prop:'coding'},
             {label:'名称',prop:'name'},
-            {label:'单位',prop:'unit'},
+            // {label:'单位',prop:'unit'},
             {label:'品牌',prop:'brand'},
             {label:'价格',prop:'price'},
-            {label:'单独核算',prop:'singleCount',
-              formatter:function (row) {
-                return row.singleCount==1?'是':'否'
-              }
-            },
-            {label:'资产组',prop:'groupName'},
-            {label:'资产类型',prop:'typeName'},
+            // {label:'单独核算',prop:'singleCount',
+            //   formatter:function (row) {
+            //     return row.singleCount==1?'是':'否'
+            //   }
+            // },
+            // {label:'资产组',prop:'groupName'},
+            // {label:'资产类型',prop:'typeName'},
             {label:'数量',prop:'quantity'},
             {label:'入库部门',prop:'departmentName'}],
           uiConfig:{
@@ -154,10 +157,10 @@
     methods: {
       async getDepartmentTree() {
         let res = await AssetManageApi.getDepartmentTree();
-        this.$refs[this.formConfig.ref].setColumnByProp("buyer", {
+        this.$refs[this.formConfig.ref].setColumnByProp("buyId", {
           dicData: res[0].childNode
         });
-        this.$refs[this.formConfig.ref].setColumnByProp("checker", {
+        this.$refs[this.formConfig.ref].setColumnByProp("acceptId", {
           dicData: res[0].childNode
         });
        this.deptTree=res[0].childNode
@@ -205,6 +208,9 @@
         })
         return res
       },
+      onClickSaveBtn(){
+        console.log(this.model,this.tableConfig.data)
+      }
     },
     mounted() {
       this.getDepartmentTree();
@@ -226,6 +232,10 @@
   }
   .add-modal{
     height:100%
+  }
+  .operator-box{
+    margin-top: 40px;
+    text-align: center;
   }
 }
 </style>
