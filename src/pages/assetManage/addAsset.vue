@@ -392,8 +392,7 @@ export default {
       } else if(this.assetId){
         this.addSingleAsset();
       }else if(this.fromFlag=='stockApply'){
-        let obj={description:this.assetAddForm.remark}
-        this.$parent.addStockDetail &&  this.$parent.addStockDetail({...this.assetAddForm,...obj})
+        this.$parent.addStockDetail &&  this.$parent.addStockDetail({...this.assetAddForm})
       }
     },
     onProviderChange(val) {
@@ -506,7 +505,6 @@ export default {
         deptId:  this.assetAddForm.deptId,
         departmentName:  this.assetAddForm.departmentName,
         remark:this.assetAddForm.remark,
-        // price:this.assetAddForm.price,
         quantity:this.assetAddForm.quantity,
       }
       this.assetAddForm={...row,...tmp}
