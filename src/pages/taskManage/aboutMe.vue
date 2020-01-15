@@ -1,5 +1,5 @@
 <template>
-  <div class="about-me">
+  <div class="about-me panel-container">
     <div
       :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
       class="energy-tree-box radius-shadow"
@@ -7,7 +7,7 @@
       <Tree :tree-list="taskData" :tree-config="taskTreeConfig"></Tree>
     </div>
     <div class="right-content">
-      <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
+      <el-tabs type="border-card" v-model="taskActiveName" @tab-click="handleClick">
         <el-tab-pane
           v-for="(item,index) in tabTypeList"
           :label="item.text"
@@ -48,9 +48,11 @@ export default {
     return {
       currentPage: 1,
       levelId: 1,
-      activeName: "frist",
+      taskActiveName: sessionStorage.taskActiveName
+        ? sessionStorage.taskActiveName
+        : "frist",
       taskType: 1,
-      taskId:"",
+      taskId: "",
       taskTreeConfig: {
         nodeKey: "value",
         treeProps: {
@@ -99,7 +101,7 @@ export default {
             }
           ]
         }
-      },
+      }
     };
   },
   computed: {
@@ -161,13 +163,13 @@ export default {
     onClickTreeNodeCallBack() {},
     async taskList() {
       let labelList = [
-        { label: "工单编号", prop: "tenantNumber" },
+        { label: "工单编号", prop: "taskNumber" },
         { label: "工单名称", prop: "taskName" },
         { label: "工单类型", prop: "typeText" },
         { label: "工单描述", prop: "description" },
-        { label: "创建时间", prop: "" },
-        { label: "预计结束时间", prop: "" },
-        { label: "优先级", prop: "" },
+        { label: "创建时间", prop: "beginTime" },
+        { label: "预计结束时间", prop: "endTime" },
+        { label: "优先级", prop: "urgent" },
         { label: "状态", prop: "taskStatus" },
         { label: "创建人", prop: "founderName" },
         { label: "处理人", prop: "username" }
@@ -180,16 +182,50 @@ export default {
       });
       if (res && res.list) {
         res.list.map((item, ind) => {
-          item.taskStatus =
-            item.status == "1"
-              ? "待派"
-              : item.status == "2"
-              ? "已派"
-              : item.status == "3"
-              ? "处理中"
-              : item.status == "4"
-              ? "已完成"
-              : "";
+          if (this.taskActiveName == "third") {
+            switch (item.status) {
+              case "2":
+                item.taskStatus = "待接";
+                break;
+              case "3":
+                item.taskStatus = "处理中";
+                break;
+              case "4":
+                item.taskStatus = "已完成";
+                break;
+              default:
+                item.taskStatus = "";
+                break;
+            }
+          } else {
+             switch (item.status) {
+              case "1":
+                item.taskStatus = "待派";
+                break;
+              case "2":
+                item.taskStatus = "已派";
+                break;
+              case "3":
+                item.taskStatus = "处理中";
+                break;
+              case "4":
+                item.taskStatus = "已完成";
+                break;
+              default:
+                item.taskStatus = "";
+                break;
+            }
+          }
+          // item.taskStatus =
+          //   item.status == "1"
+          //     ? "待派"
+          //     : item.status == "2"
+          //     ? "已派"
+          //     : item.status == "3"
+          //     ? "处理中"
+          //     : item.status == "4"
+          //     ? "已完成"
+          //     : "";
           item.typeText =
             item.type == "1"
               ? "巡检"
@@ -198,6 +234,15 @@ export default {
               : item.type == "3"
               ? "调试"
               : "其他";
+
+          item.urgent =
+            item.urgent == "1"
+              ? "正常"
+              : item.urgent == "2"
+              ? "重要"
+              : item.urgent == "3"
+              ? "紧急"
+              : "";
         });
 
         this.tableData.data = res.list;
@@ -212,48 +257,81 @@ export default {
       this.taskList();
     },
     handleClick(tab, event) {
-      this.activeName == "frist"
+      sessionStorage.setItem("taskActiveName", this.taskActiveName);
+      this.taskActiveName == "frist"
         ? (this.taskType = 1)
-        : this.activeName == "second"
+        : this.taskActiveName == "second"
         ? (this.taskType = 1)
-        : this.activeName == "third"
+        : this.taskActiveName == "third"
         ? (this.taskType = 2)
         : "";
+      // if (this.taskActiveName != "third") {
+      //   this.tableData.btnConfig.btns.push({
+      //     type: "basic",
+      //     label: "删除",
+      //     handler: function(data) {
+      //       _this.deleteRow(data.row);
+      //     }
+      //   });
+      // }
       this.taskList();
     },
     showDeleteTip() {
-      CommonFun.deleteTip(this, this.taskId, "请至少选择一条任务！", this.sureDelete,this.cancelDelete);
+      CommonFun.deleteTip(
+        this,
+        this.taskId,
+        "请至少选择一条任务！",
+        this.sureDelete,
+        this.cancelDelete
+      );
     },
     async sureDelete() {
       console.log(this.taskId);
-       await TaskManageApi.closeTask({
+      await TaskManageApi.closeTask({
         taskId: this.taskId
       });
       this.$message({
         type: "success",
         message: "删除成功!"
       });
-      this.taskId = ''
+      this.taskId = "";
       this.taskList();
     },
-    cancelDelete(){
-      this.taskId = ''
+    cancelDelete() {
+      this.taskId = "";
     },
     deleteRow(val) {
       this.taskId = val.id;
-      this.showDeleteTip()
+      this.showDeleteTip();
     },
-    editRow(val){
-      console.log('val',val)
-     this.$router.push({
+    editRow(val) {
+      console.log("val", val);
+      if (this.taskActiveName == "second") {
+        this.$router.push({
           name: "NewTask",
           params: {
-            id: val.id
+            extraOptions: {
+              disabled: true
+            },
+            id: val.id,
+            status: val.status
           }
         });
+      } else if (this.taskActiveName == "third") {
+        this.$router.push({
+          name: "NewTask",
+          params: {
+            extraOptions: {
+              disabled: true
+            },
+            id: val.id,
+            acceptStatus: val.status
+          }
+        });
+      }
     },
-    addTask(){
-      this.$router.push('newTask')
+    addTask() {
+      this.$router.push("newTask");
     },
     fixTree() {
       $(".energy-tree-box").css({
@@ -262,6 +340,13 @@ export default {
     }
   },
   mounted() {
+     this.taskActiveName == "frist"
+        ? (this.taskType = 1)
+        : this.taskActiveName == "second"
+        ? (this.taskType = 1)
+        : this.taskActiveName == "third"
+        ? (this.taskType = 2)
+        : "";
     this.taskList();
     this.taskTreeConfig.defaultExpandedkeys = [this.taskData[0].value];
     this.fixTree();
@@ -274,6 +359,13 @@ export default {
 
 <style lang="less">
 .about-me {
+  .el-tabs{
+    height:100%;
+    border: none;
+  }
+  .right-content {
+     height:100%;
+  }
   .energy-tree-box {
     height: 100%;
     padding: 20px 0;
