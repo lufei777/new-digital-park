@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import DigitalParkApi from "../../../service/api/digitalPark";
+import SystemManageApi from "@/service/api/systemManage";
 import { mapState } from "vuex";
 
 export default {
@@ -111,7 +111,7 @@ export default {
           goBackClientLogin();
         } else {
           sessionStorage.removeItem("token");
-          await DigitalParkApi.logOut();
+          await SystemManageApi.logOut();
           this.$router.push("/login");
         }
       } else {
@@ -173,7 +173,7 @@ export default {
 
     },
     async getUserInfo() {
-      this.userInfo = await DigitalParkApi.getUserInfo();
+      this.userInfo = await SystemManageApi.getUserInfo();
       localStorage.setItem("userInfo", JSON.stringify(this.userInfo));
       this.$store.commit("digitalPark/updateUserInfo", false);
     },

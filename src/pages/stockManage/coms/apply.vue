@@ -17,23 +17,24 @@
         </template>
       </miTable>
       <div class="operator-box">
-        <el-button type="primary" >提交</el-button>
-        <el-button type="primary" @click="onClickSaveBtn">保存</el-button>
+        <el-button type="primary"  @click="onClickSubmitBtn(1)">提交</el-button>
+        <el-button type="primary" @click="onClickSubmitBtn(2)">保存</el-button>
       </div>
     </div>
-    <div v-show="showAddModal">
+    <div v-if="showAddModal">
       <AddAsset fromFlag="stockApply" :curDetail="curDetail"/>
     </div>
   </div>
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import miForm from "@/components/Form";
   import miTable from "@/components/Table";
   import {StockDic} from "@/utils/dictionary";
   import AssetManageApi from '@/service/api/assetManage'
+  import SystemManageApi from '@/service/api/systemManage'
   import AddAsset from '../../assetManage/addAsset'
-  import TaskManageApi from '@/service/api/taskManage'
   import StockManageApi from '@/service/api/stockManage'
   export default {
     name: "Apply",
@@ -148,7 +149,7 @@
             // {label:'资产组',prop:'groupName'},
             // {label:'资产类型',prop:'typeName'},
             {label:'数量',prop:'quantity'},
-            {label:'入库部门',prop:'departmentName'}],
+            {label:'入库部门',prop:'deptName'}],
           uiConfig:{
             height:'auto',
             selection: true,
@@ -156,12 +157,25 @@
         },
         showAddModal:false,
         curDetail:{},
+        curRowIndex:{},
         deptTree:[],
       };
     },
+    computed:{
+      ...mapState({
+        stockTabChange:state=>state.digitalPark.stockTabChange
+      })
+    },
+    watch:{
+      stockTabChange(){
+        if(this.stockTabChange==0){
+          // this.getApplyDraft()
+        }
+      }
+    },
     methods: {
       async getDepartmentTree() {
-        let res = await AssetManageApi.getDepartmentTree();
+        let res = await SystemManageApi.getDepartmentTree();
         this.$refs[this.formConfig.ref].setColumnByProp("buyId", {
           dicData: res[0].childNode
         });
@@ -179,10 +193,14 @@
       onClickAddBtn(){
         this.curDetail={}
         this.showAddModal=true
-
       },
       addStockDetail(obj){
-        this.tableConfig.data.push(obj)
+        if(this.curDetail.id){
+          this.tableConfig.data[this.curRowIndex] =obj
+        }else{
+          this.tableConfig.data.push(obj)
+        }
+        console.log(this.tableConfig.data)
         this.showAddModal=false
       },
       deleteRow(index){
@@ -190,6 +208,7 @@
       },
       editRow(index){
         this.showAddModal=true
+        this.curRowIndex=index
         this.curDetail=this.tableConfig.data[index]
       },
       onClickMultiDelBtn(){
@@ -204,7 +223,7 @@
       },
       async getUserList(id) {
         let deptId = id
-        let res = await TaskManageApi.listBy({
+        let res = await SystemManageApi.listBy({
           deptId
         })
         res.map((item)=>{
@@ -213,7 +232,8 @@
         })
         return res
       },
-      async onClickSaveBtn(){
+      async onClickSubmitBtn(flag){
+        let res
         let stockDetailsList = this.tableConfig.data
         stockDetailsList.map((item)=>{
           item.assetId = item.id
@@ -222,17 +242,32 @@
         let obj = {
           ...this.model,
           ...{buyId:this.model.buyId[this.model.buyId.length-1],
-              acceptId:this.model.acceptId[this.model.acceptId.length-1],
-              stockDetailsList
-              },
+            acceptId:this.model.acceptId[this.model.acceptId.length-1],
+            stockDetailsList
+          },
         }
-        console.log(obj)
-        await StockManageApi.saveStockApply(obj)
+        if(flag==1){
+          res = await StockManageApi.submitStockApply(obj)
+        }else{
+          res = await StockManageApi.saveStockApply(obj)
+        }
+        console.log(res)
+        this.$message({
+          type:'success',
+          message:res,
+        })
+      },
+      async getApplyDraft(){
+        let res = await StockManageApi.getApplyDraft()
+        console.log(res)
+        this.model=res==null?{}:res
+        this.tableConfig.data=res.stockDetailsList
       }
     },
     mounted() {
       this.getDepartmentTree();
       this.getProviderList()
+      // this.getApplyDraft()
     }
   };
 </script>

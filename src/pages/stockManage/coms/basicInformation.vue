@@ -1,6 +1,6 @@
 <template>
   <div class="basic-information">
-    <div class="tip">基本信息：</div>
+    <div class="module-tip">基本信息：</div>
     <div class="basic-box">
       <el-row>
         <el-col :span="8" :offset="4">
@@ -65,7 +65,7 @@
 
 <style lang="less">
   .basic-information {
-    .tip{
+    .module-tip{
       font-weight: bold;
       font-size: 16px;
       margin:0 0 20px 0;
