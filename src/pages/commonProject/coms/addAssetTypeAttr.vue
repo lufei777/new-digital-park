@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import AssetManageApi from '../../../service/api/assetManageApi'
+  import AssetManageApi from '@/service/api/assetManage'
   export default {
     name: 'AddAssetTypeAttr',
     components: {

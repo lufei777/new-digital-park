@@ -20,7 +20,7 @@
 
 <script>
 import Table from "@/components/Table";
-import AssetManageApi from "@/service/api/assetManageApi";
+import AssetManageApi from "@/service/api/assetManage";
 export default {
   name: "Test",
   components: {

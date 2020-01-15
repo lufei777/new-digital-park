@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import CommonApi from "../../../service/api/commonApi";
+import CommonApi from "../../../service/api/common";
 import Table from "../../../components/Table/index";
 import CommonFun from "../../../utils/commonFun";
 export default {

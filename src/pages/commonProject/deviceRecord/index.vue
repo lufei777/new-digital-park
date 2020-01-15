@@ -56,7 +56,7 @@
 
 <script>
   import {mapState} from 'vuex'
-  import CommonApi from '../../../service/api/commonApi'
+  import CommonApi from '../../../service/api/common'
   import Table from '../../../components/Table/index'
   import EditMeter from './editMeter'
   import AddMeter from './addMeter'

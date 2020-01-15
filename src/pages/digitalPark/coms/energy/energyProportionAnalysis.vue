@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import CommonApi from "../../../../service/api/commonApi";
+import CommonApi from "../../../../service/api/common";
 import ChartUtils from "../../../../utils/chartUtils";
 export default {
   name: "EnergyProportionAnalysis",

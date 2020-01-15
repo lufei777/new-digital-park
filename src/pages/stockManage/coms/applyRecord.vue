@@ -17,7 +17,7 @@
 <script>
   import miTable from "@/components/Table";
   import {StockDic} from "@/utils/dictionary";
-  import StockManageApi from '@/service/api/stockManageApi'
+  import StockManageApi from '@/service/api/stockManage'
   import BasicInformation from '../coms/basicInformation'
   export default {
     name: "ApplyRecord",

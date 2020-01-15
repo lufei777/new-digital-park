@@ -39,8 +39,8 @@
 <script>
 import { LeaseManageDic } from "@/utils/dictionary";
 import miForm from "@/components/Form";
-import leaseManageApi from "@/service/api/leaseManageApi";
-import commonApi from "@/service/api/commonApi";
+import leaseManageApi from "@/service/api/leaseManage";
+import commonApi from "@/service/api/common";
 
 const apiConfig = {
   add: {

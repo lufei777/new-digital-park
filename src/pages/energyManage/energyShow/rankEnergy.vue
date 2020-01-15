@@ -25,7 +25,7 @@
 <script>
   import echarts from 'echarts'
   import ChartUtils from '../../../utils/chartUtils'
-  import EnergyApi from '../../../service/api/energyApi'
+  import EnergyApi from '../../../service/api/energy'
   import ConditionSelect from '../../../components/conditionSelect/index'
   import Table from '../../../components/Table/index'
   export default {

@@ -31,7 +31,7 @@
 <script>
   import AddAssetTypeAttr from '../commonProject/coms/addAssetTypeAttr'
   import Table from '../../components/Table/index'
-  import AssetManageApi from '../../service/api/assetManageApi'
+  import AssetManageApi from '@/service/api/assetManage'
   import CommonFun from '../../utils/commonFun'
   import CustomTree from '../../components/customTree/slotTree'
   export default {

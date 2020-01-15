@@ -36,7 +36,7 @@
 </template>
 
 <script>
-  import CommonApi from '../../../service/api/commonApi'
+  import CommonApi from '../../../service/api/common'
   import EnergyTree from './coms/energyTree'
   export default {
     name: 'AddMeter',

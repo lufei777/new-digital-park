@@ -35,7 +35,7 @@
 <script>
   import miForm from "@/components/Form";
   import miTable from "@/components/Table";
-  import AssetManageApi from '@/service/api/assetManageApi'
+  import AssetManageApi from '@/service/api/assetManage'
   import Tree from '@/components/tree'
   import {AssetDic} from "../../../utils/dictionary";
   export default {

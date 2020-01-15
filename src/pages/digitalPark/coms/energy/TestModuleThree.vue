@@ -8,7 +8,7 @@
 <script>
 import CommonFun from "../../../../utils/commonFun";
 import ChartUtils from "../../../../utils/chartUtils";
-import EnergyApi from "../../../../service/api/energyApi";
+import EnergyApi from "../../../../service/api/energy";
 export default {
   name: "TestModuleOne",
   components: {},

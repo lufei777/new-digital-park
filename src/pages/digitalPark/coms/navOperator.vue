@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import DigitalParkApi from "../../../service/api/digitalParkApi";
+import DigitalParkApi from "../../../service/api/digitalPark";
 import { mapState } from "vuex";
 
 export default {

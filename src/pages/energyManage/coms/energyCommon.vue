@@ -31,8 +31,8 @@
 
 <script>
   import {mapState} from 'vuex'
-  import CommonApi from '../../../service/api/commonApi'
-  import EnergyApi from '../../../service/api/energyApi'
+  import CommonApi from '../../../service/api/common'
+  import EnergyApi from '../../../service/api/energy'
   import Tree from '../../../components/tree'
   import ConditionSelect from '../../../components/conditionSelect'
   import ChartUtils from '../../../utils/chartUtils'

@@ -148,8 +148,8 @@
 
 <script>
 import echarts from "echarts";
-import EnergyApi from "../../../service/api/energyApi";
-import CommonApi from "../../../service/api/commonApi";
+import EnergyApi from "../../../service/api/energy";
+import CommonApi from "../../../service/api/common";
 import ChartUtils from "../../../utils/chartUtils";
 import Table from "../../../components/Table/index";
 export default {

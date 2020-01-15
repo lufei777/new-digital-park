@@ -6,7 +6,7 @@
 
 <script>
   import DataReport from './dataReport'
-  import CommonApi from '../../../service/api/commonApi'
+  import CommonApi from '../../../service/api/common'
   export default {
     name: 'SpaceReport',
     components: {

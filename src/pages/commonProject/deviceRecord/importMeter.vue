@@ -14,7 +14,7 @@
 </template>
 
 <script>
-  import CommonApi from '../../../service/api/commonApi'
+  import CommonApi from '../../../service/api/common'
   // import Upload from  '@/components/Form/compoents/upload'
   export default {
     name: 'ImportMeter',

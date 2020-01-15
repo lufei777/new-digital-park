@@ -12,7 +12,7 @@
 
 <script>
   import miForm from "@/components/Form";
-  import DigitalPark from '@/service/api/digitalParkApi'
+  import DigitalPark from '@/service/api/digitalPark'
   export default {
     name: 'ModifyPassword',
     components: {

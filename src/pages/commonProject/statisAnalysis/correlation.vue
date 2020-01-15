@@ -16,7 +16,7 @@
   import echarts from 'echarts'
   import MonitorChoose from '../coms/monitorChoose'
   import MonitorModal from '../../../components/monitorModal/index'
-  import CommonApi from '../../../service/api/commonApi'
+  import CommonApi from '../../../service/api/common'
   export default {
     name: 'DeviceAnalysis',
     components: {

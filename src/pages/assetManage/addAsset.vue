@@ -169,7 +169,7 @@
 </template>
 
 <script>
-import AssetManageApi from "../../service/api/assetManageApi";
+import AssetManageApi from "../../service/api/assetManage";
 import TreeModal from "../../components/treeModal/index";
 import SearchAssetModal from '../stockManage/coms/searchAsset'
 export default {

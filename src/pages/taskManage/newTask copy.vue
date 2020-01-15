@@ -92,7 +92,7 @@ let priorityType = [
   }
 ];
 import miForm from "@/components/Form";
-import TaskManageApi from "../../service/api/taskManageApi";
+import TaskManageApi from "../../service/api/taskManage";
 export default {
   name: "NewTask",
   components: { miForm },

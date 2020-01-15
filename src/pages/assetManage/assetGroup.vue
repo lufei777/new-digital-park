@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import AssetManageApi from '../../service/api/assetManageApi'
+  import AssetManageApi from '@/service/api/assetManage'
   import CustomTree from '../../components/customTree/slotTree'
   export default {
     name: 'AssetGroup',

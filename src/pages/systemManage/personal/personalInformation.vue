@@ -12,7 +12,7 @@
 
 <script>
   import miForm from "@/components/Form/index";
-  import DigitalPark from '@/service/api/digitalParkApi'
+  import DigitalPark from '@/service/api/digitalPark'
   import { CommonDic } from '@/utils/dictionary'
   import {mapState} from 'vuex'
   export default {

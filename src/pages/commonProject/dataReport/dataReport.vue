@@ -44,7 +44,7 @@
 
 <script>
   import moment from 'moment'
-  import CommonApi from '../../../service/api/commonApi'
+  import CommonApi from '../../../service/api/common'
   let dateTypeList=[{
       name:'年',
       id:'year'

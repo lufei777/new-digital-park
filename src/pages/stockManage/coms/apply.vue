@@ -31,10 +31,10 @@
   import miForm from "@/components/Form";
   import miTable from "@/components/Table";
   import {StockDic} from "@/utils/dictionary";
-  import AssetManageApi from '@/service/api/assetManageApi'
+  import AssetManageApi from '@/service/api/assetManage'
   import AddAsset from '../../assetManage/addAsset'
-  import TaskManageApi from '@/service/api/taskManageApi'
-  import StockManageApi from '@/service/api/stockManageApi'
+  import TaskManageApi from '@/service/api/taskManage'
+  import StockManageApi from '@/service/api/stockManage'
   export default {
     name: "Apply",
     components: { miForm, miTable,AddAsset },

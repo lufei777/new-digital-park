@@ -1,5 +1,5 @@
 import moment from 'moment'
-import CommonApi from '../../service/api/commonApi'
+import CommonApi from '../../service/api/common'
 const state = {
   showDialog:false,
   startTime:moment(new Date(new Date().getTime()-5*24*60*60*1000)).format('YYYY-MM-DD HH:mm:ss'),
