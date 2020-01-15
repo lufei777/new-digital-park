@@ -18,6 +18,10 @@ import escapeRoutes from '../pages/digitalPark/coms/alarm/escapeRoutes'
 import saleStatistics from '../pages/digitalPark/coms/statis/saleStatistics'
 import inventoryAnalysis from '../pages/digitalPark/coms/stock/inventoryAnalysis'
 import messageRelease from '../pages/digitalPark/coms/message/messageRelease'
+import environmentalMonitoring from '../pages/digitalPark/coms/buildMonitor/environmentalMonitoring'
+import waterSupplyAndDrainage from '../pages/digitalPark/coms/buildMonitor/waterSupplyAndDrainage'
+import hvac from '../pages/digitalPark/coms/buildMonitor/hvac'
+import elevatorMonitoring from '../pages/digitalPark/coms/buildMonitor/elevatorMonitoring'
 import router from '@/router'
 import axios from 'axios'
 class commonFun {
@@ -41,7 +45,11 @@ class commonFun {
     escapeRoutes,
     saleStatistics,
     inventoryAnalysis,
-    messageRelease
+    messageRelease,
+    environmentalMonitoring,
+    waterSupplyAndDrainage,
+    hvac,
+    elevatorMonitoring
   }
   //this,删除的id,没有id时的提示信息，点击确定的回调函数
   deleteTip(that, deleteId, msgTip, sureCallBack, cancelCallBack) {
@@ -1647,72 +1655,72 @@ class commonFun {
     contractTime: '2019-02-01'
   }]
 
-  messageDevice=[{
-    id:'TradeCode21',
-    name:'室内广告机',
-    type:'大屏',
-    status:'播放中',
-    date1:'2019-12-24',
-    date2:'2019-12-28',
-    remark:'备注',
-    name2:'官网首页',
-    name3:'公司宣传视频',
-    type2:'视频'
-  },{
-    id:'TradeCode22',
-    name:'门店海报机',
-    type:'大屏',
-    status:'播放中',
-    date1:'2019-12-24',
-    date2:'2019-12-28',
-    remark:'备注',
-    name2:'数字园区首页',
-    name3:'公司宣传视频',
-    type2:'视频',
-  },{
-    id:'TradeCode23',
-    name:'展览大屏幕',
-    type:'大屏',
-    status:'已通过',
-    date1:'2019-12-24',
-    date2:'2019-12-28',
-    remark:'备注',
-    name2:'数字园区首页',
-    name3:'新年祝福文字',
-    type2:'文字'
-  },{
-    id:'TradeCode24',
-    name:'门外广告机',
-    type:'大屏',
-    status:'待审核',
-    date1:'2019-12-24',
-    date2:'2019-12-28',
-    remark:'备注',
-    name2:'公众号首页',
-    name3:'团建活动图片',
-    type2:'图片'
-  },{
-    id:'TradeCode25',
-    name:'门外广告机',
-    type:'大屏',
-    status:'待审核',
-    date1:'2019-12-24',
-    date2:'2019-12-28',
-    remark:'备注',
-    name2:'公众号首页',
-    name3:'团建活动图片',
-    type2:'图片'
-  },,{
-    id:'TradeCode26',
-    name:'展览大屏幕',
-    type:'大屏',
-    status:'待审核',
-    date1:'2019-12-24',
-    date2:'2019-12-28',
-    remark:'备注',
-    name2:'公众号首页',
-    name3:'团建活动图片',
-    type2:'图片'
+  messageDevice = [{
+    id: 'TradeCode21',
+    name: '室内广告机',
+    type: '大屏',
+    status: '播放中',
+    date1: '2019-12-24',
+    date2: '2019-12-28',
+    remark: '备注',
+    name2: '官网首页',
+    name3: '公司宣传视频',
+    type2: '视频'
+  }, {
+    id: 'TradeCode22',
+    name: '门店海报机',
+    type: '大屏',
+    status: '播放中',
+    date1: '2019-12-24',
+    date2: '2019-12-28',
+    remark: '备注',
+    name2: '数字园区首页',
+    name3: '公司宣传视频',
+    type2: '视频',
+  }, {
+    id: 'TradeCode23',
+    name: '展览大屏幕',
+    type: '大屏',
+    status: '已通过',
+    date1: '2019-12-24',
+    date2: '2019-12-28',
+    remark: '备注',
+    name2: '数字园区首页',
+    name3: '新年祝福文字',
+    type2: '文字'
+  }, {
+    id: 'TradeCode24',
+    name: '门外广告机',
+    type: '大屏',
+    status: '待审核',
+    date1: '2019-12-24',
+    date2: '2019-12-28',
+    remark: '备注',
+    name2: '公众号首页',
+    name3: '团建活动图片',
+    type2: '图片'
+  }, {
+    id: 'TradeCode25',
+    name: '门外广告机',
+    type: '大屏',
+    status: '待审核',
+    date1: '2019-12-24',
+    date2: '2019-12-28',
+    remark: '备注',
+    name2: '公众号首页',
+    name3: '团建活动图片',
+    type2: '图片'
+  }, , {
+    id: 'TradeCode26',
+    name: '展览大屏幕',
+    type: '大屏',
+    status: '待审核',
+    date1: '2019-12-24',
+    date2: '2019-12-28',
+    remark: '备注',
+    name2: '公众号首页',
+    name3: '团建活动图片',
+    type2: '图片'
   }]
 
   // 跳转链接
@@ -1730,17 +1738,20 @@ class commonFun {
     }
   }
 
-  loadThreeD(item,clientMenu) {
+  loadThreeD(item, clientMenu) {
     // const loadNames = ["安防管理", "机房动环", "智能建筑", "建筑监控", "消防管理"];
     // if (loadNames.includes(item.name)) {
     //   let clientName = item.name === "安防管理" ? "综合安防" : item.name;
     //   Client.SkipToSigleBuild(clientName);
     // }
-    if(item.level==2 && item.clientType==1){
+    if (typeof item === 'undefined') {
+      return false;
+    }
+    if (item.level == 2 && item.clientType == 1) {
       router.push(`${item.routeAddress}?productId=${item.id}`)
       return true;
-    }else if(item.level!=2 && item.clientType==1){
-      window.goToClientPage(JSON.stringify(clientMenu),item.id)
+    } else if (item.level != 2 && item.clientType == 1) {
+      window.goToClientPage(JSON.stringify(clientMenu), item.id)
       return true;
     }
     return false;
@@ -1749,8 +1760,8 @@ class commonFun {
   //导出
   exportMethod(data, that) {
     axios({
-      headers:{
-        'X-SSO-Token':sessionStorage.getItem('token')
+      headers: {
+        'X-SSO-Token': sessionStorage.getItem('token')
       },
       method: "get",
       url: `${data.url}${data.params ? '?' + data.params : ''}`,

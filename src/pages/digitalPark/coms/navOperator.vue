@@ -163,12 +163,14 @@ export default {
       }
     },
     onClickGoBack() { //点击返回首页
+      console.log(1111111)
       if (Cookies.get("moduleType") == 2) {
         this.$router.push("/digitalPark/homePage");
       } else {
         this.$router.push("/digitalPark/dashboardHomePage");
       }
       Cookies.remove("activeMenuIndex");
+
     },
     async getUserInfo() {
       this.userInfo = await DigitalParkApi.getUserInfo();

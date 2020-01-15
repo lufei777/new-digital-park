@@ -264,7 +264,10 @@ export default {
       ? tableConfig.tableMethods
       : {};
     //如果行单击和行双击都设置了，则需要解决事件冲突
-    if (this.tableMethods.rowClick && this.tableMethods.rowDblclick) {
+    if (
+      (this.tableMethods.rowClick && this.tableMethods.rowDblclick) ||
+      (this.$listeners["row-click"] && this.$listeners["row-dblclick"])
+    ) {
       this.clickConflict = true;
     }
 
@@ -534,6 +537,8 @@ export default {
         () => {
           this.tableMethods.rowClick &&
             this.tableMethods.rowClick(row, column, e);
+
+          this.$emit("row-click", row, column, e);
         },
         this.clickConflict ? 200 : 0
       );
@@ -544,13 +549,16 @@ export default {
       if (
         preventClick.includes(column.property) ||
         preventClick.includes(column.type)
-      )
+      ) {
         return;
+      }
       this._setCurrentRowData(row);
 
       clearTimeout(dblclickTimer);
       this.tableMethods.rowDblclick &&
         this.tableMethods.rowDblclick(row, column, e);
+
+      this.$emit("row-dblclick", row, column, e);
     },
     //单选选择当前行
     setCurrentRow(index) {
@@ -595,10 +603,6 @@ export default {
     toggleAllSelection() {
       this.$refs.dataBaseTable.toggleAllSelection();
     },
-    //多选清除选择项
-    clearSelection() {
-      this.$refs.dataBaseTable.clearSelection();
-    },
     //点击排序触发
     sortChange(sortObj) {
       //如果排序没有，则恢复数据
@@ -610,23 +614,24 @@ export default {
       if (this.tableMethods.sortChange) {
         this.tableMethods.sortChange(sortObj, this);
       }
-    },
-    //重新布局
-    doLayout() {
-      this.$refs.dataBaseTable.doLayout();
-      this.key++;
+
+      this.$emit("sort-change", sortObj, this);
     },
     // 当勾选数据行的checkbox时触发
     select(selection, row) {
       if (this.tableMethods.select) {
         this.tableMethods.select(selection, row, this);
       }
+
+      this.$emit("select", selection, row, this);
     },
     // 当勾选全选checkbox时触发
     selectAll(selection) {
       if (this.tableMethods.selectAll) {
         this.tableMethods.selectAll(selection, this);
       }
+
+      this.$emit("select-all", selection, this);
     },
     // 当选择项发生变化时触发该事件
     selectionChange(selection) {
@@ -634,6 +639,17 @@ export default {
       if (this.tableMethods.selectionChange) {
         this.tableMethods.selectionChange(selection, this);
       }
+
+      this.$emit("selection-change", selection, this);
+    },
+    //多选清除选择项
+    clearSelection() {
+      this.$refs.dataBaseTable.clearSelection();
+    },
+    //重新布局
+    doLayout() {
+      this.$refs.dataBaseTable.doLayout();
+      this.key++;
     },
     //以下方法未添加
     toggleRowExpansion() {},

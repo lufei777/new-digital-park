@@ -1,13 +1,13 @@
 <template>
   <div class="apply-coms">
-    <div v-if="!showAddModal">
+    <div v-show="!showAddModal">
       <div class="tip">基本信息：</div>
       <div class="form-box">
         <miForm :ref="formConfig.ref" :options="formConfig" v-model="model"/>
       </div>
       <div class="tip">入库明细：</div>
       <div class="operator-btn-box flex-row-reverse">
-        <el-button type="primary">批量删除</el-button>
+        <el-button type="primary" @click="onClickMultiDelBtn">批量删除</el-button>
         <el-button type="primary" @click="onClickAddBtn">添加明细</el-button>
       </div>
       <miTable :ref="tableConfig.ref" :tableConfig="tableConfig">
@@ -16,9 +16,12 @@
           <el-button type="text" @click="deleteRow($index)">删除</el-button>
         </template>
       </miTable>
+      <div class="operator-box">
+        <el-button type="primary" >提交</el-button>
+        <el-button type="primary" @click="onClickSaveBtn">保存</el-button>
+      </div>
     </div>
-
-    <div v-if="showAddModal">
+    <div v-show="showAddModal">
       <AddAsset fromFlag="stockApply" :curDetail="curDetail"/>
     </div>
   </div>
@@ -30,10 +33,12 @@
   import {StockDic} from "@/utils/dictionary";
   import AssetManageApi from '@/service/api/assetManageApi'
   import AddAsset from '../../assetManage/addAsset'
+  import TaskManageApi from '@/service/api/taskManageApi'
   export default {
     name: "Apply",
     components: { miForm, miTable,AddAsset },
     data() {
+      let _this = this
       return {
         model: {},
         formConfig:{
@@ -42,40 +47,64 @@
           forms: [{
             type: "select",
             label: "入库类型",
-            prop: "type",
+            prop: "stockType",
             dicData:StockDic.stockInApply,
             valueDefault:1,
             span: 10,
           },{
             type: "date",
             label: "购置日期",
-            prop: "buyDate",
+            prop: "buyTime",
             span: 10,
             offset:4
           },{
-            type: "tree",
+            type: "cascader",
             label: "采购人",
-            prop: "buyer",
+            prop: "buyId",
             props: {
               label: "name",
               value: "id",
-              children: "childNode"
+              children: "childNode",
+              lazy: true,
+              lazyLoad:async function (node, resolve) {
+                const { level,data } = node;
+                let nodes =[]
+                if(level==0 || data.childNode.length){
+                  resolve(nodes);
+                }else{
+                  let res =await _this.getUserList(node.data.id)
+                  nodes=res
+                }
+                resolve(nodes);
+              },
             },
             span: 10,
           },{
             type: "date",
             label: "入库日期",
-            prop: "inDate",
+            prop: "stockTime",
             span: 10,
             offset:4
           },{
-            type: "tree",
+            type: "cascader",
             label: "验收人",
-            prop: "checker",
+            prop: "acceptId",
             props: {
               label: "name",
               value: "id",
-              children: "childNode"
+              children: "childNode",
+              lazy: true,
+              lazyLoad:async function (node, resolve) {
+                const { level,data } = node;
+                let nodes =[]
+                if(level==0 || data.childNode.length){
+                  resolve(nodes);
+                }else{
+                  let res =await _this.getUserList(node.data.id)
+                  nodes=res
+                }
+                resolve(nodes);
+              },
             },
             span: 10,
           },{
@@ -101,18 +130,18 @@
           operation:true,
           data:[],
           columnConfig:[
-            {label:'编号',prop:'coding'},
+            // {label:'编号',prop:'coding'},
             {label:'名称',prop:'name'},
-            {label:'单位',prop:'unit'},
+            // {label:'单位',prop:'unit'},
             {label:'品牌',prop:'brand'},
             {label:'价格',prop:'price'},
-            {label:'单独核算',prop:'singleCount',
-              formatter:function (row) {
-                return row.singleCount==1?'是':'否'
-              }
-            },
-            {label:'资产组',prop:'groupName'},
-            {label:'资产类型',prop:'typeName'},
+            // {label:'单独核算',prop:'singleCount',
+            //   formatter:function (row) {
+            //     return row.singleCount==1?'是':'否'
+            //   }
+            // },
+            // {label:'资产组',prop:'groupName'},
+            // {label:'资产类型',prop:'typeName'},
             {label:'数量',prop:'quantity'},
             {label:'入库部门',prop:'departmentName'}],
           uiConfig:{
@@ -122,18 +151,19 @@
         },
         showAddModal:false,
         curDetail:{},
-        showModal2:false
+        deptTree:[],
       };
     },
     methods: {
       async getDepartmentTree() {
         let res = await AssetManageApi.getDepartmentTree();
-        this.$refs[this.formConfig.ref].setColumnByProp("buyer", {
-          dicData: res
+        this.$refs[this.formConfig.ref].setColumnByProp("buyId", {
+          dicData: res[0].childNode
         });
-        this.$refs[this.formConfig.ref].setColumnByProp("checker", {
-          dicData: res
+        this.$refs[this.formConfig.ref].setColumnByProp("acceptId", {
+          dicData: res[0].childNode
         });
+       this.deptTree=res[0].childNode
       },
       async getProviderList() {
         let res = await AssetManageApi.getProviderList();
@@ -156,6 +186,30 @@
       editRow(index){
         this.showAddModal=true
         this.curDetail=this.tableConfig.data[index]
+      },
+      onClickMultiDelBtn(){
+        let delArr = this.$refs["tableRef"].getSelectedData()
+        let tmp = []
+        this.tableConfig.data.map((item)=>{
+          if(delArr.indexOf(item)==-1){
+            tmp.push(item)
+          }
+        })
+        this.tableConfig.data=tmp
+      },
+      async getUserList(id) {
+        let deptId = id
+        let res = await TaskManageApi.listBy({
+          deptId
+        })
+        res.map((item)=>{
+          item.name=item.fullName
+          item.leaf=true
+        })
+        return res
+      },
+      onClickSaveBtn(){
+        console.log(this.model,this.tableConfig.data)
       }
     },
     mounted() {
@@ -178,6 +232,10 @@
   }
   .add-modal{
     height:100%
+  }
+  .operator-box{
+    margin-top: 40px;
+    text-align: center;
   }
 }
 </style>
