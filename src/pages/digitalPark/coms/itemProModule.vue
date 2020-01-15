@@ -41,7 +41,7 @@
 <script>
   import draggable from 'vuedraggable'
   import CommonFun from '../../../utils/commonFun'
-  import DigitalParkApi from '../../../service/api/digitalParkApi'
+  import DigitalParkApi from '../../../service/api/digitalPark'
   // import operateIncome from '../coms/operateIncome'
   export default {
     name: 'ItemProModule',

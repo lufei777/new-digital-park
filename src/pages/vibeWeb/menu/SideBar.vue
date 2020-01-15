@@ -45,7 +45,7 @@
 <script>
 import commonFun from "@/utils/commonFun";
 import SidebarItem from "./SidebarItem";
-import DigitalParkApi from "@/service/api/digitalParkApi";
+import DigitalParkApi from "@/service/api/digitalPark";
 export default {
   name: "Sidebar",
   components: { SidebarItem },

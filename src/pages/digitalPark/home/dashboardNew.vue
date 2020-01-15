@@ -115,7 +115,7 @@
 <script>
   import draggable from 'vuedraggable'
   import NavOperator from '../coms/navOperator'
-  import DigitalParkApi from '../../../service/api/digitalParkApi'
+  import DigitalParkApi from '../../../service/api/digitalPark'
   import ItemProModule from '../coms/itemProModule'
   import CommonFun from '../../../utils/commonFun'
   export default {

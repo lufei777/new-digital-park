@@ -26,7 +26,7 @@
 
 <script>
   import {mapState} from 'vuex'
-   import CommonApi from '../../service/api/commonApi'
+   import CommonApi from '../../service/api/common'
   export default {
     name: 'Monitor',
     components: {

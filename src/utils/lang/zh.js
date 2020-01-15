@@ -1,4 +1,4 @@
-import DigitalParkApi from '../../service/api/digitalParkApi'
+import DigitalParkApi from '../../service/api/digitalPark'
 // async function getMenu(){
 //   let menu =await DigitalParkApi.getMenu()
 //   return menu

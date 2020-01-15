@@ -51,7 +51,7 @@
 
 <script>
   import { mapState } from 'vuex'
-  import CommonApi from '@/service/api/commonApi'
+  import CommonApi from '@/service/api/common'
   import CommonTable from '@/components/commonTable/index'
   import Tree from '@/components/tree/index'
   export default {

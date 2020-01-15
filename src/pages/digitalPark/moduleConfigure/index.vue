@@ -64,7 +64,7 @@
 </template>
 
 <script>
-  import DigitalParkApi from '../../../service/api/digitalParkApi'
+  import DigitalParkApi from '../../../service/api/digitalPark'
   import elementResizeDetectorMaker from 'element-resize-detector'
   import draggable from 'vuedraggable'
   import HomePage from '../home/index'

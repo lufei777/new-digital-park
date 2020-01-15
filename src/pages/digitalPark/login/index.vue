@@ -33,7 +33,7 @@
 </template>
 
 <script>
-  import DigitalPark from '../../../service/api/digitalParkApi'
+  import DigitalPark from '../../../service/api/digitalPark'
   export default {
     name: 'DigitalParkLogin',
     components: {

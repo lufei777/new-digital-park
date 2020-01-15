@@ -24,7 +24,7 @@
 </template>
 
 <script>
-  import CommonApi from '@/service/api/commonApi'
+  import CommonApi from '@/service/api/common'
   import TreeModal from '@/components/treeModal/index'
   export default {
     name: 'AddDept',
