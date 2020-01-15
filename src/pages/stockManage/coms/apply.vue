@@ -34,6 +34,7 @@
   import AssetManageApi from '@/service/api/assetManageApi'
   import AddAsset from '../../assetManage/addAsset'
   import TaskManageApi from '@/service/api/taskManageApi'
+  import StockManageApi from '@/service/api/stockManageApi'
   export default {
     name: "Apply",
     components: { miForm, miTable,AddAsset },
@@ -55,12 +56,14 @@
             type: "date",
             label: "购置日期",
             prop: "buyTime",
+            valueFormat:'yyyy-MM-dd',
             span: 10,
             offset:4
           },{
             type: "cascader",
             label: "采购人",
             prop: "buyId",
+            showAllLevels:false,
             props: {
               label: "name",
               value: "id",
@@ -83,12 +86,14 @@
             type: "date",
             label: "入库日期",
             prop: "stockTime",
+            valueFormat:'yyyy-MM-dd',
             span: 10,
             offset:4
           },{
             type: "cascader",
             label: "验收人",
             prop: "acceptId",
+            showAllLevels:false,
             props: {
               label: "name",
               value: "id",
@@ -208,8 +213,21 @@
         })
         return res
       },
-      onClickSaveBtn(){
-        console.log(this.model,this.tableConfig.data)
+      async onClickSaveBtn(){
+        let stockDetailsList = this.tableConfig.data
+        stockDetailsList.map((item)=>{
+          item.assetId = item.id
+          item.description = item.remark
+        })
+        let obj = {
+          ...this.model,
+          ...{buyId:this.model.buyId[this.model.buyId.length-1],
+              acceptId:this.model.acceptId[this.model.acceptId.length-1],
+              stockDetailsList
+              },
+        }
+        console.log(obj)
+        await StockManageApi.saveStockApply(obj)
       }
     },
     mounted() {
