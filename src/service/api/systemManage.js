@@ -1,4 +1,4 @@
-import { get, post, url } from '../axios/ApiDecorator'
+import { get, post, put, url,} from '../axios/ApiDecorator'
 
 class SystemManage {
     //部门树

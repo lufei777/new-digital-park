@@ -12,7 +12,7 @@
 
 <script>
   import miForm from "@/components/Form/index";
-  import DigitalPark from '@/service/api/digitalPark'
+  import SystemManageApi from '@/service/api/systemManage'
   import { CommonDic } from '@/utils/dictionary'
   import {mapState} from 'vuex'
   export default {
@@ -112,7 +112,7 @@
     },
     methods: {
       async submit(model,hide){
-        await DigitalPark.editPersonInformation(this.formModel)
+        await SystemManageApi.editPersonInformation(this.formModel)
              .then(res=>{
                  this.$message({
                    type: "success",
@@ -124,7 +124,7 @@
           })
       },
       async getUserInfo(){
-        let res =  await DigitalPark.getUserInfo()
+        let res =  await SystemManageApi.getUserInfo()
         this.formModel = res
       },
       goBack(){
