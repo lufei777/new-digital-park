@@ -149,7 +149,7 @@
             // {label:'资产组',prop:'groupName'},
             // {label:'资产类型',prop:'typeName'},
             {label:'数量',prop:'quantity'},
-            {label:'入库部门',prop:'departmentName'}],
+            {label:'入库部门',prop:'deptName'}],
           uiConfig:{
             height:'auto',
             selection: true,
@@ -169,7 +169,7 @@
     watch:{
       stockTabChange(){
         if(this.stockTabChange==0){
-          this.getApplyDraft()
+          // this.getApplyDraft()
         }
       }
     },
@@ -195,11 +195,12 @@
         this.showAddModal=true
       },
       addStockDetail(obj){
-        if(this.curDetail){
-          this.tableConfig.data[this.curRowIndex] = obj
+        if(this.curDetail.id){
+          this.tableConfig.data[this.curRowIndex] =obj
         }else{
           this.tableConfig.data.push(obj)
         }
+        console.log(this.tableConfig.data)
         this.showAddModal=false
       },
       deleteRow(index){
@@ -258,14 +259,15 @@
       },
       async getApplyDraft(){
         let res = await StockManageApi.getApplyDraft()
-        this.model=res
+        console.log(res)
+        this.model=res==null?{}:res
         this.tableConfig.data=res.stockDetailsList
       }
     },
     mounted() {
       this.getDepartmentTree();
       this.getProviderList()
-      this.getApplyDraft()
+      // this.getApplyDraft()
     }
   };
 </script>
