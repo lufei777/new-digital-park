@@ -48,6 +48,11 @@ class taskManageApi {
     @get
     completeTask() { }
 
+     //工单流转情况记录查询
+     @url("/oaApi/task/operateLogList")
+     @get
+     operateLogList() { }
+
 }
 
 export default new taskManageApi()
