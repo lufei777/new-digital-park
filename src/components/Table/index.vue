@@ -158,6 +158,7 @@
 import pagination from "./components/pagination";
 import dropDown from "./components/dropDown";
 import props from "./common/props";
+import { PLACEHOLDER } from "./global/variable";
 
 // 默认log
 const LOG = {
@@ -471,11 +472,22 @@ export default {
     // 全局初始化
     _globalColumnFormatter(row, column) {
       let value = row[column.property];
-      if (typeof value === "string" && value.trim().length === 0) {
-        return "--";
+      let type = typeof value;
+      if (value === null) {
+        return PLACEHOLDER;
       }
-      if (!value) {
-        return "--";
+      switch (type) {
+        case "string":
+          if (value.trim().length === 0) {
+            return PLACEHOLDER;
+          }
+          break;
+        case "undefined":
+          return PLACEHOLDER;
+          break;
+        default:
+          return value;
+          break;
       }
       return value;
     },

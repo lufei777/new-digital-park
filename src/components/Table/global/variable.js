@@ -18,3 +18,4 @@ export const DIC_HTTP_PROPS = {
     pageNum: 'pageNum'
 };
 export const KEY_COMPONENT_NAME = 'mi-';
+export const PLACEHOLDER = '--';
