@@ -9,27 +9,27 @@
         </el-col>
         <el-col :span="8" :offset="4">
           <label for="">购置日期：</label>
-          <span>2019-10-10</span>
+          <span>{{this.detail.buyTime}}</span>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="8" :offset="4">
           <label for="">采购人：</label>
-          <span>战三</span>
+          <span>{{this.detail.buyUserName}}</span>
         </el-col>
         <el-col :span="8" :offset="4">
           <label for="">入库日期：</label>
-          <span>2019-10-10</span>
+          <span>{{this.detail.stockTime}}</span>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="8" :offset="4">
           <label for="">验收人：</label>
-          <span>战三</span>
+          <span>{{this.detail.stockUserName}}</span>
         </el-col>
          <el-col :span="8" :offset="4">
           <label for="">供应商：</label>
-          <span>京东</span>
+          <span>{{this.detail.stockUserName}}</span>
          </el-col>
       </el-row>
       <el-row>
@@ -51,6 +51,7 @@
   export default {
     name: "BasicInformation",
     components: { },
+    props:['detail'],
     data() {
       return {
 

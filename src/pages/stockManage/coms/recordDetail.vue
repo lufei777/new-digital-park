@@ -1,7 +1,7 @@
 <template>
   <div class="record-detail">
     <div class="tip">入库申请记录详情</div>
-    <BasicInformation />
+    <BasicInformation :detail="recordDetail"/>
     <div class="go-back"><el-button type="primary" @click="onClickBackBtn">返回</el-button></div>
   </div>
 </template>
@@ -17,7 +17,7 @@
     props:["curRecordId"],
     data() {
       return {
-
+       recordDetail:{}
       };
     },
     computed:{
@@ -29,12 +29,13 @@
     },
     methods: {
       onClickBackBtn(){
-        this.showDetail=false
+        this.$parent.onClickBackBtn &&  this.$parent.onClickBackBtn()
       },
       async getRecordDetail(){
-        await StockManageApi.getRecordDetail({
+        let res = await StockManageApi.getRecordDetail({
           recordId:this.curRecordId
         })
+        this.recordDetail = res.stock
       }
     },
     mounted() {

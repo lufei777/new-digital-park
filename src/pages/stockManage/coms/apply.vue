@@ -169,7 +169,7 @@
     watch:{
       stockTabChange(){
         if(this.stockTabChange==0){
-          // this.getApplyDraft()
+          this.getApplyDraft()
         }
       }
     },
@@ -182,7 +182,16 @@
         this.$refs[this.formConfig.ref].setColumnByProp("acceptId", {
           dicData: res[0].childNode
         });
-       this.deptTree=res[0].childNode
+        // let findLast =res[0].childNode
+        // findLast.map(async (item)=>{
+        //   if(item.childNode.length){
+        //     findLast=item.childNode
+        //   }else{
+        //     let res = await this.getUserList(item.id)
+        //   }
+        // })
+        this.deptTree=res[0].childNode
+
       },
       async getProviderList() {
         let res = await AssetManageApi.getProviderList();
@@ -196,7 +205,7 @@
       },
       addStockDetail(obj){
         if(this.curDetail.id){
-          this.tableConfig.data[this.curRowIndex] =obj
+          this.tableConfig.data[this.curRowIndex] ={...obj,...{id:this.curDetail.id}}
         }else{
           this.tableConfig.data.push(obj)
         }
@@ -259,15 +268,40 @@
       },
       async getApplyDraft(){
         let res = await StockManageApi.getApplyDraft()
-        console.log(res)
-        this.model=res==null?{}:res
-        this.tableConfig.data=res.stockDetailsList
-      }
+        if(res){
+          this.model=res
+          this.tableConfig.data=res.stockDetailsList
+        }
+        // let a = ["dept-20a0cc719722490bbf2c3e4974d2d5c4", "dept-482965b451684eca8dd85a48b9c73722",
+        // // "user-6a3a7369a6v8478cb844a4g4a5666666"]
+        // let a= ["dept-20a0cc719722490bbf2c3e4974d2d5c4","dept-482965b451684eca8dd85a48b9c73722"]
+        // this.model.buyId=a
+        // this.model.acceptId=a
+
+      },
+      // async getUserList(value) {
+        // let deptId = value[value.length - 1]
+        // let res = await TaskManageApi.listBy({
+        //   deptId
+        // })
+        // let i=0
+        // let findItem=this.deptTree
+        // console.log(this.deptTree)
+        // while(i<value.length){
+        //   findItem.map((item)=>{
+        //     if(item.id==value[i]){
+        //       findItem=item.childNode
+        //     }
+        //   })
+        //   i++;
+        // }
+        // console.log("find",findItem)
+      // },
     },
-    mounted() {
-      this.getDepartmentTree();
-      this.getProviderList()
-      // this.getApplyDraft()
+    async mounted() {
+      await this.getDepartmentTree();
+      await this.getProviderList()
+      this.getApplyDraft()
     }
   };
 </script>
