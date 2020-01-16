@@ -81,7 +81,7 @@
 <script>
   import draggable from 'vuedraggable'
   import NavOperator from '../coms/navOperator'
-  import DigitalParkApi from '../../../service/api/digitalParkApi'
+  import DigitalParkApi from '../../../service/api/digitalPark'
   import ItemProModule from '../coms/itemProModule'
   export default {
     name: 'DashBoardHomePage',

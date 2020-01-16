@@ -24,7 +24,7 @@ import { mapState } from "vuex";
 import miTable from "@/components/Table";
 import Tree from "../../components/tree/index";
 import CommonSelect from "../taskManage/coms/commonSelect";
-import TaskManageApi from "../../service/api/taskManageApi";
+import TaskManageApi from "../../service/api/taskManage";
 
 export default {
   name: "AlreadyTask",

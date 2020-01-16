@@ -23,7 +23,7 @@
 
 <script>
   import {mapState} from 'vuex'
-  import CommonApi from '../../../../service/api/commonApi'
+  import CommonApi from '../../../../service/api/common'
   import Tree from '../../../../components/tree'
   export default {
     name: 'EnergyTree',

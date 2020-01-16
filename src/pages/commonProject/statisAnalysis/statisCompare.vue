@@ -27,7 +27,7 @@
   import echarts from 'echarts'
   import MonitorChoose from '../coms/monitorChoose'
   import MonitorModal from '../../../components/monitorModal/index'
-  import CommonApi from '../../../service/api/commonApi'
+  import CommonApi from '../../../service/api/common'
   import ChartUtils from '../../../utils/chartUtils'
   export default {
     name: 'StatisCompare',

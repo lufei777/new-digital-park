@@ -1,6 +1,6 @@
 <template>
   <div class="apply-coms">
-    <div v-if="!showAddModal">
+    <div v-show="!showAddModal">
       <div class="tip">基本信息：</div>
       <div class="form-box">
         <miForm :ref="formConfig.ref" :options="formConfig" v-model="model"/>
@@ -16,8 +16,11 @@
           <el-button type="text" @click="deleteRow($index)">删除</el-button>
         </template>
       </miTable>
+      <div class="operator-box">
+        <el-button type="primary"  @click="onClickSubmitBtn(1)">提交</el-button>
+        <el-button type="primary" @click="onClickSubmitBtn(2)">保存</el-button>
+      </div>
     </div>
-
     <div v-if="showAddModal">
       <AddAsset fromFlag="stockApply" :curDetail="curDetail"/>
     </div>
@@ -25,12 +28,14 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import miForm from "@/components/Form";
   import miTable from "@/components/Table";
   import {StockDic} from "@/utils/dictionary";
-  import AssetManageApi from '@/service/api/assetManageApi'
+  import AssetManageApi from '@/service/api/assetManage'
+  import SystemManageApi from '@/service/api/systemManage'
   import AddAsset from '../../assetManage/addAsset'
-  import TaskManageApi from '@/service/api/taskManageApi'
+  import StockManageApi from '@/service/api/stockManage'
   export default {
     name: "Apply",
     components: { miForm, miTable,AddAsset },
@@ -44,20 +49,22 @@
           forms: [{
             type: "select",
             label: "入库类型",
-            prop: "type",
+            prop: "stockType",
             dicData:StockDic.stockInApply,
             valueDefault:1,
             span: 10,
           },{
             type: "date",
             label: "购置日期",
-            prop: "buyDate",
+            prop: "buyTime",
+            valueFormat:'yyyy-MM-dd',
             span: 10,
             offset:4
           },{
             type: "cascader",
             label: "采购人",
-            prop: "buyer",
+            prop: "buyId",
+            showAllLevels:false,
             props: {
               label: "name",
               value: "id",
@@ -79,13 +86,15 @@
           },{
             type: "date",
             label: "入库日期",
-            prop: "inDate",
+            prop: "stockTime",
+            valueFormat:'yyyy-MM-dd',
             span: 10,
             offset:4
           },{
             type: "cascader",
             label: "验收人",
-            prop: "checker",
+            prop: "acceptId",
+            showAllLevels:false,
             props: {
               label: "name",
               value: "id",
@@ -127,20 +136,20 @@
           operation:true,
           data:[],
           columnConfig:[
-            {label:'编号',prop:'coding'},
+            // {label:'编号',prop:'coding'},
             {label:'名称',prop:'name'},
-            {label:'单位',prop:'unit'},
+            // {label:'单位',prop:'unit'},
             {label:'品牌',prop:'brand'},
             {label:'价格',prop:'price'},
-            {label:'单独核算',prop:'singleCount',
-              formatter:function (row) {
-                return row.singleCount==1?'是':'否'
-              }
-            },
-            {label:'资产组',prop:'groupName'},
-            {label:'资产类型',prop:'typeName'},
+            // {label:'单独核算',prop:'singleCount',
+            //   formatter:function (row) {
+            //     return row.singleCount==1?'是':'否'
+            //   }
+            // },
+            // {label:'资产组',prop:'groupName'},
+            // {label:'资产类型',prop:'typeName'},
             {label:'数量',prop:'quantity'},
-            {label:'入库部门',prop:'departmentName'}],
+            {label:'入库部门',prop:'deptName'}],
           uiConfig:{
             height:'auto',
             selection: true,
@@ -148,16 +157,29 @@
         },
         showAddModal:false,
         curDetail:{},
+        curRowIndex:{},
         deptTree:[],
       };
     },
+    computed:{
+      ...mapState({
+        stockTabChange:state=>state.digitalPark.stockTabChange
+      })
+    },
+    watch:{
+      stockTabChange(){
+        if(this.stockTabChange==0){
+          // this.getApplyDraft()
+        }
+      }
+    },
     methods: {
       async getDepartmentTree() {
-        let res = await AssetManageApi.getDepartmentTree();
-        this.$refs[this.formConfig.ref].setColumnByProp("buyer", {
+        let res = await SystemManageApi.getDepartmentTree();
+        this.$refs[this.formConfig.ref].setColumnByProp("buyId", {
           dicData: res[0].childNode
         });
-        this.$refs[this.formConfig.ref].setColumnByProp("checker", {
+        this.$refs[this.formConfig.ref].setColumnByProp("acceptId", {
           dicData: res[0].childNode
         });
        this.deptTree=res[0].childNode
@@ -171,10 +193,14 @@
       onClickAddBtn(){
         this.curDetail={}
         this.showAddModal=true
-
       },
       addStockDetail(obj){
-        this.tableConfig.data.push(obj)
+        if(this.curDetail.id){
+          this.tableConfig.data[this.curRowIndex] =obj
+        }else{
+          this.tableConfig.data.push(obj)
+        }
+        console.log(this.tableConfig.data)
         this.showAddModal=false
       },
       deleteRow(index){
@@ -182,6 +208,7 @@
       },
       editRow(index){
         this.showAddModal=true
+        this.curRowIndex=index
         this.curDetail=this.tableConfig.data[index]
       },
       onClickMultiDelBtn(){
@@ -196,7 +223,7 @@
       },
       async getUserList(id) {
         let deptId = id
-        let res = await TaskManageApi.listBy({
+        let res = await SystemManageApi.listBy({
           deptId
         })
         res.map((item)=>{
@@ -205,10 +232,42 @@
         })
         return res
       },
+      async onClickSubmitBtn(flag){
+        let res
+        let stockDetailsList = this.tableConfig.data
+        stockDetailsList.map((item)=>{
+          item.assetId = item.id
+          item.description = item.remark
+        })
+        let obj = {
+          ...this.model,
+          ...{buyId:this.model.buyId[this.model.buyId.length-1],
+            acceptId:this.model.acceptId[this.model.acceptId.length-1],
+            stockDetailsList
+          },
+        }
+        if(flag==1){
+          res = await StockManageApi.submitStockApply(obj)
+        }else{
+          res = await StockManageApi.saveStockApply(obj)
+        }
+        console.log(res)
+        this.$message({
+          type:'success',
+          message:res,
+        })
+      },
+      async getApplyDraft(){
+        let res = await StockManageApi.getApplyDraft()
+        console.log(res)
+        this.model=res==null?{}:res
+        this.tableConfig.data=res.stockDetailsList
+      }
     },
     mounted() {
       this.getDepartmentTree();
       this.getProviderList()
+      // this.getApplyDraft()
     }
   };
 </script>
@@ -226,6 +285,10 @@
   }
   .add-modal{
     height:100%
+  }
+  .operator-box{
+    margin-top: 40px;
+    text-align: center;
   }
 }
 </style>

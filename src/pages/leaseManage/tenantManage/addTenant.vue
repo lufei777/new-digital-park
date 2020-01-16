@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import LeaseManageApi from "../../../service/api/leaseManageApi";
+import LeaseManageApi from "../../../service/api/leaseManage";
 import miForm from "@/components/Form";
 import miTable from "@/components/Table";
 export default {

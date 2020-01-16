@@ -51,7 +51,7 @@
 <script>
   import {mapState} from 'vuex'
   import moment from 'moment'
-  import CommonApi from '../../../service/api/commonApi'
+  import CommonApi from '../../../service/api/common'
   import MonitorModal from '../../../components/monitorModal/index'
   export default {
     name: 'DeviceAnalysis',

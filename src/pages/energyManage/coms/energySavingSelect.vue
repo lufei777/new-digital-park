@@ -54,8 +54,8 @@
 </template>
 
 <script>
-import CommonApi from "../../../service/api/commonApi";
-import EnergyApi from "../../../service/api/energyApi";
+import CommonApi from "../../../service/api/common";
+import EnergyApi from "../../../service/api/energy";
 import Table from "../../../components/Table/index";
 import TreeModal from '../../../components/treeModal/index'
 import moment from "moment";

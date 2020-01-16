@@ -103,9 +103,9 @@
           </el-col>
 
           <el-col :span="12" v-if="fromFlag=='stockApply'">
-            <el-form-item label="入库部门" prop="departmentId">
-               <!--<el-input v-model="assetAddForm.departmentName" @focus="onShowDept"></el-input>-->
-              <el-select v-model="assetAddForm.departmentId" @change="onDeptChange">
+            <el-form-item label="入库部门" prop="deptId">
+               <!--<el-input v-model="assetAddForm.deptName" @focus="onShowDept"></el-input>-->
+              <el-select v-model="assetAddForm.deptId" @change="onDeptChange">
                 <el-option v-for="item in deptTree" :key="item.id"
                            :label="item.name" :value="item.id">
                 </el-option>
@@ -169,7 +169,7 @@
 </template>
 
 <script>
-import AssetManageApi from "../../service/api/assetManageApi";
+import AssetManageApi from "../../service/api/assetManage";
 import TreeModal from "../../components/treeModal/index";
 import SearchAssetModal from '../stockManage/coms/searchAsset'
 export default {
@@ -210,8 +210,8 @@ export default {
         specification:'',
         //以下为入库申请需要的字段
         quantity:'',
-        departmentId: "",
-        departmentName:''
+        deptId: "",
+        deptName:''
       },
       rules: {
         name: [{ required: true, message: "请输入资产名称", trigger: "change" }],
@@ -302,8 +302,8 @@ export default {
         groupName: res.groupName,
         coding: res.coding,
         unit: res.unit,
-        // departmentId: res.departmentId,
-        // departmentName: res.departmentName,
+        // deptId: res.deptId,
+        // deptName: res.deptName,
         price: res.price,
         remark: res.remark,
         singleCount:res.singleCount,
@@ -383,7 +383,7 @@ export default {
         this.assetAddForm.groupId = val.id;
         this.assetAddForm.groupName = val.name;
       } else if (this.modalFlag == 1) {
-        this.assetAddForm.departmentId = val.id;
+        this.assetAddForm.deptId = val.id;
       }
     },
     addAsset() {
@@ -392,7 +392,7 @@ export default {
       } else if(this.assetId){
         this.addSingleAsset();
       }else if(this.fromFlag=='stockApply'){
-        this.$parent.addStockDetail &&  this.$parent.addStockDetail(this.assetAddForm)
+        this.$parent.addStockDetail &&  this.$parent.addStockDetail({...this.assetAddForm})
       }
     },
     onProviderChange(val) {
@@ -404,8 +404,8 @@ export default {
     async getDepartmentTree() {
       let res = await AssetManageApi.getDepartmentTree();
       if(!this.assetIds || !this.assetId){
-        this.assetAddForm.departmentId = res[0].childNode[0].id;
-        this.assetAddForm.departmentName = res[0].childNode[0].name;
+        this.assetAddForm.deptId = res[0].childNode[0].id;
+        this.assetAddForm.deptName = res[0].childNode[0].name;
       }
       this.deptTree = res[0].childNode.map((item)=>{return {id:item.id,name:item.name}});
     },
@@ -428,7 +428,7 @@ export default {
           key != "groupName" &&
           key != "ownAttrList" &&
           key != "customAttrList" &&
-          key != "departmentName"
+          key != "deptName"
         ) {
           tmp.push({
             attrName: key,
@@ -502,19 +502,17 @@ export default {
     },
     onGetAssetDetail(row){
       let tmp={
-        departmentId:  this.assetAddForm.departmentId,
-        departmentName:  this.assetAddForm.departmentName,
+        deptId:  this.assetAddForm.deptId,
+        deptName:  this.assetAddForm.deptName,
         remark:this.assetAddForm.remark,
-        price:this.assetAddForm.price,
-        quantity:this.assetAddForm.quantity
+        quantity:this.assetAddForm.quantity,
       }
       this.assetAddForm={...row,...tmp}
       this.showSearchModal=false
     },
     onDeptChange(val){
-      console.log(111,val)
       let tmp = this.deptTree.find((item)=>item.id==val)
-      this.assetAddForm.departmentName=tmp.name
+      this.assetAddForm.deptName=tmp.name
     }
   },
   mounted() {

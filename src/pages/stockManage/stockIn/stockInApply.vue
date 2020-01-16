@@ -1,11 +1,11 @@
 <template>
   <div class="stock-in-apply panel-container">
-    <el-tabs type="border-card">
+    <el-tabs type="border-card" @tab-click="onClickTab" v-model="activeTab">
       <el-tab-pane label="入库申请">
         <Apply />
       </el-tab-pane>
       <el-tab-pane label="申请记录">
-        <ApplyRecord />
+        <ApplyRecord fromFlag="1"/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -13,7 +13,7 @@
 
 <script>
 import Apply from '../coms/apply'
-import ApplyRecord from '../coms/applyRecord'
+import ApplyRecord from '../coms/record'
 export default {
   name: "stockInApply",
   components: {
@@ -22,9 +22,13 @@ export default {
   },
   data() {
     return {
+      activeTab:'0'
     };
   },
   methods: {
+    onClickTab(val){
+      this.$store.commit('digitalPark/stockTabChange',val.index)
+    }
   },
   mounted() {
   }

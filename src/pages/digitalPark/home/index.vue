@@ -81,7 +81,7 @@
 <script>
 import Sidebar from "../../../components/commonMenu/SideBar";
 import CommonFun from "../../../utils/commonFun";
-import DigitalParkApi from "../../../service/api/digitalParkApi";
+import DigitalParkApi from "../../../service/api/digitalPark";
 import NavOperator from "../coms/navOperator";
 import draggable from "vuedraggable";
 import ItemProModule from "../coms/itemProModule";

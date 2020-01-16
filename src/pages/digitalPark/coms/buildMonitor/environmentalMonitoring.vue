@@ -9,7 +9,7 @@
 </template>
 
 <script>
-  import CommonApi from '@/service/api/commonApi'
+  import CommonApi from '@/service/api/common'
   export default {
     name: "environmentalMonitoring",
     components: {

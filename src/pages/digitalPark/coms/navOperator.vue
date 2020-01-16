@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import DigitalParkApi from "../../../service/api/digitalParkApi";
+import SystemManageApi from "@/service/api/systemManage";
 import { mapState } from "vuex";
 
 export default {
@@ -111,7 +111,7 @@ export default {
           goBackClientLogin();
         } else {
           sessionStorage.removeItem("token");
-          await DigitalParkApi.logOut();
+          await SystemManageApi.logOut();
           this.$router.push("/login");
         }
       } else {
@@ -163,15 +163,17 @@ export default {
       }
     },
     onClickGoBack() { //点击返回首页
+      console.log(1111111)
       if (Cookies.get("moduleType") == 2) {
         this.$router.push("/digitalPark/homePage");
       } else {
         this.$router.push("/digitalPark/dashboardHomePage");
       }
       Cookies.remove("activeMenuIndex");
+
     },
     async getUserInfo() {
-      this.userInfo = await DigitalParkApi.getUserInfo();
+      this.userInfo = await SystemManageApi.getUserInfo();
       localStorage.setItem("userInfo", JSON.stringify(this.userInfo));
       this.$store.commit("digitalPark/updateUserInfo", false);
     },

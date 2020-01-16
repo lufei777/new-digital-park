@@ -12,7 +12,7 @@
 
 <script>
   import miForm from "@/components/Form";
-  import DigitalPark from '@/service/api/digitalParkApi'
+  import SystemManageApi from '@/service/api/systemManage'
   export default {
     name: 'ModifyPassword',
     components: {
@@ -78,7 +78,7 @@
     },
     methods: {
       async submit(model,hide){
-       await DigitalPark.modifyPwd(this.formModel).then(res => {
+       await SystemManageApi.modifyPwd(this.formModel).then(res => {
            this.$message({
              type: "success",
              message: res

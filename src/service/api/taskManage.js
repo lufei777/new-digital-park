@@ -5,18 +5,18 @@ class taskManageApi {
     @url("/oaApi/task/add")
     @post
     taskAdd() { }
-    
+
     @url("/oaApi/task/list")
     @get
     taskList() { }
 
     @url('/oaApi/task/transferDept')
     @get
-    transferDept(){}
+    transferDept() { }
 
     @url('/oaApi/task/homeTaskCount')
     @get
-    homeTaskCount(){}
+    homeTaskCount() { }
 
     @url("/oaApi/dept/tree")
     @get
@@ -37,6 +37,16 @@ class taskManageApi {
     @url("/oaApi/task/detail")
     @get
     detailTask() { }
+
+    //接单、退单、转派、撤回工单
+    @url("/oaApi/task/dealTask")
+    @post
+    dealTask() { }
+
+    //完成
+    @url("/oaApi/task/completeTask")
+    @get
+    completeTask() { }
 
 }
 

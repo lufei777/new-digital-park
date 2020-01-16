@@ -6,6 +6,7 @@
           :ref="newTaskForm.ref"
           :options="newTaskForm"
           v-model="model"
+          @submit="submit"
           @reset-change="resetChange"
         >
           <template slot="department">
@@ -33,37 +34,23 @@
               </el-select>
             </div>
           </template>
-          <template slot="ordererName">
-            <div>{{model.ordererName}}</div>
+           <template slot="ordererName">
+            <div>
+              {{model.ordererName}}
+            </div>
           </template>
           <template slot="createBy">
             <div>{{createPeople}}</div>
           </template>
-          <template slot="reason">
+          <!-- <template slot="btn" slot-scope="obj">
             <div>
-              <el-input
-                type="textarea"
-                :autosize="{ minRows: 2, maxRows: 4}"
-                placeholder="请输入内容"
-                v-model="model.reason"
-              ></el-input>
+              <el-button type="primary"  @click="dispatch" v-show="waitSend">派单</el-button>
+              <el-button  type="primary" v-show="taskOperationShow" @click="submit(obj)">{{taskOperation}}</el-button>
+              <el-button @click="back(obj)">{{taskBack}}</el-button>
             </div>
-          </template>
-          <template slot="btn" slot-scope="obj">
-            <div>
-              <el-button type="primary" @click="dispatch()" v-show="waitSend">派单</el-button>
-              <el-button
-                type="primary"
-                v-show="taskOperationShow"
-                @click="submit(obj)"
-              >{{taskOperation}}</el-button>
-              <el-button
-                :type="anotherButton"
-                @click="back(obj)"
-                v-show="anotherTaskOperationShow"
-              >{{anotherTaskOperation}}</el-button>
-              <el-button @click="back(obj)" v-show="taskBackShow">返回</el-button>
-            </div>
+          </template> -->
+          <template slot-scope="scope" slot="menuBtn">
+             <el-button @click="back(scope)">{{taskBack}}</el-button>
           </template>
         </miForm>
       </div>
@@ -74,33 +61,33 @@
 <script>
 let workOrderType = [
   {
-    value: "1",
+    value: 1,
     label: "巡检"
   },
   {
-    value: "2",
+    value: 2,
     label: "审批"
   },
   {
-    value: "3",
+    value: 3,
     label: "调试"
   },
   {
-    value: "4",
+    value: 4,
     label: "其他"
   }
 ];
 let priorityType = [
   {
-    value: "1",
+    value: 1,
     label: "正常"
   },
   {
-    value: "2",
+    value: 2,
     label: "重要"
   },
   {
-    value: "3",
+    value: 3,
     label: "紧急"
   }
 ];
@@ -112,17 +99,18 @@ export default {
   data() {
     return {
       model: {
-        taskType: "1",
-        urgent: "1"
+        taskType: 1,
+        urgent: 1
       },
       newTaskForm: {
         ref: "newTaskForm",
         labelWidth: "120",
         labelPosition: "right",
         menuPosition: "left",
+        submitText: "确定",
         emptyBtn: false,
         size: "medium",
-        menuBtn: false,
+        menuBtn: true,
         forms: [
           {
             type: "input",
@@ -155,10 +143,12 @@ export default {
             type: "datetime",
             label: "开始时间",
             prop: "beginTime",
-            valueFormat: "yyyy-MM-dd HH:mm:ss",
             placeholder: "选择日期时间",
             clearable: true,
             span: 10,
+            // format: "yyyy-MM-dd",
+            // valueFormat: "timestamp",
+            valueFormat: "yyyy-MM-dd HH:mm:ss",
             rules: {
               required: true,
               message: "请选择开始时间",
@@ -169,11 +159,11 @@ export default {
             type: "datetime",
             label: "预计结束时间",
             prop: "endTime",
-            valueFormat: "yyyy-MM-dd HH:mm:ss",
             placeholder: "选择日期时间",
             clearable: true,
             span: 10,
             offset: 2,
+            valueFormat: "yyyy-MM-dd HH:mm:ss",
             rules: {
               required: true,
               message: "请选择开始时间",
@@ -194,18 +184,15 @@ export default {
             clearable: true,
             offset: 2,
             span: 10,
-            dicData: priorityType,
-            rules: {
-              required: true,
-              message: "请选择优先级",
-              trigger: "change"
-            }
+            dicData: priorityType
           },
           {
             label: "部门",
             prop: "department",
             span: 10,
-            formslot: true
+            formslot: true,
+            hide: true
+            // display:false,
           },
           {
             label: "指派",
@@ -220,30 +207,17 @@ export default {
             prop: "ordererName",
             span: 10,
             formslot: true,
-            display: false
+            display:false
           },
           {
             type: "textarea",
-            label: "描述",
+            label: "备注",
             prop: "description",
             clearable: true,
             span: 22,
             maxlength: 255,
             minRows: 6,
-            showWordLimit: true,
-            rules: {
-              required: true,
-              message: "请填写描述",
-              trigger: "change"
-            }
-          },
-          {
-            type: "textarea",
-            label: "备注",
-            prop: "reason",
-            formslot: true,
-            span: 22,
-            display: false
+            showWordLimit: true
           },
           {
             type: "upload",
@@ -251,6 +225,7 @@ export default {
             label: "添加图片",
             prop: "taskPicList",
             span: 24,
+            // tip: "只能上传jpg/png文件。",
             action: "/oaApi/image/upload",
             accept: ["jpg", "jpeg", "png"],
             props: {
@@ -263,11 +238,12 @@ export default {
               res: "data"
             }
           },
-          {
-            prop: "btn",
-            span: 22,
-            formslot: true
-          }
+          // {
+          //   prop: "btn",
+          //   span: 4,
+          //   formslot: true,
+          //   // width: 55
+          // }
         ]
       },
       treeProps: {
@@ -279,14 +255,10 @@ export default {
       assignList: [],
       designatorName: "",
       createPeople: "",
-      taskOperation: "确定",
-      anotherTaskOperation: "关闭",
-      waitSend: false,
-      taskOperationShow: true,
-      anotherTaskOperationShow: true,
-      taskBackShow: true,
-      taskTypeStatus: "",
-      anotherButton: ""
+      taskOperation:"确定",
+      taskBack:"返回",
+      waitSend:false,
+      taskOperationShow:true
     };
   },
   computed: {
@@ -301,8 +273,7 @@ export default {
         description: this.model.description,
         type: this.model.taskType,
         urgent: this.model.urgent,
-        taskPicList: this.model.taskPicList,
-        delFlag: 1
+        taskPicList: this.model.taskPicList
       };
     },
     taskId() {
@@ -314,87 +285,43 @@ export default {
       ...this.newTaskForm,
       ...this.$route.params.extraOptions
     };
-    if (!this.taskId.id) {
-      this.anotherTaskOperationShow = false;
-    }
-    if (this.taskId.status == 1) {
-      this.waitSend = true;
-      this.taskOperationShow = false;
-      this.anotherTaskOperation = "关闭";
-    } else if (this.taskId.status == 2) {
-      this.taskOperation = "撤回";
-      this.taskTypeStatus = 2;
-    } else if (this.taskId.status == 3) {
-      this.taskOperationShow = false;
-      this.anotherTaskOperation = "关闭";
-      this.anotherButton = "primary";
-    } else if (this.taskId.acceptStatus == 2) {
-      this.taskTypeStatus = 1;
-      this.taskOperation = "接单";
-      this.anotherTaskOperation = "退单";
-    } else if (this.taskId.acceptStatus == 3) {
-      this.taskTypeStatus = 3;
-      this.taskOperation = "转派";
-      this.anotherTaskOperation = "完成";
-    } else if (this.taskId.acceptStatus == 4) {
-      this.taskOperation = "完成";
+    if(this.taskId.status == 1){
+       this.newTaskForm.submitText = "派单"
+      this.waitSend = true
+      this.taskOperationShow = false
+       this.taskBack = "关闭"
+    } else if(this.taskId.status == 2){
+       this.newTaskForm.submitText = "撤回"
+    } else if(this.taskId.status == 3){
+       this.newTaskForm.submitText = "返回"
+      this.taskBack = "关闭"
+    } else if(this.taskId.acceptStatus == 2){
+       this.newTaskForm.submitText = "接单"
+       this.taskBack = "退单"
+    } else if(this.taskId.acceptStatus == 3){
+       this.newTaskForm.submitText = "转派"
+       this.taskBack = "完成"
+    } else if(this.taskId.acceptStatus == 4){
+       this.newTaskForm.submitText = "完成"
     }
   },
   methods: {
-    async submitOperation() {
-      console.log("this.taskId", this.taskId);
-      if (this.taskId.id) {
-        alert(13);
-        this.dealTask();
-      } else {
-        alert(888);
-        let res = await TaskManageApi.taskAdd(this.paramsData);
-        if (res) {
-          this.$message({
-            type: "success",
-            message: res
-          });
+    async submit(model) {
+      let params = {
+        ...model,
+        ...{
+          designatorName: this.designatorName
+          //  delFlag:1
         }
-        this.$router.push("/aboutMe");
-      }
-    },
-    async dealTask() {
-      let res = await TaskManageApi.dealTask({
-        id: this.taskId.id,
-        taskType: this.taskTypeStatus,
-        designatorId: this.model.designatorId,
-        reason: this.model.reason,
-        taskPicList: this.model.taskPicList
-      });
-      this.toastMessage(res);
-    },
-    async closeTask() {
-      let res = await TaskManageApi.closeTask({
-        taskId: this.taskId.id
-      });
-    },
-    // async submitOperation() {
-
-    // },
-    async submit() {
-      this.$refs[this.newTaskForm.ref].validate(valid => {
-        if (valid) {
-          this.submitOperation();
-        } else {
-          console.log("error");
-          return false;
-        }
-      });
-    },
-    toastMessage(res) {
+      };
+      let res = await TaskManageApi.taskAdd(this.paramsData);
       if (res) {
         this.$message({
-          showClose: true,
-          message: res,
-          type: res.successful ? "success" : !res.successful ? "error" : ""
+          type: "success",
+          message: res
         });
-        this.$router.push("/aboutMe");
       }
+      this.$router.push("/aboutMe");
     },
     resetChange() {},
     // 递归判断列表，把最后的children设为undefined
@@ -448,11 +375,8 @@ export default {
       this.$refs[this.newTaskForm.ref].setColumnByProp("designatorId", {
         display: false
       });
-      this.$refs[this.newTaskForm.ref].setColumnByProp("ordererName", {
+       this.$refs[this.newTaskForm.ref].setColumnByProp("ordererName", {
         display: true
-      });
-      this.$refs[this.newTaskForm.ref].setColumnByProp("taskPicList", {
-        display: false
       });
       let res = await TaskManageApi.detailTask({
         taskId: this.taskId.id
@@ -463,68 +387,32 @@ export default {
         this.model.createBy = res.createBy;
         this.model.beginTime = res.beginTime;
         this.model.endTime = res.endTime;
-        // this.model.designatorId = res.username;
+        this.model.designatorId = res.username;
         this.model.ordererName = res.username;
         this.model.description = res.description;
-        this.model.taskType = res.type;
-        this.model.urgent = res.urgent;
+        this.model.taskType = parseInt(res.type);
+        this.model.urgent = parseInt(res.urgent);
+        this.model.taskPicList = res.taskPics;
       }
     },
-    dispatch() {
-      // pd={
-      //   btn:{
-      //     text:"",
-      //     eventnam:"dispatch"
-      //   },
-      //   props:{
-      //     department:{
-      //       display: true,
-      //       rule:[]
-      //     }
-      //   }
-      // }
-      // this[a.eventnam]();
-      //派单
-      this.$refs[this.newTaskForm.ref].setColumnByProp("department", {
-        display: true,
-        rules: {
-          required: true,
-          message: "请输入工单名称",
-          trigger: "change"
-        }
+   async dispatch(){//派单
+       this.$refs[this.newTaskForm.ref].setColumnByProp("department", {
+        display: true
       });
       this.$refs[this.newTaskForm.ref].setColumnByProp("designatorId", {
-        display: true,
-        rules: {
-          required: true,
-          message: "请输入工单名称",
-          trigger: "change"
-        }
+        display: true
       });
-      this.$refs[this.newTaskForm.ref].setColumnByProp("ordererName", {
+       this.$refs[this.newTaskForm.ref].setColumnByProp("ordererName", {
         display: false
       });
-
-      this.$refs[this.newTaskForm.ref].validate(valid => {
-        if (valid) {
-          console.log("valid", valid);
-          this.add();
-        } else {
-          console.log("error");
-          return false;
-        }
-      });
-    },
-
-    async add() {
       let addTaskParams = {
         ...this.paramsData,
         ...{
-          id: this.taskId.id
+          id:this.taskId.id
         }
-      };
+      }
       let res = await TaskManageApi.taskAdd(addTaskParams);
-      console.log("res", res);
+      console.log('res',res)
     }
   },
   mounted() {
