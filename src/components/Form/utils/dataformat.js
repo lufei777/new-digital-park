@@ -70,9 +70,10 @@ export const getPlaceholder = function (column, type) {
  * 初始化数据格式
  */
 export const initVal = ({ listType, type, multiple, dataType, value, curentForm }) => {
+    // cascader 去除处理
     if (
         (['select', 'tree'].includes(type) && multiple) ||
-        ['checkbox', 'cascader', 'dynamic', 'upload'].includes(type)
+        ['checkbox', 'dynamic', 'upload'].includes(type)
     ) {
         // 头像框特殊处理
         if (listType === 'picture-img' && type === 'upload') {

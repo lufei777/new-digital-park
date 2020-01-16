@@ -104,7 +104,7 @@
 
           <el-col :span="12" v-if="fromFlag=='stockApply'">
             <el-form-item label="入库部门" prop="deptId">
-               <!--<el-input v-model="assetAddForm.departmentName" @focus="onShowDept"></el-input>-->
+               <!--<el-input v-model="assetAddForm.deptName" @focus="onShowDept"></el-input>-->
               <el-select v-model="assetAddForm.deptId" @change="onDeptChange">
                 <el-option v-for="item in deptTree" :key="item.id"
                            :label="item.name" :value="item.id">
@@ -211,7 +211,7 @@ export default {
         //以下为入库申请需要的字段
         quantity:'',
         deptId: "",
-        departmentName:''
+        deptName:''
       },
       rules: {
         name: [{ required: true, message: "请输入资产名称", trigger: "change" }],
@@ -303,7 +303,7 @@ export default {
         coding: res.coding,
         unit: res.unit,
         // deptId: res.deptId,
-        // departmentName: res.departmentName,
+        // deptName: res.deptName,
         price: res.price,
         remark: res.remark,
         singleCount:res.singleCount,
@@ -405,7 +405,7 @@ export default {
       let res = await AssetManageApi.getDepartmentTree();
       if(!this.assetIds || !this.assetId){
         this.assetAddForm.deptId = res[0].childNode[0].id;
-        this.assetAddForm.departmentName = res[0].childNode[0].name;
+        this.assetAddForm.deptName = res[0].childNode[0].name;
       }
       this.deptTree = res[0].childNode.map((item)=>{return {id:item.id,name:item.name}});
     },
@@ -428,7 +428,7 @@ export default {
           key != "groupName" &&
           key != "ownAttrList" &&
           key != "customAttrList" &&
-          key != "departmentName"
+          key != "deptName"
         ) {
           tmp.push({
             attrName: key,
@@ -503,7 +503,7 @@ export default {
     onGetAssetDetail(row){
       let tmp={
         deptId:  this.assetAddForm.deptId,
-        departmentName:  this.assetAddForm.departmentName,
+        deptName:  this.assetAddForm.deptName,
         remark:this.assetAddForm.remark,
         quantity:this.assetAddForm.quantity,
       }
@@ -512,7 +512,7 @@ export default {
     },
     onDeptChange(val){
       let tmp = this.deptTree.find((item)=>item.id==val)
-      this.assetAddForm.departmentName=tmp.name
+      this.assetAddForm.deptName=tmp.name
     }
   },
   mounted() {

@@ -26,25 +26,6 @@ class DigitalParkApi {
   @put
   updateUserProModules(){}
 
-  @url('/oaApi/user/logout')
-  @get
-  logOut(){}
-
-  @url('/oaApi/user/mobileLogin')
-  @post
-  login(){}
-
-  @url("/oaApi/user/getNowUser")
-  @get
-  getUserInfo(){}
-
-  @url('/oaApi/user/password')
-  @put
-  modifyPwd(){}
-
-  @url('/oaApi/user')
-  @put
-  editPersonInformation(){}
 }
 
 export default new DigitalParkApi()

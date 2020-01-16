@@ -53,7 +53,14 @@ export const StockDic = {
   },{
     label:'其他入库',
     value:2
-  }]
+  }],
+
+  recordStatus:{
+    0:'待验',
+    1:'已入库',
+    2: '已作废',
+    3:'已收回',
+  }
 }
 
 export const AssetDic = {

@@ -33,7 +33,7 @@
 </template>
 
 <script>
-  import DigitalPark from '../../../service/api/digitalPark'
+  import SystemManageApi from '@/service/api/systemManage'
   export default {
     name: 'DigitalParkLogin',
     components: {
@@ -72,7 +72,7 @@
           username:this.name.trim(),
           password:this.pwd.trim()
         }
-        let res  = await DigitalPark.login(params).catch(err => {
+        let res  = await SystemManageApi.login(params).catch(err => {
           this.loading=false;
           console.error(err);
         })

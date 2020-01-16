@@ -5,7 +5,7 @@
       :visible.sync="showModal"
       width="40%"
     >
-      <el-tabs type="border-card">
+      <el-tabs type="border-card" @tab-click="onClickTab">
         <el-tab-pane label="按资产类型">
           <div class="tree-box">
             <Tree :tree-list="typeTree" :treeConfig="treeConfig"/>
@@ -16,7 +16,7 @@
           <miForm :ref="formConfig.ref" :options="formConfig" v-model="formModel">
             <template slot="btn" slot-scope="obj">
               <div>
-                <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">搜索</el-button>
+                <el-button :disabled="obj.disabled" type="primary" @click="onClickSearchBtn(obj)">搜索</el-button>
                 <el-button :disabled="obj.disabled" @click="clearForm(obj)">重置</el-button>
               </div>
             </template>
@@ -129,11 +129,12 @@
         this.typeTree =res
       },
       async getAssetList(){
-        let res = await AssetManageApi.getAssetList({
+        let params={...{
           typeId:this.curType,
-          pageNum:this.curPage,
-          pageSize:10
-        })
+            pageNum:this.curPage,
+            pageSize:10
+        },...this.formModel}
+        let res = await AssetManageApi.getAssetList(params)
         this.tableConfig.data=res.list
         // this.tableConfig.uiConfig.pagination.total=res.total
       },
@@ -147,6 +148,16 @@
       },
       onClickSureBtn(){
         this.$parent.onGetAssetDetail && this.$parent.onGetAssetDetail(this.curRow)
+      },
+      onClickSearchBtn(){
+        console.log(this.formModel)
+        this.getAssetList()
+      },
+      clearForm(){
+        this.$refs[this.formConfig.ref].resetForm();
+      },
+      onClickTab(){
+        // this.
       }
     },
     mounted() {
