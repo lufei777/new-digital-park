@@ -5,7 +5,7 @@
       <el-row>
         <el-col :span="8" :offset="4">
           <label for="">入库类型：</label>
-          <span>采购入库</span>
+          <span>{{this.detail.stockType==1?'采购入库':'其他入库'}}</span>
         </el-col>
         <el-col :span="8" :offset="4">
           <label for="">购置日期：</label>
@@ -15,7 +15,7 @@
       <el-row>
         <el-col :span="8" :offset="4">
           <label for="">采购人：</label>
-          <span>{{this.detail.buyUserName}}</span>
+          <span>{{this.detail.buyUser}}</span>
         </el-col>
         <el-col :span="8" :offset="4">
           <label for="">入库日期：</label>
@@ -25,22 +25,22 @@
       <el-row>
         <el-col :span="8" :offset="4">
           <label for="">验收人：</label>
-          <span>{{this.detail.stockUserName}}</span>
+          <span>{{this.detail.acceptUser}}</span>
         </el-col>
          <el-col :span="8" :offset="4">
           <label for="">供应商：</label>
-          <span>{{this.detail.stockUserName}}</span>
+          <span>{{this.detail.providerName}}</span>
          </el-col>
       </el-row>
       <el-row>
         <el-col :span="8" :offset="4">
           <label for="">合同号：</label>
-          <span>1600697784187</span>
+          <span>{{this.detail.contractId}}</span>
         </el-col>
-        <!--<div>-->
-          <!--<label for="">供应商：</label>-->
-          <!--<span>京东</span>-->
-        <!--</div>-->
+        <!--<el-col :span="8" :offset="4">-->
+        <!--<label for="">入库部门：</label>-->
+        <!--<span>{{this.detail.deptName}}</span>-->
+        <!--</el-col>-->
      </el-row>
 
     </div>

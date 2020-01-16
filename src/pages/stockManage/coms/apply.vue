@@ -37,7 +37,7 @@
   import AddAsset from '../../assetManage/addAsset'
   import StockManageApi from '@/service/api/stockManage'
   export default {
-    name: "Apply",
+    name: "ApplyComs",
     components: { miForm, miTable,AddAsset },
     data() {
       let _this = this
@@ -159,6 +159,7 @@
         curDetail:{},
         curRowIndex:{},
         deptTree:[],
+        editFlag:false
       };
     },
     computed:{
@@ -201,15 +202,23 @@
       },
       onClickAddBtn(){
         this.curDetail={}
+        this.editFlag=false
         this.showAddModal=true
       },
       addStockDetail(obj){
-        if(this.curDetail.id){
-          this.tableConfig.data[this.curRowIndex] ={...obj,...{id:this.curDetail.id}}
-        }else{
-          this.tableConfig.data.push(obj)
+        let data = {...obj,
+          ...{
+            assetId:obj.id,
+            id:this.curDetail.id,
+            description:obj.remark
+          }
         }
-        console.log(this.tableConfig.data)
+        console.log("detail",this.curDetail)
+        if(this.editFlag){
+          this.tableConfig.data[this.curRowIndex] =data
+        }else{
+          this.tableConfig.data.push(data)
+        }
         this.showAddModal=false
       },
       deleteRow(index){
@@ -217,8 +226,10 @@
       },
       editRow(index){
         this.showAddModal=true
+        this.editFlag=true
         this.curRowIndex=index
         this.curDetail=this.tableConfig.data[index]
+
       },
       onClickMultiDelBtn(){
         let delArr = this.$refs["tableRef"].getSelectedData()
@@ -243,18 +254,19 @@
       },
       async onClickSubmitBtn(flag){
         let res
-        let stockDetailsList = this.tableConfig.data
-        stockDetailsList.map((item)=>{
-          item.assetId = item.id
-          item.description = item.remark
-        })
+        // let stockDetailsList = this.tableConfig.data
+        // stockDetailsList.map((item)=>{
+        //   // item.assetId = item.id
+        //   item.description = item.remark
+        // })
         let obj = {
           ...this.model,
           ...{buyId:this.model.buyId[this.model.buyId.length-1],
             acceptId:this.model.acceptId[this.model.acceptId.length-1],
-            stockDetailsList
+            stockDetailsList:this.tableConfig.data
           },
         }
+        console.log(obj)
         if(flag==1){
           res = await StockManageApi.submitStockApply(obj)
         }else{
@@ -271,10 +283,15 @@
         if(res){
           this.model=res
           this.tableConfig.data=res.stockDetailsList
+          let a = ["dept-20a0cc719722490bbf2c3e4974d2d5c4", "dept-482965b451684eca8dd85a48b9c73722",
+            "user-6a3a7369a6v8478cb844a4g4a5666666"]
+          // let a= ["dept-20a0cc719722490bbf2c3e4974d2d5c4","dept-482965b451684eca8dd85a48b9c73722"]
+          this.model.buyId=a
+          this.model.acceptId=a
         }
         // let a = ["dept-20a0cc719722490bbf2c3e4974d2d5c4", "dept-482965b451684eca8dd85a48b9c73722",
-        // // "user-6a3a7369a6v8478cb844a4g4a5666666"]
-        // let a= ["dept-20a0cc719722490bbf2c3e4974d2d5c4","dept-482965b451684eca8dd85a48b9c73722"]
+        // "user-6a3a7369a6v8478cb844a4g4a5666666"]
+        // // let a= ["dept-20a0cc719722490bbf2c3e4974d2d5c4","dept-482965b451684eca8dd85a48b9c73722"]
         // this.model.buyId=a
         // this.model.acceptId=a
 
