@@ -4,9 +4,11 @@
       <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
         <el-button type="text" @click="onClickDetailBtn(row)">详情</el-button>
         <el-button type="text" @click="onClickDetailBtn(row)" v-if="row.recordStatus==0">收回</el-button>
+        <el-button type="text" @click="onClickDetailBtn(row)" v-if="row.recordStatus==2">重新申请</el-button>
       </template>
     </miTable>
-    <RecordDetail v-if="showDetail" :curRecordId="curRecordId" />
+    <RecordDetail v-if="showDetail" :detailId="curRecordId"
+                  :fromFlag="fromFlag" :on-click-back-callback="onClickBackBtn"/>
   </div>
 </template>
 
@@ -27,10 +29,12 @@
         tableConfig:{
           ref:'tableRef',
           data:[],
-          operation:true,
+          operation:{
+            width:150
+          },
           columnConfig:[
-            {label:'采购人',prop:'buyUserName'},
-            {label:'验收人',prop:'stockUserName'},
+            {label:'采购人',prop:'buyUser'},
+            {label:'验收人',prop:'acceptUser'},
             {label:'购置日期',prop:'buyTime'},
             {label:'入库日期',prop:'stockTime'},
             {label:'入库状态',prop:'recordStatus',

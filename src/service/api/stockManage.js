@@ -21,4 +21,16 @@ export default new class {
   @url("/oaApi/stock/record")
   @get
   getRecordDetail(){}
+
+  @url("/oaApi/stock/checkList")
+  @get
+  getStockCheckList(){}
+
+  @url('/oaApi/stock/confirmAccept')
+  @post
+  checkStockApply(){}
+
+  @url("/oaApi/stock/confirmInvalid")
+  @get
+  invalidStockApply(){}
 }
