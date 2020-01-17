@@ -33,4 +33,8 @@ export default new class {
   @url("/oaApi/stock/confirmInvalid")
   @get
   invalidStockApply(){}
+
+  @url("/oaApi/stock/takeBack")
+  @get
+  takeBackStockApply(){}
 }

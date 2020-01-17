@@ -71,7 +71,7 @@
           customTop:true,
           columnConfig:columnConfig,
           uiConfig:{
-            height:'auto',
+            height:'300',
           },
           tableMethods: {
             rowClick: this.rowClick,
@@ -96,6 +96,7 @@
             label: "单独核算",
             prop: "singleCount",
             dicData:AssetDic.singleCount,
+            // valueDefault:1,
             span: 10,
           },{
             prop: "btn",
@@ -130,7 +131,7 @@
       },
       async getAssetList(){
         let params={...{
-          typeId:this.curType,
+            typeId:this.curType,
             pageNum:this.curPage,
             pageSize:10
         },...this.formModel}
@@ -157,11 +158,19 @@
         this.$refs[this.formConfig.ref].resetForm();
       },
       onClickTab(){
-        // this.
+        this.curType=""
+        this.formModel={
+          singleCount:'',
+          name:'',
+          coding:''
+        }
+        this.curPage=1
+        this.getAssetList()
       }
     },
-    mounted() {
-      this.getAssetTypeList()
+    async mounted() {
+      await this.getAssetTypeList()
+      this.getAssetList()
     }
   };
 </script>

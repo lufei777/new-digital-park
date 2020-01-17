@@ -181,7 +181,9 @@ export default {
   props:['fromFlag','curDetail'],
   data() {
     let checkQuantity = (rule, value, callback) => {
-      if (value < 1) {
+      if ((!Number(value) || value<0) && value!="") {
+        callback(new Error("请输入正数"));
+      } else if (value < 1) {
         callback(new Error("数量最小为1"));
       } else {
         callback();
@@ -528,7 +530,7 @@ export default {
       this.getDepartmentTree();
     }
     if(this.curDetail){
-      this.assetAddForm=this.curDetail
+      this.assetAddForm={...this.curDetail,...{remark:this.curDetail.description}}
     }
   }
 };
