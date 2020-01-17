@@ -528,7 +528,7 @@ export default {
       this.getDepartmentTree();
     }
     if(this.curDetail){
-      this.assetAddForm=this.curDetail
+      this.assetAddForm={...this.curDetail,...{remark:this.curDetail.description}}
     }
   }
 };

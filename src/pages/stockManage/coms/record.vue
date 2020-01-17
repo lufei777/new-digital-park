@@ -4,7 +4,7 @@
       <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
         <el-button type="text" @click="onClickDetailBtn(row)">详情</el-button>
         <el-button type="text" @click="onClickDetailBtn(row)" v-if="row.recordStatus==0">收回</el-button>
-        <el-button type="text" @click="onClickDetailBtn(row)" v-if="row.recordStatus==2">重新申请</el-button>
+        <el-button type="text" @click="onClickReApplyBtn(row)" v-if="row.recordStatus==2 && fromFlag==1">重新申请</el-button>
       </template>
     </miTable>
     <RecordDetail v-if="showDetail" :detailId="curRecordId"
@@ -21,7 +21,7 @@
   export default {
     name: "Record",
     components: { miTable,RecordDetail },
-    props:["fromFlag"],   //fromFlag: 1-申请记录  2-验收记录
+    props:["fromFlag","reApplyCallBack"],   //fromFlag: 1-申请记录  2-验收记录
     data() {
       let _this=this
       return {
@@ -90,7 +90,9 @@
         this.curPage=page
         this.getRecordList()
       },
-
+      onClickReApplyBtn(row){
+        this.reApplyCallBack && this.reApplyCallBack(row.id,"reApply")
+      }
     },
     mounted() {
       this.getRecordList()

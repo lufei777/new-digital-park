@@ -2,7 +2,7 @@
   <div class="digital-park-login" @click="showErrTip=false">
     <img src="../../../../static/image/digitalPark/logo.png" class="logo-img" alt="">
     <div class="login-box flex-column flex-align" v-loading="loading">
-      <span class="login-title">数字园区综合管理平台</span>
+      <span class="login-title">信智联综合管控平台</span>
       <div class="flex-item flex-align border-basic name-box">
         <i class="iconfont iconzhanghao login-icon name-icon"></i>
         <el-input v-model="name"

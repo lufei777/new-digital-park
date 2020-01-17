@@ -5,7 +5,7 @@
         <Apply />
       </el-tab-pane>
       <el-tab-pane label="申请记录">
-        <ApplyRecord fromFlag="1"/>
+        <ApplyRecord fromFlag="1" :reApplyCallBack="reApplyCallBack"/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -22,12 +22,18 @@ export default {
   },
   data() {
     return {
-      activeTab:'0'
+      activeTab:'0',
+      reApply:false
     };
   },
   methods: {
     onClickTab(val){
       this.$store.commit('digitalPark/stockTabChange',val.index)
+    },
+    async reApplyCallBack(row){
+      this.activeTab='0'
+      // this.reApply=true
+      // this.$store.commit('digitalPark/stockTabChange',0)
     }
   },
   mounted() {

@@ -283,17 +283,12 @@
         if(res){
           this.model=res
           this.tableConfig.data=res.stockDetailsList
-          let a = ["dept-20a0cc719722490bbf2c3e4974d2d5c4", "dept-482965b451684eca8dd85a48b9c73722",
-            "user-6a3a7369a6v8478cb844a4g4a5666666"]
-          // let a= ["dept-20a0cc719722490bbf2c3e4974d2d5c4","dept-482965b451684eca8dd85a48b9c73722"]
-          this.model.buyId=a
-          this.model.acceptId=a
+          // let a = ["dept-20a0cc719722490bbf2c3e4974d2d5c4", "dept-482965b451684eca8dd85a48b9c73722",
+          //   "user-6a3a7369a6v8478cb844a4g4a5666666"]
+          // // let a= ["dept-20a0cc719722490bbf2c3e4974d2d5c4","dept-482965b451684eca8dd85a48b9c73722"]
+          // this.model.buyId=a
+          // this.model.acceptId=a
         }
-        // let a = ["dept-20a0cc719722490bbf2c3e4974d2d5c4", "dept-482965b451684eca8dd85a48b9c73722",
-        // "user-6a3a7369a6v8478cb844a4g4a5666666"]
-        // // let a= ["dept-20a0cc719722490bbf2c3e4974d2d5c4","dept-482965b451684eca8dd85a48b9c73722"]
-        // this.model.buyId=a
-        // this.model.acceptId=a
 
       },
       // async getUserList(value) {

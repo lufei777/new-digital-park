@@ -23,6 +23,9 @@
                label-width="80px" :model="formData"
                :rules="rules"
       >
+        <el-form-item label="入库数量" prop="">
+          <el-input v-model="curRow.quantity" disabled></el-input>
+        </el-form-item>
         <el-form-item label="实收数量" prop="actualQuantity">
           <el-input v-model="formData.actualQuantity"></el-input>
         </el-form-item>
@@ -120,10 +123,12 @@
           this.tableConfig.columnConfig=[...this.tableConfig.columnConfig, ...
             [{label:'实收数量',prop:'actualQuantity'},
               {label:'备注',prop:'description'}]]
-          res.stockDetailsList.map((item)=>{
-            item.actualQuantity=0
-            item.description=''
-          })
+          if(this.fromFlag==3){
+            res.stockDetailsList.map((item)=>{
+              item.actualQuantity=0
+              item.description=''
+            })
+          }
         }
         this.detailData=res
         this.tableConfig.data=res.stockDetailsList
