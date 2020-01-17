@@ -16,11 +16,15 @@
         >
           <div class="about-me-table">
             <div class="operator-box flex-row-reverse">
-              <el-button type="primary">刷新</el-button>
-              <el-button type="primary">批量删除</el-button>
+              <el-button type="primary" @click="refresh">刷新</el-button>
               <el-button type="primary" @click="addTask">新增</el-button>
             </div>
-            <miTable :ref="tableData.ref" :tableConfig="tableData"></miTable>
+            <miTable :ref="tableData.ref" :tableConfig="tableData">
+              <template slot="operation" slot-scope="obj">
+                <el-button type="text" @click="editRow(obj)">详情</el-button>
+                <el-button type="text" @click="delRow(obj)" v-if="deleteRowShow">删除</el-button>
+              </template>
+            </miTable>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -64,6 +68,9 @@ export default {
       },
       tableData: {
         ref: "tableData",
+        operation: {
+          width: 200
+        },
         data: [],
         columnConfig: [],
         uiConfig: {
@@ -78,30 +85,9 @@ export default {
               _this.handleCurrentChange(currentPage);
             }
           }
-        },
-        btnConfig: {
-          prop: "operation",
-          label: "操作",
-          fixed: "right",
-          width: 150,
-          btns: [
-            {
-              type: "basic",
-              label: "详情",
-              handler: function(data) {
-                _this.editRow(data.row);
-              }
-            },
-            {
-              type: "basic",
-              label: "删除",
-              handler: function(data) {
-                _this.deleteRow(data.row);
-              }
-            }
-          ]
         }
-      }
+      },
+      deleteRowShow: true
     };
   },
   computed: {
@@ -198,7 +184,7 @@ export default {
                 break;
             }
           } else {
-             switch (item.status) {
+            switch (item.status) {
               case "1":
                 item.taskStatus = "待派";
                 break;
@@ -216,16 +202,6 @@ export default {
                 break;
             }
           }
-          // item.taskStatus =
-          //   item.status == "1"
-          //     ? "待派"
-          //     : item.status == "2"
-          //     ? "已派"
-          //     : item.status == "3"
-          //     ? "处理中"
-          //     : item.status == "4"
-          //     ? "已完成"
-          //     : "";
           item.typeText =
             item.type == "1"
               ? "巡检"
@@ -265,15 +241,9 @@ export default {
         : this.taskActiveName == "third"
         ? (this.taskType = 2)
         : "";
-      // if (this.taskActiveName != "third") {
-      //   this.tableData.btnConfig.btns.push({
-      //     type: "basic",
-      //     label: "删除",
-      //     handler: function(data) {
-      //       _this.deleteRow(data.row);
-      //     }
-      //   });
-      // }
+      if (this.taskActiveName == "third") {
+        this.deleteRowShow = false;
+      }
       this.taskList();
     },
     showDeleteTip() {
@@ -313,8 +283,8 @@ export default {
             extraOptions: {
               disabled: true
             },
-            id: val.id,
-            status: val.status
+            id: val.scopeRow.row.id,
+            status: val.scopeRow.row.status
           }
         });
       } else if (this.taskActiveName == "third") {
@@ -324,11 +294,15 @@ export default {
             extraOptions: {
               disabled: true
             },
-            id: val.id,
-            acceptStatus: val.status
+            id: val.scopeRow.row.id,
+            acceptStatus: val.scopeRow.row.status
           }
         });
       }
+    },
+    refresh(){
+      this.currentPage = 1
+      this.taskList();
     },
     addTask() {
       this.$router.push("newTask");
@@ -340,13 +314,16 @@ export default {
     }
   },
   mounted() {
-     this.taskActiveName == "frist"
-        ? (this.taskType = 1)
-        : this.taskActiveName == "second"
-        ? (this.taskType = 1)
-        : this.taskActiveName == "third"
-        ? (this.taskType = 2)
-        : "";
+    this.taskActiveName == "frist"
+      ? (this.taskType = 1)
+      : this.taskActiveName == "second"
+      ? (this.taskType = 1)
+      : this.taskActiveName == "third"
+      ? (this.taskType = 2)
+      : "";
+    if (this.taskActiveName == "third") {
+      this.deleteRowShow = false;
+    }
     this.taskList();
     this.taskTreeConfig.defaultExpandedkeys = [this.taskData[0].value];
     this.fixTree();
@@ -359,12 +336,12 @@ export default {
 
 <style lang="less">
 .about-me {
-  .el-tabs{
-    height:100%;
+  .el-tabs {
+    height: 100%;
     border: none;
   }
   .right-content {
-     height:100%;
+    height: 100%;
   }
   .energy-tree-box {
     height: 100%;

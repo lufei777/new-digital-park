@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Apply from '../coms/apply'
 import ApplyRecord from '../coms/record'
 export default {
@@ -25,10 +26,22 @@ export default {
       activeTab:'0'
     };
   },
+  computed:{
+    ...mapState({
+      stockInApplyTab:state=>state.digitalPark.stockInApplyTab,
+      stockInReApplyId:state=>state.digitalPark.stockInReApplyId
+    }),
+  },
+  watch:{
+    stockInApplyTab(){
+      this.activeTab = this.stockInApplyTab
+    }
+  },
   methods: {
     onClickTab(val){
-      this.$store.commit('digitalPark/stockTabChange',val.index)
-    }
+      this.$store.commit('digitalPark/stockInReApplyId','')
+      this.$store.commit('digitalPark/stockInApplyTab',val.index)
+    },
   },
   mounted() {
   }
