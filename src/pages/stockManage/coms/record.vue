@@ -3,8 +3,11 @@
     <miTable :ref="tableConfig.ref" :tableConfig="tableConfig" v-if="!showDetail">
       <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
         <el-button type="text" @click="onClickDetailBtn(row)">详情</el-button>
-        <el-button type="text" @click="onClickDetailBtn(row)" v-if="row.recordStatus==0">收回</el-button>
-        <el-button type="text" @click="onClickReApplyBtn(row)" v-if="row.recordStatus==2 && fromFlag==1">重新申请</el-button>
+        <el-button type="text" @click="onClickTakeBackBtn(row)"
+                   v-if="row.recordStatus==0 && fromFlag==1">收回</el-button>
+        <el-button type="text" @click="onClickReApplyBtn(row)"
+                   v-if="(row.recordStatus==2 || row.recordStatus==3) && fromFlag==1"
+        >重新申请</el-button>
       </template>
     </miTable>
     <RecordDetail v-if="showDetail" :detailId="curRecordId"
@@ -92,6 +95,12 @@
       },
       onClickReApplyBtn(row){
         this.reApplyCallBack && this.reApplyCallBack(row.id,"reApply")
+      },
+      async onClickTakeBackBtn(row){
+        await StockManageApi.takeBackStockApply({
+          stockId:row.stockId
+        })
+        this.getRecordList()
       }
     },
     mounted() {

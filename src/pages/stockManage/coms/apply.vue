@@ -268,6 +268,13 @@
         }
         console.log(obj)
         if(flag==1){
+          if(!this.tableConfig.data.length){
+            this.$message({
+              type:'warning',
+              message:"请先添加入库明细",
+            })
+            return ;
+          }
           res = await StockManageApi.submitStockApply(obj)
         }else{
           res = await StockManageApi.saveStockApply(obj)

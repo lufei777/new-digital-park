@@ -71,7 +71,7 @@
           customTop:true,
           columnConfig:columnConfig,
           uiConfig:{
-            height:'auto',
+            height:'300',
           },
           tableMethods: {
             rowClick: this.rowClick,
@@ -168,8 +168,9 @@
         this.getAssetList()
       }
     },
-    mounted() {
-      this.getAssetTypeList()
+    async mounted() {
+      await this.getAssetTypeList()
+      this.getAssetList()
     }
   };
 </script>
@@ -182,10 +183,6 @@
     .tree-box{
       height:200px;
       border:1px solid #f0f0f0;
-    }
-    .el-dialog__body{
-      height:500px;
-      overflow: auto;
     }
   }
 </style>
