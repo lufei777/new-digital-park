@@ -109,6 +109,7 @@
       },
       async getDetail(){
         let res
+        console.log(this.fromFlag)
         if(this.fromFlag==1 || this.fromFlag==2){
            res = await StockManageApi.getRecordDetail({
             recordId:this.detailId
@@ -117,6 +118,7 @@
            res = await StockManageApi.getApplyDraft({
             id:this.detailId
           })
+          console.log("beforeRes",res)
         }
 
         if(this.fromFlag==2 || this.fromFlag==3){
@@ -129,7 +131,9 @@
               item.description=''
             })
           }
+          console.log("centerres",res)
         }
+        console.log("res",res.stockDetailsList)
         this.detailData=res
         this.tableConfig.data=res.stockDetailsList
       },
