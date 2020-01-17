@@ -147,7 +147,7 @@ export default {
         }
       },
       currentPage: 1,
-      tenantIds: ""
+      contractIds: ""
     };
   },
   methods: {
@@ -165,7 +165,7 @@ export default {
       console.log("清空", ...args);
       this.$refs[this.leaseContractForm.ref].resetForm();
     },
-    async tenantList() {
+    async contractList() {
       let labelList = [
         { label: "合同编号", prop: "contractNumber" },
         { label: "合同名称", prop: "contractName" },
@@ -192,45 +192,46 @@ export default {
       console.log("搜索", ...args);
       this.curPcurrentPageage = 1;
       // this.$refs[this.leaseContractTableConfig.ref].setCurrentPage(1)
-      this.tenantList();
+      this.contractList();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.tenantList();
+      this.contractList();
     },
-    showDeleteTip() {
+   showDeleteTip() {
       CommonFun.deleteTip(
         this,
-        this.tenantIds,
+        this.contractIds,
         "请至少选择一条信息！",
         this.sureDelete,
         this.cancelDelete
       );
     },
     async sureDelete() {
-      await LeaseManageApi.delTenant({
-        tenantIds: this.tenantIds
+      await LeaseManageApi.removeContract({
+        contractIds: this.contractIds
       });
       this.$message({
         type: "success",
         message: "删除成功!"
       });
-      this.tenantIds = "";
-      this.tenantList();
+      this.contractIds = "";
+      this.contractList();
     },
     cancelDelete() {
-      this.tenantIds = "";
+      this.contractIds = "";
     },
     delRow(obj) {
-      this.tenantIds = obj.scopeRow.row.tenantId;
+      console.log("res",obj)
+      this.contractIds = obj.scopeRow.row.contractId;
       this.showDeleteTip();
     },
     batchDels(obj) {
-      this.tenantIds =
+      this.contractIds =
         this.$refs["leaseContractTable"].getSelectedData().length &&
         this.$refs["leaseContractTable"]
           .getSelectedData()
-          .map(item => item.tenantId)
+          .map(item => item.contractId)
           .join(",");
       this.showDeleteTip();
     },
@@ -256,7 +257,7 @@ export default {
     }
   },
   mounted() {
-    this.tenantList();
+    this.contractList();
   }
 };
 </script>

@@ -535,6 +535,11 @@ export default {
       position: relative;
       overflow: hidden;
     }
+    .el-upload_disabled{
+      .el-upload{
+        display: none;
+      }
+    }
     .picture-list .el-upload:hover {
       border-color: #409eff;
     }

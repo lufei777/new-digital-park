@@ -224,13 +224,15 @@ export default {
       this.showDeleteTip();
     },
     batchDels(obj) {
-      this.tenantIds =
-        this.$refs["tenantManageTable"].getSelectedData().length &&
-        this.$refs["tenantManageTable"]
-          .getSelectedData()
-          .map(item => item.tenantId)
-          .join(",");
-      this.showDeleteTip();
+        console.log("44444",this.$refs["tenantManageTable"]
+          .getSelectedData().map(item => item.tenantId))
+      // this.tenantIds =
+      //   this.$refs["tenantManageTable"].getSelectedData().length &&
+      //   this.$refs["tenantManageTable"]
+      //     .getSelectedData()
+      //     .map(item => item.tenantId)
+      //     .join(",");
+      // this.showDeleteTip();
     },
     editRow(obj) {
       this.$router.push({
