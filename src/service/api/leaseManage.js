@@ -58,7 +58,12 @@ export default new class {
     contractList() { }
 
     //添加合同
-    @url('/contract/addContract')
+    @url('/oaApi/contract/addContract')
     @post
     addContract() { }
+
+    //删除合同
+    @url('/oaApi/contract/removeContract')
+    @get
+    removeContract() { }
 }
