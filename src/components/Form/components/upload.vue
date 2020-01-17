@@ -1,7 +1,7 @@
 <template>
   <div class="mi-form_upload" v-loading.lock="loading">
     <el-upload
-      :class="{'picture-list':listType=='picture-img'}"
+      :class="{'picture-list':listType=='picture-img','el-upload_disabled':disabled}"
       :action="action"
       :accept="elAccept"
       :auto-upload="autoUpload"
@@ -25,7 +25,7 @@
         <i class="el-icon-plus"></i>
       </template>
       <template v-else-if="listType=='picture-img'">
-        <img v-if="imgUrl" :src="imgUrl" class="avatar"/>
+        <img v-if="imgUrl" :src="imgUrl" class="avatar" />
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </template>
       <template v-else-if="drag">
