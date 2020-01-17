@@ -44,9 +44,6 @@
       let _this = this
       return {
         model: {
-          buyId: ["dept-20a0cc719722490bbf2c3e4974d2d5c4", "dept-482965b451684eca8dd85a48b9c73722",
-            "user-6a3a7369a6v8478cb844a4g4a5666666"]
-
         },
         formConfig:{
           ref:'formRef',
@@ -76,6 +73,16 @@
               children: "childNode",
               lazy: true,
               lazyLoad:async function (node, resolve) {
+                // const { level,data } = node;
+                // let nodes =[]
+                // if(level==0 || data.childNode.length){
+                //   resolve(nodes);
+                // }else{
+                //   let res =await _this.getUserList(node.data.id)
+                //   nodes=res
+                // }
+                // resolve(nodes);
+
                 const { level,data } = node;
                 let nodes =[]
                 if(level==0){
@@ -112,13 +119,17 @@
               lazyLoad:async function (node, resolve) {
                 const { level,data } = node;
                 let nodes =[]
-                if(level==0 || data.childNode.length){
-                  resolve(nodes);
-                }else{
+                if(level==0){
+                  _this.getDepartmentTree().then(_=>{
+                    resolve(_this.deptTree)
+                  })
+                  // resolve(nodes);
+                }else if (level === 2) {
                   let res =await _this.getUserList(node.data.id)
                   nodes=res
+                  resolve(nodes);
                 }
-                resolve(nodes);
+                resolve([]);
               },
             },
             span: 10,
@@ -187,12 +198,12 @@
     methods: {
       async getDepartmentTree() {
         let res = await SystemManageApi.getDepartmentTree();
-        this.$refs[this.formConfig.ref].setColumnByProp("buyId", {
-          dicData: res[0].childNode
-        });
-        this.$refs[this.formConfig.ref].setColumnByProp("acceptId", {
-          dicData: res[0].childNode
-        });
+        // this.$refs[this.formConfig.ref].setColumnByProp("buyId", {
+        //   dicData: res[0].childNode
+        // });
+        // this.$refs[this.formConfig.ref].setColumnByProp("acceptId", {
+        //   dicData: res[0].childNode
+        // });
         // let findLast =res[0].childNode
         // findLast.map(async (item)=>{
         //   if(item.childNode.length){
@@ -264,11 +275,14 @@
       },
       async onClickSubmitBtn(flag){
         let res
+        let userIdList="" //方便回显采购人、验收人
+        userIdList = [...this.model.buyId,...this.model.acceptId].join(",")
         let obj = {
           ...this.model,
           ...{buyId:this.model.buyId[this.model.buyId.length-1],
             acceptId:this.model.acceptId[this.model.acceptId.length-1],
-            stockDetailsList:this.tableConfig.data
+            stockDetailsList:this.tableConfig.data,
+            userIdList
           },
         }
         console.log("ibj",obj)
@@ -283,6 +297,7 @@
           res = await StockManageApi.submitStockApply(obj)
         }else{
           res = await StockManageApi.saveStockApply(obj)
+          this.getApplyDetail()
         }
         console.log(res)
         this.$message({
@@ -298,38 +313,19 @@
           })
         }else{
           res = await StockManageApi.getApplyDraft()
+
         }
         if(res){
           this.model=res
+          this.model.buyId=["dept-20a0cc719722490bbf2c3e4974d2d5c4", "dept-482965b451684eca8dd85a48b9c73722",
+            "user-6a3a7369a6v8478cb844a4g4a5666666"]
           this.tableConfig.data=res.stockDetailsList
-          let a = ["dept-20a0cc719722490bbf2c3e4974d2d5c4", "dept-482965b451684eca8dd85a48b9c73722",
-          "user-6a3a7369a6v8478cb844a4g4a5666666"]
-          // // let a= ["dept-20a0cc719722490bbf2c3e4974d2d5c4","dept-482965b451684eca8dd85a48b9c73722"]
-          this.model.buyId=a
-          // this.model.acceptId=a
         }
+
       },
       onClickCloseBtn(){
         this.$store.commit('digitalPark/stockInApplyTab','1')
       }
-      // async getUserList(value) {
-        // let deptId = value[value.length - 1]
-        // let res = await TaskManageApi.listBy({
-        //   deptId
-        // })
-        // let i=0
-        // let findItem=this.deptTree
-        // console.log(this.deptTree)
-        // while(i<value.length){
-        //   findItem.map((item)=>{
-        //     if(item.id==value[i]){
-        //       findItem=item.childNode
-        //     }
-        //   })
-        //   i++;
-        // }
-        // console.log("find",findItem)
-      // },
     },
     async created(){
       await this.getDepartmentTree();

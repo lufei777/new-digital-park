@@ -135,7 +135,7 @@ export default {
       this.getStockCheckList()
     },
     onClickTab(val){
-      this.$store.commit('digitalPark/stockTabChange',val.index)
+      this.$store.commit('digitalPark/stockInApplyTab',val.index)
     }
   },
   mounted() {
