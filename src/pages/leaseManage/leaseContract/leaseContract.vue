@@ -154,7 +154,7 @@ export default {
     submit() {},
     resetChange() {},
     addContract() {
-      this.$router.push("/addLeaseContract");
+      this.$router.push("/addContract");
     },
     onClickSearchBtn2() {
       this.curPage = 1;

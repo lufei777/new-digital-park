@@ -1,6 +1,6 @@
 <template>
   <div class="new-task panel-container">
-    <div class="condition-box panel">
+    <div class="panel">
       <div class="new-task-box">
         <miForm
           :ref="newTaskForm.ref"
@@ -59,7 +59,7 @@
               >{{taskOperation}}</el-button>
               <el-button
                 :type="anotherButton"
-                @click="back(obj)"
+                @click="anotherSubmit(obj)"
                 v-show="anotherTaskOperationShow"
               >{{anotherTaskOperation}}</el-button>
               <el-button @click="back(obj)" v-show="taskBackShow">返回</el-button>
@@ -67,6 +67,34 @@
           </template>
         </miForm>
       </div>
+    </div>
+    <div class="block panel" v-if="taskId.id">
+      <div class="flow-detail-title">流转详情</div>
+      <el-timeline :reverse="reverse">
+        <el-timeline-item
+          v-for="(activity, index) in activities"
+          :key="index"
+          :icon="activity.icon"
+          :type="activity.type"
+          :color="activity.color"
+          :size="activity.size"
+          :timestamp="activity.createTime"
+          placement="top"
+        >
+          <el-card>
+            <span class="activityUser activity-user-name">{{activity.username}}</span>
+            <span class="activity-user-name">{{activity.description}}</span>
+            <p v-if="activity.reason" class="reason">备注：{{activity.reason}}</p>
+            <div class="demo-image__preview" v-if="activity.fileUrls.length>0">
+              <el-image
+                style="width: 100px; height: 100px"
+                :src="circulationUrl"
+                :preview-src-list="srcList"
+              ></el-image>
+            </div>
+          </el-card>
+        </el-timeline-item>
+      </el-timeline>
     </div>
   </div>
 </template>
@@ -238,7 +266,6 @@ export default {
             }
           },
           {
-            type: "textarea",
             label: "备注",
             prop: "reason",
             formslot: true,
@@ -286,7 +313,11 @@ export default {
       anotherTaskOperationShow: true,
       taskBackShow: true,
       taskTypeStatus: "",
-      anotherButton: ""
+      anotherButton: "",
+      reverse: true,
+      activities: [],
+      circulationUrl: "",
+      srcList: []
     };
   },
   computed: {
@@ -342,12 +373,9 @@ export default {
   },
   methods: {
     async submitOperation() {
-      console.log("this.taskId", this.taskId);
       if (this.taskId.id) {
-        alert(13);
         this.dealTask();
       } else {
-        alert(888);
         let res = await TaskManageApi.taskAdd(this.paramsData);
         if (res) {
           this.$message({
@@ -372,11 +400,81 @@ export default {
       let res = await TaskManageApi.closeTask({
         taskId: this.taskId.id
       });
+      this.toastMessage(res);
     },
-    // async submitOperation() {
-
-    // },
+    async goOut() {
+      //返回关闭退单完成
+      if (this.taskId.acceptStatus == 2) {
+        //接收人待接（退单）
+        this.taskTypeStatus = 4;
+        this.dealTask();
+      } else if (this.taskId.acceptStatus == 3) {
+        //接收人处理中（完成）
+        let res = await TaskManageApi.completeTask({
+          id: this.taskId.id,
+          reason: this.model.reason
+        });
+        this.toastMessage(res);
+      }
+    },
     async submit() {
+      // this.$confirm(`确定${this.taskOperation}吗？`, "提示", {
+      //   confirmButtonText: "确定",
+      //   cancelButtonText: "取消",
+      //   type: "warning"
+      // })
+      //   .then(() => {
+      //     this.$refs[this.newTaskForm.ref].validate(valid => {
+      //       if (valid) {
+      //         this.submitOperation();
+      //       } else {
+      //         console.log("error");
+      //         return false;
+      //       }
+      //     });
+      //   })
+      //   .catch(() => {
+      //     this.$message({
+      //       type: "info",
+      //       message: "已取消删除"
+      //     });
+      //   });
+      if (this.taskId.status == 2) {
+        this.submitOperation();
+      } else if (
+        this.taskId.acceptStatus == 3 &&
+        !this.newTaskForm.forms[6].display &&
+        !this.newTaskForm.forms[10].display
+      ) {
+        this.$refs[this.newTaskForm.ref].setColumnByProp("department", {
+          display: true,
+          rules: {
+            required: true,
+            message: "请输入工单名称",
+            trigger: "change"
+          }
+        });
+        this.$refs[this.newTaskForm.ref].setColumnByProp("designatorId", {
+          display: true,
+          rules: {
+            required: true,
+            message: "请输入工单名称",
+            trigger: "change"
+          }
+        });
+        this.$refs[this.newTaskForm.ref].setColumnByProp("ordererName", {
+          display: false
+        });
+        this.$refs[this.newTaskForm.ref].setColumnByProp("reason", {
+          display: true,
+          rules: {
+            required: true,
+            message: "请输入工单名称",
+            trigger: "change"
+          }
+        });
+        return;
+      }
       this.$refs[this.newTaskForm.ref].validate(valid => {
         if (valid) {
           this.submitOperation();
@@ -386,12 +484,60 @@ export default {
         }
       });
     },
+    anotherSubmit() {
+      if (
+        this.taskId.acceptStatus == 3 &&
+        !this.newTaskForm.forms[10].display
+      ) {
+        this.$refs[this.newTaskForm.ref].setColumnByProp("reason", {
+          display: true,
+          rules: {
+            required: true,
+            message: "请输入备注",
+            trigger: "change"
+          }
+        });
+        return;
+      } else if (this.taskId.acceptStatus == 2 && !this.newTaskForm.forms[10].display) {
+        this.taskTypeStatus = 4;
+        this.$refs[this.newTaskForm.ref].setColumnByProp("reason", {
+          display: true,
+          rules: {
+            required: true,
+            message: "请输入备注",
+            trigger: "change"
+          }
+        });
+        return;
+      }
+      this.$confirm(`确定${this.anotherTaskOperation}吗？`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$refs[this.newTaskForm.ref].validate(valid => {
+            if (valid) {
+              this.goOut();
+            } else {
+              console.log("error");
+              return false;
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
     toastMessage(res) {
       if (res) {
         this.$message({
           showClose: true,
           message: res,
-          type: res.successful ? "success" : !res.successful ? "error" : ""
+          type: "success"
         });
         this.$router.push("/aboutMe");
       }
@@ -428,7 +574,6 @@ export default {
       let res = await TaskManageApi.listBy({
         deptId: valueData
       });
-      // this.newTaskForm.forms[7].dicData.push(res)
       this.assignList = res;
     },
     assignChange(value) {
@@ -484,38 +629,53 @@ export default {
       //   }
       // }
       // this[a.eventnam]();
-      //派单
-      this.$refs[this.newTaskForm.ref].setColumnByProp("department", {
-        display: true,
-        rules: {
-          required: true,
-          message: "请输入工单名称",
-          trigger: "change"
-        }
-      });
-      this.$refs[this.newTaskForm.ref].setColumnByProp("designatorId", {
-        display: true,
-        rules: {
-          required: true,
-          message: "请输入工单名称",
-          trigger: "change"
-        }
-      });
-      this.$refs[this.newTaskForm.ref].setColumnByProp("ordererName", {
-        display: false
-      });
+      if (!this.newTaskForm.forms[7].display) {
+        //派单
+        this.$refs[this.newTaskForm.ref].setColumnByProp("department", {
+          display: true,
+          rules: {
+            required: true,
+            message: "请输入工单名称",
+            trigger: "change"
+          }
+        });
+        this.$refs[this.newTaskForm.ref].setColumnByProp("designatorId", {
+          display: true,
+          rules: {
+            required: true,
+            message: "请输入工单名称",
+            trigger: "change"
+          }
+        });
 
-      this.$refs[this.newTaskForm.ref].validate(valid => {
-        if (valid) {
-          console.log("valid", valid);
-          this.add();
-        } else {
-          console.log("error");
-          return false;
-        }
-      });
+        this.$refs[this.newTaskForm.ref].setColumnByProp("ordererName", {
+          display: false
+        });
+        return;
+      }
+
+      this.$confirm("确定派单吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$refs[this.newTaskForm.ref].validate(valid => {
+            if (valid) {
+              this.add();
+            } else {
+              console.log("error");
+              return false;
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
-
     async add() {
       let addTaskParams = {
         ...this.paramsData,
@@ -524,7 +684,26 @@ export default {
         }
       };
       let res = await TaskManageApi.taskAdd(addTaskParams);
-      console.log("res", res);
+      this.toastMessage(res);
+    },
+    async operateLogList() {
+      let res = await TaskManageApi.operateLogList({
+        taskId: this.taskId.id
+      });
+      res.map((item, index) => {
+        item.type = "primary";
+        item.color = "#0bbd87";
+        item.size = "large";
+      });
+      this.activities = res;
+      if (res) {
+        res.map(item => {
+          if (item.fileUrls[0]) {
+            this.circulationUrl = item.fileUrls[0];
+            this.srcList = item.fileUrls;
+          }
+        });
+      }
     }
   },
   mounted() {
@@ -532,6 +711,7 @@ export default {
     this.createPeople = JSON.parse(localStorage.getItem("userInfo")).fullName;
     if (this.taskId.id) {
       this.detailTask();
+      this.operateLogList();
     }
   }
 };
@@ -545,6 +725,31 @@ export default {
     // background: pink;
     // margin-top: 20px;
     margin-left: 25%;
+  }
+  .flow-detail-title {
+    height: 50px;
+    line-height: 30px;
+    color: #9a9b9c;
+    font-size: 16px;
+    padding-left: 4px;
+    font-weight: 600;
+  }
+  .block {
+    // height: auto;
+    .activityUser {
+      color: #008dea;
+    }
+    .activity-user-name {
+      // float: left;
+    }
+    .reason {
+      // margin-top: 8px;
+      // line-height: 20px;
+      color: #909399;
+    }
+    .demo-image__preview {
+      margin-top: 8px;
+    }
   }
 }
 </style>
