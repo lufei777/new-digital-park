@@ -24,7 +24,7 @@
   export default {
     name: "Record",
     components: { miTable,RecordDetail },
-    props:["fromFlag","reApplyCallBack"],   //fromFlag: 1-申请记录  2-验收记录
+    props:["fromFlag"],   //fromFlag: 1-申请记录  2-验收记录
     data() {
       let _this=this
       return {
@@ -62,12 +62,13 @@
     },
     computed:{
       ...mapState({
-        stockTabChange:state=>state.digitalPark.stockTabChange
+        stockInApplyTab:state=>state.digitalPark.stockInApplyTab,
+        stockInReApplyId:state=>state.digitalPark.stockInReApplyId
       })
     },
     watch:{
-      stockTabChange(){
-        if(this.stockTabChange==1){
+      stockInApplyTab(){
+        if(this.stockInApplyTab==1){
           this.getRecordList()
         }
       }
@@ -94,7 +95,8 @@
         this.getRecordList()
       },
       onClickReApplyBtn(row){
-        this.reApplyCallBack && this.reApplyCallBack(row.id,"reApply")
+        this.$store.commit("digitalPark/stockInApplyTab",'0')
+        this.$store.commit("digitalPark/stockInReApplyId",row.id)
       },
       async onClickTakeBackBtn(row){
         await StockManageApi.takeBackStockApply({

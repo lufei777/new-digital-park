@@ -5,13 +5,14 @@
         <Apply />
       </el-tab-pane>
       <el-tab-pane label="申请记录">
-        <ApplyRecord fromFlag="1" :reApplyCallBack="reApplyCallBack"/>
+        <ApplyRecord fromFlag="1"/>
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Apply from '../coms/apply'
 import ApplyRecord from '../coms/record'
 export default {
@@ -22,19 +23,25 @@ export default {
   },
   data() {
     return {
-      activeTab:'0',
-      reApply:false
+      activeTab:'0'
     };
+  },
+  computed:{
+    ...mapState({
+      stockInApplyTab:state=>state.digitalPark.stockInApplyTab,
+      stockInReApplyId:state=>state.digitalPark.stockInReApplyId
+    }),
+  },
+  watch:{
+    stockInApplyTab(){
+      this.activeTab = this.stockInApplyTab
+    }
   },
   methods: {
     onClickTab(val){
-      this.$store.commit('digitalPark/stockTabChange',val.index)
+      this.$store.commit('digitalPark/stockInReApplyId','')
+      this.$store.commit('digitalPark/stockInApplyTab',val.index)
     },
-    async reApplyCallBack(row){
-      this.activeTab='0'
-      // this.reApply=true
-      // this.$store.commit('digitalPark/stockTabChange',0)
-    }
   },
   mounted() {
   }

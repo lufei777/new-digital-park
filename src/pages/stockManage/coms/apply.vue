@@ -18,7 +18,8 @@
       </miTable>
       <div class="operator-box">
         <el-button type="primary"  @click="onClickSubmitBtn(1)">提交</el-button>
-        <el-button type="primary" @click="onClickSubmitBtn(2)">保存</el-button>
+        <el-button type="primary" @click="onClickSubmitBtn(2)" v-if="!stockInReApplyId">保存</el-button>
+        <el-button  @click="onClickCloseBtn" v-if="stockInReApplyId">关闭</el-button>
       </div>
     </div>
     <div v-if="showAddModal">
@@ -42,7 +43,11 @@
     data() {
       let _this = this
       return {
-        model: {},
+        model: {
+          buyId: ["dept-20a0cc719722490bbf2c3e4974d2d5c4", "dept-482965b451684eca8dd85a48b9c73722",
+            "user-6a3a7369a6v8478cb844a4g4a5666666"]
+
+        },
         formConfig:{
           ref:'formRef',
           menuBtn:false,
@@ -73,13 +78,17 @@
               lazyLoad:async function (node, resolve) {
                 const { level,data } = node;
                 let nodes =[]
-                if(level==0 || data.childNode.length){
-                  resolve(nodes);
-                }else{
+                if(level==0){
+                  _this.getDepartmentTree().then(_=>{
+                    resolve(_this.deptTree)
+                  })
+                  // resolve(nodes);
+                }else if (level === 2) {
                   let res =await _this.getUserList(node.data.id)
                   nodes=res
+                  resolve(nodes);
                 }
-                resolve(nodes);
+                resolve([]);
               },
             },
             span: 10,
@@ -164,13 +173,14 @@
     },
     computed:{
       ...mapState({
-        stockTabChange:state=>state.digitalPark.stockTabChange
+        stockInApplyTab:state=>state.digitalPark.stockInApplyTab,
+        stockInReApplyId:state=>state.digitalPark.stockInReApplyId,
       })
     },
     watch:{
-      stockTabChange(){
-        if(this.stockTabChange==0){
-          this.getApplyDraft()
+      stockInApplyTab(){
+        if(this.stockInApplyTab==0){
+         this.getApplyDetail()
         }
       }
     },
@@ -254,11 +264,6 @@
       },
       async onClickSubmitBtn(flag){
         let res
-        // let stockDetailsList = this.tableConfig.data
-        // stockDetailsList.map((item)=>{
-        //   // item.assetId = item.id
-        //   item.description = item.remark
-        // })
         let obj = {
           ...this.model,
           ...{buyId:this.model.buyId[this.model.buyId.length-1],
@@ -266,7 +271,7 @@
             stockDetailsList:this.tableConfig.data
           },
         }
-        console.log(obj)
+        console.log("ibj",obj)
         if(flag==1){
           if(!this.tableConfig.data.length){
             this.$message({
@@ -285,19 +290,28 @@
           message:res,
         })
       },
-      async getApplyDraft(){
-        let res = await StockManageApi.getApplyDraft()
+      async getApplyDetail(){
+        let res
+        if(this.stockInReApplyId){
+          res = await StockManageApi.getRecordDetail({
+            recordId:this.stockInReApplyId
+          })
+        }else{
+          res = await StockManageApi.getApplyDraft()
+        }
         if(res){
           this.model=res
           this.tableConfig.data=res.stockDetailsList
-          // let a = ["dept-20a0cc719722490bbf2c3e4974d2d5c4", "dept-482965b451684eca8dd85a48b9c73722",
-          //   "user-6a3a7369a6v8478cb844a4g4a5666666"]
+          let a = ["dept-20a0cc719722490bbf2c3e4974d2d5c4", "dept-482965b451684eca8dd85a48b9c73722",
+          "user-6a3a7369a6v8478cb844a4g4a5666666"]
           // // let a= ["dept-20a0cc719722490bbf2c3e4974d2d5c4","dept-482965b451684eca8dd85a48b9c73722"]
-          // this.model.buyId=a
+          this.model.buyId=a
           // this.model.acceptId=a
         }
-
       },
+      onClickCloseBtn(){
+        this.$store.commit('digitalPark/stockInApplyTab','1')
+      }
       // async getUserList(value) {
         // let deptId = value[value.length - 1]
         // let res = await TaskManageApi.listBy({
@@ -317,10 +331,12 @@
         // console.log("find",findItem)
       // },
     },
-    async mounted() {
+    async created(){
       await this.getDepartmentTree();
       await this.getProviderList()
-      this.getApplyDraft()
+      this.getApplyDetail()
+    },
+    async mounted() {
     }
   };
 </script>
