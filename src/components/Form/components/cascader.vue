@@ -1,6 +1,7 @@
 <template>
   <div class="mi-form_cascader">
     <component
+      ref="cascader"
       :is="componentId"
       v-model="text"
       :options="getTreeData(dic)"
@@ -42,12 +43,14 @@ import props from "../common/props";
 import events from "../common/events";
 
 export default {
+  name: "cascader",
   mixins: [props(), events()],
   data() {
     return {
       defaultDic: [],
       netDic: [],
-      componentId: "el-cascader"
+      componentId: "el-cascader",
+      runLazyLoad: true
     };
   },
   props: {
@@ -102,13 +105,15 @@ export default {
     }
   },
   watch: {
-    /* text: {
-      immediate: true,
+    text: {
+      // immediate: true,
       handler(value) {
-        console.log("watch text", value);
-        this.handleChange(value);
+        if (this.props.lazy && this.runLazyLoad) {
+          this.runLazyLoad = !this.runLazyLoad;
+          this.$refs["cascader"].$refs["panel"].lazyLoad();
+        }
       }
-    } */
+    }
   },
   created() {
     if (this.multiple) {
