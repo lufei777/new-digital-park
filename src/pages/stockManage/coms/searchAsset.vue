@@ -96,6 +96,7 @@
             label: "单独核算",
             prop: "singleCount",
             dicData:AssetDic.singleCount,
+            // valueDefault:1,
             span: 10,
           },{
             prop: "btn",
@@ -130,7 +131,7 @@
       },
       async getAssetList(){
         let params={...{
-          typeId:this.curType,
+            typeId:this.curType,
             pageNum:this.curPage,
             pageSize:10
         },...this.formModel}
@@ -157,7 +158,14 @@
         this.$refs[this.formConfig.ref].resetForm();
       },
       onClickTab(){
-        // this.
+        this.curType=""
+        this.formModel={
+          singleCount:'',
+          name:'',
+          coding:''
+        }
+        this.curPage=1
+        this.getAssetList()
       }
     },
     mounted() {
@@ -174,6 +182,10 @@
     .tree-box{
       height:200px;
       border:1px solid #f0f0f0;
+    }
+    .el-dialog__body{
+      height:500px;
+      overflow: auto;
     }
   }
 </style>
