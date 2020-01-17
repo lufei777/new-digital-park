@@ -2,7 +2,8 @@ const state = {
   dragFlag:true,
   menuIsCollapse:false,
   updateUserInfo:false,
-  stockTabChange:0
+  stockInApplyTab:'0',
+  stockInReApplyId:''
 }
 
 const mutations={
@@ -15,8 +16,11 @@ const mutations={
   updateUserInfo(state,data) {
     state.updateUserInfo = data
   },
-  stockTabChange(state,data){
-    state.stockTabChange = data
+  stockInApplyTab(state,data){
+    state.stockInApplyTab = data
+  },
+  stockInReApplyId(state,data){
+    state.stockInReApplyId = data
   }
 }
 
