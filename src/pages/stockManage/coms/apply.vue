@@ -277,6 +277,7 @@
         let res
         let userIdList="" //方便回显采购人、验收人
         userIdList = [...this.model.buyId,...this.model.acceptId].join(",")
+        console.log("userIdList",userIdList)
         let obj = {
           ...this.model,
           ...{buyId:this.model.buyId[this.model.buyId.length-1],
@@ -317,8 +318,11 @@
         }
         if(res){
           this.model=res
-          this.model.buyId=["dept-20a0cc719722490bbf2c3e4974d2d5c4", "dept-482965b451684eca8dd85a48b9c73722",
-            "user-6a3a7369a6v8478cb844a4g4a5666666"]
+          // this.model.buyId=["dept-20a0cc719722490bbf2c3e4974d2d5c4", "dept-482965b451684eca8dd85a48b9c73722",
+          //   "user-6a3a7369a6v8478cb844a4g4a5666666"]
+          let userIdList=res.userIdList.split(",")
+          this.model.buyId = userIdList.slice(0,3)
+          this.model.acceptId = userIdList.slice(3,6)
           this.tableConfig.data=res.stockDetailsList
         }
 
