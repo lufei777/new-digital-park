@@ -1,9 +1,13 @@
 <template>
   <div class="environmental-monitoring">
-    <div class="my-chart">
+    <div class="flex-align-between envir-content">
       <img src="../../../../../static/image/digitalPark/home_environment.png" alt="">
+      <div>
+        <div v-for="(item,index) in envirData" :key="index" class="item-envir">
+          {{item.title}}：{{item.value}}
+        </div>
+      </div>
     </div>
-
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -17,7 +21,7 @@
     props: ["moduleItem"],
     data() {
       return {
-
+        envirData:{}
       };
     },
     methods: {
@@ -25,8 +29,9 @@
       },
       async getEnvironmentData(){
         let res = await CommonApi.getEnvironmentData({
-          homeId:this.moduleItem.id
+          homeId:1
         })
+        this.envirData=res.data
       },
     },
     mounted() {
@@ -38,5 +43,16 @@
 
 <style lang="less">
   .environmental-monitoring {
+    img{
+      width:150px;
+    }
+    .envir-content{
+      width:80%;
+      height:95%;
+    }
+    .item-envir{
+      margin-bottom: 10px;
+      color:@dashboardColor;
+    }
   }
 </style>
