@@ -16,7 +16,7 @@
 <script>
   import CommonApi from '@/service/api/common'
   export default {
-    name: "environmentalMonitoring",
+    name: "waterSupplyAndDrainage",
     components: {
     },
     props: ["moduleItem"],

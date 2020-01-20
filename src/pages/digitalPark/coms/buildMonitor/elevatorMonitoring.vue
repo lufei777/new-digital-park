@@ -11,7 +11,7 @@
   import CommonApi from '@/service/api/common'
   import ChartUtils from '@/utils/chartUtils'
   export default {
-    name: "environmentalMonitoring",
+    name: "elevatorMonitoring",
     components: {
     },
     props: ["moduleItem"],

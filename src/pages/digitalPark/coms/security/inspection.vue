@@ -1,12 +1,12 @@
 <template>
-  <div class="video-monitoring">
+  <div class="inspection-coms">
     <div ></div>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'videoMonitoring',
+    name: 'inspection',
     components: {
     },
     data () {
