@@ -1,12 +1,12 @@
 <template>
-  <div class="access-control">
+  <div class="inspection-coms">
     <div ></div>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'accessControl',
+    name: 'inspection',
     components: {
     },
     data () {

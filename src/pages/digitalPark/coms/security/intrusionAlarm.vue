@@ -1,12 +1,12 @@
 <template>
-  <div class="access-control">
+  <div class="intrusion-alarm">
     <div ></div>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'accessControl',
+    name: 'intrusionAlarm',
     components: {
     },
     data () {
