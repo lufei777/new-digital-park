@@ -1,0 +1,98 @@
+@mainBg: #013b4e;
+@tableBorder: #ebeef5;
+@navFontColor: #deeaee;
+@navChildColor: #22dbfc;
+@white: #fff;
+@black: #000;
+@headerShadow: 0 0 20px #ccc;
+
+//数字园区
+@parkMainTextColor: #002063;
+@mainBgColor: #008DEA;
+@mainHoverColor: #3CB2FF;
+@dashboardColor:#8FD3FA;
+
+@menuWidth: 250px;
+@collapseMenuWidth: 80px;
+
+.hover-pointer {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.radius-shadow {
+  border-radius: 8px;
+  box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.1);
+  background: @white;
+}
+
+.item-group {
+  display: flex;
+  align-items: center;
+  margin-right: 40px;
+  label {
+    margin-right: 5px;
+    flex-shrink: 0;
+  }
+}
+
+.panel-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel {
+  .radius-shadow;
+  box-sizing: border-box;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: @white;
+}
+
+.panel:last-child {
+  margin-bottom: 0px;
+  flex-grow: 1;
+}
+
+/* div.panel + div.panel {
+  flex-grow: 1;
+} */
+
+.no-border {
+  border: none;
+}
+
+//空间导航折叠与展开样式
+.unload-left-zoom-nav,
+.collapse-left-zoom-nav {
+  width: @menuWidth;
+  float: left;
+  position: fixed;
+  height: 100%;
+  left: @menuWidth+20px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.collapse-left-zoom-nav {
+  left: @collapseMenuWidth+20px;
+}
+
+//子内容
+.right-content {
+  background: #f2f2f2;
+  margin-left: @menuWidth+20px;
+  box-sizing: border-box;
+}
+
+//操作类按钮间距20
+.operator-btn-box{
+  .el-button+.el-button{
+    margin-left:20px;
+  }
+  .el-button{
+    margin-left: 20px;
+  }
+}
