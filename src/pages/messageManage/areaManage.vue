@@ -1,7 +1,7 @@
 <template>
   <div class="message-device-manage panel-container">
     <div class="condition-box radius-shadow">
-      <miForm
+      <z-form
         :ref="formData.ref"
         :options="formData"
         v-model="model"
@@ -14,7 +14,7 @@
             <el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>
           </div>
         </template>
-      </miForm>
+      </z-form>
     </div>
 
     <div class="warehouse-manage-table panel">
@@ -24,19 +24,16 @@
         <el-button  type="primary">导入</el-button>
         <el-button  type="primary">新增</el-button>
       </div>
-      <miTable :ref="tableData.ref" :tableConfig="tableData">
-      </miTable>
+      <z-table :ref="tableData.ref" :tableConfig="tableData">
+      </z-table>
     </div>
   </div>
 </template>
 
 <script>
-  import miForm from "@/components/Form";
-  import miTable from "@/components/Table";
   import CommonFun from "@/utils/commonFun";
   export default {
     name: "areaManage",
-    components: { miForm, miTable },
     data() {
       return {
         model: {},

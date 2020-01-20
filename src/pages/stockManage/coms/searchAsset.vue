@@ -9,19 +9,19 @@
         <el-tab-pane label="按资产类型">
           <div class="tree-box">
             <Tree :tree-list="typeTree" :treeConfig="treeConfig"/>
-            <miTable :ref="tableConfig.ref" :tableConfig="tableConfig"/>
+            <z-table :ref="tableConfig.ref" :tableConfig="tableConfig"/>
           </div>
         </el-tab-pane>
         <el-tab-pane label="组合查询">
-          <miForm :ref="formConfig.ref" :options="formConfig" v-model="formModel">
+          <el-button :ref="formConfig.ref" :options="formConfig" v-model="formModel">
             <template slot="btn" slot-scope="obj">
               <div>
                 <el-button :disabled="obj.disabled" type="primary" @click="onClickSearchBtn(obj)">搜索</el-button>
                 <el-button :disabled="obj.disabled" @click="clearForm(obj)">重置</el-button>
               </div>
             </template>
-          </miForm>
-          <miTable :ref="tableConfig.ref" :tableConfig="tableConfig"/>
+          </el-button>
+          <z-table :ref="tableConfig.ref" :tableConfig="tableConfig"/>
         </el-tab-pane>
       </el-tabs>
     <span slot="footer" class="dialog-footer">
@@ -33,8 +33,6 @@
 </template>
 
 <script>
-  import miForm from "@/components/Form";
-  import miTable from "@/components/Table";
   import AssetManageApi from '@/service/api/assetManage'
   import Tree from '@/components/tree'
   import {AssetDic} from "../../../utils/dictionary";
@@ -42,8 +40,6 @@
     name: "SearchAssetModal",
     props:["showSearchModal"],
     components: {
-      miForm,
-      miTable,
       Tree
     },
     data() {

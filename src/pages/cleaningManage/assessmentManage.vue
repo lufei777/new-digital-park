@@ -1,7 +1,7 @@
 <template>
   <div class="assessment-manage panel-container">
     <div class="condition-box radius-shadow">
-      <miForm
+      <z-form
         :ref="formData.ref"
         :options="formData"
         v-model="model"
@@ -14,11 +14,11 @@
             <el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>
           </div>
         </template>
-      </miForm>
+      </z-form>
     </div>
 
     <div class="assessment-manage-table panel">
-      <miTable :ref="tableData.ref" :tableConfig="tableData">
+      <z-table :ref="tableData.ref" :tableConfig="tableData">
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">
             <el-button :size="obj.size" type="primary">批量删除</el-button>
@@ -26,18 +26,15 @@
             <el-button :size="obj.size" type="primary">导入</el-button>
           </div>
         </template>
-      </miTable>
+      </z-table>
     </div>
   </div>
 </template>
 
 <script>
-import miForm from "@/components/Form";
-import miTable from "@/components/Table";
 import CommonFun from "../../utils/commonFun";
 export default {
   name:"AssessmentManage",
-  components: { miForm, miTable },
   data() {
     return {
       model: {},

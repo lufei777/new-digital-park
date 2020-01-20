@@ -13,7 +13,7 @@
             <el-button type="primary">刷新</el-button>
             <el-button type="primary">删除</el-button>
           </div>
-        <miTable :ref="tableData.ref" :tableConfig="tableData"></miTable>
+        <z-table :ref="tableData.ref" :tableConfig="tableData"></z-table>
       </div>
     </div>
   </div>
@@ -21,7 +21,6 @@
 
 <script>
 import { mapState } from "vuex";
-import miTable from "@/components/Table";
 import Tree from "../../components/tree/index";
 import CommonSelect from "../taskManage/coms/commonSelect";
 import TaskManageApi from "../../service/api/taskManage";
@@ -30,8 +29,7 @@ export default {
   name: "AlreadyTask",
   components: {
     Tree,
-    CommonSelect,
-    miTable
+    CommonSelect
   },
   data() {
     let _this = this;
