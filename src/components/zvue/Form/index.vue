@@ -61,7 +61,7 @@
                       :column="column"
                       :label="model['$'+column.prop]"
                       :size="column.size || controlSize"
-                      :disabled="column.disabled || allDisabled"
+                      :disabled="vaildBoolean(column.disabled,allDisabled)"
                       :dic="DIC[column.prop]"
                     ></slot>
                     <form-temp
@@ -71,7 +71,7 @@
                       :dic="DIC[column.prop]"
                       :upload-before="uploadBefore"
                       :upload-after="uploadAfter"
-                      :disabled="column.disabled || allDisabled"
+                      :disabled="vaildBoolean(column.disabled,allDisabled)"
                     >
                       <!-- 自定义表单里内容 -->
                       <template
@@ -91,10 +91,16 @@
                       </template>
                       <!-- input的slot处理 -->
                       <template v-if="column.prependslot" :slot="column.prependslot">
-                        <slot :name="column.prependslot" :disabled="column.disabled || allDisabled"></slot>
+                        <slot
+                          :name="column.prependslot"
+                          :disabled="vaildBoolean(column.disabled,allDisabled)"
+                        ></slot>
                       </template>
                       <template v-if="column.appendslot" :slot="column.appendslot">
-                        <slot :name="column.appendslot" :disabled="column.disabled || allDisabled"></slot>
+                        <slot
+                          :name="column.appendslot"
+                          :disabled="vaildBoolean(column.disabled,allDisabled)"
+                        ></slot>
                       </template>
                     </form-temp>
                   </el-tooltip>
@@ -142,6 +148,7 @@
 import {
   deepClone,
   vaildData,
+  vaildBoolean,
   setPx,
   filterDefaultParams,
   findArray
@@ -211,6 +218,7 @@ export default {
     deepClone,
     validatenull,
     vaildData,
+    vaildBoolean,
     getPlaceholder,
     setPx,
     findArray,
