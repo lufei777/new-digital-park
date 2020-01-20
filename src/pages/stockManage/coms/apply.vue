@@ -202,137 +202,135 @@ export default {
     }
   },
   methods: {
-    async getDepartmentTree() {
-      let res = await SystemManageApi.getDepartmentTree();
-      // this.$refs[this.formConfig.ref].setColumnByProp("buyId", {
-      //   dicData: res[0].childNode
-      // });
-      // this.$refs[this.formConfig.ref].setColumnByProp("acceptId", {
-      //   dicData: res[0].childNode
-      // });
-      // let findLast =res[0].childNode
-      // findLast.map(async (item)=>{
-      //   if(item.childNode.length){
-      //     findLast=item.childNode
-      //   }else{
-      //     let res = await this.getUserList(item.id)
-      //   }
-      // })
-      this.deptTree = res[0].childNode;
-    },
-    async getProviderList() {
-      let res = await AssetManageApi.getProviderList();
-      this.$refs[this.formConfig.ref].setColumnByProp("providerId", {
-        dicData: res
-      });
-    },
-    onClickAddBtn() {
-      this.curDetail = {};
-      this.editFlag = false;
-      this.showAddModal = true;
-    },
-    addStockDetail(obj) {
-      let data = {
-        ...obj,
-        ...{
-          assetId: obj.id,
-          id: this.curDetail.id,
-          description: obj.remark
-        }
-      };
-      console.log("detail", this.curDetail);
-      if (this.editFlag) {
-        this.tableConfig.data[this.curRowIndex] = data;
-      } else {
-        this.tableConfig.data.push(data);
-      }
-      this.showAddModal = false;
-    },
-    deleteRow(index) {
-      this.tableConfig.data.splice(index, 1);
-    },
-    editRow(index) {
-      this.showAddModal = true;
-      this.editFlag = true;
-      this.curRowIndex = index;
-      this.curDetail = this.tableConfig.data[index];
-    },
-    onClickMultiDelBtn() {
-      let delArr = this.$refs["tableRef"].getSelectedData();
-      let tmp = [];
-      this.tableConfig.data.map(item => {
-        if (delArr.indexOf(item) == -1) {
-          tmp.push(item);
-        }
-      });
-      this.tableConfig.data = tmp;
-    },
-    async getUserList(id) {
-      let deptId = id;
-      let res = await SystemManageApi.listBy({
-        deptId
-      });
-      res.map(item => {
-        item.name = item.fullName;
-        item.leaf = true;
-      });
-      return res;
-    },
-    async onClickSubmitBtn(flag) {
-      let res;
-      let userIdList = ""; //方便回显采购人、验收人
-      userIdList = [...this.model.buyId, ...this.model.acceptId].join(",");
-      let obj = {
-        ...this.model,
-        ...{
-          buyId: this.model.buyId[this.model.buyId.length - 1],
-          acceptId: this.model.acceptId[this.model.acceptId.length - 1],
-          stockDetailsList: this.tableConfig.data,
-          userIdList
-        }
-      };
-      console.log("ibj", obj);
-      if (flag == 1) {
-        if (!this.tableConfig.data.length) {
-          this.$message({
-            type: "warning",
-            message: "请先添加入库明细"
-          });
-          return;
-        }
-        res = await StockManageApi.submitStockApply(obj);
-      } else {
-        res = await StockManageApi.saveStockApply(obj);
-        this.getApplyDetail();
-      }
-      console.log(res);
-      this.$message({
-        type: "success",
-        message: res
-      });
-    },
-    async getApplyDetail() {
-      let res;
-      if (this.stockInReApplyId) {
-        res = await StockManageApi.getRecordDetail({
-          recordId: this.stockInReApplyId
+      async getDepartmentTree() {
+        let res = await SystemManageApi.getDepartmentTree();
+        // this.$refs[this.formConfig.ref].setColumnByProp("buyId", {
+        //   dicData: res[0].childNode
+        // });
+        // this.$refs[this.formConfig.ref].setColumnByProp("acceptId", {
+        //   dicData: res[0].childNode
+        // });
+        // let findLast =res[0].childNode
+        // findLast.map(async (item)=>{
+        //   if(item.childNode.length){
+        //     findLast=item.childNode
+        //   }else{
+        //     let res = await this.getUserList(item.id)
+        //   }
+        // })
+        this.deptTree=res[0].childNode
+
+      },
+      async getProviderList() {
+        let res = await AssetManageApi.getProviderList();
+        this.$refs[this.formConfig.ref].setColumnByProp("providerId", {
+          dicData: res
         });
-      } else {
-        res = await StockManageApi.getApplyDraft();
+      },
+      onClickAddBtn(){
+        this.curDetail={}
+        this.editFlag=false
+        this.showAddModal=true
+      },
+      addStockDetail(obj){
+        let data = {...obj,
+          ...{
+            assetId:obj.id,
+            id:this.curDetail.id,
+            description:obj.remark
+          }
+        }
+        console.log("detail",this.curDetail)
+        if(this.editFlag){
+          this.tableConfig.data[this.curRowIndex] =data
+        }else{
+          this.tableConfig.data.push(data)
+        }
+        this.showAddModal=false
+      },
+      deleteRow(index) {
+        this.tableConfig.data.splice(index, 1);
+      },
+      editRow(index) {
+        this.showAddModal = true;
+        this.editFlag = true;
+        this.curRowIndex = index;
+        this.curDetail = this.tableConfig.data[index];
+      },
+      onClickMultiDelBtn() {
+        let delArr = this.$refs["tableRef"].getSelectedData();
+        let tmp = [];
+        this.tableConfig.data.map(item => {
+          if (delArr.indexOf(item) == -1) {
+            tmp.push(item);
+          }
+        });
+        this.tableConfig.data = tmp;
+      },
+      async getUserList(id) {
+        let deptId = id;
+        let res = await SystemManageApi.listBy({
+          deptId
+        });
+        res.map(item => {
+          item.name = item.fullName;
+          item.leaf = true;
+        });
+        return res;
+      },
+      async onClickSubmitBtn(flag) {
+        let res;
+        let userIdList = ""; //方便回显采购人、验收人
+        userIdList = [...this.model.buyId, ...this.model.acceptId].join(",");
+        let obj = {
+          ...this.model,
+          ...{
+            buyId: this.model.buyId[this.model.buyId.length - 1],
+            acceptId: this.model.acceptId[this.model.acceptId.length - 1],
+            stockDetailsList: this.tableConfig.data,
+            userIdList
+          }
+        }
+        console.log("ibj", obj);
+        if (flag == 1) {
+          if (!this.tableConfig.data.length) {
+            this.$message({
+              type: "warning",
+              message: "请先添加入库明细"
+            });
+            return;
+          }
+          res = await StockManageApi.submitStockApply(obj);
+        } else {
+          res = await StockManageApi.saveStockApply(obj);
+          this.getApplyDetail();
+        }
+        console.log(res);
+        this.$message({
+          type: "success",
+          message: res
+        });
+      },
+      async getApplyDetail() {
+        let res;
+        if (this.stockInReApplyId) {
+          res = await StockManageApi.getRecordDetail({
+            recordId: this.stockInReApplyId
+          });
+        } else {
+          res = await StockManageApi.getApplyDraft();
+        }
+        if (res) {
+          this.model=res
+          let userIdList=res.userIdList.split(",")
+          this.model.buyId = userIdList.slice(0,3)
+          this.model.acceptId = userIdList.slice(3,6)
+          this.tableConfig.data=res.stockDetailsList
+        }
+      },
+      onClickCloseBtn() {
+        this.$store.commit("digitalPark/stockInApplyTab", "1");
       }
-      if (res) {
-        this.model = res;
-        this.model.buyId = [
-          "dept-20a0cc719722490bbf2c3e4974d2d5c4",
-          "dept-482965b451684eca8dd85a48b9c73722",
-          "user-6a3a7369a6v8478cb844a4g4a5666666"
-        ];
-        this.tableConfig.data = res.stockDetailsList;
-      }
-    },
-    onClickCloseBtn() {
-      this.$store.commit("digitalPark/stockInApplyTab", "1");
-    }
   },
   async created() {
     await this.getDepartmentTree();
