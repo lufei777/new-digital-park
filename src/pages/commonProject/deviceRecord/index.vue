@@ -34,8 +34,8 @@
           <el-button type="primary" icon="el-icon-delete" @click="onClickMultipleDelBtn">删除记录</el-button>
           <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
         </div>
-        <Table :ref="tableConfig.ref" :table-config="tableConfig">
-        </Table>
+        <z-table :ref="tableConfig.ref" :table-config="tableConfig">
+        </z-table>
       </div>
 
       <div class="item-row-detail-table radius-shadow">
@@ -57,7 +57,6 @@
 <script>
   import {mapState} from 'vuex'
   import CommonApi from '../../../service/api/common'
-  import Table from '../../../components/Table/index'
   import EditMeter from './editMeter'
   import AddMeter from './addMeter'
   import ImportMeter from './importMeter'
@@ -65,7 +64,6 @@
   export default {
     name: 'DeviceRecord',
     components: {
-      Table,
       EditMeter,
       AddMeter,
       ImportMeter,

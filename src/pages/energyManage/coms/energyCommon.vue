@@ -22,7 +22,7 @@
           <div class="table-tip">{{tableTip}}</div>
           <el-button type="primary" @click="onClickExportBtn" v-if="tableConfig.data.length">导出表格</el-button>
         </div>
-        <Table :ref="tableConfig.ref" :tableConfig="tableConfig"></Table>
+        <z-table :ref="tableConfig.ref" :tableConfig="tableConfig"></z-table>
       </div>
     </div>
   </div>
@@ -36,14 +36,12 @@
   import Tree from '../../../components/tree'
   import ConditionSelect from '../../../components/conditionSelect'
   import ChartUtils from '../../../utils/chartUtils'
-  import Table from '../../../components/Table'
   import CommonFun from '../../../utils/commonFun'
   export default {
     name:'EnergyCommon',
     components: {
       Tree,
-      ConditionSelect,
-      Table,
+      ConditionSelect
     },
     //fromFlag 1:空间对比 2:同比环比分析 3:能耗对比 4:分时能耗 5:分项能耗
     props:['isZoomMultiple','fromFlag','isEnergyByGroup'],

@@ -1,6 +1,6 @@
 <template>
   <div class="apply-record">
-    <miTable :ref="tableConfig.ref" :tableConfig="tableConfig" v-if="!showDetail">
+    <z-table :ref="tableConfig.ref" :tableConfig="tableConfig" v-if="!showDetail">
       <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
         <el-button type="text" @click="onClickDetailBtn(row)">详情</el-button>
         <el-button type="text" @click="onClickTakeBackBtn(row)"
@@ -9,7 +9,7 @@
                    v-if="(row.recordStatus==2 || row.recordStatus==3) && fromFlag==1"
         >重新申请</el-button>
       </template>
-    </miTable>
+    </z-table>
     <RecordDetail v-if="showDetail" :detailId="curRecordId"
                   :fromFlag="fromFlag" :on-click-back-callback="onClickBackBtn"/>
   </div>
@@ -17,13 +17,12 @@
 
 <script>
   import { mapState } from 'vuex'
-  import miTable from "@/components/Table";
   import {StockDic} from "@/utils/dictionary";
   import StockManageApi from '@/service/api/stockManage'
   import RecordDetail from '../coms/recordDetail'
   export default {
     name: "Record",
-    components: { miTable,RecordDetail },
+    components: { RecordDetail },
     props:["fromFlag"],   //fromFlag: 1-申请记录  2-验收记录
     data() {
       let _this=this

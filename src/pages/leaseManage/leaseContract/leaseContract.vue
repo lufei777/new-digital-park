@@ -1,7 +1,7 @@
 <template>
   <div class="lease-contract panel-container">
     <div class="condition-box radius-shadow">
-      <miForm
+      <z-form
         :ref="leaseContractForm.ref"
         :options="leaseContractForm"
         v-model="model"
@@ -14,11 +14,11 @@
             <el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>
           </div>
         </template>
-      </miForm>
+      </z-form>
     </div>
 
     <div class="lease-contract-table panel">
-      <miTable :ref="leaseContractTable.ref" :tableConfig="leaseContractTable">
+      <z-table :ref="leaseContractTable.ref" :tableConfig="leaseContractTable">
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">
             <el-button :size="obj.size" type="primary" @click="batchDels(obj)">批量删除</el-button>
@@ -31,19 +31,16 @@
           <el-button type="text" @click="editRow(obj)">编辑</el-button>
           <el-button type="text" @click="delRow(obj)">删除</el-button>
         </template>
-      </miTable>
+      </z-table>
     </div>
   </div>
 </template>
 
 <script>
 import LeaseManageApi from "@/service/api/leaseManage";
-import miForm from "@/components/Form";
-import miTable from "@/components/Table";
 import CommonFun from "@/utils/commonFun";
 export default {
   name: "LeaseContract",
-  components: { miForm, miTable },
   data() {
     let _this = this;
     return {

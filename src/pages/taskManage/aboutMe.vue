@@ -19,12 +19,12 @@
               <el-button type="primary" @click="refresh">刷新</el-button>
               <el-button type="primary" @click="addTask">新增</el-button>
             </div>
-            <miTable :ref="tableData.ref" :tableConfig="tableData">
+            <z-table :ref="tableData.ref" :tableConfig="tableData">
               <template slot="operation" slot-scope="obj">
                 <el-button type="text" @click="editRow(obj)">详情</el-button>
                 <el-button type="text" @click="delRow(obj)" v-if="deleteRowShow">删除</el-button>
               </template>
-            </miTable>
+            </z-table>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -34,7 +34,6 @@
 
 <script>
 import { mapState } from "vuex";
-import miTable from "@/components/Table";
 import Tree from "../../components/tree/index";
 import CommonSelect from "../taskManage/coms/commonSelect";
 import TaskManageApi from "../../service/api/taskManage";
@@ -44,8 +43,7 @@ export default {
   name: "AboutMe",
   components: {
     Tree,
-    CommonSelect,
-    miTable
+    CommonSelect
   },
   data() {
     let _this = this;

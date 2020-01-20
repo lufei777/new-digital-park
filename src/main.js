@@ -46,9 +46,9 @@ Vue.use(VueDND)
 import axios from '@/service/axios/AxiosInterceptors.js'
 Vue.prototype.$axios = axios;
 
-// install directives
-import installDirectives from '@/directives'
-installDirectives(Vue);
+// cizing 封装组件
+import zvue from './components/zvue';
+Vue.use(zvue);
 
 // 语言包
 if (!Cookies.get('lang')) {

@@ -26,12 +26,12 @@
           <el-button type="primary" @click="onClickAddBtn">新建</el-button>
         </div>
 
-        <Table :ref="assetsTableConfig.ref" :tableConfig="assetsTableConfig">
+        <z-table :ref="assetsTableConfig.ref" :tableConfig="assetsTableConfig">
           <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
             <el-button type="text" @click="rowClick(row)">编辑</el-button>
             <el-button type="text" @click="deleteRow(row)">删除</el-button>
           </template>
-        </Table>
+        </z-table>
       </div>
     </div>
 
@@ -69,7 +69,6 @@
 </template>
 
 <script>
-import Table from "@/components/Table"
 import CommonDialog from "../commonProject/coms/commonDialog";
 import CommonUpload from "../commonProject/coms/commonUpload";
 import AssetManageApi from "../../service/api/assetManage";
@@ -82,8 +81,7 @@ export default {
     CommonTable,
     TreeModal,
     CommonDialog,
-    CommonUpload,
-    Table
+    CommonUpload
   },
   data() {
     var _this = this;
