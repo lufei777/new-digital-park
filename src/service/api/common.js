@@ -253,9 +253,15 @@ class CommonApi {
   @get
   exportZoomReport(){}
 
+   //环境监测
   @url("/vibe-web/homeInterfaceEnvironment")
   @get
   getEnvironmentData(){}
+
+   //给排水
+  @url("/vibe-web/homeInterfaceMonitor")
+  @get
+  getHomeInterfaceMonitor(){}
 }
 
 export default new CommonApi()
