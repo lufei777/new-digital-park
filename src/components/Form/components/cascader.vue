@@ -16,8 +16,8 @@
       :show-all-levels="showAllLevels"
       :filterable="filterable"
       :separator="separator"
-      @change="handleChange"
-      @blue="handleBlur"
+      @change="handlechange"
+      @blur="handleBlur"
       @focus="handleFocus"
       @click.native="handleClick"
     >
@@ -43,14 +43,18 @@ import props from "../common/props";
 import events from "../common/events";
 
 export default {
-  name: "cascader",
+  name: "miCascader",
   mixins: [props(), events()],
   data() {
     return {
       defaultDic: [],
       netDic: [],
       componentId: "el-cascader",
-      runLazyLoad: true
+      runLazyLoad: true,
+      lazyTimer: null,
+      runLazyTimer: false,
+      expandchage: false,
+      runHandleChange: false
     };
   },
   props: {
@@ -102,16 +106,38 @@ export default {
     },
     itemIsArray(item) {
       return Object.prototype.toString.call(item) === "[object Array]";
+    },
+    handlechange(value) {
+      this.runHandleChange = true;
+      this.handleChange(value);
     }
   },
   watch: {
     text: {
       // immediate: true,
       handler(value) {
-        if (this.props.lazy && this.runLazyLoad) {
-          this.runLazyLoad = !this.runLazyLoad;
-          this.$refs["cascader"].$refs["panel"].lazyLoad();
+        // 只用当值改变时，表明是手动点击，此时不调用lazyLoad方法
+        if (this.runHandleChange) {
+          this.runLazyLoad = false;
+          this.runHandleChange = false;
         }
+        // 调用elementUI的lazyLoad方法，加载异步数据
+        if (this.props.lazy && this.runLazyLoad) {
+          // 拿到elementUI的cascader-panel组件
+          const elCascaderPanel = this.$refs["cascader"].$refs["panel"];
+          // 将loadCount置为0，可以使组件的checkedValue重新跑，在lazyLoad方法中
+          elCascaderPanel.loadCount = 0;
+          // 将activePath数组置为空，则可以防止 expandNodes 方法中遍历nodes报错，不置空nodes会是null
+          elCascaderPanel.activePath.length = 0;
+          // 手动调用lazyLoad方法，可以加载异步数据
+          elCascaderPanel.lazyLoad();
+        }
+      }
+    },
+    value: {
+      handler(value) {
+        // 当外部值改变则取置此标志位true，此处和handlechange联动协调runLazyLoad
+        this.runLazyLoad = true;
       }
     }
   },
