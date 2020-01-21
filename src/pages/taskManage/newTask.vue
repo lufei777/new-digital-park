@@ -369,8 +369,10 @@ export default {
       this.taskTypeStatus = 3;
       this.taskOperation = "转派";
       this.anotherTaskOperation = "完成";
-    } else if (this.taskId.acceptStatus == 4) {
-      this.taskOperation = "完成";
+    } else if (this.taskId.acceptStatus == 4 || this.taskId.status == 4) {
+      // this.taskOperation = "完成"; 
+      this.anotherTaskOperationShow = false
+      this.taskOperationShow = false
     }
   },
   methods: {
