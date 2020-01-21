@@ -234,21 +234,21 @@ export default {
     },
     editRow(obj) {
       this.$router.push({
-        name: "addTenantManage",
+        name: "AddContract",
         params: {
-          tenantId: obj.scopeRow.row.tenantId
+          contractId: obj.scopeRow.row.contractId
         }
       });
     },
     detailContract(obj) {
       console.log(obj.scopeRow.row);
       this.$router.push({
-        name: "addTenantManage",
+        name: "AddContract",
         params: {
           extraOptions: {
             disabled: true
           },
-          tenantId: obj.scopeRow.row.tenantId
+          contractId: obj.scopeRow.row.contractId
         }
       });
     }

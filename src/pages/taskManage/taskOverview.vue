@@ -142,35 +142,37 @@ export default {
         pageSize: 10
         // type: 1,
       });
-      res.list.map((item, ind) => {
-        item.taskStatus =
-          item.status == "1"
-            ? "待派"
-            : item.status == "2"
-            ? "已派"
-            : item.status == "3"
-            ? "处理中"
-            : item.status == "4"
-            ? "已完成"
-            : "";
-        item.typeText =
-          item.type == "1"
-            ? "巡检"
-            : item.type == "2"
-            ? "审批"
-            : item.type == "3"
-            ? "调试"
-            : "其他";
+      if (res.list) {
+        res.list.map((item, ind) => {
+          item.taskStatus =
+            item.status == "1"
+              ? "待派"
+              : item.status == "2"
+              ? "已派"
+              : item.status == "3"
+              ? "处理中"
+              : item.status == "4"
+              ? "已完成"
+              : "";
+          item.typeText =
+            item.type == "1"
+              ? "巡检"
+              : item.type == "2"
+              ? "审批"
+              : item.type == "3"
+              ? "调试"
+              : "其他";
 
-        item.priority =
-          item.urgent == "1"
-            ? "重要"
-            : item.urgent == "2"
-            ? "紧急"
-            : item.urgent == "3"
-            ? "正常"
-            : "";
-      });
+          item.priority =
+            item.urgent == "1"
+              ? "重要"
+              : item.urgent == "2"
+              ? "紧急"
+              : item.urgent == "3"
+              ? "正常"
+              : "";
+        });
+      }
       if (res) {
         this.tableData.data = res.list;
         this.tableData.uiConfig.pagination.total = res.total;
