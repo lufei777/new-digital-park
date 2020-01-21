@@ -62,6 +62,7 @@
                 @click="anotherSubmit(obj)"
                 v-show="anotherTaskOperationShow"
               >{{anotherTaskOperation}}</el-button>
+              <el-button type="plain" @click="addTempTask" v-show="saveButtonShow">保存</el-button>
               <el-button @click="back(obj)" v-show="taskBackShow">返回</el-button>
             </div>
           </template>
@@ -280,6 +281,7 @@ export default {
             span: 24,
             action: "/oaApi/image/upload",
             accept: ["jpg", "jpeg", "png"],
+            disabled: false,
             props: {
               label: "fileName",
               value: "fileUrl"
@@ -306,7 +308,7 @@ export default {
       assignList: [],
       designatorName: "",
       createPeople: "",
-      taskOperation: "确定",
+      taskOperation: "提交",
       anotherTaskOperation: "关闭",
       waitSend: false,
       taskOperationShow: true,
@@ -317,7 +319,8 @@ export default {
       reverse: true,
       activities: [],
       circulationUrl: "",
-      srcList: []
+      srcList: [],
+      saveButtonShow:false
     };
   },
   computed: {
@@ -347,17 +350,18 @@ export default {
     };
     if (!this.taskId.id) {
       this.anotherTaskOperationShow = false;
+      this.saveButtonShow = true;
     }
     if (this.taskId.status == 1) {
       this.waitSend = true;
       this.taskOperationShow = false;
-      this.anotherTaskOperation = "关闭";
+      // this.anotherTaskOperation = "关闭";
     } else if (this.taskId.status == 2) {
       this.taskOperation = "撤回";
       this.taskTypeStatus = 2;
     } else if (this.taskId.status == 3) {
       this.taskOperationShow = false;
-      this.anotherTaskOperation = "关闭";
+      // this.anotherTaskOperation = "关闭";
       this.anotherButton = "primary";
     } else if (this.taskId.acceptStatus == 2) {
       this.taskTypeStatus = 1;
@@ -384,6 +388,27 @@ export default {
           });
         }
         this.$router.push("/aboutMe");
+      }
+    },
+    async addTempTask(){
+      // let res = await addTempTask()
+    },
+    async save() {
+      let params = {
+        ...this.paramsData,
+        ...{
+          delFlag: 2,
+          id: this.TempTaskId
+        }
+      };
+      let res = await TaskManageApi.addTempTask(params);
+      if (res) {
+        Toast({
+          message: res,
+          iconClass: "iconfont iconchenggong1",
+          duration: 3000
+        });
+        this.$router.push("/workOrder");
       }
     },
     async dealTask() {
@@ -415,32 +440,17 @@ export default {
           reason: this.model.reason
         });
         this.toastMessage(res);
+      } else if (
+        this.taskId.status == 2 ||
+        this.taskId.status == 1 ||
+        this.taskId.status == 3
+      ) {
+        this.closeTask();
       }
     },
     async submit() {
-      // this.$confirm(`确定${this.taskOperation}吗？`, "提示", {
-      //   confirmButtonText: "确定",
-      //   cancelButtonText: "取消",
-      //   type: "warning"
-      // })
-      //   .then(() => {
-      //     this.$refs[this.newTaskForm.ref].validate(valid => {
-      //       if (valid) {
-      //         this.submitOperation();
-      //       } else {
-      //         console.log("error");
-      //         return false;
-      //       }
-      //     });
-      //   })
-      //   .catch(() => {
-      //     this.$message({
-      //       type: "info",
-      //       message: "已取消删除"
-      //     });
-      //   });
       if (this.taskId.status == 2) {
-        this.submitOperation();
+        // this.submitOperation();
       } else if (
         this.taskId.acceptStatus == 3 &&
         !this.newTaskForm.forms[6].display &&
@@ -473,16 +483,41 @@ export default {
             trigger: "change"
           }
         });
+        this.$refs[this.newTaskForm.ref].setColumnByProp("taskPicList", {
+          display: true,
+          disabled: false
+        });
         return;
       }
-      this.$refs[this.newTaskForm.ref].validate(valid => {
-        if (valid) {
-          this.submitOperation();
-        } else {
-          console.log("error");
-          return false;
-        }
-      });
+      this.$confirm(`确定${this.taskOperation}吗？`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$refs[this.newTaskForm.ref].validate(valid => {
+            if (valid) {
+              this.submitOperation();
+            } else {
+              console.log("error");
+              return false;
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+      // this.$refs[this.newTaskForm.ref].validate(valid => {
+      //   if (valid) {
+      //     this.submitOperation();
+      //   } else {
+      //     console.log("error");
+      //     return false;
+      //   }
+      // });
     },
     anotherSubmit() {
       if (
@@ -497,8 +532,15 @@ export default {
             trigger: "change"
           }
         });
+        this.$refs[this.newTaskForm.ref].setColumnByProp("taskPicList", {
+          display: true,
+          disabled: false
+        });
         return;
-      } else if (this.taskId.acceptStatus == 2 && !this.newTaskForm.forms[10].display) {
+      } else if (
+        this.taskId.acceptStatus == 2 &&
+        !this.newTaskForm.forms[10].display
+      ) {
         this.taskTypeStatus = 4;
         this.$refs[this.newTaskForm.ref].setColumnByProp("reason", {
           display: true,
@@ -507,6 +549,10 @@ export default {
             message: "请输入备注",
             trigger: "change"
           }
+        });
+        this.$refs[this.newTaskForm.ref].setColumnByProp("taskPicList", {
+          display: true,
+          disabled: false
         });
         return;
       }
@@ -605,7 +651,8 @@ export default {
       console.log("res", res);
       if (res) {
         this.model.taskName = res.taskName;
-        this.model.createBy = res.createBy;
+        this.model.createBy = res.founderName;
+        this.createPeople = res.founderName;
         this.model.beginTime = res.beginTime;
         this.model.endTime = res.endTime;
         // this.model.designatorId = res.username;

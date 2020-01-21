@@ -10,9 +10,9 @@
       <CommonSelect />
       <div class="already-task-table panel">
         <div class="operator-box flex-row-reverse">
-            <el-button type="primary">刷新</el-button>
-            <el-button type="primary">删除</el-button>
-          </div>
+          <el-button type="primary">刷新</el-button>
+          <el-button type="primary">删除</el-button>
+        </div>
         <miTable :ref="tableData.ref" :tableConfig="tableData"></miTable>
       </div>
     </div>
@@ -64,27 +64,28 @@ export default {
             }
           }
         },
-        btnConfig:{
-            prop: "operation",
-            label:'操作',
-            fixed: "right",
-            width: 150,
-            btns: [
-              {
-                type: "basic",
-                label: "详情",
-                handler: function(data) {
-                  _this.editRow(data.row);
-                }
-              },
-              {
-                type: "basic",
-                label: "删除",
-                handler: function(data) {
-                  _this.deleteRow(data.row);
-                }
-              }]
-          },
+        btnConfig: {
+          prop: "operation",
+          label: "操作",
+          fixed: "right",
+          width: 150,
+          btns: [
+            {
+              type: "basic",
+              label: "详情",
+              handler: function(data) {
+                _this.editRow(data.row);
+              }
+            },
+            {
+              type: "basic",
+              label: "删除",
+              handler: function(data) {
+                _this.deleteRow(data.row);
+              }
+            }
+          ]
+        }
       },
       todayFinish: ""
     };
@@ -149,26 +150,28 @@ export default {
         pageSize: 10
         // type: 1,
       });
-      res.list.map((item, ind) => {
-        item.taskStatus =
-          item.status == "1"
-            ? "待派"
-            : item.status == "2"
-            ? "已派"
-            : item.status == "3"
-            ? "处理中"
-            : item.status == "4"
-            ? "已完成"
-            : "";
-        item.typeText =
-          item.type == "1"
-            ? "巡检"
-            : item.type == "2"
-            ? "审批"
-            : item.type == "3"
-            ? "调试"
-            : "其他";
-      });
+      if (res.list) {
+        res.list.map((item, ind) => {
+          item.taskStatus =
+            item.status == "1"
+              ? "待派"
+              : item.status == "2"
+              ? "已派"
+              : item.status == "3"
+              ? "处理中"
+              : item.status == "4"
+              ? "已完成"
+              : "";
+          item.typeText =
+            item.type == "1"
+              ? "巡检"
+              : item.type == "2"
+              ? "审批"
+              : item.type == "3"
+              ? "调试"
+              : "其他";
+        });
+      }
       if (res) {
         this.tableData.data = res.list;
         this.tableData.uiConfig.pagination.total = res.total;
@@ -217,13 +220,13 @@ export default {
   .already-task-table {
     margin: 20px 0;
     padding: 20px;
-    .operator-box{
+    .operator-box {
       background: @white;
       // margin-bottom: 20px;
       display: flex;
       flex-direction: row-reverse;
-      .el-button{
-        margin-left:20px;
+      .el-button {
+        margin-left: 20px;
       }
     }
   }

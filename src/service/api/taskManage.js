@@ -53,6 +53,14 @@ class taskManageApi {
      @get
      operateLogList() { }
 
+     @url("/oaApi/task/addTempTask")
+     @post
+     addTempTask() { }
+
+     @url("/oaApi/task/findTempTask")
+     @get
+     findTempTask() { }
+
 }
 
 export default new taskManageApi()

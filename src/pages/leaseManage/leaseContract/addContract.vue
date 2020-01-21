@@ -308,6 +308,9 @@ export default {
     this.contractList();
     this.houseList();
     this.createTenNum()
+    if(this.contractIdDetail){
+      this.contractDetail()
+    }
   },
   computed: {
     addContractParams() {
@@ -321,6 +324,12 @@ export default {
         businessLicense: this.model.businessLicense.length>0?this.model.businessLicense:"",
         contractFile: this.model.contractFile.length>0?this.model.businessLicense:""
       };
+    },
+    contractIdEdit() {
+      return this.$route.params.contractId;
+    },
+    contractIdDetail() {
+      return this.$route.params.contractId;
     }
   },
   methods: {
@@ -332,6 +341,9 @@ export default {
           message: res
         });
       }
+      this.$router.push("/leaseContract");
+    },
+    back(){
       this.$router.push("/leaseContract");
     },
      async createTenNum() {
@@ -360,7 +372,12 @@ export default {
       this.$refs[this.addContractForm.ref].setColumnByProp("selectHouse", {
         dicData: res
       });
-    }
+    },
+    async contractDetail(){
+      let res = await LeaseManageApi.contractDetail({
+        contractId:this.contractIdDetail
+      })
+    },
   }
 };
 </script>

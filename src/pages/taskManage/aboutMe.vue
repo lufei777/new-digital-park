@@ -22,7 +22,7 @@
             <miTable :ref="tableData.ref" :tableConfig="tableData">
               <template slot="operation" slot-scope="obj">
                 <el-button type="text" @click="editRow(obj)">详情</el-button>
-                <el-button type="text" @click="delRow(obj)" v-if="deleteRowShow">删除</el-button>
+                <el-button type="text" @click="deleteRow(obj)" v-if="deleteRowShow">删除</el-button>
               </template>
             </miTable>
           </div>
@@ -76,6 +76,7 @@ export default {
         uiConfig: {
           height: "auto", //"", //高度
           selection: true, //是否多选
+          searchable: ["taskName"],
           showIndex: true,
           pagination: {
             //是否分页，分页是否自定义
@@ -243,6 +244,8 @@ export default {
         : "";
       if (this.taskActiveName == "third") {
         this.deleteRowShow = false;
+      }else {
+        this.deleteRowShow = true;
       }
       this.taskList();
     },
@@ -271,7 +274,7 @@ export default {
       this.taskId = "";
     },
     deleteRow(val) {
-      this.taskId = val.id;
+      this.taskId = val.scopeRow.row.id;
       this.showDeleteTip();
     },
     editRow(val) {

@@ -66,4 +66,12 @@ export default new class {
     @url('/oaApi/contract/removeContract')
     @get
     removeContract() { }
+
+    @url('/oaApi/contract/contractDetail')
+    @get
+    contractDetail() { }
+
+    @url('/oaApi/contract/editContract')
+    @get
+    editContract() { }
 }
