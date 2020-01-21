@@ -348,7 +348,7 @@ export default {
     };
     if (!this.taskId.id) {
       this.anotherTaskOperationShow = false;
-      this.saveButtonShow = true;
+      // this.saveButtonShow = true;
     }
     if (this.taskId.status == 1) {
       this.waitSend = true;
