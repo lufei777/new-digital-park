@@ -2,7 +2,7 @@
   <div class="add-tenant-manage">
     <div class="condition-box radius-shadow">
       <div class="tenant-box">
-        <miForm
+        <z-form
           :ref="addTenantManageForm.ref"
           :options="addTenantManageForm"
           v-model="model"
@@ -24,7 +24,7 @@
           <template slot="otherImageText">
             <h3>其他证明</h3>
           </template>
-        </miForm>
+        </z-form>
       </div>
     </div>
   </div>
@@ -32,11 +32,7 @@
 
 <script>
 import LeaseManageApi from "../../../service/api/leaseManage";
-import miForm from "@/components/Form";
-import miTable from "@/components/Table";
 export default {
-  components: { miForm, miTable },
-  //
   data() {
     let validID = (rule, value, callback) => {
       let reg = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;

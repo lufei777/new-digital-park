@@ -1,15 +1,13 @@
 <template>
   <div class="emergencies">
-    <miTable :ref="Emergencies.ref" :tableConfig="Emergencies"></miTable>
+    <z-table :ref="Emergencies.ref" :tableConfig="Emergencies"></z-table>
     <div style="margin-bottom:10px;">{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
 <script>
-import miTable from "@/components/Table";
 export default {
   name: "Emergencies",
-  components: { miTable },
   props: ["moduleItem"],
   data() {
     return {

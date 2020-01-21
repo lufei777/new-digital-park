@@ -1,7 +1,7 @@
 <template>
   <div class="panel-container">
     <div id="houseproperty-form" class="panel">
-      <miForm
+      <z-form
         :ref="leaseManageForm.ref"
         :options="leaseManageForm"
         v-model="model"
@@ -14,29 +14,26 @@
             <el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>
           </div>
         </template>
-      </miForm>
+      </z-form>
     </div>
 
     <div class="table panel">
-      <miTable :ref="leaseManageTable.ref" :tableConfig="leaseManageTable">
+      <z-table :ref="leaseManageTable.ref" :tableConfig="leaseManageTable">
         <template slot="operation" slot-scope="obj">
           <el-button type="text" @click="propertyDetail(obj)">详情</el-button>
           <el-button type="text" @click="propertyEdit(obj)">编辑</el-button>
           <el-button type="text" @click="propertyDel(obj)">删除</el-button>
           <el-button type="text" @click="propertyLocation(obj)">定位</el-button>
         </template>
-      </miTable>
+      </z-table>
     </div>
   </div>
 </template>
 <script>
-import miForm from "@/components/Form";
-import miTable from "@/components/Table";
 import leaseManageApi from "@/service/api/leaseManage";
 import commonFun from "@/utils/commonFun.js";
 
 export default {
-  components: { miForm, miTable },
   data() {
     return {
       model: {},

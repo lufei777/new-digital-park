@@ -30,20 +30,16 @@
         <el-button type="primary" icon="el-icon-delete" @click="onMultiDel">删除记录</el-button>
         <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
       </div>
-      <Table :ref="collectTableConfig.ref" :table-config="collectTableConfig"></Table>
+      <z-table :ref="collectTableConfig.ref" :table-config="collectTableConfig"></z-table>
     </div>
   </div>
 </template>
 
 <script>
 import CommonApi from "../../../service/api/common";
-import Table from "../../../components/Table/index";
 import CommonFun from "../../../utils/commonFun";
 export default {
   name: "ManMadeCollectList",
-  components: {
-    Table
-  },
   data() {
     let _this = this;
     return {

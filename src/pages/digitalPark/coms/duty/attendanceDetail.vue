@@ -1,6 +1,6 @@
 <template>
   <div class="attendance-detail">
-    <miTable :ref="leaseManageTable.ref" :tableConfig="leaseManageTable"></miTable>
+    <z-table :ref="leaseManageTable.ref" :tableConfig="leaseManageTable"></z-table>
     <div style="margin-bottom:10px;">{{moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -8,11 +8,9 @@
 <script>
 import CommonFun from "../../../../utils/commonFun";
 import ChartUtils from "../../../../utils/chartUtils";
-import miTable from "@/components/Table";
 
 export default {
   name: "AttendanceDetail",
-  components: { miTable },
   props: ["moduleItem"],
   data() {
     return {

@@ -36,21 +36,17 @@
       <div class="operator-box">
         <el-button type="primary" @click="handleExport">导出</el-button>
       </div>
-      <Table :ref="tableConfig.ref" :table-config="tableConfig" />
+      <z-table :ref="tableConfig.ref" :table-config="tableConfig" />
     </div>
   </div>
 </template>
 
 <script>
 import CommonApi from "../../../service/api/common";
-import Table from "../../../components/Table/index";
-import CommonFun from '../../../utils/commonFun'
+import CommonFun from "../../../utils/commonFun";
 
 export default {
   name: "AutoCollectList",
-  components: {
-    Table
-  },
   data() {
     let _this = this;
     return {

@@ -2,7 +2,7 @@
   <div class="new-task panel-container">
     <div class="panel">
       <div class="new-task-box">
-        <miForm
+        <z-form
           :ref="newTaskForm.ref"
           :options="newTaskForm"
           v-model="model"
@@ -66,7 +66,7 @@
               <el-button @click="back(obj)" v-show="taskBackShow">返回</el-button>
             </div>
           </template>
-        </miForm>
+        </z-form>
       </div>
     </div>
     <div class="block panel" v-if="taskId.id">
@@ -133,11 +133,9 @@ let priorityType = [
     label: "紧急"
   }
 ];
-import miForm from "@/components/Form";
 import TaskManageApi from "../../service/api/taskManage";
 export default {
   name: "NewTask",
-  components: { miForm },
   data() {
     return {
       model: {

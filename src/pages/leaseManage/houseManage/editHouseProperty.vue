@@ -5,7 +5,7 @@
         <span class="icon"></span>
         <span>{{pageConfig.title}}</span>
       </span>
-      <miForm
+      <z-form
         :ref="leaseManageForm.ref"
         :options="leaseManageForm"
         v-model="model"
@@ -32,13 +32,12 @@
         <template slot="menuBtn" slot-scope="scope">
           <el-button @click="back(scope)">返回</el-button>
         </template>
-      </miForm>
+      </z-form>
     </div>
   </div>
 </template>
 <script>
 import { LeaseManageDic } from "@/utils/dictionary";
-import miForm from "@/components/Form";
 import leaseManageApi from "@/service/api/leaseManage";
 import commonApi from "@/service/api/common";
 
@@ -54,7 +53,6 @@ const apiConfig = {
 };
 
 export default {
-  components: { miForm },
   data() {
     let _this = this;
     return {
@@ -124,12 +122,7 @@ export default {
             dataType: "number",
             append: "m²",
             clearable: true,
-            span: 12,
-            rules: {
-              type: "number",
-              message: "请输入数字",
-              trigger: "change"
-            }
+            span: 12
           },
           {
             type: "input",

@@ -17,7 +17,7 @@
     </div>
     <div class="table-box radius-shadow">
       <div class="table-tip">{{commonTip}}能耗展示排名</div>
-      <Table :ref="tableConfig.ref" :tableConfig="tableConfig"></Table>
+      <z-table :ref="tableConfig.ref" :tableConfig="tableConfig"></z-table>
     </div>
   </div>
 </template>
@@ -27,12 +27,10 @@
   import ChartUtils from '../../../utils/chartUtils'
   import EnergyApi from '../../../service/api/energy'
   import ConditionSelect from '../../../components/conditionSelect/index'
-  import Table from '../../../components/Table/index'
   export default {
     name: 'TimeEnergy',
     components: {
-      ConditionSelect,
-      Table
+      ConditionSelect
     },
     data () {
       let _this = this

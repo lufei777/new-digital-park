@@ -22,12 +22,12 @@
               <el-button @click="onClickResetBtn">重置</el-button>
             </div>
           </div>
-          <miTable :ref="tableConfig.ref" :tableConfig="tableConfig">
+          <z-table :ref="tableConfig.ref" :tableConfig="tableConfig">
             <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
               <el-button type="text" @click="checkRow(row)">验收</el-button>
               <el-button type="text" @click="deleteRow(row)">作废</el-button>
             </template>
-          </miTable>
+          </z-table>
         </div>
 
         <RecordDetail v-if="showCheck" :detailId="curId" fromFlag="3"
@@ -43,14 +43,12 @@
 </template>
 
 <script>
-import miForm from "@/components/Form";
-import miTable from "@/components/Table";
 import StockManageApi from '@/service/api/stockManage'
 import RecordDetail from '../coms/recordDetail'
 import Record from '../coms/record'
 export default {
   name: "StockCheck",
-  components: { miForm, miTable, RecordDetail,Record },
+  components: { RecordDetail,Record },
   data() {
     let _this = this
     return {
@@ -135,7 +133,7 @@ export default {
       this.getStockCheckList()
     },
     onClickTab(val){
-      this.$store.commit('digitalPark/stockTabChange',val.index)
+      this.$store.commit('digitalPark/stockInApplyTab',val.index)
     }
   },
   mounted() {

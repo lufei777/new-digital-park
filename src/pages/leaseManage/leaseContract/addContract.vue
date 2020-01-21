@@ -2,7 +2,7 @@
   <div class="add-contract panel-container">
     <div class="condition-box panel">
       <div class="add-contract-box">
-        <miForm
+        <z-form
           :ref="addContractForm.ref"
           :options="addContractForm"
           v-model="model"
@@ -18,7 +18,7 @@
           <template slot-scope="scope" slot="menuBtn">
             <el-button :size="scope.size" @click="back(scope)">返回</el-button>
           </template>
-        </miForm>
+        </z-form>
       </div>
     </div>
   </div>
@@ -26,12 +26,8 @@
 
 <script>
 import LeaseManageApi from "../../../service/api/leaseManage";
-import miForm from "@/components/Form";
 export default {
   name: "AddContract",
-  components: {
-    miForm
-  },
   data() {
     let _this = this;
     return {

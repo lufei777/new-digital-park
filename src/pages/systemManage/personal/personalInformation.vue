@@ -1,25 +1,21 @@
 <template>
   <div class="personal-information radius-shadow panel-container">
     <div class="form-box">
-      <miForm :ref="formData.ref" :options="formData" v-model="formModel" @submit="submit">
+      <z-form :ref="formData.ref" :options="formData" v-model="formModel" @submit="submit">
         <template slot="menuBtn" slot-scope="scope">
            <el-button @click="goBack(scope)">返回</el-button>
         </template>
-      </miForm>
+      </z-form>
     </div>
   </div>
 </template>
 
 <script>
-  import miForm from "@/components/Form/index";
   import SystemManageApi from '@/service/api/systemManage'
   import { CommonDic } from '@/utils/dictionary'
   import {mapState} from 'vuex'
   export default {
     name: 'PersonalInformation',
-    components: {
-      miForm
-    },
     data () {
       let validTelephone = (rule, value, callgoBack) => {
         let reg = /^1[3|4|5|7|8]\d{9}$/;

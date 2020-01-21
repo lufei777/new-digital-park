@@ -47,7 +47,7 @@
         <span>注:红色字体为超标</span>
         <em>{{tabTitle}}</em>
       </div>
-      <Table :ref="tableConfig.ref" :tableConfig="tableConfig" ></Table>
+      <z-table :ref="tableConfig.ref" :tableConfig="tableConfig" ></z-table>
       <TreeModal :tree-modal-config="treeModalConfig"/>
     </div>
   </div>
@@ -56,7 +56,6 @@
 <script>
 import CommonApi from "../../../service/api/common";
 import EnergyApi from "../../../service/api/energy";
-import Table from "../../../components/Table/index";
 import TreeModal from '../../../components/treeModal/index'
 import moment from "moment";
 import CommonFun from '../../../utils/commonFun'
@@ -64,7 +63,6 @@ let activeNav;
 export default {
   name: "EnergySavingSelect",
   components: {
-    Table,
     TreeModal
   },
   props: ["energySaveFlag"],

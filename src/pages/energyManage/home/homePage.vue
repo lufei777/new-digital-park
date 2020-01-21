@@ -141,7 +141,7 @@
     </div>
     <div class="tabulation">
       <div class="tabulation-title">2019年A3能耗排名展示(按综合能耗排名)</div>
-      <Table :ref="homePageTableConfig.ref" :tableConfig="homePageTableConfig"></Table>
+      <z-table :ref="homePageTableConfig.ref" :tableConfig="homePageTableConfig"></z-table>
     </div>
   </div>
 </template>
@@ -151,12 +151,8 @@ import echarts from "echarts";
 import EnergyApi from "../../../service/api/energy";
 import CommonApi from "../../../service/api/common";
 import ChartUtils from "../../../utils/chartUtils";
-import Table from "../../../components/Table/index";
 export default {
   name: "HomePage",
-  components: {
-    Table
-  },
   data() {
     let _this = this;
     return {

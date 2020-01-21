@@ -1,6 +1,6 @@
 <template>
   <div class="test">
-    <Table :ref="assetsTableData.ref" :tableConfig="assetsTableData">
+    <z-table :ref="assetsTableData.ref" :tableConfig="assetsTableData">
       <template slot="custom-top" slot-scope="customTopObj">
         <div>
           <el-button-group>
@@ -14,18 +14,14 @@
           </el-button-group>
         </div>
       </template>
-    </Table>
+    </z-table>
   </div>
 </template>
 
 <script>
-import Table from "@/components/Table";
 import AssetManageApi from "@/service/api/assetManage";
 export default {
   name: "Test",
-  components: {
-    Table
-  },
   data() {
     var _this = this;
     return {

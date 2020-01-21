@@ -3,11 +3,11 @@
     <div class="tip">{{detailTip}}</div>
     <BasicInformation :detail="detailData"/>
     <div class="module-tip">入库明细：</div>
-    <miTable :ref="tableConfig.ref" :tableConfig="tableConfig">
+    <z-table :ref="tableConfig.ref" :tableConfig="tableConfig">
       <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
         <el-button type="text" @click="editRow($index,row)">编辑</el-button>
       </template>
-    </miTable>
+    </z-table>
     <div class="operator-box">
       <el-button type="primary" @click="onClickCheckBtn" v-if="fromFlag==3">确认验收</el-button>
       <el-button  @click="onClickBackBtn">返回</el-button>
@@ -19,7 +19,7 @@
       :visible.sync="showEditModal"
        width="400px"
     >
-      <el-form ref="formRef"label-position="right"
+      <el-form ref="formRef" label-position="right"
                label-width="80px" :model="formData"
                :rules="rules"
       >
@@ -46,10 +46,9 @@
   import {StockDic} from "@/utils/dictionary";
   import StockManageApi from '@/service/api/stockManage'
   import BasicInformation from '../coms/basicInformation'
-  import miTable from '@/components/Table'
   export default {
     name: "RecordDetail",
-    components: { BasicInformation,miTable },
+    components: { BasicInformation },
     //fromFlag 1:申请详情 2:验收详情 3:验收页面
     props:["detailId","fromFlag","onClickBackCallback","onClickCheckCallback"],
     data() {
@@ -109,6 +108,7 @@
       },
       async getDetail(){
         let res
+        console.log(this.fromFlag)
         if(this.fromFlag==1 || this.fromFlag==2){
            res = await StockManageApi.getRecordDetail({
             recordId:this.detailId
@@ -117,6 +117,7 @@
            res = await StockManageApi.getApplyDraft({
             id:this.detailId
           })
+          console.log("beforeRes",res)
         }
 
         if(this.fromFlag==2 || this.fromFlag==3){
@@ -129,7 +130,9 @@
               item.description=''
             })
           }
+          console.log("centerres",res)
         }
+        console.log("res",res.stockDetailsList)
         this.detailData=res
         this.tableConfig.data=res.stockDetailsList
       },
