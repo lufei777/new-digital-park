@@ -3,11 +3,11 @@
     <div class="chart-box flex">
       <!--<div class="chart1" ref="myChart1"></div>-->
       <div class="chart-box-item">
-        <vcharts :chartConfig="chartConfig" :chartData='chartConfig.chartData' class="chart1"></vcharts>
+        <vcharts :options="chartConfig" :chartData='chartConfig.chartData' class="chart1"></vcharts>
         <span>直梯</span>
       </div>
       <div class="chart-box-item">
-        <vcharts :chartConfig="chartConfig2" :chartData='chartConfig.chartData' class="chart1"></vcharts>
+        <vcharts :options="chartConfig2" :chartData='chartConfig.chartData' class="chart1"></vcharts>
         <span>扶梯</span>
       </div>
 
