@@ -211,15 +211,6 @@
             }
           }
         },
-        controlHeader() {
-          $("body").mousemove((e) => {
-            if(e.clientY<60){
-              this.showHeader=true
-            }else{
-              this.showHeader=false
-            }
-          })
-        },
         scrollNews() {
           this.newsTimer = setInterval(() => {
             if (this.curNewsIndex < this.newsList.length-1) {
@@ -321,6 +312,9 @@
           if(this.hideHeader) return ; //配置页不进行后续操作
           //跳转三维客户端
           if(CommonFun.loadThreeD(item,this.clientMenu)){
+            if(item.level==2){
+              this.getModulesByType()
+            }
             return;
           }
           Cookies.set('moduleType',1)
