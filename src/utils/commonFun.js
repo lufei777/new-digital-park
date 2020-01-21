@@ -22,6 +22,10 @@ import environmentalMonitoring from '../pages/digitalPark/coms/buildMonitor/envi
 import waterSupplyAndDrainage from '../pages/digitalPark/coms/buildMonitor/waterSupplyAndDrainage'
 import hvac from '../pages/digitalPark/coms/buildMonitor/hvac'
 import elevatorMonitoring from '../pages/digitalPark/coms/buildMonitor/elevatorMonitoring'
+import accessControl from '../pages/digitalPark/coms/security/accessControl'
+import intrusionAlarm from '../pages/digitalPark/coms/security/intrusionAlarm'
+import videoMonitoring from '../pages/digitalPark/coms/security/videoMonitoring'
+import inspection from '../pages/digitalPark/coms/security/inspection'
 import router from '@/router'
 import axios from 'axios'
 class commonFun {
@@ -49,7 +53,11 @@ class commonFun {
     environmentalMonitoring,
     waterSupplyAndDrainage,
     hvac,
-    elevatorMonitoring
+    elevatorMonitoring,
+    videoMonitoring,
+    accessControl,
+    intrusionAlarm,
+    inspection
   }
   //this,删除的id,没有id时的提示信息，点击确定的回调函数
   deleteTip(that, deleteId, msgTip, sureCallBack, cancelCallBack) {
@@ -1187,9 +1195,6 @@ class commonFun {
     remark: "公司内部需要"
   }]
 
-  purchaseReturnsData = [{
-
-  }]
 
   warehouseManageData = [{
     warehouseId: 1,
@@ -1229,43 +1234,6 @@ class commonFun {
     remark: "电子设备"
   }]
 
-  stockInCheck = [{
-    warehouseId: 1,
-    goodsName: "显示屏",
-    goodsType: "电子设备",
-    warehouseSum: "5",
-    warehouseTime: "2019-12-10",
-    applicant: "通过",
-    handlePeople: "程琳",
-    remark: "电子设备"
-  }, {
-    warehouseId: 2,
-    goodsName: "电脑桌",
-    goodsType: "办公用品",
-    warehouseSum: "2",
-    warehouseTime: "2019-10-10",
-    applicant: "通过",
-    handlePeople: "程琳",
-    remark: "办公用品"
-  }, {
-    warehouseId: 3,
-    goodsName: "鼠标",
-    goodsType: "电子设备",
-    warehouseSum: "1",
-    warehouseTime: "2019-2-10",
-    applicant: "通过",
-    handlePeople: "程琳",
-    remark: "电子设备"
-  }, {
-    warehouseId: 4,
-    goodsName: "网线",
-    goodsType: "电子设备",
-    warehouseSum: "6",
-    warehouseTime: "2019-12-10",
-    applicant: "通过",
-    handlePeople: "程琳",
-    remark: "电子设备"
-  }]
   stockOut = [{
     warehouseId: 1,
     goodsName: "显示屏",

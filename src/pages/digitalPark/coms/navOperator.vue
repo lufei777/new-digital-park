@@ -163,7 +163,6 @@ export default {
       }
     },
     onClickGoBack() { //点击返回首页
-      console.log(1111111)
       if (Cookies.get("moduleType") == 2) {
         this.$router.push("/digitalPark/homePage");
       } else {
@@ -207,7 +206,6 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
 .digital-nav-operator {
   font-size: 14px;
