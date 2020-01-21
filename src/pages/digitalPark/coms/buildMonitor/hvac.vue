@@ -16,7 +16,7 @@
 <script>
   import CommonApi from '@/service/api/common'
   export default {
-    name: "Hvac",
+    name: "hvac",
     components: {
     },
     props: ["moduleItem"],

@@ -1,33 +1,48 @@
 <template>
-  <div class="v-charts">
-    <component
-      ref="myCharts"
-      width="100%"
-      height="100%"
-      :is="componentId"
-      :data="chartData"
-      :settings="chartConfig['chartSettings']"
-      :extend="chartConfig['extend']"
-      :events="chartConfig['chartsEvents']"
-      :grid="chartConfig['grid']"
-      :title="chartConfig['title']"
-      :legend-visible="chartConfig['legend-visible']"
-      :tooltip-visible="chartConfig['tooltip-visible']"
-      :init-options="chartConfig['init-options']"
-      :legend="chartConfig['legend']"
-      :yAxis="chartConfig['yAxis']"
-      :xAxis="chartConfig['xAxis']"
-      :theme-name="chartConfig['theme-name']"
-      :theme="chartConfig['theme']"
-      :set-option-opts="chartConfig['set-option-opts']"
-      :log="chartConfig['log']"
-      :style="{'display':'inline-block'}"
-      :loading="loading"
-      :data-empty="dataEmpty"
-    ></component>
-  </div>
+  <component
+    ref="myCharts"
+    width="100%"
+    height="100%"
+    :is="componentId"
+    :data="options.chartData"
+    :grid="options.grid"
+    :colors="options.colors"
+    :visualMap="options.visualMap"
+    :dataZoom="options.dataZoom"
+    :toolbox="options.toolbox"
+    :title="options.title"
+    :legend="options.legend"
+    :yAxis="options.yAxis"
+    :xAxis="options.xAxis"
+    :radar="options.radar"
+    :tooltip="options.tooltip"
+    :axisPointer="options.axisPointer"
+    :brush="options.brush"
+    :geo="options.geo"
+    :timeline="options.timeline"
+    :graphic="options.graphic"
+    :series="options.series"
+    :backgroundColor="options.backgroundColor"
+    :textStyle="options.textStyle"
+    :animation="options.animation"
+    :settings="options.settings"
+    :extend="options.extend"
+    :events="options.events"
+    :legend-visible="options.legendVisible"
+    :tooltip-visible="options.tooltipVisible"
+    :init-options="options.initOptions"
+    :theme-name="options.themeName"
+    :theme="options.theme"
+    :set-option-opts="options.setOptionOpts"
+    :log="options.log"
+    :loading="loading"
+    :data-empty="dataEmpty"
+  ></component>
 </template>
 <script>
+// ready 图表渲染完成后触发，每次渲染都会触发一次3
+// ready-once 只会在首次渲染完成后触发
+
 const EMPTY_DATA = {
   columns: [],
   rows: []
@@ -35,14 +50,14 @@ const EMPTY_DATA = {
 
 export default {
   props: {
-    chartConfig: {
+    options: {
       type: Object,
       required: true
     }
   },
   data() {
     return {
-      chartData: {},
+      ...this.options,
       chartWidth: "",
       loading: false,
       dataEmpty: false
@@ -50,6 +65,7 @@ export default {
   },
   mounted() {
     this._chartInit();
+    this.charts = this.$refs["myCharts"];
   },
   methods: {
     _chartInit() {
@@ -57,11 +73,11 @@ export default {
       if (this._isServerMode()) {
         this._getServerData();
       } else {
-        this.chartData = this.chartConfig.chartData;
+        this.chartData = this.options.chartData;
       }
     },
     _isServerMode() {
-      let chartData = this.chartConfig.chartData;
+      let chartData = this.options.chartData;
       return (
         chartData.serverMode &&
         (typeof CharacterData.rows === "undefined" ||
@@ -71,7 +87,7 @@ export default {
     _getServerData() {
       this.loading = true;
 
-      let serverMode = this.chartConfig.chartData.serverMode;
+      let serverMode = this.options.chartData.serverMode;
       let url = serverMode.url;
       let dataSrc = serverMode.dataSrc;
 
@@ -99,8 +115,11 @@ export default {
       } else {
         //ajax请求type和url
         let type = serverMode.type.toLowerCase();
-
-        this.$axios[type](url, serverMode.data)
+        this.$axios({
+          method: type,
+          url: url,
+          data: serverMode.data
+        })
           .then(res => {
             var data = res.data[dataSrc];
             if (data.length) {
@@ -126,10 +145,13 @@ export default {
       return options;
     },
     _setchartData({ columns, rows }) {
-      this.chartData = {
-        columns: columns || this.chartConfig.chartData.columns,
+      this.options.chartData = {
+        columns: columns || this.options.chartData.columns,
         rows
       };
+    },
+    resize() {
+      this.charts.echarts.resize();
     },
     refreshByData(data) {
       if (data instanceof Array) {
@@ -139,11 +161,11 @@ export default {
   },
   computed: {
     componentId() {
-      return "ve-" + this.chartConfig.type;
+      return "ve-" + this.options.type;
     }
   },
   watch: {
-    chartData(newvalue, oldvalue) {
+    "options.chartData"(newvalue, oldvalue) {
       if (!(newvalue.rows instanceof Array) || newvalue.rows.length === 0) {
         this.dataEmpty = true;
       } else {
@@ -153,9 +175,3 @@ export default {
   }
 };
 </script>
-<style lang='less' scoped>
-.v-charts {
-  width: 100%;
-  height: 100%;
-}
-</style>
