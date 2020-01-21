@@ -3,7 +3,6 @@ import Pagination from './Table/components/pagination.vue'
 import Dropdown from './Table/components/dropdown.vue'
 
 import Form from './Form'
-import formTemp from "./Form/formtemp";
 import Cascader from './Form/components/Cascader';
 import Checkbox from './Form/components/checkbox';
 import Date from './Form/components/date';
@@ -37,7 +36,6 @@ const components = [
     Time,
     Tree,
     Upload,
-    formTemp,
     Group,
     Form
 ]
@@ -69,7 +67,6 @@ export default {
     Time,
     Tree,
     Upload,
-    formTemp,
     Group,
     Form,
     install

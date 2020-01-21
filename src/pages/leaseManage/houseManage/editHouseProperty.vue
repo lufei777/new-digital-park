@@ -122,12 +122,7 @@ export default {
             dataType: "number",
             append: "m²",
             clearable: true,
-            span: 12,
-            rules: {
-              type: "number",
-              message: "请输入数字",
-              trigger: "change"
-            }
+            span: 12
           },
           {
             type: "input",

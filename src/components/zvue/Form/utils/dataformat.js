@@ -121,7 +121,8 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
         }
     }
     // 数字处理
-    if (type === 'number' || curentForm.rawtype === 'number') {
+    if ((type === 'number' || curentForm.rawtype === 'number'
+        || dataType === 'number') && typeof value !== 'undefined') {
         value = parseFloat(value);
         if (isNaN(value)) {
             value = undefined;
