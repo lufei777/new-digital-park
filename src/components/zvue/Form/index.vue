@@ -145,6 +145,7 @@
   </div>
 </template>
 <script>
+import formTemp from "./formtemp";
 import {
   deepClone,
   vaildData,
@@ -178,6 +179,7 @@ const setDefaultValue = function(defaultOptions, options, vm) {
 export default {
   name: "zForm",
   mixins: [init()],
+  components: { formTemp },
   props: {
     uploadBefore: Function,
     uploadAfter: Function,
