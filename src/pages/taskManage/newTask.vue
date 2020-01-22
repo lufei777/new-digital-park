@@ -279,6 +279,7 @@ export default {
             span: 24,
             action: "/oaApi/image/upload",
             accept: ["jpg", "jpeg", "png"],
+            dataType: "string",
             disabled: false,
             props: {
               label: "fileName",
@@ -318,7 +319,7 @@ export default {
       activities: [],
       circulationUrl: "",
       srcList: [],
-      saveButtonShow:false
+      saveButtonShow: false
     };
   },
   computed: {
@@ -348,7 +349,7 @@ export default {
     };
     if (!this.taskId.id) {
       this.anotherTaskOperationShow = false;
-      // this.saveButtonShow = true;
+      this.saveButtonShow = true;
     }
     if (this.taskId.status == 1) {
       this.waitSend = true;
@@ -370,9 +371,9 @@ export default {
       this.taskOperation = "转派";
       this.anotherTaskOperation = "完成";
     } else if (this.taskId.acceptStatus == 4 || this.taskId.status == 4) {
-      // this.taskOperation = "完成"; 
-      this.anotherTaskOperationShow = false
-      this.taskOperationShow = false
+      // this.taskOperation = "完成";
+      this.anotherTaskOperationShow = false;
+      this.taskOperationShow = false;
     }
   },
   methods: {
@@ -380,7 +381,25 @@ export default {
       if (this.taskId.id) {
         this.dealTask();
       } else {
-        let res = await TaskManageApi.taskAdd(this.paramsData);
+        localStorage.setItem("judgeOperation", 0);
+        let params;
+        if (localStorage.getItem("judgeOperation") == 1) {
+          params = {
+            ...this.paramsData,
+            ...{
+              delFlag: 1,
+              id: this.TempTaskId
+            }
+          };
+        } else if (localStorage.getItem("judgeOperation") == 0) {
+          params = {
+            ...this.paramsData,
+            ...{
+              delFlag: 1
+            }
+          };
+        }
+        let res = await TaskManageApi.taskAdd(params);
         if (res) {
           this.$message({
             type: "success",
@@ -390,10 +409,24 @@ export default {
         this.$router.push("/aboutMe");
       }
     },
-    async addTempTask(){
-      // let res = await addTempTask()
+    async addTempTask() {
+      this.$confirm("将此次编辑保留？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.$refs[this.newTaskForm.ref].validate(valid => {
+          if (valid) {
+            this.save();
+          } else {
+            console.log("error");
+            return false;
+          }
+        });
+      });
     },
     async save() {
+      localStorage.setItem("judgeOperation", 1);
       let params = {
         ...this.paramsData,
         ...{
@@ -403,12 +436,32 @@ export default {
       };
       let res = await TaskManageApi.addTempTask(params);
       if (res) {
-        Toast({
-          message: res,
-          iconClass: "iconfont iconchenggong1",
-          duration: 3000
+        this.$message({
+          type: "success",
+          message: res
         });
-        this.$router.push("/workOrder");
+        this.$router.push("/aboutMe");
+      }
+    },
+    async findTempTask() {
+      let res = await TaskManageApi.findTempTask({
+        delFlag: 2
+      });
+      if (res && localStorage.getItem("judgeOperation") == 1) {
+        if (res.deptId) {
+          this.changelistBy(res.deptId);
+        }
+        this.model.department = res.deptId;
+        this.model.taskType = res.type
+        this.model.urgent = res.urgent
+        this.TempTaskId = res.id;
+        this.model.taskName = res.taskName;
+        this.model.beginTime = res.beginTime;
+        this.model.endTime = res.endTime;
+        this.model.designatorId = res.designatorId;
+        this.designatorName = res.designatorName;
+        this.model.description = res.description;
+        this.model.taskPicList = res.taskPics
       }
     },
     async dealTask() {
@@ -510,14 +563,6 @@ export default {
             message: "已取消删除"
           });
         });
-      // this.$refs[this.newTaskForm.ref].validate(valid => {
-      //   if (valid) {
-      //     this.submitOperation();
-      //   } else {
-      //     console.log("error");
-      //     return false;
-      //   }
-      // });
     },
     anotherSubmit() {
       if (
@@ -605,10 +650,11 @@ export default {
     async deptTreeList() {
       let res = await TaskManageApi.deptTreeList();
       this.departmentList = this.getTreeData(res[0].childNode);
+      
     },
     async changelistBy(value) {
       let valueData;
-      if (localStorage.getItem("draft") == 1) {
+      if (localStorage.getItem("judgeOperation") == 1) {
         if (Array.isArray(value)) {
           valueData = value[value.length - 1];
         } else {
@@ -648,7 +694,6 @@ export default {
       let res = await TaskManageApi.detailTask({
         taskId: this.taskId.id
       });
-      console.log("res", res);
       if (res) {
         this.model.taskName = res.taskName;
         this.model.createBy = res.founderName;
@@ -753,12 +798,16 @@ export default {
       }
     }
   },
-  mounted() {
-    this.deptTreeList();
+ async mounted() {
+   await this.deptTreeList();
     this.createPeople = JSON.parse(localStorage.getItem("userInfo")).fullName;
     if (this.taskId.id) {
       this.detailTask();
       this.operateLogList();
+    }
+    console.log("judgeOperation", localStorage.getItem("judgeOperation"));
+    if (localStorage.getItem("judgeOperation") == 1) {
+      this.findTempTask();
     }
   }
 };
