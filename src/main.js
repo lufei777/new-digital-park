@@ -7,20 +7,6 @@ import router from './router/index'
 import Vuex from 'vuex'
 import store from './vuex/store'
 
-//v-charts
-import VeLine from 'v-charts/lib/line.common' //折线图
-import VeBar from 'v-charts/lib/bar.common' //条形图
-import VeHistogram from 'v-charts/lib/histogram.common' //柱状图
-import VePie from 'v-charts/lib/pie.common' //饼图
-import VeRing from 'v-charts/lib/ring.common' //环图
-
-Vue.component(VeLine.name, VeLine);
-Vue.component(VeBar.name, VeBar);
-Vue.component(VeHistogram.name, VeHistogram);
-Vue.component(VePie.name, VePie);
-Vue.component(VeRing.name, VeRing);
-import "v-charts/lib/style.css"
-
 // ElementUi
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
