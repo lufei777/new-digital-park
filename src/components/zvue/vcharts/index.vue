@@ -49,6 +49,7 @@ const EMPTY_DATA = {
 };
 
 export default {
+  name:'zCharts',
   props: {
     options: {
       type: Object,
