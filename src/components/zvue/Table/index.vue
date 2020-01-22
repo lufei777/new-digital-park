@@ -379,49 +379,38 @@ export default {
       this.searchVal = "";
     },
     // 加载服务端数据
-    _loadServerMode(sendData) {
+    _loadServerMode(data) {
       let _this = this;
       //加载中开始
       this.loading = true;
 
       let serverMode = this.isServerMode;
       let url = this.isServerMode.url;
-
+      this._axios({
+        mehtod: this.isServerMode.type,
+        url: url,
+        data: data
+      })
+        .then(res => {
+          this._setTableData(res[this.listKey]);
+          this.setPaginationTotal(res[this.totalKey]);
+        })
+        .catch(err => {
+          //加载中结束
+          this.loading = false;
+          throw err;
+        })
+        .finally(() => {
+          //加载中结束
+          this.loading = false;
+        });
+    },
+    // AXIOS
+    _axios({ mehtod = "get", url = "", data = {} }) {
       if (url instanceof Function) {
-        //如果使用方法来进行分页请求
-        url(sendData)
-          .then(res => {
-            this._setTableData(res[this.listKey]);
-            this.setPaginationTotal(res[this.totalKey]);
-          })
-          .finally(() => {
-            //加载中结束
-            this.loading = false;
-          });
+        return url(data);
       } else if (typeof url === "string") {
-        //ajax请求type和url
-        let config = {};
-        let type = this.isServerMode.type.toLowerCase();
-
-        if (type === "get") {
-          config.params = sendData;
-        } else if (type === "post") {
-          config = sendData;
-        }
-
-        this.$axios[type](url, config)
-          .then(res => {
-            res = res.data;
-            this._setTableData(res[this.resKey]);
-            this.setPaginationTotal(res[this.totalKey]);
-          })
-          .catch(err => {
-            throw err;
-          })
-          .finally(() => {
-            //加载中结束
-            this.loading = false;
-          });
+        return this.$axios({ mehtod, url, data });
       }
     },
     //放进方法队列

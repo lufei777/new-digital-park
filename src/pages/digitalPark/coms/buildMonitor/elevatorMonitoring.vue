@@ -49,7 +49,7 @@
             radius: [50, 70],
             label:label,
           },
-          chartData: {
+          data: {
             columns: [
               "label",
               "value",
@@ -65,7 +65,7 @@
             radius: [50, 70],
             label:label,
           },
-          chartData: {
+          data: {
             columns: [
               "label",
               "value",

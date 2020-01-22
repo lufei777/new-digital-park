@@ -4,7 +4,7 @@
     width="100%"
     height="100%"
     :is="componentId"
-    :data="options.chartData"
+    :data="options.data"
     :grid="options.grid"
     :colors="options.colors"
     :visualMap="options.visualMap"
@@ -49,7 +49,7 @@ const EMPTY_DATA = {
 };
 
 export default {
-  name:'zCharts',
+  name: "zCharts",
   props: {
     options: {
       type: Object,
@@ -71,74 +71,48 @@ export default {
   methods: {
     _chartInit() {
       // 服务器模式
-      if (this._isServerMode()) {
+      if (this._isServerMode) {
         this._getServerData();
       } else {
-        this.chartData = this.options.chartData;
+        this.data = this.options.data;
       }
-    },
-    _isServerMode() {
-      let chartData = this.options.chartData;
-      return (
-        chartData.serverMode &&
-        (typeof CharacterData.rows === "undefined" ||
-          chartData.rows.length === 0)
-      );
     },
     _getServerData() {
       this.loading = true;
 
-      let serverMode = this.options.chartData.serverMode;
+      let serverMode = this.data.serverMode;
       let url = serverMode.url;
       let dataSrc = serverMode.dataSrc;
-
-      if (url instanceof Function) {
-        //如果使用方法来进行分页请求
-        url(serverMode.data)
-          .then(res => {
-            var data = res[dataSrc];
-            if (data.length) {
-              this._setchartData({
-                rows: data
-              });
-            } else {
-              this._setchartData(EMPTY_DATA);
-            }
-            //加载中结束
-            this.loading = false;
-          })
-          .catch(err => {
-            //加载中结束
-            this.loading = false;
-            this.dataEmpty = true;
-            throw err;
-          });
-      } else {
-        //ajax请求type和url
-        let type = serverMode.type.toLowerCase();
-        this.$axios({
-          method: type,
-          url: url,
-          data: serverMode.data
+      
+      this._axios({
+        mehtod: serverMode.type,
+        url: url,
+        data: serverMode.data
+      })
+        .then(res => {
+          let data = res[dataSrc];
+          if (data.length) {
+            this._setchartData({
+              rows: data
+            });
+          } else {
+            this._setchartData(EMPTY_DATA);
+          }
+          //加载中结束
+          this.loading = false;
         })
-          .then(res => {
-            var data = res.data[dataSrc];
-            if (data.length) {
-              this._setchartData({
-                rows: data
-              });
-            } else {
-              this._setchartData(EMPTY_DATA);
-            }
-            //加载中结束
-            this.loading = false;
-          })
-          .catch(err => {
-            //加载中结束
-            this.loading = false;
-            this.dataEmpty = true;
-            throw err;
-          });
+        .catch(err => {
+          //加载中结束
+          this.loading = false;
+          this.dataEmpty = true;
+          throw err;
+        });
+    }, // AXIOS
+    _axios({ mehtod = "get", url = "", data = {} }) {
+      if (url instanceof Function) {
+        return url(data);
+      } else if (typeof url === "string") {
+        return this.$axios({ mehtod, url, data });
       }
     },
     _afterConfig(options) {
@@ -146,8 +120,8 @@ export default {
       return options;
     },
     _setchartData({ columns, rows }) {
-      this.options.chartData = {
-        columns: columns || this.options.chartData.columns,
+      this.options.data = {
+        columns: columns || this.data.columns,
         rows
       };
     },
@@ -161,12 +135,18 @@ export default {
     }
   },
   computed: {
+    _isServerMode() {
+      return (
+        this.data.serverMode &&
+        (typeof this.data.rows === "undefined" || this.data.rows.length === 0)
+      );
+    },
     componentId() {
       return "ve-" + this.options.type;
     }
   },
   watch: {
-    "options.chartData"(newvalue, oldvalue) {
+    "options.data"(newvalue, oldvalue) {
       if (!(newvalue.rows instanceof Array) || newvalue.rows.length === 0) {
         this.dataEmpty = true;
       } else {
