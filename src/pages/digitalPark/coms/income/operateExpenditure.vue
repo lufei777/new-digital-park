@@ -2,18 +2,16 @@
   <div class="operate-expenditure">
      <div ref="myChart" class="my-chart"></div>
     <div>{{moduleItem.moduleName}}</div>
-    <!--<vcharts :chartConfig="chartConfig"></vcharts>-->
+    <!--<z-charts :options="chartConfig"></z-charts>-->
   </div>
 </template>
 
 <script>
-import vcharts from "@/components/vcharts";
 import CommonFun from "../../../../utils/commonFun";
 import ChartUtils from "../../../../utils/chartUtils";
 
 export default {
   name: "OperateExpenditure",
-  components: { vcharts },
   props: ["moduleItem"],
   data() {
     let _self = this;

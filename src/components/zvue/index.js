@@ -17,6 +17,14 @@ import Time from './Form/components/time';
 import Tree from './Form/components/tree';
 import Upload from './Form/components/upload';
 
+import VeLine from 'v-charts/lib/line.common' //折线图
+import VeBar from 'v-charts/lib/bar.common' //条形图
+import VeHistogram from 'v-charts/lib/histogram.common' //柱状图
+import VePie from 'v-charts/lib/pie.common' //饼图
+import VeRing from 'v-charts/lib/ring.common' //环图
+import "v-charts/lib/style.css"
+import vcharts from './vcharts'
+
 // directive
 import Clickout from "./directive/clickout"
 
@@ -37,7 +45,13 @@ const components = [
     Tree,
     Upload,
     Group,
-    Form
+    Form,
+    VeLine,
+    VeBar,
+    VeHistogram,
+    VePie,
+    VeRing,
+    vcharts
 ]
 
 const install = (Vue) => {
@@ -54,6 +68,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 export default {
     author: 'lxh',
     version: '1.0',
+    install,
     Table,
     Cascader,
     Checkbox,
@@ -69,5 +84,10 @@ export default {
     Upload,
     Group,
     Form,
-    install
+    VeLine,
+    VeBar,
+    VeHistogram,
+    VePie,
+    VeRing,
+    vcharts
 }

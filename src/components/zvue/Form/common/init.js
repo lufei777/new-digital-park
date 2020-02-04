@@ -14,7 +14,6 @@ export default function (type) {
     watch: {
       options: {
         handler() {
-          console.log('change');
           this.init();
         },
         deep: true

@@ -48,15 +48,16 @@ export const getPlaceholder = function (column, type) {
     // return column.placeholder;
     const placeholder = column.placeholder;
     const label = column.label;
-    if (type === 'search') {
+    /* if (type === 'search') {
         const searchPlaceholder = column.searchPlaceholder;
         if (!validatenull(searchPlaceholder)) {
             return searchPlaceholder;
         } else {
             return label;
         }
-    } else if (validatenull(placeholder)) {
-        if (['select', 'checkbox', 'radio', 'tree'].includes(column.type)) {
+    } else  */
+    if (validatenull(placeholder)) {
+        if (['select', 'checkbox', 'cascader', 'radio', 'tree'].includes(column.type)) {
             return `请选择 ${label}`;
         } else {
             return `请输入 ${label}`;

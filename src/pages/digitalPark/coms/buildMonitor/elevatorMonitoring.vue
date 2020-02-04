@@ -3,11 +3,11 @@
     <div class="chart-box flex">
       <!--<div class="chart1" ref="myChart1"></div>-->
       <div class="chart-box-item">
-        <vcharts :chartConfig="chartConfig" :chartData='chartConfig.chartData' class="chart1"></vcharts>
+        <z-charts :options="chartConfig" :chartData='chartConfig.chartData' class="chart1"></z-charts>
         <span>直梯</span>
       </div>
       <div class="chart-box-item">
-        <vcharts :chartConfig="chartConfig2" :chartData='chartConfig.chartData' class="chart1"></vcharts>
+        <z-charts :options="chartConfig2" :chartData='chartConfig.chartData' class="chart1"></z-charts>
         <span>扶梯</span>
       </div>
 
@@ -19,12 +19,8 @@
 <script>
   import CommonApi from '@/service/api/common'
   import ChartUtils from '@/utils/chartUtils'
-  import vcharts from "@/components/vCharts/index";
   export default {
     name: "elevatorMonitoring",
-    components: {
-      vcharts
-    },
     props: ["moduleItem"],
     data() {
       let label={
@@ -53,7 +49,7 @@
             radius: [50, 70],
             label:label,
           },
-          chartData: {
+          data: {
             columns: [
               "label",
               "value",
@@ -69,7 +65,7 @@
             radius: [50, 70],
             label:label,
           },
-          chartData: {
+          data: {
             columns: [
               "label",
               "value",
