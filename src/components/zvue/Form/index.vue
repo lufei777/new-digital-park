@@ -234,9 +234,19 @@ export default {
     },
     formRulesInit() {
       let _self = this;
-      _.map(this.options.forms, (item, key) => {
+      _.map(this.propOption, (item, key) => {
         if (item.rules && item.disabled !== false && item.display !== false) {
           let currentRules = item.rules;
+          // 必填时自动生成message
+          if (
+            !currentRules.message ||
+            currentRules.message.trim().length === 0
+          ) {
+            if (currentRules.required) {
+              currentRules.message = `必填，请填写${item.label}`;
+            }
+          }
+          // 添加进rules
           if (_.isArray(currentRules)) {
             _self.$set(_self.formRules, item.prop, currentRules);
           } else if (_.isObject(currentRules)) {

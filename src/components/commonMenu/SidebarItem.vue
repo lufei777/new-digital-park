@@ -3,7 +3,7 @@
     <template v-for="item in menuData.childNode">
       <el-menu-item
         :key="item.id"
-        v-if="item.childNode.length == 0"
+        v-if="!item.childNode || item.childNode.length == 0"
         :index="item.id + item.routeAddress"
       >
         <i v-if="item.icon && !specialRoute" :class="['iconfont',item.icon]"></i>

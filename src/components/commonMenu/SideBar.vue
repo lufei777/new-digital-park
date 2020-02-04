@@ -142,7 +142,7 @@ export default {
     },
     getActiveIndex(menu){
       if(!menu) return ;
-      if(menu[0].childNode.length!=0){
+      if(menu[0].childNode && menu[0].childNode.length!=0){
         this.getActiveIndex(menu[0].childNode)
       }else{
         this.activeTmp = menu[0].id+menu[0].routeAddress
