@@ -7,6 +7,12 @@ export default [{
     redirect: '/addpersonal',
     children: [
         {
+            path: '/personalmanageinfo',
+            name: 'personalmanageinfo',
+            meta: { title: '人员信息' },
+            component: () => import('@/pages/personalManage/personalManage')
+        },
+        {
             path: '/addpersonal',
             name: 'addpersonal',
             meta: { title: '添加人员' },

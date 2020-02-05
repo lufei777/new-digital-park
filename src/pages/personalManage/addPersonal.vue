@@ -223,7 +223,220 @@ export default {
               {
                 label: "出生日期",
                 prop: "csrq",
-                type: "datetime"
+                type: "datetime",
+                rules: {
+                  required: true
+                }
+              },
+              {
+                label: "民族",
+                prop: "mz",
+                type: "input",
+                rules: {
+                  required: true
+                }
+              },
+              {
+                label: "籍贯",
+                prop: "jg",
+                type: "input",
+                rules: {
+                  required: true
+                }
+              },
+              {
+                label: "户口类型",
+                prop: "hklx",
+                type: "select",
+                dicData: [
+                  { label: "城市", value: 0 },
+                  { label: "农村", value: 1 }
+                ],
+                rules: {
+                  required: true
+                }
+              },
+              {
+                label: "身份证号码",
+                prop: "sfzhm",
+                type: "input",
+                rules: {
+                  required: true
+                }
+              },
+              {
+                label: "婚姻状况",
+                prop: "hyzk",
+                type: "select",
+                dicData: [
+                  { label: "已婚", value: 0 },
+                  { label: "未婚", value: 1 }
+                ]
+              },
+              {
+                label: "子女个数",
+                prop: "zngs",
+                type: "number",
+                minRows: 0
+              },
+              {
+                label: "政治面貌",
+                prop: "zzmm",
+                type: "select",
+                dicData: [
+                  { label: "中共党员", value: 0 },
+                  { label: "中共预备党员", value: 1 },
+                  { label: "共青团员", value: 2 },
+                  { label: "群众", value: 3 },
+                  { label: "民革党员", value: 4 },
+                  { label: "民盟盟员", value: 5 },
+                  { label: "民建会员", value: 6 },
+                  { label: "民进会员", value: 7 },
+                  { label: "农工党党员", value: 8 },
+                  { label: "致公党党员", value: 9 },
+                  { label: "九三学社社员", value: 10 },
+                  { label: "台盟盟员", value: 11 },
+                  { label: "无党派人士", value: 12 }
+                ]
+              },
+              {
+                label: "入团日期",
+                prop: "rtrq",
+                type: "date"
+              },
+              {
+                label: "入党日期",
+                prop: "rdrq",
+                type: "date"
+              },
+              {
+                label: "工会会员",
+                prop: "ghhy",
+                type: "select",
+                dicData: [
+                  { label: "是", value: 0 },
+                  { label: "否", value: 1 }
+                ]
+              },
+              {
+                label: "学历",
+                prop: "xl",
+                type: "select",
+                dicData: [
+                  {
+                    label: "小学",
+                    value: 0
+                  },
+                  {
+                    label: "初级中学",
+                    value: 1
+                  },
+                  {
+                    label: "高级中学",
+                    value: 2
+                  },
+                  {
+                    label: "中专",
+                    value: 3
+                  },
+                  {
+                    label: "职校",
+                    value: 4
+                  },
+                  {
+                    label: "中技",
+                    value: 5
+                  },
+                  {
+                    label: "专科（高职、高专、高技）",
+                    value: 6
+                  },
+                  {
+                    label: "本科",
+                    value: 7
+                  },
+                  {
+                    label: "硕士研究生",
+                    value: 8
+                  },
+                  {
+                    label: "博士研究生",
+                    value: 9
+                  }
+                ]
+              },
+              {
+                label: "学位",
+                prop: "xw",
+                type: "select",
+                dicData: [
+                  {
+                    label: "学士",
+                    value: 0
+                  },
+                  {
+                    label: "硕士",
+                    value: 1
+                  },
+                  {
+                    label: "博士",
+                    value: 2
+                  }
+                ]
+              },
+              {
+                label: "健康状况",
+                prop: "jkzk",
+                type: "select",
+                dicData: [
+                  {
+                    label: "优秀",
+                    value: 0
+                  },
+                  {
+                    label: "良好",
+                    value: 1
+                  },
+                  {
+                    label: "一般",
+                    value: 2
+                  },
+                  {
+                    label: "较差",
+                    value: 3
+                  }
+                ]
+              },
+              { label: "身高", prop: "sg", type: "input", append: "cm" },
+              { label: "体重", prop: "tz", type: "input", append: "kg" },
+              { label: "血型", prop: "xx", type: "input" },
+              {
+                label: "现居住地",
+                prop: "xjzd",
+                type: "input",
+                rules: { required: true }
+              },
+              {
+                label: "家庭联系方式",
+                prop: "jtlxfs",
+                type: "input",
+                rules: { required: true }
+              },
+              {
+                label: "暂住证号码",
+                prop: "zzzhm",
+                type: "input"
+              },
+              {
+                label: "教育经历",
+                prop: "jyjl",
+                type: "textarea"
+              },
+              {
+                label: "家庭情况",
+                prop: "jtqk",
+                type: "textarea",
+                placeholder: "包括成员、称谓、工作单位、职务、地址"
               }
             ]
           }
