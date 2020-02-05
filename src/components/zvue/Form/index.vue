@@ -1,7 +1,7 @@
 <template>
   <div class="el-form_wrapper" :style="setPx(parentOption.formSize,'100%')">
     <el-form
-      ref="form"
+      :ref="formRef"
       status-icon
       :label-suffix="parentOption.labelSuffix || '：'"
       :rules="formRules"
@@ -14,8 +14,10 @@
       :inline-message="parentOption.inlineMessage"
     >
       <el-row :span="24">
+        <!-- :display="item.display" -->
         <z-group
           v-for="(item,index) in columnOption"
+          v-show="vaildData(!item.hide,true)"
           :key="item.prop"
           :display="item.display"
           :icon="item.icon"
@@ -61,7 +63,7 @@
                       :column="column"
                       :label="model['$'+column.prop]"
                       :size="column.size || controlSize"
-                      :disabled="vaildBoolean(column.disabled,allDisabled)"
+                      :disabled="vaildBoolean(vaildBoolean(column.disabled,item.disabled),allDisabled)"
                       :dic="DIC[column.prop]"
                     ></slot>
                     <form-temp
@@ -71,7 +73,7 @@
                       :dic="DIC[column.prop]"
                       :upload-before="uploadBefore"
                       :upload-after="uploadAfter"
-                      :disabled="vaildBoolean(column.disabled,allDisabled)"
+                      :disabled="vaildBoolean(vaildBoolean(column.disabled,item.disabled),allDisabled)"
                     >
                       <!-- 自定义表单里内容 -->
                       <template
@@ -93,13 +95,13 @@
                       <template v-if="column.prependslot" :slot="column.prependslot">
                         <slot
                           :name="column.prependslot"
-                          :disabled="vaildBoolean(column.disabled,allDisabled)"
+                          :disabled="vaildBoolean(vaildBoolean(column.disabled,item.disabled),allDisabled)"
                         ></slot>
                       </template>
                       <template v-if="column.appendslot" :slot="column.appendslot">
                         <slot
                           :name="column.appendslot"
-                          :disabled="vaildBoolean(column.disabled,allDisabled)"
+                          :disabled="vaildBoolean(vaildBoolean(column.disabled,item.disabled),allDisabled)"
                         ></slot>
                       </template>
                     </form-temp>
@@ -195,6 +197,7 @@ export default {
   },
   data() {
     return {
+      formRef: "form",
       itemSpanDefault: 12,
       formRules: {},
       formCreate: true, // 表单是否第一次创建
@@ -314,7 +317,7 @@ export default {
       }
     },
     clearValidate() {
-      this.$refs.form.clearValidate();
+      this.$refs[this.formRef].clearValidate();
     },
     /**
      * 清空表单字段
@@ -339,16 +342,22 @@ export default {
     validate(callback) {
       if (!callback) {
         return new Promise((resolve, reject) => {
-          this.$refs.form.validate(valid => {
+          this.$refs[this.formRef].validate(valid => {
             if (valid) {
               resolve(valid);
             } else {
+              this.$message.warning("表单未填写完整，请检查后再提交");
               reject(valid);
             }
           });
         });
       } else {
-        this.$refs["form"].validate(valid => callback(valid));
+        this.$refs[this.formRef].validate(valid => {
+          if (!valid) {
+            this.$message.warning("表单未填写完整，请检查后再提交");
+          }
+          callback(valid);
+        });
       }
     },
     submit() {
