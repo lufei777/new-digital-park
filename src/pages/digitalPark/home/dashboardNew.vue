@@ -229,6 +229,108 @@
             language:Cookies.get('lang'),
             menuId:this.productId
           })
+          // let res  =[
+          //   {
+          //     "id":"user-mod-rel-38cdb3c888a0410883718a4853fbf894",
+          //     "menuId":"menu-72ec912f72234956abdc681707633d9a",
+          //     "parentId":null,
+          //     "userId":"user-5a3a8369a6a7478ca844a4f4a55b82a8",
+          //     "menuName":"视频监控",
+          //     "position":1,
+          //     "routeAddress":"/digitalPark/dashboardHomePage",
+          //     "type":1,
+          //     "moduleList":[
+          //       {
+          //         "id":"menu-f9f00df8732k2ac6a0c6bae1cfj29s93",
+          //         "pid":"menu-72ec912f72234956abdc681707633d9a",
+          //         "moduleName":"视频监控",
+          //         "routeAddress":"",
+          //         "componentName":"videoMonitoring",
+          //         "contentOrder":1
+          //       }
+          //     ]
+          //   },
+          //   {
+          //     "id":"user-mod-rel-297b693efbcd4fe7a014017c91434018",
+          //     "menuId":"menu-72ec912f72234956abdc681707633d9a",
+          //     "parentId":null,
+          //     "userId":"user-5a3a8369a6a7478ca844a4f4a55b82a8",
+          //     "menuName":"门禁管理",
+          //     "position":5,
+          //     "routeAddress":"/digitalPark/dashboardHomePage",
+          //     "type":1,
+          //     "moduleList":[
+          //       {
+          //         "id":"menu-f055037c291446c0bf465332c093j29s",
+          //         "pid":"menu-72ec912f72234956abdc681707633d9a",
+          //         "moduleName":"门禁管理",
+          //         "routeAddress":"",
+          //         "componentName":"accessControl",
+          //         "contentOrder":1
+          //       }
+          //     ]
+          //   },
+          //   {
+          //     "id":"user-mod-rel-8cc9809518654028bc169918b1853d8a",
+          //     "menuId":"menu-72ec912f72234956abdc681707633d9a",
+          //     "parentId":null,
+          //     "userId":"user-5a3a8369a6a7478ca844a4f4a55b82a8",
+          //     "menuName":"入侵报警",
+          //     "position":6,
+          //     "routeAddress":"/digitalPark/dashboardHomePage",
+          //     "type":1,
+          //     "moduleList":[
+          //       {
+          //         "id":"menu-95d88963e8e666ddbe3e0aa35ck20020",
+          //         "pid":"menu-72ec912f72234956abdc681707633d9a",
+          //         "moduleName":"入侵报警",
+          //         "routeAddress":"",
+          //         "componentName":"intrusionAlarm",
+          //         "contentOrder":1
+          //       }
+          //     ]
+          //   },
+          //   {
+          //     "id":"user-mod-rel-a024c4e27e5943dba7a630003ce4ff84",
+          //     "menuId":"menu-72ec912f72234956abdc681707633d9a",
+          //     "parentId":null,
+          //     "userId":"user-5a3a8369a6a7478ca844a4f4a55b82a8",
+          //     "menuName":"预警报警",
+          //     "position":8,
+          //     "routeAddress":"/digitalPark/dashboardHomePage",
+          //     "type":1,
+          //     "moduleList":[
+          //       {
+          //         "id":"menu-f0afbb05c323409198589406f4k20s02",
+          //         "pid":"menu-72ec912f72234956abdc681707633d9a",
+          //         "moduleName":"预警报警",
+          //         "routeAddress":"",
+          //         "componentName":"buildingEarlyWarningAlarm",
+          //         "contentOrder":1
+          //       }
+          //     ]
+          //   },
+          //   {
+          //     "id":"user-mod-rel-a024c4e27e5943dba7a630003ce4ff85",
+          //     "menuId":"menu-72ec912f72234956abdc681707633d9a",
+          //     "parentId":null,
+          //     "userId":"user-5a3a8369a6a7478ca844a4f4a55b82a8",
+          //     "menuName":"巡检管理",
+          //     "position":8,
+          //     "routeAddress":"/digitalPark/dashboardHomePage",
+          //     "type":1,
+          //     "moduleList":[
+          //       {
+          //         "id":"menu-f0afbb05c323409198589406f4k20s02",
+          //         "pid":"menu-72ec912f72234956abdc681707633d9a",
+          //         "moduleName":"巡检管理",
+          //         "routeAddress":"",
+          //         "componentName":"inspection",
+          //         "contentOrder":1
+          //       }
+          //     ]
+          //   }
+          // ]
           this.proModuleList1 =res.slice(0,3)
           this.proModuleList2 =res.slice(3,5)
           this.loading=false
@@ -396,7 +498,9 @@
     flex-direction: column;
     height:100%;
     overflow: hidden;
-    background: url('../../../../static/image/digitalPark/home.png');
+    background-image: url('../../../../static/image/digitalPark/home.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
     .dashboard-left,.dashboard-right{
       width:22%;
       height:100%;
