@@ -23,7 +23,7 @@ export default {
       childNode: [
         {
           id: "11",
-          name: "添加人员",
+          name: "新增人员",
           routeAddress: "/addpersonal"
         }
       ]

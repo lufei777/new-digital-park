@@ -1,5 +1,5 @@
 <template>
-  <div class="el-form_wrapper" :style="setPx(parentOption.formSize,'100%')">
+  <div class="el-form_wrapper" :style="{width:setPx(parentOption.width,'100%')}">
     <el-form
       :ref="formRef"
       status-icon

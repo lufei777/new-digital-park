@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="panel-container">
     <div class="panel">
       <div v-if="stepsActive === 0">
         <z-form v-model="model" :options="options" :uploadAfter="uploadAfter">

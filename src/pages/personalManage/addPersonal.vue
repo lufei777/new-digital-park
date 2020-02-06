@@ -1,11 +1,13 @@
 <template>
   <div class="panel-container">
-    <div class="panel">
+    <div class="panel flex-align-center" style="align-items:flex-start;">
       <z-form :ref="options.ref" :options="options" v-model="model" @submit="submit"></z-form>
     </div>
   </div>
 </template>
 <script>
+import SystemManageApi from "@/service/api/systemManage";
+
 export default {
   data() {
     return {
@@ -13,17 +15,20 @@ export default {
       options: {
         ref: "form",
         labelWidth: "100",
+        width: "50%",
         size: "small",
         group: [
           {
             icon: "el-icon-user-solid",
             label: "基本信息",
             prop: "group1",
+            display: true,
             forms: [
               {
                 label: "姓名",
                 prop: "name",
                 type: "input",
+                span: 8,
                 rules: {
                   required: true,
                   trigger: "blur"
@@ -33,6 +38,7 @@ export default {
                 label: "性别",
                 prop: "six",
                 type: "select",
+                span: 8,
                 rules: {
                   required: true,
                   trigger: "blur"
@@ -47,7 +53,7 @@ export default {
                     value: 2
                   },
                   {
-                    label: "未知",
+                    label: "保密",
                     value: 3
                   }
                 ]
@@ -55,14 +61,24 @@ export default {
               {
                 label: "年龄",
                 prop: "age",
-                type: "number"
+                type: "input",
+                dataType: "number",
+                span: 8
               },
               {
                 label: "所在部门",
                 prop: "szbm",
-                type: "input",
+                type: "cascader",
                 rules: {
-                  required: true
+                  required: true,
+                  trigger: "blur"
+                },
+                showAllLevels: false,
+                dicUrl: SystemManageApi.getDepartmentTree,
+                props: {
+                  label: "name",
+                  value: "id",
+                  children: "childNode"
                 }
               },
               {
@@ -136,26 +152,28 @@ export default {
               {
                 label: "入职时间",
                 prop: "rzsj",
-                type: "datetime"
+                type: "date"
               },
               {
                 label: "转正时间",
                 prop: "zzsj",
-                type: "datetime"
+                type: "date"
               },
               {
                 label: "初次参加工作时间",
                 prop: "cccjgzsj",
-                type: "datetime"
+                type: "date"
               },
               {
                 label: "工号",
                 prop: "gh",
-                type: "number",
+                type: "input",
+                dataType: "number",
                 disabled: true,
                 rules: {
                   required: true
-                }
+                },
+                valueDefault: 1
               },
               {
                 label: "办公电话",
@@ -206,12 +224,14 @@ export default {
               {
                 label: "专长",
                 prop: "zc",
-                type: "textarea"
+                type: "textarea",
+                span: 24
               },
               {
                 label: "爱好",
                 prop: "ah",
-                type: "textarea"
+                type: "textarea",
+                span: 24
               }
             ]
           },
@@ -219,13 +239,15 @@ export default {
             icon: "el-icon-user",
             label: "个人信息",
             prop: "group2",
+            display: false,
             forms: [
               {
                 label: "出生日期",
                 prop: "csrq",
-                type: "datetime",
+                type: "date",
                 rules: {
-                  required: true
+                  required: true,
+                  trigger: "blur"
                 }
               },
               {
@@ -445,8 +467,21 @@ export default {
     };
   },
   methods: {
-    submit(...args) {
-      console.log(args);
+    submit(model, hide) {
+      console.log("model", model);
+
+      setTimeout(() => {
+        hide();
+        this.resetForm();
+
+        this.options.group.forEach(item => {
+          item.display = false;
+        });
+        this.options.group[1].display = true;
+      }, 500);
+    },
+    resetForm() {
+      this.$refs[this.options.ref].resetForm();
     }
   }
 };
