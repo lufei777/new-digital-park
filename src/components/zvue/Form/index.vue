@@ -16,19 +16,19 @@
       <el-row :span="24">
         <!-- :display="item.display" -->
         <z-group
-          v-for="(item,index) in columnOption"
-          v-show="vaildData(!item.hide,true)"
-          :key="item.prop"
-          :display="item.display"
-          :icon="item.icon"
+          v-for="(group,index) in columnOption"
+          v-show="vaildData(!group.hide,true)"
+          :key="group.prop"
+          :display="group.display"
+          :icon="group.icon"
           :card="parentOption.card"
-          :label="item.label"
+          :label="group.label"
         >
-          <template slot="header" v-if="$slots[item.prop+'Header']">
-            <slot :name="`${item.prop}Header`"></slot>
+          <template slot="header" v-if="$slots[group.prop+'Header']">
+            <slot :name="`${group.prop}Header`"></slot>
           </template>
           <div class="z-form_group">
-            <template v-for="(column, cindex) in item.forms">
+            <template v-for="(column, cindex) in group.forms">
               <el-col
                 :key="column.prop"
                 :span="column.span || itemSpanDefault"
@@ -36,6 +36,7 @@
                 :push="column.push || 0"
                 :pull="column.pull || 0"
                 :xs="24"
+                v-show="vaildData(!column.hide,true)"
                 v-if="vaildDisplay(column)"
               >
                 <el-form-item
@@ -63,7 +64,7 @@
                       :column="column"
                       :label="model['$'+column.prop]"
                       :size="column.size || controlSize"
-                      :disabled="vaildBoolean(vaildBoolean(column.disabled,item.disabled),allDisabled)"
+                      :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
                       :dic="DIC[column.prop]"
                     ></slot>
                     <form-temp
@@ -73,7 +74,7 @@
                       :dic="DIC[column.prop]"
                       :upload-before="uploadBefore"
                       :upload-after="uploadAfter"
-                      :disabled="vaildBoolean(vaildBoolean(column.disabled,item.disabled),allDisabled)"
+                      :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
                     >
                       <!-- 自定义表单里内容 -->
                       <template
@@ -95,13 +96,13 @@
                       <template v-if="column.prependslot" :slot="column.prependslot">
                         <slot
                           :name="column.prependslot"
-                          :disabled="vaildBoolean(vaildBoolean(column.disabled,item.disabled),allDisabled)"
+                          :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
                         ></slot>
                       </template>
                       <template v-if="column.appendslot" :slot="column.appendslot">
                         <slot
                           :name="column.appendslot"
-                          :disabled="vaildBoolean(vaildBoolean(column.disabled,item.disabled),allDisabled)"
+                          :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
                         ></slot>
                       </template>
                     </form-temp>

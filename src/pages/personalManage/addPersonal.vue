@@ -1,12 +1,37 @@
 <template>
-  <div class="panel-container">
-    <div class="panel flex-align-center" style="align-items:flex-start;">
-      <z-form :ref="options.ref" :options="options" v-model="model" @submit="submit"></z-form>
+  <div id="personal-manage" class="panel-container">
+    <div class="panel">
+      <el-tabs v-if="pageConfig.flag === 'edit'" type="border-card" @tab-click="tabClick">
+        <el-tab-pane label="基本信息"></el-tab-pane>
+        <el-tab-pane label="个人信息"></el-tab-pane>
+      </el-tabs>
+
+      <div class="flex-align-center" style="align-items:flex-start;background:#fff;">
+        <z-form :ref="options.ref" :options="options" v-model="model" @submit="submit">
+          <template slot="menuBtn" slot-scope="scope">
+            <!-- <el-button @click="lastStep">上一步</el-button>
+            <el-button @click="nextStep">下一步</el-button>-->
+            <el-button @click="backList(scope)">返回</el-button>
+          </template>
+        </z-form>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import SystemManageApi from "@/service/api/systemManage";
+const apiConfig = {
+  add: {
+    flag: "add",
+    title: "新增人员",
+    api: SystemManageApi.addHouse
+  },
+  edit: {
+    flag: "edit",
+    title: "编辑人员",
+    api: SystemManageApi.editHouse
+  }
+};
 
 export default {
   data() {
@@ -15,7 +40,7 @@ export default {
       options: {
         ref: "form",
         labelWidth: "100",
-        width: "50%",
+        width: "70%",
         size: "small",
         group: [
           {
@@ -25,10 +50,21 @@ export default {
             display: true,
             forms: [
               {
-                label: "姓名",
-                prop: "name",
+                label: "用户id",
+                prop: "user_id",
+                hide: true
+              },
+              {
+                label: "工号",
+                prop: "jobNumber",
                 type: "input",
-                span: 8,
+                hide: true,
+                tip: "自动生成"
+              },
+              {
+                label: "姓名",
+                prop: "fullName",
+                type: "input",
                 rules: {
                   required: true,
                   trigger: "blur"
@@ -36,9 +72,8 @@ export default {
               },
               {
                 label: "性别",
-                prop: "six",
+                prop: "sex",
                 type: "select",
-                span: 8,
                 rules: {
                   required: true,
                   trigger: "blur"
@@ -58,16 +93,16 @@ export default {
                   }
                 ]
               },
-              {
+              /* {
                 label: "年龄",
                 prop: "age",
                 type: "input",
                 dataType: "number",
                 span: 8
-              },
+              }, */
               {
                 label: "所在部门",
-                prop: "szbm",
+                prop: "orgName",
                 type: "cascader",
                 rules: {
                   required: true,
@@ -83,7 +118,7 @@ export default {
               },
               {
                 label: "所在岗位",
-                prop: "szgw",
+                prop: "position",
                 type: "input",
                 rules: {
                   required: true
@@ -91,7 +126,7 @@ export default {
               },
               {
                 label: "岗位级别",
-                prop: "gwjb",
+                prop: "level",
                 type: "input",
                 rules: {
                   required: true
@@ -99,7 +134,7 @@ export default {
               },
               {
                 label: "直接上级",
-                prop: "zjsj",
+                prop: "superior",
                 type: "input",
                 rules: {
                   required: true
@@ -107,7 +142,7 @@ export default {
               },
               {
                 label: "员工状态",
-                prop: "ygzt",
+                prop: "status",
                 type: "select",
                 rules: {
                   required: true
@@ -129,7 +164,7 @@ export default {
               },
               {
                 label: "员工类型",
-                prop: "yglx",
+                prop: "type",
                 type: "select",
                 rules: {
                   required: true
@@ -151,53 +186,42 @@ export default {
               },
               {
                 label: "入职时间",
-                prop: "rzsj",
+                prop: "entryDate",
                 type: "date"
               },
               {
                 label: "转正时间",
-                prop: "zzsj",
+                prop: "correctionDate",
                 type: "date"
               },
               {
                 label: "初次参加工作时间",
-                prop: "cccjgzsj",
+                prop: "workDate",
                 type: "date"
               },
               {
-                label: "工号",
-                prop: "gh",
-                type: "input",
-                dataType: "number",
-                disabled: true,
-                rules: {
-                  required: true
-                },
-                valueDefault: 1
-              },
-              {
                 label: "办公电话",
-                prop: "bgdh",
+                prop: "officePhone",
                 type: "input"
               },
               {
                 label: "移动电话",
-                prop: "yddh",
+                prop: "telePhone",
                 type: "input"
               },
               {
                 label: "工作邮箱",
-                prop: "gzyx",
+                prop: "officeEmail",
                 type: "input"
               },
               {
                 label: "个人邮箱",
-                prop: "gryx",
+                prop: "email",
                 type: "input"
               },
               {
                 label: "办公地点",
-                prop: "bgdd",
+                prop: "officeAddress",
                 type: "input",
                 rules: {
                   required: true
@@ -205,7 +229,7 @@ export default {
               },
               {
                 label: "照片",
-                prop: "housePictureVOList",
+                prop: "pictureUrl",
                 type: "upload",
                 listType: "picture-img",
                 span: 24,
@@ -223,13 +247,13 @@ export default {
               },
               {
                 label: "专长",
-                prop: "zc",
+                prop: "expertise",
                 type: "textarea",
                 span: 24
               },
               {
                 label: "爱好",
-                prop: "ah",
+                prop: "hobby",
                 type: "textarea",
                 span: 24
               }
@@ -242,8 +266,13 @@ export default {
             display: false,
             forms: [
               {
+                label: "用户id",
+                prop: "user_id",
+                hide: true
+              },
+              {
                 label: "出生日期",
-                prop: "csrq",
+                prop: "birthday",
                 type: "date",
                 rules: {
                   required: true,
@@ -252,7 +281,7 @@ export default {
               },
               {
                 label: "民族",
-                prop: "mz",
+                prop: "nation",
                 type: "input",
                 rules: {
                   required: true
@@ -260,7 +289,7 @@ export default {
               },
               {
                 label: "籍贯",
-                prop: "jg",
+                prop: "natives",
                 type: "input",
                 rules: {
                   required: true
@@ -268,11 +297,11 @@ export default {
               },
               {
                 label: "户口类型",
-                prop: "hklx",
+                prop: "residence_type",
                 type: "select",
                 dicData: [
-                  { label: "城市", value: 0 },
-                  { label: "农村", value: 1 }
+                  { label: "城市", value: 1 },
+                  { label: "农村", value: 2 }
                 ],
                 rules: {
                   required: true
@@ -280,7 +309,7 @@ export default {
               },
               {
                 label: "身份证号码",
-                prop: "sfzhm",
+                prop: "cardNo",
                 type: "input",
                 rules: {
                   required: true
@@ -288,22 +317,22 @@ export default {
               },
               {
                 label: "婚姻状况",
-                prop: "hyzk",
+                prop: "maritalStatus",
                 type: "select",
                 dicData: [
-                  { label: "已婚", value: 0 },
-                  { label: "未婚", value: 1 }
+                  { label: "已婚", value: 1 },
+                  { label: "未婚", value: 2 }
                 ]
               },
               {
                 label: "子女个数",
-                prop: "zngs",
+                prop: "childNum",
                 type: "number",
                 minRows: 0
               },
               {
                 label: "政治面貌",
-                prop: "zzmm",
+                prop: "political",
                 type: "select",
                 dicData: [
                   { label: "中共党员", value: 0 },
@@ -323,26 +352,26 @@ export default {
               },
               {
                 label: "入团日期",
-                prop: "rtrq",
+                prop: "groupDate",
                 type: "date"
               },
               {
                 label: "入党日期",
-                prop: "rdrq",
+                prop: "partyDate",
                 type: "date"
               },
               {
                 label: "工会会员",
-                prop: "ghhy",
+                prop: "guild",
                 type: "select",
                 dicData: [
-                  { label: "是", value: 0 },
-                  { label: "否", value: 1 }
+                  { label: "是", value: 1 },
+                  { label: "否", value: 2 }
                 ]
               },
               {
                 label: "学历",
-                prop: "xl",
+                prop: "education",
                 type: "select",
                 dicData: [
                   {
@@ -389,7 +418,7 @@ export default {
               },
               {
                 label: "学位",
-                prop: "xw",
+                prop: "degree",
                 type: "select",
                 dicData: [
                   {
@@ -408,83 +437,161 @@ export default {
               },
               {
                 label: "健康状况",
-                prop: "jkzk",
+                prop: "health",
                 type: "select",
                 dicData: [
                   {
                     label: "优秀",
-                    value: 0
-                  },
-                  {
-                    label: "良好",
                     value: 1
                   },
                   {
-                    label: "一般",
+                    label: "良好",
                     value: 2
                   },
                   {
-                    label: "较差",
+                    label: "一般",
                     value: 3
+                  },
+                  {
+                    label: "较差",
+                    value: 4
                   }
                 ]
               },
-              { label: "身高", prop: "sg", type: "input", append: "cm" },
-              { label: "体重", prop: "tz", type: "input", append: "kg" },
-              { label: "血型", prop: "xx", type: "input" },
+              { label: "身高", prop: "height", type: "input", append: "cm" },
+              { label: "体重", prop: "weight", type: "input", append: "kg" },
+              { label: "血型", prop: "bloodType", type: "input" },
               {
                 label: "现居住地",
-                prop: "xjzd",
+                prop: "address",
                 type: "input",
                 rules: { required: true }
               },
               {
                 label: "家庭联系方式",
-                prop: "jtlxfs",
+                prop: "familyContact",
                 type: "input",
                 rules: { required: true }
               },
               {
                 label: "暂住证号码",
-                prop: "zzzhm",
+                prop: "temporaryNo",
+                placeholder: "非籍贯地的居住证号码",
                 type: "input"
               },
               {
                 label: "教育经历",
-                prop: "jyjl",
+                prop: "educationExperience",
                 type: "textarea"
               },
               {
                 label: "家庭情况",
-                prop: "jtqk",
+                prop: "familyDetails",
                 type: "textarea",
                 placeholder: "包括成员、称谓、工作单位、职务、地址"
               }
             ]
           }
         ]
-      }
+      },
+      step: 0,
+      infoArr: [],
+      pageConfig: apiConfig.add
     };
   },
+  created() {
+    if (this.$route.query || this.$route.params) {
+      let params = this.$route.params;
+      // 传递过来的数据
+      if (!_.isEmpty(params.model)) {
+        this.pageConfig = _.cloneDeep(apiConfig.edit);
+        this.model = { ...this.model, ...params.model };
+      }
+      // 传递过来额外的配置
+      this.options = {
+        ...this.options,
+        ...params.extraOptions
+      };
+      // 如果有disabled属性，则为查看详情
+      if (this.options.disabled) {
+        this.pageConfig.title = "人员详情";
+      }
+    }
+  },
   methods: {
+    nextStep(model, hide) {
+      hide(); // 隐藏提交状态
+      this.resetForm(); // 重置form
+
+      this.infoArr[this.step] = _.cloneDeep(model); // 保存当前model
+      this.step++; // 下一步
+
+      // 将下一步group显示
+      this.displayGroup(this.step);
+    },
+    lastStep() {
+      this.step--;
+
+      // 将上一步group显示
+      this.displayGroup(this.step);
+    },
+    displayGroup(index) {
+      this.options.group.forEach(item => {
+        item.display = false;
+      });
+      this.options.group[index].display = true;
+      this.model = this.infoArr[index] || {};
+    },
     submit(model, hide) {
       console.log("model", model);
 
       setTimeout(() => {
-        hide();
-        this.resetForm();
+        if (this.step === this.options.group.length - 1 || this.pageConfig.flag === 'edit') {
+          this.backList();
+          return;
+        }
 
-        this.options.group.forEach(item => {
-          item.display = false;
+        this.nextStep(model, hide);
+        this.$nextTick(() => {
+          this.model.user_id = "9527";
         });
-        this.options.group[1].display = true;
       }, 500);
     },
     resetForm() {
       this.$refs[this.options.ref].resetForm();
+    },
+    backList() {
+      this.$router.push({
+        name: "personalmanageinfo"
+      });
+    },
+    tabClick(tab, event) {
+      // console.log(tab, event);
+      this.displayGroup(tab.index);
     }
   }
 };
 </script>
-<style lang='less' scoped>
+<style lang='less'>
+#personal-manage {
+  .panel {
+    padding: 0;
+  }
+
+  .el-tabs--border-card {
+    position: relative;
+    box-shadow: unset;
+    border: 0;
+  }
+
+  .el-tabs__content{
+    padding: 20px;
+  }
+
+  .el-tabs__header {
+    position: absolute !important;
+    z-index: 10;
+    width: 100%;
+  }
+}
 </style>

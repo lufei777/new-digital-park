@@ -117,12 +117,12 @@ export const vaildData = (val, dafult) => {
     }
     return !validatenull(val) ? val : dafult;
 };
-export const vaildBoolean = (bool1, bool2) => {
-    if (typeof bool1 === 'boolean') {
-        return bool1;
-    }
-    if (typeof bool2 === 'boolean') {
-        return bool2;
+export const vaildBoolean = (...args) => {
+    for (let index = 0; index < args.length; index++) {
+        const item = args[index];
+        if (typeof item === 'boolean') {
+            return item;
+        }
     }
     return false;
 }
