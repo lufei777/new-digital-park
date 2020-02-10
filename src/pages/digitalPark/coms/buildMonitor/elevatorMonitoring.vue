@@ -3,11 +3,11 @@
     <div class="chart-box flex">
       <!--<div class="chart1" ref="myChart1"></div>-->
       <div class="chart-box-item">
-        <z-charts :options="chartConfig" :chartData='chartConfig.chartData' class="chart1"></z-charts>
+        <z-charts :options="chartConfig" class="chart1"></z-charts>
         <span>直梯</span>
       </div>
       <div class="chart-box-item">
-        <z-charts :options="chartConfig2" :chartData='chartConfig.chartData' class="chart1"></z-charts>
+        <z-charts :options="chartConfig2" class="chart1"></z-charts>
         <span>扶梯</span>
       </div>
 
@@ -83,14 +83,14 @@
         this.initChart(res)
       },
       initChart(res){
-        this.chartConfig.chartData.rows=[{
+        this.chartConfig.data.rows=[{
             label:'上升',value:res[0].up
           },{
             label:'下降',value:res[0].down
           },{
             label:'停止',value:res[0].stop
         }]
-        this.chartConfig2.chartData.rows=[{
+        this.chartConfig2.data.rows=[{
           label:'上升',value:res[1].up
         },{
           label:'下降',value:res[1].down
