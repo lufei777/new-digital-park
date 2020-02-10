@@ -1,53 +1,17 @@
 <template>
   <div class="video-monitoring">
-    <z-charts :options="chartConfig" class="chart1"></z-charts>
+    <div class="my-chart" ref="myChart"></div>
   </div>
 </template>
 
 <script>
+  import ChartUtils from '@/utils/chartUtils'
   export default {
     name: 'videoMonitoring',
     components: {
     },
     data () {
       return {
-        chartConfig:{
-          type:'ring',
-          data: {
-            columns: [
-              "name",
-              "value",
-            ],
-            rows: [{}]
-          },
-          legend:{
-            textStyle:{
-              color:'#8FD3FA',
-              fontSize:14,
-            },
-            right:10,
-            y:'40%',
-            orient: 'vertical',
-          },
-          settings:{
-            offsetY: 130,
-            center:['10%','10%'],
-            radius: ['50%', '70%'],
-            label:{
-              normal: {
-                show: false,
-                position: 'center'
-              },
-              emphasis: {
-                show: true,
-                textStyle: {
-                  fontSize: '20',
-                  fontWeight: 'bold'
-                }
-              }
-            }
-          },
-        }
       }
     },
     computed:{
@@ -57,9 +21,37 @@
     methods: {
       getVideoData(){
         let res = [{id:1,name:'硬盘录像机',value:100},
-                   {id:1,name:'摄像机',value:20},
-                   {id:1,name:'矩阵',value:1}]
-        this.chartConfig.data.rows=res
+                   {id:2,name:'摄像机',value:20},
+                   {id:3,name:'矩阵',value:1}]
+        this.initChart(res)
+      },
+      initChart(res){
+        let myChart = echarts.init(this.$refs.myChart);
+        let legendData = [];
+        let dataList = res;
+        res.map(item => {
+          legendData.push(`${item.name}`);
+        });
+        let seriesData =dataList
+        let data = {
+          legendData,
+          seriesData,
+          legendUi:{
+            top:'center',
+            right:'10',
+            textStyle:{
+              color:'#8FD3FA'
+            },
+            formatter:function(name){
+              let obj=res.find((item)=>item.name==name)
+              return name+':'+obj.value
+            }
+          },
+          seriesUi:{
+            center:['35%','50%']
+          }
+        };
+        ChartUtils.hollowPieChart(myChart,data);
       }
     },
     mounted(){
