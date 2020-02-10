@@ -391,10 +391,10 @@ export default {
     addAsset() {
       if (this.assetIds) {
         this.multiEditAsset();
-      } else if(this.assetId){
-        this.addSingleAsset();
       }else if(this.fromFlag=='stockApply'){
         this.$parent.addStockDetail &&  this.$parent.addStockDetail({...this.assetAddForm})
+      }else{
+        this.addSingleAsset()
       }
     },
     onProviderChange(val) {

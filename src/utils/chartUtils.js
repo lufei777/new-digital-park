@@ -61,7 +61,10 @@ class chartUtils {
   }
 
   //空心饼图
-  hollowPieChart(dom, data,resizeBox) {
+  hollowPieChart(dom, data) {
+    let { legendUi,legendUi:{textStyle:legendTextStyle}={} } = data
+    let { seriesUi } = data
+    console.log("1",legendTextStyle)
     let option = {
       title: {
         text: data.titleText,
@@ -80,14 +83,21 @@ class chartUtils {
       },
       legend: {
         orient: 'vertical',
-        x: 'right',
-        data: data.legendData
+        right: legendUi.right || '',
+        top:legendUi.top || '',
+        data: data.legendData,
+        textStyle:{
+          fontSize:14,
+          color:legendTextStyle && legendTextStyle.color || 'gray'
+        },
+        formatter:legendUi && legendUi.formatter || ''
       },
-      color: ['#4DA1FF', '#83D587', '#FFCE33', '#FF7B8C'],
+      color: data.color || ['#4DA1FF', '#83D587', '#FFCE33', '#FF7B8C'],
       series: [{
         name:data.seriesName?data.seriesName:'',
         type: 'pie',
         radius: ['50%', '70%'],
+        center:seriesUi.center || '',
         avoidLabelOverlap: false,
         label: {
           normal: {
