@@ -4,12 +4,12 @@ export default [{
     meta: { title: '人事管理' },
     // component: () => import('@/pages/commonProject/coms/commonIndex'),
     component: () => import('@/pages/personalManage'),
-    redirect: '/addpersonal',
+    redirect: '/personalmanageinfo',
     children: [
         {
             path: '/personalmanageinfo',
             name: 'personalmanageinfo',
-            meta: { title: '人员信息' },
+            meta: { title: '用户管理' },
             component: () => import('@/pages/personalManage/personalManage')
         },
         {

@@ -1,7 +1,7 @@
 <template>
-  <div class="el-form_wrapper" :style="setPx(parentOption.formSize,'100%')">
+  <div class="el-form_wrapper" :style="{width:setPx(parentOption.width,'100%')}">
     <el-form
-      ref="form"
+      :ref="formRef"
       status-icon
       :label-suffix="parentOption.labelSuffix || '：'"
       :rules="formRules"
@@ -14,19 +14,21 @@
       :inline-message="parentOption.inlineMessage"
     >
       <el-row :span="24">
+        <!-- :display="item.display" -->
         <z-group
-          v-for="(item,index) in columnOption"
-          :key="item.prop"
-          :display="item.display"
-          :icon="item.icon"
+          v-for="(group,index) in columnOption"
+          v-show="vaildData(!group.hide,true)"
+          :key="group.prop"
+          :display="group.display"
+          :icon="group.icon"
           :card="parentOption.card"
-          :label="item.label"
+          :label="group.label"
         >
-          <template slot="header" v-if="$slots[item.prop+'Header']">
-            <slot :name="`${item.prop}Header`"></slot>
+          <template slot="header" v-if="$slots[group.prop+'Header']">
+            <slot :name="`${group.prop}Header`"></slot>
           </template>
           <div class="z-form_group">
-            <template v-for="(column, cindex) in item.forms">
+            <template v-for="(column, cindex) in group.forms">
               <el-col
                 :key="column.prop"
                 :span="column.span || itemSpanDefault"
@@ -34,6 +36,7 @@
                 :push="column.push || 0"
                 :pull="column.pull || 0"
                 :xs="24"
+                v-show="vaildData(!column.hide,true)"
                 v-if="vaildDisplay(column)"
               >
                 <el-form-item
@@ -61,7 +64,7 @@
                       :column="column"
                       :label="model['$'+column.prop]"
                       :size="column.size || controlSize"
-                      :disabled="vaildBoolean(column.disabled,allDisabled)"
+                      :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
                       :dic="DIC[column.prop]"
                     ></slot>
                     <form-temp
@@ -71,7 +74,7 @@
                       :dic="DIC[column.prop]"
                       :upload-before="uploadBefore"
                       :upload-after="uploadAfter"
-                      :disabled="vaildBoolean(column.disabled,allDisabled)"
+                      :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
                     >
                       <!-- 自定义表单里内容 -->
                       <template
@@ -93,13 +96,13 @@
                       <template v-if="column.prependslot" :slot="column.prependslot">
                         <slot
                           :name="column.prependslot"
-                          :disabled="vaildBoolean(column.disabled,allDisabled)"
+                          :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
                         ></slot>
                       </template>
                       <template v-if="column.appendslot" :slot="column.appendslot">
                         <slot
                           :name="column.appendslot"
-                          :disabled="vaildBoolean(column.disabled,allDisabled)"
+                          :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
                         ></slot>
                       </template>
                     </form-temp>
@@ -195,6 +198,7 @@ export default {
   },
   data() {
     return {
+      formRef: "form",
       itemSpanDefault: 12,
       formRules: {},
       formCreate: true, // 表单是否第一次创建
@@ -314,7 +318,7 @@ export default {
       }
     },
     clearValidate() {
-      this.$refs.form.clearValidate();
+      this.$refs[this.formRef].clearValidate();
     },
     /**
      * 清空表单字段
@@ -339,16 +343,22 @@ export default {
     validate(callback) {
       if (!callback) {
         return new Promise((resolve, reject) => {
-          this.$refs.form.validate(valid => {
+          this.$refs[this.formRef].validate(valid => {
             if (valid) {
               resolve(valid);
             } else {
+              this.$message.warning("表单未填写完整，请检查后再提交");
               reject(valid);
             }
           });
         });
       } else {
-        this.$refs["form"].validate(valid => callback(valid));
+        this.$refs[this.formRef].validate(valid => {
+          if (!valid) {
+            this.$message.warning("表单未填写完整，请检查后再提交");
+          }
+          callback(valid);
+        });
       }
     },
     submit() {

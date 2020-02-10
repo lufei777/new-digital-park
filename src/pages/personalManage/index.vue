@@ -22,9 +22,9 @@ export default {
       routeAddress: "/personalmanage",
       childNode: [
         {
-          id: "11",
-          name: "添加人员",
-          routeAddress: "/addpersonal"
+          id: "12",
+          name: "人员信息",
+          routeAddress: "/personalmanageinfo"
         }
       ]
     };
