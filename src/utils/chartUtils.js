@@ -64,7 +64,7 @@ class chartUtils {
   hollowPieChart(dom, data) {
     let { legendUi={},legendUi:{textStyle:legendTextStyle}={} } = data
     let { seriesUi={} } = data
-    console.log("1",legendTextStyle,legendUi)
+    // console.log("1",legendTextStyle,legendUi)
     let option = {
       title: {
         text: data.titleText,

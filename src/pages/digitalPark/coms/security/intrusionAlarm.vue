@@ -6,6 +6,7 @@
 
 <script>
   import ChartUtils from '@/utils/chartUtils'
+  import CommonApi from '@/service/api/common'
   export default {
     name: 'intrusionAlarm',
     components: {
@@ -19,10 +20,18 @@
     watch:{
     },
     methods: {
-      getVideoData(){
-        let res = [{id:1,name:'报警点数',value:5},
-          {id:2,name:'未报警点数',value:145}]
-        this.initChart(res)
+     async getInstrusionData(){
+       let res = await CommonApi.getHomeInterfaceMonitor({
+         homeId:8
+       })
+       let tmp = [{
+          name:'报警点数',
+          value:res.alarm
+       },{
+         name:'未报警点数',
+         value:res.normal
+       }]
+        this.initChart(tmp)
       },
       initChart(res){
         let myChart = echarts.init(this.$refs.myChart);
@@ -55,7 +64,7 @@
       }
     },
     mounted(){
-      this.getVideoData()
+      this.getInstrusionData()
     }
   }
 </script>
