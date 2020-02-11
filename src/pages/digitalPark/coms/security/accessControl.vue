@@ -6,6 +6,7 @@
 
 <script>
   import ChartUtils from '@/utils/chartUtils'
+  import CommonApi from '@/service/api/common'
   export default {
     name: 'accessControl',
     components: {
@@ -19,10 +20,21 @@
     watch:{
     },
     methods: {
-      getVideoData(){
-        let res = [{id:1,name:'开启门禁',value:57},
-          {id:2,name:'关闭门禁',value:43}]
-        this.initChart(res)
+      async getAccessData(){
+        let res = await CommonApi.getHomeInterfaceMonitor({
+          homeId:7
+        })
+        let tmp=[{
+          name:'开启门禁',
+          value:res.open
+        },{
+          name:'关闭门禁',
+          value:res.close
+        },{
+          name:'未连接',
+          value:res.unconnected
+        }]
+        this.initChart(tmp)
       },
       initChart(res){
         let myChart = echarts.init(this.$refs.myChart);
@@ -43,19 +55,19 @@
             },
             formatter:function(name){
               let obj=res.find((item)=>item.name==name)
-              return name+':'+obj.value
+              return name+'：'+obj.value
             }
           },
           seriesUi:{
             center:['35%','50%']
           },
-          color:['purple','yellow']
+          color:['#83D587','red','yellow']
         };
         ChartUtils.hollowPieChart(myChart,data);
       }
     },
     mounted(){
-      this.getVideoData()
+      this.getAccessData()
     }
   }
 </script>
