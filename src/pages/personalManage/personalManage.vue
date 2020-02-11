@@ -18,7 +18,11 @@
     </div>
 
     <div class="table panel">
-      <z-table :ref="personalManageTable.ref" :tableConfig="personalManageTable">
+      <z-table
+        :ref="personalManageTable.ref"
+        :tableConfig="personalManageTable"
+        @sort-change="sortChange"
+      >
         <template slot="custom-top" slot-scope="obj">
           <el-button :size="obj.size" type="primary" @click="addedProperty(obj)">新增</el-button>
           <el-button :size="obj.size" type="primary" @click="bulkImport(obj)">批量导入</el-button>
@@ -34,7 +38,7 @@
 </template>
 <script>
 import { LeaseManageDic } from "@/utils/dictionary";
-import leaseManageApi from "@/service/api/leaseManage";
+import personalManageApi from "@/service/api/personalManage";
 import commonFun from "@/utils/commonFun.js";
 const temMmodel = {
   fullName: "刘二狗",
@@ -82,6 +86,72 @@ const temMmodel = {
   educationExperience: "没有\n1\n2\n3",
   familyDetails: "没有\n1\n2\n3"
 };
+
+const data = [
+  {
+    id: "9558866",
+    jobNumber: "9527",
+    fullName: "刘二狗",
+    sex: "男",
+    orgName: "软件部",
+    position: "Java开发工程师",
+    level: "一级",
+    superior: "老王",
+    type: "正式",
+    status: "全职",
+    officeAddress: "信智联",
+    birthday: "1995/01/05",
+    nation: "汉",
+    natives: "北京市",
+    residence_type: "城市",
+    cardNo: "123456789000000000",
+    health: "良好",
+    address: "北京市海淀区",
+    familyContact: "12345678900"
+  },
+  {
+    id: "9558867",
+    jobNumber: "9527",
+    fullName: "刘三狗",
+    sex: "男",
+    orgName: "软件部",
+    position: "Java开发工程师",
+    level: "一级",
+    superior: "老王",
+    type: "正式",
+    status: "全职",
+    officeAddress: "信智联",
+    birthday: "1995/01/05",
+    nation: "汉",
+    natives: "北京市",
+    residence_type: "城市",
+    cardNo: "123456789000000000",
+    health: "良好",
+    address: "北京市海淀区",
+    familyContact: "12345678900"
+  },
+  {
+    id: "9558868",
+    jobNumber: "9527",
+    fullName: "刘四狗",
+    sex: "男",
+    orgName: "软件部",
+    position: "Java开发工程师",
+    level: "一级",
+    superior: "老王",
+    type: "正式",
+    status: "全职",
+    officeAddress: "信智联",
+    birthday: "1995/01/05",
+    nation: "汉",
+    natives: "北京市",
+    residence_type: "城市",
+    cardNo: "123456789000000000",
+    health: "良好",
+    address: "北京市海淀区",
+    familyContact: "12345678900"
+  }
+];
 
 export default {
   data() {
@@ -133,71 +203,19 @@ export default {
         ref: "personalManageTable",
         customTop: true,
         customTopPosition: "right",
-        data: [
-          {
-            id: "9558866",
-            jobNumber: "9527",
-            fullName: "刘二狗",
-            sex: "男",
-            orgName: "软件部",
-            position: "Java开发工程师",
-            level: "一级",
-            superior: "老王",
-            type: "正式",
-            status: "全职",
-            officeAddress: "信智联",
-            birthday: "1995/01/05",
-            nation: "汉",
-            natives: "北京市",
-            residence_type: "城市",
-            cardNo: "123456789000000000",
-            health: "良好",
-            address: "北京市海淀区",
-            familyContact: "12345678900"
+        serverMode: {
+          url: personalManageApi.getUserMessageList,
+          data: {
+            pageNum: 1,
+            pageSize: 10
           },
-          {
-            id: "9558867",
-            jobNumber: "9527",
-            fullName: "刘三狗",
-            sex: "男",
-            orgName: "软件部",
-            position: "Java开发工程师",
-            level: "一级",
-            superior: "老王",
-            type: "正式",
-            status: "全职",
-            officeAddress: "信智联",
-            birthday: "1995/01/05",
-            nation: "汉",
-            natives: "北京市",
-            residence_type: "城市",
-            cardNo: "123456789000000000",
-            health: "良好",
-            address: "北京市海淀区",
-            familyContact: "12345678900"
-          },
-          {
-            id: "9558868",
-            jobNumber: "9527",
-            fullName: "刘四狗",
-            sex: "男",
-            orgName: "软件部",
-            position: "Java开发工程师",
-            level: "一级",
-            superior: "老王",
-            type: "正式",
-            status: "全职",
-            officeAddress: "信智联",
-            birthday: "1995/01/05",
-            nation: "汉",
-            natives: "北京市",
-            residence_type: "城市",
-            cardNo: "123456789000000000",
-            health: "良好",
-            address: "北京市海淀区",
-            familyContact: "12345678900"
+          props: {
+            listKey: "list",
+            total: "total",
+            pageSize: "pageSize",
+            pageNum: "pageNum"
           }
-        ],
+        },
         operation: {
           width: 100
         },
@@ -210,7 +228,8 @@ export default {
           {
             prop: "fullName",
             label: "姓名",
-            fixed: "left"
+            fixed: "left",
+            sortable: true
           },
           {
             prop: "sex",
@@ -220,13 +239,14 @@ export default {
           {
             prop: "orgName",
             label: "所在部门",
-            fixed: "left"
+            fixed: "left",
+            width: "120"
           },
           {
             prop: "position",
             label: "所在岗位",
             fixed: "left",
-            width: "150"
+            width: "120"
           },
           {
             prop: "level",
@@ -315,24 +335,27 @@ export default {
     getPropertyDetail(row) {
       return leaseManageApi.houseDetails(row);
     },
-    propertyDetail({ scopeRow: { $index, row, _self } }) {
-      temMmodel['user_id'] = row.id;
+    propertyDetail({ scopeRow: { $index, row: model, _self } }) {
+      // 为了区分messageId和userId，做的处理
+      model["messageId"] = model.id;
       this.$router.push({
         name: "addpersonal",
         params: {
           extraOptions: {
             disabled: true
           },
-          model: temMmodel
+          model
         }
       });
     },
-    propertyEdit({ scopeRow: { $index, row, _self } }) {
-      temMmodel['user_id'] = row.id;
+    propertyEdit({ scopeRow: { $index, row: model, _self } }) {
+      // 为了区分messageId和userId，做的处理
+      model["messageId"] = model.id;
+
       this.$router.push({
         name: "addpersonal",
         params: {
-          model: temMmodel
+          model: model
         }
       });
     },
@@ -348,6 +371,19 @@ export default {
     },
     refreshTable() {
       this.$refs[this.personalManageTable.ref].refreshTable();
+    },
+    sortChange(sortObj, $table) {
+      const { listKey, resKey } = $table;
+      personalManageApi
+        .getUserMessageList({
+          pageNum: 1,
+          pageSize: 10,
+          orderType: sortObj.order == "ascending" ? "asc" : "desc", //0降序1升序
+          orderBy: sortObj.prop
+        })
+        .then(res => {
+          $table.setData(res[resKey][listKey]);
+        });
     }
   }
 };

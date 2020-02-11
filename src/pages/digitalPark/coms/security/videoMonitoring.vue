@@ -6,6 +6,7 @@
 
 <script>
   import ChartUtils from '@/utils/chartUtils'
+  import CommonApi from '@/service/api/common'
   export default {
     name: 'videoMonitoring',
     components: {
@@ -19,11 +20,18 @@
     watch:{
     },
     methods: {
-      getVideoData(){
-        let res = [{id:1,name:'硬盘录像机',value:100},
-                   {id:2,name:'摄像机',value:20},
-                   {id:3,name:'矩阵',value:1}]
-        this.initChart(res)
+      async getVideoData(){
+        let res = await CommonApi.getHomeInterfaceMonitor({
+          homeId:6
+        })
+        let tmp=[]
+        for(let key in res){
+          tmp.push({
+            name:key,
+            value:res[key]
+          })
+        }
+        this.initChart(tmp)
       },
       initChart(res){
         let myChart = echarts.init(this.$refs.myChart);
@@ -44,7 +52,7 @@
             },
             formatter:function(name){
               let obj=res.find((item)=>item.name==name)
-              return name+':'+obj.value
+              return name+'：'+obj.value
             }
           },
           seriesUi:{
