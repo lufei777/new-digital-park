@@ -57,7 +57,7 @@ export default {
               label: "tenantName",
               value: "index"
             },
-            placeholder: "请输入",
+            placeholder: "请选择租户",
             clearable: true,
             sapn: 12,
             row: true,
@@ -68,13 +68,14 @@ export default {
               _this.model.telephone = obj.telephone;
               _this.model.idCard = obj.idCard;
               _this.tenantId = obj.tenantId;
+              console.log("tenantId", obj.tenantId);
             }
           },
           {
             type: "input",
             label: "租户编号",
             prop: "tenantNumber",
-            placeholder: "请输入",
+            placeholder: "租户编号",
             clearable: true,
             sapn: 12,
             disabled: true
@@ -83,7 +84,7 @@ export default {
             type: "input",
             label: "租户名称",
             prop: "tenantName",
-            placeholder: "请输入",
+            placeholder: "租户名称",
             clearable: true,
             sapn: 12
           },
@@ -91,7 +92,7 @@ export default {
             type: "input",
             label: "联系方式",
             prop: "telephone",
-            placeholder: "请输入",
+            placeholder: "联系方式",
             clearable: true,
             sapn: 8,
             disabled: true
@@ -100,7 +101,7 @@ export default {
             type: "input",
             label: "身份证号",
             prop: "idCard",
-            placeholder: "请输入",
+            placeholder: "身份证号",
             clearable: true,
             sapn: 12
           },
@@ -117,7 +118,7 @@ export default {
               message: "请选择房产",
               trigger: "change"
             },
-            placeholder: "请输入",
+            placeholder: "请选择房产",
             clearable: true,
             sapn: 12,
             row: true,
@@ -131,13 +132,14 @@ export default {
               _this.model.projectName = obj.projectName;
               _this.model.housePrice = obj.housePrice;
               _this.houseId = obj.houseId;
+              console.log("houseId", obj.houseId);
             }
           },
           {
             type: "input",
             label: "房产编号",
             prop: "houseNumber",
-            placeholder: "请输入",
+            placeholder: "房产编号",
             clearable: true,
             sapn: 12,
             disabled: true
@@ -146,7 +148,7 @@ export default {
             type: "input",
             label: "空间位置",
             prop: "spaceName",
-            placeholder: "请输入",
+            placeholder: "空间位置",
             clearable: true,
             sapn: 12,
             disabled: true
@@ -155,7 +157,7 @@ export default {
             type: "input",
             label: "房产名称",
             prop: "houseName",
-            placeholder: "请输入",
+            placeholder: "房产名称",
             clearable: true,
             sapn: 12,
             disabled: true
@@ -164,7 +166,7 @@ export default {
             type: "input",
             label: "面积",
             prop: "houseArea",
-            placeholder: "请输入",
+            placeholder: "面积",
             clearable: true,
             sapn: 12,
             disabled: true
@@ -173,7 +175,7 @@ export default {
             type: "input",
             label: "工程名称",
             prop: "projectName",
-            placeholder: "请输入",
+            placeholder: "工程名称",
             clearable: true,
             sapn: 12,
             disabled: true
@@ -182,7 +184,7 @@ export default {
             type: "input",
             label: "价格",
             prop: "housePrice",
-            placeholder: "请输入",
+            placeholder: "价格",
             clearable: true,
             sapn: 12,
             disabled: true
@@ -219,7 +221,7 @@ export default {
             type: "input",
             label: "合同编号",
             prop: "contractNumber",
-            placeholder: "请输入",
+            placeholder: "请输入合同编号",
             clearable: true,
             sapn: 12,
             rules: {
@@ -232,7 +234,7 @@ export default {
             type: "input",
             label: "合同名称",
             prop: "contractName",
-            placeholder: "请输入",
+            placeholder: "请输入合同名称",
             clearable: true,
             sapn: 12,
             rules: {
@@ -306,6 +308,26 @@ export default {
     if (this.detailContractId || this.editContractId) {
       this.contractDetail();
     }
+    if (this.editContractId) {
+      this.$refs[this.addContractForm.ref].setColumnByProp("selectTenant", {
+        display: false
+      });
+      this.$refs[this.addContractForm.ref].setColumnByProp("tenantName", {
+        disabled: true
+      });
+      this.$refs[this.addContractForm.ref].setColumnByProp("telephone", {
+        disabled: false
+      });
+      this.$refs[this.addContractForm.ref].setColumnByProp("selectHouse", {
+        display: false
+      });
+      this.$refs[this.addContractForm.ref].setColumnByProp("contractTime", {
+        disabled: true
+      });
+      this.$refs[this.addContractForm.ref].setColumnByProp("expireTime", {
+        disabled: true
+      });
+    }
   },
   created() {
     this.addContractForm = {
@@ -322,6 +344,7 @@ export default {
         houseId: this.houseId,
         contractTime: this.model.contractTime,
         expireTime: this.model.expireTime,
+        idCard: this.model.idCard,
         businessLicense:
           this.model.businessLicense.length > 0
             ? this.model.businessLicense
@@ -344,7 +367,8 @@ export default {
         let params = {
           ...this.addContractParams,
           ...{
-            contractId: this.editContractId
+            contractId: this.editContractId,
+            telephone: this.model.telephone
           }
         };
         res = await LeaseManageApi.editContract(params);
@@ -398,10 +422,10 @@ export default {
     },
     async contractDetail() {
       let contractId;
-      if(this.detailContractId) {
-        contractId = this.detailContractId
+      if (this.detailContractId) {
+        contractId = this.detailContractId;
       } else {
-        contractId = this.editContractId
+        contractId = this.editContractId;
       }
       let res = await LeaseManageApi.contractDetail({
         contractId: contractId
@@ -411,6 +435,8 @@ export default {
         this.model = res;
         this.model.selectTenant = res.tenantName;
         this.model.selectHouse = res.houseName;
+        this.houseId = res.houseId;
+        this.tenantId = res.tenantId;
       }
     }
   }
