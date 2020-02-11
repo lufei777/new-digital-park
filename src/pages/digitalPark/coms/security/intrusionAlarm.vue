@@ -24,6 +24,7 @@
        let res = await CommonApi.getHomeInterfaceMonitor({
          homeId:8
        })
+       
        let tmp = [{
           name:'报警点数',
           value:res.alarm
