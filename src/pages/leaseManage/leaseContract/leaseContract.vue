@@ -236,7 +236,7 @@ export default {
       this.$router.push({
         name: "AddContract",
         params: {
-          contractId: obj.scopeRow.row.contractId
+          editContractId: obj.scopeRow.row.contractId
         }
       });
     },
@@ -248,7 +248,7 @@ export default {
           extraOptions: {
             disabled: true
           },
-          contractId: obj.scopeRow.row.contractId
+          detailContractId: obj.scopeRow.row.contractId
         }
       });
     }

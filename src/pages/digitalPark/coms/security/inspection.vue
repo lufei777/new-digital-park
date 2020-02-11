@@ -7,6 +7,8 @@
 </template>
 
 <script>
+  import ChartUtils from '@/utils/chartUtils'
+  import CommonApi from '@/service/api/common'
   export default {
     name: 'inspection',
     components: {
@@ -57,8 +59,22 @@
     watch:{
     },
     methods: {
+      async getSpectionData(){
+        let res = await CommonApi.getHomeInterfaceMonitor({
+          homeId:10
+        })
+        let tmp=[]
+        for(let key in res){
+          tmp.push({
+            name:key,
+            value:res[key]
+          })
+        }
+        // this.initChart(tmp)
+      },
     },
     mounted(){
+      this.getSpectionData()
     }
   }
 </script>

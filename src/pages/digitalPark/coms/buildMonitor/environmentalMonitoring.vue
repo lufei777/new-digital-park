@@ -35,7 +35,6 @@
       },
     },
     mounted() {
-      // this.initChart()
       this.getEnvironmentData()
     }
   };
