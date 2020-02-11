@@ -72,6 +72,6 @@ export default new class {
     contractDetail() { }
 
     @url('/oaApi/contract/editContract')
-    @get
+    @post
     editContract() { }
 }

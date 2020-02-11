@@ -63,7 +63,6 @@ export default {
             row: true,
             change: function(value) {
               let obj = value.column.dicData[value.value];
-              console.log("hahhah", obj);
               _this.model.tenantNumber = obj.tenantNumber;
               _this.model.tenantName = obj.tenantName;
               _this.model.telephone = obj.telephone;
@@ -124,13 +123,13 @@ export default {
             row: true,
             change: function(value) {
               let obj = value.column.dicData[value.value];
-              console.log("obj",obj)
+              // console.log("obj",obj)
               _this.model.houseNumber = obj.houseNumber;
-              _this.model.spacePosition = obj.spaceName;
+              _this.model.spaceName = obj.spaceName;
               _this.model.houseName = obj.houseName;
-              _this.model.area = obj.houseArea;
-              _this.model.projectName = obj.idCard;
-              _this.model.price = obj.housePrice;
+              _this.model.houseArea = obj.houseArea;
+              _this.model.projectName = obj.projectName;
+              _this.model.housePrice = obj.housePrice;
               _this.houseId = obj.houseId;
             }
           },
@@ -146,7 +145,7 @@ export default {
           {
             type: "input",
             label: "空间位置",
-            prop: "spacePosition",
+            prop: "spaceName",
             placeholder: "请输入",
             clearable: true,
             sapn: 12,
@@ -164,7 +163,7 @@ export default {
           {
             type: "input",
             label: "面积",
-            prop: "area",
+            prop: "houseArea",
             placeholder: "请输入",
             clearable: true,
             sapn: 12,
@@ -182,7 +181,7 @@ export default {
           {
             type: "input",
             label: "价格",
-            prop: "price",
+            prop: "housePrice",
             placeholder: "请输入",
             clearable: true,
             sapn: 12,
@@ -191,7 +190,7 @@ export default {
           {
             type: "datetime",
             label: "签约时间",
-            prop: "startTime",
+            prop: "contractTime",
             valueFormat: "yyyy-MM-dd HH:mm:ss",
             placeholder: "选择日期时间",
             clearable: true,
@@ -249,7 +248,7 @@ export default {
             // pull: 6,
             formslot: true
           },
-           {
+          {
             type: "upload",
             listType: "picture-card",
             label: "",
@@ -301,12 +300,18 @@ export default {
     };
   },
   mounted() {
-    this.contractList();
+    this.tenantList();
     this.houseList();
-    this.createTenNum()
-    if(this.contractIdDetail){
-      this.contractDetail()
+    this.createTenNum();
+    if (this.detailContractId || this.editContractId) {
+      this.contractDetail();
     }
+  },
+  created() {
+    this.addContractForm = {
+      ...this.addContractForm,
+      ...this.$route.params.extraOptions
+    };
   },
   computed: {
     addContractParams() {
@@ -315,23 +320,38 @@ export default {
         contractName: this.model.contractName,
         tenantId: this.tenantId,
         houseId: this.houseId,
-        contractTime: this.model.startTime,
+        contractTime: this.model.contractTime,
         expireTime: this.model.expireTime,
-        businessLicense: this.model.businessLicense.length>0?this.model.businessLicense:"",
-        contractFile: this.model.contractFile.length>0?this.model.businessLicense:""
+        businessLicense:
+          this.model.businessLicense.length > 0
+            ? this.model.businessLicense
+            : "",
+        contractFile:
+          this.model.contractFile.length > 0 ? this.model.businessLicense : ""
       };
     },
-    contractIdEdit() {
-      return this.$route.params.contractId;
+    editContractId() {
+      return this.$route.params.editContractId;
     },
-    contractIdDetail() {
-      return this.$route.params.contractId;
+    detailContractId() {
+      return this.$route.params.detailContractId;
     }
   },
   methods: {
     async submit() {
-      let res = await LeaseManageApi.addContract(this.addContractParams)
-       if (res) {
+      let res;
+      if (this.editContractId) {
+        let params = {
+          ...this.addContractParams,
+          ...{
+            contractId: this.editContractId
+          }
+        };
+        res = await LeaseManageApi.editContract(params);
+      } else {
+        res = await LeaseManageApi.addContract(this.addContractParams);
+      }
+      if (res) {
         this.$message({
           type: "success",
           message: res
@@ -339,22 +359,29 @@ export default {
       }
       this.$router.push("/leaseContract");
     },
-    back(){
+    async editContract() {
+      if (res) {
+        this.$message({
+          type: "success",
+          message: res
+        });
+      }
       this.$router.push("/leaseContract");
     },
-     async createTenNum() {
+    back() {
+      this.$router.push("/leaseContract");
+    },
+    async createTenNum() {
       let res = await LeaseManageApi.createTenNum({
         numType: 3
       });
       this.model.contractNumber = res;
     },
     resetChange() {},
-    async contractList() {
+    async tenantList() {
       let res = await LeaseManageApi.tenantList();
-       console.log("res",res)
       res.map((item, index) => {
         item.index = index;
-        console.log(item);
       });
       this.$refs[this.addContractForm.ref].setColumnByProp("selectTenant", {
         dicData: res
@@ -369,11 +396,23 @@ export default {
         dicData: res
       });
     },
-    async contractDetail(){
+    async contractDetail() {
+      let contractId;
+      if(this.detailContractId) {
+        contractId = this.detailContractId
+      } else {
+        contractId = this.editContractId
+      }
       let res = await LeaseManageApi.contractDetail({
-        contractId:this.contractIdDetail
-      })
-    },
+        contractId: contractId
+      });
+      if (res) {
+        console.log("res", res);
+        this.model = res;
+        this.model.selectTenant = res.tenantName;
+        this.model.selectHouse = res.houseName;
+      }
+    }
   }
 };
 </script>
