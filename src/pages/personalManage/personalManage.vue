@@ -21,7 +21,6 @@
       <z-table
         :ref="personalManageTable.ref"
         :tableConfig="personalManageTable"
-        @sort-change="sortChange"
       >
         <template slot="custom-top" slot-scope="obj">
           <el-button :size="obj.size" type="primary" @click="addedProperty(obj)">新增</el-button>
@@ -371,19 +370,6 @@ export default {
     },
     refreshTable() {
       this.$refs[this.personalManageTable.ref].refreshTable();
-    },
-    sortChange(sortObj, $table) {
-      const { listKey, resKey } = $table;
-      personalManageApi
-        .getUserMessageList({
-          pageNum: 1,
-          pageSize: 10,
-          orderType: sortObj.order == "ascending" ? "asc" : "desc", //0降序1升序
-          orderBy: sortObj.prop
-        })
-        .then(res => {
-          $table.setData(res[resKey][listKey]);
-        });
     }
   }
 };

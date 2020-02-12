@@ -1,9 +1,6 @@
 import { get, post, url } from '../axios/ApiDecorator'
 
 export default new class {
-    constructor(){
-        console.log('构建api');
-    }
     /**
      * userId 账号id
      * messageId 人员信息id

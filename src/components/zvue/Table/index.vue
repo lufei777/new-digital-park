@@ -347,6 +347,7 @@ export default {
     },
     // 获取分页数据
     _getPatinationData() {
+      console.log('_getPatinationData');
       let currentPage = this.currentPage;
       let pageSize = this.pageSize;
       let paginationConfig = this.uiConfig.pagination;
@@ -616,6 +617,19 @@ export default {
       //如果有排序方法，则执行
       if (this.tableMethods.sortChange) {
         this.tableMethods.sortChange(sortObj, this);
+      }
+
+      //如果采用服务端分页模式
+      if (this.isServerMode) {
+        let currentPage = this.currentPage;
+        let pageSize = this.pageSize;
+
+        this._loadServerMode({
+          [this.pageSizeKey]: pageSize,
+          [this.pageNumKey]: currentPage,
+          [this.orderTypeKey]: sortObj.order == "ascending" ? this.ascKey : this.descKey,
+          [this.orderPropKey]: sortObj.prop
+        });
       }
 
       this.$emit("sort-change", sortObj, this);
