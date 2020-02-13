@@ -1,5 +1,5 @@
 <template>
-  <div class="video-monitoring">
+  <div class="device-type-alarm-proportion">
     <div class="my-chart" ref="myChart"></div>
   </div>
 </template>
@@ -8,7 +8,7 @@
   import ChartUtils from '@/utils/chartUtils'
   import CommonApi from '@/service/api/common'
   export default {
-    name: 'videoMonitoring',
+    name: 'deviceTypeAlarmProportion',
     components: {
     },
     data () {
@@ -20,35 +20,36 @@
     watch:{
     },
     methods: {
-      async getVideoData(){
+      async getAccessData(){
         let res = await CommonApi.getHomeInterfaceMonitor({
-          homeId:6
+          homeId:7
         })
-        let tmp=[]
-        for(let key in res){
-          tmp.push({
-            name:key,
-            value:res[key]
-          })
-        }
+        let tmp=[{
+          name:'开启门禁',
+          value:res.open
+        },{
+          name:'关闭门禁',
+          value:res.close
+        },{
+          name:'未连接',
+          value:res.unconnected
+        }]
         this.initChart(tmp)
       },
       initChart(res){
         let myChart = echarts.init(this.$refs.myChart);
         let legendData = [];
-        let total=0
+        let dataList = res;
         res.map(item => {
           legendData.push(`${item.name}`);
-          total+=Number(item.value)
         });
-        let titleText=total+"个视频设备"
+        let seriesData =dataList
         let data = {
-          // titleText,
           legendData,
-          seriesData:res,
+          seriesData,
           legendUi:{
             top:'center',
-            right:'10',
+            right:'20',
             textStyle:{
               color:'#8FD3FA'
             },
@@ -59,13 +60,14 @@
           },
           seriesUi:{
             center:['35%','50%']
-          }
+          },
+          color:['#83D587','red','yellow']
         };
         ChartUtils.hollowPieChart(myChart,data);
       }
     },
     mounted(){
-      this.getVideoData()
+      this.getAccessData()
     }
   }
 </script>

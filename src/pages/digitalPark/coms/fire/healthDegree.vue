@@ -1,12 +1,12 @@
 <template>
-  <div class="system-monitoring">
+  <div class="health-degree">
     <div ></div>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'SystemMonitoring',
+    name: 'healthDegree',
     components: {
     },
     data () {
