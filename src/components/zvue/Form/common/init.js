@@ -39,7 +39,11 @@ export default function (type) {
         return this.controlSize === 'medium' ? 'small' : this.controlSize;
       },
       controlSize() {
-        return this.tableOption.size || 'medium';
+        if (isCrud) {
+          return this.tableOption.uiConfig.size || 'medium'
+        } else {
+          return this.tableOption.size || 'medium';
+        }
       }
     },
     methods: {
@@ -52,16 +56,18 @@ export default function (type) {
         this.isMobile = window.document.body.clientWidth <= 768;
       },
       init() {
-        this.tableOption = this.options;
+        if (isCrud) {
+          this.tableOption = this.options;
+          this.tableOption.forms = this.options.columnConfig;
+        } else {
+          this.tableOption = this.options;
+        }
         this.getIsMobile();
         window.onresize = () => {
           this.getIsMobile();
         };
         // 规则初始化
         if (this.formRulesInit) {
-          /* (isCrud ? this.propOption : this.columnOption).forEach(ele => {
-            this.formRulesInit(ele.column);
-          }); */
           this.formRulesInit();
         }
         clearTimeout(this.initDicTimer);
@@ -79,12 +85,6 @@ export default function (type) {
             }
           })
         } else {
-          //表单赋值
-          // this.options.forms.forEach(item => {
-          //   if (Array.isArray(item.dicData)) {
-          //     this.$set(this.DIC, item.prop, item.dicData)
-          //   }
-          // })
           this.columnOption.forEach(ele => {
             (ele.forms || []).forEach(item => {
               if (Array.isArray(item.dicData)) {

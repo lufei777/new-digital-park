@@ -17,7 +17,7 @@
       </z-form>
     </div>
     <div class="cleaning-manage-table panel">
-      <z-table :ref="tableData.ref" :tableConfig="tableData">
+      <z-table :ref="tableData.ref" :options="tableData">
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">
             <el-button :size="obj.size" type="primary">批量编辑</el-button>

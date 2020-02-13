@@ -24,7 +24,7 @@
         <el-button  type="primary">导入</el-button>
         <el-button  type="primary">新增</el-button>
       </div>
-      <z-table :ref="tableData.ref" :tableConfig="tableData">
+      <z-table :ref="tableData.ref" :options="tableData">
       </z-table>
     </div>
   </div>

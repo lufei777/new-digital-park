@@ -22,7 +22,7 @@
               <el-button @click="onClickResetBtn">重置</el-button>
             </div>
           </div>
-          <z-table :ref="tableConfig.ref" :tableConfig="tableConfig">
+          <z-table :ref="tableConfig.ref" :options="tableConfig">
             <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
               <el-button type="text" @click="checkRow(row)">验收</el-button>
               <el-button type="text" @click="deleteRow(row)">作废</el-button>

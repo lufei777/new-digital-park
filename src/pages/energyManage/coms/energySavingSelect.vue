@@ -47,7 +47,7 @@
         <span>注:红色字体为超标</span>
         <em>{{tabTitle}}</em>
       </div>
-      <z-table :ref="tableConfig.ref" :tableConfig="tableConfig" ></z-table>
+      <z-table :ref="tableConfig.ref" :options="tableConfig" ></z-table>
       <TreeModal :tree-modal-config="treeModalConfig"/>
     </div>
   </div>

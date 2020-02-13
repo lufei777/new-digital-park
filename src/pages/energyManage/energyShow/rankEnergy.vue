@@ -17,7 +17,7 @@
     </div>
     <div class="table-box radius-shadow">
       <div class="table-tip">{{commonTip}}能耗展示排名</div>
-      <z-table :ref="tableConfig.ref" :tableConfig="tableConfig"></z-table>
+      <z-table :ref="tableConfig.ref" :options="tableConfig"></z-table>
     </div>
   </div>
 </template>

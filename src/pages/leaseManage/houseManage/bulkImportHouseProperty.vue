@@ -27,7 +27,7 @@
       </div>
 
       <div v-show="stepsActive === 1 ||stepsActive ===  2" v-loading.lock="tableloading">
-        <z-table style="margin-bottom:20px;" :ref="tableConfig.ref" :tableConfig="tableConfig"></z-table>
+        <z-table style="margin-bottom:20px;" :ref="tableConfig.ref" :options="tableConfig"></z-table>
         <el-row type="flex" justify="center">
           <el-col class="is-justify-space-around el-row--flex" :span="8">
             <el-button type="primary" round @click="importProperty">导入</el-button>

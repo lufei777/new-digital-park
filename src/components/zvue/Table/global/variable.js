@@ -5,7 +5,8 @@ export const DIC_PROPS = {
     groups: 'groups',
     children: 'children',
     labelText: '名称',
-    disabled: 'disabled'
+    disabled: 'disabled',
+    rowKey: 'id'
 };
 export const DIC_HTTP_PROPS = {
     name: 'name',
@@ -15,7 +16,11 @@ export const DIC_HTTP_PROPS = {
     total: 'total',
     pageSize: 'pageSize',
     list: 'list',
-    pageNum: 'pageNum'
+    pageNum: 'pageNum',
+    desc: 'desc',
+    asc: 'asc',
+    orderType: 'orderType',
+    orderBy: 'orderBy'
 };
 export const KEY_COMPONENT_NAME = 'z-';
 export const PLACEHOLDER = '--';

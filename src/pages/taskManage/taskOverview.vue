@@ -28,7 +28,7 @@
       </div>
       <CommonSelect />
       <div class="task-overview-table panel">
-        <z-table :ref="tableData.ref" :tableConfig="tableData"></z-table>
+        <z-table :ref="tableData.ref" :options="tableData"></z-table>
       </div>
     </div>
   </div>

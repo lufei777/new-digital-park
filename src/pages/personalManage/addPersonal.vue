@@ -2,8 +2,9 @@
   <div id="personal-manage" class="panel-container">
     <div class="panel">
       <el-tabs v-if="pageConfig.flag === 'edit'" type="border-card" @tab-click="tabClick">
-        <el-tab-pane label="基本信息"></el-tab-pane>
-        <el-tab-pane label="个人信息"></el-tab-pane>
+        <template v-for="item in tabPanelOptions">
+          <el-tab-pane :key="item.label" :label="item.label" :name="item.name"></el-tab-pane>
+        </template>
       </el-tabs>
 
       <div class="flex-align-center" style="align-items:flex-start;background:#fff;">
@@ -19,20 +20,21 @@
   </div>
 </template>
 <script>
+import { CommonDic } from "@/utils/dictionary";
 import SystemManageApi from "@/service/api/systemManage";
+import PersonalManageApi from "@/service/api/personalManage";
 const apiConfig = {
   add: {
     flag: "add",
-    title: "新增人员",
-    api: SystemManageApi.addHouse
+    title: "新增人员"
   },
   edit: {
     flag: "edit",
-    title: "编辑人员",
-    api: SystemManageApi.editHouse
+    title: "编辑人员"
   }
 };
-
+// tabPanelOptions 和 options.group的顺序要一致
+// tabPanelOptions每项的name要和api对应
 export default {
   data() {
     return {
@@ -51,7 +53,7 @@ export default {
             forms: [
               {
                 label: "用户id",
-                prop: "user_id",
+                prop: "id",
                 hide: true
               },
               {
@@ -78,20 +80,7 @@ export default {
                   required: true,
                   trigger: "blur"
                 },
-                dicData: [
-                  {
-                    label: "男",
-                    value: 1
-                  },
-                  {
-                    label: "女",
-                    value: 2
-                  },
-                  {
-                    label: "保密",
-                    value: 3
-                  }
-                ]
+                dicData: CommonDic.sexDic
               },
               /* {
                 label: "年龄",
@@ -103,18 +92,19 @@ export default {
               {
                 label: "所在部门",
                 prop: "orgName",
-                type: "cascader",
+                type: "input",
                 rules: {
                   required: true,
                   trigger: "blur"
-                },
+                }
+                /* type: "cascader",
                 showAllLevels: false,
                 dicUrl: SystemManageApi.getDepartmentTree,
                 props: {
                   label: "name",
                   value: "id",
                   children: "childNode"
-                }
+                } */
               },
               {
                 label: "所在岗位",
@@ -150,15 +140,15 @@ export default {
                 dicData: [
                   {
                     label: "临时",
-                    value: 1
+                    value: "1"
                   },
                   {
                     label: "试用",
-                    value: 2
+                    value: "2"
                   },
                   {
                     label: "正式",
-                    value: 3
+                    value: "3"
                   }
                 ]
               },
@@ -172,17 +162,26 @@ export default {
                 dicData: [
                   {
                     label: "外包",
-                    value: 1
+                    value: "1"
                   },
                   {
                     label: "兼职",
-                    value: 2
+                    value: "2"
                   },
                   {
                     label: "全职",
-                    value: 3
+                    value: "3"
                   }
                 ]
+              },
+              {
+                label: "出生日期",
+                prop: "birthday",
+                type: "date",
+                rules: {
+                  required: true,
+                  trigger: "blur"
+                }
               },
               {
                 label: "入职时间",
@@ -267,17 +266,8 @@ export default {
             forms: [
               {
                 label: "用户id",
-                prop: "user_id",
+                prop: "id",
                 hide: true
-              },
-              {
-                label: "出生日期",
-                prop: "birthday",
-                type: "date",
-                rules: {
-                  required: true,
-                  trigger: "blur"
-                }
               },
               {
                 label: "民族",
@@ -300,8 +290,8 @@ export default {
                 prop: "residence_type",
                 type: "select",
                 dicData: [
-                  { label: "城市", value: 1 },
-                  { label: "农村", value: 2 }
+                  { label: "城市", value: "1" },
+                  { label: "农村", value: "2" }
                 ],
                 rules: {
                   required: true
@@ -320,8 +310,8 @@ export default {
                 prop: "maritalStatus",
                 type: "select",
                 dicData: [
-                  { label: "已婚", value: 1 },
-                  { label: "未婚", value: 2 }
+                  { label: "已婚", value: "1" },
+                  { label: "未婚", value: "2" }
                 ]
               },
               {
@@ -335,19 +325,19 @@ export default {
                 prop: "political",
                 type: "select",
                 dicData: [
-                  { label: "中共党员", value: 0 },
-                  { label: "中共预备党员", value: 1 },
-                  { label: "共青团员", value: 2 },
-                  { label: "群众", value: 3 },
-                  { label: "民革党员", value: 4 },
-                  { label: "民盟盟员", value: 5 },
-                  { label: "民建会员", value: 6 },
-                  { label: "民进会员", value: 7 },
-                  { label: "农工党党员", value: 8 },
-                  { label: "致公党党员", value: 9 },
-                  { label: "九三学社社员", value: 10 },
-                  { label: "台盟盟员", value: 11 },
-                  { label: "无党派人士", value: 12 }
+                  { label: "中共党员", value: "0" },
+                  { label: "中共预备党员", value: "1" },
+                  { label: "共青团员", value: "2" },
+                  { label: "群众", value: "3" },
+                  { label: "民革党员", value: "4" },
+                  { label: "民盟盟员", value: "5" },
+                  { label: "民建会员", value: "6" },
+                  { label: "民进会员", value: "7" },
+                  { label: "农工党党员", value: "8" },
+                  { label: "致公党党员", value: "9" },
+                  { label: "九三学社社员", value: "10" },
+                  { label: "台盟盟员", value: "11" },
+                  { label: "无党派人士", value: "12" }
                 ]
               },
               {
@@ -365,8 +355,8 @@ export default {
                 prop: "guild",
                 type: "select",
                 dicData: [
-                  { label: "是", value: 1 },
-                  { label: "否", value: 2 }
+                  { label: "是", value: "1" },
+                  { label: "否", value: "2" }
                 ]
               },
               {
@@ -376,43 +366,43 @@ export default {
                 dicData: [
                   {
                     label: "小学",
-                    value: 0
+                    value: "0"
                   },
                   {
                     label: "初级中学",
-                    value: 1
+                    value: "1"
                   },
                   {
                     label: "高级中学",
-                    value: 2
+                    value: "2"
                   },
                   {
                     label: "中专",
-                    value: 3
+                    value: "3"
                   },
                   {
                     label: "职校",
-                    value: 4
+                    value: "4"
                   },
                   {
                     label: "中技",
-                    value: 5
+                    value: "5"
                   },
                   {
                     label: "专科（高职、高专、高技）",
-                    value: 6
+                    value: "6"
                   },
                   {
                     label: "本科",
-                    value: 7
+                    value: "7"
                   },
                   {
                     label: "硕士研究生",
-                    value: 8
+                    value: "8"
                   },
                   {
                     label: "博士研究生",
-                    value: 9
+                    value: "9"
                   }
                 ]
               },
@@ -423,15 +413,15 @@ export default {
                 dicData: [
                   {
                     label: "学士",
-                    value: 0
+                    value: "0"
                   },
                   {
                     label: "硕士",
-                    value: 1
+                    value: "1"
                   },
                   {
                     label: "博士",
-                    value: 2
+                    value: "2"
                   }
                 ]
               },
@@ -442,19 +432,19 @@ export default {
                 dicData: [
                   {
                     label: "优秀",
-                    value: 1
+                    value: "1"
                   },
                   {
                     label: "良好",
-                    value: 2
+                    value: "2"
                   },
                   {
                     label: "一般",
-                    value: 3
+                    value: "3"
                   },
                   {
                     label: "较差",
-                    value: 4
+                    value: "4"
                   }
                 ]
               },
@@ -494,9 +484,22 @@ export default {
           }
         ]
       },
+      tabPanelOptions: [
+        {
+          label: "基本信息",
+          name: ""
+        },
+        {
+          label: "个人信息",
+          name: "Person"
+        }
+      ],
       step: 0,
       infoArr: [],
-      pageConfig: apiConfig.add
+      pageConfig: apiConfig.add,
+      apiName: "",
+      userId: "", // 用户账号id
+      messageId: "" // 用户信息id
     };
   },
   created() {
@@ -506,6 +509,9 @@ export default {
       if (!_.isEmpty(params.model)) {
         this.pageConfig = _.cloneDeep(apiConfig.edit);
         this.model = { ...this.model, ...params.model };
+
+        this.userId = this.model.userId;
+        this.messageId = this.model.messageId;
       }
       // 传递过来额外的配置
       this.options = {
@@ -519,15 +525,18 @@ export default {
     }
   },
   methods: {
-    nextStep(model, hide) {
+    nextStep({ model = {}, hide = () => {}, step = ++this.step }) {
       hide(); // 隐藏提交状态
       this.resetForm(); // 重置form
 
-      this.infoArr[this.step] = _.cloneDeep(model); // 保存当前model
-      this.step++; // 下一步
+      this.infoArr[step] = _.cloneDeep(model); // 保存当前model
 
-      // 将下一步group显示
-      this.displayGroup(this.step);
+      if (step === this.options.group.length) {
+        this.backList();
+      } else {
+        // 将下一步group显示
+        this.displayGroup(step);
+      }
     },
     lastStep() {
       this.step--;
@@ -536,26 +545,54 @@ export default {
       this.displayGroup(this.step);
     },
     displayGroup(index) {
-      this.options.group.forEach(item => {
-        item.display = false;
+      this.$nextTick(() => {
+        this.options.group.forEach(item => {
+          item.display = false;
+        });
+        this.options.group[index].display = true;
+        this.model = this.infoArr[index] || {};
       });
-      this.options.group[index].display = true;
-      this.model = this.infoArr[index] || {};
+      // 更新apiName
+      this.apiName = this.tabPanelOptions[index].name;
     },
     submit(model, hide) {
-      console.log("model", model);
+      if (this.pageConfig.flag === "edit") {
+        // 更新信息
+        this.updateInfo(model);
+      } else {
+        this.insertInfo(model, hide);
+      }
+    },
+    insertInfo(model, hide) {
+      // 添加信息
+      PersonalManageApi[`insertUser${this.apiName}Message`](
+        Object.assign(model, this.getIdField)
+      ).then(res => {
+        this.messageId = res.id;
+        this.nextStep({ model: {}, hide });
+      });
+    },
+    updateInfo(model) {
+      model.messageId = this.messageId;
+      model.userId = this.userId;
 
-      setTimeout(() => {
-        if (this.step === this.options.group.length - 1 || this.pageConfig.flag === 'edit') {
+      // 更新信息
+      PersonalManageApi[`updateUser${this.apiName}Message`](model)
+        .then(res => {
+          console.log(res);
           this.backList();
-          return;
-        }
-
-        this.nextStep(model, hide);
-        this.$nextTick(() => {
-          this.model.user_id = "9527";
+        })
+        .catch(err => {
+          console.error(err);
         });
-      }, 500);
+    },
+    getInfo(cb) {
+      // 更新信息
+      PersonalManageApi[`getUser${this.apiName}Message`](
+        Object.assign({}, this.getIdField)
+      ).then(res => {
+        cb(res);
+      });
     },
     resetForm() {
       this.$refs[this.options.ref].resetForm();
@@ -566,8 +603,26 @@ export default {
       });
     },
     tabClick(tab, event) {
-      // console.log(tab, event);
-      this.displayGroup(tab.index);
+      const { name } = tab;
+      this.apiName = name;
+
+      this.getInfo(res => {
+        this.nextStep({ model: res, step: tab.index });
+      });
+    }
+  },
+  computed: {
+    isBaseInfo() {
+      return this.apiName.length === 0;
+    },
+    getIdField() {
+      /**
+       * 新增基本信息传 id
+       * 新增其他信息传 messageId
+       */
+      return {
+        [this.isBaseInfo ? "id" : "messageId"]: this.messageId
+      };
     }
   }
 };
@@ -584,7 +639,7 @@ export default {
     border: 0;
   }
 
-  .el-tabs__content{
+  .el-tabs__content {
     padding: 20px;
   }
 

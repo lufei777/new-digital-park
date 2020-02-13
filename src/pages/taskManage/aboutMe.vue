@@ -19,7 +19,7 @@
               <el-button type="primary" @click="refresh">刷新</el-button>
               <el-button type="primary" @click="addTask">新增</el-button>
             </div>
-            <z-table :ref="tableData.ref" :tableConfig="tableData">
+            <z-table :ref="tableData.ref" :options="tableData">
               <template slot="operation" slot-scope="obj">
                 <el-button type="text" @click="editRow(obj)">详情</el-button>
                 <el-button type="text" @click="deleteRow(obj)" v-if="deleteRowShow">删除</el-button>

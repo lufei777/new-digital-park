@@ -18,16 +18,27 @@
         </template>
         <!-- 内容 -->
         <template slot-scope="scopeRow">
-          <!-- 自定义 -->
-          <slot v-if="col.slot" :name="col.prop" :scopeRow="scopeRow"></slot>
+          <form-temp
+            v-if="cellEditFlag(scopeRow.row,col)"
+            v-model="scopeRow.row[col.prop]"
+            :column="col"
+            :size="crud.isMediumSize"
+            :dic="crud.DIC[col.prop]"
+            :upload-before="col.uploadBefore"
+            :upload-after="col.uploadAfter"
+            :disabled="col.disabled"
+            @click.native.stop
+          ></form-temp>
+          <slot
+            v-else-if="col.slot"
+            :name="col.prop"
+            :label="handleShowLabel(scopeRow.row,col,crud.DIC[col.prop])"
+            :scopeRow="scopeRow"
+            :row="scopeRow.row"
+            :size="crud.isMediumSize"
+            :dic="crud.DIC[col.prop]"
+          ></slot>
           <template v-else>
-            <!-- <el-input
-              class="edit-row-input"
-              size="small"
-              v-model="scope.row[col.prop]"
-              placeholder="请输入内容"
-              @change="_handleRowEdit(scopeRow)"
-            ></el-input>-->
             <span v-html="_columnFormatter(scopeRow,col)"></span>
           </template>
         </template>
@@ -36,18 +47,28 @@
   </span>
 </template>
 <script>
+import { detail } from "../../Form/utils/detail";
+import { validatenull } from "../../Form/utils/validate";
+import formTemp from "../../Form/formtemp";
+
 export default {
   name: "column",
+  inject: ["crud"],
   props: {
     columnConfig: {
       type: Array,
-      required: true
+      required: true,
+      default: []
     }
   },
+  components: { formTemp },
   data() {
-    return {};
+    return {
+      DIC: {}
+    };
   },
   methods: {
+    validatenull,
     // 由于slot-scope和formatter不能共存只能如此
     _columnFormatter(scopeRow, currentColumn) {
       let row = scopeRow.row;
@@ -56,11 +77,11 @@ export default {
       if (typeof currentColumn.formatter === "function") {
         return currentColumn.formatter(row, column);
       } else {
-        return this._globalColumnFormatter(row, column);
+        return this._globalColumnFormatter(row, column, currentColumn);
       }
     },
     // 全局初始化
-    _globalColumnFormatter(row, column) {
+    _globalColumnFormatter(row, column, currentColumn) {
       let value = row[column.property];
       if (typeof value === "string" && value.trim().length === 0) {
         return "--";
@@ -68,7 +89,30 @@ export default {
       if (!value) {
         return "--";
       }
-      return value;
+      return this.handleDetail(
+        row,
+        currentColumn,
+        this.crud.DIC[currentColumn.prop]
+      );
+    },
+    cellEditFlag(row, column) {
+      return row.$cellEdit && column.slot !== true && column.cell;
+    },
+    handleDetail(row, column, DIC) {
+      let result = row[column.prop];
+      result = detail(row, column, this.crud.tableOption, DIC);
+      if (!this.validatenull(DIC)) {
+        row["$" + column.prop] = result;
+      }
+      return result;
+    },
+    handleShowLabel(row, column, DIC) {
+      let result = "";
+      result = detail(row, column, this.crud.tableOption, DIC);
+      if (!this.validatenull(DIC)) {
+        row["$" + column.prop] = result;
+      }
+      return result;
     }
   }
 };
