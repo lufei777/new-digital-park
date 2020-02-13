@@ -183,7 +183,7 @@ export default {
       },
       showAddModal: false,
       curDetail: {},
-      curRowIndex: {},
+      curRowIndex: 0,
       deptTree: [],
       editFlag: false
     };

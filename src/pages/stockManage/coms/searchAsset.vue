@@ -38,20 +38,36 @@
   import {AssetDic} from "../../../utils/dictionary";
   export default {
     name: "SearchAssetModal",
-    props:["showSearchModal"],
+    props:["showSearchModal","fromFlag"], //fromFlag 1：搜索资产信息 2：搜索资产
     components: {
       Tree
     },
     data() {
-      let columnConfig=[
-        {label:'编号', prop:'coding'},{label:'名称', prop:'name'},
-        {label:'规格型号', prop:'specification'},
-        {label:'单独核算', prop:'singleCount',
-          formatter:function(row){
-           return row.singleCount==1?'是':'否'
+      let columnConfig=[]
+      if(this.fromFlag==1){
+        columnConfig = [
+          {label:'编号', prop:'coding'},
+          {label:'名称', prop:'name'},
+          {label:'规格型号', prop:'specification'},
+          {label:'单独核算', prop:'singleCount',
+            formatter:function(row){
+              return row.singleCount==1?'是':'否'
+            }
           }
-        }
-      ]
+        ]
+      }else if(this.fromFlag==2){
+        columnConfig = [
+          {label:'名称', prop:'name'},
+          {label:'规格型号', prop:'specification'},
+          {label:'状态', prop:'status',
+            formatter:function(row){
+              return row.singleCount==1?'是':'否'
+            }
+          },
+          {label:'数量',prop:'quantity'}
+        ]
+      }
+      let _this = this
       return {
         typeTree:[],
         treeConfig:{
@@ -114,6 +130,31 @@
         },
         set(){
           this.closeModal()
+        }
+      },
+      columnConfig(){
+        console.log(2222)
+        if(this.fromFlag==1){
+          return [
+            {label:'编号', prop:'coding'},{label:'名称', prop:'name'},
+            {label:'规格型号', prop:'specification'},
+            {label:'单独核算', prop:'singleCount',
+              formatter:function(row){
+                return row.singleCount==1?'是':'否'
+              }
+            }
+          ]
+        }else if(this.fromFlag==2){
+          console.log(111)
+          return [
+            {label:'编号', prop:'coding'},{label:'名称', prop:'name'},
+            {label:'规格型号', prop:'specification'},
+            {label:'单独核算', prop:'singleCount',
+              formatter:function(row){
+                return row.singleCount==1?'是':'否'
+              }
+            }
+          ]
         }
       }
     },

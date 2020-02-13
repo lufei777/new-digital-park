@@ -1,5 +1,5 @@
 <template>
-  <div class="video-monitoring">
+  <div class="intrusion-alarm">
     <div class="my-chart" ref="myChart"></div>
   </div>
 </template>
@@ -8,7 +8,7 @@
   import ChartUtils from '@/utils/chartUtils'
   import CommonApi from '@/service/api/common'
   export default {
-    name: 'videoMonitoring',
+    name: 'healthDegree',
     components: {
     },
     data () {
@@ -20,52 +20,52 @@
     watch:{
     },
     methods: {
-      async getVideoData(){
-        let res = await CommonApi.getHomeInterfaceMonitor({
-          homeId:6
-        })
-        let tmp=[]
-        for(let key in res){
-          tmp.push({
-            name:key,
-            value:res[key]
-          })
-        }
+     async getInstrusionData(){
+       let res = await CommonApi.getHomeInterfaceMonitor({
+         homeId:8
+       })
+       
+       let tmp = [{
+          name:'报警点数',
+          value:res.alarm
+       },{
+         name:'未报警点数',
+         value:res.normal
+       }]
         this.initChart(tmp)
       },
       initChart(res){
         let myChart = echarts.init(this.$refs.myChart);
         let legendData = [];
-        let total=0
+        let dataList = res;
         res.map(item => {
           legendData.push(`${item.name}`);
-          total+=Number(item.value)
         });
-        let titleText=total+"个视频设备"
+        let seriesData =dataList
         let data = {
-          // titleText,
           legendData,
-          seriesData:res,
+          seriesData,
           legendUi:{
             top:'center',
-            right:'10',
+            right:'20',
             textStyle:{
               color:'#8FD3FA'
             },
             formatter:function(name){
               let obj=res.find((item)=>item.name==name)
-              return name+'：'+obj.value
+              return name+':'+obj.value
             }
           },
           seriesUi:{
             center:['35%','50%']
-          }
+          },
+          color:['red','gray']
         };
         ChartUtils.hollowPieChart(myChart,data);
       }
     },
     mounted(){
-      this.getVideoData()
+      this.getInstrusionData()
     }
   }
 </script>

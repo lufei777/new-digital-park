@@ -26,6 +26,10 @@ import accessControl from '../pages/digitalPark/coms/security/accessControl'
 import intrusionAlarm from '../pages/digitalPark/coms/security/intrusionAlarm'
 import videoMonitoring from '../pages/digitalPark/coms/security/videoMonitoring'
 import inspection from '../pages/digitalPark/coms/security/inspection'
+import healthDegree from '../pages/digitalPark/coms/fire/healthDegree'
+import gangedLog from '../pages/digitalPark/coms/fire/gangedLog'
+import deviceTypeAlarmProportion from '../pages/digitalPark/coms/fire/deviceTypeAlarmProportion'
+import alarmNews from '../pages/digitalPark/coms/alarm/alarmNews'
 import router from '@/router'
 import axios from 'axios'
 class commonFun {
@@ -57,7 +61,11 @@ class commonFun {
     videoMonitoring,
     accessControl,
     intrusionAlarm,
-    inspection
+    inspection,
+    healthDegree,
+    gangedLog,
+    deviceTypeAlarmProportion,
+    alarmNews
   }
   //this,删除的id,没有id时的提示信息，点击确定的回调函数
   deleteTip(that, deleteId, msgTip, sureCallBack, cancelCallBack) {

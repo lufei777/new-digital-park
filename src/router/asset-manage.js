@@ -10,25 +10,36 @@ import MyAsset from '../pages/assetManage/myAsset'
 export default [{
   path: '/assetManage',
   name: 'AssetManage',
-  meta: { title: "资产信息" },
+  meta: { title: "资产管理" },
   component: () => import('@/pages/commonProject/coms/commonIndex'),
-  redirect: '/assetMaintenance',
+  redirect: '/myAsset',
   children: [{
-    path: '/assetMaintenance',
-    name: 'AssetMaintenance',
-    meta: { title: "资产信息维护" },
-    component: AssetMaintenance,
-  }, {
-    path: '/assetGroup',
-    name: 'AssetGroup',
-    meta: { title: "资产组设置" },
-    component: AssetGroup,
-  }, {
-    path: '/assetType',
-    name: 'AssetType',
-    meta: { title: "资产类型设置" },
-    component: AssetType,
-  }, {
+    path: '/myAsset',
+    name: 'MyAsset',
+    component: MyAsset,
+    meta: { title: "我的资产" },
+  },{
+    path: '/assetTmpRouter',
+    name: 'TmpRouter',
+    meta: { title: "资产信息" },
+    component: () => import('@/pages/commonProject/coms/tmpRouterBox'),
+    children:[{
+      path: '/assetMaintenance',
+      name: 'AssetMaintenance',
+      meta: { title: "资产信息维护" },
+      component: AssetMaintenance,
+    },{
+      path: '/assetType',
+      name: 'AssetType',
+      meta: { title: "资产类型设置" },
+      component: AssetType,
+    },{
+      path: '/assetGroup',
+      name: 'AssetGroup',
+      meta: { title: "资产组设置" },
+      component: AssetGroup,
+    }],
+  },{
     path: '/addAsset',
     name: 'AssetAdd',
     meta: { title: "资产编辑" },
@@ -38,16 +49,22 @@ export default [{
     name: 'AssetLedger',
     component: AssetLedger,
     meta: { title: "资产台账" },
-  }, {
-    path: '/myAsset',
-    name: 'MyAsset',
-    component: MyAsset,
-    meta: { title: "我的资产" },
-  }, {
+  },{
     path: '/digitalPark/defaultPage',
     name: 'DefaultPage',
     component: DefaultPage,
     meta: { title: "建设中" },
+  },
+    {
+      path: '/assetUseTmpRouter',
+      name: 'TmpRouter',
+      component:  () => import('@/pages/commonProject/coms/tmpRouterBox'),
+      meta: { title: "管理资产" },
+      children:[{
+        path: '/assetUse',
+        name: 'AssetUse',
+        component:  () => import('@/pages/assetManage/assetOperator/assetUse'),
+        meta: { title: "资产领用" },
+      }]
   }]
-
 }]

@@ -163,7 +163,7 @@
       </el-form>
     </div>
     <TreeModal :tree-modal-config="treeModalConfig" />
-    <SearchAssetModal :showSearchModal="showSearchModal"/>
+    <SearchAssetModal :showSearchModal="showSearchModal" from-flag="1"/>
 
   </div>
 </template>
