@@ -1,7 +1,7 @@
 <template>
   <div class="inspection-coms">
     <div class="my-chart ">
-      <zTable :ref="tableConfig.ref" :tableConfig="tableConfig"></zTable>
+      <zTable :ref="tableConfig.ref" :options="tableConfig"></zTable>
     </div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div class="test">
-    <z-table :ref="assetsTableData.ref" :tableConfig="assetsTableData">
+    <z-table :ref="assetsTableData.ref" :options="assetsTableData">
       <template slot="custom-top" slot-scope="customTopObj">
         <div>
           <el-button-group>

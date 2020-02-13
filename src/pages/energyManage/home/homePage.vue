@@ -141,7 +141,7 @@
     </div>
     <div class="tabulation">
       <div class="tabulation-title">2019年A3能耗排名展示(按综合能耗排名)</div>
-      <z-table :ref="homePageTableConfig.ref" :tableConfig="homePageTableConfig"></z-table>
+      <z-table :ref="homePageTableConfig.ref" :options="homePageTableConfig"></z-table>
     </div>
   </div>
 </template>

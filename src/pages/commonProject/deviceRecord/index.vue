@@ -34,7 +34,7 @@
           <el-button type="primary" icon="el-icon-delete" @click="onClickMultipleDelBtn">删除记录</el-button>
           <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
         </div>
-        <z-table :ref="tableConfig.ref" :table-config="tableConfig">
+        <z-table :ref="tableConfig.ref" :options="tableConfig">
         </z-table>
       </div>
 

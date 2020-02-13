@@ -114,11 +114,12 @@ export default {
   computed: {},
   watch: {
     dic: {
+      immediate: true,
       handler(val) {
         this.netDic = val;
         this.defaultDic = val;
       }
-    }/* ,
+    } /* ,
     text: {
       // immediate: true,
       handler(value) {

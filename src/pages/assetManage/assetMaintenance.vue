@@ -26,7 +26,7 @@
           <el-button type="primary" @click="onClickAddBtn">新建</el-button>
         </div>
 
-        <z-table :ref="assetsTableConfig.ref" :tableConfig="assetsTableConfig">
+        <z-table :ref="assetsTableConfig.ref" :options="assetsTableConfig">
           <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
             <el-button type="text" @click="rowClick(row)">编辑</el-button>
             <el-button type="text" @click="deleteRow(row)">删除</el-button>

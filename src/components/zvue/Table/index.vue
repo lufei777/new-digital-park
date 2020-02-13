@@ -1,9 +1,9 @@
 <template>
   <div class="el-table-wrapper" :style="{height:wrapperHeight}">
     <div
-      v-if="tableConfig.customTop"
+      v-if="options.customTop"
       ref="customTop"
-      :style="{textAlign:tableConfig.customTopPosition || 'right',height:'auto',padding:'0 20px 20px'}"
+      :style="{textAlign:options.customTopPosition || 'right',height:'auto',padding:'0 20px 20px'}"
     >
       <slot
         :name="topSlotName"
@@ -22,7 +22,7 @@
       header-row-class-name="el-table-header"
       cell-class-name="el-table-cell"
       ref="dataBaseTable"
-      row-key="id"
+      :row-key="rowKey"
       :row-style="{height:'50px'}"
       :cell-style="{padding:'0px'}"
       :header-cell-style="{padding:'0px',height:'50px'}"
@@ -58,8 +58,8 @@
       >
         <template slot="header">{{uiConfig.showIndex.label || "序号"}}</template>
       </el-table-column>
-
-      <!-- 正常列 -->
+      
+      <!-- 使用column组件会导致多选索引顺序错位 -->
       <!-- <column :columnConfig="columnConfig">
         <template v-for="col in columnConfig">
           <template slot-scope="{column}" :slot="`${col.prop}Header`">
@@ -70,6 +70,8 @@
           </template>
         </template>
       </column>-->
+
+      <!-- 正常列 -->
       <template v-for="col in columnConfig">
         <el-table-column
           v-if="!col.hide"
@@ -88,16 +90,27 @@
           </template>
           <!-- 内容 -->
           <template slot-scope="scopeRow">
-            <!-- 自定义 -->
-            <slot v-if="col.slot" :name="col.prop" :scopeRow="scopeRow"></slot>
+            <form-temp
+              v-if="cellEditFlag(scopeRow.row,col)"
+              v-model="scopeRow.row[col.prop]"
+              :column="col"
+              :size="isMediumSize"
+              :dic="DIC[col.prop]"
+              :upload-before="col.uploadBefore"
+              :upload-after="col.uploadAfter"
+              :disabled="col.disabled"
+              @click.native.stop
+            ></form-temp>
+            <slot
+              v-else-if="col.slot"
+              :name="col.prop"
+              :label="handleShowLabel(scopeRow.row,col,DIC[col.prop])"
+              :scopeRow="scopeRow"
+              :row="scopeRow.row"
+              :size="isMediumSize"
+              :dic="DIC[col.prop]"
+            ></slot>
             <template v-else>
-              <!-- <el-input
-              class="edit-row-input"
-              size="small"
-              v-model="scope.row[col.prop]"
-              placeholder="请输入内容"
-              @change="_handleRowEdit(scopeRow)"
-              ></el-input>-->
               <span v-html="_columnFormatter(scopeRow,col)"></span>
             </template>
           </template>
@@ -119,13 +132,31 @@
         </template>
         <!-- 按钮 -->
         <template slot-scope="scopeRow">
+          <el-button
+            type="text"
+            :size="isMediumSize"
+            @click.stop="_rowCell(scopeRow.row,scopeRow.$index)"
+            v-if="vaildBoolean(parentOption.editBtn,false)"
+          >{{_editBtnText(scopeRow.row,scopeRow.index)}}</el-button>
+          <el-button
+            v-if="scopeRow.row.$cellEdit && vaildBoolean(parentOption.calcelBtn,true)"
+            type="text"
+            :size="isMediumSize"
+            @click.stop="_rowCanel(scopeRow.row,scopeRow.$index)"
+          >取 消</el-button>
           <!-- 操作列的slot -->
-          <slot v-if="tableConfig.operation" :name="operationSlotName" :scopeRow="scopeRow"></slot>
+          <slot
+            v-if="options.operation"
+            :name="operationSlotName"
+            :scopeRow="scopeRow"
+            :size="isMediumSize"
+          ></slot>
           <template v-for="btn in btnConfig.btns">
+            <!-- :size="btn.size || uiConfig.size" -->
             <!-- 基础模式，如删除，编辑。参数为scopeRow -->
             <el-button
               v-if="btn.type === 'basic' || !btn.type"
-              :size="btn.size || uiConfig.size"
+              :size="btn.size || isMediumSize"
               type="text"
               :key="btn.label"
               @click.stop="btn.handler(scopeRow)"
@@ -136,7 +167,7 @@
             <!-- 带下拉按钮，参数为scopeRow -->
             <z-dropdown
               v-if="btn.type === 'dropDown'"
-              :size="btn.size || uiConfig.size"
+              :size="btn.size || isMediumSize"
               :key="btn.label"
               :dropDown="btn"
               :carryData="scopeRow"
@@ -150,11 +181,11 @@
     <!-- 分页 -->
     <div :ref="paginationSlotName" v-if="uiConfig.pagination" class="table-pagination">
       <z-pagination
-        :key="`${tableConfig.ref}_pagination`"
+        :key="`${options.ref}_pagination`"
         :paginationConfig="uiConfig.pagination"
         :currentPage="paginationObj.currentPage"
         :pageSize="paginationObj.pageSize"
-        :total="uiConfig.pagination.total||tableData.length"
+        :total="uiConfig.pagination.total || tableData.length"
         :handleSizeChange="_handleSizeChange"
         :handleCurrentChange="_handleCurrentChange"
       />
@@ -162,9 +193,15 @@
   </div>
 </template>
 <script>
+import formTemp from "../Form/formtemp";
 // import column from "./components/column";
 import props from "./common/props";
 import { PLACEHOLDER } from "./global/variable";
+import init from "../Form/common/init";
+import { validatenull, asyncValidator } from "../Form/utils/validate";
+import { deepClone, vaildData, vaildBoolean } from "../Form/utils/util";
+
+import { detail } from "../Form/utils/detail";
 
 // 默认log
 const LOG = {
@@ -230,12 +267,12 @@ const setDefaultValue = (defaultOptions, options) => {
 
 export default {
   name: "zTable",
-  mixins: [props()],
-  props: {
-    tableConfig: {
-      type: Object,
-      required: true
-    }
+  mixins: [props(), init("crud")],
+  components: { formTemp },
+  provide() {
+    return {
+      crud: this
+    };
   },
   data() {
     let _this = this;
@@ -255,17 +292,20 @@ export default {
       pageSize: Number.POSITIVE_INFINITY, // 内部使用
       searchVal: "",
       tableHeight: undefined,
-      layoutHeight: [] //高度数组，用来决定整体高度
+      layoutHeight: [], //高度数组，用来决定整体高度
+      // 规则
+      formRules: {},
+      formCellRules: {},
+      formCascaderList: [],
+      formIndexList: []
     };
   },
   created() {
-    const tableConfig = this.tableConfig;
+    const options = this.options;
     /**
      * 事件配置处理
      */
-    this.tableMethods = tableConfig.tableMethods
-      ? tableConfig.tableMethods
-      : {};
+    this.tableMethods = options.tableMethods ? options.tableMethods : {};
     //如果行单击和行双击都设置了，则需要解决事件冲突
     if (
       (this.tableMethods.rowClick && this.tableMethods.rowDblclick) ||
@@ -275,14 +315,15 @@ export default {
     }
 
     //服务器模式
-    this.isServerMode = tableConfig.serverMode;
+    this.isServerMode = options.serverMode;
 
     //ui配置处理
-    if (tableConfig.uiConfig && tableConfig.uiConfig.pagination === true) {
-      this.tableConfig.uiConfig.pagination = {};
+    if (options.uiConfig && options.uiConfig.pagination === true) {
+      this.options.uiConfig.pagination = {};
     }
 
     this._tableInit();
+    this.handleLoadDic();
   },
   mounted() {
     this.$nextTick(() => {
@@ -290,6 +331,11 @@ export default {
     });
   },
   methods: {
+    deepClone,
+    vaildData,
+    validatenull,
+    asyncValidator,
+    vaildBoolean,
     /**
      * 内部使用方法
      */
@@ -300,18 +346,14 @@ export default {
         this._loadServerMode(this.isServerMode.data);
       } else {
         //如果是刷新表格，如果data为空，说明是在外部使用ajax请求数据，则出现加载动画，3秒后加载动画关闭
-        if (
-          reload ||
-          !this.tableConfig.data ||
-          this.tableConfig.data.length === 0
-        ) {
+        if (reload || !this.options.data || this.options.data.length === 0) {
           this.loading = true;
           setTimeout(() => {
             this.loading = false;
           }, 2000);
         }
 
-        this._setTableData(this.tableConfig.data);
+        this._setTableData(this.options.data);
       }
     },
     // 检索
@@ -347,7 +389,6 @@ export default {
     },
     // 获取分页数据
     _getPatinationData() {
-      console.log('_getPatinationData');
       let currentPage = this.currentPage;
       let pageSize = this.pageSize;
       let paginationConfig = this.uiConfig.pagination;
@@ -447,42 +488,6 @@ export default {
       // 分页有20px的margin-top
       this.tableHeight = _height - 20;
     },
-    _handleRowEdit(index, row) {
-      console.log(index, row);
-    },
-    // 由于slot-scope和formatter不能共存只能如此
-    _columnFormatter(scopeRow, currentColumn) {
-      let row = scopeRow.row;
-      let column = scopeRow.column;
-
-      if (typeof currentColumn.formatter === "function") {
-        return currentColumn.formatter(row, column);
-      } else {
-        return this._globalColumnFormatter(row, column);
-      }
-    },
-    // 全局初始化
-    _globalColumnFormatter(row, column) {
-      let value = row[column.property];
-      let type = typeof value;
-      if (value === null) {
-        return PLACEHOLDER;
-      }
-      switch (type) {
-        case "string":
-          if (value.trim().length === 0) {
-            return PLACEHOLDER;
-          }
-          break;
-        case "undefined":
-          return PLACEHOLDER;
-          break;
-        default:
-          return value;
-          break;
-      }
-      return value;
-    },
     //set
     _setCurrentRowData(row) {
       //设置当前选中行
@@ -521,6 +526,158 @@ export default {
       } else {
         return true;
       }
+    },
+
+    /**
+     * 以下行编辑
+     */
+    _editBtnText(row, index) {
+      return row.$cellEdit === true ? "保 存" : "编 辑";
+    },
+    formRulesInit() {
+      this.formRules = {};
+      this.propOption.forEach(ele => {
+        if (ele.rules) this.formRules[ele.prop] = ele.rules;
+        if (ele.rules && ele.cell) this.formCellRules[ele.prop] = ele.rules;
+      });
+
+      let _self = this;
+      _.map(this.propOption, (item, key) => {
+        if (item.rules && item.disabled !== false && item.display !== false) {
+          let currentRules = item.rules;
+          // 必填时自动生成message
+          if (
+            validatenull(currentRules.validator) &&
+            (!currentRules.message || currentRules.message.trim().length === 0)
+          ) {
+            if (currentRules.required) {
+              currentRules.message = `必填，请填写${item.label}`;
+            }
+          }
+          // 添加进rules
+          if (_.isArray(currentRules)) {
+            _self.$set(_self.formRules, item.prop, currentRules);
+            _self.$set(_self.formCellRules, item.prop, currentRules);
+          } else if (_.isObject(currentRules)) {
+            _self.$set(_self.formRules, item.prop, [currentRules]);
+            _self.$set(_self.formCellRules, item.prop, [currentRules]);
+          }
+        }
+      });
+    },
+    _rowCell(row, index) {
+      if (row.$cellEdit) {
+        this._rowCellUpdate(row, index);
+      } else {
+        this._rowCellEdit(row, index);
+      }
+    },
+    //单元格新增
+    _rowCellAdd(obj = {}) {
+      const len = this.tableShowData.length;
+      this.tableShowData.push(
+        this.deepClone(
+          Object.assign(
+            this.tableForm,
+            {
+              $cellEdit: true,
+              $index: len
+            },
+            obj
+          )
+        )
+      );
+      this.formIndexList.push(len);
+    },
+    //行取消
+    _rowCanel(row, index) {
+      if (this.validatenull(row[this.rowKey])) {
+        this.tableShowData.splice(index, 1);
+        return;
+      }
+      this.formCascaderList[index].$cellEdit = false;
+      //设置行数据
+      this.$set(this.tableShowData, index, this.formCascaderList[index]);
+
+      this.formIndexList.splice(this.formIndexList.indexOf(index), 1);
+    },
+    // 单元格编辑
+    _rowCellEdit(row, index) {
+      row.$cellEdit = true;
+      this.$set(this.tableShowData, index, row);
+      //缓冲行数据
+      this.formCascaderList[index] = this.deepClone(row);
+
+      setTimeout(() => {
+        this.formIndexList.push(index);
+      }, 1000);
+    },
+    //单元格更新
+    _rowCellUpdate(row, index) {
+      this.btnDisabled = true;
+      this.asyncValidator(this.formCellRules, row)
+        .then(res => {
+          this.$emit(
+            "row-update",
+            row,
+            index,
+            () => {
+              row.$cellEdit = false;
+              this.$set(this.tableShowData, index, row);
+            },
+            () => {
+              this.btnDisabled = false;
+            }
+          );
+        })
+        .catch(errors => {
+          this.$message.warning(errors[0]);
+        });
+    },
+    // 由于slot-scope和formatter不能共存只能如此
+    _columnFormatter(scopeRow, currentColumn) {
+      let row = scopeRow.row;
+      let column = scopeRow.column;
+
+      if (typeof currentColumn.formatter === "function") {
+        return currentColumn.formatter(row, column);
+      } else {
+        return this._globalColumnFormatter(row, column, currentColumn);
+      }
+    },
+    // 全局初始化
+    _globalColumnFormatter(row, column, currentColumn) {
+      let value = row[column.property];
+      if (typeof value === "string" && value.trim().length === 0) {
+        return "--";
+      }
+      if (!value) {
+        return "--";
+      }
+      return this.handleDetail(
+        row,
+        currentColumn,
+        this.DIC[currentColumn.prop]
+      );
+    },
+    cellEditFlag(row, column) {
+      return row.$cellEdit && column.slot !== true && column.cell;
+    },
+    handleDetail(row, column, DIC) {
+      let result = row[column.prop];
+      result = detail(row, column, this.tableOption, DIC);
+      if (!this.validatenull(DIC)) {
+        row["$" + column.prop] = result;
+      }
+      return result;
+    },
+    handleShowLabel(row, column, DIC) {
+      let result = "";
+      result = detail(row, column, this.tableOption, DIC);
+      if (!this.validatenull(DIC)) {
+        row["$" + column.prop] = result;
+      }
+      return result;
     },
 
     /**
@@ -627,7 +784,8 @@ export default {
         this._loadServerMode({
           [this.pageSizeKey]: pageSize,
           [this.pageNumKey]: currentPage,
-          [this.orderTypeKey]: sortObj.order == "ascending" ? this.ascKey : this.descKey,
+          [this.orderTypeKey]:
+            sortObj.order == "ascending" ? this.ascKey : this.descKey,
           [this.orderPropKey]: sortObj.prop
         });
       }
@@ -737,33 +895,33 @@ export default {
   computed: {
     columnConfig: {
       get() {
-        if (this.tableConfig.columnConfig) {
-          return this.tableConfig.columnConfig;
+        if (this.options.columnConfig) {
+          return this.options.columnConfig;
         } else {
           console.error("表格列配置为必须项");
           return;
         }
       },
       set(columnConfig) {
-        this.tableConfig.columnConfig = columnConfig;
+        this.options.columnConfig = columnConfig;
       }
     },
     btnConfig() {
       // 如果有operation，则代表要使用slot的列操作，权重为最高
-      let operation = this.tableConfig.operation;
+      let operation = this.options.operation;
       if (operation) {
         if (typeof operation === "boolean") {
-          this.tableConfig.btnConfig = defaultBtnConfig;
+          this.options.btnConfig = defaultBtnConfig;
         } else if (typeof operation === "object") {
           // 设置默认值
           setDefaultValue(defaultBtnConfig, operation);
-          this.tableConfig.btnConfig = operation;
+          this.options.btnConfig = operation;
         }
       }
-      return this.tableConfig.btnConfig ? this.tableConfig.btnConfig : false;
+      return this.options.btnConfig ? this.options.btnConfig : false;
     },
     uiConfig() {
-      let uiConfig = this.tableConfig.uiConfig || {};
+      let uiConfig = this.options.uiConfig || {};
       // 设置默认值
       setDefaultValue(defaultUiConfig, uiConfig);
       // 初始化currentPage和pageSize
@@ -784,6 +942,44 @@ export default {
     paginationObj() {
       const { currentPage, pageSize } = this;
       return { currentPage, pageSize };
+    },
+    parentOption() {
+      return this.tableOption || {};
+    },
+    columnFormOption() {
+      let list = [];
+      if (this.isGroup) {
+        this.groupOption.forEach(ele => {
+          if (!ele.column) return;
+          ele.column.forEach(column => {
+            list.push(column);
+          });
+        });
+      } else {
+        list = this.propOption;
+      }
+      return list;
+    },
+    propOption() {
+      let result = [];
+      const safe = this;
+      function findProp(list) {
+        if (!Array.isArray(list)) return;
+        list.forEach(ele => {
+          if (ele.prop) {
+            result.push(ele);
+          }
+          if (ele.children) {
+            safe.isChild = true;
+            findProp(ele.children);
+          }
+        });
+      }
+      findProp(this.columnConfig);
+      return result;
+    },
+    isGroup() {
+      return !this.validatenull(this.tableOption.group);
     }
   },
   watch: {
@@ -826,7 +1022,7 @@ export default {
       }
     },
     //动态监测tableConfig.data的改变，有可能外部ajax改变data值
-    "tableConfig.data"(val) {
+    "options.data"(val) {
       this._setTableData(val);
     },
     tableData(newVal, oldVal) {
@@ -934,6 +1130,14 @@ export default {
     ul.el-pager li {
       background-color: inherit;
     }
+  }
+  // 编辑
+  .z-input-number,
+  .el-cascader,
+  .el-date-editor.el-input,
+  .el-date-editor.el-input__inner,
+  .el-select {
+    width: 100% !important;
   }
 }
 </style>

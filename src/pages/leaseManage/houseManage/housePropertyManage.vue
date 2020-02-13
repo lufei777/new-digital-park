@@ -18,7 +18,7 @@
     </div>
 
     <div class="table panel">
-      <z-table :ref="leaseManageTable.ref" :tableConfig="leaseManageTable">
+      <z-table :ref="leaseManageTable.ref" :options="leaseManageTable">
         <template slot="custom-top" slot-scope="obj">
           <el-button :size="obj.size" type="primary" @click="addedProperty(obj)">新增</el-button>
           <el-button :size="obj.size" type="primary" @click="bulkImport(obj)">批量导入</el-button>

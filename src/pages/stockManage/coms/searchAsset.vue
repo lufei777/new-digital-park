@@ -9,7 +9,7 @@
         <el-tab-pane label="按资产类型">
           <div class="tree-box">
             <Tree :tree-list="typeTree" :treeConfig="treeConfig"/>
-            <z-table :ref="tableConfig.ref" :tableConfig="tableConfig"/>
+            <z-table :ref="tableConfig.ref" :options="tableConfig"/>
           </div>
         </el-tab-pane>
         <el-tab-pane label="组合查询">
@@ -21,7 +21,7 @@
               </div>
             </template>
           </el-button>
-          <z-table :ref="tableConfig.ref" :tableConfig="tableConfig"/>
+          <z-table :ref="tableConfig.ref" :options="tableConfig"/>
         </el-tab-pane>
       </el-tabs>
     <span slot="footer" class="dialog-footer">

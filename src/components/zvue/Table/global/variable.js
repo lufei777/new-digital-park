@@ -5,7 +5,8 @@ export const DIC_PROPS = {
     groups: 'groups',
     children: 'children',
     labelText: '名称',
-    disabled: 'disabled'
+    disabled: 'disabled',
+    rowKey: 'id'
 };
 export const DIC_HTTP_PROPS = {
     name: 'name',

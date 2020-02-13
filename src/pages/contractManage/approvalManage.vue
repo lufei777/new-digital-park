@@ -18,7 +18,7 @@
     </div>
 
     <div class="approval-manage-table panel">
-      <z-table :ref="tableData.ref" :tableConfig="tableData">
+      <z-table :ref="tableData.ref" :options="tableData">
         <contract slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">
             <el-button :size="obj.size" type="primary">批量删除</el-button>

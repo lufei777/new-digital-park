@@ -1,6 +1,6 @@
 <template>
   <div class="apply-record">
-    <z-table :ref="tableConfig.ref" :tableConfig="tableConfig" v-if="!showDetail">
+    <z-table :ref="tableConfig.ref" :options="tableConfig" v-if="!showDetail">
       <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
         <el-button type="text" @click="onClickDetailBtn(row)">详情</el-button>
         <el-button type="text" @click="onClickTakeBackBtn(row)"

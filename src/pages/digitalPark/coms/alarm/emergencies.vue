@@ -1,6 +1,6 @@
 <template>
   <div class="emergencies">
-    <z-table :ref="Emergencies.ref" :tableConfig="Emergencies"></z-table>
+    <z-table :ref="Emergencies.ref" :options="Emergencies"></z-table>
     <div style="margin-bottom:10px;">{{moduleItem.moduleName}}</div>
   </div>
 </template>

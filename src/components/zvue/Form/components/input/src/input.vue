@@ -64,6 +64,7 @@
     <el-input
       v-else
       :clearable="disabled?false:clearable"
+      :size="size"
       v-model="text"
       :type="typeParam"
       :autofocus="autofocus"

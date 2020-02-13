@@ -22,7 +22,7 @@
           <div class="table-tip">{{tableTip}}</div>
           <el-button type="primary" @click="onClickExportBtn" v-if="tableConfig.data.length">导出表格</el-button>
         </div>
-        <z-table :ref="tableConfig.ref" :tableConfig="tableConfig"></z-table>
+        <z-table :ref="tableConfig.ref" :options="tableConfig"></z-table>
       </div>
     </div>
   </div>

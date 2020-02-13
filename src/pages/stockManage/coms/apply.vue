@@ -10,7 +10,7 @@
         <el-button type="primary" @click="onClickMultiDelBtn">批量删除</el-button>
         <el-button type="primary" @click="onClickAddBtn">添加明细</el-button>
       </div>
-      <z-table :ref="tableConfig.ref" :tableConfig="tableConfig">
+      <z-table :ref="tableConfig.ref" :options="tableConfig">
         <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
           <el-button type="text" @click="editRow($index)">编辑</el-button>
           <el-button type="text" @click="deleteRow($index)">删除</el-button>

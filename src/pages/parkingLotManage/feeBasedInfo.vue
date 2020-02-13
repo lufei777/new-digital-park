@@ -18,7 +18,7 @@
     </div>
 
     <div class="table panel">
-      <z-table :ref="leaseManageTable.ref" :tableConfig="leaseManageTable">
+      <z-table :ref="leaseManageTable.ref" :options="leaseManageTable">
         <template slot="operation" slot-scope="obj">
           <el-button type="text" @click="propertyDetail(obj)">详情</el-button>
           <el-button type="text" @click="propertyEdit(obj)">编辑</el-button>

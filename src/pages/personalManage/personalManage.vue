@@ -20,7 +20,7 @@
     <div class="table panel">
       <z-table
         :ref="personalManageTable.ref"
-        :tableConfig="personalManageTable"
+        :options="personalManageTable"
       >
         <template slot="custom-top" slot-scope="obj">
           <el-button :size="obj.size" type="primary" @click="addedProperty(obj)">新增</el-button>

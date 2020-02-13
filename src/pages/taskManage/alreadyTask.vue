@@ -13,7 +13,7 @@
             <el-button type="primary">刷新</el-button>
             <el-button type="primary">删除</el-button>
           </div>
-        <z-table :ref="tableData.ref" :tableConfig="tableData"></z-table>
+        <z-table :ref="tableData.ref" :options="tableData"></z-table>
       </div>
     </div>
   </div>

@@ -18,7 +18,7 @@
     </div>
 
     <div class="lease-contract-table panel">
-      <z-table :ref="leaseContractTable.ref" :tableConfig="leaseContractTable">
+      <z-table :ref="leaseContractTable.ref" :options="leaseContractTable">
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">
             <el-button :size="obj.size" type="primary" @click="batchDels(obj)">批量删除</el-button>

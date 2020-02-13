@@ -3,7 +3,7 @@
     <div class="tip">{{detailTip}}</div>
     <BasicInformation :detail="detailData"/>
     <div class="module-tip">入库明细：</div>
-    <z-table :ref="tableConfig.ref" :tableConfig="tableConfig">
+    <z-table :ref="tableConfig.ref" :options="tableConfig">
       <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
         <el-button type="text" @click="editRow($index,row)">编辑</el-button>
       </template>
