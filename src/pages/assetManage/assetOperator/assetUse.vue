@@ -5,7 +5,7 @@
         <el-button type="primary">批量删除</el-button>
         <el-button type="primary" @click="onClickAddBtn">添加</el-button>
       </div>
-      <zTable :ref="tableConfig.ref" :tableConfig="tableConfig" >
+      <zTable :ref="tableConfig.ref" :options="tableConfig" >
         <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
           <el-button type="text" @click="editRow($index)">编辑</el-button>
           <el-button type="text" @click="deleteRow($index)">删除</el-button>
