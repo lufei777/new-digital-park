@@ -1,5 +1,5 @@
 <template>
-  <div class="ganged-log">
+  <div class="electric-transformer-and-distribution">
     <div class="my-chart ">
       <zTable :ref="tableConfig.ref" :options="tableConfig"></zTable>
     </div>
@@ -11,7 +11,7 @@
   import ChartUtils from '@/utils/chartUtils'
   import CommonApi from '@/service/api/common'
   export default {
-    name: 'gangedLog',
+    name: 'electricTransformerAndDistribution',
     components: {
     },
     props:['moduleItem'],
