@@ -262,6 +262,16 @@ class CommonApi {
   @url("/vibe-web/homeInterfaceMonitor")
   @get
   getHomeInterfaceMonitor(){}
+
+  //联动日志
+  @url("/vibe-web/queryLinkageLogListByTime")
+  @get
+  getGangedLog(){}
+
+  //报警
+  @url("/vibe-web/queryAlarmMessageListByTime")
+  @get
+  getAlarmMessageList(){}
 }
 
 export default new CommonApi()

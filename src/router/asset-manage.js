@@ -54,13 +54,17 @@ export default [{
     name: 'DefaultPage',
     component: DefaultPage,
     meta: { title: "建设中" },
-  },
-    {
+  },{
       path: '/assetUseTmpRouter',
       name: 'TmpRouter',
       component:  () => import('@/pages/commonProject/coms/tmpRouterBox'),
       meta: { title: "管理资产" },
       children:[{
+        path: '/todoList',
+        name: 'TodoList',
+        component:  () => import('@/pages/assetManage/assetOperator/todoList'),
+        meta: { title: "我的待办" },
+      },{
         path: '/assetUse',
         name: 'AssetUse',
         component:  () => import('@/pages/assetManage/assetOperator/assetUse'),

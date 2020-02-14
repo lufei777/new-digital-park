@@ -1,8 +1,9 @@
 <template>
   <div class="ganged-log">
     <div class="my-chart ">
-      <zTable :ref="tableConfig.ref" :tableConfig="tableConfig"></zTable>
+      <zTable :ref="tableConfig.ref" :options="tableConfig"></zTable>
     </div>
+    <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
@@ -13,43 +14,29 @@
     name: 'gangedLog',
     components: {
     },
+    props:['moduleItem'],
     data () {
       return {
         tableConfig:{
-          data: [
-            {
-              zbrq: "2019.11.6",
-              zbry: "李逵",
-              zbdd: "A座",
-              zbnr: "巡视",
-              jjry: "宋江"
-            },
-            {
-              zbrq: "2019.11.8",
-              zbry: "宋江",
-              zbdd: "B座",
-              zbnr: "巡视",
-              jjry: "李逵"
-            }
-          ],
+          ref:'tableRef',
+          data:[],
           columnConfig: [{
-              prop: "zbrq",
-              label: "巡检日期",
-            },
-            {
-              prop: "zbry",
-              label: "值班人员"
-            },
-            {
-              prop: "zbdd",
-              label: "巡检地点"
-            },
-            {
-              prop: "zbnr",
-              label: "备注"
+              prop: "causeAsset",
+              label: "事件源"
+            },{
+              prop: "time",
+              label: "时间"
+            },{
+              prop: "value",
+              label: "事件"
             }],
           uiConfig: {
-            height: "auto"
+            // height: "auto",
+            showIndex: {
+              width: 50
+            },
+            pagination: {
+            }
           }
         }
       }
@@ -59,22 +46,18 @@
     watch:{
     },
     methods: {
-      async getSpectionData(){
-        let res = await CommonApi.getHomeInterfaceMonitor({
-          homeId:10
+      async getGangedLog(){
+        let res = await CommonApi.getGangedLog({
+          pageNum:1,
+          pageCount:6,
+          start:'',
+          end:''
         })
-        let tmp=[]
-        for(let key in res){
-          tmp.push({
-            name:key,
-            value:res[key]
-          })
-        }
-        // this.initChart(tmp)
-      },
+        this.tableConfig.data=res
+      }
     },
     mounted(){
-      this.getSpectionData()
+      this.getGangedLog()
     }
   }
 </script>
