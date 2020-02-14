@@ -30,6 +30,9 @@ import healthDegree from '../pages/digitalPark/coms/fire/healthDegree'
 import gangedLog from '../pages/digitalPark/coms/fire/gangedLog'
 import deviceTypeAlarmProportion from '../pages/digitalPark/coms/fire/deviceTypeAlarmProportion'
 import alarmNews from '../pages/digitalPark/coms/alarm/alarmNews'
+import UPSMonitoring from '../pages/digitalPark/coms/computerRoomRing/UPSMonitoring'
+import airConditioner from '../pages/digitalPark/coms/computerRoomRing/airConditioner'
+import electricTransformerAndDistribution from '../pages/digitalPark/coms/computerRoomRing/electricTransformerAndDistribution'
 import router from '@/router'
 import axios from 'axios'
 class commonFun {
@@ -65,7 +68,10 @@ class commonFun {
     healthDegree,
     gangedLog,
     deviceTypeAlarmProportion,
-    alarmNews
+    alarmNews,
+    UPSMonitoring,
+    airConditioner,
+    electricTransformerAndDistribution
   }
   //this,删除的id,没有id时的提示信息，点击确定的回调函数
   deleteTip(that, deleteId, msgTip, sureCallBack, cancelCallBack) {

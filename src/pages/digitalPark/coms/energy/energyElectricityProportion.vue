@@ -29,7 +29,7 @@
       },
       initChart(res) {
         //document.getElementById('energy-electricity-proportion-chart')this.$refs.myChart
-        let myChart = echarts.init(this.$refs.myChart || document.getElementById('energy-electricity-proportion-chart'));
+        let myChart = echarts.init(this.$refs.myChart);
         let legendData = [];
         let dataList = [];
         res.elecList.map(item => {
@@ -47,9 +47,7 @@
           seriesData,
           // titleText,
         };
-        // window.onresize = myChart.resize;
-        // console.log(myChart)
-        // let resizeBox=$("#energy-electricity-proportion-chart").parents('.item-product-coms')
+        console.log(data)
         ChartUtils.hollowPieChart(myChart,data);
 
         let option={

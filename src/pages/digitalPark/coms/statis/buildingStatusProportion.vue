@@ -1,7 +1,7 @@
 <template>
   <div class="building-status-proportion">
     <div ref="myChart" class="my-chart" id="building-status-proportion-chart"></div>
-    <div>{{moduleItem.moduleName}}11</div>
+    <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
