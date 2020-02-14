@@ -631,6 +631,7 @@ export default {
           );
         })
         .catch(errors => {
+          errors[0].message = `第${index + 1}行：${errors[0].message}`;
           this.$message.warning(errors[0]);
         });
     },
