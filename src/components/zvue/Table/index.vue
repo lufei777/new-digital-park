@@ -58,7 +58,7 @@
       >
         <template slot="header">{{uiConfig.showIndex.label || "序号"}}</template>
       </el-table-column>
-      
+
       <!-- 使用column组件会导致多选索引顺序错位 -->
       <!-- <column :columnConfig="columnConfig">
         <template v-for="col in columnConfig">
@@ -258,7 +258,7 @@ const setDefaultValue = (defaultOptions, options) => {
     if (!options.hasOwnProperty(key)) {
       options[key] = _.cloneDeep(value);
     } else {
-      if (typeof value === "object") {
+      if (typeof value === "object" && typeof options[key] === "object") {
         setDefaultValue(value, options[key]);
       }
     }
