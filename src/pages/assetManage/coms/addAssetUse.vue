@@ -32,12 +32,14 @@
       let _this = this
       let userInfo =JSON.parse(localStorage.userInfo)
       let checkQuantity = (rule, value, callback) => {
-        if ((!Number(value) || value<0)) {
-          callback(new Error("请输入正数"));
-        } else if(value==0){
+        if(value.trim()==""){
+          callback(new Error("请输入领用数量"));
+        }else if(value==0){
           callback(new Error("最小领用数量为1"));
+        }else if((!Number(value) || value<0)){
+          callback(new Error("请输入正数"));
         }else if(value>_this.formModel.quantity){
-          callback(new Error("领用数量应小于入库数量"));
+          callback(new Error("领用数量应小于等于入库数量"));
         }else{
           callback();
         }
@@ -102,6 +104,7 @@
               message:'请选择领用人',
               trigger: "change",
             },
+            change:_this.userChange
           },{
             type: "input",
             label: "规格型号",
@@ -132,7 +135,8 @@
             span: 24,
           }]
         },
-        showSearchModal:false
+        showSearchModal:false,
+        userList:[]
       }
     },
     methods: {
@@ -149,6 +153,7 @@
           item.name = item.fullName;
           item.leaf = true;
         });
+        this.userList=res
         return res;
       },
       onSearchAsset(){
@@ -164,6 +169,11 @@
       },
       back(){
         this.goBack && this.goBack()
+      },
+      userChange(data){
+        let userId = data.value[data.value.length-1]
+        let user = this.userList.find((item)=>item.id==userId)
+        this.formModel.userName=user.fullName
       }
     },
     mounted(){

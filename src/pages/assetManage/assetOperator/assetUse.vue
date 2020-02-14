@@ -2,7 +2,7 @@
   <div class="asset-use panel-container panel">
     <div v-if="!showAdd" class="asset-use-table-panel">
       <div class="operator-btn-box flex-row-reverse">
-        <el-button type="primary">批量删除</el-button>
+        <el-button type="primary" @click="onClickMultiDelBtn">批量删除</el-button>
         <el-button type="primary" @click="onClickAddBtn">添加</el-button>
       </div>
       <zTable :ref="tableConfig.ref" :options="tableConfig" >
@@ -43,7 +43,7 @@
             prop:'name'
           },{
             label:'领用人',
-            prop:'buyId'
+            prop:'userName'
           },{
             label:'规格型号',
             prop:'specification'
@@ -86,7 +86,20 @@
         }else{
           this.tableConfig.data.push(obj)
         }
-      }
+      },
+      deleteRow(index) {
+        this.tableConfig.data.splice(index, 1);
+      },
+      onClickMultiDelBtn() {
+        let delArr = this.$refs["tableRef"].getSelectedData();
+        let tmp = [];
+        this.tableConfig.data.map(item => {
+          if (delArr.indexOf(item) == -1) {
+            tmp.push(item);
+          }
+        });
+        this.tableConfig.data = tmp;
+      },
     },
     mounted(){
     }
