@@ -18,10 +18,7 @@
     </div>
 
     <div class="table panel">
-      <z-table
-        :ref="personalManageTable.ref"
-        :options="personalManageTable"
-      >
+      <z-table :ref="personalManageTable.ref" :options="personalManageTable">
         <template slot="custom-top" slot-scope="obj">
           <el-button :size="obj.size" type="primary" @click="addedProperty(obj)">新增</el-button>
           <el-button :size="obj.size" type="primary" @click="bulkImport(obj)">批量导入</el-button>
@@ -36,7 +33,7 @@
   </div>
 </template>
 <script>
-import { LeaseManageDic } from "@/utils/dictionary";
+import { CommonDic, PersonalManageDic } from "@/utils/dictionary";
 import personalManageApi from "@/service/api/personalManage";
 import commonFun from "@/utils/commonFun.js";
 const temMmodel = {
@@ -167,7 +164,7 @@ export default {
             type: "input",
             prop: "jobNumber",
             clearable: true,
-            span: 5
+            span: 4
           },
           {
             label: "姓名",
@@ -177,22 +174,30 @@ export default {
             span: 4
           },
           {
-            label: "个人邮箱",
+            label: "部门",
             type: "input",
             prop: "email",
             clearable: true,
-            span: 5
+            span: 4
           },
           {
-            label: "办公电话",
+            label: "岗位",
             type: "input",
             prop: "officePhone",
             clearable: true,
-            span: 5
+            span: 4
+          },
+          {
+            label: "员工类型",
+            type: "select",
+            prop: "officePhone",
+            clearable: true,
+            span: 4,
+            dicData: PersonalManageDic.employeeType
           },
           {
             prop: "btn",
-            span: 5,
+            span: 4,
             formslot: true,
             width: 55
           }
@@ -233,7 +238,8 @@ export default {
           {
             prop: "sex",
             label: "性别",
-            fixed: "left"
+            fixed: "left",
+            dicData: CommonDic.sexDic
           },
           {
             prop: "orgName",
@@ -257,11 +263,13 @@ export default {
           },
           {
             prop: "type",
-            label: "员工状态"
+            label: "员工状态",
+            dicData: PersonalManageDic.employeeStatus
           },
           {
             prop: "status",
-            label: "员工类型"
+            label: "员工类型",
+            dicData: PersonalManageDic.employeeType
           },
           {
             prop: "officeAddress",
@@ -283,7 +291,8 @@ export default {
           },
           {
             prop: "residence_type",
-            label: "户口类型"
+            label: "户口类型",
+            dicData: PersonalManageDic.residenceType
           },
           {
             prop: "cardNo",
@@ -292,7 +301,8 @@ export default {
           },
           {
             prop: "health",
-            label: "健康状况"
+            label: "健康状况",
+            dicData: PersonalManageDic.healthStatus
           },
           {
             prop: "address",
