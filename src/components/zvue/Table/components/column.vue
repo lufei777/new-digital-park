@@ -92,7 +92,7 @@ export default {
       return this.handleDetail(
         row,
         currentColumn,
-        this.crud.DIC[currentColumn.prop]
+        this.DIC[currentColumn.prop]
       );
     },
     cellEditFlag(row, column) {
@@ -100,7 +100,7 @@ export default {
     },
     handleDetail(row, column, DIC) {
       let result = row[column.prop];
-      result = detail(row, column, this.crud.tableOption, DIC);
+      result = detail(row, column, this.tableOption, DIC);
       if (!this.validatenull(DIC)) {
         row["$" + column.prop] = result;
       }
@@ -108,7 +108,7 @@ export default {
     },
     handleShowLabel(row, column, DIC) {
       let result = "";
-      result = detail(row, column, this.crud.tableOption, DIC);
+      result = detail(row, column, this.tableOption, DIC);
       if (!this.validatenull(DIC)) {
         row["$" + column.prop] = result;
       }

@@ -21,8 +21,8 @@
           :key="group.prop"
           :display="group.display"
           :icon="group.icon"
-          :card="parentOption.card"
           :label="group.label"
+          :card="parentOption.card"
         >
           <template slot="header" v-if="$slots[group.prop+'Header']">
             <slot :name="`${group.prop}Header`"></slot>
@@ -237,7 +237,6 @@ export default {
       this.formVal();
     },
     formRulesInit() {
-      let _self = this;
       _.map(this.propOption, (item, key) => {
         if (item.rules && item.disabled !== false && item.display !== false) {
           let currentRules = item.rules;
@@ -252,9 +251,9 @@ export default {
           }
           // 添加进rules
           if (_.isArray(currentRules)) {
-            _self.$set(_self.formRules, item.prop, currentRules);
+            this.$set(this.formRules, item.prop, currentRules);
           } else if (_.isObject(currentRules)) {
-            _self.$set(_self.formRules, item.prop, [currentRules]);
+            this.$set(this.formRules, item.prop, [currentRules]);
           }
         }
       });

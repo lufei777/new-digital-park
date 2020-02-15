@@ -198,7 +198,7 @@ export default {
       let ids = _.reduce(
         selectedData,
         (result, cur, curindex) => {
-          return result + "," + cur.houseId;
+          return result + "," + cur.id;
         },
         ""
       );
@@ -242,12 +242,13 @@ export default {
       });
     },
     propertyDel({ scopeRow: { $index, row, _self } }) {
+      console.log($index,row,_self);
       commonFun.deleteTip(
         this,
         true,
         "确定要删除吗?",
         () => {
-          this.deleteRow(row.houseId);
+          this.deleteRow(row.id);
         },
         () => {}
       );
