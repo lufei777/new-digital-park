@@ -8,31 +8,20 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {
-      '/vibe-web': {
-        // target:'http://192.168.1.130:8008',//后端接口地址
-        target:'http://39.98.130.147:8008',//后端接口地址
-        // target:'http://192.168.1.129:8008',//后端接口地址
-        /* changeOrigin: true,//是否允许跨越
-        pathRewrite: {
-          '^/api': '',//重写,
+    proxyTable: [
+      {
+        context: ['/oaApi', '/user-service'],
+        target: 'http://39.98.130.147:8080'
+        /* changeOrigin: true,//是否允许跨越*/
+        /* pathRewrite: {
+          '/user-service': ''
         } */
       },
-      '/oaApi': {
-        // target:'http://192.168.1.130:8002',//后端接口地址
-        target:'http://39.98.130.147:8080',//后端接口地址
-        // target:'http://192.168.1.129:8002',//后端接口地址
-        /* changeOrigin: true,//是否允许跨越
-        pathRewrite: {
-          '^/oaApi': '',//重写,
-        } */
-      },
-      '/user-service': {
-        // target:'http://192.168.1.130:8002',//后端接口地址
-        target:'http://39.98.130.147:8080',//后端接口地址
-        // target:'http://192.168.1.129:8002',//后端接口地址
+      {
+        context: ['/vibe-web'],
+        target: 'http://39.98.130.147:8008'
       }
-    },
+    ],
 
     // Various Dev Server settings
     host: '0.0.0.0', // can be overwritten by process.env.HOST

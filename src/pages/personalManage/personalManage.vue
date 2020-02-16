@@ -36,118 +36,6 @@
 import { CommonDic, PersonalManageDic } from "@/utils/dictionary";
 import personalManageApi from "@/service/api/personalManage";
 import commonFun from "@/utils/commonFun.js";
-const temMmodel = {
-  fullName: "刘二狗",
-  sex: 2,
-  orgName: [
-    "dept-cb0560e3cab348f5ae5be948fa3aa995",
-    "dept-20a0cc719722490bbf2c3e4974d2d5c4",
-    "dept-ac96b78bfe3e411ebe7419722e9fb1c5"
-  ],
-  position: "1",
-  level: "2",
-  superior: "3",
-  status: 1,
-  type: 2,
-  entryDate: "2020-02-26T16:00:00.000Z",
-  correctionDate: "2020-02-21T16:00:00.000Z",
-  workDate: "2010-02-02T16:00:00.000Z",
-  officePhone: "11111111111",
-  telePhone: "11111111111",
-  officeEmail: "111@qq.com",
-  email: "222@qq.com",
-  officeAddress: "信智联科技有限公司",
-  expertise: "没有专长\n1\n2\n3",
-  hobby: "没有爱好\n1\n3\n4",
-  birthday: "2020-02-05T16:00:00.000Z",
-  nation: "汉",
-  natives: "北京市",
-  residence_type: 2,
-  cardNo: "111111111111111111",
-  maritalStatus: 2,
-  childNum: 0,
-  political: 3,
-  groupDate: "2020-02-06T16:00:00.000Z",
-  partyDate: "2020-02-06T16:00:00.000Z",
-  guild: 2,
-  education: 7,
-  degree: 0,
-  health: 2,
-  height: "170",
-  weight: "72",
-  bloodType: "A",
-  address: "北京市",
-  familyContact: "11111111111",
-  temporaryNo: "GAB35-G",
-  educationExperience: "没有\n1\n2\n3",
-  familyDetails: "没有\n1\n2\n3"
-};
-
-const data = [
-  {
-    id: "9558866",
-    jobNumber: "9527",
-    fullName: "刘二狗",
-    sex: "男",
-    orgName: "软件部",
-    position: "Java开发工程师",
-    level: "一级",
-    superior: "老王",
-    type: "正式",
-    status: "全职",
-    officeAddress: "信智联",
-    birthday: "1995/01/05",
-    nation: "汉",
-    natives: "北京市",
-    residence_type: "城市",
-    cardNo: "123456789000000000",
-    health: "良好",
-    address: "北京市海淀区",
-    familyContact: "12345678900"
-  },
-  {
-    id: "9558867",
-    jobNumber: "9527",
-    fullName: "刘三狗",
-    sex: "男",
-    orgName: "软件部",
-    position: "Java开发工程师",
-    level: "一级",
-    superior: "老王",
-    type: "正式",
-    status: "全职",
-    officeAddress: "信智联",
-    birthday: "1995/01/05",
-    nation: "汉",
-    natives: "北京市",
-    residence_type: "城市",
-    cardNo: "123456789000000000",
-    health: "良好",
-    address: "北京市海淀区",
-    familyContact: "12345678900"
-  },
-  {
-    id: "9558868",
-    jobNumber: "9527",
-    fullName: "刘四狗",
-    sex: "男",
-    orgName: "软件部",
-    position: "Java开发工程师",
-    level: "一级",
-    superior: "老王",
-    type: "正式",
-    status: "全职",
-    officeAddress: "信智联",
-    birthday: "1995/01/05",
-    nation: "汉",
-    natives: "北京市",
-    residence_type: "城市",
-    cardNo: "123456789000000000",
-    health: "良好",
-    address: "北京市海淀区",
-    familyContact: "12345678900"
-  }
-];
 
 export default {
   data() {
@@ -183,14 +71,14 @@ export default {
           {
             label: "岗位",
             type: "input",
-            prop: "officePhone",
+            prop: "position",
             clearable: true,
             span: 4
           },
           {
             label: "员工类型",
             type: "select",
-            prop: "officePhone",
+            prop: "type",
             clearable: true,
             span: 4,
             dicData: PersonalManageDic.employeeType
