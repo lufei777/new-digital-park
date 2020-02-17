@@ -7,7 +7,7 @@
     >
       <slot
         :name="config.topSlotName"
-        :size="uiConfig.size"
+        :size="isMediumSize"
         :columnConfig="columnConfig"
         :allData="allData"
         :tableShowData="tableShowData"
@@ -27,7 +27,7 @@
       :key="key"
       :data="tableShowData"
       :height="tableHeight"
-      :size="uiConfig.size"
+      :size="isMediumSize"
       v-loading="loading"
       @row-click="rowClick"
       @row-dblclick="rowDblclick"
@@ -43,6 +43,7 @@
         type="selection"
         :width="config.selectionWidth"
         :selectable="_selectable"
+        align="center"
       ></el-table-column>
 
       <!-- 索引 -->
@@ -52,10 +53,11 @@
         type="index"
         :index="uiConfig.showIndex.handler"
         :width="uiConfig.showIndex.width || config.indexWidth"
-        :align="uiConfig.showIndex.align || config.indexAlign"
+        :align="uiConfig.showIndex.align || 'center'"
       >
         <template slot="header">{{uiConfig.showIndex.label || config.indexLabel}}</template>
       </el-table-column>
+      <el-table-column width="1px"></el-table-column>
 
       <!-- 使用column组件会导致多选索引顺序错位 -->
       <!-- <column :columnConfig="columnConfig">
@@ -73,14 +75,16 @@
       <template v-for="col in columnConfig">
         <el-table-column
           v-if="!col.hide"
+          show-overflow-tooltip
           :key="col.label"
           :prop="col.prop"
           :label="col.label"
           :width="col.width"
           :fixed="col.fixed"
           :sortable="col.sortable || false"
-          :align="col.align || 'left'"
-          show-overflow-tooltip
+          :align="col.align || options.align || config.align"
+          :header-align="col.headerAlign || options.headerAlign || config.headerAlign"
+          :render-header="col.renderHeader"
         >
           <template v-if="col.headerSlot" slot="header">
             <slot :name="`${col.prop}Header`" :column="col"></slot>
@@ -120,7 +124,8 @@
         :prop="btnConfig.prop"
         :label="btnConfig.label"
         :width="btnConfig.width"
-        :align="btnConfig.align || config.btnAlign"
+        :align="btnConfig.align || options.align || config.align"
+        :header-align="btnConfig.headerAlign || config.headerAlign"
       >
         <!-- 搜索框 -->
         <template v-if="uiConfig.searchable" slot="header">
@@ -128,12 +133,14 @@
         </template>
         <!-- 按钮 -->
         <template slot-scope="scopeRow">
+          <!-- 编辑按钮 -->
           <el-button
             type="text"
             :size="isMediumSize"
             @click.stop="rowCell(scopeRow.row,scopeRow.$index)"
             v-if="vaildBoolean(parentOption.editBtn,config.editBtn)"
           >{{_editBtnText(scopeRow.row,scopeRow.index)}}</el-button>
+          <!-- 取消按钮 -->
           <el-button
             v-if="scopeRow.row.$cellEdit && vaildBoolean(parentOption.calcelBtn,config.calcelBtn)"
             type="text"
@@ -147,9 +154,9 @@
             :scopeRow="scopeRow"
             :size="isMediumSize"
           ></slot>
+          <!-- 基础模式，如删除，编辑。参数为scopeRow -->
           <template v-for="btn in btnConfig.btns">
             <!-- :size="btn.size || uiConfig.size" -->
-            <!-- 基础模式，如删除，编辑。参数为scopeRow -->
             <el-button
               v-if="btn.type === 'basic' || !btn.type"
               :size="btn.size || isMediumSize"
@@ -350,7 +357,7 @@ export default {
         } else {
           //如果不是服务器模式
           // 如果tableData.length >= total，说明allData是全部数据，使用tableData分页即可
-          if (this.tableData.length >= paginationConfig.total) {
+          if (this.tableData.length >= this.uiConfig.pagination.total) {
             let currentIndex = currentPage * pageSize;
             this.tableShowData = this.tableData.slice(
               currentIndex - pageSize,
@@ -632,18 +639,18 @@ export default {
     rowClick(row, column, e) {
       //如果是操作列则不执行
       if (
+        !this.tableMethods.rowClick ||
         preventClick.includes(column.property) ||
         preventClick.includes(column.type)
       )
         return;
+        
       this._setCurrentRowData(row);
 
       clearTimeout(dblclickTimer);
       dblclickTimer = setTimeout(
         () => {
-          this.tableMethods.rowClick &&
-            this.tableMethods.rowClick(row, column, e);
-
+          this.tableMethods.rowClick(row, column, e);
           this.$emit("row-click", row, column, e);
         },
         this.clickConflict ? 200 : 0
@@ -653,6 +660,7 @@ export default {
     rowDblclick(row, column, e) {
       //如果是操作列则不执行
       if (
+        this.tableMethods.rowDblclick ||
         preventClick.includes(column.property) ||
         preventClick.includes(column.type)
       )
@@ -661,9 +669,8 @@ export default {
       this._setCurrentRowData(row);
 
       clearTimeout(dblclickTimer);
-      this.tableMethods.rowDblclick &&
-        this.tableMethods.rowDblclick(row, column, e);
 
+      this.tableMethods.rowDblclick(row, column, e);
       this.$emit("row-dblclick", row, column, e);
     },
     //单选选择当前行
