@@ -69,6 +69,11 @@ export default [{
         name: 'AssetUse',
         component:  () => import('@/pages/assetManage/assetOperator/assetUse'),
         meta: { title: "资产领用" },
+      },{
+        path: '/checkDetail',
+        name: 'CheckDetail',
+        component: () => import('@/pages/assetManage/assetOperator/checkDetail'),
+        meta: { title: "我的待办" },
       }]
-  }]
+  },]
 }]
