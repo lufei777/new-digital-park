@@ -350,7 +350,7 @@ export default {
         } else {
           //如果不是服务器模式
           // 如果tableData.length >= total，说明allData是全部数据，使用tableData分页即可
-          if (this.tableData.length >= this.uiConfig.pagination.total) {
+          if (this.tableData.length >= paginationConfig.total) {
             let currentIndex = currentPage * pageSize;
             this.tableShowData = this.tableData.slice(
               currentIndex - pageSize,
@@ -825,7 +825,9 @@ export default {
     },
     // 设置数据总条数，计算页数使用
     setPaginationTotal(totalNum) {
-      this.uiConfig.pagination.total = totalNum;
+      if (typeof this.uiConfig.pagination === "object") {
+        this.uiConfig.pagination.total = totalNum;
+      }
     },
     // 设置列配置
     setColumnConfig(columnConfig) {

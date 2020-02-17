@@ -9,7 +9,7 @@ export default [{
         {
             path: '/personalmanageinfo',
             name: 'personalmanageinfo',
-            meta: { title: '用户管理' },
+            meta: { title: '人员信息' },
             component: () => import('@/pages/personalManage/personalManage')
         },
         {
