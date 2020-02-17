@@ -40,7 +40,25 @@
     name: 'TodoList',
     components: {
     },
+    props:['fromFlag'],
     data () {
+      let columnConfig = [{
+        label:'申请日期',
+        prop:'date'
+      },{
+        label:'申请人',
+        prop:'applyUser'
+      },{
+        label:'申请类型',
+        prop:'name'
+      }]
+      if(this.fromFlag==2) {
+        columnConfig = [...columnConfig, ...
+          [{
+            label: '当前节点',
+            prop: 'name'
+          }]]
+      }
       return {
         date:['',''],
         typeList:[{name:'资产领用',value:0},{name:'资产借用',value:1}],
@@ -48,16 +66,7 @@
         tableConfig:{
           ref:'tableRef',
           data:[],
-          columnConfig:[{
-            label:'申请日期',
-            prop:'date'
-          },{
-            label:'申请人',
-            prop:'applyUser'
-          },{
-            label:'申请类型',
-            prop:'name'
-          }],
+          columnConfig:columnConfig,
           customTop: true,
           operation: true,
           uiConfig:{
