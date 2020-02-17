@@ -36,14 +36,14 @@ export default function (type) {
         return this.tableOption.menuType || 'button';
       },
       isMediumSize() {
-        return this.controlSize === 'medium' ? 'small' : this.controlSize;
+        if (isCrud) {
+          return this.tableOption.uiConfig ? this.tableOption.uiConfig.size || 'medium' : 'medium';
+        } else {
+          return this.controlSize === 'medium' ? 'small' : this.controlSize;
+        }
       },
       controlSize() {
-        if (isCrud) {
-          return this.tableOption.uiConfig.size || 'medium'
-        } else {
-          return this.tableOption.size || 'medium';
-        }
+        return this.tableOption.size || 'medium';
       }
     },
     methods: {
