@@ -177,13 +177,17 @@ export default {
       localStorage.setItem('menuTree',JSON.stringify(res))
     },
     getItemBg(item) {
-      return {
-        backgroundImage:
+      let backgroundImage = "";
+      try {
+        backgroundImage =
           "url(" +
           require("../../../../static/image/digitalPark/" +
             item.productBgUrl +
             ".png") +
-          ")"
+          ")";
+      } catch (error) {}
+      return {
+        backgroundImage
       };
     },
     onClickChangeModel(val) {
