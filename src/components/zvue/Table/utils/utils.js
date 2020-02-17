@@ -15,7 +15,7 @@ export const setDefaultValue = (defaultOptions, options) => {
         if (!options.hasOwnProperty(key)) {
             options[key] = _.cloneDeep(value);
         } else {
-            if (typeof value === "object") {
+            if (typeof value === "object" && typeof options[key] === "object") {
                 setDefaultValue(value, options[key]);
             }
         }
