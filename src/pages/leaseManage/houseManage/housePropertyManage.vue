@@ -138,14 +138,7 @@ export default {
           {
             prop: "houseStatus",
             label: "房产状态",
-            formatter: function(row, column) {
-              let HouseStatus = LeaseManageDic.HouseStatus;
-              let rowValue = row[column.property];
-              let res = _.find(HouseStatus, (cur, key, obj) => {
-                return cur.value === rowValue;
-              });
-              return res ? res.label : "--";
-            }
+            dicData: LeaseManageDic.HouseStatus
           },
           {
             prop: "houseArea",
@@ -205,7 +198,7 @@ export default {
       let ids = _.reduce(
         selectedData,
         (result, cur, curindex) => {
-          return result + "," + cur.houseId;
+          return result + "," + cur.id;
         },
         ""
       );
@@ -249,12 +242,13 @@ export default {
       });
     },
     propertyDel({ scopeRow: { $index, row, _self } }) {
+      console.log($index,row,_self);
       commonFun.deleteTip(
         this,
         true,
         "确定要删除吗?",
         () => {
-          this.deleteRow(row.houseId);
+          this.deleteRow(row.id);
         },
         () => {}
       );

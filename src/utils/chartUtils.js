@@ -97,7 +97,7 @@ class chartUtils {
         name:data.seriesName?data.seriesName:'',
         type: 'pie',
         radius: ['50%', '70%'],
-        center:seriesUi.center || '',
+        center:seriesUi.center || ['50%','50%'],
         avoidLabelOverlap: false,
         label: {
           normal: {

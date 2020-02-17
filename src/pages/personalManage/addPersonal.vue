@@ -20,7 +20,7 @@
   </div>
 </template>
 <script>
-import { CommonDic } from "@/utils/dictionary";
+import { CommonDic, PersonalManageDic, BooleanDic } from "@/utils/dictionary";
 import SystemManageApi from "@/service/api/systemManage";
 import PersonalManageApi from "@/service/api/personalManage";
 const apiConfig = {
@@ -137,20 +137,7 @@ export default {
                 rules: {
                   required: true
                 },
-                dicData: [
-                  {
-                    label: "临时",
-                    value: "1"
-                  },
-                  {
-                    label: "试用",
-                    value: "2"
-                  },
-                  {
-                    label: "正式",
-                    value: "3"
-                  }
-                ]
+                dicData: PersonalManageDic.employeeStatus
               },
               {
                 label: "员工类型",
@@ -159,20 +146,7 @@ export default {
                 rules: {
                   required: true
                 },
-                dicData: [
-                  {
-                    label: "外包",
-                    value: "1"
-                  },
-                  {
-                    label: "兼职",
-                    value: "2"
-                  },
-                  {
-                    label: "全职",
-                    value: "3"
-                  }
-                ]
+                dicData: PersonalManageDic.employeeType
               },
               {
                 label: "出生日期",
@@ -289,10 +263,7 @@ export default {
                 label: "户口类型",
                 prop: "residence_type",
                 type: "select",
-                dicData: [
-                  { label: "城市", value: "1" },
-                  { label: "农村", value: "2" }
-                ],
+                dicData: PersonalManageDic.residenceType,
                 rules: {
                   required: true
                 }
@@ -309,10 +280,7 @@ export default {
                 label: "婚姻状况",
                 prop: "maritalStatus",
                 type: "select",
-                dicData: [
-                  { label: "已婚", value: "1" },
-                  { label: "未婚", value: "2" }
-                ]
+                dicData: PersonalManageDic.maritalStatus
               },
               {
                 label: "子女个数",
@@ -324,21 +292,7 @@ export default {
                 label: "政治面貌",
                 prop: "political",
                 type: "select",
-                dicData: [
-                  { label: "中共党员", value: "0" },
-                  { label: "中共预备党员", value: "1" },
-                  { label: "共青团员", value: "2" },
-                  { label: "群众", value: "3" },
-                  { label: "民革党员", value: "4" },
-                  { label: "民盟盟员", value: "5" },
-                  { label: "民建会员", value: "6" },
-                  { label: "民进会员", value: "7" },
-                  { label: "农工党党员", value: "8" },
-                  { label: "致公党党员", value: "9" },
-                  { label: "九三学社社员", value: "10" },
-                  { label: "台盟盟员", value: "11" },
-                  { label: "无党派人士", value: "12" }
-                ]
+                dicData: PersonalManageDic.politicalStatus
               },
               {
                 label: "入团日期",
@@ -354,99 +308,25 @@ export default {
                 label: "工会会员",
                 prop: "guild",
                 type: "select",
-                dicData: [
-                  { label: "是", value: "1" },
-                  { label: "否", value: "2" }
-                ]
+                dicData: BooleanDic.isOrNot
               },
               {
                 label: "学历",
                 prop: "education",
                 type: "select",
-                dicData: [
-                  {
-                    label: "小学",
-                    value: "0"
-                  },
-                  {
-                    label: "初级中学",
-                    value: "1"
-                  },
-                  {
-                    label: "高级中学",
-                    value: "2"
-                  },
-                  {
-                    label: "中专",
-                    value: "3"
-                  },
-                  {
-                    label: "职校",
-                    value: "4"
-                  },
-                  {
-                    label: "中技",
-                    value: "5"
-                  },
-                  {
-                    label: "专科（高职、高专、高技）",
-                    value: "6"
-                  },
-                  {
-                    label: "本科",
-                    value: "7"
-                  },
-                  {
-                    label: "硕士研究生",
-                    value: "8"
-                  },
-                  {
-                    label: "博士研究生",
-                    value: "9"
-                  }
-                ]
+                dicData: PersonalManageDic.educationBackground
               },
               {
                 label: "学位",
                 prop: "degree",
                 type: "select",
-                dicData: [
-                  {
-                    label: "学士",
-                    value: "0"
-                  },
-                  {
-                    label: "硕士",
-                    value: "1"
-                  },
-                  {
-                    label: "博士",
-                    value: "2"
-                  }
-                ]
+                dicData: PersonalManageDic.degree
               },
               {
                 label: "健康状况",
                 prop: "health",
                 type: "select",
-                dicData: [
-                  {
-                    label: "优秀",
-                    value: "1"
-                  },
-                  {
-                    label: "良好",
-                    value: "2"
-                  },
-                  {
-                    label: "一般",
-                    value: "3"
-                  },
-                  {
-                    label: "较差",
-                    value: "4"
-                  }
-                ]
+                dicData: PersonalManageDic.healthStatus
               },
               { label: "身高", prop: "height", type: "input", append: "cm" },
               { label: "体重", prop: "weight", type: "input", append: "kg" },

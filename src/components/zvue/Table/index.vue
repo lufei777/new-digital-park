@@ -6,7 +6,7 @@
       :style="{textAlign:options.customTopPosition || 'right',height:'auto',padding:'0 20px 20px'}"
     >
       <slot
-        :name="topSlotName"
+        :name="config.topSlotName"
         :size="uiConfig.size"
         :columnConfig="columnConfig"
         :allData="allData"
@@ -15,17 +15,15 @@
       ></slot>
     </div>
 
-    <!-- stripe 
-    border-->
     <el-table
       highlight-current-row
       header-row-class-name="el-table-header"
       cell-class-name="el-table-cell"
       ref="dataBaseTable"
       :row-key="rowKey"
-      :row-style="{height:'50px'}"
-      :cell-style="{padding:'0px'}"
-      :header-cell-style="{padding:'0px',height:'50px'}"
+      :row-style="config.rowStyle"
+      :cell-style="config.cellStyle"
+      :header-cell-style="config.headerCellStyle"
       :key="key"
       :data="tableShowData"
       :height="tableHeight"
@@ -40,23 +38,23 @@
     >
       <!-- 多选 -->
       <el-table-column
+        v-if="uiConfig.selection"
         fixed="left"
         type="selection"
-        width="37"
-        v-if="uiConfig.selection"
+        :width="config.selectionWidth"
         :selectable="_selectable"
       ></el-table-column>
 
       <!-- 索引 -->
       <el-table-column
+        v-if="uiConfig.showIndex"
         fixed="left"
         type="index"
-        v-if="uiConfig.showIndex"
         :index="uiConfig.showIndex.handler"
-        :width="uiConfig.showIndex.width || 50"
-        :align="uiConfig.showIndex.align || 'center'"
+        :width="uiConfig.showIndex.width || config.indexWidth"
+        :align="uiConfig.showIndex.align || config.indexAlign"
       >
-        <template slot="header">{{uiConfig.showIndex.label || "序号"}}</template>
+        <template slot="header">{{uiConfig.showIndex.label || config.indexLabel}}</template>
       </el-table-column>
 
       <!-- 使用column组件会导致多选索引顺序错位 -->
@@ -84,11 +82,9 @@
           :align="col.align || 'left'"
           show-overflow-tooltip
         >
-          <!-- 列标题slot -->
           <template v-if="col.headerSlot" slot="header">
             <slot :name="`${col.prop}Header`" :column="col"></slot>
           </template>
-          <!-- 内容 -->
           <template slot-scope="scopeRow">
             <form-temp
               v-if="cellEditFlag(scopeRow.row,col)"
@@ -124,30 +120,30 @@
         :prop="btnConfig.prop"
         :label="btnConfig.label"
         :width="btnConfig.width"
-        :align="btnConfig.align || 'left'"
+        :align="btnConfig.align || config.btnAlign"
       >
         <!-- 搜索框 -->
         <template v-if="uiConfig.searchable" slot="header">
-          <el-input v-model="searchVal" size="mini" placeholder="检索" />
+          <el-input v-model="searchVal" :size="isMediumSize" placeholder="检索" />
         </template>
         <!-- 按钮 -->
         <template slot-scope="scopeRow">
           <el-button
             type="text"
             :size="isMediumSize"
-            @click.stop="_rowCell(scopeRow.row,scopeRow.$index)"
-            v-if="vaildBoolean(parentOption.editBtn,false)"
+            @click.stop="rowCell(scopeRow.row,scopeRow.$index)"
+            v-if="vaildBoolean(parentOption.editBtn,config.editBtn)"
           >{{_editBtnText(scopeRow.row,scopeRow.index)}}</el-button>
           <el-button
-            v-if="scopeRow.row.$cellEdit && vaildBoolean(parentOption.calcelBtn,true)"
+            v-if="scopeRow.row.$cellEdit && vaildBoolean(parentOption.calcelBtn,config.calcelBtn)"
             type="text"
             :size="isMediumSize"
-            @click.stop="_rowCanel(scopeRow.row,scopeRow.$index)"
+            @click.stop="rowCanel(scopeRow.row,scopeRow.$index)"
           >取 消</el-button>
           <!-- 操作列的slot -->
           <slot
             v-if="options.operation"
-            :name="operationSlotName"
+            :name="config.operationSlotName"
             :scopeRow="scopeRow"
             :size="isMediumSize"
           ></slot>
@@ -179,7 +175,7 @@
     </el-table>
 
     <!-- 分页 -->
-    <div :ref="paginationSlotName" v-if="uiConfig.pagination" class="table-pagination">
+    <div :ref="config.paginationSlotName" v-if="uiConfig.pagination" class="table-pagination">
       <z-pagination
         :key="`${options.ref}_pagination`"
         :paginationConfig="uiConfig.pagination"
@@ -193,82 +189,35 @@
   </div>
 </template>
 <script>
-import formTemp from "../Form/formtemp";
 // import column from "./components/column";
+import config from "./global/config";
 import props from "./common/props";
 import { PLACEHOLDER } from "./global/variable";
+import { setDefaultValue } from "./utils/utils";
+
+import formTemp from "../Form/formtemp";
 import init from "../Form/common/init";
 import { validatenull, asyncValidator } from "../Form/utils/validate";
 import { deepClone, vaildData, vaildBoolean } from "../Form/utils/util";
-
 import { detail } from "../Form/utils/detail";
-
-// 默认log
-const LOG = {
-  error: {
-    tableData: {
-      TypeError: "数组数据类型必须是数组"
-    },
-    pagination: {
-      RequestError: "服务端分页请求错误"
-    }
-  }
-};
-
-//默认uiConfig
-const defaultUiConfig = {
-  /**
-   * height: "300px" 设定按照设定值来规定table高度
-   *         "auto"  根据内容自适应
-   *          不设置  根据父级计算高度
-   */
-  size: "medium",
-  pagination: {
-    // sizes
-    layout: "total, ->, prev, pager, next, jumper",
-    pageSizes: [10],
-    pageSize: 10,
-    currentPage: 1
-  }
-};
-
-// 默认btnConfig
-const defaultBtnConfig = {
-  prop: "operation",
-  label: "操作",
-  fixed: "right",
-  width: 100
-};
 
 //单双击冲突timer
 let dblclickTimer = null;
 let paginationTimer = null;
 
 //点击事件屏蔽列
-let preventClick = ["selection", "operation", undefined];
-
-// 设置默认值
-const _objKeysForeach = (obj, cb) => {
-  Object.keys(obj).forEach((key, index) => {
-    cb(key, obj[key], index);
-  });
-};
-const setDefaultValue = (defaultOptions, options) => {
-  _objKeysForeach(defaultOptions, (key, value, index) => {
-    if (!options.hasOwnProperty(key)) {
-      options[key] = _.cloneDeep(value);
-    } else {
-      if (typeof value === "object" && typeof options[key] === "object") {
-        setDefaultValue(value, options[key]);
-      }
-    }
-  });
-};
+let preventClick = ["selection", "operation"];
 
 export default {
   name: "zTable",
   mixins: [props(), init("crud")],
   components: { formTemp },
+  props: {
+    propsHttp: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   provide() {
     return {
       crud: this
@@ -277,9 +226,7 @@ export default {
   data() {
     let _this = this;
     return {
-      topSlotName: "custom-top",
-      operationSlotName: "operation",
-      paginationSlotName: "tablePagination",
+      config,
       selectedData: [], //表格当前多选数据
       allData: [], //保存数组原始数据，用来复原数据
       tableData: [], //表格传入数据，用作分页使用
@@ -289,7 +236,7 @@ export default {
       key: 1, //在doLayout中改变，为保证每次Table都是重新渲染
       loading: false, //是否呈加载状态
       currentPage: 1, // 内部使用
-      pageSize: Number.POSITIVE_INFINITY, // 内部使用
+      pageSize: Infinity, // 内部使用
       searchVal: "",
       tableHeight: undefined,
       layoutHeight: [], //高度数组，用来决定整体高度
@@ -403,7 +350,7 @@ export default {
         } else {
           //如果不是服务器模式
           // 如果tableData.length >= total，说明allData是全部数据，使用tableData分页即可
-          if (this.tableData.length >= this.uiConfig.pagination.total) {
+          if (this.tableData.length >= paginationConfig.total) {
             let currentIndex = currentPage * pageSize;
             this.tableShowData = this.tableData.slice(
               currentIndex - pageSize,
@@ -535,13 +482,11 @@ export default {
       return row.$cellEdit === true ? "保 存" : "编 辑";
     },
     formRulesInit() {
-      this.formRules = {};
       this.propOption.forEach(ele => {
         if (ele.rules) this.formRules[ele.prop] = ele.rules;
         if (ele.rules && ele.cell) this.formCellRules[ele.prop] = ele.rules;
       });
 
-      let _self = this;
       _.map(this.propOption, (item, key) => {
         if (item.rules && item.disabled !== false && item.display !== false) {
           let currentRules = item.rules;
@@ -556,29 +501,28 @@ export default {
           }
           // 添加进rules
           if (_.isArray(currentRules)) {
-            _self.$set(_self.formRules, item.prop, currentRules);
-            _self.$set(_self.formCellRules, item.prop, currentRules);
+            this.$set(this.formRules, item.prop, currentRules);
+            this.$set(this.formCellRules, item.prop, currentRules);
           } else if (_.isObject(currentRules)) {
-            _self.$set(_self.formRules, item.prop, [currentRules]);
-            _self.$set(_self.formCellRules, item.prop, [currentRules]);
+            this.$set(this.formRules, item.prop, [currentRules]);
+            this.$set(this.formCellRules, item.prop, [currentRules]);
           }
         }
       });
     },
-    _rowCell(row, index) {
+    rowCell(row, index) {
       if (row.$cellEdit) {
-        this._rowCellUpdate(row, index);
+        this.rowCellUpdate(row, index);
       } else {
-        this._rowCellEdit(row, index);
+        this.rowCellEdit(row, index);
       }
     },
     //单元格新增
-    _rowCellAdd(obj = {}) {
+    rowCellAdd(obj = {}) {
       const len = this.tableShowData.length;
       this.tableShowData.push(
         this.deepClone(
           Object.assign(
-            this.tableForm,
             {
               $cellEdit: true,
               $index: len
@@ -590,7 +534,7 @@ export default {
       this.formIndexList.push(len);
     },
     //行取消
-    _rowCanel(row, index) {
+    rowCanel(row, index) {
       if (this.validatenull(row[this.rowKey])) {
         this.tableShowData.splice(index, 1);
         return;
@@ -602,7 +546,7 @@ export default {
       this.formIndexList.splice(this.formIndexList.indexOf(index), 1);
     },
     // 单元格编辑
-    _rowCellEdit(row, index) {
+    rowCellEdit(row, index) {
       row.$cellEdit = true;
       this.$set(this.tableShowData, index, row);
       //缓冲行数据
@@ -613,7 +557,7 @@ export default {
       }, 1000);
     },
     //单元格更新
-    _rowCellUpdate(row, index) {
+    rowCellUpdate(row, index) {
       this.btnDisabled = true;
       this.asyncValidator(this.formCellRules, row)
         .then(res => {
@@ -711,9 +655,9 @@ export default {
       if (
         preventClick.includes(column.property) ||
         preventClick.includes(column.type)
-      ) {
+      )
         return;
-      }
+
       this._setCurrentRowData(row);
 
       clearTimeout(dblclickTimer);
@@ -881,7 +825,9 @@ export default {
     },
     // 设置数据总条数，计算页数使用
     setPaginationTotal(totalNum) {
-      this.uiConfig.pagination.total = totalNum;
+      if (typeof this.uiConfig.pagination === "object") {
+        this.uiConfig.pagination.total = totalNum;
+      }
     },
     // 设置列配置
     setColumnConfig(columnConfig) {
@@ -912,10 +858,10 @@ export default {
       let operation = this.options.operation;
       if (operation) {
         if (typeof operation === "boolean") {
-          this.options.btnConfig = defaultBtnConfig;
+          this.options.btnConfig = this.config.defaultBtnConfig;
         } else if (typeof operation === "object") {
           // 设置默认值
-          setDefaultValue(defaultBtnConfig, operation);
+          setDefaultValue(this.config.defaultBtnConfig, operation);
           this.options.btnConfig = operation;
         }
       }
@@ -924,7 +870,7 @@ export default {
     uiConfig() {
       let uiConfig = this.options.uiConfig || {};
       // 设置默认值
-      setDefaultValue(defaultUiConfig, uiConfig);
+      setDefaultValue(this.config.defaultUiConfig, uiConfig);
       // 初始化currentPage和pageSize
       this.currentPage = uiConfig.pagination.currentPage;
       this.pageSize = uiConfig.pagination.pageSize;
@@ -1013,7 +959,8 @@ export default {
         if (this.uiConfig.pagination.handler) {
           return;
         }
-        if (oldVal.pageSize != Number.POSITIVE_INFINITY) {
+        // oldVal.pageSize != Number.POSITIVE_INFINITY
+        if (Number.isFinite(oldVal.pageSize)) {
           //为防止在极短的时间内重复请求
           clearTimeout(paginationTimer);
           paginationTimer = setTimeout(() => {
@@ -1034,7 +981,7 @@ export default {
       } else {
         this.$notify({
           type: "error",
-          message: LOG.error.tableData.TypeError
+          message: this.config.LOG.error.tableData.TypeError
         });
       }
     }
