@@ -1,10 +1,11 @@
 <template>
   <div class="todo-list panel-container panel">
-    <el-tabs type="border-card" @tab-click="onClickTab" v-model="activeTab">
+    <el-tabs type="border-card" @tab-click="onClickTab" >
       <el-tab-pane label="待办">
-        <TodoComs />
+        <TodoComs fromFlag="1"/>
       </el-tab-pane>
       <el-tab-pane label="已办">
+        <TodoComs fromFlag="2"/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -16,11 +17,10 @@
     name: 'TodoList',
     components: {
       TodoComs,
-
     },
     data () {
       return {
-        activeTab:1
+        // activeTab:1
       }
     },
     methods: {
