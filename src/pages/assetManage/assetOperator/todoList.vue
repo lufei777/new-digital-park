@@ -1,6 +1,6 @@
 <template>
   <div class="todo-list panel-container panel">
-    <el-tabs type="border-card" @tab-click="onClickTab" v-model="activeTab">
+    <el-tabs type="border-card" @tab-click="onClickTab" >
       <el-tab-pane label="待办">
         <TodoComs />
       </el-tab-pane>
@@ -20,7 +20,7 @@
     },
     data () {
       return {
-        activeTab:1
+        // activeTab:1
       }
     },
     methods: {

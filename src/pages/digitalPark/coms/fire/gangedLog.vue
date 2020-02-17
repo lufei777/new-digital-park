@@ -35,7 +35,7 @@
             showIndex: {
               width: 50
             },
-            pagination: false
+            // pagination: false
           }
         }
       }
