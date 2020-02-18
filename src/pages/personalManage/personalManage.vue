@@ -5,7 +5,7 @@
         :ref="personalManageForm.ref"
         :options="personalManageForm"
         v-model="model"
-        @submit="submit"
+        @submit="searchSubmit"
         @reset-change="resetChange"
       >
         <template slot="btn" slot-scope="obj">
@@ -36,6 +36,10 @@
 import { CommonDic, PersonalManageDic } from "@/utils/dictionary";
 import personalManageApi from "@/service/api/personalManage";
 import commonFun from "@/utils/commonFun.js";
+let tableSendData = {
+  pageNum: 1,
+  pageSize: 10
+};
 
 export default {
   data() {
@@ -64,7 +68,7 @@ export default {
           {
             label: "部门",
             type: "input",
-            prop: "email",
+            prop: "orgName",
             clearable: true,
             span: 4
           },
@@ -97,10 +101,7 @@ export default {
         customTopPosition: "right",
         serverMode: {
           url: personalManageApi.getUserMessageList,
-          data: {
-            pageNum: 1,
-            pageSize: 10
-          },
+          data: tableSendData,
           props: {
             listKey: "list",
             total: "total",
@@ -211,7 +212,12 @@ export default {
     };
   },
   methods: {
-    submit() {},
+    searchSubmit(model, hide) {
+      hide();
+      let data = this.personalManageTable.serverMode.data;
+      this.personalManageTable.serverMode.data = Object.assign(_.cloneDeep(tableSendData), model);
+      this.refreshTable();
+    },
     resetChange() {},
     deleteRow(ids) {
       leaseManageApi.removeHouse({ houseIds: ids }).then(res => {
@@ -257,17 +263,22 @@ export default {
       });
     },
     search(...args) {
-      this.$refs[this.personalManageForm.ref].getFormModel(res => {
-        console.log("model", res);
-      });
-      console.log("搜索", ...args);
+      this.zForm.submit();
     },
     clearForm(...args) {
       console.log("清空", ...args);
-      this.$refs[this.personalManageForm.ref].resetForm();
+      this.zForm.resetForm();
     },
     refreshTable() {
-      this.$refs[this.personalManageTable.ref].refreshTable();
+      this.zTable.refreshTable();
+    }
+  },
+  computed: {
+    zForm() {
+      return this.$refs[this.personalManageForm.ref];
+    },
+    zTable() {
+      return this.$refs[this.personalManageTable.ref];
     }
   }
 };

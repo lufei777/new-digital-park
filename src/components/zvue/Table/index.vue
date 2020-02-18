@@ -350,10 +350,12 @@ export default {
       if (paginationConfig) {
         //如果采用服务端分页模式
         if (this.isServerMode) {
-          this._loadServerMode({
-            [this.pageSizeKey]: pageSize,
-            [this.pageNumKey]: currentPage
-          });
+          this._loadServerMode(
+            Object.assign(this.isServerMode.data, {
+              [this.pageSizeKey]: pageSize,
+              [this.pageNumKey]: currentPage
+            })
+          );
         } else {
           //如果不是服务器模式
           // 如果tableData.length >= total，说明allData是全部数据，使用tableData分页即可
@@ -644,7 +646,7 @@ export default {
         preventClick.includes(column.type)
       )
         return;
-        
+
       this._setCurrentRowData(row);
 
       clearTimeout(dblclickTimer);
