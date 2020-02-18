@@ -16,6 +16,7 @@ import Switch from './Form/components/switch';
 import Time from './Form/components/time';
 import Tree from './Form/components/tree';
 import Upload from './Form/components/upload';
+import Dynamic from './Form/components/dynamic';
 
 import VeLine from 'v-charts/lib/line.common' //折线图
 import VeBar from 'v-charts/lib/bar.common' //条形图
@@ -31,6 +32,7 @@ import Clickout from "./directive/clickout"
 const components = [
     Dropdown,
     Pagination,
+    Dynamic,
     Table,
     Cascader,
     Checkbox,
