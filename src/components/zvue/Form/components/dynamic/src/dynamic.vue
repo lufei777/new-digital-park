@@ -71,6 +71,7 @@ export default {
               prop: "index",
               fixed: true,
               width: 50,
+              slot: true,
               renderHeader: (h, { column, $index }) => {
                 if (this.options.addBtn === false) {
                   return "序号";
@@ -87,8 +88,7 @@ export default {
                     click: this.addRow
                   }
                 });
-              },
-              slot: true
+              }
             }
           ];
           this.columnOption.forEach(ele => {
