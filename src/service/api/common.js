@@ -272,6 +272,16 @@ class CommonApi {
   @url("/vibe-web/queryAlarmMessageListByTime")
   @get
   getAlarmMessageList(){}
+
+  //ups
+  @url("/vibe-web/homeInterfaceAlarmById")
+  @get
+  getHomeInterfaceAlarmById(){}
+
+  //变配电
+  @url("/vibe-web/homeInterfaceAlarmByModule")
+  @get
+  getHomeInterfaceAlarmByModule(){}
 }
 
 export default new CommonApi()

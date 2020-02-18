@@ -15,7 +15,7 @@
           <el-button type="primary" @click="onClickMultiDelBtn">批量删除</el-button>
           <el-button type="primary" @click="onAddTypeAttr">新建</el-button>
         </div>
-        <z-table :ref='tableConfig.ref' :table-config="tableConfig">
+        <z-table :ref='tableConfig.ref' :options="tableConfig">
           <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
             <el-button type="text" @click="editRow(row)">编辑</el-button>
             <el-button type="text" @click="deleteRow(row)">删除</el-button>
