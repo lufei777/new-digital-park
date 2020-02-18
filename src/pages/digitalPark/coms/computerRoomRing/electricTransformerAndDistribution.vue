@@ -1,8 +1,6 @@
 <template>
   <div class="electric-transformer-and-distribution">
-    <div class="my-chart ">
-      <zTable :ref="tableConfig.ref" :options="tableConfig"></zTable>
-    </div>
+    <div class="my-chart" ref="myChart"></div>
     <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
@@ -17,27 +15,6 @@
     props:['moduleItem'],
     data () {
       return {
-        tableConfig:{
-          ref:'tableRef',
-          data:[],
-          columnConfig: [{
-              prop: "causeAsset",
-              label: "事件源"
-            },{
-              prop: "time",
-              label: "时间"
-            },{
-              prop: "value",
-              label: "事件"
-            }],
-          uiConfig: {
-            // height: "auto",
-            showIndex: {
-              width: 50
-            },
-            pagination: false
-          }
-        }
       }
     },
     computed:{
@@ -45,18 +22,51 @@
     watch:{
     },
     methods: {
-      async getGangedLog(){
-        let res = await CommonApi.getGangedLog({
-          pageNum:1,
-          pageCount:6,
-          start:'',
-          end:''
+      async getData(){
+        let res = await CommonApi.getHomeInterfaceAlarmByModule({
+         modules:3
         })
-        this.tableConfig.data=res
+        let tmp = [{
+          name:'正常',
+          value:100
+        },{
+          name:'报警',
+          value:30
+        }]
+        this.initChart(tmp)
+      },
+      initChart(res){
+        let myChart = echarts.init(this.$refs.myChart);
+        let legendData = [];
+        let dataList = res;
+        res.map(item => {
+          legendData.push(`${item.name}`);
+        });
+        let seriesData =dataList
+        let data = {
+          legendData,
+          seriesData,
+          legendUi:{
+            top:'center',
+            right:'20',
+            textStyle:{
+              color:'#8FD3FA'
+            },
+            formatter:function(name){
+              let obj=res.find((item)=>item.name==name)
+              return name+':'+obj.value
+            }
+          },
+          seriesUi:{
+            center:['35%','50%']
+          },
+          color:['rgba(255,255,255,0.2)','#8FD3FA']
+        };
+        ChartUtils.hollowPieChart(myChart,data);
       }
     },
     mounted(){
-      this.getGangedLog()
+      this.getData()
     }
   }
 </script>

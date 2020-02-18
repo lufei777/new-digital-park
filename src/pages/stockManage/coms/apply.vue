@@ -35,6 +35,7 @@ import AssetManageApi from "@/service/api/assetManage";
 import SystemManageApi from "@/service/api/systemManage";
 import AddAsset from "../../assetManage/addAsset";
 import StockManageApi from "@/service/api/stockManage";
+
 export default {
   name: "ApplyComs",
   components: { AddAsset },
@@ -161,31 +162,31 @@ export default {
         operation: true,
         data: [],
         columnConfig: [
-          // {label:'编号',prop:'coding'},
           { label: "名称", prop: "name" },
-          // {label:'单位',prop:'unit'},
           { label: "品牌", prop: "brand" },
           { label: "价格", prop: "price" },
-          // {label:'单独核算',prop:'singleCount',
-          //   formatter:function (row) {
-          //     return row.singleCount==1?'是':'否'
-          //   }
-          // },
-          // {label:'资产组',prop:'groupName'},
-          // {label:'资产类型',prop:'typeName'},
           { label: "数量", prop: "quantity" },
           { label: "入库部门", prop: "deptName" }
         ],
         uiConfig: {
           height: "auto",
-          selection: true
+          selection: true,
+          pagination:{
+            pageSize:2,
+            handler:function(size,page){
+              _this.handleCurrentChange(page)
+            },
+          }
         }
       },
       showAddModal: false,
       curDetail: {},
       curRowIndex: 0,
       deptTree: [],
-      editFlag: false
+      editFlag: false,
+      detailList:[],
+      pageSize:2,
+      curPage:1
     };
   },
   computed: {
@@ -204,22 +205,7 @@ export default {
   methods: {
       async getDepartmentTree() {
         let res = await SystemManageApi.getDepartmentTree();
-        // this.$refs[this.formConfig.ref].setColumnByProp("buyId", {
-        //   dicData: res[0].childNode
-        // });
-        // this.$refs[this.formConfig.ref].setColumnByProp("acceptId", {
-        //   dicData: res[0].childNode
-        // });
-        // let findLast =res[0].childNode
-        // findLast.map(async (item)=>{
-        //   if(item.childNode.length){
-        //     findLast=item.childNode
-        //   }else{
-        //     let res = await this.getUserList(item.id)
-        //   }
-        // })
         this.deptTree=res[0].childNode
-
       },
       async getProviderList() {
         let res = await AssetManageApi.getProviderList();
@@ -233,6 +219,7 @@ export default {
         this.showAddModal=true
       },
       addStockDetail(obj){
+        // console.log("objjjjj",obj)
         let data = {...obj,
           ...{
             assetId:obj.id,
@@ -240,16 +227,25 @@ export default {
             description:obj.remark
           }
         }
-        console.log("detail",this.curDetail)
+        console.log("data",data)
         if(this.editFlag){
+          // this.tableConfig.data[this.curRowIndex] =data
+          let tmp = this.curRowIndex+this.pageSize*(this.curPage-1)
+          console.log(tmp)
+          this.detailList[this.curRowIndex+this.pageSize*(this.curPage-1)]=data
           this.tableConfig.data[this.curRowIndex] =data
         }else{
-          this.tableConfig.data.push(data)
+          this.detailList.push(data)
+          // this.tableConfig.data.push(data)
+          let len= this.detailList.length
+          this.tableConfig.data=this.detailList.slice(0,this.pageSize)
+          this.tableConfig.uiConfig.pagination.total=len
         }
         this.showAddModal=false
       },
       deleteRow(index) {
-        this.tableConfig.data.splice(index, 1);
+        this.detailList.splice(this.index, 1);
+        // this.tableConfig.data.splice(index, 1);
       },
       editRow(index) {
         this.showAddModal = true;
@@ -291,7 +287,6 @@ export default {
             userIdList
           }
         }
-        console.log("ibj", obj);
         if (flag == 1) {
           if (!this.tableConfig.data.length) {
             this.$message({
@@ -330,6 +325,11 @@ export default {
       },
       onClickCloseBtn() {
         this.$store.commit("digitalPark/stockInApplyTab", "1");
+      },
+      handleCurrentChange(page){
+        this.curPage=page
+        let tmp = this.detailList.slice((page-1)*this.pageSize,(page-1)*this.pageSize+this.pageSize)
+        this.tableConfig.data=tmp
       }
   },
   async created() {
