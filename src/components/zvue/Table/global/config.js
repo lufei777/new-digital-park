@@ -11,6 +11,7 @@ export default {
     indexWidth: 50,
     align: 'left',
     headerAlign: 'left',
+    customTopPosition: 'right',
     indexLabel: "序号",
     // 默认log
     LOG: {
@@ -34,7 +35,7 @@ export default {
         pagination: {
             // sizes
             layout: "total, ->, prev, pager, next, jumper",
-            pageSizes: [10],
+            pageSizes: [5, 10, 20],
             pageSize: 10,
             currentPage: 1
         }

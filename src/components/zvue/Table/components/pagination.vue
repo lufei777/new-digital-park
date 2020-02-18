@@ -4,14 +4,18 @@
       @size-change="sizeChange"
       @current-change="currentChange"
       :current-page.sync="curPage"
-      :page-sizes="pageSizes"
-      :page-size.sync="size || pageSizes[0]"
+      :page-sizes="paginationConfig.pageSizes"
+      :page-size="size || pageSizes[0]"
       :layout="paginationConfig.layout"
       :total="total"
     ></el-pagination>
   </div>
 </template>
 <script>
+/**
+ * 0218修改
+ * :pagi-size去除了.sync修饰符，因为下拉切换页面数量时会报错
+ */
 export default {
   name: "zPagination",
   props: {
@@ -41,16 +45,13 @@ export default {
       get() {
         return this.currentPage;
       },
-      set(...args) {}
+      set() {}
     },
     size: {
       get() {
         return this.pageSize;
       },
-      set() {}
-    },
-    pageSizes() {
-      return this.paginationConfig.pageSizes;
+      set(...args) {}
     }
   }
 };

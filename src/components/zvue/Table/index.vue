@@ -3,7 +3,7 @@
     <div
       v-if="options.customTop"
       ref="customTop"
-      :style="{textAlign:options.customTopPosition || 'right',height:'auto',padding:'0 20px 20px'}"
+      :style="{textAlign:options.customTopPosition || config.customTopPosition,height:'auto',padding:'0 20px 20px'}"
     >
       <slot
         :name="config.topSlotName"
@@ -278,6 +278,7 @@ export default {
 
     this._tableInit();
     this.handleLoadDic();
+    this._dataIndexInit();
   },
   mounted() {
     this.$nextTick(() => {
@@ -448,6 +449,17 @@ export default {
     _setCurrentRowData(row) {
       //设置当前选中行
       this.currentRowData = row;
+    },
+    _dataIndexInit() {
+      //初始化序列的参数
+      (this.isServerMode ? this.tableShowData : this.tableData).forEach(
+        (ele, index) => {
+          if (ele.$cellEdit) {
+            this.formCascaderList[index] = this.deepClone(ele);
+          }
+          ele.$index = index;
+        }
+      );
     },
     _setTableData(data) {
       if (!(data instanceof Array)) return;
@@ -662,7 +674,7 @@ export default {
     rowDblclick(row, column, e) {
       //如果是操作列则不执行
       if (
-        this.tableMethods.rowDblclick ||
+        !this.tableMethods.rowDblclick ||
         preventClick.includes(column.property) ||
         preventClick.includes(column.type)
       )
@@ -981,6 +993,7 @@ export default {
     //动态监测tableConfig.data的改变，有可能外部ajax改变data值
     "options.data"(val) {
       this._setTableData(val);
+      this._dataIndexInit();
     },
     tableData(newVal, oldVal) {
       if (newVal instanceof Array) {
