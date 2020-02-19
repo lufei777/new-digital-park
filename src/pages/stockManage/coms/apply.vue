@@ -203,6 +203,9 @@ export default {
     }
   },
   methods: {
+     getData(){
+       return this.detailList;
+     },
       async getDepartmentTree() {
         let res = await SystemManageApi.getDepartmentTree();
         this.deptTree=res[0].childNode
@@ -230,16 +233,16 @@ export default {
         console.log("data",data)
         if(this.editFlag){
           // this.tableConfig.data[this.curRowIndex] =data
-          let tmp = this.curRowIndex+this.pageSize*(this.curPage-1)
-          console.log(tmp)
-          this.detailList[this.curRowIndex+this.pageSize*(this.curPage-1)]=data
-          this.tableConfig.data[this.curRowIndex] =data
+          // let tmp = this.curRowIndex+this.pageSize*(this.curPage-1)
+          // console.log(tmp)
+          // this.detailList[this.curRowIndex+this.pageSize*(this.curPage-1)]=data
+          this.tableConfig.data[this.curRowIndex] = data
         }else{
-          this.detailList.push(data)
           // this.tableConfig.data.push(data)
-          let len= this.detailList.length
-          this.tableConfig.data=this.detailList.slice(0,this.pageSize)
-          this.tableConfig.uiConfig.pagination.total=len
+          this.detailList.push(data)
+          // this.tableConfig.data=this.detailList.slice(0,this.pageSize)
+          // let len= this.detailList.length
+          // this.tableConfig.uiConfig.pagination.total=len
         }
         this.showAddModal=false
       },
@@ -358,6 +361,12 @@ export default {
   .operator-box {
     margin-top: 40px;
     text-align: center;
+  }
+  .mybtn{
+    /*width:60px;*/
+    /*height:60px;*/
+    /*!*padding:20px;*!*/
+    /*border-radius: 50%;*/
   }
 }
 </style>

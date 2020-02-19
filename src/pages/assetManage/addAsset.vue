@@ -392,7 +392,6 @@ export default {
       if (this.assetIds) {
         this.multiEditAsset();
       }else if(this.fromFlag=='stockApply'){
-        console.log("this.assetAddForm",this.assetAddForm)
         this.$parent.addStockDetail &&  this.$parent.addStockDetail({...this.assetAddForm})
       }else{
         this.addSingleAsset()
