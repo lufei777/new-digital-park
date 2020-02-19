@@ -1713,8 +1713,10 @@ class commonFun {
     } else {
       if (_.isObject(item)) {
         localStorage.setItem('show_menu', item.routeAddress)
+        Cookies.set('activeMenuIndex', item.routeAddress)
       } else {
         localStorage.setItem('show_menu', item)
+        Cookies.set('activeMenuIndex', item)
       }
       router.push('/vibe-web')
     }
