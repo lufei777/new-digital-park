@@ -133,7 +133,6 @@
         }
       },
       columnConfig(){
-        console.log(2222)
         if(this.fromFlag==1){
           return [
             {label:'编号', prop:'coding'},{label:'名称', prop:'name'},
@@ -145,7 +144,6 @@
             }
           ]
         }else if(this.fromFlag==2){
-          console.log(111)
           return [
             {label:'编号', prop:'coding'},{label:'名称', prop:'name'},
             {label:'规格型号', prop:'specification'},

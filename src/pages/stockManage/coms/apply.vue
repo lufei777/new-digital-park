@@ -10,7 +10,7 @@
         <el-button type="primary" @click="onClickMultiDelBtn">批量删除</el-button>
         <el-button type="primary" @click="onClickAddBtn">添加明细</el-button>
       </div>
-      <z-table :ref="tableConfig.ref" :options="tableConfig">
+      <z-table :ref="tableConfig.ref" :options="tableConfig" @handle-pagination="handleCurrentChange">
         <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
           <el-button type="text" @click="editRow($index)">编辑</el-button>
           <el-button type="text" @click="deleteRow($index)">删除</el-button>
@@ -173,9 +173,9 @@ export default {
           selection: true,
           pagination:{
             pageSize:2,
-            handler:function(size,page){
-              _this.handleCurrentChange(page)
-            },
+            // handler:function(size,page){
+            //   _this.handleCurrentChange(page)
+            // },
           }
         }
       },
@@ -203,6 +203,9 @@ export default {
     }
   },
   methods: {
+     getData(){
+       return this.detailList;
+     },
       async getDepartmentTree() {
         let res = await SystemManageApi.getDepartmentTree();
         this.deptTree=res[0].childNode
@@ -229,28 +232,22 @@ export default {
         }
         console.log("data",data)
         if(this.editFlag){
-          // this.tableConfig.data[this.curRowIndex] =data
-          let tmp = this.curRowIndex+this.pageSize*(this.curPage-1)
-          console.log(tmp)
-          this.detailList[this.curRowIndex+this.pageSize*(this.curPage-1)]=data
-          this.tableConfig.data[this.curRowIndex] =data
+          console.log("curRowIndex",this.curRowIndex)
+          this.tableConfig.data.splice(this.curRowIndex,1,data)
         }else{
-          this.detailList.push(data)
-          // this.tableConfig.data.push(data)
-          let len= this.detailList.length
-          this.tableConfig.data=this.detailList.slice(0,this.pageSize)
-          this.tableConfig.uiConfig.pagination.total=len
+          this.tableConfig.data.push(data)
         }
         this.showAddModal=false
       },
       deleteRow(index) {
-        this.detailList.splice(this.index, 1);
-        // this.tableConfig.data.splice(index, 1);
+        // this.detailList.splice(this.index, 1);
+        let tmp = index+(this.curPage-1)*this.pageSize
+        this.tableConfig.data.splice(tmp, 1);
       },
       editRow(index) {
         this.showAddModal = true;
         this.editFlag = true;
-        this.curRowIndex = index;
+        this.curRowIndex = index+(this.curPage-1)*this.pageSize;
         this.curDetail = this.tableConfig.data[index];
       },
       onClickMultiDelBtn() {
@@ -326,10 +323,8 @@ export default {
       onClickCloseBtn() {
         this.$store.commit("digitalPark/stockInApplyTab", "1");
       },
-      handleCurrentChange(page){
+      handleCurrentChange(size,page){
         this.curPage=page
-        let tmp = this.detailList.slice((page-1)*this.pageSize,(page-1)*this.pageSize+this.pageSize)
-        this.tableConfig.data=tmp
       }
   },
   async created() {
@@ -358,6 +353,12 @@ export default {
   .operator-box {
     margin-top: 40px;
     text-align: center;
+  }
+  .mybtn{
+    /*width:60px;*/
+    /*height:60px;*/
+    /*!*padding:20px;*!*/
+    /*border-radius: 50%;*/
   }
 }
 </style>
