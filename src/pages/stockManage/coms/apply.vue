@@ -17,7 +17,7 @@
         </template>
       </z-table>
       <div class="operator-box">
-        <el-button type="primary" @click="onClickSubmitBtn(1)" size="small">提交</el-button>
+        <el-button type="primary" @click="onClickSubmitBtn(1)">提交</el-button>
         <el-button type="primary" @click="onClickSubmitBtn(2)" v-if="!stockInReApplyId">保存</el-button>
         <el-button @click="onClickCloseBtn" v-if="stockInReApplyId">关闭</el-button>
       </div>
@@ -173,9 +173,9 @@ export default {
           selection: true,
           pagination:{
             pageSize:2,
-            handler:function(size,page){
-              _this.handleCurrentChange(page)
-            },
+            // handler:function(size,page){
+            //   _this.handleCurrentChange(page)
+            // },
           }
         }
       },
@@ -238,11 +238,11 @@ export default {
           // this.detailList[this.curRowIndex+this.pageSize*(this.curPage-1)]=data
           this.tableConfig.data[this.curRowIndex] = data
         }else{
-          // this.tableConfig.data.push(data)
-          this.detailList.push(data)
+          this.tableConfig.data.push(data)
+          // this.detailList.push(data)
           // this.tableConfig.data=this.detailList.slice(0,this.pageSize)
-          // let len= this.detailList.length
-          // this.tableConfig.uiConfig.pagination.total=len
+          let len= this.tableConfig.data.length
+          this.tableConfig.uiConfig.pagination.total=len
         }
         this.showAddModal=false
       },
@@ -331,8 +331,8 @@ export default {
       },
       handleCurrentChange(page){
         this.curPage=page
-        let tmp = this.detailList.slice((page-1)*this.pageSize,(page-1)*this.pageSize+this.pageSize)
-        this.tableConfig.data=tmp
+        // let tmp = this.detailList.slice((page-1)*this.pageSize,(page-1)*this.pageSize+this.pageSize)
+        // this.tableConfig.data=tmp
       }
   },
   async created() {
