@@ -467,6 +467,8 @@ export default {
         this.tableShowData = data;
       } else {
         this.tableData = data;
+        // 在本地模式下，重新赋值后，重设total
+        this.setPaginationTotal(data.length);
       }
       this.allData = data;
       // 设置总页数为null，这样在数据更新后没有手动设置total，会自动读取数据长度
