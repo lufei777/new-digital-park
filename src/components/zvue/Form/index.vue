@@ -451,12 +451,12 @@ export default {
         // 循环列的全部属性
         ele.forms.forEach((form, cindex) => {
           //动态计算列的位置，如果为隐藏状态则或则手机状态不计算
-          if (form.display !== false && !this.isMobile) {
+          if (form.hide !== true && form.display !== false && !this.isMobile) {
             form = calcCount(form, this.itemSpanDefault, cindex === 0);
           }
         });
         //处理级联属性
-        ele.forms = calcCascader(ele.forms);
+        // ele.forms = calcCascader(ele.forms);
       });
       // console.log("columnOption", list);
       return list;

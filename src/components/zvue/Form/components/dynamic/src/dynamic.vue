@@ -1,6 +1,17 @@
 <template>
   <div>
     <z-table ref="crud" :options="options">
+      <!-- <template slot="indexHeader">
+        <span v-if="options.addBtn === false">序号</span>
+        <el-button
+          v-else
+          type="primary"
+          @click="addRow"
+          icon="el-icon-plus"
+          :disabled="disabled"
+          circle
+        ></el-button>
+      </template> -->
       <template slot-scope="{scopeRow:scope}" slot="index">
         <el-button
           v-if="!delBtn && hoverList[scope.row.$index] && !disabled"
@@ -24,6 +35,7 @@
 <script>
 import props from "../../../common/props";
 import events from "../../../common/events";
+import { deepClone } from "../../../utils/util";
 
 export default {
   name: "zDynamic",
@@ -72,6 +84,7 @@ export default {
               fixed: true,
               width: 50,
               slot: true,
+              // 如果使用headerSlot，会有省略号
               renderHeader: (h, { column, $index }) => {
                 if (this.options.addBtn === false) {
                   return "序号";
@@ -116,6 +129,7 @@ export default {
     }
   },
   methods: {
+    deepClone,
     initData() {
       this.text.forEach((ele, index) => {
         ele = Object.assign(ele, {
