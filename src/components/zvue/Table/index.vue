@@ -488,6 +488,7 @@ export default {
     _handlerPagination(pageSize, currentPage) {
       this.uiConfig.pagination.handler &&
         this.uiConfig.pagination.handler(pageSize, currentPage, this);
+      this.$emit("handle-pagination", pageSize, currentPage, this);
     },
     // 当前行是否可多选
     _selectable: function(row, index) {
