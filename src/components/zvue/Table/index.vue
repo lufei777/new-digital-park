@@ -568,6 +568,9 @@ export default {
       this.$set(this.tableShowData, index, this.formCascaderList[index]);
 
       this.formIndexList.splice(this.formIndexList.indexOf(index), 1);
+
+      // 编辑取消事件
+      this.$emit("row-edit-cancel", row, index);
     },
     // 单元格编辑
     rowCellEdit(row, index) {
@@ -575,6 +578,9 @@ export default {
       this.$set(this.tableShowData, index, row);
       //缓冲行数据
       this.formCascaderList[index] = this.deepClone(row);
+
+      // 编辑事件
+      this.$emit("row-edit", row, index);
 
       setTimeout(() => {
         this.formIndexList.push(index);
@@ -980,6 +986,7 @@ export default {
     paginationObj: {
       deep: true,
       handler: function(newVal, oldVal) {
+        // 如果有handler，则拦截分页方法。为了兼容服务端自己写请求数据方法
         if (this.uiConfig.pagination.handler) {
           return;
         }
