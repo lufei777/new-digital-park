@@ -110,13 +110,13 @@ export default {
           data: {
             pageNum: 1,
             pageSize: 10
-          },
-          props: {
-            listKey: "list",
-            total: "total",
-            pageSize: "pageSize",
-            pageNum: "pageNum"
           }
+        },
+        propsHttp: {
+          listKey: "list",
+          total: "total",
+          pageSize: "pageSize",
+          pageNum: "pageNum"
         },
         operation: {
           width: 200
@@ -242,7 +242,7 @@ export default {
       });
     },
     propertyDel({ scopeRow: { $index, row, _self } }) {
-      console.log($index,row,_self);
+      console.log($index, row, _self);
       commonFun.deleteTip(
         this,
         true,

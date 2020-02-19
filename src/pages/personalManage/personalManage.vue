@@ -101,13 +101,13 @@ export default {
         customTopPosition: "right",
         serverMode: {
           url: personalManageApi.getUserMessageList,
-          data: tableSendData,
-          props: {
-            listKey: "list",
-            total: "total",
-            pageSize: "pageSize",
-            pageNum: "pageNum"
-          }
+          data: tableSendData
+        },
+        propsHttp: {
+          listKey: "list",
+          total: "total",
+          pageSize: "pageSize",
+          pageNum: "pageNum"
         },
         operation: {
           width: 100
@@ -215,7 +215,10 @@ export default {
     searchSubmit(model, hide) {
       hide();
       let data = this.personalManageTable.serverMode.data;
-      this.personalManageTable.serverMode.data = Object.assign(_.cloneDeep(tableSendData), model);
+      this.personalManageTable.serverMode.data = Object.assign(
+        _.cloneDeep(tableSendData),
+        model
+      );
       this.refreshTable();
     },
     resetChange() {},
