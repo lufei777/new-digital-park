@@ -17,7 +17,7 @@
         </template>
       </z-table>
       <div class="operator-box">
-        <el-button type="primary" @click="onClickSubmitBtn(1)">提交</el-button>
+        <el-button type="primary" @click="onClickSubmitBtn(1)" size="small">提交</el-button>
         <el-button type="primary" @click="onClickSubmitBtn(2)" v-if="!stockInReApplyId">保存</el-button>
         <el-button @click="onClickCloseBtn" v-if="stockInReApplyId">关闭</el-button>
       </div>
