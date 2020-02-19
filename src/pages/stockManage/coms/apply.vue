@@ -173,9 +173,9 @@ export default {
           selection: true,
           pagination:{
             pageSize:2,
-            // handler:function(size,page){
-            //   _this.handleCurrentChange(page)
-            // },
+            handler:function(size,page){
+              _this.handleCurrentChange(page)
+            },
           }
         }
       },
@@ -241,8 +241,8 @@ export default {
           this.tableConfig.data.push(data)
           // this.detailList.push(data)
           // this.tableConfig.data=this.detailList.slice(0,this.pageSize)
-          let len= this.tableConfig.data.length
-          this.tableConfig.uiConfig.pagination.total=len
+          // let len= this.tableConfig.data.length
+          // this.tableConfig.uiConfig.pagination.total=len
         }
         this.showAddModal=false
       },
