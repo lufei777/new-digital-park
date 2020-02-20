@@ -145,7 +145,8 @@ export default {
             handler:function(size,page){
               _this.handleCurrentChange(page)
             },
-            currentPage:1
+            currentPage:1,
+            total:0
           }
         },
         tableMethods: {
@@ -192,9 +193,11 @@ export default {
           },
           {label:'资产组',prop:'groupName'},
           {label:'资产类型',prop:'typeName'}]
-         this.assetsTableConfig.data=res.list
-        =res.total
-         this.loading=false
+          this.assetsTableConfig.data=res.list
+          this.assetsTableConfig.uiConfig.pagination.total=res.total
+          // this.$refs[this.assetsTableConfig.ref].setPaginationTotal(res.total)
+          console.log("total",this.assetsTableConfig.uiConfig.pagination.total,res.total)
+          this.loading=false
       },
     onClickSearchBtn(){
       this.curPage=1
