@@ -3,7 +3,7 @@
     <div class="tip">{{detailTip}}</div>
     <BasicInformation :detail="detailData"/>
     <div class="module-tip">入库明细：</div>
-    <z-table :ref="tableConfig.ref" :options="tableConfig">
+    <z-table :ref="tableConfig.ref" :options="tableConfig" @handle-pagination="handleCurrentChange">
       <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
         <el-button type="text" @click="editRow($index,row)">编辑</el-button>
       </template>
@@ -74,7 +74,10 @@
            {label:'单价',prop:'price'},
            {label:'入库数量',prop:'quantity'}],
          uiConfig:{
-           height:'auto'
+           height:'auto',
+           pagination:{
+             pageSize:5,
+           }
          }
        },
         showEditModal:false,
@@ -87,7 +90,9 @@
         rules: {
           actualQuantity: [{ required: true, message: "请输入实收数量", trigger: "blur" },
             { validator: checkQuantity, trigger: "blur" }]
-        }
+        },
+        pageSize:5,
+        curPage:1
       };
     },
     computed:{
@@ -151,7 +156,7 @@
       editRow(index,row){
         this.showEditModal=true
         this.curRow=row
-        this.curIndex=index
+        this.curIndex=index+(this.curPage-1)*this.pageSize
       },
       onClickSureBtn(){
         this.$refs['formRef'].validate((valid) => {
@@ -171,6 +176,9 @@
       },
       onCloseModal(){
         this.showEditModal=false
+      },
+      handleCurrentChange(size,page){
+        this.curPage=page
       }
     },
     mounted() {

@@ -172,10 +172,7 @@ export default {
           height: "auto",
           selection: true,
           pagination:{
-            pageSize:2,
-            // handler:function(size,page){
-            //   _this.handleCurrentChange(page)
-            // },
+            pageSize:5,
           }
         }
       },
@@ -185,7 +182,7 @@ export default {
       deptTree: [],
       editFlag: false,
       detailList:[],
-      pageSize:2,
+      pageSize:5,
       curPage:1
     };
   },
@@ -225,7 +222,7 @@ export default {
         // console.log("objjjjj",obj)
         let data = {...obj,
           ...{
-            assetId:obj.id,
+            assetId:obj.id || obj.assetId,
             id:this.curDetail.id,
             description:obj.remark
           }
@@ -293,11 +290,21 @@ export default {
             return;
           }
           res = await StockManageApi.submitStockApply(obj);
+          // this.$refs['formRef'].
+          this.model={
+            stockType:1,
+            stockTime:'',
+            acceptId:'',
+            providerId:'',
+            contractId:'',
+            buyId:'',
+            buyTime:''
+          }
+          this.tableConfig.data=[]
         } else {
           res = await StockManageApi.saveStockApply(obj);
           this.getApplyDetail();
         }
-        console.log(res);
         this.$message({
           type: "success",
           message: res

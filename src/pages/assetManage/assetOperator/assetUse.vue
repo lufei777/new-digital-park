@@ -40,13 +40,16 @@
     data () {
       let _this = this
       let checkQuantity = (rule, value, callback) => {
-        debugger
-        console.log(value)
         if(value.trim()==""){
-          console.log(123)
           return callback({message:"请输入领用数量"});
+        }else if(value==0){
+          callback(new Error("最小领用数量为1"));
+        }else if((!Number(value) || value<0)){
+          callback(new Error("请输入正数"));
+        }else if(value>_this.curDetail.quantity){
+          callback(new Error("领用数量应小于等于入库数量"));
         }else{
-          return callback();
+          callback();
         }
       };
       return {
