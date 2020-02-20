@@ -61,7 +61,7 @@
     :onRemove="column.onRemove"
     :parent="column.parent"
     :pickerOptions="column.pickerOptions"
-    :placeholder="getPlaceholder(column,column.type)"
+    :placeholder="getPlaceholder(column,column.type,disabled)"
     :precision="column.precision"
     :prefixIcon="column.prefixIcon"
     :prefix="column.prefix"
@@ -125,7 +125,7 @@
         :childrenkey="childrenkey"
       ></slot>
     </template>
-    <!-- input的slot处理 -->
+    <!-- input的slot处睆 -->
     <template v-if="column.prependslot" :slot="column.prependslot">
       <slot :name="column.prependslot"></slot>
     </template>

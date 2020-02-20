@@ -224,7 +224,8 @@ export default {
           name: "editHouseProperty",
           params: {
             extraOptions: {
-              disabled: true
+              disabled: true,
+              submitBtn: false
             },
             model: _.cloneDeep(res)
           }
