@@ -24,21 +24,31 @@ export default {
       let myPieChart = echarts.init(this.$refs.myChart || document.getElementById('building-status-proportion-chart'));
       let legendData = res.legend;
       let legend = "right";
-      let color = ["#F7B87F", "#B6A2DE", "#56C7C9", "#5AB1EF"];
+      let color = ["#30475B", "#66FBF9", "#0088FF", "#D77443"];
       let textStyleColor = '#8FD3FA'
-      let series = res.values;
+      let seriesData = res.values;
       let data = {
         legendData,
-        series,
+        seriesData,
         legend,
         color,
-        textStyleColor
+        textStyleColor,
+        legendUi:{
+            top:'center',
+            right:'30',
+            textStyle:{
+              color:'#8FD3FA'
+            },
+          },
+          seriesUi:{
+            center:['35%','50%']
+          }
       };
       // $(window).resize(function(){
       //   myPieChart.resize()
       // }) ;
       let resizeBox=$("#energy-electricity-proportion-chart").parents('.item-product-coms')
-      ChartUtils.handlePieChart(myPieChart, data);
+      ChartUtils.hollowPieChart(myPieChart, data);
     }
   },
   mounted() {
