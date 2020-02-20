@@ -57,7 +57,7 @@
         if ((!Number(value) || value<0) && value!="") {
           callback(new Error("请输入正数"));
         } else if(value>_this.curRow.quantity){
-          callback(new Error("实收数量应小于入库数量"));
+          callback(new Error("实收数量应小于等于入库数量"));
         }else{
           callback();
         }

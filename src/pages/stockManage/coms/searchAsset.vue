@@ -36,6 +36,7 @@
   import AssetManageApi from '@/service/api/assetManage'
   import Tree from '@/components/tree'
   import {AssetDic} from "../../../utils/dictionary";
+  import StockManageApi from '@/service/api/stockManage'
   export default {
     name: "SearchAssetModal",
     props:["showSearchModal","fromFlag"], //fromFlag 1：搜索资产信息 2：搜索资产
@@ -61,10 +62,11 @@
           {label:'规格型号', prop:'specification'},
           {label:'状态', prop:'status',
             formatter:function(row){
-              return row.singleCount==1?'是':'否'
+              return '闲置'
             }
           },
-          {label:'数量',prop:'quantity'}
+          {label:'入库部门', prop:'deptName'},
+          {label:'数量',prop:'actualQuantity'}
         ]
       }
       let _this = this
@@ -132,29 +134,6 @@
           this.closeModal()
         }
       },
-      columnConfig(){
-        if(this.fromFlag==1){
-          return [
-            {label:'编号', prop:'coding'},{label:'名称', prop:'name'},
-            {label:'规格型号', prop:'specification'},
-            {label:'单独核算', prop:'singleCount',
-              formatter:function(row){
-                return row.singleCount==1?'是':'否'
-              }
-            }
-          ]
-        }else if(this.fromFlag==2){
-          return [
-            {label:'编号', prop:'coding'},{label:'名称', prop:'name'},
-            {label:'规格型号', prop:'specification'},
-            {label:'单独核算', prop:'singleCount',
-              formatter:function(row){
-                return row.singleCount==1?'是':'否'
-              }
-            }
-          ]
-        }
-      }
     },
     methods: {
       closeModal(){
@@ -170,7 +149,13 @@
             pageNum:this.curPage,
             pageSize:10
         },...this.formModel}
-        let res = await AssetManageApi.getAssetList(params)
+        let res
+        if(this.fromFlag==1){
+          res = await AssetManageApi.getAssetList(params)
+        }else if(this.fromFlag==2){
+          params={...params,...{status:0}}
+          res = await StockManageApi.getStockList(params)
+        }
         this.tableConfig.data=res.list
         // this.tableConfig.uiConfig.pagination.total=res.total
       },
