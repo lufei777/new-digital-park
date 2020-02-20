@@ -12,7 +12,7 @@
           <template slot="menuBtn" slot-scope="scope">
             <!-- <el-button @click="lastStep">上一步</el-button>
             <el-button @click="nextStep">下一步</el-button>-->
-            <el-button type="primary" @click="editCurrent(scope)">{{options.disabled ? '编辑' :'取消'}}</el-button>
+            <el-button v-if="pageConfig.flag === 'edit'" type="primary" @click="editCurrent(scope)">{{options.disabled ? '编辑' :'取消'}}</el-button>
             <el-button @click="backList(scope)">返回</el-button>
           </template>
         </z-form>
