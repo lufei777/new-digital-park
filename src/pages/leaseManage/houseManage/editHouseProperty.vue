@@ -64,7 +64,6 @@ export default {
         labelWidth: "100",
         size: "small",
         menuPosition: "right",
-        submitText: "保存",
         emptyBtn: false,
         forms: [
           {

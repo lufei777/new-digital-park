@@ -179,7 +179,7 @@ export default {
             label: "籍贯"
           },
           {
-            prop: "residence_type",
+            prop: "residenceType",
             label: "户口类型",
             dicData: PersonalManageDic.residenceType
           },
@@ -248,7 +248,9 @@ export default {
         name: "addpersonal",
         params: {
           extraOptions: {
-            disabled: true
+            disabled: true,
+            submitBtn: false,
+            emptyBtn: false
           },
           model
         }

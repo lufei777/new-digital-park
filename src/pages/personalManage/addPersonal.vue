@@ -12,6 +12,7 @@
           <template slot="menuBtn" slot-scope="scope">
             <!-- <el-button @click="lastStep">上一步</el-button>
             <el-button @click="nextStep">下一步</el-button>-->
+            <el-button type="primary" @click="editCurrent(scope)">{{options.disabled ? '编辑' :'取消'}}</el-button>
             <el-button @click="backList(scope)">返回</el-button>
           </template>
         </z-form>
@@ -92,15 +93,15 @@ export default {
               {
                 label: "所在部门",
                 prop: "orgName",
-                // type: "input",
-                type: "cascader",
+                type: "input",
+                /* type: "cascader",
                 showAllLevels: false,
                 dicUrl: SystemManageApi.getDepartmentTree,
                 props: {
                   label: "name",
                   value: "id",
                   children: "childNode"
-                },
+                }, */
                 rules: {
                   required: true,
                   trigger: "blur"
@@ -125,7 +126,8 @@ export default {
               {
                 label: "直接上级",
                 prop: "superior",
-                type: "cascader",
+                type: "input",
+                /* type: "cascader",
                 props: {
                   label: "name",
                   value: "id",
@@ -153,9 +155,10 @@ export default {
                     }
                     resolve([]);
                   }
-                },
+                }, */
                 rules: {
-                  required: true
+                  required: true,
+                  trigger: "blur"
                 }
               },
               {
@@ -183,23 +186,27 @@ export default {
                 rules: {
                   required: true,
                   trigger: "blur"
-                }
+                },
+                valueFormat: "yyyy-MM-dd"
               },
               {
                 label: "入职时间",
                 prop: "entryDate",
-                type: "date"
+                type: "date",
+                valueFormat: "yyyy-MM-dd"
               },
               {
                 label: "转正时间",
                 prop: "correctionDate",
-                type: "date"
+                type: "date",
+                valueFormat: "yyyy-MM-dd"
               },
               {
                 width: 150,
                 label: "初次参加工作时间",
                 prop: "workDate",
-                type: "date"
+                type: "date",
+                valueFormat: "yyyy-MM-dd"
               },
               {
                 label: "办公电话",
@@ -237,10 +244,6 @@ export default {
                 span: 24,
                 action: "/oaApi/image/upload",
                 accept: ["jpg", "jpeg", "png"],
-                props: {
-                  label: "housePictureName",
-                  value: "housePictureUrl"
-                },
                 propsHttp: {
                   name: "fileName",
                   url: "fileUrl",
@@ -290,7 +293,7 @@ export default {
               },
               {
                 label: "户口类型",
-                prop: "residence_type",
+                prop: "residenceType",
                 type: "select",
                 dicData: PersonalManageDic.residenceType,
                 rules: {
@@ -327,12 +330,14 @@ export default {
               {
                 label: "入团日期",
                 prop: "groupDate",
-                type: "date"
+                type: "date",
+                valueFormat: "yyyy-MM-dd"
               },
               {
                 label: "入党日期",
                 prop: "partyDate",
-                type: "date"
+                type: "date",
+                valueFormat: "yyyy-MM-dd"
               },
               {
                 label: "工会会员",
@@ -383,7 +388,7 @@ export default {
               },
               {
                 label: "教育经历",
-                prop: "educationExperience",
+                prop: "educationExperienceList",
                 type: "dynamic",
                 span: 24,
                 children: {
@@ -395,37 +400,39 @@ export default {
                     {
                       width: 200,
                       label: "学校名称",
-                      prop: "xxmc"
+                      prop: "schoolName"
                     },
                     {
                       width: 200,
                       label: "专业",
-                      prop: "zy",
+                      prop: "specialized",
                       type: "input"
                     },
                     {
                       width: 200,
                       label: "开始日期",
-                      prop: "ksrq",
-                      type: "date"
+                      prop: "startDate",
+                      type: "date",
+                      valueFormat: "yyyy-MM-dd"
                     },
                     {
                       width: 200,
                       label: "结束日期",
-                      prop: "jsrq",
-                      type: "date"
+                      prop: "endDate",
+                      type: "date",
+                      valueFormat: "yyyy-MM-dd"
                     },
                     {
                       width: 200,
                       label: "学历",
-                      prop: "xl",
+                      prop: "subEducation",
                       type: "select",
                       dicData: PersonalManageDic.educationBackground
                     },
                     {
                       width: 200,
                       label: "详细描述",
-                      prop: "xxms",
+                      prop: "description",
                       type: "input"
                     }
                   ],
@@ -435,13 +442,11 @@ export default {
                   },
                   tableMethods: {
                     rowAdd: done => {
-                      this.$message.success("新增回调");
                       done({
-                        input: "默认值"
+                        valueDefault: "无"
                       });
                     },
                     rowDel: (row, done) => {
-                      this.$message.success("删除回调" + JSON.stringify(row));
                       done();
                     }
                   }
@@ -449,7 +454,7 @@ export default {
               },
               {
                 label: "家庭情况",
-                prop: "familyDetails",
+                prop: "familyDetailsList",
                 type: "dynamic",
                 // tip: "包括成员、称谓、工作单位、职务、地址",
                 span: 24,
@@ -462,30 +467,30 @@ export default {
                     {
                       width: 200,
                       label: "成员",
-                      prop: "cy"
+                      prop: "name"
                     },
                     {
                       width: 200,
                       label: "称谓",
-                      prop: "cw",
+                      prop: "appellation",
                       type: "input"
                     },
                     {
                       width: 200,
                       label: "工作单位",
-                      prop: "gzdw",
+                      prop: "work",
                       type: "input"
                     },
                     {
                       width: 200,
                       label: "职务",
-                      prop: "zw",
+                      prop: "post",
                       type: "input"
                     },
                     {
                       width: 250,
                       label: "地址",
-                      prop: "dz",
+                      prop: "familyAddress",
                       type: "input"
                     }
                   ],
@@ -554,7 +559,6 @@ export default {
   methods: {
     nextStep({ model = {}, hide = () => {}, step = ++this.step }) {
       hide(); // 隐藏提交状态
-      this.resetForm(); // 重置form
 
       this.infoArr[step] = _.cloneDeep(model); // 保存当前model
 
@@ -577,7 +581,7 @@ export default {
           item.display = false;
         });
         this.options.group[index].display = true;
-        this.model = this.infoArr[index] || {};
+        // this.model = this.infoArr[index] || {};
       });
       // 更新apiName
       this.apiName = this.tabPanelOptions[index].name;
@@ -596,7 +600,7 @@ export default {
         Object.assign(model, this.getIdField)
       ).then(res => {
         this.messageId = res.id;
-        this.nextStep({ model: {}, hide });
+        this.nextStep({ hide });
       });
     },
     updateInfo(model) {
@@ -621,8 +625,11 @@ export default {
         cb(res);
       });
     },
-    resetForm() {
+    resetForm(cb) {
       this.$refs[this.options.ref].resetForm();
+      this.$nextTick(() => {
+        cb && cb();
+      });
     },
     backList() {
       this.$router.push({
@@ -634,7 +641,18 @@ export default {
       this.apiName = name;
 
       this.getInfo(res => {
-        this.nextStep({ model: res, step: tab.index });
+        this.resetForm(() => {
+          this.model = res;
+        }); // 重置form
+      });
+
+      this.nextStep({ step: tab.index });
+    },
+    editCurrent() {
+      Object.assign(this.options, {
+        disabled: !this.options.disabled,
+        submitBtn: !this.options.submitBtn,
+        emptyBtn: !this.options.emptyBtn
       });
     }
   },

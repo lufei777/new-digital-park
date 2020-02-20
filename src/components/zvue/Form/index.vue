@@ -466,6 +466,9 @@ export default {
         return this.parentOption.menuPosition;
       }
       return "center";
+    },
+    optionsDisabled() {
+      return this.options.disabled;
     }
   },
   watch: {
@@ -492,11 +495,11 @@ export default {
         }
       }
     },
-    "this.options.disabled": {
+    optionsDisabled: {
       immediate: true,
-      handler() {
-        if (typeof this.options.disabled === "boolean") {
-          this.allDisabled = this.options.disabled;
+      handler(val) {
+        if (typeof val === "boolean") {
+          this.allDisabled = val;
         }
       }
     },
@@ -550,8 +553,10 @@ export default {
       position: relative;
       overflow: hidden;
     }
+    // 如果是禁用，隐藏上传的加号和上传按钮
     .el-upload_disabled {
-      .el-upload {
+      .el-upload--picture-card,
+      .el-upload--text {
         display: none;
       }
     }
