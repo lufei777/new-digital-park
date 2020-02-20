@@ -133,6 +133,16 @@ let priorityType = [
     label: "紧急"
   }
 ];
+let officeLocationType =  [
+        {
+          value: 0,
+          label: "公司"
+        },
+        {
+          value: 1,
+          label: "现场"
+        }
+      ]
 import TaskManageApi from "../../service/api/taskManage";
 export default {
   name: "NewTask",
@@ -242,6 +252,20 @@ export default {
             span: 10,
             formslot: true
           },
+           {
+            type: "select",
+            label: "地点",
+            prop: "officeLocation",
+            placeholder: "请选择办公地点",
+            clearable: true,
+            span: 10,
+            dicData: officeLocationType,
+            rules: {
+              required: true,
+              message: "请选择办公地点",
+              trigger: "change"
+            }
+          },
           {
             label: "接单人",
             prop: "ordererName",
@@ -335,7 +359,8 @@ export default {
         type: this.model.taskType,
         urgent: this.model.urgent,
         taskPicList: this.model.taskPicList,
-        delFlag: 1
+        delFlag: 1,
+        officeLocation:this.model.officeLocation
       };
     },
     taskId() {
@@ -650,7 +675,6 @@ export default {
     async deptTreeList() {
       let res = await TaskManageApi.deptTreeList();
       this.departmentList = this.getTreeData(res[0].childNode);
-      
     },
     async changelistBy(value) {
       let valueData;
@@ -705,6 +729,7 @@ export default {
         this.model.description = res.description;
         this.model.taskType = res.type;
         this.model.urgent = res.urgent;
+        this.model.officeLocation = res.officeLocation
       }
     },
     dispatch() {
