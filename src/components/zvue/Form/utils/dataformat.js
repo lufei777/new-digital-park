@@ -44,7 +44,7 @@ export const getComponent = function (type, component) {
     return KEY_COMPONENT_NAME + result;
 }
 
-export const getPlaceholder = function (column, type) {
+export const getPlaceholder = function (column, type, isDisabled) {
     // return column.placeholder;
     const placeholder = column.placeholder;
     const label = column.label;
@@ -56,6 +56,10 @@ export const getPlaceholder = function (column, type) {
             return label;
         }
     } else  */
+    // 如果是禁用状态则不显示占位
+    if (isDisabled === true) {
+        return '';
+    }
     if (validatenull(placeholder)) {
         if (['select', 'checkbox', 'cascader', 'radio', 'tree'].includes(column.type)) {
             return `请选择 ${label}`;
@@ -63,7 +67,6 @@ export const getPlaceholder = function (column, type) {
             return `请输入 ${label}`;
         }
     }
-
     return placeholder;
 }
 

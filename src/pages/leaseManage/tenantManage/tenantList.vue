@@ -44,8 +44,7 @@ export default {
   data() {
     let _this = this;
     return {
-      model: {
-      },
+      model: {},
       tenantManageForm: {
         ref: "tenantManageForm",
         labelWidth: "100",
@@ -221,8 +220,12 @@ export default {
       this.showDeleteTip();
     },
     batchDels(obj) {
-        console.log("44444",this.$refs["tenantManageTable"]
-          .getSelectedData().map(item => item.tenantId))
+      console.log(
+        "44444",
+        this.$refs["tenantManageTable"]
+          .getSelectedData()
+          .map(item => item.tenantId)
+      );
       // this.tenantIds =
       //   this.$refs["tenantManageTable"].getSelectedData().length &&
       //   this.$refs["tenantManageTable"]
@@ -240,12 +243,12 @@ export default {
       });
     },
     detailTenant(obj) {
-      console.log(obj.scopeRow.row);
       this.$router.push({
         name: "addTenantManage",
         params: {
           extraOptions: {
-            disabled: true
+            disabled: true,
+            submitBtn: false
           },
           tenantId: obj.scopeRow.row.tenantId
         }

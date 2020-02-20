@@ -44,8 +44,7 @@ export default {
   data() {
     let _this = this;
     return {
-      model: {
-      },
+      model: {},
       leaseContractForm: {
         ref: "leaseContractForm",
         labelWidth: "100",
@@ -195,7 +194,7 @@ export default {
       this.currentPage = val;
       this.contractList();
     },
-   showDeleteTip() {
+    showDeleteTip() {
       CommonFun.deleteTip(
         this,
         this.contractIds,
@@ -219,7 +218,7 @@ export default {
       this.contractIds = "";
     },
     delRow(obj) {
-      console.log("res",obj)
+      console.log("res", obj);
       this.contractIds = obj.scopeRow.row.contractId;
       this.showDeleteTip();
     },
@@ -241,12 +240,12 @@ export default {
       });
     },
     detailContract(obj) {
-      console.log(obj.scopeRow.row);
       this.$router.push({
         name: "AddContract",
         params: {
           extraOptions: {
-            disabled: true
+            disabled: true,
+            submitBtn: false
           },
           detailContractId: obj.scopeRow.row.contractId
         }
