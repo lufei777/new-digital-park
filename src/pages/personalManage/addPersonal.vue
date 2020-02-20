@@ -12,7 +12,11 @@
           <template slot="menuBtn" slot-scope="scope">
             <!-- <el-button @click="lastStep">上一步</el-button>
             <el-button @click="nextStep">下一步</el-button>-->
-            <el-button v-if="isEdit && typeof options.submitBtn !== 'undefined'" type="primary" @click="editCurrent(scope)">{{options.disabled ? '编辑' :'取消'}}</el-button>
+            <el-button
+              v-if="isEdit && typeof options.submitBtn !== 'undefined'"
+              type="primary"
+              @click="editCurrent(scope)"
+            >{{options.disabled ? '编辑' :'取消'}}</el-button>
             <el-button @click="backList(scope)">返回</el-button>
           </template>
         </z-form>
@@ -92,16 +96,16 @@ export default {
               }, */
               {
                 label: "所在部门",
-                prop: "orgName",
-                type: "input",
-                /* type: "cascader",
+                prop: "orgNameList",
+                // type: "input",
+                type: "cascader",
                 showAllLevels: false,
-                dicUrl: SystemManageApi.getDepartmentTree,
+                dicUrl: [],
                 props: {
                   label: "name",
                   value: "id",
                   children: "childNode"
-                }, */
+                },
                 rules: {
                   required: true,
                   trigger: "blur"
@@ -125,9 +129,9 @@ export default {
               },
               {
                 label: "直接上级",
-                prop: "superior",
-                type: "input",
-                /* type: "cascader",
+                prop: "superiorList",
+                // type: "input",
+                type: "cascader",
                 props: {
                   label: "name",
                   value: "id",
@@ -155,7 +159,7 @@ export default {
                     }
                     resolve([]);
                   }
-                }, */
+                },
                 rules: {
                   required: true,
                   trigger: "blur"
@@ -555,6 +559,12 @@ export default {
         this.pageConfig.title = "人员详情";
       }
     }
+
+    SystemManageApi.getDepartmentTree().then(res => {
+      this.$refs[this.options.ref].setColumnByProp("orgNameList", {
+        dicData: res[0].childNode
+      });
+    });
   },
   methods: {
     nextStep({ model = {}, hide = () => {}, step = ++this.step }) {
@@ -657,8 +667,8 @@ export default {
     }
   },
   computed: {
-    isEdit(){
-      return this.pageConfig.flag === 'edit';
+    isEdit() {
+      return this.pageConfig.flag === "edit";
     },
     isBaseInfo() {
       return this.apiName.length === 0;

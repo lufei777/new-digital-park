@@ -296,11 +296,22 @@ export default {
     },
     // 根据prop设置属性
     setColumnByProp(prop, setOptions) {
-      let forms = this.options.forms;
+      let isGroup = typeof this.options.group !== "undefined";
+      let options = this.options;
+      let index = this.findColumnIndex(prop, isGroup);
+      if (isGroup) {
+        var formsOption = options.group[index[0]].forms[index[1]];
+      } else {
+        var formsOption = options.forms[this.findColumnIndex(prop)];
+      }
+      setDefaultValue(setOptions, formsOption, this);
+
+      // this.options.forms = [...forms];
+      /* let forms = this.options.forms;
       let formsOption = forms[this.findColumnIndex(prop)];
       setDefaultValue(setOptions, formsOption, this);
 
-      this.options.forms = [...forms];
+      this.options.forms = [...forms]; */
     },
     // 验证表单是否显隐
     vaildDisplay(column) {
