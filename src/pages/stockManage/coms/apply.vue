@@ -233,6 +233,7 @@ export default {
           this.tableConfig.data.splice(this.curRowIndex,1,data)
         }else{
           this.tableConfig.data.push(data)
+          this.tableConfig.uiConfig.pagination.total= this.tableConfig.data.length
         }
         this.showAddModal=false
       },
