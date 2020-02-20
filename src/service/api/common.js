@@ -283,6 +283,15 @@ class CommonApi {
   @get
   getHomeAssetHealth(){}
 
+  //ups
+  @url("/vibe-web/homeInterfaceAlarmById")
+  @get
+  getHomeInterfaceAlarmById(){}
+
+  //变配电
+  @url("/vibe-web/homeInterfaceAlarmByModule")
+  @get
+  getHomeInterfaceAlarmByModule(){}
 }
 
 export default new CommonApi()

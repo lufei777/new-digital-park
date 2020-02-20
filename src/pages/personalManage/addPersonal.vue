@@ -42,7 +42,7 @@ export default {
       options: {
         ref: "form",
         labelWidth: "100",
-        width: "70%",
+        width: "60%",
         size: "small",
         group: [
           {
@@ -92,19 +92,19 @@ export default {
               {
                 label: "所在部门",
                 prop: "orgName",
-                type: "input",
-                rules: {
-                  required: true,
-                  trigger: "blur"
-                }
-                /* type: "cascader",
+                // type: "input",
+                type: "cascader",
                 showAllLevels: false,
                 dicUrl: SystemManageApi.getDepartmentTree,
                 props: {
                   label: "name",
                   value: "id",
                   children: "childNode"
-                } */
+                },
+                rules: {
+                  required: true,
+                  trigger: "blur"
+                }
               },
               {
                 label: "所在岗位",
@@ -125,7 +125,35 @@ export default {
               {
                 label: "直接上级",
                 prop: "superior",
-                type: "input",
+                type: "cascader",
+                props: {
+                  label: "name",
+                  value: "id",
+                  children: "childNode",
+                  lazy: true,
+                  lazyLoad: async function(node, resolve) {
+                    const { level, data } = node;
+                    let nodes = [];
+                    if (level == 0) {
+                      SystemManageApi.getDepartmentTree().then(res => {
+                        resolve(res[0].childNode);
+                      });
+                      // resolve(nodes);
+                    } else if (level === 2) {
+                      SystemManageApi.listBy({
+                        deptId: node.data.id
+                      }).then(res => {
+                        res.map(item => {
+                          item.name = item.fullName;
+                          item.leaf = true;
+                        });
+
+                        resolve(res);
+                      });
+                    }
+                    resolve([]);
+                  }
+                },
                 rules: {
                   required: true
                 }
@@ -168,6 +196,7 @@ export default {
                 type: "date"
               },
               {
+                width: 150,
                 label: "初次参加工作时间",
                 prop: "workDate",
                 type: "date"
@@ -272,6 +301,7 @@ export default {
                 label: "身份证号码",
                 prop: "cardNo",
                 type: "input",
+                width: 115,
                 rules: {
                   required: true
                 }
@@ -341,24 +371,141 @@ export default {
                 label: "家庭联系方式",
                 prop: "familyContact",
                 type: "input",
+                width: 130,
                 rules: { required: true }
               },
               {
                 label: "暂住证号码",
                 prop: "temporaryNo",
                 placeholder: "非籍贯地的居住证号码",
-                type: "input"
+                type: "input",
+                row: true
               },
               {
                 label: "教育经历",
                 prop: "educationExperience",
-                type: "textarea"
+                type: "dynamic",
+                span: 24,
+                children: {
+                  align: "center",
+                  headerAlign: "center",
+                  editBtn: true,
+                  data: [],
+                  columnConfig: [
+                    {
+                      width: 200,
+                      label: "学校名称",
+                      prop: "xxmc"
+                    },
+                    {
+                      width: 200,
+                      label: "专业",
+                      prop: "zy",
+                      type: "input"
+                    },
+                    {
+                      width: 200,
+                      label: "开始日期",
+                      prop: "ksrq",
+                      type: "date"
+                    },
+                    {
+                      width: 200,
+                      label: "结束日期",
+                      prop: "jsrq",
+                      type: "date"
+                    },
+                    {
+                      width: 200,
+                      label: "学历",
+                      prop: "xl",
+                      type: "select",
+                      dicData: PersonalManageDic.educationBackground
+                    },
+                    {
+                      width: 200,
+                      label: "详细描述",
+                      prop: "xxms",
+                      type: "input"
+                    }
+                  ],
+                  uiConfig: {
+                    pagination: false,
+                    height: "auto"
+                  },
+                  tableMethods: {
+                    rowAdd: done => {
+                      this.$message.success("新增回调");
+                      done({
+                        input: "默认值"
+                      });
+                    },
+                    rowDel: (row, done) => {
+                      this.$message.success("删除回调" + JSON.stringify(row));
+                      done();
+                    }
+                  }
+                }
               },
               {
                 label: "家庭情况",
                 prop: "familyDetails",
-                type: "textarea",
-                placeholder: "包括成员、称谓、工作单位、职务、地址"
+                type: "dynamic",
+                // tip: "包括成员、称谓、工作单位、职务、地址",
+                span: 24,
+                children: {
+                  align: "center",
+                  headerAlign: "center",
+                  editBtn: true,
+                  data: [],
+                  columnConfig: [
+                    {
+                      width: 200,
+                      label: "成员",
+                      prop: "cy"
+                    },
+                    {
+                      width: 200,
+                      label: "称谓",
+                      prop: "cw",
+                      type: "input"
+                    },
+                    {
+                      width: 200,
+                      label: "工作单位",
+                      prop: "gzdw",
+                      type: "input"
+                    },
+                    {
+                      width: 200,
+                      label: "职务",
+                      prop: "zw",
+                      type: "input"
+                    },
+                    {
+                      width: 250,
+                      label: "地址",
+                      prop: "dz",
+                      type: "input"
+                    }
+                  ],
+                  uiConfig: {
+                    pagination: false,
+                    height: "auto"
+                  },
+                  tableMethods: {
+                    rowAdd: done => {
+                      this.$message.success("新增回调");
+                      done({
+                        input: "默认值"
+                      });
+                    },
+                    rowDel: (row, done) => {
+                      this.$message.success("删除回调" + JSON.stringify(row));
+                      done();
+                    }
+                  }
+                }
               }
             ]
           }

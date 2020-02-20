@@ -115,6 +115,7 @@ export default {
           this.$router.push("/login");
         }
       } else {
+        console.log("执行")
         let menuTree = JSON.parse(localStorage.getItem("menuTree"));
         let firstLevelTree = menuTree[0].childNode.find(
           item => item.name == "基础功能"

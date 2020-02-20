@@ -22,10 +22,12 @@
     watch:{
     },
     methods: {
-      getHealthDegreeData(){
-        let res=[{name:'健康',value:45},
-                 {name:'亚健康',value:35},
-                 {name:'不健康',value:15}]
+      async getHealthDegreeData(){
+        // let res =CommonApi.getHomeInterfaceAlarmById({
+        //   ids:4150
+        // })
+        let res=[{name:'正常',value:240},
+                 {name:'报警',value:35}]
         this.initChart(res)
       },
       initChart(res){
@@ -50,7 +52,8 @@
           },
           seriesUi:{
             center:['35%','50%']
-          }
+          },
+          color:['gray','red']
         };
         ChartUtils.hollowPieChart(myChart,data);
       }

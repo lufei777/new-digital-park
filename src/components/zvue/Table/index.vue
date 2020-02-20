@@ -3,11 +3,11 @@
     <div
       v-if="options.customTop"
       ref="customTop"
-      :style="{textAlign:options.customTopPosition || 'right',height:'auto',padding:'0 20px 20px'}"
+      :style="{textAlign:options.customTopPosition || config.customTopPosition,height:'auto',padding:'0 20px 20px'}"
     >
       <slot
         :name="config.topSlotName"
-        :size="uiConfig.size"
+        :size="isMediumSize"
         :columnConfig="columnConfig"
         :allData="allData"
         :tableShowData="tableShowData"
@@ -27,7 +27,7 @@
       :key="key"
       :data="tableShowData"
       :height="tableHeight"
-      :size="uiConfig.size"
+      :size="isMediumSize"
       v-loading="loading"
       @row-click="rowClick"
       @row-dblclick="rowDblclick"
@@ -43,6 +43,7 @@
         type="selection"
         :width="config.selectionWidth"
         :selectable="_selectable"
+        align="center"
       ></el-table-column>
 
       <!-- 索引 -->
@@ -52,10 +53,11 @@
         type="index"
         :index="uiConfig.showIndex.handler"
         :width="uiConfig.showIndex.width || config.indexWidth"
-        :align="uiConfig.showIndex.align || config.indexAlign"
+        :align="uiConfig.showIndex.align || 'center'"
       >
         <template slot="header">{{uiConfig.showIndex.label || config.indexLabel}}</template>
       </el-table-column>
+      <el-table-column width="1px"></el-table-column>
 
       <!-- 使用column组件会导致多选索引顺序错位 -->
       <!-- <column :columnConfig="columnConfig">
@@ -73,14 +75,16 @@
       <template v-for="col in columnConfig">
         <el-table-column
           v-if="!col.hide"
+          show-overflow-tooltip
           :key="col.label"
           :prop="col.prop"
           :label="col.label"
           :width="col.width"
           :fixed="col.fixed"
           :sortable="col.sortable || false"
-          :align="col.align || 'left'"
-          show-overflow-tooltip
+          :align="col.align || options.align || config.align"
+          :header-align="col.headerAlign || options.headerAlign || config.headerAlign"
+          :render-header="col.renderHeader"
         >
           <template v-if="col.headerSlot" slot="header">
             <slot :name="`${col.prop}Header`" :column="col"></slot>
@@ -120,7 +124,8 @@
         :prop="btnConfig.prop"
         :label="btnConfig.label"
         :width="btnConfig.width"
-        :align="btnConfig.align || config.btnAlign"
+        :align="btnConfig.align || options.align || config.align"
+        :header-align="btnConfig.headerAlign || config.headerAlign"
       >
         <!-- 搜索框 -->
         <template v-if="uiConfig.searchable" slot="header">
@@ -128,12 +133,14 @@
         </template>
         <!-- 按钮 -->
         <template slot-scope="scopeRow">
+          <!-- 编辑按钮 -->
           <el-button
             type="text"
             :size="isMediumSize"
             @click.stop="rowCell(scopeRow.row,scopeRow.$index)"
             v-if="vaildBoolean(parentOption.editBtn,config.editBtn)"
           >{{_editBtnText(scopeRow.row,scopeRow.index)}}</el-button>
+          <!-- 取消按钮 -->
           <el-button
             v-if="scopeRow.row.$cellEdit && vaildBoolean(parentOption.calcelBtn,config.calcelBtn)"
             type="text"
@@ -147,9 +154,9 @@
             :scopeRow="scopeRow"
             :size="isMediumSize"
           ></slot>
+          <!-- 基础模式，如删除，编辑。参数为scopeRow -->
           <template v-for="btn in btnConfig.btns">
             <!-- :size="btn.size || uiConfig.size" -->
-            <!-- 基础模式，如删除，编辑。参数为scopeRow -->
             <el-button
               v-if="btn.type === 'basic' || !btn.type"
               :size="btn.size || isMediumSize"
@@ -271,6 +278,7 @@ export default {
 
     this._tableInit();
     this.handleLoadDic();
+    this._dataIndexInit();
   },
   mounted() {
     this.$nextTick(() => {
@@ -343,14 +351,16 @@ export default {
       if (paginationConfig) {
         //如果采用服务端分页模式
         if (this.isServerMode) {
-          this._loadServerMode({
-            [this.pageSizeKey]: pageSize,
-            [this.pageNumKey]: currentPage
-          });
+          this._loadServerMode(
+            Object.assign(this.isServerMode.data, {
+              [this.pageSizeKey]: pageSize,
+              [this.pageNumKey]: currentPage
+            })
+          );
         } else {
           //如果不是服务器模式
           // 如果tableData.length >= total，说明allData是全部数据，使用tableData分页即可
-          if (this.tableData.length >= paginationConfig.total) {
+          if (this.tableData.length >= this.uiConfig.pagination.total) {
             let currentIndex = currentPage * pageSize;
             this.tableShowData = this.tableData.slice(
               currentIndex - pageSize,
@@ -440,12 +450,25 @@ export default {
       //设置当前选中行
       this.currentRowData = row;
     },
+    _dataIndexInit() {
+      //初始化序列的参数
+      (this.isServerMode ? this.tableShowData : this.tableData).forEach(
+        (ele, index) => {
+          if (ele.$cellEdit) {
+            this.formCascaderList[index] = this.deepClone(ele);
+          }
+          ele.$index = index;
+        }
+      );
+    },
     _setTableData(data) {
       if (!(data instanceof Array)) return;
       if (this.isServerMode) {
         this.tableShowData = data;
       } else {
         this.tableData = data;
+        // 在本地模式下，重新赋值后，重设total
+        this.setPaginationTotal(data.length);
       }
       this.allData = data;
       // 设置总页数为null，这样在数据更新后没有手动设置total，会自动读取数据长度
@@ -465,6 +488,7 @@ export default {
     _handlerPagination(pageSize, currentPage) {
       this.uiConfig.pagination.handler &&
         this.uiConfig.pagination.handler(pageSize, currentPage, this);
+      this.$emit("handle-pagination", pageSize, currentPage, this);
     },
     // 当前行是否可多选
     _selectable: function(row, index) {
@@ -544,6 +568,9 @@ export default {
       this.$set(this.tableShowData, index, this.formCascaderList[index]);
 
       this.formIndexList.splice(this.formIndexList.indexOf(index), 1);
+
+      // 编辑取消事件
+      this.$emit("row-edit-cancel", row, index);
     },
     // 单元格编辑
     rowCellEdit(row, index) {
@@ -551,6 +578,9 @@ export default {
       this.$set(this.tableShowData, index, row);
       //缓冲行数据
       this.formCascaderList[index] = this.deepClone(row);
+
+      // 编辑事件
+      this.$emit("row-edit", row, index);
 
       setTimeout(() => {
         this.formIndexList.push(index);
@@ -632,18 +662,18 @@ export default {
     rowClick(row, column, e) {
       //如果是操作列则不执行
       if (
+        !this.tableMethods.rowClick ||
         preventClick.includes(column.property) ||
         preventClick.includes(column.type)
       )
         return;
+
       this._setCurrentRowData(row);
 
       clearTimeout(dblclickTimer);
       dblclickTimer = setTimeout(
         () => {
-          this.tableMethods.rowClick &&
-            this.tableMethods.rowClick(row, column, e);
-
+          this.tableMethods.rowClick(row, column, e);
           this.$emit("row-click", row, column, e);
         },
         this.clickConflict ? 200 : 0
@@ -653,6 +683,7 @@ export default {
     rowDblclick(row, column, e) {
       //如果是操作列则不执行
       if (
+        !this.tableMethods.rowDblclick ||
         preventClick.includes(column.property) ||
         preventClick.includes(column.type)
       )
@@ -661,9 +692,8 @@ export default {
       this._setCurrentRowData(row);
 
       clearTimeout(dblclickTimer);
-      this.tableMethods.rowDblclick &&
-        this.tableMethods.rowDblclick(row, column, e);
 
+      this.tableMethods.rowDblclick(row, column, e);
       this.$emit("row-dblclick", row, column, e);
     },
     //单选选择当前行
@@ -956,6 +986,7 @@ export default {
     paginationObj: {
       deep: true,
       handler: function(newVal, oldVal) {
+        // 如果有handler，则拦截分页方法。为了兼容服务端自己写请求数据方法
         if (this.uiConfig.pagination.handler) {
           return;
         }
@@ -972,6 +1003,7 @@ export default {
     //动态监测tableConfig.data的改变，有可能外部ajax改变data值
     "options.data"(val) {
       this._setTableData(val);
+      this._dataIndexInit();
     },
     tableData(newVal, oldVal) {
       if (newVal instanceof Array) {

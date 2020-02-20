@@ -9,9 +9,10 @@ export default {
     headerCellStyle: { padding: '0px', height: '50px' },
     selectionWidth: 37,
     indexWidth: 50,
-    indexAlign: "center",
+    align: 'left',
+    headerAlign: 'left',
+    customTopPosition: 'right',
     indexLabel: "序号",
-    btnAlign: "left",
     // 默认log
     LOG: {
         error: {
@@ -28,13 +29,13 @@ export default {
         /**
          * height: "300px" 设定按照设定值来规定table高度
          *         "auto"  根据内容自适应
-         *          不设置  根据父级计算高度
+         *          不设置 默认 根据父级计算高度
          */
-        size: "medium",
+        // size: "medium",
         pagination: {
             // sizes
             layout: "total, ->, prev, pager, next, jumper",
-            pageSizes: [10],
+            pageSizes: [5, 10, 20],
             pageSize: 10,
             currentPage: 1
         }

@@ -1,6 +1,7 @@
 <template>
   <div class="air-conditioner">
     <div class="my-chart" ref="myChart"></div>
+    <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
@@ -11,6 +12,7 @@
     name: 'airConditioner',
     components: {
     },
+    props:['moduleItem'],
     data () {
       return {
       }
@@ -20,17 +22,17 @@
     watch:{
     },
     methods: {
-     async getInstrusionData(){
-       let res = await CommonApi.getHomeInterfaceMonitor({
-         homeId:8
+     async getAirConditionerData(){
+       let res =CommonApi.getHomeInterfaceAlarmById({
+         ids:4151
        })
        
        let tmp = [{
-          name:'报警点数',
-          value:res.alarm
+          name:'正常',
+          value:100
        },{
-         name:'未报警点数',
-         value:res.normal
+         name:'报警',
+         value:40
        }]
         this.initChart(tmp)
       },
@@ -59,13 +61,13 @@
           seriesUi:{
             center:['35%','50%']
           },
-          color:['red','gray']
+          color:['gray','blue']
         };
         ChartUtils.hollowPieChart(myChart,data);
       }
     },
     mounted(){
-      this.getInstrusionData()
+      this.getAirConditionerData()
     }
   }
 </script>

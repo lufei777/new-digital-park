@@ -10,7 +10,7 @@
         <el-button type="primary" @click="onClickMultiDelBtn">批量删除</el-button>
         <el-button type="primary" @click="onClickAddBtn">添加明细</el-button>
       </div>
-      <z-table :ref="tableConfig.ref" :options="tableConfig">
+      <z-table :ref="tableConfig.ref" :options="tableConfig" @handle-pagination="handleCurrentChange">
         <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
           <el-button type="text" @click="editRow($index)">编辑</el-button>
           <el-button type="text" @click="deleteRow($index)">删除</el-button>
@@ -35,6 +35,7 @@ import AssetManageApi from "@/service/api/assetManage";
 import SystemManageApi from "@/service/api/systemManage";
 import AddAsset from "../../assetManage/addAsset";
 import StockManageApi from "@/service/api/stockManage";
+
 export default {
   name: "ApplyComs",
   components: { AddAsset },
@@ -161,31 +162,31 @@ export default {
         operation: true,
         data: [],
         columnConfig: [
-          // {label:'编号',prop:'coding'},
           { label: "名称", prop: "name" },
-          // {label:'单位',prop:'unit'},
           { label: "品牌", prop: "brand" },
           { label: "价格", prop: "price" },
-          // {label:'单独核算',prop:'singleCount',
-          //   formatter:function (row) {
-          //     return row.singleCount==1?'是':'否'
-          //   }
-          // },
-          // {label:'资产组',prop:'groupName'},
-          // {label:'资产类型',prop:'typeName'},
           { label: "数量", prop: "quantity" },
           { label: "入库部门", prop: "deptName" }
         ],
         uiConfig: {
           height: "auto",
-          selection: true
+          selection: true,
+          pagination:{
+            pageSize:2,
+            // handler:function(size,page){
+            //   _this.handleCurrentChange(page)
+            // },
+          }
         }
       },
       showAddModal: false,
       curDetail: {},
       curRowIndex: 0,
       deptTree: [],
-      editFlag: false
+      editFlag: false,
+      detailList:[],
+      pageSize:2,
+      curPage:1
     };
   },
   computed: {
@@ -202,24 +203,12 @@ export default {
     }
   },
   methods: {
+     getData(){
+       return this.detailList;
+     },
       async getDepartmentTree() {
         let res = await SystemManageApi.getDepartmentTree();
-        // this.$refs[this.formConfig.ref].setColumnByProp("buyId", {
-        //   dicData: res[0].childNode
-        // });
-        // this.$refs[this.formConfig.ref].setColumnByProp("acceptId", {
-        //   dicData: res[0].childNode
-        // });
-        // let findLast =res[0].childNode
-        // findLast.map(async (item)=>{
-        //   if(item.childNode.length){
-        //     findLast=item.childNode
-        //   }else{
-        //     let res = await this.getUserList(item.id)
-        //   }
-        // })
         this.deptTree=res[0].childNode
-
       },
       async getProviderList() {
         let res = await AssetManageApi.getProviderList();
@@ -233,6 +222,7 @@ export default {
         this.showAddModal=true
       },
       addStockDetail(obj){
+        // console.log("objjjjj",obj)
         let data = {...obj,
           ...{
             assetId:obj.id,
@@ -240,21 +230,24 @@ export default {
             description:obj.remark
           }
         }
-        console.log("detail",this.curDetail)
+        console.log("data",data)
         if(this.editFlag){
-          this.tableConfig.data[this.curRowIndex] =data
+          console.log("curRowIndex",this.curRowIndex)
+          this.tableConfig.data.splice(this.curRowIndex,1,data)
         }else{
           this.tableConfig.data.push(data)
         }
         this.showAddModal=false
       },
       deleteRow(index) {
-        this.tableConfig.data.splice(index, 1);
+        // this.detailList.splice(this.index, 1);
+        let tmp = index+(this.curPage-1)*this.pageSize
+        this.tableConfig.data.splice(tmp, 1);
       },
       editRow(index) {
         this.showAddModal = true;
         this.editFlag = true;
-        this.curRowIndex = index;
+        this.curRowIndex = index+(this.curPage-1)*this.pageSize;
         this.curDetail = this.tableConfig.data[index];
       },
       onClickMultiDelBtn() {
@@ -291,7 +284,6 @@ export default {
             userIdList
           }
         }
-        console.log("ibj", obj);
         if (flag == 1) {
           if (!this.tableConfig.data.length) {
             this.$message({
@@ -330,6 +322,9 @@ export default {
       },
       onClickCloseBtn() {
         this.$store.commit("digitalPark/stockInApplyTab", "1");
+      },
+      handleCurrentChange(size,page){
+        this.curPage=page
       }
   },
   async created() {
@@ -358,6 +353,12 @@ export default {
   .operator-box {
     margin-top: 40px;
     text-align: center;
+  }
+  .mybtn{
+    /*width:60px;*/
+    /*height:60px;*/
+    /*!*padding:20px;*!*/
+    /*border-radius: 50%;*/
   }
 }
 </style>

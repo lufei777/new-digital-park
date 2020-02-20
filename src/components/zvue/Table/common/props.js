@@ -1,4 +1,10 @@
 import { DIC_HTTP_PROPS, DIC_PROPS } from "../global/variable";
+const getKeyFromProps = (options, keyName) => {
+    return options.props ? options.props[keyName] || DIC_PROPS[keyName] : DIC_PROPS[keyName];
+}
+const getKeyFromPropsHttp = (options, keyName) => {
+    return options.propsHttp ? options.propsHttp[keyName] || DIC_HTTP_PROPS[keyName] : DIC_HTTP_PROPS[keyName];
+}
 
 export default function () {
     return {
@@ -6,42 +12,42 @@ export default function () {
         computed: {
             // 列表list字段
             listKey() {
-                return this.propsHttp.list || DIC_HTTP_PROPS.list;
+                return getKeyFromPropsHttp(this.options, 'list');
             },
             // 第几页字段
             pageNumKey() {
-                return this.propsHttp.pageNum || DIC_HTTP_PROPS.pageNum;
+                return getKeyFromPropsHttp(this.options, 'pageNum');
             },
             // 一页几条字段
             pageSizeKey() {
-                return this.propsHttp.pageSize || DIC_HTTP_PROPS.pageSize;
+                return getKeyFromPropsHttp(this.options, 'pageSize');
             },
             // 总数量字段
             totalKey() {
-                return this.propsHttp.total || DIC_HTTP_PROPS.total;
+                return getKeyFromPropsHttp(this.options, 'total');
             },
             // res返回结果字段
             resKey() {
-                return this.propsHttp.res || DIC_HTTP_PROPS.res;
+                return getKeyFromPropsHttp(this.options, 'res');
             },
             // 降序字段
             descKey() {
-                return this.propsHttp.desc || DIC_HTTP_PROPS.desc;
+                return getKeyFromPropsHttp(this.options, 'desc');
             },
             // 升序字段
             ascKey() {
-                return this.propsHttp.asc || DIC_HTTP_PROPS.asc;
+                return getKeyFromPropsHttp(this.options, 'asc');
             },
             // 升降序类型字段
             orderTypeKey() {
-                return this.propsHttp.orderType || DIC_HTTP_PROPS.orderType;
+                return getKeyFromPropsHttp(this.options, 'orderType');
             },
             // 根据什么属性排序字段
             orderPropKey() {
-                return this.propsHttp.orderBy || DIC_HTTP_PROPS.orderBy;
+                return getKeyFromPropsHttp(this.options, 'orderBy');
             },
             rowKey() {
-                return this.options.props ? this.options.props.rowKey || DIC_PROPS.rowKey : DIC_PROPS.rowKey;
+                return getKeyFromProps(this.options, 'rowKey');
             }
         },
     }

@@ -13,14 +13,14 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="组合查询">
-          <el-button :ref="formConfig.ref" :options="formConfig" v-model="formModel">
+          <zForm :ref="formConfig.ref" :options="formConfig" v-model="formModel">
             <template slot="btn" slot-scope="obj">
               <div>
                 <el-button :disabled="obj.disabled" type="primary" @click="onClickSearchBtn(obj)">搜索</el-button>
                 <el-button :disabled="obj.disabled" @click="clearForm(obj)">重置</el-button>
               </div>
             </template>
-          </el-button>
+          </zForm>
           <z-table :ref="tableConfig.ref" :options="tableConfig"/>
         </el-tab-pane>
       </el-tabs>
@@ -133,7 +133,6 @@
         }
       },
       columnConfig(){
-        console.log(2222)
         if(this.fromFlag==1){
           return [
             {label:'编号', prop:'coding'},{label:'名称', prop:'name'},
@@ -145,7 +144,6 @@
             }
           ]
         }else if(this.fromFlag==2){
-          console.log(111)
           return [
             {label:'编号', prop:'coding'},{label:'名称', prop:'name'},
             {label:'规格型号', prop:'specification'},
@@ -220,6 +218,9 @@
     .tree-box{
       height:200px;
       border:1px solid #f0f0f0;
+    }
+    .el-tabs__content{
+      height:500px;
     }
   }
 </style>
