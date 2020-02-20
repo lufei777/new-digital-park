@@ -40,16 +40,13 @@
     data () {
       let _this = this
       let checkQuantity = (rule, value, callback) => {
+        debugger
+        console.log(value)
         if(value.trim()==""){
-          callback(new Error("请输入领用数量"));
-        }else if(value==0){
-          callback(new Error("最小领用数量为1"));
-        }else if((!Number(value) || value<0)){
-          callback(new Error("请输入正数"));
-        }else if(value>_this.curDetail.quantity){
-          callback(new Error("领用数量应小于等于入库数量"));
+          console.log(123)
+          return callback({message:"请输入领用数量"});
         }else{
-          callback();
+          return callback();
         }
       };
       return {
@@ -75,7 +72,7 @@
             focus:_this.chooseAsset
           },{
             label:'领用人',
-            prop:'userName',
+            prop:'collarId',
             cell:true,
             type: "cascader",
             showAllLevels: false,
@@ -99,6 +96,7 @@
                 resolve([]);
               }
             },
+            change:_this.userChange
           },{
             label:'规格型号',
             prop:'specification'
@@ -107,14 +105,13 @@
             prop:'quantity'
           },{
             label:'领用数量',
-            prop:'num2',
+            prop:'collarNum',
             cell:true,
-            // rules: {
-            //   required: true,
-            //   validator: checkQuantity,
-            //   trigger: "blur",
-            //   // message:'请填写22222'
-            // },
+            type:'input',
+            rules: {
+              required: true,
+              validator: checkQuantity,
+            },
           },{
             label:'备注',
             prop:'description',
@@ -145,12 +142,13 @@
              date:moment(new Date()).format('YYYY-MM-DD'),
              applyUser:userInfo.fullName,
              name:'',
-             userName:'',
+             collarId:'',
              specification:'',
              quantity:'',
-             num2:'',
+             collarNum:'',
              description:'',
-             flag:false
+             flag:false,
+             collarName:''
           }
         // this.$refs['tableRef'].rowCellAdd(obj)
         this.tableConfig.data.push(obj)
@@ -191,11 +189,16 @@
         tmp.flag=false
         this.tableConfig.data.splice(index,1,tmp)
         callback()
+        console.log(tmp,this.tableConfig.data)
       },
       onGetAssetDetail(val) {
         console.log("curRow",this.curDetail)
-
-        let obj={...this.curDetail,...val,...{flag:true}}
+        let tmp={
+          id:this.curDetail.id,
+          assetId:val.id,
+          flag:true
+        }
+        let obj={...this.curDetail,...val,...tmp}
         this.showSearchModal = false
         this.tableConfig.data.splice(this.curRowIndex,1,obj)
       },
@@ -227,6 +230,13 @@
         this.userList=res
         return res;
       },
+      userChange(data){
+        let userId = data.value[data.value.length-1]
+        let user = this.userList.find((item)=>item.id==userId)
+        this.tableConfig.data[this.curRowIndex].collarId=userId
+        this.tableConfig.data[this.curRowIndex].collarName=user.fullName
+        console.log("change",this.tableConfig.data)
+      }
     },
     mounted(){
     }

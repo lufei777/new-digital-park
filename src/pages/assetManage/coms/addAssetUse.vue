@@ -162,7 +162,7 @@
       },
       onGetAssetDetail(row){
         this.showSearchModal=false
-        this.formModel={...this.formModel,...row}
+        this.formModel={...this.formModel,...row,}
       },
       onSubmit(){
         this.$parent.addAssetUseDetail &&  this.$parent.addAssetUseDetail(this.formModel)
