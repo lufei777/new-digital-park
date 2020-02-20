@@ -305,13 +305,6 @@ export default {
         var formsOption = options.forms[this.findColumnIndex(prop)];
       }
       setDefaultValue(setOptions, formsOption, this);
-
-      // this.options.forms = [...forms];
-      /* let forms = this.options.forms;
-      let formsOption = forms[this.findColumnIndex(prop)];
-      setDefaultValue(setOptions, formsOption, this);
-
-      this.options.forms = [...forms]; */
     },
     // 验证表单是否显隐
     vaildDisplay(column) {

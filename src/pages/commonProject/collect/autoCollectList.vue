@@ -36,7 +36,7 @@
       <div class="operator-box">
         <el-button type="primary" @click="handleExport">导出</el-button>
       </div>
-      <z-table :ref="tableConfig.ref" :table-config="tableConfig" />
+      <z-table :ref="tableConfig.ref" :options="tableConfig" />
     </div>
   </div>
 </template>

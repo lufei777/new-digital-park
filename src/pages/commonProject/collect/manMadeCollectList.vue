@@ -96,13 +96,13 @@ export default {
         page: this.curPage,
         rows: 10
       };
-      let res = await CommonApi.getManMadeCollectList(params);
       this.collectTableConfig.columnConfig = [
         { label: "监测器名称", prop: "monitorStr" },
         { label: "录入时间", prop: "lookTime" },
         { label: "用户名", prop: "person" },
         { label: "表值", prop: "value" }
       ];
+      let res = await CommonApi.getManMadeCollectList(params); 
       this.collectTableConfig.data = res.data;
       this.collectTableConfig.uiConfig.pagination.total = res.total;
       if (res && res.data) {
