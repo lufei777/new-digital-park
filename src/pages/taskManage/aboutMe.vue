@@ -74,7 +74,7 @@ export default {
         uiConfig: {
           height: "auto", //"", //高度
           selection: true, //是否多选
-          searchable: ["taskName"],
+          searchable: ["taskName","officeLocation"],
           showIndex: true,
           pagination: {
             //是否分页，分页是否自定义
@@ -157,7 +157,8 @@ export default {
         { label: "优先级", prop: "urgent" },
         { label: "状态", prop: "taskStatus" },
         { label: "创建人", prop: "founderName" },
-        { label: "处理人", prop: "username" }
+        { label: "处理人", prop: "username" },
+        { label: "地点", prop: "officeLocation" }
       ];
       this.tableData.columnConfig = labelList;
       let res = await TaskManageApi.taskList({
@@ -217,6 +218,13 @@ export default {
               ? "重要"
               : item.urgent == "3"
               ? "紧急"
+              : "";
+
+            item.officeLocation =
+              item.officeLocation == 0
+              ? "公司"
+              : item.officeLocation == 1
+              ? "现场"
               : "";
         });
 
