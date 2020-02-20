@@ -153,11 +153,12 @@ export default {
                           item.name = item.fullName;
                           item.leaf = true;
                         });
-
+                        console.log(res);
                         resolve(res);
                       });
+                    } else {
+                      resolve([]);
                     }
-                    resolve([]);
                   }
                 },
                 rules: {
@@ -608,10 +609,15 @@ export default {
       // 添加信息
       PersonalManageApi[`insertUser${this.apiName}Message`](
         Object.assign(model, this.getIdField)
-      ).then(res => {
-        this.messageId = res.id;
-        this.nextStep({ hide });
-      });
+      )
+        .then(res => {
+          this.messageId = res.id;
+          this.nextStep({ hide });
+        })
+        .catch(err => {
+          hide();
+          console.error(err);
+        });
     },
     updateInfo(model) {
       model.messageId = this.messageId;
@@ -620,7 +626,6 @@ export default {
       // 更新信息
       PersonalManageApi[`updateUser${this.apiName}Message`](model)
         .then(res => {
-          console.log(res);
           this.backList();
         })
         .catch(err => {
