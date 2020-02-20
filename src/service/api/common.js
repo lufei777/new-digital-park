@@ -273,6 +273,16 @@ class CommonApi {
   @get
   getAlarmMessageList(){}
 
+  //消防管理-->预警报警
+  @url("/vibe-web/deviceTypeAlarmProportion")
+  @get
+  getAlarmProportion(){}
+
+  //消防管理-->系统监控
+  @url("/vibe-web/homeAssetHealth")
+  @get
+  getHomeAssetHealth(){}
+
   //ups
   @url("/vibe-web/homeInterfaceAlarmById")
   @get

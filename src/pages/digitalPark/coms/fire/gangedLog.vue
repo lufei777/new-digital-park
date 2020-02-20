@@ -65,7 +65,7 @@ export default {
       width: 100%;
       height: 50px;
       color: #8fd3fa;
-      border-bottom: 1px solid #1a314c;
+      border-bottom: 1px solid #1B2F44;
       font-size: 14px;
       span {
         float: left;

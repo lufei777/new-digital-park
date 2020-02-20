@@ -74,7 +74,7 @@ export default {
         uiConfig: {
           height: "auto", //"", //高度
           selection: true, //是否多选
-          searchable: ["taskName"],
+          searchable: ["taskName","officeLocation"],
           showIndex: true,
           pagination: {
             //是否分页，分页是否自定义

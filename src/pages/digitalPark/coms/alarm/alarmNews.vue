@@ -47,11 +47,12 @@
 <style lang="less">
   .alarm-news{
     .item-alarm{
+      width: 98%;
       overflow: hidden;
       text-overflow:ellipsis;
       white-space: nowrap;
       padding:10px 0;
-      border-bottom:1px solid #ccc;
+      border-bottom:1px solid #1B2F44;
       font-size: 12px;
       color:@dashboardColor;
     }
