@@ -70,7 +70,14 @@ export const AssetDic = {
   }, {
     label: '否',
     value: 0
-  }]
+  }],
+
+  // recordStatus: {
+  //   0: '待验',
+  //   1: '已入库',
+  //   2: '已作废',
+  //   3: '已收回',
+  // }
 }
 
 export const PersonalManageDic = {

@@ -41,13 +41,14 @@
       let _this = this
       let checkQuantity = (rule, value, callback) => {
         if(value.trim()==""){
-          callback(new Error("请输入领用数量"));
+          return callback({message:"请输入领用数量"});
         }else if(value==0){
-          callback(new Error("最小领用数量为1"));
+          callback({message:"最小领用数量为1"});
         }else if((!Number(value) || value<0)){
-          callback(new Error("请输入正数"));
-        }else if(value>_this.curDetail.quantity){
-          callback(new Error("领用数量应小于等于入库数量"));
+          callback({message:"请输入正数"});
+        }else if(value>_this.curDetail.actualQuantity){
+          console.log(value,_this.curDetail.actualQuantity)
+          callback({message:"领用数量应小于等于入库数量"});
         }else{
           callback();
         }
@@ -74,47 +75,47 @@
             readonly:true,
             focus:_this.chooseAsset
           },{
+            label:'规格型号',
+            prop:'specification'
+          },{
+            label:'库存数量',
+            prop:'actualQuantity'
+          },
+          //   {
+          //   label:'领用部门',
+          //   prop:'deptId',
+          //   cell:true,
+          //   type: "cascader",
+          //   showAllLevels: false,
+          //   props: {
+          //     label: "name",
+          //     value: "id",
+          //     children: "childNode",
+          //   },
+          //   dicData:_this.deptTree,
+          //   // change:_this.userChange
+          // },
+            {
             label:'领用人',
-            prop:'userName',
+            prop:'collarId',
             cell:true,
             type: "cascader",
             showAllLevels: false,
             props: {
               label: "name",
               value: "id",
-              children: "childNode",
-              lazy: true,
-              lazyLoad: async function(node, resolve) {
-                const { level, data } = node;
-                let nodes = [];
-                if (level == 0) {
-                  _this.getDepartmentTree().then(_ => {
-                    resolve(_this.deptTree);
-                  });
-                } else if (level === 2) {
-                  let res = await _this.getUserList(node.data.id);
-                  nodes = res;
-                  resolve(nodes);
-                }
-                resolve([]);
-              }
             },
-          },{
-            label:'规格型号',
-            prop:'specification'
-          },{
-            label:'库存数量',
-            prop:'quantity'
+            dicData:[],
+            // change:_this.userChange
           },{
             label:'领用数量',
-            prop:'num2',
+            prop:'collarNum',
             cell:true,
-            // rules: {
-            //   required: true,
-            //   validator: checkQuantity,
-            //   trigger: "blur",
-            //   // message:'请填写22222'
-            // },
+            type:'input',
+            rules: {
+              required: true,
+              validator: checkQuantity,
+            },
           },{
             label:'备注',
             prop:'description',
@@ -135,25 +136,30 @@
         isEdit:false,
         showSearchModal:false,
         pageSize:10,
+        deptTree:[]
       }
     },
     methods: {
-      onClickAddBtn(){
+      async onClickAddBtn(){
         let userInfo = JSON.parse(localStorage.getItem('userInfo'))
         let obj={
              id:_.uniqueId(),
              date:moment(new Date()).format('YYYY-MM-DD'),
              applyUser:userInfo.fullName,
              name:'',
-             userName:'',
+             collarId:'',
              specification:'',
-             quantity:'',
-             num2:'',
+             actualQuantity:'',
+             collarNum:'',
              description:'',
-             flag:false
+             flag:false,
+             collarName:'',
+             deptId:'',
+             assetId:''
           }
         // this.$refs['tableRef'].rowCellAdd(obj)
-        this.tableConfig.data.push(obj)
+        await AssetManageApi.addAssetUseDetail(obj)
+        // this.tableConfig.data.push(obj)
         this.isEdit=false
       },
       goBack(){
@@ -191,13 +197,21 @@
         tmp.flag=false
         this.tableConfig.data.splice(index,1,tmp)
         callback()
+        console.log(tmp,this.tableConfig.data)
       },
       onGetAssetDetail(val) {
-        console.log("curRow",this.curDetail)
-
-        let obj={...this.curDetail,...val,...{flag:true}}
-        this.showSearchModal = false
+        // console.log("curRow",this.curDetail)
+        let tmp={
+          id:this.curDetail.id,
+          assetId:val.id || val.assetId,
+          flag:true,
+          collarNum:this.curDetail.collarNum
+        }
+        let obj={...this.curDetail,...val,...tmp}
+        console.log(obj)
         this.tableConfig.data.splice(this.curRowIndex,1,obj)
+        this.curDetail=obj
+        this.showSearchModal = false
       },
       rowEdit(obj,index){
         console.log("edit",obj,index)
@@ -208,12 +222,17 @@
         console.log(111,obj,index)
         if(obj.flag){
           this.tableConfig.data.splice(this.curRowIndex,1,{...this.curDetail,...{$cellEdit:false}})
-
         }
       },
       async getDepartmentTree() {
         let res = await SystemManageApi.getDepartmentTree();
         this.deptTree=res[0].childNode
+        // this.$refs['tableRef'].setColumnByProp("deptId", {
+        //   dicData:this.deptTree
+        // });
+        // console.log("this.depeTREE",this.deptTree)
+         let list = this.insertNode(this.deptTree)
+        // return this.deptTree
       },
       async getUserList(id) {
         let deptId = id;
@@ -227,8 +246,32 @@
         this.userList=res
         return res;
       },
+      userChange(data){
+        let userId = data.value[data.value.length-1]
+        let user = this.userList.find((item)=>item.id==userId)
+        this.tableConfig.data[this.curRowIndex].collarId=userId
+        this.tableConfig.data[this.curRowIndex].collarName=user.fullName
+        console.log("change",this.tableConfig.data)
+      },
+       insertNode(arr){
+        // console.log("tree2",this.deptTree)
+        // console.log("arr1",arr)
+          arr.map(async(item)=> {
+            if (item.childNode.length) {
+              this.insertNode(item.childNode)
+            } else {
+              let res = await this.getUserList(item.id)
+              item.childNode=res
+            }
+          })
+          return arr;
+      }
+    },
+    created(){
+
     },
     mounted(){
+      this.getDepartmentTree()
     }
   }
 </script>

@@ -37,4 +37,8 @@ export default new class {
   @url("/oaApi/stock/takeBack")
   @get
   takeBackStockApply(){}
+
+  @url("/oaApi/stockDeal/assetList")
+  @get
+  getStockList(){}
 }

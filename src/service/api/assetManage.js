@@ -96,6 +96,10 @@ class CommonApi {
   @url('/oaApi/asset/updateAssets')
   @put
   multiEditAsset(){}
+
+  @url("/oaApi/stockDeal/addCollar")
+  @post
+  addAssetUseDetail(){}
 }
 
 export default new CommonApi()
