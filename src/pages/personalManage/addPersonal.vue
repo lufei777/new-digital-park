@@ -100,7 +100,6 @@ export default {
                 // type: "input",
                 type: "cascader",
                 showAllLevels: false,
-                dicUrl: [],
                 props: {
                   label: "name",
                   value: "id",
@@ -132,6 +131,7 @@ export default {
                 prop: "superiorList",
                 // type: "input",
                 type: "cascader",
+                showAllLevels: false,
                 props: {
                   label: "name",
                   value: "id",
