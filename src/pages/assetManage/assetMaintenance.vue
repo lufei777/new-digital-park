@@ -194,8 +194,8 @@ export default {
           {label:'资产组',prop:'groupName'},
           {label:'资产类型',prop:'typeName'}]
           this.assetsTableConfig.data=res.list
-          // this.assetsTableConfig.uiConfig.pagination.total=res.total
-          this.$refs[this.assetsTableConfig.ref].setPaginationTotal(res.total)
+          this.assetsTableConfig.uiConfig.pagination.total=res.total
+          // this.$refs[this.assetsTableConfig.ref].setPaginationTotal(res.total)
           console.log("total",this.assetsTableConfig.uiConfig.pagination.total,res.total)
           this.loading=false
       },
