@@ -1,7 +1,7 @@
 <template>
   <div id="personal-manage" class="panel-container">
     <div class="panel">
-      <el-tabs v-if="pageConfig.flag === 'edit'" type="border-card" @tab-click="tabClick">
+      <el-tabs v-if="isEdit" type="border-card" @tab-click="tabClick">
         <template v-for="item in tabPanelOptions">
           <el-tab-pane :key="item.label" :label="item.label" :name="item.name"></el-tab-pane>
         </template>
@@ -12,7 +12,7 @@
           <template slot="menuBtn" slot-scope="scope">
             <!-- <el-button @click="lastStep">上一步</el-button>
             <el-button @click="nextStep">下一步</el-button>-->
-            <el-button v-if="pageConfig.flag === 'edit'" type="primary" @click="editCurrent(scope)">{{options.disabled ? '编辑' :'取消'}}</el-button>
+            <el-button v-if="isEdit && typeof options.submitBtn !== 'undefined'" type="primary" @click="editCurrent(scope)">{{options.disabled ? '编辑' :'取消'}}</el-button>
             <el-button @click="backList(scope)">返回</el-button>
           </template>
         </z-form>
@@ -657,6 +657,9 @@ export default {
     }
   },
   computed: {
+    isEdit(){
+      return this.pageConfig.flag === 'edit';
+    },
     isBaseInfo() {
       return this.apiName.length === 0;
     },
