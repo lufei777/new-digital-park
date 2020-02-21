@@ -86,6 +86,7 @@
           columnConfig:columnConfig,
           uiConfig:{
             height:'300',
+            pagination:{},
           },
           tableMethods: {
             rowClick: this.rowClick,
@@ -157,7 +158,7 @@
           res = await StockManageApi.getStockList(params)
         }
         this.tableConfig.data=res.list
-        // this.tableConfig.uiConfig.pagination.total=res.total
+        this.tableConfig.uiConfig.pagination.total=res.total
       },
       onClickTreeNodeCallBack(node){
          this.curType=node.id

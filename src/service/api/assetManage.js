@@ -100,6 +100,22 @@ class CommonApi {
   @url("/oaApi/stockDeal/addCollar")
   @post
   addAssetUseDetail(){}
+
+  @url("/oaApi/stockDeal/collarList")
+  @get
+  getAssetUseList(){}
+
+  @url("/oaApi/stockDeal/delCollar")
+  @get
+  deleteAssetUseDetail(){}
+
+  @url("/oaApi/stockDeal/editCollar")
+  @post
+  editAssetUseDetail(){}
+
+  @url("/oaApi/stockDeal/collarUse")
+  @get
+  addAssetUseApply(){}
 }
 
 export default new CommonApi()
