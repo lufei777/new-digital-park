@@ -108,8 +108,23 @@ export default {
       return Object.prototype.toString.call(item) === "[object Array]";
     },
     handlechange(value) {
+      // console.log("value");
       this.runHandleChange = true;
       this.handleChange(value);
+      // console.log(this.$refs["cascader"].inputValue);
+    },
+    execLazyLoad() {
+      // 调用elementUI的lazyLoad方法，加载异步数据
+      if (this.props.lazy && this.runLazyLoad && !validatenull(this.text)) {
+        // 拿到elementUI的cascader-panel组件
+        const elCascaderPanel = this.$refs["cascader"].$refs["panel"];
+        // 将loadCount置为0，可以使组件的checkedValue重新跑，在 elCascaderPanel 的 lazyLoad方法中
+        elCascaderPanel.loadCount = 0;
+        // 将activePath数组置为空，则可以防止 elCascaderPanel 中 expandNodes 方法中遍历nodes报错，不置空nodes会是null
+        elCascaderPanel.activePath.length = 0;
+        // 手动调用lazyLoad方法，可以加载异步数据
+        elCascaderPanel.lazyLoad();
+      }
     }
   },
   watch: {
@@ -121,17 +136,12 @@ export default {
           this.runLazyLoad = false;
           this.runHandleChange = false;
         }
-        // 调用elementUI的lazyLoad方法，加载异步数据
-        if (this.props.lazy && this.runLazyLoad) {
-          // 拿到elementUI的cascader-panel组件
-          const elCascaderPanel = this.$refs["cascader"].$refs["panel"];
-          // 将loadCount置为0，可以使组件的checkedValue重新跑，在 elCascaderPanel 的 lazyLoad方法中
-          elCascaderPanel.loadCount = 0;
-          // 将activePath数组置为空，则可以防止 elCascaderPanel 中 expandNodes 方法中遍历nodes报错，不置空nodes会是null
-          elCascaderPanel.activePath.length = 0;
-          // 手动调用lazyLoad方法，可以加载异步数据
-          elCascaderPanel.lazyLoad();
+        // 如果创建和值变化小于1000毫秒，则不可手动执行lazyLoad
+        // 组件新创建时会用值直接去请求，值改变也会去请求，两个请求会冲突
+        if (_.now() - this.createdTimeStamp < 1000) {
+          this.runLazyLoad = false;
         }
+        this.execLazyLoad();
       }
     },
     value: {
@@ -149,6 +159,7 @@ export default {
     if (this.type === "cascader-panel") {
       this.componentId = "el-cascader-panel";
     }
+    this.createdTimeStamp = _.now();
   }
 };
 </script>
