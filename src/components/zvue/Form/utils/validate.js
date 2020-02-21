@@ -11,7 +11,7 @@ export const validatenull = (value) => {
         !_.isFunction(value);
 }
 
-export const asyncValidator = (rules, form, option = {}) =>
+export const asyncValidator = (rules, form, option = { firstFields: true }) =>
     new Promise((resolve, reject) => {
         const schema = new Schema(rules);
         schema.validate(form, option, errors => {

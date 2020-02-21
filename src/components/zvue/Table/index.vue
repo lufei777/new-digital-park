@@ -207,6 +207,7 @@ import init from "../Form/common/init";
 import { validatenull, asyncValidator } from "../Form/utils/validate";
 import { deepClone, vaildData, vaildBoolean } from "../Form/utils/util";
 import { detail } from "../Form/utils/detail";
+import { DIC_SPLIT } from "../Form/global/variable";
 
 //单双击冲突timer
 let dblclickTimer = null;
@@ -635,14 +636,18 @@ export default {
         this.DIC[currentColumn.prop]
       );
     },
-    cellEditFlag(row, column) {
-      return row.$cellEdit && column.slot !== true && column.cell;
-    },
     handleDetail(row, column, DIC) {
       let result = row[column.prop];
       result = detail(row, column, this.tableOption, DIC);
       if (!this.validatenull(DIC)) {
         row["$" + column.prop] = result;
+      }
+      // 如果是级联，则对结果进行处理
+      if (column.type === "cascader") {
+        if (column.showAllLevels === false) {
+          let list = result.split(DIC_SPLIT);
+          result = list[list.length - 1];
+        }
       }
       return result;
     },
@@ -658,6 +663,9 @@ export default {
     /**
      * table触发方法
      */
+    cellEditFlag(row, column) {
+      return row.$cellEdit && column.slot !== true && column.cell;
+    },
     //行单击事件
     rowClick(row, column, e) {
       //如果是操作列则不执行
@@ -867,6 +875,26 @@ export default {
     refreshTable() {
       this._tableInit(true);
       this.doLayout();
+    },
+    //搜索指定的属性配置
+    findColumnIndex(prop) {
+      let result;
+      this.columnConfig.forEach((column, index) => {
+        if (column.prop === prop) {
+          result = index;
+        }
+      });
+      return result;
+    },
+    // 根据prop设置属性
+    setColumnByProp(prop, setOptions) {
+      let index = this.findColumnIndex(prop);
+      for (const key in setOptions) {
+        if (setOptions.hasOwnProperty(key)) {
+          const element = setOptions[key];
+          this.columnConfig[index][key] = element;
+        }
+      }
     }
   },
   computed: {
@@ -891,7 +919,7 @@ export default {
           this.options.btnConfig = this.config.defaultBtnConfig;
         } else if (typeof operation === "object") {
           // 设置默认值
-          setDefaultValue(this.config.defaultBtnConfig, operation);
+          setDefaultValue(this.config.defaultBtnConfig, operation, this);
           this.options.btnConfig = operation;
         }
       }
@@ -900,7 +928,7 @@ export default {
     uiConfig() {
       let uiConfig = this.options.uiConfig || {};
       // 设置默认值
-      setDefaultValue(this.config.defaultUiConfig, uiConfig);
+      setDefaultValue(this.config.defaultUiConfig, uiConfig, this);
       // 初始化currentPage和pageSize
       this.currentPage = uiConfig.pagination.currentPage;
       this.pageSize = uiConfig.pagination.pageSize;

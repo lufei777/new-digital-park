@@ -10,13 +10,13 @@ export const _objKeysForeach = (obj, cb) => {
         cb(key, obj[key], index);
     });
 };
-export const setDefaultValue = (defaultOptions, options) => {
+export const setDefaultValue = (defaultOptions, options, vm) => {
     _objKeysForeach(defaultOptions, (key, value, index) => {
         if (!options.hasOwnProperty(key)) {
-            options[key] = _.cloneDeep(value);
+            vm.$set(options, key, _.cloneDeep(value));
         } else {
             if (typeof value === "object" && typeof options[key] === "object") {
-                setDefaultValue(value, options[key]);
+                setDefaultValue(value, options[key], vm);
             }
         }
     });

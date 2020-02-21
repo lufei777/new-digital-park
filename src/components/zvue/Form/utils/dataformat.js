@@ -56,7 +56,7 @@ export const getPlaceholder = function (column, type, isDisabled) {
             return label;
         }
     } else  */
-    // 如果是禁用状态则不显示占位
+    // 如果禁用状态，则取消占位显示
     if (isDisabled === true) {
         return '';
     }
@@ -67,6 +67,7 @@ export const getPlaceholder = function (column, type, isDisabled) {
             return `请输入 ${label}`;
         }
     }
+
     return placeholder;
 }
 

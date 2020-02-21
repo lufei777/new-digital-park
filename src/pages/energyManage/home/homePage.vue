@@ -379,7 +379,14 @@ export default {
       let data = {
         legendData,
         seriesData,
-        titleText
+        titleText,
+        legendUi:{
+            top:'10',
+            right:'30',
+          },
+          seriesUi:{
+            center:['35%','50%']
+          }
       };
       window.onresize = myPieChart.resize;
       ChartUtils.hollowPieChart(myPieChart, data);
@@ -415,6 +422,13 @@ export default {
         legendData,
         seriesData,
         titleText,
+         legendUi:{
+            top:'10',
+            right:'30',
+          },
+          seriesUi:{
+            center:['35%','50%']
+          }
       };
       window.onresize = myPieChart.resize;
       ChartUtils.hollowPieChart(myPieChart, data);

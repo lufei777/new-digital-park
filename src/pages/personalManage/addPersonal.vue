@@ -137,14 +137,12 @@ export default {
                   value: "id",
                   children: "childNode",
                   lazy: true,
-                  lazyLoad: async function(node, resolve) {
+                  lazyLoad: function(node, resolve) {
                     const { level, data } = node;
-                    let nodes = [];
                     if (level == 0) {
                       SystemManageApi.getDepartmentTree().then(res => {
                         resolve(res[0].childNode);
                       });
-                      // resolve(nodes);
                     } else if (level === 2) {
                       SystemManageApi.listBy({
                         deptId: node.data.id
@@ -153,11 +151,12 @@ export default {
                           item.name = item.fullName;
                           item.leaf = true;
                         });
-
+                        // console.log(res);
                         resolve(res);
                       });
+                    } else {
+                      resolve([]);
                     }
-                    resolve([]);
                   }
                 },
                 rules: {
@@ -568,6 +567,7 @@ export default {
   },
   methods: {
     nextStep({ model = {}, hide = () => {}, step = ++this.step }) {
+      this.resetForm(); // 重置form
       hide(); // 隐藏提交状态
 
       this.infoArr[step] = _.cloneDeep(model); // 保存当前model
@@ -593,13 +593,14 @@ export default {
         this.options.group[index].display = true;
         // this.model = this.infoArr[index] || {};
       });
-      // 更新apiName
+      // 更新apiName 和 step
       this.apiName = this.tabPanelOptions[index].name;
+      this.step = Number(index);
     },
     submit(model, hide) {
-      if (this.pageConfig.flag === "edit") {
+      if (this.pageConfig.flag === "edit" && this.model.id.length > 0) {
         // 更新信息
-        this.updateInfo(model);
+        this.updateInfo(model, hide);
       } else {
         this.insertInfo(model, hide);
       }
@@ -608,22 +609,27 @@ export default {
       // 添加信息
       PersonalManageApi[`insertUser${this.apiName}Message`](
         Object.assign(model, this.getIdField)
-      ).then(res => {
-        this.messageId = res.id;
-        this.nextStep({ hide });
-      });
+      )
+        .then(res => {
+          this.messageId = res.id;
+          this.nextStep({ hide });
+        })
+        .catch(err => {
+          hide();
+          console.error(err);
+        });
     },
-    updateInfo(model) {
+    updateInfo(model, hide) {
       model.messageId = this.messageId;
       model.userId = this.userId;
 
       // 更新信息
       PersonalManageApi[`updateUser${this.apiName}Message`](model)
         .then(res => {
-          console.log(res);
           this.backList();
         })
         .catch(err => {
+          hide();
           console.error(err);
         });
     },
@@ -635,11 +641,8 @@ export default {
         cb(res);
       });
     },
-    resetForm(cb) {
+    resetForm() {
       this.$refs[this.options.ref].resetForm();
-      this.$nextTick(() => {
-        cb && cb();
-      });
     },
     backList() {
       this.$router.push({
@@ -651,11 +654,8 @@ export default {
       this.apiName = name;
 
       this.getInfo(res => {
-        this.resetForm(() => {
-          this.model = res;
-        }); // 重置form
+        this.model = res;
       });
-
       this.nextStep({ step: tab.index });
     },
     editCurrent() {
