@@ -101,7 +101,7 @@ export default {
         customTopPosition: "right",
         serverMode: {
           url: personalManageApi.getUserMessageList,
-          data: tableSendData
+          data: _.cloneDeep(tableSendData)
         },
         propsHttp: {
           listKey: "list",
