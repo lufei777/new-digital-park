@@ -82,20 +82,6 @@
             label:'库存数量',
             prop:'actualQuantity'
           },
-          //   {
-          //   label:'领用部门',
-          //   prop:'deptId',
-          //   cell:true,
-          //   type: "cascader",
-          //   showAllLevels: false,
-          //   props: {
-          //     label: "name",
-          //     value: "id",
-          //     children: "childNode",
-          //   },
-          //   dicData:_this.deptTree,
-          //   // change:_this.userChange
-          // },
             {
             label:'领用人',
             prop:'collarId',
@@ -105,9 +91,9 @@
             props: {
               label: "name",
               value: "id",
+              children: "childNode",
             },
             dicData:[],
-            // change:_this.userChange
           },{
             label:'领用数量',
             prop:'collarNum',
@@ -150,7 +136,7 @@
              applyTime:moment(new Date()).format('YYYY-MM-DD'),
              applyUser:userInfo.fullName,
              name:'',
-             collarId:userInfo.id,
+             collarId:'',
              specification:'',
              actualQuantity:'',
              collarNum:'',
@@ -181,9 +167,13 @@
         this.showSearchModal=true
       },
       async rowUpdate(data,index,callback){
-        let tmp =data
-        tmp.flag=false
-        await this.editAssetUseDetail(tmp)
+        console.log("baocun",data)
+        data.collarId = data.collarId[data.collarId.length-1]
+        data.isEdit=0
+        // let tmp =data
+        // tmp.isEdit=0
+        // tmp.collarId = data[data.collarId.length-1]
+        await this.editAssetUseDetail(data)
         callback()
       },
       onGetAssetDetail(val) {
@@ -217,9 +207,9 @@
 
         let list = this.insertNode(this.deptTree)
         console.log("list",list)
-        // this.$refs['tableRef'].setColumnByProp("deptId", {
-        //   dicData:list
-        // });
+        this.$refs['tableRef'].setColumnByProp("collarId", {
+          dicData:list
+        });
       },
       async getUserList(id) {
         let deptId = id;
@@ -233,25 +223,16 @@
         this.userList=res
         return res;
       },
-      userChange(data){
-        let userId = data.value[data.value.length-1]
-        let user = this.userList.find((item)=>item.id==userId)
-        this.tableConfig.data[this.curRowIndex].collarId=userId
-        this.tableConfig.data[this.curRowIndex].collarName=user.fullName
-        console.log("change",this.tableConfig.data)
-      },
-       insertNode(arr){
-        // console.log("tree2",this.deptTree)
-        // console.log("arr1",arr)
-          arr.map(async(item)=> {
-            if (item.childNode.length) {
-              this.insertNode(item.childNode)
-            } else {
-              let res = await this.getUserList(item.id)
-              item.childNode=res
-            }
-          })
-          return arr;
+      insertNode(arr){
+        arr.map(async(item)=> {
+          if (item.childNode.length) {
+            this.insertNode(item.childNode)
+          } else {
+            let res = await this.getUserList(item.id)
+            item.childNode=res
+          }
+        })
+        return arr;
       },
       async getAssetUseList(){
         let res = await AssetManageApi.getAssetUseList({
@@ -261,7 +242,7 @@
         if(res.list){
           res.list.map((item)=>{
             item.flag=false
-            item.$cellEdit=item.isEdit || true
+            item.$cellEdit=item.isEdit
           })
         }
         this.tableConfig.data=res.list
