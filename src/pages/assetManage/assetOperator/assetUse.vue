@@ -13,11 +13,11 @@
       >
         <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
           <!--<el-button type="text" @click="editRow($index)">编辑</el-button>-->
-          <el-button type="text" @click="deleteRow($index)">删除</el-button>
+          <el-button type="text" @click="deleteRow(row)">删除</el-button>
         </template>
       </zTable>
       <div class="submit-btn">
-        <el-button type="primary">提交</el-button>
+        <el-button type="primary" @click="onClickSubmitBtn">提交</el-button>
       </div>
     </div>
     <!--<AddAssetUse v-if="showAdd" :curDetail="curDetail" :goBack="goBack"/>-->
@@ -31,6 +31,7 @@
   import AddAssetUse from '../coms/addAssetUse'
   import SystemManageApi from '@/service/api/systemManage'
   import moment from 'moment'
+  import CommonFun from '@/utils/commonFun'
   export default {
     name: 'AssetUse',
     components: {
@@ -43,14 +44,14 @@
         if(value.trim()==""){
           return callback({message:"请输入领用数量"});
         }else if(value==0){
-          callback({message:"最小领用数量为1"});
+          return  callback({message:"最小领用数量为1"});
         }else if((!Number(value) || value<0)){
-          callback({message:"请输入正数"});
+         return  callback({message:"请输入正数"});
         }else if(value>_this.curDetail.actualQuantity){
           console.log(value,_this.curDetail.actualQuantity)
-          callback({message:"领用数量应小于等于入库数量"});
+          return callback({message:"领用数量应小于等于入库数量"});
         }else{
-          callback();
+          return callback();
         }
       };
       return {
@@ -63,7 +64,7 @@
           },
           columnConfig:[{
             label:'申请日期',
-            prop:'date',
+            prop:'applyTime',
           },{
             label:'申请人',
             prop:'applyUser'
@@ -81,20 +82,6 @@
             label:'库存数量',
             prop:'actualQuantity'
           },
-          //   {
-          //   label:'领用部门',
-          //   prop:'deptId',
-          //   cell:true,
-          //   type: "cascader",
-          //   showAllLevels: false,
-          //   props: {
-          //     label: "name",
-          //     value: "id",
-          //     children: "childNode",
-          //   },
-          //   dicData:_this.deptTree,
-          //   // change:_this.userChange
-          // },
             {
             label:'领用人',
             prop:'collarId',
@@ -104,18 +91,18 @@
             props: {
               label: "name",
               value: "id",
+              children: "childNode",
             },
             dicData:[],
-            // change:_this.userChange
           },{
             label:'领用数量',
             prop:'collarNum',
             cell:true,
             type:'input',
-            rules: {
-              required: true,
-              validator: checkQuantity,
-            },
+            // rules: {
+            //   required: true,
+            //   validator: checkQuantity,
+            // },
           },{
             label:'备注',
             prop:'description',
@@ -136,7 +123,9 @@
         isEdit:false,
         showSearchModal:false,
         pageSize:10,
-        deptTree:[]
+        deptTree:[],
+        curPage:1,
+        deleteId:''
       }
     },
     methods: {
@@ -144,7 +133,7 @@
         let userInfo = JSON.parse(localStorage.getItem('userInfo'))
         let obj={
              id:_.uniqueId(),
-             date:moment(new Date()).format('YYYY-MM-DD'),
+             applyTime:moment(new Date()).format('YYYY-MM-DD'),
              applyUser:userInfo.fullName,
              name:'',
              collarId:'',
@@ -153,54 +142,41 @@
              collarNum:'',
              description:'',
              flag:false,
-             collarName:'',
-             deptId:'',
              assetId:''
           }
         // this.$refs['tableRef'].rowCellAdd(obj)
-        await AssetManageApi.addAssetUseDetail(obj)
         // this.tableConfig.data.push(obj)
+        await this.addAssetUseDetail(obj)
         this.isEdit=false
       },
       goBack(){
         this.showAdd=false
       },
-      addAssetUseDetail(obj){
-        console.log("obj",obj)
-        this.showAdd=false
-        if(this.isEdit){
-          this.tableConfig.data[this.curRowIndex] =obj
-        }else{
-          this.tableConfig.data.push(obj)
-        }
-      },
-      deleteRow(index) {
-        this.tableConfig.data.splice(index, 1);
+      deleteRow(row) {
+        // this.tableConfig.data.splice(index, 1);
+        // CommonFun.deleteTip(this,true,"确定要删除吗")
+        this.deleteId= row.id
+        this.deleteAssetUseDetail()
       },
       onClickMultiDelBtn() {
         let delArr = this.$refs["tableRef"].getSelectedData();
-        let tmp = [];
-        this.tableConfig.data.map(item => {
-          if (delArr.indexOf(item) == -1) {
-            tmp.push(item);
-          }
-        });
-        this.tableConfig.data = tmp;
+        this.deleteId=delArr.map((item)=>item.id).join(",")
+        this.deleteAssetUseDetail()
       },
       chooseAsset(){
-        // this.showAdd=true
         this.showSearchModal=true
       },
-      rowUpdate(data,index,callback){
-        // console.log(val1,val2,val3)
-        let tmp =data
-        tmp.flag=false
-        this.tableConfig.data.splice(index,1,tmp)
+      async rowUpdate(data,index,callback){
+        console.log("baocun",data)
+        data.collarId = data.collarId[data.collarId.length-1]
+        data.isEdit=0
+        // let tmp =data
+        // tmp.isEdit=0
+        // tmp.collarId = data[data.collarId.length-1]
+        await this.editAssetUseDetail(data)
         callback()
-        console.log(tmp,this.tableConfig.data)
       },
       onGetAssetDetail(val) {
-        // console.log("curRow",this.curDetail)
         let tmp={
           id:this.curDetail.id,
           assetId:val.id || val.assetId,
@@ -208,31 +184,32 @@
           collarNum:this.curDetail.collarNum
         }
         let obj={...this.curDetail,...val,...tmp}
-        console.log(obj)
+        console.log("getDetail",this.curDetail,obj)
         this.tableConfig.data.splice(this.curRowIndex,1,obj)
         this.curDetail=obj
         this.showSearchModal = false
       },
       rowEdit(obj,index){
-        console.log("edit",obj,index)
+        console.log("edit",obj)
         this.curRowIndex=index
         this.curDetail=obj
       },
-      rowEditCancel(obj,index){
-        console.log(111,obj,index)
+      async rowEditCancel(obj,index){
+        // console.log(111,obj,index)
+        console.log("cancel",obj)
         if(obj.flag){
-          this.tableConfig.data.splice(this.curRowIndex,1,{...this.curDetail,...{$cellEdit:false}})
+          this.tableConfig.data.splice(index,1,{...this.curDetail,...{$cellEdit:false}})
         }
       },
       async getDepartmentTree() {
         let res = await SystemManageApi.getDepartmentTree();
         this.deptTree=res[0].childNode
-        // this.$refs['tableRef'].setColumnByProp("deptId", {
-        //   dicData:this.deptTree
-        // });
-        // console.log("this.depeTREE",this.deptTree)
-         let list = this.insertNode(this.deptTree)
-        // return this.deptTree
+
+        let list = this.insertNode(this.deptTree)
+        console.log("list",list)
+        this.$refs['tableRef'].setColumnByProp("collarId", {
+          dicData:list
+        });
       },
       async getUserList(id) {
         let deptId = id;
@@ -246,32 +223,67 @@
         this.userList=res
         return res;
       },
-      userChange(data){
-        let userId = data.value[data.value.length-1]
-        let user = this.userList.find((item)=>item.id==userId)
-        this.tableConfig.data[this.curRowIndex].collarId=userId
-        this.tableConfig.data[this.curRowIndex].collarName=user.fullName
-        console.log("change",this.tableConfig.data)
+      insertNode(arr){
+        arr.map(async(item)=> {
+          if (item.childNode.length) {
+            this.insertNode(item.childNode)
+          } else {
+            let res = await this.getUserList(item.id)
+            item.childNode=res
+          }
+        })
+        return arr;
       },
-       insertNode(arr){
-        // console.log("tree2",this.deptTree)
-        // console.log("arr1",arr)
-          arr.map(async(item)=> {
-            if (item.childNode.length) {
-              this.insertNode(item.childNode)
-            } else {
-              let res = await this.getUserList(item.id)
-              item.childNode=res
-            }
+      async getAssetUseList(){
+        let res = await AssetManageApi.getAssetUseList({
+           pageNum:this.curPage,
+           pageSize:10,
+        })
+        if(res.list){
+          res.list.map((item)=>{
+            item.flag=false
+            item.$cellEdit=item.isEdit
           })
-          return arr;
+        }
+        this.tableConfig.data=res.list
+        this.tableConfig.uiConfig.pagination.total=res.total
+      },
+      async addAssetUseDetail(obj){
+        await AssetManageApi.addAssetUseDetail(obj)
+        await this.getAssetUseList()
+      },
+      async deleteAssetUseDetail(){
+        await AssetManageApi.deleteAssetUseDetail({
+          ids:this.deleteId
+        })
+        this.getAssetUseList()
+      },
+      async editAssetUseDetail(obj){
+        await AssetManageApi.editAssetUseDetail(obj)
+        this.getAssetUseList()
+      },
+      async onClickSubmitBtn(){
+        let list = this.tableConfig.data
+        let arr= list.filter((item)=>{
+          return !item.assetId || !item.collarId || !item.collarNum || !item.$cellEdit
+        })
+        if(arr.length){
+          this.$message({
+            type:'warning',
+            message:'请将信息补充完整'
+          })
+          return ;
+        }
+        await AssetManageApi.addAssetUseApply()
+        this.getAssetUseList()
       }
     },
     created(){
 
     },
-    mounted(){
-      this.getDepartmentTree()
+    async mounted(){
+      await this.getDepartmentTree()
+      this.getAssetUseList()
     }
   }
 </script>
