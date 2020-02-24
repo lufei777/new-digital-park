@@ -90,8 +90,20 @@
             <slot :name="`${col.prop}Header`" :column="col"></slot>
           </template>
           <template slot-scope="scopeRow">
+            <slot
+              v-if="col.slot"
+              :name="col.prop"
+              :label="handleShowLabel(scopeRow.row,col,DIC[col.prop])"
+              :scopeRow="scopeRow"
+              :row="scopeRow.row"
+              :size="isMediumSize"
+              :column="col"
+              :disabled="col.disabled"
+              :isEdit="cellEditFlag(scopeRow.row,col)"
+              :dic="DIC[col.prop]"
+            ></slot>
             <form-temp
-              v-if="cellEditFlag(scopeRow.row,col)"
+              v-else-if="cellEditFlag(scopeRow.row,col)"
               v-model="scopeRow.row[col.prop]"
               :column="col"
               :size="isMediumSize"
@@ -101,15 +113,6 @@
               :disabled="col.disabled"
               @click.native.stop
             ></form-temp>
-            <slot
-              v-else-if="col.slot"
-              :name="col.prop"
-              :label="handleShowLabel(scopeRow.row,col,DIC[col.prop])"
-              :scopeRow="scopeRow"
-              :row="scopeRow.row"
-              :size="isMediumSize"
-              :dic="DIC[col.prop]"
-            ></slot>
             <template v-else>
               <span v-html="_columnFormatter(scopeRow,col)"></span>
             </template>
@@ -664,13 +667,13 @@ export default {
      * table触发方法
      */
     cellEditFlag(row, column) {
-      return row.$cellEdit && column.slot !== true && column.cell;
+      return row.$cellEdit && column.cell;
     },
     //行单击事件
     rowClick(row, column, e) {
       //如果是操作列则不执行
       if (
-        !this.tableMethods.rowClick ||
+        (!this.$listeners["row-click"] && !this.tableMethods.rowClick) ||
         preventClick.includes(column.property) ||
         preventClick.includes(column.type)
       )
@@ -681,7 +684,8 @@ export default {
       clearTimeout(dblclickTimer);
       dblclickTimer = setTimeout(
         () => {
-          this.tableMethods.rowClick(row, column, e);
+          this.tableMethods.rowClick &&
+            this.tableMethods.rowClick(row, column, e);
           this.$emit("row-click", row, column, e);
         },
         this.clickConflict ? 200 : 0
@@ -691,7 +695,7 @@ export default {
     rowDblclick(row, column, e) {
       //如果是操作列则不执行
       if (
-        !this.tableMethods.rowDblclick ||
+        (!this.$listeners["row-dblclick"] && !this.tableMethods.rowDblclick) ||
         preventClick.includes(column.property) ||
         preventClick.includes(column.type)
       )
@@ -701,7 +705,8 @@ export default {
 
       clearTimeout(dblclickTimer);
 
-      this.tableMethods.rowDblclick(row, column, e);
+      this.tableMethods.rowDblclick &&
+        this.tableMethods.rowDblclick(row, column, e);
       this.$emit("row-dblclick", row, column, e);
     },
     //单选选择当前行
