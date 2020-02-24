@@ -3,7 +3,8 @@ const state = {
   menuIsCollapse:false,
   updateUserInfo:false,
   stockInApplyTab:'0',
-  stockInReApplyId:''
+  stockInReApplyId:'',
+  todoTab:'0',
 }
 
 const mutations={
@@ -21,6 +22,9 @@ const mutations={
   },
   stockInReApplyId(state,data){
     state.stockInReApplyId = data
+  },
+  todoTab(state,data){
+    state.todoTab = data
   }
 }
 

@@ -72,12 +72,11 @@ export const AssetDic = {
     value: 0
   }],
 
-  // recordStatus: {
-  //   0: '待验',
-  //   1: '已入库',
-  //   2: '已作废',
-  //   3: '已收回',
-  // }
+  applyType: {
+    1: '资产领用',
+    2: '已作废',
+    3: '已收回',
+  }
 }
 
 export const PersonalManageDic = {

@@ -15,7 +15,7 @@
       </div>
       <div class="item-group">
         <label for="">申请类型：</label>
-        <el-select v-model="typeId" placeholder="请选择">
+        <el-select v-model="applyType" placeholder="请选择">
           <el-option
             v-for="item in typeList"
             :key="item.value"
@@ -31,10 +31,10 @@
       </div>
     </div>
     <zTable :ref="tableConfig.ref" :options="tableConfig">
-      <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
-        <el-button type="text" @click="onClickCheckBtn(row)" v-if="fromFlag==1">审核</el-button>
-        <el-button type="text" @click="onClickReApplyBtn(row)" v-if="fromFlag==1">重新申请</el-button>
-        <el-button type="text" @click="onClickDetailBtn($index)" v-if="fromFlag==2">详情</el-button>
+      <template slot="operation" slot-scope="{scopeRow:{$index,row,obj}}">
+        <el-button type="text" @click="onClickCheckBtn(row)" v-if="row.status==0 && fromFlag==1">审核</el-button>
+        <el-button type="text" @click="onClickReApplyBtn(row)" v-if="row.status==2">重新申请</el-button>
+        <el-button type="text" @click="onClickDetailBtn(row)" v-if="fromFlag==2">详情</el-button>
       </template>
     </zTable>
   </div>
@@ -42,36 +42,40 @@
 
 <script>
   import AssetManageApi from '@/service/api/assetManage'
+  import { AssetDic } from "@/utils/dictionary"
   export default {
     name: 'TodoList',
     components: {
     },
-    props:['fromFlag'],
+    props:['fromFlag'], //fromFlag 1:待办 2：已办
     data () {
       let columnConfig = [{
         label:'申请日期',
-        prop:'date'
+        prop:'applyTime'
       },{
         label:'申请人',
         prop:'applyUser'
       },{
         label:'申请类型',
-        prop:'name'
+        prop:'applyType',
+        formatter:function(row,column){
+          return AssetDic.applyType[row.applyType]
+        }
       }]
       if(this.fromFlag==2) {
         columnConfig = [...columnConfig, ...
           [{
             label: '当前节点',
-            prop: 'user'
+            prop: 'receiveUser'
           }]]
       }
       return {
         date:['',''],
-        typeList:[{name:'资产领用',value:0},{name:'资产借用',value:1}],
-        typeId:0,
+        typeList:[{name:'资产领用',value:1},{name:'资产借用',value:2}],
+        applyType:'',
         tableConfig:{
           ref:'tableRef',
-          data:[{date:'2020-2-17',applyUser:'关艳爽',name:'资产领用','user':'刘振刚'}],
+          data:[],
           columnConfig:columnConfig,
           customTop: true,
           operation: {
@@ -86,29 +90,34 @@
     },
     methods: {
       async getTodoList(){
-        // let res = await StockManageApi.getTodoList({
-        //   buyStartTime:this.date[0],
-        //   buyEndTime:this.date[1],
-        //   pageNum:this.curPage,
-        //   pageSize:10,
-        // })
-        // this.tableConfig.data=res.list || []
+        let res = await AssetManageApi.getAssetTodoList({
+           dealType:this.fromFlag==1?0:1,
+           applyType:this.applyType,
+           applyStartTime:this.date[0],
+           applyEndTime:this.date[1],
+
+        })
+        this.tableConfig.data=res.list
       },
       onClickResetBtn(){
         this.date=['','']
-        this.curPage=1
+        this.curPage=1,
+        this.applyType=''
         this.getStockCheckList()
       },
       onClickCheckBtn(row){
-        this.$router.push(`/checkDetail?id=${row.id}`)
+        this.$router.push(`/checkDetail?detail=${JSON.stringify(row)}&fromFlag=${this.fromFlag}`);
       },
       onClickReApplyBtn(row){
         this.$router.push(`/assetUse?id=${row.id}`)
         // Cookies.set('activeMenuIndex','')
       },
-      onClickDetailBtn(){}
+      onClickDetailBtn(row){
+        this.$router.push(`/checkDetail?detail=${JSON.stringify(row)}&fromFlag=${this.fromFlag}`);
+      }
     },
     mounted(){
+      this.getTodoList()
     }
   }
 </script>

@@ -16,18 +16,30 @@
         :type="item.type"
         :color="item.color"
         :size="item.size"
-        :timestamp="item.timestamp">
-        {{item.content}}
+        :timestamp="item.approvalTime"
+        placement="top">
+        <el-card>
+          <span>{{item.approvalUser}}</span>
+         <span>{{item.pointName}}</span>
+        </el-card>
       </el-timeline-item>
     </el-timeline>
-    <div class="flex-align-between checker-info">
-       <span>审批人：{{userName}}</span>
-       <span>审批时间：{{checkDate}}</span>
+    <div v-if="fromFlag==1">
+      <div class="flex-align-between checker-info">
+        <span>审批人：{{userName}}</span>
+        <span>审批时间：{{checkDate}}</span>
+      </div>
+      <div class="flex check-mark">
+        <label>审批意见：</label>
+        <el-input type="textarea" :rows="4"/>
+      </div>
     </div>
-    <div class="flex check-mark">
-      <label>审批意见：</label>
-      <el-input type="textarea" :rows="4"/>
+    <div class="flex-align-center operator-box">
+      <el-button  @click="onClickBackBtn" v-if="fromFlag==1">通过</el-button>
+      <el-button  @click="onClickBackBtn" v-if="fromFlag==1">不通过</el-button>
+      <el-button  @click="onClickBackBtn">关闭</el-button>
     </div>
+
   </div>
 </template>
 
@@ -38,11 +50,10 @@
     name: 'CheckDetail',
     components: {
     },
-    props:['fromFlag'],
     data () {
       let columnConfig = [{
         label:'申请日期',
-        prop:'date'
+        prop:'applyTime'
       },{
         label:'申请人',
         prop:'applyUser'
@@ -51,16 +62,16 @@
         prop:'name'
       },{
         label:'领用人',
-        prop:'userName'
+        prop:'collarUser'
       },{
         label:'规格型号',
         prop:'specification'
       },{
         label:'库存数量',
-        prop:'quantity'
+        prop:'actualQuantity'
       },{
         label:'领用数量',
-        prop:'num2'
+        prop:'collarNum'
       },{
         label:'备注',
         prop:'description'
@@ -69,7 +80,7 @@
       return {
         tableConfig:{
           ref:'tableRef',
-          data:[{date:'2020-2-17',applyUser:'关艳爽',name:'资产领用','user':'刘振刚'}],
+          data:[],
           columnConfig:columnConfig,
           customTop: true,
           uiConfig:{
@@ -82,33 +93,38 @@
         checkDate:moment(new Date()).format('YYYY-MM-DD')
       }
     },
+    computed:{
+      fromFlag(){
+        return this.$route.query.fromFlag
+      },
+      detail(){
+        return  JSON.parse(this.$route.query.detail)
+      }
+    },
     methods: {
-      async getTodoList(){
-        // let res = await StockManageApi.getTodoList({
-        //   buyStartTime:this.date[0],
-        //   buyEndTime:this.date[1],
-        //   pageNum:this.curPage,
-        //   pageSize:10,
-        // })
-        // this.tableConfig.data=res.list || []
-      },
-      onClickResetBtn(){
-        this.date=['','']
-        this.curPage=1
-        this.getStockCheckList()
-      },
       onClickCheckBtn(){},
       onClickReApplyBtn(){},
       onClickDetailBtn(){},
       getCheckList(){
-          this.checkList.map((item)=>{
-            item.type = "primary";
-            item.color = "#0bbd87";
-            item.size = "large";
-          })
+        this.checkList = this.detail.stockApprovalList
+        this.checkList.map((item)=>{
+          item.type = "primary";
+          item.color = "#0bbd87";
+          item.size = "large";
+        })
+      },
+      onClickBackBtn(){
+        if(this.fromFlag==1){
+
+        }else{
+          this.$store.commit('digitalPark/todoTab','1')
+        }
+        history.go(-1)
       }
     },
     mounted(){
+      this.tableConfig.data = this.detail.stockDealDetailsList
+      this.getCheckList()
     }
   }
 </script>
@@ -129,6 +145,12 @@
     }
     .checker-info{
       margin: 40px 0 20px 0;
+    }
+    .operator-box{
+      margin:40px;
+      .el-button{
+        margin:0 20px;
+      }
     }
   }
 </style>

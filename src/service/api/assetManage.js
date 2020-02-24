@@ -116,6 +116,10 @@ class CommonApi {
   @url("/oaApi/stockDeal/collarUse")
   @get
   addAssetUseApply(){}
+
+  @url("/oaApi/stockDeal/dealList")
+  @get
+  getAssetTodoList(){}
 }
 
 export default new CommonApi()

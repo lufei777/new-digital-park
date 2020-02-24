@@ -41,18 +41,17 @@
     data () {
       let _this = this
       let checkQuantity = (rule, value, callback) => {
+        console.log("value",_this.curDetail.actualQuantity,value)
         if(value.trim()==""){
           return callback({message:"请输入领用数量"});
         }else if(value==0){
           return  callback({message:"最小领用数量为1"});
         }else if((!Number(value) || value<0)){
          return  callback({message:"请输入正数"});
-        }else if(value>_this.curDetail.actualQuantity){
-          console.log(value,_this.curDetail.actualQuantity)
+        }else if(_this.curDetail.actualQuantity && value>_this.curDetail.actualQuantity){
           return callback({message:"领用数量应小于等于入库数量"});
-        }else{
-          return callback();
         }
+        return callback();
       };
       return {
         tableConfig:{
@@ -168,8 +167,10 @@
       },
       async rowUpdate(data,index,callback){
         console.log("baocun",data)
-        data.collarId = data.collarId[data.collarId.length-1]
-        data.isEdit=0
+        if(data.collarId && data.collarId instanceof Array){
+          data.collarId = data.collarId[data.collarId.length-1]
+        }
+        data.isEdit=1
         // let tmp =data
         // tmp.isEdit=0
         // tmp.collarId = data[data.collarId.length-1]
@@ -180,7 +181,7 @@
         let tmp={
           id:this.curDetail.id,
           assetId:val.id || val.assetId,
-          flag:true,
+          $cellEdit:true,
           collarNum:this.curDetail.collarNum
         }
         let obj={...this.curDetail,...val,...tmp}
@@ -189,16 +190,15 @@
         this.curDetail=obj
         this.showSearchModal = false
       },
-      rowEdit(obj,index){
-        console.log("edit",obj)
+      async rowEdit(obj,index){
         this.curRowIndex=index
         this.curDetail=obj
+        // await this.editAssetUseDetail({...obj,...{isEdit:0}})
       },
       async rowEditCancel(obj,index){
-        // console.log(111,obj,index)
         console.log("cancel",obj)
         if(obj.flag){
-          this.tableConfig.data.splice(index,1,{...this.curDetail,...{$cellEdit:false}})
+          this.tableConfig.data.splice(index,1,{...obj.preDetail,...{$cellEdit:false}})
         }
       },
       async getDepartmentTree() {
@@ -206,7 +206,6 @@
         this.deptTree=res[0].childNode
 
         let list = this.insertNode(this.deptTree)
-        console.log("list",list)
         this.$refs['tableRef'].setColumnByProp("collarId", {
           dicData:list
         });
@@ -241,9 +240,11 @@
         })
         if(res.list){
           res.list.map((item)=>{
-            item.flag=false
-            item.$cellEdit=item.isEdit
+            // item.$cellEdit=item.isEdit?true:false
+            // item.preDetail = item
           })
+        }else{
+          res.list=[]
         }
         this.tableConfig.data=res.list
         this.tableConfig.uiConfig.pagination.total=res.total
@@ -265,8 +266,9 @@
       async onClickSubmitBtn(){
         let list = this.tableConfig.data
         let arr= list.filter((item)=>{
-          return !item.assetId || !item.collarId || !item.collarNum || !item.$cellEdit
+          return !item.name || !item.collarId || !item.collarNum
         })
+        console.log(list)
         if(arr.length){
           this.$message({
             type:'warning',

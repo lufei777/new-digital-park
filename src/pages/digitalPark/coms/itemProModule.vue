@@ -116,6 +116,9 @@
       onClickItemComponent(item){
          if(this.hideHeader) return ;  //配置页点击不进行操作
          console.log(item)
+        if(CommonFun.loadThreeD(item,this.clientMenu)){
+          return;
+        }
       },
       onClickMoreBtn(){
         Cookies.set('moduleType',2)
