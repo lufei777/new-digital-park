@@ -20,7 +20,8 @@
         placement="top">
         <el-card>
           <span>{{item.approvalUser}}</span>
-         <span>{{item.pointName}}</span>
+          <span>{{item.pointName}}</span>
+          <div class="opinion">{{item.opinion}}</div>
         </el-card>
       </el-timeline-item>
     </el-timeline>
@@ -31,12 +32,12 @@
       </div>
       <div class="flex check-mark">
         <label>审批意见：</label>
-        <el-input type="textarea" :rows="4"/>
+        <el-input v-model="opinion" type="textarea" :rows="4"/>
       </div>
     </div>
     <div class="flex-align-center operator-box">
-      <el-button  @click="onClickBackBtn" v-if="fromFlag==1">通过</el-button>
-      <el-button  @click="onClickBackBtn" v-if="fromFlag==1">不通过</el-button>
+      <el-button  @click="onClickDealBtn(true)" v-if="fromFlag==1">通过</el-button>
+      <el-button  @click="onClickDealBtn(false)" v-if="fromFlag==1">不通过</el-button>
       <el-button  @click="onClickBackBtn">关闭</el-button>
     </div>
 
@@ -88,9 +89,10 @@
             showIndex:true
           }
         },
-        checkList:[{timestamp:'2020-10-10'}],
+        checkList:[],
         userName:userInfo.fullName,
-        checkDate:moment(new Date()).format('YYYY-MM-DD')
+        checkDate:moment(new Date()).format('YYYY-MM-DD'),
+        opinion:''
       }
     },
     computed:{
@@ -115,11 +117,23 @@
       },
       onClickBackBtn(){
         if(this.fromFlag==1){
-
+          this.$router.push("/todoList?fromFlag=1")
         }else{
-          this.$store.commit('digitalPark/todoTab','1')
+          this.$router.push("/todoList?fromFlag=2")
         }
-        history.go(-1)
+      },
+      async onClickDealBtn(isPass){
+        let params = {
+          isPass,
+          opinion:this.opinion,
+          stockDealId:this.detail.id
+        }
+        let res = await AssetManageApi.dealAssetApply(params)
+        this.$message({
+          type:'success',
+          message:res
+        })
+        this.$router.push('/todoList')
       }
     },
     mounted(){
@@ -151,6 +165,12 @@
       .el-button{
         margin:0 20px;
       }
+    }
+    .el-card{
+      width:80%;
+    }
+    .opinion{
+      margin:20px 0;
     }
   }
 </style>

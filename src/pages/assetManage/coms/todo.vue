@@ -92,7 +92,7 @@
       async getTodoList(){
         let res = await AssetManageApi.getAssetTodoList({
            dealType:this.fromFlag==1?0:1,
-           applyType:this.applyType,
+           applyType:1,//this.applyType,
            applyStartTime:this.date[0],
            applyEndTime:this.date[1],
 

@@ -1,6 +1,6 @@
 <template>
   <div class="todo-list panel-container panel">
-    <el-tabs type="border-card" @tab-click="onClickTab" v-model="activeTab">
+    <el-tabs type="border-card"  v-model="activeTab">
       <el-tab-pane label="待办">
         <TodoComs fromFlag="1"/>
       </el-tab-pane>
@@ -25,15 +25,8 @@
       }
     },
     computed:{
-      ...mapState({
-        todoTab:state=>state.digitalPark.todoTab
-      })
     },
     watch:{
-      todoTab(){
-        debugger
-        this.activeTab = this.todoTab
-      }
     },
     methods: {
       onClickTab(){}
