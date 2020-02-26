@@ -1768,5 +1768,16 @@ class commonFun {
     })
   }
 
+  setMenuIndex(item){
+    if(item.routeAddress){
+      if(item.routeAddress.indexOf('defaultPage')!=-1){
+        return item.id+item.routeAddress
+      }else{
+        return item.routeAddress
+      }
+    }else{
+      return item.id
+    }
+  }
 }
 export default new commonFun()

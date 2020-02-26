@@ -19,7 +19,7 @@ module.exports = {
       },
       {
         context: ['/vibe-web'],
-        target: 'http://39.98.130.147:8008'
+        target: 'http://39.98.130.147:8080'
       }
     ],
 

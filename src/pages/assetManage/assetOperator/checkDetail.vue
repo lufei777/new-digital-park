@@ -31,12 +31,12 @@
       </div>
       <div class="flex check-mark">
         <label>审批意见：</label>
-        <el-input type="textarea" :rows="4"/>
+        <el-input v-model="opinion" type="textarea" :rows="4"/>
       </div>
     </div>
     <div class="flex-align-center operator-box">
-      <el-button  @click="onClickBackBtn" v-if="fromFlag==1">通过</el-button>
-      <el-button  @click="onClickBackBtn" v-if="fromFlag==1">不通过</el-button>
+      <el-button  @click="onClickDealBtn(true)" v-if="fromFlag==1">通过</el-button>
+      <el-button  @click="onClickDealBtn(false)" v-if="fromFlag==1">不通过</el-button>
       <el-button  @click="onClickBackBtn">关闭</el-button>
     </div>
 
@@ -90,7 +90,8 @@
         },
         checkList:[{timestamp:'2020-10-10'}],
         userName:userInfo.fullName,
-        checkDate:moment(new Date()).format('YYYY-MM-DD')
+        checkDate:moment(new Date()).format('YYYY-MM-DD'),
+        opinion:''
       }
     },
     computed:{
@@ -120,6 +121,19 @@
           this.$store.commit('digitalPark/todoTab','1')
         }
         history.go(-1)
+      },
+      async onClickDealBtn(isPass){
+        let params = {
+          isPass,
+          opinion:this.opinion,
+          stockDealId:this.detail.id
+        }
+        let res = await AssetManageApi.dealAssetApply(params)
+        this.$message({
+          type:'success',
+          message:res
+        })
+        this.$router.push('/todoList')
       }
     },
     mounted(){
