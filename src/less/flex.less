@@ -1,67 +1,76 @@
 //flex布局
-.flex{
+.flex {
   display: flex;
 }
+
 // 垂直居中
-.flex-align{
+.flex-align {
   .flex;
   align-items: center;
 }
 
 // 垂直水平居中
-.flex-align-center{
+.flex-align-center {
   .flex-align;
   justify-content: center;
 }
 
 // 垂直居中 水平两端对齐
-.flex-align-between{
+.flex-align-between {
   .flex-align;
   justify-content: space-between;
 }
 
+// 垂直居中 左对齐
+.flex-align-start {
+  .flex-align;
+  justify-content: flex-start;
+}
+
 /*垂直居中 水平中间等分*/
-.flex-align-around{
+.flex-align-around {
   display: flex;
   align-items: center;
   justify-content: space-around;
 }
 
 /*两端对齐等高*/
-.flex-stretch-between{
+.flex-stretch-between {
   display: flex;
   justify-content: space-between;
   align-items: stretch;
 }
 
 // 垂直居中 换行
-.flex-align-wrap{
+.flex-align-wrap {
   .flex-align;
   flex-wrap: wrap;
 }
 
 // 列排
-.flex-column{
+.flex-column {
   display: flex;
   flex-direction: column;
 }
-.flex-row-reverse{
+
+.flex-row-reverse {
   display: flex;
   flex-direction: row-reverse;
 }
+
 //换行
-.flex-wrap{
+.flex-wrap {
   .flex;
   flex-wrap: wrap;
 }
-.flex-wrap-align-center{
+
+.flex-wrap-align-center {
   .flex-wrap;
   .flex-align-center;
 }
-.flex-colum-center{
+
+.flex-colum-center {
   .flex-column;
   justify-content: center;
   align-items: center;
 }
-
-

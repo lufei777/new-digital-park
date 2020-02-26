@@ -190,10 +190,10 @@ export default {
     //   };
     // },
     tenantIdEdit() {
-      return this.$route.params.tenantId;
+      return this.$route.query.tenantId;
     },
     tenantIdDetail() {
-      return this.$route.params.tenantId;
+      return this.$route.query.tenantId;
     }
   },
   methods: {
@@ -263,7 +263,7 @@ export default {
   created() {
     this.addTenantManageForm = {
       ...this.addTenantManageForm,
-      ...this.$route.params.extraOptions
+      ...this.$route.query.extraOptions
     };
   }
 };

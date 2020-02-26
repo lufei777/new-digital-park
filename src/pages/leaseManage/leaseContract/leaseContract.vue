@@ -234,7 +234,7 @@ export default {
     editRow(obj) {
       this.$router.push({
         name: "AddContract",
-        params: {
+        query: {
           editContractId: obj.scopeRow.row.contractId
         }
       });
@@ -242,7 +242,7 @@ export default {
     detailContract(obj) {
       this.$router.push({
         name: "AddContract",
-        params: {
+        query: {
           extraOptions: {
             disabled: true,
             submitBtn: false

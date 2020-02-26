@@ -364,13 +364,13 @@ export default {
       };
     },
     taskId() {
-      return this.$route.params;
+      return this.$route.query;
     }
   },
   created() {
     this.newTaskForm = {
       ...this.newTaskForm,
-      ...this.$route.params.extraOptions
+      ...this.$route.query.extraOptions
     };
     if (!this.taskId.id) {
       this.anotherTaskOperationShow = false;

@@ -47,7 +47,8 @@
 <style lang="less">
   .alarm-news{
     .item-alarm{
-      width: 98%;
+      width: 100%;
+      text-align: left;
       overflow: hidden;
       text-overflow:ellipsis;
       white-space: nowrap;
