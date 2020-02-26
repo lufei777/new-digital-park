@@ -133,6 +133,11 @@
         deleteId:''
       }
     },
+    computed:{
+       stockDealId(){
+         return this.$route.query.id
+       }
+    },
     methods: {
       async onClickAddBtn(){
         let userInfo = JSON.parse(localStorage.getItem('userInfo'))
@@ -236,6 +241,7 @@
         let res = await AssetManageApi.getAssetUseList({
            pageNum:this.curPage,
            pageSize:10,
+           stockDealId:this.stockDealId
         })
         if(res.list){
           res.list.map((item)=>{
@@ -275,8 +281,18 @@
           })
           return ;
         }
-        await AssetManageApi.addAssetUseApply()
-        this.getAssetUseList()
+        let res = await AssetManageApi.addAssetUseApply({
+          stockDealId:this.stockDealId
+        })
+        this.$message({
+          type:'success',
+          message:res
+        })
+        if(this.stockDealId){
+          this.$router.push('/todoList')
+        }else{
+          this.getAssetUseList()
+        }
       }
     },
     created(){

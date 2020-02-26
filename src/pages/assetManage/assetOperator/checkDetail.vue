@@ -20,7 +20,8 @@
         placement="top">
         <el-card>
           <span>{{item.approvalUser}}</span>
-         <span>{{item.pointName}}</span>
+          <span>{{item.pointName}}</span>
+          <div class="opinion">{{item.opinion}}</div>
         </el-card>
       </el-timeline-item>
     </el-timeline>
@@ -88,7 +89,7 @@
             showIndex:true
           }
         },
-        checkList:[{timestamp:'2020-10-10'}],
+        checkList:[],
         userName:userInfo.fullName,
         checkDate:moment(new Date()).format('YYYY-MM-DD'),
         opinion:''
@@ -116,11 +117,10 @@
       },
       onClickBackBtn(){
         if(this.fromFlag==1){
-
+          this.$router.push("/todoList?fromFlag=1")
         }else{
-          this.$store.commit('digitalPark/todoTab','1')
+          this.$router.push("/todoList?fromFlag=2")
         }
-        history.go(-1)
       },
       async onClickDealBtn(isPass){
         let params = {
@@ -165,6 +165,12 @@
       .el-button{
         margin:0 20px;
       }
+    }
+    .el-card{
+      width:80%;
+    }
+    .opinion{
+      margin:20px 0;
     }
   }
 </style>
