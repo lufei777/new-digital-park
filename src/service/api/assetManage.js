@@ -120,6 +120,10 @@ class CommonApi {
   @url("/oaApi/stockDeal/dealList")
   @get
   getAssetTodoList(){}
+
+  @url("/oaApi/stockDeal/dealApproval")
+  @post
+  dealAssetApply(){}
 }
 
 export default new CommonApi()

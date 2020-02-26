@@ -219,27 +219,15 @@ export default {
       return leaseManageApi.houseDetails(row);
     },
     propertyDetail({ scopeRow: { $index, row, _self } }) {
-      this.getPropertyDetail(row).then(res => {
-        this.$router.push({
-          name: "editHouseProperty",
-          params: {
-            extraOptions: {
-              disabled: true,
-              submitBtn: false
-            },
-            model: _.cloneDeep(res)
-          }
-        });
+      this.$router.push({
+        name: "editHouseProperty",
+        query: { id: row.id, flag: "detail" }
       });
     },
     propertyEdit({ scopeRow: { $index, row, _self } }) {
-      this.getPropertyDetail(row).then(res => {
-        this.$router.push({
-          name: "editHouseProperty",
-          params: {
-            model: _.cloneDeep(res)
-          }
-        });
+      this.$router.push({
+        name: "editHouseProperty",
+        query: { id: row.id, flag: "edit" }
       });
     },
     propertyDel({ scopeRow: { $index, row, _self } }) {

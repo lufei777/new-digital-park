@@ -1,6 +1,6 @@
 <template>
   <div class="asset-use panel-container panel">
-    <div v-if="!showAdd" class="asset-use-table-panel">
+    <div class="asset-use-table-panel">
       <div class="operator-btn-box flex-row-reverse">
         <el-button type="primary" @click="onClickMultiDelBtn">批量删除</el-button>
         <el-button type="primary" @click="onClickAddBtn">添加</el-button>
@@ -12,15 +12,23 @@
               @row-edit-cancel="rowEditCancel"
       >
         <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
-          <!--<el-button type="text" @click="editRow($index)">编辑</el-button>-->
-          <el-button type="text" @click="deleteRow(row)">删除</el-button>
+          <el-button type="text" @click="deleteRow(row)" >删除</el-button>
+        </template>
+        <template slot="name" slot-scope="{isEdit,row,column,size}">
+           <el-input
+             :size="size"
+             readonly
+             v-model="row[column.prop]"
+             @focus="chooseAsset(row,column,$event)"
+             v-if="isEdit"
+           ></el-input>
+           <span v-if="!isEdit">{{row.name}}</span>
         </template>
       </zTable>
       <div class="submit-btn">
         <el-button type="primary" @click="onClickSubmitBtn">提交</el-button>
       </div>
     </div>
-    <!--<AddAssetUse v-if="showAdd" :curDetail="curDetail" :goBack="goBack"/>-->
     <SearchAssetModal :showSearchModal="showSearchModal"  from-flag="2"/>
   </div>
 </template>
@@ -42,7 +50,7 @@
       let _this = this
       let checkQuantity = (rule, value, callback) => {
         console.log("value",_this.curDetail.actualQuantity,value)
-        if(value.trim()==""){
+        if((value+"").trim()==""){
           return callback({message:"请输入领用数量"});
         }else if(value==0){
           return  callback({message:"最小领用数量为1"});
@@ -71,9 +79,10 @@
             label:'领用的资产',
             prop:'name',
             cell:true,
-            clearable: false,
-            readonly:true,
-            focus:_this.chooseAsset
+            // clearable: false,
+            // readonly:true,
+            // focus:_this.chooseAsset,
+            slot:true
           },{
             label:'规格型号',
             prop:'specification'
@@ -98,10 +107,10 @@
             prop:'collarNum',
             cell:true,
             type:'input',
-            // rules: {
-            //   required: true,
-            //   validator: checkQuantity,
-            // },
+            rules: {
+              required: true,
+              validator: checkQuantity,
+            },
           },{
             label:'备注',
             prop:'description',
@@ -116,16 +125,18 @@
             selection: true,
           }
         },
-        showAdd:false,
         curDetail:{},
         curRowIndex:0,
-        isEdit:false,
         showSearchModal:false,
-        pageSize:10,
         deptTree:[],
         curPage:1,
         deleteId:''
       }
+    },
+    computed:{
+       stockDealId(){
+         return this.$route.query.id
+       }
     },
     methods: {
       async onClickAddBtn(){
@@ -140,16 +151,11 @@
              actualQuantity:'',
              collarNum:'',
              description:'',
-             flag:false,
              assetId:''
           }
         // this.$refs['tableRef'].rowCellAdd(obj)
         // this.tableConfig.data.push(obj)
         await this.addAssetUseDetail(obj)
-        this.isEdit=false
-      },
-      goBack(){
-        this.showAdd=false
       },
       deleteRow(row) {
         // this.tableConfig.data.splice(index, 1);
@@ -162,7 +168,10 @@
         this.deleteId=delArr.map((item)=>item.id).join(",")
         this.deleteAssetUseDetail()
       },
-      chooseAsset(){
+      chooseAsset(row,column,event){
+        console.log("111",row)
+        this.curDetail = this.tableConfig.data[row.$index]
+        this.curRowIndex=row.$index
         this.showSearchModal=true
       },
       async rowUpdate(data,index,callback){
@@ -170,10 +179,7 @@
         if(data.collarId && data.collarId instanceof Array){
           data.collarId = data.collarId[data.collarId.length-1]
         }
-        data.isEdit=1
-        // let tmp =data
-        // tmp.isEdit=0
-        // tmp.collarId = data[data.collarId.length-1]
+        data.isEdit=0
         await this.editAssetUseDetail(data)
         callback()
       },
@@ -191,15 +197,13 @@
         this.showSearchModal = false
       },
       async rowEdit(obj,index){
+        console.log("edit",obj)
         this.curRowIndex=index
         this.curDetail=obj
-        // await this.editAssetUseDetail({...obj,...{isEdit:0}})
+        await this.editAssetUseDetail({...obj,...{isEdit:1}})
       },
       async rowEditCancel(obj,index){
-        console.log("cancel",obj)
-        if(obj.flag){
-          this.tableConfig.data.splice(index,1,{...obj.preDetail,...{$cellEdit:false}})
-        }
+        await this.editAssetUseDetail({...obj.preDetail,...{isEdit:0}})
       },
       async getDepartmentTree() {
         let res = await SystemManageApi.getDepartmentTree();
@@ -237,11 +241,12 @@
         let res = await AssetManageApi.getAssetUseList({
            pageNum:this.curPage,
            pageSize:10,
+           stockDealId:this.stockDealId
         })
         if(res.list){
           res.list.map((item)=>{
-            // item.$cellEdit=item.isEdit?true:false
-            // item.preDetail = item
+            item.$cellEdit=item.isEdit?true:false
+            item.preDetail ={...item}
           })
         }else{
           res.list=[]
@@ -276,8 +281,18 @@
           })
           return ;
         }
-        await AssetManageApi.addAssetUseApply()
-        this.getAssetUseList()
+        let res = await AssetManageApi.addAssetUseApply({
+          stockDealId:this.stockDealId
+        })
+        this.$message({
+          type:'success',
+          message:res
+        })
+        if(this.stockDealId){
+          this.$router.push('/todoList')
+        }else{
+          this.getAssetUseList()
+        }
       }
     },
     created(){
