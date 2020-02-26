@@ -237,7 +237,7 @@ export default {
     editRow(obj) {
       this.$router.push({
         name: "addTenantManage",
-        params: {
+        query: {
           tenantId: obj.scopeRow.row.tenantId
         }
       });
@@ -245,7 +245,7 @@ export default {
     detailTenant(obj) {
       this.$router.push({
         name: "addTenantManage",
-        params: {
+        query: {
           extraOptions: {
             disabled: true,
             submitBtn: false

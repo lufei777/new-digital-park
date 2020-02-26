@@ -288,7 +288,7 @@ export default {
       if (this.taskActiveName == "second") {
         this.$router.push({
           name: "NewTask",
-          params: {
+          query: {
             extraOptions: {
               disabled: true
             },
@@ -299,7 +299,7 @@ export default {
       } else if (this.taskActiveName == "third") {
         this.$router.push({
           name: "NewTask",
-          params: {
+          query: {
             extraOptions: {
               disabled: true
             },

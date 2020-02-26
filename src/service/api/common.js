@@ -292,6 +292,11 @@ class CommonApi {
   @url("/vibe-web/homeInterfaceAlarmByModule")
   @get
   getHomeInterfaceAlarmByModule(){}
+
+  //机房动环-->系统监控(usp监测)
+  @url("/vibe-web/countMonitorStatus")
+  @get
+  getCountMonitorStatus(){}
 }
 
 export default new CommonApi()

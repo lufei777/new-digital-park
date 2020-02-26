@@ -332,7 +332,7 @@ export default {
   created() {
     this.addContractForm = {
       ...this.addContractForm,
-      ...this.$route.params.extraOptions
+      ...this.$route.query.extraOptions
     };
   },
   computed: {
@@ -354,10 +354,10 @@ export default {
       };
     },
     editContractId() {
-      return this.$route.params.editContractId;
+      return this.$route.query.editContractId;
     },
     detailContractId() {
-      return this.$route.params.detailContractId;
+      return this.$route.query.detailContractId;
     }
   },
   methods: {

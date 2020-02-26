@@ -38,7 +38,7 @@
             >{{showMoreProduct?$t('fold'):$t('more')}}</span>
           </div>
           <ul
-            class="flex-align-around production-list"
+            class="flex-align-start production-list"
             :style="showMoreProduct?'':{height:'160px'}"
           >
             <li
@@ -426,6 +426,10 @@ export default {
       background-repeat: no-repeat;
       background-size: 100% 100%;
       margin-bottom: 15px;
+      margin-right:1.4%;
+    }
+    li:nth-child(6n){
+      margin-right: 0px;
     }
     span:hover {
       cursor: pointer;

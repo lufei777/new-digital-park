@@ -23,26 +23,22 @@
     },
     methods: {
       async getData(){
-        let res = await CommonApi.getHomeInterfaceAlarmByModule({
-         modules:3
-        })
-        let tmp = [{
-          name:'正常',
-          value:100
-        },{
-          name:'报警',
-          value:30
-        }]
-        this.initChart(tmp)
+         let res = await CommonApi.getCountMonitorStatus({
+          ids:"1000,1001,1003,1004,1006,1007,1007,1008,1009,1050"
+        });
+        // let tmp = [{
+        //   name:'正常',
+        //   value:100
+        // },{
+        //   name:'报警',
+        //   value:30
+        // }]
+        this.initChart(res)
       },
       initChart(res){
         let myChart = echarts.init(this.$refs.myChart);
-        let legendData = [];
-        let dataList = res;
-        res.map(item => {
-          legendData.push(`${item.name}`);
-        });
-        let seriesData =dataList
+        let legendData = res.legend;
+        let seriesData = res.values
         let data = {
           legendData,
           seriesData,
@@ -53,14 +49,14 @@
               color:'#8FD3FA'
             },
             formatter:function(name){
-              let obj=res.find((item)=>item.name==name)
+              let obj=res.values.find((item)=>item.name==name)
               return name+':'+obj.value
             }
           },
           seriesUi:{
             center:['35%','50%']
           },
-          color:['rgba(255,255,255,0.2)','#8FD3FA']
+           color: ["#30475B", "#66FBF9", "#0088FF", "#D77443"]
         };
         ChartUtils.hollowPieChart(myChart,data);
       }
