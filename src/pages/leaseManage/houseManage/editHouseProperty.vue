@@ -49,6 +49,13 @@ const apiConfig = {
   edit: {
     title: "编辑房产",
     api: leaseManageApi.editHouse
+  },
+  detail: {
+    title: "查看房产",
+    extraOptions: {
+      disabled: true,
+      submitBtn: false
+    }
   }
 };
 
@@ -197,8 +204,22 @@ export default {
     };
   },
   created() {
+    console.log(this.$route.query);
     if (this.$route.query || this.$route.params) {
-      let params = this.$route.params;
+      let { id, flag } = this.$route.query;
+      if (id) {
+        this.pageConfig = _.cloneDeep(apiConfig[flag]);
+        this.getPropertyDetail({ id }).then(res => {
+          this.model = { ...this.model, ...res };
+        });
+      }
+      // 传递过来额外的配置
+      this.leaseManageForm = {
+        ...this.leaseManageForm,
+        ...this.pageConfig.extraOptions
+      };
+
+      /* let params = this.$route.params;
       // 传递过来的数据
       if (!_.isEmpty(params.model)) {
         this.pageConfig = _.cloneDeep(apiConfig.edit);
@@ -212,7 +233,7 @@ export default {
       // 如果有disabled属性，则为查看详情
       if (this.leaseManageForm.disabled) {
         this.pageConfig.title = "房产详情";
-      }
+      } */
     }
     // 空间
     commonApi.getAllFloorOfA3().then(res => {
@@ -244,6 +265,9 @@ export default {
     },
     back() {
       this.$router.back();
+    },
+    getPropertyDetail(row) {
+      return leaseManageApi.houseDetails(row);
     }
   },
   watch: {
