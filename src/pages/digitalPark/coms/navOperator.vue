@@ -129,12 +129,20 @@ export default {
         );
         if (val == 1) {
           Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[0].id}/personalInformation`);
+          // if(this.$route.path=='/vibe-web'){
+          //   this.$router.push("/personalInformation")
+          //   return ;
+          // }
         } else if (val == 2) {
           Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[1].id}/modifyPassword`);
+          // if(this.$route.path=='/vibe-web'){
+          //   this.$router.push("/modifyPassword")
+          //   return ;
+          // }
         }
+        this.userValue = "0";
         this.$router.push("/vibe-web")
       }
-      this.userValue = "0";
     },
     onClickSetup(val) { //点击设置
       Cookies.set('moduleType',this.cookieModuleType)
@@ -156,11 +164,19 @@ export default {
         );
         if (val == 2) {
           Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[0].id}/personalInformation`);
+          if(this.$route.path=='/vibe-web'){
+            this.$router.push("/personalInformation")
+            return ;
+          }
         } else if (val == 3) {
           Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[1].id}/modifyPassword`);
+          if(this.$route.path=='/vibe-web'){
+            this.$router.push("/modifyPassword")
+            return ;
+          }
         }
-        this.$router.push("/vibe-web")
         this.setupValue = "0";
+        this.$router.push("/vibe-web")
       }
     },
     onClickGoBack() { //点击返回首页

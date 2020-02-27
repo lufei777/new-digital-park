@@ -6,7 +6,7 @@ export default [{
   path:'/tmpRouter',
   redirect:'/manMadeCollect',
   component:TmpRouter,
-  name:'TmpRouter',
+  // name:'TmpRouter',
   meta:{title:'设备采集'},
   children:[{
     path:'/manMadeCollect',

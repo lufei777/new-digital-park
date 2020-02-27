@@ -2,11 +2,6 @@
   <div class="asset-check-detail panel-container panel">
     <div class="tip">申请详情</div>
     <zTable :ref="tableConfig.ref" :options="tableConfig">
-      <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
-        <el-button type="text" @click="onClickCheckBtn(row)" v-if="fromFlag==1">审核</el-button>
-        <el-button type="text" @click="onClickReApplyBtn($index)" v-if="fromFlag==1">重新申请</el-button>
-        <el-button type="text" @click="onClickDetailBtn($index)" v-if="fromFlag==2">详情</el-button>
-      </template>
     </zTable>
     <div class="tip second-tip">审批详情</div>
     <el-timeline>
@@ -104,9 +99,6 @@
       }
     },
     methods: {
-      onClickCheckBtn(){},
-      onClickReApplyBtn(){},
-      onClickDetailBtn(){},
       getCheckList(){
         this.checkList = this.detail.stockApprovalList
         this.checkList.map((item)=>{

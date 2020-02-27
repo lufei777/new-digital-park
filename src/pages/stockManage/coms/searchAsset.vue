@@ -165,14 +165,13 @@
          this.getAssetList()
       },
       rowClick(row){
-        console.log(row)
+        console.log("rowClick",row)
         this.curRow=row
       },
       onClickSureBtn(){
         this.$parent.onGetAssetDetail && this.$parent.onGetAssetDetail(this.curRow)
       },
       onClickSearchBtn(){
-        console.log(this.formModel)
         this.getAssetList()
       },
       clearForm(){

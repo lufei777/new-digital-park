@@ -19,7 +19,7 @@ import DataReport from './commonRouter/dataReport'
 
 export default [{
   path: '/digitalPark/defaultPage',
-  name: 'DefaultPage',
+  // name: 'DefaultPage',
   component: DefaultPage
 }, {
   path: '/energy',
@@ -52,9 +52,9 @@ export default [{
       meta: { title: '能耗排名' }
     }]
   }, {
-    path: '/tmpRouter2',
+    path: '/tmpRouter',
     redirect: '/energy/waterDiffer',
-    component: TmpRouter,
+    // component: TmpRouter,
     meta: { title: '节能诊断' },
     children: [{
       path: '/energy/waterDiffer',
