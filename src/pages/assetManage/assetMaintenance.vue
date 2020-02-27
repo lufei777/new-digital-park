@@ -252,7 +252,6 @@ export default {
           this.groupName = val.name
           this.treeModalConfig.showModal=false
         }
-
     },
     async getAssetGroupTree() {
       let res = await AssetManageApi.getAssetGroupTree();

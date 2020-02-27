@@ -32,7 +32,9 @@
     </div>
     <zTable :ref="tableConfig.ref" :options="tableConfig">
       <template slot="operation" slot-scope="{scopeRow:{$index,row,obj}}">
-        <el-button type="text" @click="onClickCheckBtn(row)" v-if="row.status==0 && fromFlag==1">审核</el-button>
+        <el-button type="text" @click="onClickCheckBtn(row)"
+                   v-if="(row.status==0 || row.status==1) && fromFlag==1"
+        >审核</el-button>
         <el-button type="text" @click="onClickReApplyBtn(row)" v-if="row.status==2">重新申请</el-button>
         <el-button type="text" @click="onClickDetailBtn(row)" v-if="fromFlag==2">详情</el-button>
       </template>
