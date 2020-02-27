@@ -1,185 +1,145 @@
 <template>
   <div class="my-asset panel-container">
-    <div class="condition-box radius-shadow ">
-      <z-form
-        :ref="formData.ref"
-        :options="formData"
-        v-model="model"
-        @submit="submit"
-        @reset-change="resetChange"
-      >
-        <template slot="btn" slot-scope="obj">
-          <div>
-            <el-button :disabled="obj.disabled" type="primary" @click="onClickSearchBtn(obj)">搜索</el-button>
-            <el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>
-          </div>
-        </template>
-      </z-form>
+    <div class="condition-box radius-shadow flex">
+       <div class="item-group">
+         <label>编号：</label>
+         <el-input v-model="searchObj.coding"/>
+       </div>
+      <div class="item-group">
+        <label>名称：</label>
+        <el-input v-model="searchObj.name"/>
+      </div>
+      <div class="item-group">
+        <label>资产组：</label>
+        <el-input v-model="searchObj.groupName" @focus="onShowTree"/>
+      </div>
+      <div class="item-group">
+        <el-button type="primary" class="search-btn" @click="onClickSearchBtn">搜索</el-button>
+        <el-button @click="onClickResetBtn">重置</el-button>
+      </div>
     </div>
+
+    <TreeModal :treeModalConfig="treeModalConfig"/>
 
     <div class="my-asset-table radius-shadow panel">
       <z-table :ref="tableData.ref" :options="tableData">
-        <template slot="custom-top" slot-scope="obj">
-          <div class="operator-box flex-row-reverse">
-            <el-button :size="obj.size" type="primary">批量删除</el-button>
-            <el-button :size="obj.size" type="primary">导出</el-button>
-            <el-button :size="obj.size" type="primary">导入</el-button>
-            <el-button :size="obj.size" type="primary">新增</el-button>
-          </div>
+        <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
+          <el-button type="text" @click="dealAsset(row)">归还</el-button>
+          <el-button type="text" @click="dealAsset(row)">送修</el-button>
         </template>
       </z-table>
     </div>
+    
   </div>
 </template>
 
 <script>
-  import CommonFun from "@/utils/commonFun";
+  import { AssetDic } from "@/utils/dictionary";
+  import AssetManageApi from '@/service/api/assetManage'
+  import TreeModal from '@/components/treeModal'
   export default {
     name: "MyAsset",
+    components: {
+      TreeModal,
+    },
     data() {
       return {
-        model: {},
-        formData: {
-          ref: "formData",
-          labelWidth: "100",
-          size: "medium",
-          menuPosition: "right",
-          menuBtn: false,
-          // labelPosition: "left",
-          forms: [
-            {
-              type: "input",
-              label: "资产编号",
-              prop: "assetNumber",
-              placeholder: "请输入",
-              clearable: true,
-              span: 4,
-              minRows: 0
-            },
-            {
-              type: "input",
-              label: "资产名称",
-              prop: "assetName",
-              placeholder: "请输入",
-              clearable: true,
-              span: 4,
-              minRows: 0
-            },
-            {
-              type: "input",
-              label: "资产类型",
-              prop: "assetType",
-              placeholder: "请输入",
-              clearable: true,
-              span: 4,
-              minRows: 0
-            },
-            {
-              prop: "",
-              formslot: true,
-              span: 12
-            },
-            {
-              type: "input",
-              label: "资产状态",
-              prop: "assetStatus",
-              placeholder: "请输入",
-              clearable: true,
-              span: 4
-            },
-            // {
-            //   prop: "",
-            //   formslot: true,
-            //   span: 6
-            // },
-            {
-              type: "input",
-              label: "经办人",
-              prop: "handlePeople",
-              placeholder: "请输入",
-              span: 4
-            },
-            {
-              prop: "btn",
-              span: 6,
-              pull: 4,
-              formslot: true
-              // width: "34px"
-            }
-          ]
-        },
         tableData: {
           ref: "tableData",
           data: [],
-          columnConfig: [],
+          operation:true,
+          columnConfig: [
+            { label: "资产编号", prop: "coding" },
+            { label: "资产名称", prop: "name" },
+            { label: "资产组", prop: "groupName" },
+            { label: "使用部门", prop: "deptName" },
+            { label: "使用人", prop: "assetUser" },
+            { label: "规格型号", prop: "specification" },
+            { label: "状态", prop: "status",
+              formatter:function(row,column){
+                return AssetDic.assetStatus[row.status]
+              }
+            },
+          ],
           uiConfig: {
-            height: "auto", //"", //高度
-            selection: true, //是否多选
-            showIndex: true,
+            height: "auto",
+            // selection: true,
             pagination: {
-              //是否分页，分页是否自定义
-              layout: "total,->, prev, pager, next, jumper",
-              pageSizes: [10, 20, 50],
-              handler(pageSize, currentPage, table) {
-                _this.handleCurrentChange(currentPage);
+              handler(pageSize, page) {
+                _this.handleCurrentChange(page);
               }
             }
           },
-          btnConfig: {
-            prop: "operation",
-            label: "操作",
-            fixed: "right",
-            width: 200,
-            btns: [
-              {
-                label: "查看",
-                handler: function(row) {}
-              },
-              {
-                label: "编辑",
-                handler: function(row) {}
-              },
-              {
-                label: "删除",
-                handler: function(row) {}
-              }
-            ]
-          }
-        }
+        },
+        treeModalConfig:{
+          treeList:[],
+          treeConfig:{
+            treeProps:{
+              label:'name',
+              children:'childNode'
+            },
+            showSearch:true
+          },
+          showModal:false,
+          modalTip:'',
+          onClickCancelBtnCallback:this.hideTreeModal,
+          onClickSureBtnCallback:this.onClickTreeModalSureBtn
+        },
+        curPage:1,
+        searchObj:{
+          coding:'',
+          name:'',
+          groupId:'',
+          groupName:''
+        },
+        groupTree:[]
       };
     },
     methods: {
-      submit() {},
-      resetChange() {},
-      onClickSearchBtn(...args) {
-        this.$refs[this.formData.ref].getFormModel(res => {
-          console.log("model", res);
-        });
-        console.log("搜索", ...args);
+      async getMyAssetList() {
+        let params = {...this.searchObj,...{pageNum:this.curPage}}
+        let res = await AssetManageApi.getMyAssetList(params)
+        this.tableData.data = res.list;
       },
-      clearForm(...args) {
-        console.log("清空", ...args);
-        this.$refs[this.formData.ref].resetForm();
+      async getAssetGroupTree() {
+        let res = await AssetManageApi.getAssetGroupTree();
+        this.groupTree = res;
       },
-      getCleaningList() {
-        let res = CommonFun.myAssetData;
-        let labelList = [
-          { label: "资产编号", prop: "assetNumber" },
-          { label: "资产名称", prop: "assetName" },
-          { label: "资产类型", prop: "assetType" },
-          { label: "资产状态", prop: "assetStatus" },
-          { label: "经办人", prop: "handlePeople" },
-          { label: "最近操作日期", prop: "operatingTime" },
-          { label: "备注", prop: "remark" }
-        ];
-        this.tableData.columnConfig = labelList;
-        this.tableData.data = res;
+      dealAsset(row){
+
       },
-      batchDels() {},
-      addTenant() {}
+      handleCurrentChange(page){
+        this.curPage = page
+      },
+      onShowTree(){
+        this.treeModalConfig.treeList=this.groupTree
+        this.treeModalConfig.modalTip="选择资产组"
+        this.treeModalConfig.showModal = true
+      },
+      hideTreeModal(){
+        this.treeModalConfig.showModal=false
+      },
+      onClickTreeModalSureBtn(val){
+        this.searchObj.groupName = val.name,
+        this.searchObj.groupId = val.id
+        this.treeModalConfig.showModal=false
+      },
+      onClickSearchBtn(){
+        this.getMyAssetList();
+      },
+      onClickResetBtn() {
+        this.searchObj={
+          coding:'',
+          name:'',
+          groupId:'',
+          groupName:''
+        }
+        this.getMyAssetList()
+      }
     },
     mounted() {
-      this.getCleaningList();
+      this.getMyAssetList();
+      this.getAssetGroupTree()
     }
   };
 </script>
@@ -201,6 +161,9 @@
           margin-left: 20px;
         }
       }
+    }
+    .search-btn{
+      margin-right: 10px;
     }
   }
 </style>

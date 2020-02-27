@@ -1455,58 +1455,6 @@ class commonFun {
     remark: "联想鼠标"
   }]
 
-  myAssetData = [{
-    myAssetId: 1,
-    assetNumber: "ZC-154678955789",
-    assetName: "笔记本",
-    assetType: "服务器",
-    assetStatus: "已出库",
-    handlePeople: "程琳",
-    operatingTime: "2019-11-15",
-    remark: "服务部借出"
-  }, {
-    assetLedgerId: 2,
-    assetNumber: "ZC-157894563258",
-    assetName: "显示器",
-    assetType: "固定资产",
-    assetStatus: "维修",
-    handlePeople: "程琳",
-    operatingTime: "2019-09-15",
-    remark: "vator"
-  }, {
-    assetLedgerId: 3,
-    assetNumber: "ZC-157894563258",
-    assetName: "鼠标",
-    assetType: "固定资产",
-    assetStatus: "报废",
-    handlePeople: "程琳",
-    operatingTime: "2019-11-15",
-    remark: "联想鼠标"
-  }]
-
-  contractManageData = [{
-    contractManageId: 1,
-    contractName: "租房合同",
-    contractType: "租赁",
-    contractStatus: "待审核",
-    signTime: "2019-12-22",
-    remark: "个人租赁"
-  }, {
-    contractManageId: 2,
-    contractName: "入职合同",
-    contractType: "个人",
-    contractStatus: "运行中",
-    signTime: "2019-05-22",
-    remark: "入职合同"
-  }, {
-    contractManageId: 3,
-    contractName: "劳动合同",
-    contractType: "个人",
-    contractStatus: "运行中",
-    signTime: "2019-05-22",
-    remark: "劳动合同"
-  }]
-
   signatureManageData = [{
     signatureManageId: 1,
     signatureNumber: "QZ-156789452365",
