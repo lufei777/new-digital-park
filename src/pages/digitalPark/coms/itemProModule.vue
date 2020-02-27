@@ -117,7 +117,7 @@
          if(this.hideHeader) return ;  //配置页点击不进行操作
          console.log(item)
          let menuList = JSON.parse(localStorage.getItem('menuList'))
-         item.level=2
+         item.level=3
          if(CommonFun.loadThreeD(item,menuList)){
           return;
          }

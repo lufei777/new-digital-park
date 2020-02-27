@@ -26,7 +26,7 @@ export default [{
         component: InvoiceManage,
     },{
         path: '/reportManage',
-        name: 'ReportManage',
+        name: 'CostReportManage',
         meta: { title: '报表管理' },
         component: ReportManage,
     }]

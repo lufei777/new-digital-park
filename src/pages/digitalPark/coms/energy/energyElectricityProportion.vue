@@ -47,7 +47,6 @@
           seriesData,
           // titleText,
         };
-        console.log(data)
         ChartUtils.hollowPieChart(myChart,data);
 
         let option={
