@@ -627,10 +627,11 @@ export default {
     // 全局初始化
     _globalColumnFormatter(row, column, currentColumn) {
       let value = row[column.property];
-      if (typeof value === "string" && value.trim().length === 0) {
-        return "--";
-      }
-      if (!value) {
+      if (
+        this.validatenull(value) ||
+        (typeof value === "string" && value.trim().length === 0) ||
+        (Array.isArray(value) && value.length === 0)
+      ) {
         return "--";
       }
       return this.handleDetail(

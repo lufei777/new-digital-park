@@ -261,9 +261,11 @@ export default {
     }
   },
   created() {
+    let extraOptions = this.$route.query.extraOptions;
+    extraOptions ? (extraOptions = JSON.parse(extraOptions)) : "";
     this.addTenantManageForm = {
       ...this.addTenantManageForm,
-      ...this.$route.query.extraOptions
+      ...extraOptions
     };
   }
 };
