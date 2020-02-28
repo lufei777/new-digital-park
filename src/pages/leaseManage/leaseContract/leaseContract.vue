@@ -243,10 +243,10 @@ export default {
       this.$router.push({
         name: "AddContract",
         query: {
-          extraOptions: {
+          extraOptions: JSON.stringify({
             disabled: true,
             submitBtn: false
-          },
+          }),
           detailContractId: obj.scopeRow.row.contractId
         }
       });

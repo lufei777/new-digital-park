@@ -246,10 +246,10 @@ export default {
       this.$router.push({
         name: "addTenantManage",
         query: {
-          extraOptions: {
+          extraOptions: JSON.stringify({
             disabled: true,
             submitBtn: false
-          },
+          }),
           tenantId: obj.scopeRow.row.tenantId
         }
       });
