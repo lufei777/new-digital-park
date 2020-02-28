@@ -111,6 +111,7 @@ export default {
           goBackClientLogin();
         } else {
           sessionStorage.removeItem("token");
+          Cookies.remove("activeMenuIndex");
           await SystemManageApi.logOut();
           this.$router.push("/login");
         }
