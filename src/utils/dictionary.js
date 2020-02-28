@@ -74,8 +74,10 @@ export const AssetDic = {
 
   applyType: {
     1: '资产领用',
-    2: '已作废',
-    3: '已收回',
+  },
+
+  assetStatus:{
+    0:'领用'
   }
 }
 

@@ -62,7 +62,7 @@ export default [{
     meta:{title:'角色编辑'},
   },{
     path:'/personalTmpRouter',
-    name:'TmpRouter',
+    // name:'TmpRouter',
     component:TmpRouter,
     meta:{title:'个人中心'},
     redirect:'/personalInformation',

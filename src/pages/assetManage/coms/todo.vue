@@ -32,7 +32,9 @@
     </div>
     <zTable :ref="tableConfig.ref" :options="tableConfig">
       <template slot="operation" slot-scope="{scopeRow:{$index,row,obj}}">
-        <el-button type="text" @click="onClickCheckBtn(row)" v-if="row.status==0 && fromFlag==1">审核</el-button>
+        <el-button type="text" @click="onClickCheckBtn(row)"
+                   v-if="(row.status==0 || row.status==1) && fromFlag==1"
+        >审核</el-button>
         <el-button type="text" @click="onClickReApplyBtn(row)" v-if="row.status==2">重新申请</el-button>
         <el-button type="text" @click="onClickDetailBtn(row)" v-if="fromFlag==2">详情</el-button>
       </template>
@@ -69,6 +71,7 @@
             prop: 'receiveUser'
           }]]
       }
+      let _this = this
       return {
         date:['',''],
         typeList:[{name:'资产领用',value:1},{name:'资产借用',value:2}],
@@ -84,6 +87,11 @@
           uiConfig:{
             height: "auto",
             selection: true,
+            pagination:{
+              handler:function(size,page){
+                _this.handleCurrentChange(page)
+              },
+            }
           }
         },
       }
@@ -95,25 +103,30 @@
            applyType:1,//this.applyType,
            applyStartTime:this.date[0],
            applyEndTime:this.date[1],
-
+           pageNum:this.curPage
         })
-        this.tableConfig.data=res.list
+        this.tableConfig.data=res.list || []
+        this.tableConfig.uiConfig.pagination.total = res.total
       },
       onClickResetBtn(){
         this.date=['','']
         this.curPage=1,
         this.applyType=''
-        this.getStockCheckList()
+        this.getTodoList()
       },
       onClickCheckBtn(row){
         this.$router.push(`/checkDetail?detail=${JSON.stringify(row)}&fromFlag=${this.fromFlag}`);
       },
       onClickReApplyBtn(row){
-        this.$router.push(`/assetUse?id=${row.id}`)
+        this.$router.push(`/assetUse?id=${row.id}&stockApprovalList=${JSON.stringify(row.stockApprovalList)}`)
         // Cookies.set('activeMenuIndex','')
       },
       onClickDetailBtn(row){
         this.$router.push(`/checkDetail?detail=${JSON.stringify(row)}&fromFlag=${this.fromFlag}`);
+      },
+      handleCurrentChange(page){
+        this.curPage=page
+        this.getTodoList()
       }
     },
     mounted(){

@@ -20,7 +20,7 @@ export default [{
     meta: { title: "我的资产" },
   },{
     path: '/assetTmpRouter',
-    name: 'TmpRouter',
+    // name: 'TmpRouter',
     meta: { title: "资产信息" },
     component: () => import('@/pages/commonProject/coms/tmpRouterBox'),
     children:[{
@@ -51,29 +51,29 @@ export default [{
     meta: { title: "资产台账" },
   },{
     path: '/digitalPark/defaultPage',
-    name: 'DefaultPage',
+    // name: 'DefaultPage',
     component: DefaultPage,
     meta: { title: "建设中" },
   },{
-      path: '/assetUseTmpRouter',
-      name: 'TmpRouter',
-      component:  () => import('@/pages/commonProject/coms/tmpRouterBox'),
-      meta: { title: "管理资产" },
-      children:[{
-        path: '/todoList',
-        name: 'TodoList',
-        component:  () => import('@/pages/assetManage/assetOperator/todoList'),
-        meta: { title: "我的待办" },
-      },{
-        path: '/assetUse',
-        name: 'AssetUse',
-        component:  () => import('@/pages/assetManage/assetOperator/assetUse'),
-        meta: { title: "资产领用" },
-      },{
-        path: '/checkDetail',
-        name: 'CheckDetail',
-        component: () => import('@/pages/assetManage/assetOperator/checkDetail'),
-        meta: { title: "我的待办" },
-      }]
+    path: '/assetUseTmpRouter',
+    // name: 'TmpRouter',
+    component:  () => import('@/pages/commonProject/coms/tmpRouterBox'),
+    meta: { title: "管理资产" },
+    children:[{
+      path: '/todoList',
+      name: 'TodoList',
+      component:  () => import('@/pages/assetManage/assetOperator/todoList'),
+      meta: { title: "我的待办" },
+    },{
+      path: '/assetUse',
+      name: 'AssetUse',
+      component:  () => import('@/pages/assetManage/assetOperator/assetUse'),
+      meta: { title: "资产领用" },
+    },{
+      path: '/checkDetail',
+      name: 'CheckDetail',
+      component: () => import('@/pages/assetManage/assetOperator/checkDetail'),
+      meta: { title: "我的待办" },
+    }]
   },]
 }]
