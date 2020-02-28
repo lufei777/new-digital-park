@@ -425,7 +425,7 @@ export default {
       line-height: 150px;
       background-repeat: no-repeat;
       background-size: 100% 100%;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       margin-right:1.4%;
     }
     li:nth-child(6n){
