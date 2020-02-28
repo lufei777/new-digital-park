@@ -108,7 +108,7 @@ export default {
         yAxis: [
           {
             type: "value",
-            name: "能耗(kwh)",
+            name: res.unit,
             axisLabel: {
               textStyle: {
                 color: "#4F89B2"
