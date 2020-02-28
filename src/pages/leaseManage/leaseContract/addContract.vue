@@ -330,9 +330,11 @@ export default {
     }
   },
   created() {
+    let extraOptions = this.$route.query.extraOptions;
+    extraOptions ? (extraOptions = JSON.parse(extraOptions)) : "";
     this.addContractForm = {
       ...this.addContractForm,
-      ...this.$route.query.extraOptions
+      ...extraOptions
     };
   },
   computed: {
