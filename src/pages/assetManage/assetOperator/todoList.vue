@@ -1,6 +1,6 @@
 <template>
   <div class="todo-list panel-container panel">
-    <el-tabs type="border-card"  v-model="activeTab">
+    <el-tabs type="border-card" @tab-click="onClickTab" v-model="activeTab">
       <el-tab-pane label="待办">
         <TodoComs fromFlag="1"/>
       </el-tab-pane>
@@ -21,7 +21,7 @@
     },
     data () {
       return {
-        activeTab:'0'
+        activeTab:Cookies.get("todoTab") || '0'
       }
     },
     computed:{
@@ -29,7 +29,9 @@
     watch:{
     },
     methods: {
-      onClickTab(){}
+      onClickTab(val){
+        Cookies.set("todoTab",val.index)
+      }
     },
     mounted(){
     }
