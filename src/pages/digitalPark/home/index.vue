@@ -154,11 +154,12 @@ export default {
       // 跳转路由
       if (routeAddress) {
         // 如果带有@字符，则跳转旧项目
+        CommonFun.setShortcutList(this.productList)
         if (routeAddress.indexOf("@") != -1) {
           CommonFun.loadOldPage(item);
         } else {
           setTimeout(() => {
-            this.$router.push(item.routeAddress + "?type=2");
+            this.$router.push(item.routeAddress);
           }, 500);
         }
       } else {
