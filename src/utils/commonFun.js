@@ -1727,5 +1727,9 @@ class commonFun {
       return item.id
     }
   }
+
+  setShortcutList(shortcut){
+    localStorage.setItem("shortcutList",JSON.stringify(shortcut))
+  }
 }
 export default new commonFun()

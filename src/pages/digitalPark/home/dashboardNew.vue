@@ -310,6 +310,8 @@
         },
         onClickItemFixPro(item){
           if(this.hideHeader) return ; //配置页不进行后续操作
+          Cookies.set('moduleType',1)
+          CommonFun.setShortcutList(this.fixedProList)
           //跳转三维客户端
           if(CommonFun.loadThreeD(item,this.clientMenu)){
             if(item.level==2){
@@ -317,7 +319,6 @@
             }
             return;
           }
-          Cookies.set('moduleType',1)
           localStorage.setItem("menuList", JSON.stringify(item));
           let routeAddress = item.routeAddress;
           if (routeAddress) {
@@ -326,11 +327,11 @@
               CommonFun.loadOldPage(item);
             } else {
               setTimeout(() => {
-                this.$router.push(item.routeAddress + "?type=2");
+                this.$router.push(item.routeAddress);
               }, 500);
             }
           } else {
-            this.$router.push("/digitalPark/defaultPage?type=2");
+            this.$router.push("/digitalPark/defaultPage");
           }
         },
         getInnerOptions(){

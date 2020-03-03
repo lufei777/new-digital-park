@@ -30,15 +30,19 @@
       >
         <sidebar-item :menuData="menuData" :specialRoute="menuConfig.specialRoute"/>
       </el-menu>
-      <!--<div v-if="!menuConfig.specialRoute">-->
-        <!--<div-->
-          <!--class="iconfont iconkuaijierukou hover-pointer shortcut-btn"-->
-          <!--@click="onClickShortcutBtn"-->
-        <!--&gt;</div>-->
-        <!--<ul class="shortcut-list" v-show="showShortcutList">-->
-          <!--<li v-for="(item,index) in shortCutList" :key="index">{{item.name}}</li>-->
-        <!--</ul>-->
-      <!--</div>-->
+      <div v-if="!menuConfig.specialRoute">
+        <div
+          class="iconfont iconkuaijierukou hover-pointer shortcut-btn"
+          @click="onClickShortcutBtn"
+        ></div>
+
+          <ul class="shortcut-list" v-show="showShortcutList">
+            <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
+              <li v-for="(item,index) in shortcutList" :key="index">{{item.name}}</li>
+            </el-scrollbar>
+          </ul>
+
+      </div>
     </div>
   </el-scrollbar>
 </template>
@@ -60,7 +64,6 @@ export default {
   },
   data() {
     return {
-      shortCutList: [],
       showShortcutList: false,
       temporarilyHidden:false,
       activeTmp:''
@@ -76,7 +79,10 @@ export default {
       return this.menuConfig.specialRoute ? ""
         : Cookies.get("activeMenuIndex") ||
             this.menuConfig.activeIndex || this.getActiveIndex(this.menuData.childNode)
-    }
+    },
+    shortcutList(){
+      return JSON.parse(localStorage.getItem('shortcutList'))
+    },
   },
   watch: {
     isCollapse() {
@@ -171,7 +177,7 @@ export default {
       let res = await DigitalParkApi.getProductList({
         lang: Cookies.get("lang")
       });
-      this.shortCutList = res.slice(0, 6);
+      // this.shortCutList = res.slice(0, 6);
     },
     onClickShortcutBtn() {
       this.showShortcutList = !this.showShortcutList;
@@ -235,7 +241,7 @@ export default {
   }
   .shortcut-list {
     width: 190px;
-    /*height:400px;*/
+    height:400px;
     background: #000;
     color: @white;
     text-align: center;
