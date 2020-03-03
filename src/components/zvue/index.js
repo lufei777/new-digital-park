@@ -69,7 +69,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 
 export default {
     author: 'lxh',
-    version: '1.0',
+    version: '1.5',
     install,
     Table,
     Cascader,

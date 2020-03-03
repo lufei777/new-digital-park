@@ -160,6 +160,13 @@ export default {
       this.componentId = "el-cascader-panel";
     }
     this.createdTimeStamp = _.now();
+  },
+  mounted() {
+    this.$refs["cascader"].$watch("presentText", (newVal, oldVal) => {
+      if (newVal) {
+        this.$set(this.column, "presentText", newVal);
+      }
+    });
   }
 };
 </script>
