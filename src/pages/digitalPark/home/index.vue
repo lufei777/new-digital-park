@@ -160,10 +160,10 @@ export default {
         } else {
           setTimeout(() => {
             this.$router.push(item.routeAddress);
-          }, 500);
+          }, 300);
         }
       } else {
-        this.$router.push("/digitalPark/defaultPage?type=2");
+        this.$router.push("/digitalPark/defaultPage");
       }
     },
     onShowMoreProduct() {
@@ -181,11 +181,7 @@ export default {
       let backgroundImage = "";
       try {
         backgroundImage =
-          "url(" +
-          require("../../../../static/image/digitalPark/" +
-            item.productBgUrl +
-            ".png") +
-          ")";
+          "url(" + require("../../../../static/image/digitalPark/" + item.productBgUrl + ".png") + ")";
       } catch (error) {}
       return {
         backgroundImage
