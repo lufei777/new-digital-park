@@ -35,9 +35,11 @@
           :specialRoute="menuConfig.specialRoute"
         />
       </el-menu>
-      <!--<div class="iconfont iconkuaijierukou hover-pointer shortcut-btn" @click="onClickShortcutBtn"></div>-->
+      <div class="iconfont iconkuaijierukou hover-pointer shortcut-btn" @click="onClickShortcutBtn"></div>
       <ul class="shortcut-list" v-show="showShortcutList">
-        <li v-for="(item,index) in shortCutList" :key="index">{{item.name}}</li>
+        <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
+            <li v-for="(item,index) in shortcutList" :key="index">{{item.name}}</li>
+        </el-scrollbar>
       </ul>
     </div>
   </el-scrollbar>
@@ -74,7 +76,10 @@ export default {
       // console.log(activeIndex)
       // return activeIndex
       return this.menuConfig.activeIndex
-    }
+    },
+    shortcutList(){
+      return JSON.parse(localStorage.getItem('shortcutList'))
+    },
   },
   watch: {
     isCollapse() {
@@ -93,24 +98,17 @@ export default {
         } else {
           key = key.slice(key.indexOf("/"));
           this.$router.push(key);
-          Cookies.set("activeMenuIndex", key);
+          // Cookies.set("activeMenuIndex", key);
         }
       }
     },
     handleOpen(key) {},
     handleClose(key) {},
-    async getProModules() {
-      let res = await DigitalParkApi.getProductList({
-        lang: Cookies.get("lang")
-      });
-      this.shortCutList = res.slice(0, 6);
-    },
     onClickShortcutBtn() {
       this.showShortcutList = !this.showShortcutList;
     }
   },
   mounted() {
-    this.getProModules();
   }
 };
 </script>
@@ -163,7 +161,7 @@ export default {
   }
   .shortcut-list {
     width: 190px;
-    /*height:400px;*/
+    height:400px;
     background: #000;
     color: @white;
     text-align: center;

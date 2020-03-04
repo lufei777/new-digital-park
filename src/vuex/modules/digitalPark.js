@@ -1,10 +1,13 @@
+import Cookies from 'js-cookie'
+import CommonApi from "../../service/api/common";
+import moment from "./analysis";
 const state = {
   dragFlag:true,
   menuIsCollapse:false,
   updateUserInfo:false,
   stockInApplyTab:'0',
   stockInReApplyId:'',
-  todoTab:'0',
+  activeMenuIndex:Cookies.get("activeMenuIndex"),
 }
 
 const mutations={
@@ -23,8 +26,9 @@ const mutations={
   stockInReApplyId(state,data){
     state.stockInReApplyId = data
   },
-  todoTab(state,data){
-    state.todoTab = data
+  activeMenuIndex(state,data){
+    state.activeMenuIndex = data
+    Cookies.set("activeMenuIndex",data)
   }
 }
 

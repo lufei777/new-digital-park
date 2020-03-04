@@ -125,24 +125,15 @@ export default {
           item => item.name == "系统管理"
         );
         localStorage.setItem("menuList", JSON.stringify(secondLevelTree));
-        let thirdLevelTree = secondLevelTree.childNode.find(
-          item => item.name == "个人中心"
-        );
         if (val == 1) {
-          Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[0].id}/personalInformation`);
-          // if(this.$route.path=='/vibe-web'){
-          //   this.$router.push("/personalInformation")
-          //   return ;
-          // }
+          this.$store.commit("digitalPark/activeMenuIndex","/personalInformation")
+          // Cookies.set("activeMenuIndex", `/personalInformation`);
+          this.$router.push("/personalInformation")
         } else if (val == 2) {
-          Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[1].id}/modifyPassword`);
-          // if(this.$route.path=='/vibe-web'){
-          //   this.$router.push("/modifyPassword")
-          //   return ;
-          // }
+          this.$store.commit("digitalPark/activeMenuIndex","/modifyPassword")
+          // Cookies.set("activeMenuIndex", `/modifyPassword`);
+          this.$router.push("/modifyPassword")
         }
-        this.userValue = "0";
-        this.$router.push("/vibe-web")
       }
     },
     onClickSetup(val) { //点击设置

@@ -119,7 +119,7 @@
       },
       onClickReApplyBtn(row){
         this.$router.push(`/assetUse?id=${row.id}&stockApprovalList=${JSON.stringify(row.stockApprovalList)}`)
-        // Cookies.set('activeMenuIndex','')
+        this.$store.commit("digitalPark/activeMenuIndex",'/assetUse')
       },
       onClickDetailBtn(row){
         this.$router.push(`/checkDetail?detail=${JSON.stringify(row)}&fromFlag=${this.fromFlag}`);

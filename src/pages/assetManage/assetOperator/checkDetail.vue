@@ -109,9 +109,9 @@
       },
       onClickBackBtn(){
         if(this.fromFlag==1){
-          this.$router.push("/todoList?fromFlag=1")
+          this.$router.push("/todoList")
         }else{
-          this.$router.push("/todoList?fromFlag=2")
+          this.$router.push("/todoList")
         }
       },
       async onClickDealBtn(isPass){

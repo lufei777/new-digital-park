@@ -1716,9 +1716,17 @@ class commonFun {
     })
   }
 
+  //设置菜单index
   setMenuIndex(item){
+    let arr = ['defaultPage','digitalPark/dashboardHomePage','stockInApply']
+    let flag=false
     if(item.routeAddress){
-      if(item.routeAddress.indexOf('defaultPage')!=-1){
+      arr.map((str)=>{
+        if(item.routeAddress.indexOf(str)!=-1){
+          flag=true
+        }
+      })
+      if(flag){
         return item.id+item.routeAddress
       }else{
         return item.routeAddress
