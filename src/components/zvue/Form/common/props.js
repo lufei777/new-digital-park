@@ -31,7 +31,7 @@ export default function () {
             },
             column: {
                 type: Object,
-                default: () => { }
+                default: () => ({})
             },
             dic: {
                 type: Array,
