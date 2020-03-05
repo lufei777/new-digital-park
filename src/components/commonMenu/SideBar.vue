@@ -75,9 +75,10 @@ export default {
     },
     activeMenuIndex() {
       //当前激活的菜单，顺序是cookie拿到的、父级传递的、默认的父级没传时使用菜单第一个
-      return this.menuConfig.specialRoute ? ""
-        : this.activeMenuIndexVuex ||
-            this.menuConfig.activeIndex || this.setActiveIndex(this.menuData)
+      return this.menuConfig.specialRoute ? "" :
+             this.activeMenuIndexVuex ||
+             this.menuConfig.activeIndex ||
+             this.setActiveIndex(this.menuData)
     },
     shortcutList(){
       return JSON.parse(localStorage.getItem('shortcutList'))
@@ -92,9 +93,6 @@ export default {
         this.showShortcutList = false;
       }
     },
-    activeMenuIndexVuex(){
-
-    }
   },
   methods: {
     handleSelect(key, keyPath) {
@@ -112,13 +110,24 @@ export default {
       this.showShortcutList = !this.showShortcutList;
     },
     onClickItemShortcut(item){
-      // if(commonFun.loadThreeD(item,JSON.parse(localStorage.getItem("menuList")))){
-      //   return ;
-      // }else{
-      //   localStorage.setItem("menuList",JSON.stringify(item))
-      //   this.$router.push(item.routeAddress)
-      // }
-    }
+      if(commonFun.loadThreeD(item,JSON.parse(localStorage.getItem("menuList")))){
+        return ;
+      }else{
+        this.$store.commit("digitalPark/menuList",item);
+        this.loadPage(item)
+      }
+    },
+    loadPage(item) {
+      if (item.routeAddress) {
+        if (item.routeAddress.indexOf("@") != -1) {
+          commonFun.loadOldPage(item);
+        } else {
+            this.$router.push(item.routeAddress);
+        }
+      } else {
+        this.$router.push("/digitalPark/defaultPage");
+      }
+    },
   },
   mounted() {
   }

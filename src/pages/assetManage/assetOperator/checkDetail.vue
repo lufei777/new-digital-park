@@ -16,6 +16,7 @@
         <el-card>
           <span>{{item.approvalUser}}</span>
           <span>{{item.pointName}}</span>
+          <span>{{item.isPass?'通过':'不通过'}}</span>
           <div class="opinion">{{item.opinion}}</div>
         </el-card>
       </el-timeline-item>
