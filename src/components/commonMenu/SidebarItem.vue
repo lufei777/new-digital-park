@@ -87,26 +87,24 @@ export default {
        }
     },
     setMenuList(item){
-      // console.log(item,this.allMenuList)
       if (item.level == 2) {
-        localStorage.setItem("menuList", JSON.stringify(item));
+        this.$store.commit("digitalPark/menuList",item)
         this.normalShortcutList()
       }else{
         let firstMenu = this.allMenuList.find(first => {
           return first.id == item.firstMenuId;
         });
-        // console.log("first",firstMenu)
         let secondMenu = firstMenu.childNode.find(second => {
           return second.id == item.secondMenuId;
         });
         //菜单：如果是二级是客户端类概览页且点击的子集是跳网页，则不存全部菜单
         if(secondMenu.clientType==1 && item.clientType!=1 && item.level==3){
-          localStorage.setItem("menuList", JSON.stringify(item));
+          this.$store.commit("digitalPark/menuList",item);
         }else if(secondMenu.clientType==1 && item.clientType!=1 && item.level!=3){
-            let node = this.findNode(secondMenu,item)
-            localStorage.setItem("menuList", JSON.stringify(node));
+          let node = this.findNode(secondMenu,item)
+          this.$store.commit("digitalPark/menuList",node);
         }else{
-          localStorage.setItem("menuList", JSON.stringify(secondMenu));
+          this.$store.commit("digitalPark/menuList",secondMenu);
         }
         //快接入口菜单：概览类非二级菜单的快捷入口设置
         if(secondMenu.clientType==1){

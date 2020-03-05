@@ -1,6 +1,4 @@
 import Cookies from 'js-cookie'
-import CommonApi from "../../service/api/common";
-import moment from "./analysis";
 const state = {
   dragFlag:true,
   menuIsCollapse:false,
@@ -8,6 +6,7 @@ const state = {
   stockInApplyTab:'0',
   stockInReApplyId:'',
   activeMenuIndex:Cookies.get("activeMenuIndex"),
+  menuList:JSON.parse(localStorage.getItem("menuList"))
 }
 
 const mutations={
@@ -29,7 +28,11 @@ const mutations={
   activeMenuIndex(state,data){
     state.activeMenuIndex = data
     Cookies.set("activeMenuIndex",data)
-  }
+  },
+  menuList(state,data){
+    state.menuList = data
+    localStorage.setItem("menuList",JSON.stringify(data))
+  },
 }
 
 export default {

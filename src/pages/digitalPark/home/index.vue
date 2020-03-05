@@ -144,7 +144,7 @@ export default {
   methods: {
     onClickItemProduct(item) {
       Cookies.set("moduleType", 2);
-      localStorage.setItem("menuList", JSON.stringify(item));
+      this.$store.commit("digitalPark/menuList",item);
       // 192.168.1.69：9002/html
       let routeAddress = item.routeAddress;
       // 跳转三维
