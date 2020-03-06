@@ -187,6 +187,7 @@ export default {
       this.$router.push("/vibe-web");
     },
     loadPage(item) {
+      item  = JSON.parse(item)
       this.$store.commit("digitalPark/activeMenuIndex",CommonFun.setMenuIndex(item))
       if (item.routeAddress) {
         if (item.routeAddress.indexOf("@") != -1) {
