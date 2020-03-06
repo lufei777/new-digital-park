@@ -134,13 +134,15 @@ export default {
         { label: "优先级", prop: "priority" },
         { label: "状态", prop: "taskStatus" },
         { label: "创建人", prop: "founderName" },
-        { label: "处理人", prop: "username" }
+        { label: "处理人", prop: "username" },
+        { label: "地点", prop: "officeLocation" },
+        { label: "补录", prop: "isSupplementText" }
       ];
       this.tableData.columnConfig = labelList;
       let res = await TaskManageApi.taskList({
         pageNum: this.currentPage,
-        pageSize: 10
-        // type: 1,
+        pageSize: 10,
+        type: 3
       });
       if (res.list) {
         res.list.map((item, ind) => {
@@ -171,6 +173,20 @@ export default {
               : item.urgent == "3"
               ? "正常"
               : "";
+
+          item.officeLocation =
+            item.officeLocation == 0
+              ? "公司"
+              : item.officeLocation == 1
+              ? "现场"
+              : "";
+
+          item.isSupplementText =
+            item.isSupplement == "1"
+              ? "正常"
+              : item.isSupplement == "0"
+              ? "补录"
+              : "正常";
         });
       }
       if (res) {

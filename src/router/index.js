@@ -24,6 +24,7 @@ import contractManage from './contract-manage'                // 合同管理
 import NewsManage from './news-manage'                        // 消息管理
 import MessageManage from './message-manage'                  // 信息发布
 import personalManage from './personal-manage';               // 人事管理
+import zGaddress from './zGaddress';   
 
 import helloRouter from './hello-router'
 
@@ -37,7 +38,8 @@ let DigitalRouters = flattenDeep(
     PurchaseManage, StockManage,
     visitorManage, ParkingLotManage,
     taskManage, contractManage, NewsManage,
-    MessageManage, personalManage
+    MessageManage, personalManage,
+    zGaddress
   ]
 );
 
