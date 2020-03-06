@@ -16,6 +16,7 @@
         <el-card>
           <span>{{item.approvalUser}}</span>
           <span>{{item.pointName}}</span>
+          <span>{{item.isPass?'通过':'不通过'}}</span>
           <div class="opinion">{{item.opinion}}</div>
         </el-card>
       </el-timeline-item>
@@ -109,9 +110,9 @@
       },
       onClickBackBtn(){
         if(this.fromFlag==1){
-          this.$router.push("/todoList?fromFlag=1")
+          this.$router.push("/todoList")
         }else{
-          this.$router.push("/todoList?fromFlag=2")
+          this.$router.push("/todoList")
         }
       },
       async onClickDealBtn(isPass){

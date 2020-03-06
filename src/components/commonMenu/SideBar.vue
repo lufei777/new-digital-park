@@ -25,27 +25,31 @@
         :active-text-color="menuConfig.activeTextColor"
         :collapse="menuConfig.isCollapse"
         @select="handleSelect"
-        @open="handleOpen"
-        @close="handleClose"
       >
         <sidebar-item :menuData="menuData" :specialRoute="menuConfig.specialRoute"/>
       </el-menu>
-      <!--<div v-if="!menuConfig.specialRoute">-->
-        <!--<div-->
-          <!--class="iconfont iconkuaijierukou hover-pointer shortcut-btn"-->
-          <!--@click="onClickShortcutBtn"-->
-        <!--&gt;</div>-->
-        <!--<ul class="shortcut-list" v-show="showShortcutList">-->
-          <!--<li v-for="(item,index) in shortCutList" :key="index">{{item.name}}</li>-->
-        <!--</ul>-->
-      <!--</div>-->
+      <div v-if="!menuConfig.specialRoute">
+        <div
+          class="iconfont iconkuaijierukou hover-pointer shortcut-btn"
+          @click="onClickShortcutBtn"
+        ></div>
+
+          <ul class="shortcut-list" v-show="showShortcutList">
+            <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
+              <li v-for="(item,index) in shortcutList"
+                  :key="index"
+                  @click="onClickItemShortcut(item)"
+              >{{item.name}}</li>
+            </el-scrollbar>
+          </ul>
+      </div>
     </div>
   </el-scrollbar>
 </template>
 <script>
 import commonFun from "@/utils/commonFun";
 import SidebarItem from "./SidebarItem";
-import DigitalParkApi from "../../service/api/digitalPark";
+import { mapState } from 'vuex'
 export default {
   name: "Sidebar",
   components: { SidebarItem },
@@ -60,7 +64,6 @@ export default {
   },
   data() {
     return {
-      shortCutList: [],
       showShortcutList: false,
       temporarilyHidden:false,
       activeTmp:''
@@ -71,117 +74,62 @@ export default {
       return this.menuConfig.isCollapse;
     },
     activeMenuIndex() {
-      this.getActiveIndex(this.menuData.childNode)
       //当前激活的菜单，顺序是cookie拿到的、父级传递的、默认的父级没传时使用菜单第一个
-      return this.menuConfig.specialRoute ? ""
-        : Cookies.get("activeMenuIndex") ||
-            this.menuConfig.activeIndex || this.getActiveIndex(this.menuData.childNode)
-    }
+      return this.menuConfig.specialRoute ? "" :
+             this.activeMenuIndexVuex ||
+             this.menuConfig.activeIndex ||
+             this.setActiveIndex(this.menuData)
+    },
+    shortcutList(){
+      return JSON.parse(localStorage.getItem('shortcutList'))
+    },
+    ...mapState({
+      activeMenuIndexVuex:state=>state.digitalPark.activeMenuIndex
+    })
   },
   watch: {
     isCollapse() {
       if (this.isCollapse) {
         this.showShortcutList = false;
       }
-    }
+    },
   },
   methods: {
     handleSelect(key, keyPath) {
-      // debugger
       // console.log(key,keyPath)
-      if (this.menuConfig.specialRoute) {
-        //找到第一层，例如无忧服务
-        let firstMenu = this.menuData.childNode.find(first => {
-          return first.id == keyPath[0];
-        });
-        //找到第二层，例如能源管理
-        let secondId = this.getMenuId(keyPath[1])
-        let secondMenu
-        firstMenu.childNode.length &&firstMenu.childNode.map((second) => {
-          if(second.id == secondId){
-            secondMenu=second
-          }
-        });
-        // console.log("firstMenu",firstMenu,secondMenu,secondId)
-        //找到当前点击的节点
-        let curNodeId=this.getMenuId(key)
-        console.log("secondMenu",secondMenu)
-        let curNode  = this.findCurNode(secondMenu,curNodeId)
-        console.log("curNode",curNode)
-        //跳转三维
-        if (commonFun.loadThreeD(curNode,secondMenu)) {
-          return;
-        }
-        localStorage.setItem("menuList", JSON.stringify(secondMenu));
-      }
-      if (key) {
-        this.loadPage(key);
-      }
     },
-    loadPage(key) {
-      Cookies.set("activeMenuIndex", key);
-      if (key.indexOf("null") != -1) {
-        this.$router.push("/digitalPark/defaultPage");
-      } else if (key.indexOf("@") != -1) {
-        commonFun.loadOldPage(key);
-      } else {
-        key = key.slice(key.indexOf("/"));
-        this.$router.push(key);
-      }
-    },
-    findCurNode(menu,id){
-      let tmp
-      for(let item of menu.childNode){
-        if(item.id==id){
-          tmp = item;
-        }else{
-          this.findCurNode(item,id)
-        }
-      }
-      return tmp;
-    },
-    getActiveIndex(menu){
-      if(!menu) return ;
-      if(menu[0].childNode && menu[0].childNode.length!=0){
-        this.getActiveIndex(menu[0].childNode)
+    setActiveIndex(menu){
+      if(menu.childNode.length!=0){
+        this.setActiveIndex(menu.childNode[0])
       }else{
-        this.activeTmp = menu[0].id+menu[0].routeAddress
+        this.activeTmp = commonFun.setMenuIndex(menu)
       }
       return this.activeTmp;
     },
-    getMenuId(item){
-      let menuId = item.split("/")[0];
-      if (menuId.indexOf("@") != -1) {
-        menuId = menuId.split("@")[0];
-      }
-      return menuId
-    },
-    handleOpen(key) {
-      // if(key=='/assetMaintenance'){
-      //   this.$router.push(key)
-      // }
-    },
-    handleClose(key) {
-      // console.log(key)
-      // if(key=='/assetMaintenance'){
-      //   this.$router.push(key)
-      // }
-    },
-    async getProModules() {
-      let res = await DigitalParkApi.getProductList({
-        lang: Cookies.get("lang")
-      });
-      this.shortCutList = res.slice(0, 6);
-    },
     onClickShortcutBtn() {
       this.showShortcutList = !this.showShortcutList;
-    }
+    },
+    onClickItemShortcut(item){
+      if(commonFun.loadThreeD(item,JSON.parse(localStorage.getItem("menuList")))){
+        return ;
+      }else{
+        this.$store.commit("digitalPark/menuList",item);
+        this.loadPage(item)
+      }
+    },
+    loadPage(item) {
+      if (item.routeAddress) {
+        if (item.routeAddress.indexOf("@") != -1) {
+          commonFun.loadOldPage(item);
+        } else {
+            this.$router.push(item.routeAddress);
+        }
+      } else {
+        this.$router.push("/digitalPark/defaultPage");
+      }
+    },
   },
   mounted() {
-
-
-    this.getProModules();
-    // this.getActiveIndex(this.menuData.childNode)
   }
 };
 </script>
@@ -235,7 +183,7 @@ export default {
   }
   .shortcut-list {
     width: 190px;
-    /*height:400px;*/
+    height:400px;
     background: #000;
     color: @white;
     text-align: center;

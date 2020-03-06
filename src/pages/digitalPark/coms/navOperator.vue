@@ -111,37 +111,19 @@ export default {
           goBackClientLogin();
         } else {
           sessionStorage.removeItem("token");
+          this.$store.commit("digitalPark/activeMenuIndex","")
           await SystemManageApi.logOut();
           this.$router.push("/login");
         }
       } else {
-        console.log("执行")
-        let menuTree = JSON.parse(localStorage.getItem("menuTree"));
-        let firstLevelTree = menuTree[0].childNode.find(
-          item => item.name == "基础功能"
-        );
-        let secondLevelTree = firstLevelTree.childNode.find(
-          item => item.name == "系统管理"
-        );
-        localStorage.setItem("menuList", JSON.stringify(secondLevelTree));
-        let thirdLevelTree = secondLevelTree.childNode.find(
-          item => item.name == "个人中心"
-        );
+        this.setSystemMenu()
         if (val == 1) {
-          Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[0].id}/personalInformation`);
-          // if(this.$route.path=='/vibe-web'){
-          //   this.$router.push("/personalInformation")
-          //   return ;
-          // }
+          this.$store.commit("digitalPark/activeMenuIndex","/personalInformation")
+          this.$router.push("/personalInformation")
         } else if (val == 2) {
-          Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[1].id}/modifyPassword`);
-          // if(this.$route.path=='/vibe-web'){
-          //   this.$router.push("/modifyPassword")
-          //   return ;
-          // }
+          this.$store.commit("digitalPark/activeMenuIndex","/modifyPassword")
+          this.$router.push("/modifyPassword")
         }
-        this.userValue = "0";
-        this.$router.push("/vibe-web")
       }
     },
     onClickSetup(val) { //点击设置
@@ -151,33 +133,25 @@ export default {
           `/digitalPark/moduleConfigure?type=${this.moduleType}&updateDragFlag=true`
         );
       } else {
-        let menuTree = JSON.parse(localStorage.getItem("menuTree"));
-        let firstLevelTree = menuTree[0].childNode.find(
-          item => item.name == "基础功能"
-        );
-        let secondLevelTree = firstLevelTree.childNode.find(
-          item => item.name == "系统管理"
-        );
-        localStorage.setItem("menuList", JSON.stringify(secondLevelTree));
-        let thirdLevelTree = secondLevelTree.childNode.find(
-          item => item.name == "个人中心"
-        );
+        this.setSystemMenu()
         if (val == 2) {
-          Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[0].id}/personalInformation`);
-          if(this.$route.path=='/vibe-web'){
-            this.$router.push("/personalInformation")
-            return ;
-          }
+          this.$store.commit("digitalPark/activeMenuIndex","/personalInformation")
+          this.$router.push("/personalInformation")
         } else if (val == 3) {
-          Cookies.set("activeMenuIndex", `${thirdLevelTree.childNode[1].id}/modifyPassword`);
-          if(this.$route.path=='/vibe-web'){
-            this.$router.push("/modifyPassword")
-            return ;
-          }
+          this.$store.commit("digitalPark/activeMenuIndex","/modifyPassword")
+          this.$router.push("/modifyPassword")
         }
-        this.setupValue = "0";
-        this.$router.push("/vibe-web")
       }
+    },
+    setSystemMenu(){
+      let menuTree = JSON.parse(localStorage.getItem("menuTree"));
+      let firstLevelTree = menuTree[0].childNode.find(
+        item => item.name == "基础功能"
+      );
+      let secondLevelTree = firstLevelTree.childNode.find(
+        item => item.name == "系统管理"
+      );
+      localStorage.setItem("menuList", JSON.stringify(secondLevelTree));
     },
     onClickGoBack() { //点击返回首页
       if (Cookies.get("moduleType") == 2) {
@@ -185,8 +159,7 @@ export default {
       } else {
         this.$router.push("/digitalPark/dashboardHomePage");
       }
-      Cookies.remove("activeMenuIndex");
-
+      this.$store.commit("digitalPark/activeMenuIndex","")
     },
     async getUserInfo() {
       this.userInfo = await SystemManageApi.getUserInfo();

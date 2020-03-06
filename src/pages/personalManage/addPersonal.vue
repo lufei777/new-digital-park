@@ -687,14 +687,14 @@ export default {
 </script>
 <style lang='less'>
 #personal-manage {
-  .panel {
+  /* .panel {
     padding: 0;
-  }
+  } */
 
   .el-tabs--border-card {
     position: relative;
     box-shadow: unset;
-    border: 0;
+    border-bottom: 0;
   }
 
   .el-tabs__content {

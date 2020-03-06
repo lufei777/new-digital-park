@@ -54,7 +54,7 @@ export default [{
   }, {
     path: '/tmpRouter',
     redirect: '/energy/waterDiffer',
-    // component: TmpRouter,
+    component: TmpRouter,
     meta: { title: '节能诊断' },
     children: [{
       path: '/energy/waterDiffer',

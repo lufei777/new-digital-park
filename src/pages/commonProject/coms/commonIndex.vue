@@ -17,6 +17,7 @@
 
 <script>
 // 项目的公共入口
+import { mapState } from 'vuex'
 import commonIndexLayout from "./commonIndexLayout";
 import Sidebar from "@/components/commonMenu/SideBar";
 import BreadCrumb from "@/components/breadCrumb";
@@ -34,13 +35,18 @@ export default {
   data() {
     let localStorageMenuData = JSON.parse(localStorage.menuList);
     return {
-      menuData: localStorageMenuData,
+      // menuData: localStorageMenuData,
       menuConfig: {
         bgColor: "#394562",
         textColor: "#B7BAC4",
         isCollapse: false
       }
     };
+  },
+  computed:{
+    ...mapState({
+      menuData:state=>state.digitalPark.menuList
+    })
   },
   methods: {
     onClickCollapseBtn() {

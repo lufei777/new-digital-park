@@ -144,7 +144,7 @@ export default {
   methods: {
     onClickItemProduct(item) {
       Cookies.set("moduleType", 2);
-      localStorage.setItem("menuList", JSON.stringify(item));
+      this.$store.commit("digitalPark/menuList",item);
       // 192.168.1.69：9002/html
       let routeAddress = item.routeAddress;
       // 跳转三维
@@ -154,15 +154,16 @@ export default {
       // 跳转路由
       if (routeAddress) {
         // 如果带有@字符，则跳转旧项目
+        CommonFun.setShortcutList(this.productList)
         if (routeAddress.indexOf("@") != -1) {
           CommonFun.loadOldPage(item);
         } else {
           setTimeout(() => {
-            this.$router.push(item.routeAddress + "?type=2");
-          }, 500);
+            this.$router.push(item.routeAddress);
+          }, 300);
         }
       } else {
-        this.$router.push("/digitalPark/defaultPage?type=2");
+        this.$router.push("/digitalPark/defaultPage");
       }
     },
     onShowMoreProduct() {
@@ -187,11 +188,7 @@ export default {
       let backgroundImage = "";
       try {
         backgroundImage =
-          "url(" +
-          require("../../../../static/image/digitalPark/" +
-            item.productBgUrl +
-            ".png") +
-          ")";
+          "url(" + require("../../../../static/image/digitalPark/" + item.productBgUrl + ".png") + ")";
       } catch (error) {}
       return {
         backgroundImage
@@ -432,7 +429,7 @@ export default {
       line-height: 150px;
       background-repeat: no-repeat;
       background-size: 100% 100%;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       margin-right:1.4%;
     }
     li:nth-child(6n){

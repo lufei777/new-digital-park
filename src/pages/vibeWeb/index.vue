@@ -92,6 +92,7 @@ export default {
       console.log("handleClose", args);
     },
     loadPage(key, keyPath) {
+      console.log(key,keyPath)
       // 如果key没有值，则默认keyPath第一个
       if (key.length === 0) {
         key = keyPath[0];
@@ -105,6 +106,7 @@ export default {
 
         this.iframeConfig.src = key;
       } else {
+        this.$store.commit("digitalPark/activeMenuIndex",key)
         this.$router.push(key);
       }
     }

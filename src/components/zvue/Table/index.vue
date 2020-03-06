@@ -560,6 +560,7 @@ export default {
         )
       );
       this.formIndexList.push(len);
+      return len;
     },
     //行取消
     rowCanel(row, index) {
@@ -627,10 +628,11 @@ export default {
     // 全局初始化
     _globalColumnFormatter(row, column, currentColumn) {
       let value = row[column.property];
-      if (typeof value === "string" && value.trim().length === 0) {
-        return "--";
-      }
-      if (!value) {
+      if (
+        this.validatenull(value) ||
+        (typeof value === "string" && value.trim().length === 0) ||
+        (Array.isArray(value) && value.length === 0)
+      ) {
         return "--";
       }
       return this.handleDetail(
@@ -647,6 +649,12 @@ export default {
       }
       // 如果是级联，则对结果进行处理
       if (column.type === "cascader") {
+        // 如果开启了elementUI级联的lazy模式，则从column.presentText中读值，此值在cascader的mounted中赋值
+        if (column.props && column.props.lazy) {
+          result = column.presentText
+            .split(column.separator || "\\")
+            .join(DIC_SPLIT);
+        }
         if (column.showAllLevels === false) {
           let list = result.split(DIC_SPLIT);
           result = list[list.length - 1];
@@ -667,6 +675,7 @@ export default {
      * table触发方法
      */
     cellEditFlag(row, column) {
+      // && column.slot !== true
       return row.$cellEdit && column.cell;
     },
     //行单击事件

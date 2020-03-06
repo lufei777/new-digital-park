@@ -4,7 +4,8 @@
       <el-menu-item
         :key="item.id"
         v-if="!item.childNode || item.childNode.length == 0"
-        :index="item.id + item.routeAddress"
+        :index="getMenuIndex(item)"
+        @click.native="onClickLastMenu(item)"
       >
         <i v-if="item.icon && !specialRoute" :class="['iconfont',item.icon]"></i>
         <span slot="title">{{item.name}}</span>
@@ -13,7 +14,7 @@
       <el-submenu
         v-else
         :key="item.id"
-        :index="item.id + item.routeAddress"
+        :index="getMenuIndex(item)"
         @click.native="onClickSubmenu(item)"
       >
         <template slot="title">
@@ -42,8 +43,13 @@ export default {
     },
     menuData: {},
   },
+  data(){
+    return {
+      findMenu:{}
+    }
+  },
   computed: {
-    menuList() {
+    allMenuList() {
       return JSON.parse(localStorage.getItem("menuTree"))[0].childNode;
     }
   },
@@ -51,42 +57,96 @@ export default {
     onClickSubmenu(item) {
       if (!this.specialRoute || item.level == 1) {
         return;
-      } else {
-        if (item.level == 2) {
-          localStorage.setItem("menuList", JSON.stringify(item));
-        } else {
-          let firstMenu = this.menuList.find(first => {
-            return first.id == item.firstMenuId;
-          });
-          let secondMenu = firstMenu.childNode.find(second => {
-            return second.id == item.secondMenuId;
-          });
-          localStorage.setItem("menuList", JSON.stringify(secondMenu));
-        }
       }
-      // 跳转三维
-      console.log(item, JSON.parse(localStorage.getItem("menuList")));
-      if (
-        CommonFun.loadThreeD(item, JSON.parse(localStorage.getItem("menuList")))
-      ) {
-        return;
-      }
-      this.loadPage(item);
+      Cookies.set("moduleType", 2);
+      this.setMenuList(item)
     },
     loadPage(item) {
-      Cookies.set("moduleType", 2);
-      Cookies.set("activeMenuIndex", item.childNode[0].id + item.routeAddress);
+      // console.log(item)
+      this.setActiveIndex(item)
       if (item.routeAddress) {
         if (item.routeAddress.indexOf("@") != -1) {
           CommonFun.loadOldPage(item);
         } else {
           setTimeout(() => {
             this.$router.push(item.routeAddress);
-          }, 500);
+          }, 300);
         }
       } else {
-        this.$router.push("/digitalPark/defaultPage?type=2");
+        this.$router.push("/digitalPark/defaultPage");
       }
+    },
+    getMenuIndex(item){
+      return CommonFun.setMenuIndex(item)
+    },
+    onClickLastMenu(item){
+       if(this.specialRoute){ //瀑布流
+         this.setMenuList(item)
+       }else{
+         this.loadPage(item);
+       }
+    },
+    setMenuList(item){
+      if (item.level == 2) {
+        this.$store.commit("digitalPark/menuList",item)
+        this.normalShortcutList()
+      }else{
+        let firstMenu = this.allMenuList.find(first => {
+          return first.id == item.firstMenuId;
+        });
+        let secondMenu = firstMenu.childNode.find(second => {
+          return second.id == item.secondMenuId;
+        });
+        //菜单：如果是二级是客户端类概览页且点击的子集是跳网页，则不存全部菜单
+        if(secondMenu.clientType==1 && item.clientType!=1 && item.level==3){
+          this.$store.commit("digitalPark/menuList",item);
+        }else if(secondMenu.clientType==1 && item.clientType!=1 && item.level!=3){
+          let node = this.findNode(secondMenu,item)
+          this.$store.commit("digitalPark/menuList",node);
+        }else{
+          this.$store.commit("digitalPark/menuList",secondMenu);
+        }
+        //快接入口菜单：概览类非二级菜单的快捷入口设置
+        if(secondMenu.clientType==1){
+          localStorage.setItem("shortcutList", JSON.stringify(secondMenu.childNode));
+        }else{
+          this.normalShortcutList()
+        }
+      }
+      if (CommonFun.loadThreeD(item, JSON.parse(localStorage.getItem("menuList")))) {
+        return;
+      }
+      this.loadPage(item);
+    },
+    setActiveIndex(menu){
+      if(menu.childNode.length!=0){
+        this.setActiveIndex(menu.childNode[0])
+      }else{
+        let activeTmp = CommonFun.setMenuIndex(menu)
+        this.$store.commit("digitalPark/activeMenuIndex",activeTmp)
+        // Cookies.set("activeMenuIndex",activeTmp);
+      }
+      return ;
+    },
+    findNode(menu,obj){
+      //menu起始是二级菜单
+      menu.childNode.map((child)=>{
+        if(child.id==obj.id){
+          this.findMenu = menu
+        }else{
+          this.findNode(child,obj)
+        }
+      })
+      return this.findMenu;
+    },
+    normalShortcutList(){
+      let shortcutList=[]
+      this.allMenuList.map((item)=>{
+        item.childNode.map((child)=>{
+          shortcutList.push(child)
+        })
+      })
+      localStorage.setItem("shortcutList", JSON.stringify(shortcutList));
     }
   },
   mounted() {

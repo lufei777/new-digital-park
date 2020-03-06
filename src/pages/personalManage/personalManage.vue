@@ -151,12 +151,12 @@ export default {
             label: "直接上级"
           },
           {
-            prop: "type",
+            prop: "status",
             label: "员工状态",
             dicData: PersonalManageDic.employeeStatus
           },
           {
-            prop: "status",
+            prop: "type",
             label: "员工类型",
             dicData: PersonalManageDic.employeeType
           },

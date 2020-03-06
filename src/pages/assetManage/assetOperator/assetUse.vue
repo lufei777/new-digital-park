@@ -41,6 +41,7 @@
             <el-card>
               <span>{{item.approvalUser}}</span>
               <span>{{item.pointName}}</span>
+              <span>{{item.isPass?'通过':'不通过'}}</span>
               <div class="opinion">{{item.opinion}}</div>
             </el-card>
           </el-timeline-item>
@@ -101,7 +102,11 @@
             label:'领用的资产',
             prop:'name',
             cell:true,
-            slot:true
+            slot:true,
+            // rules: {
+            //   required: true,
+            //   message:'请选择资产',
+            // },
           },{
             label:'规格型号',
             prop:'specification'
@@ -224,10 +229,18 @@
       },
       onClickMultiDelBtn() {
         let delArr = this.$refs["tableRef"].getSelectedData();
+        if(!delArr.length){
+          this.$message({
+            type:'warning',
+            message:'请选择要删除的数据'
+          })
+          return ;
+        }
         this.deleteId=delArr.map((item)=>item.id).join(",")
         this.deleteAssetUseDetail()
       },
       chooseAsset(row,column,event){
+        console.log("focus",row.$index, this.tableConfig.data[row.$index])
         this.curDetail = this.tableConfig.data[row.$index]
         this.curRowIndex=row.$index
         this.showSearchModal=true
@@ -273,6 +286,7 @@
           res.list.map((item)=>{
             item.$cellEdit=item.isEdit?true:false
             item.preDetail ={...item}
+            item.collarNum=item.collarNum==0?'':item.collarNum
           })
         }else{
           res.list=[]
@@ -299,7 +313,13 @@
         let arr= list.filter((item)=>{
           return !item.name || !item.collarId || !item.collarNum
         })
-        console.log(list)
+        if(!list.length){
+          this.$message({
+            type:'warning',
+            message:'请先添加信息'
+          })
+          return ;
+        }
         if(arr.length){
           this.$message({
             type:'warning',
@@ -376,7 +396,9 @@
       font-size: 16px;
       margin-bottom:20px;
     }
+    .el-timeline{
+      margin-left:2px;
+    }
   }
-
 </style>
 

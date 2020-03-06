@@ -1,10 +1,12 @@
+import Cookies from 'js-cookie'
 const state = {
   dragFlag:true,
   menuIsCollapse:false,
   updateUserInfo:false,
   stockInApplyTab:'0',
   stockInReApplyId:'',
-  todoTab:'0',
+  activeMenuIndex:Cookies.get("activeMenuIndex"),
+  menuList:JSON.parse(localStorage.getItem("menuList"))
 }
 
 const mutations={
@@ -23,9 +25,14 @@ const mutations={
   stockInReApplyId(state,data){
     state.stockInReApplyId = data
   },
-  todoTab(state,data){
-    state.todoTab = data
-  }
+  activeMenuIndex(state,data){
+    state.activeMenuIndex = data
+    Cookies.set("activeMenuIndex",data)
+  },
+  menuList(state,data){
+    state.menuList = data
+    localStorage.setItem("menuList",JSON.stringify(data))
+  },
 }
 
 export default {
