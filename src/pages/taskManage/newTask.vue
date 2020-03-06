@@ -303,7 +303,6 @@ export default {
             span: 24,
             action: "/oaApi/image/upload",
             accept: ["jpg", "jpeg", "png"],
-            dataType: "string",
             disabled: false,
             props: {
               label: "fileName",
