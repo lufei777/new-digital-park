@@ -52,6 +52,7 @@
 <script>
 import SystemManageApi from "@/service/api/systemManage";
 import { mapState } from "vuex";
+import CommonFun from '@/utils/commonFun'
 
 export default {
   name: "DigitalNavOperator",
@@ -184,13 +185,26 @@ export default {
         })
       );
       this.$router.push("/vibe-web");
-    }
+    },
+    loadPage(item) {
+      this.$store.commit("digitalPark/activeMenuIndex",CommonFun.setMenuIndex(item))
+      if (item.routeAddress) {
+        if (item.routeAddress.indexOf("@") != -1) {
+          CommonFun.loadOldPage(item);
+        } else {
+          this.$router.push(item.routeAddress);
+        }
+      } else {
+        this.$router.push("/digitalPark/defaultPage");
+      }
+    },
   },
   mounted() {
     this.getUserInfo();
     window.CZClient={
       goToPersonal:this.onClickUserConfigure,  //跳转个人中心
-      goBack:this.onClickGoBack    //返回首页
+      goBack:this.onClickGoBack,    //返回首页
+      goToWebPage:this.loadPage
     }
   }
 };
