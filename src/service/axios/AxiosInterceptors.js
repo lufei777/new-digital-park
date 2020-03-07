@@ -48,9 +48,10 @@ axios.interceptors.response.use(
       // 如果是登陆页面，则不进行message提示
       if (router.currentRoute.path == '/login') return;
       Message({
-        message: `${res.message || res.errorMessage}，错误代码:${res.code}`,
+        message: `${res.message || res.errorMessage}`,
         type: 'error'
       });
+      console.error(`${res.message || res.errorMessage}，错误代码:${res.code}`);
       return Promise.reject(res);
     } else {
       // 兼容旧接口
