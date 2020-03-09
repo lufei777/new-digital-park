@@ -174,13 +174,14 @@ export default {
         language: Cookies.get("lang")
       });
       this.title=res[0].name
-      // let zGChildNode = {
-      //   childNode:[],
-      //   id:"menu-22b039bb127541a691e21c8398759985",
-      //   name:"中钢物业管理",
-      //   routeAddress:"/zGaddress"
-      // }
-      // res[0].childNode[2].childNode.push(zGChildNode)
+      let zGChildNode = {
+        childNode:[],
+        id:"menu-22b039bb127541a691e21c8398759985",
+        name:"中钢物业管理",
+        routeAddress:"/zGaddress",
+        level:2
+      }
+      res[0].childNode[2].childNode.push(zGChildNode)
       this.menuData = res[0];
       localStorage.setItem('menuTree',JSON.stringify(res))
     },
@@ -467,8 +468,20 @@ export default {
     margin: 0 auto;
     padding-top: 10px;
   }
-  .sidebar-container .common-menu .el-submenu__title {
-    font-size: 16px;
+  .sidebar-container .common-menu {
+    .el-menu-item,
+    .el-submenu .el-submenu__title {
+      font-size: 16px;
+    }
+    .el-submenu .el-menu {
+      .el-menu-item,
+      .el-submenu__title {
+        font-size: 16px;
+      }
+    }
+    .el-submenu .el-menu .el-submenu .el-menu .el-menu-item {
+      font-size: 16px;
+    }
   }
   .nest-menu {
     font-size: 16px !important;

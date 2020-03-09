@@ -152,7 +152,8 @@ export default {
       let secondLevelTree = firstLevelTree.childNode.find(
         item => item.name == "系统管理"
       );
-      localStorage.setItem("menuList", JSON.stringify(secondLevelTree));
+      // localStorage.setItem("menuList", JSON.stringify(secondLevelTree));
+      this.$store.commit("digitalPark/menuList",secondLevelTree)
     },
     onClickGoBack() { //点击返回首页
       if (Cookies.get("moduleType") == 2) {
