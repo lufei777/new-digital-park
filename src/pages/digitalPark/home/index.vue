@@ -178,7 +178,7 @@ export default {
         childNode:[],
         id:"menu-22b039bb127541a691e21c8398759985",
         name:"中钢物业管理",
-        routeAddress:"/zGaddress",
+        routeAddress:"/zgPropertyManage",
         level:2
       }
       res[0].childNode[2].childNode.push(zGChildNode)
@@ -468,27 +468,8 @@ export default {
     margin: 0 auto;
     padding-top: 10px;
   }
-  .sidebar-container .common-menu {
-    .el-menu-item,
-    .el-submenu .el-submenu__title {
-      font-size: 16px;
-    }
-    .el-submenu .el-menu {
-      .el-menu-item,
-      .el-submenu__title {
-        font-size: 16px;
-      }
-    }
-    .el-submenu .el-menu .el-submenu .el-menu .el-menu-item {
-      font-size: 16px;
-    }
-  }
-  .nest-menu {
-    font-size: 16px !important;
-    float: none;
-    .el-submenu__icon-arrow {
-      position: absolute !important;
-    }
+  .sidebar-container .common-menu .el-submenu .el-submenu__title{
+    font-size: 16px;
   }
   .el-menu--horizontal .el-menu-item {
     font-size: 16px;
@@ -513,9 +494,11 @@ export default {
   }
 }
 
-.el-menu-item,
-.el-submenu__title {
-  font-size: 16px;
+.el-menu--horizontal{
+  .el-menu-item,
+  .el-submenu__title {
+    font-size: 16px;
+  }
 }
 .common-menu .el-submenu .el-submenu__title {
   height: 60px !important;

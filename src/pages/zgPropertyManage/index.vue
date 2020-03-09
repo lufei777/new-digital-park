@@ -22,7 +22,7 @@
 
 <script>
 export default {
-  name: "ZGaddress",
+  name: "ZGPropertyManage",
   data() {
     return {
       back: false,

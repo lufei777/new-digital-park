@@ -1736,6 +1736,18 @@ class commonFun {
     }
   }
 
+  loadPage(item) {
+    if (item.routeAddress) {
+      if (item.routeAddress.indexOf("@") != -1) {
+        this.loadOldPage(item);
+      } else {
+        router.push(item.routeAddress);
+      }
+    } else {
+      router.push("/digitalPark/defaultPage");
+    }
+  }
+
   setShortcutList(shortcut){
     localStorage.setItem("shortcutList",JSON.stringify(shortcut))
   }

@@ -38,7 +38,11 @@
       <div class="iconfont iconkuaijierukou hover-pointer shortcut-btn" @click="onClickShortcutBtn"></div>
       <ul class="shortcut-list" v-show="showShortcutList">
         <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
-            <li v-for="(item,index) in shortcutList" :key="index">{{item.name}}</li>
+            <li v-for="(item,index) in shortcutList"
+                class="hover-pointer"
+                :key="index"
+                @click="onClickItemShortcut(item)"
+            >{{item.name}}</li>
         </el-scrollbar>
       </ul>
     </div>
@@ -48,6 +52,7 @@
 import commonFun from "@/utils/commonFun";
 import SidebarItem from "./SidebarItem";
 import DigitalParkApi from "@/service/api/digitalPark";
+import { mapState } from 'vuex'
 export default {
   name: "Sidebar",
   components: { SidebarItem },
@@ -75,11 +80,14 @@ export default {
       // let activeIndex = show_menu.indexOf("@")?show_menu.substring(show_menu.indexOf("@")):show_menu
       // console.log(activeIndex)
       // return activeIndex
-      return this.menuConfig.activeIndex
+      return this.activeMenuIndexVuex || this.menuConfig.activeIndex
     },
     shortcutList(){
       return JSON.parse(localStorage.getItem('shortcutList'))
     },
+    ...mapState({
+      activeMenuIndexVuex:state=>state.digitalPark.activeMenuIndex
+    })
   },
   watch: {
     isCollapse() {
@@ -106,7 +114,16 @@ export default {
     handleClose(key) {},
     onClickShortcutBtn() {
       this.showShortcutList = !this.showShortcutList;
-    }
+    },
+    onClickItemShortcut(item){
+      this.$store.commit("digitalPark/activeMenuIndex","");
+      if(commonFun.loadThreeD(item,JSON.parse(localStorage.getItem("menuList")))){
+        return ;
+      }else{
+        this.$store.commit("digitalPark/menuList",item);
+        commonFun.loadPage(item)
+      }
+    },
   },
   mounted() {
   }

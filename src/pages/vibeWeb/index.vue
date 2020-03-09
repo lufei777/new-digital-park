@@ -102,6 +102,7 @@ export default {
         }
       }
       if (key.indexOf("@") != -1) {
+        this.$store.commit("digitalPark/activeMenuIndex",key)
         key = key.replace("@", "");
 
         this.iframeConfig.src = key;
