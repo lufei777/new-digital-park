@@ -10,7 +10,7 @@
       </span>
     </span>
     <iframe
-      src="http://localhost:2019/"
+      src="http://localhost:2020/"
       id="iframe"
       frameborder="0"
       width="100%"
@@ -22,7 +22,7 @@
 
 <script>
 export default {
-  name: "ZGaddress",
+  name: "ZGPropertyManage",
   data() {
     return {
       back: false,

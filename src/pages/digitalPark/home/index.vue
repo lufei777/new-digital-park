@@ -174,13 +174,14 @@ export default {
         language: Cookies.get("lang")
       });
       this.title=res[0].name
-      // let zGChildNode = {
-      //   childNode:[],
-      //   id:"menu-22b039bb127541a691e21c8398759985",
-      //   name:"中钢物业管理",
-      //   routeAddress:"/zGaddress"
-      // }
-      // res[0].childNode[2].childNode.push(zGChildNode)
+      let zGChildNode = {
+        childNode:[],
+        id:"menu-22b039bb127541a691e21c8398759985",
+        name:"中钢物业管理",
+        routeAddress:"/zgPropertyManage",
+        level:2
+      }
+      res[0].childNode[2].childNode.push(zGChildNode)
       this.menuData = res[0];
       localStorage.setItem('menuTree',JSON.stringify(res))
     },
@@ -467,15 +468,8 @@ export default {
     margin: 0 auto;
     padding-top: 10px;
   }
-  .sidebar-container .common-menu .el-submenu__title {
+  .sidebar-container .common-menu .el-submenu .el-submenu__title{
     font-size: 16px;
-  }
-  .nest-menu {
-    font-size: 16px !important;
-    float: none;
-    .el-submenu__icon-arrow {
-      position: absolute !important;
-    }
   }
   .el-menu--horizontal .el-menu-item {
     font-size: 16px;
@@ -500,9 +494,11 @@ export default {
   }
 }
 
-.el-menu-item,
-.el-submenu__title {
-  font-size: 16px;
+.el-menu--horizontal{
+  .el-menu-item,
+  .el-submenu__title {
+    font-size: 16px;
+  }
 }
 .common-menu .el-submenu .el-submenu__title {
   height: 60px !important;

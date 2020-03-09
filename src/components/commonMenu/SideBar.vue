@@ -37,6 +37,7 @@
           <ul class="shortcut-list" v-show="showShortcutList">
             <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
               <li v-for="(item,index) in shortcutList"
+                  class="hover-pointer"
                   :key="index"
                   @click="onClickItemShortcut(item)"
               >{{item.name}}</li>
@@ -110,6 +111,7 @@ export default {
       this.showShortcutList = !this.showShortcutList;
     },
     onClickItemShortcut(item){
+      this.$store.commit("digitalPark/activeMenuIndex","");
       if(commonFun.loadThreeD(item,JSON.parse(localStorage.getItem("menuList")))){
         return ;
       }else{
