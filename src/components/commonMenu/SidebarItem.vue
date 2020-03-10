@@ -22,11 +22,7 @@
           <span>{{item.name}}</span>
         </template>
 
-        <sidebar-item
-          class="nest-menu"
-          :menu-data="item"
-          :specialRoute="specialRoute"
-        />
+        <sidebar-item class="nest-menu" :menu-data="item" :specialRoute="specialRoute" />
       </el-submenu>
     </template>
   </fragment>
@@ -41,12 +37,12 @@ export default {
       type: Boolean,
       required: false
     },
-    menuData: {},
+    menuData: {}
   },
-  data(){
+  data() {
     return {
-      findMenu:{}
-    }
+      findMenu: {}
+    };
   },
   computed: {
     allMenuList() {
@@ -59,39 +55,25 @@ export default {
         return;
       }
       Cookies.set("moduleType", 2);
-      this.setMenuList(item)
+      this.setMenuList(item);
     },
-    loadPage(item) {
-      // console.log(item)
-      this.setActiveIndex(item)
-      if (item.routeAddress) {
-        if (item.routeAddress.indexOf("@") != -1) {
-          CommonFun.loadOldPage(item);
-        } else {
-          setTimeout(() => {
-            this.$router.push(item.routeAddress);
-          }, 300);
-        }
+    getMenuIndex(item) {
+      return CommonFun.setMenuIndex(item);
+    },
+    onClickLastMenu(item) {
+      if (this.specialRoute) {
+        //瀑布流
+        this.setMenuList(item);
       } else {
-        this.$router.push("/digitalPark/defaultPage");
+        this.setActiveIndex(item);
+        CommonFun.loadPage(item);
       }
     },
-    getMenuIndex(item){
-      return CommonFun.setMenuIndex(item)
-    },
-    onClickLastMenu(item){
-       CommonFun.goToZGManage(item)
-       if(this.specialRoute){ //瀑布流
-         this.setMenuList(item)
-       }else{
-         this.loadPage(item);
-       }
-    },
-    setMenuList(item){
+    setMenuList(item) {
       if (item.level == 2) {
-        this.$store.commit("digitalPark/menuList",item)
-        this.normalShortcutList()
-      }else{
+        this.$store.commit("digitalPark/menuList", item);
+        this.normalShortcutList();
+      } else {
         let firstMenu = this.allMenuList.find(first => {
           return first.id == item.firstMenuId;
         });
@@ -105,50 +87,50 @@ export default {
         }else if(secondMenu.clientType==1 && item.clientType!=1 && item.level!=3){
           let node = this.findNode(secondMenu,item)
           menuTmp=node
-        }else{
-          menuTmp=secondMenu
+        }else {
+          menuTmp = secondMenu
         }
         this.$store.commit("digitalPark/menuList",menuTmp);
         //快接入口菜单：概览类非二级菜单的快捷入口设置
-        if(secondMenu.clientType==1){
+        if (secondMenu.clientType == 1) {
           localStorage.setItem("shortcutList", JSON.stringify(secondMenu.childNode));
-        }else{
-          this.normalShortcutList()
+        } else {
+          this.normalShortcutList();
         }
       }
       if (CommonFun.loadThreeD(item, JSON.parse(localStorage.getItem("menuList")))) {
         return;
       }
-      this.loadPage(item);
-    },
-    setActiveIndex(menu){
-      if(menu.childNode.length==0 || !this.specialRoute) {
-        let activeTmp = CommonFun.setMenuIndex(menu)
-        this.$store.commit("digitalPark/activeMenuIndex",activeTmp)
+      CommonFun.loadPage(item);
+      },
+    setActiveIndex(menu) {
+      if (menu.childNode.length != 0) {
+        this.setActiveIndex(menu.childNode[0]);
+      } else {
+        let activeTmp = CommonFun.setMenuIndex(menu);
+        this.$store.commit("digitalPark/activeMenuIndex", activeTmp);
         // Cookies.set("activeMenuIndex",activeTmp);
-      }else{
-        this.setActiveIndex(menu.childNode[0])
       }
-      return ;
+      return;
     },
-    findNode(menu,obj){
+    findNode(menu, obj) {
       //menu起始是二级菜单
-      menu.childNode.map((child)=>{
-        if(child.id==obj.id){
-          this.findMenu = menu
-        }else{
-          this.findNode(child,obj)
+      menu.childNode.map(child => {
+        if (child.id == obj.id) {
+          this.findMenu = menu;
+        } else {
+          this.findNode(child, obj);
         }
-      })
+      });
       return this.findMenu;
     },
-    normalShortcutList(){
-      let shortcutList=[]
-      this.allMenuList.map((item)=>{
-        item.childNode.map((child)=>{
-          shortcutList.push(child)
-        })
-      })
+    normalShortcutList() {
+      let shortcutList = [];
+      this.allMenuList.map(item => {
+        item.childNode.map(child => {
+          shortcutList.push(child);
+        });
+      });
       localStorage.setItem("shortcutList", JSON.stringify(shortcutList));
     }
   },

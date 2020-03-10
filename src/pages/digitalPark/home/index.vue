@@ -159,9 +159,9 @@ export default {
         if (routeAddress.indexOf("@") != -1) {
           CommonFun.loadOldPage(item);
         } else {
-          setTimeout(() => {
+          // setTimeout(() => {
             this.$router.push(item.routeAddress);
-          }, 300);
+          // }, 300);
         }
       } else {
         this.$router.push("/digitalPark/defaultPage");

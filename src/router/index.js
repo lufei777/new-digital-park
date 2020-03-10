@@ -49,14 +49,14 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if (typeof to.meta.loginCheck === 'boolean' && !to.meta.loginCheck) {
-    next()
+  if (to.meta.loginCheck) {
+    if (!sessionStorage.getItem('token')) {
+      router.push('/login');
+    } else {
+      next();
+    }
   } else {
-    axois.get('/oaApi/user/login').then(() => {
-      next()
-    }).catch(() => {
-
-    })
+    next();
   }
 })
 export default router
