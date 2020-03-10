@@ -2,18 +2,19 @@ import axiosOrigin from "axios";
 import router from '@/router'
 const Message = require("element-ui").Message
 
-var config = {
-  // baseURL:"",
+let config = {
   timeout: 100000
 };
-var axios = axiosOrigin.create(config);
+let axios = axiosOrigin.create(config);
 
 axios.defaults.headers.get["Content-Type"] = "application/x-www-form-urlencoded";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-let redirectHref = sessionStorage.getItem('logout') ? location.origin + '/#/digitalPark/homePage' : window.location.href
 axios.interceptors.request.use(
   function (config) {
+    let redirectHref = sessionStorage.getItem('logout')
+      ? location.origin + '/#/digitalPark/homePage'
+      : window.location.href;
     if (sessionStorage.token) {
       config.headers['X-SSO-Token'] = sessionStorage.token;
     }
@@ -42,15 +43,25 @@ axios.interceptors.response.use(
         console.log("response:", res);
       }
       // 如果没有则返回空对象
-      if (typeof res == 'undefined') return {};
-      return res.data;
+      return (res || {}).data;
     } else if (res.code) {
       // 如果是登陆页面，则不进行message提示
       if (router.currentRoute.path == '/login') return;
-      Message({
-        message: `${res.message || res.errorMessage}`,
-        type: 'error'
-      });
+      // 0：操作成功  101：报错  102：参数为空
+      switch (res.code) {
+        case '102':
+          Message({
+            message: '参数为空',
+            type: 'error'
+          });
+          break;
+        default:
+          Message({
+            message: `${res.message || res.errorMessage}`,
+            type: 'error'
+          });
+          break;
+      }
       console.error(`${res.message || res.errorMessage}，错误代码:${res.code}`);
       return Promise.reject(res);
     } else {
@@ -66,9 +77,9 @@ axios.interceptors.response.use(
       // 响应头状态匹配
       switch (response.status) {
         case 401:
-          if(localStorage.isCZClient=='true') {//如果是客户端
+          if (localStorage.isCZClient == 'true') {//如果是客户端
             window.goBackClientLogin()
-          }else{
+          } else {
             router.push('/login');
           }
           break;

@@ -116,20 +116,9 @@ export default {
         return ;
       }else{
         this.$store.commit("digitalPark/menuList",item);
-        this.loadPage(item)
+        commonFun.loadPage(item)
       }
-    },
-    loadPage(item) {
-      if (item.routeAddress) {
-        if (item.routeAddress.indexOf("@") != -1) {
-          commonFun.loadOldPage(item);
-        } else {
-            this.$router.push(item.routeAddress);
-        }
-      } else {
-        this.$router.push("/digitalPark/defaultPage");
-      }
-    },
+    }
   },
   mounted() {
   }
