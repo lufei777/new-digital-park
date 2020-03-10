@@ -1,12 +1,12 @@
 import axiosOrigin from "axios";
 import router from '@/router'
 const Message = require("element-ui").Message
+let calcelSource = getCancelSource();
 
 let config = {
   timeout: 100000
 };
 let axios = axiosOrigin.create(config);
-
 axios.defaults.headers.get["Content-Type"] = "application/x-www-form-urlencoded";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -21,6 +21,9 @@ axios.interceptors.request.use(
     config.headers['X-Requested-With'] = 'XMLHttpRequest';
     config.headers['X-Requested-InPage'] = redirectHref;
 
+    // 添加全局取消请求
+    config.cancelToken = calcelSource.source.token;
+
     return config;
   },
   function (error) {
@@ -29,7 +32,7 @@ axios.interceptors.request.use(
 );
 
 axios.interceptors.response.use(
-  function (response) {
+  (response) => {
     // 服务端打印日志
     if (response && process.server && response.config) {
       console.log("======seperate line======");
@@ -69,7 +72,7 @@ axios.interceptors.response.use(
       return res;
     }
   },
-  function (error) {
+  (error) => {
     // 最起码返回了响应头
     if (error.response) {
       let response = error.response;
@@ -77,11 +80,14 @@ axios.interceptors.response.use(
       // 响应头状态匹配
       switch (response.status) {
         case 401:
-          if (localStorage.isCZClient == 'true') {//如果是客户端
+          calcelSource.source.cancel();  // 取消所有请求
+          if (localStorage.isCZClient == 'true') {
+            //如果是客户端
             window.goBackClientLogin()
           } else {
             router.push('/login');
           }
+          calcelSource = getCancelSource();
           break;
         default:
           break;
@@ -95,9 +101,20 @@ axios.interceptors.response.use(
         });
       }
     }
-
-    return Promise.reject(error);
+    if (axiosOrigin.isCancel(error)) { // 取消请求的情况下，终端Promise调用链
+      return new Promise(() => { });
+    } else {
+      return Promise.reject(error);
+    }
   }
 );
+
+function getCancelSource() {
+  const CancelToken = axiosOrigin.CancelToken;
+  const source = CancelToken.source();
+  return {
+    source
+  }
+}
 
 export default axios;
