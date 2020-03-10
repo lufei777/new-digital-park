@@ -112,7 +112,7 @@ export default {
       ) {
         return;
       }
-      this.loadPage(item);
+      CommonFun.loadPage(item);
     },
     setActiveIndex(menu) {
       if (menu.childNode.length != 0) {
