@@ -1659,13 +1659,6 @@ class commonFun {
       sessionStorage.setItem('park_home_Page', location.href);
       location.href = OLDPROJECTHOME + '?forward=' + item.split('@')[1];
     } else {
-      let catalogId = 0
-      let arr = item.routeAddress.split("?")[1].split("&")
-      let obj = arr.find((item)=>item.includes("catalog"))
-      if(obj){
-        catalogId = obj.split("=")[1]
-        localStorage.setItem('catalogId', catalogId)
-      }
       if (_.isObject(item)) {
         localStorage.setItem('show_menu', item.routeAddress)
         Cookies.set('activeMenuIndex', item.routeAddress)
