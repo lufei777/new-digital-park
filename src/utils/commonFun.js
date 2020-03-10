@@ -1753,5 +1753,13 @@ class commonFun {
   setShortcutList(shortcut){
     localStorage.setItem("shortcutList",JSON.stringify(shortcut))
   }
+
+  goToZGManage(item){
+    //中钢物业管理客户端来处理
+    if(item.name=="物业系统"){
+      window.goToZGManage()
+      return ;
+    }
+  }
 }
 export default new commonFun()

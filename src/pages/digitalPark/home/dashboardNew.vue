@@ -319,7 +319,9 @@
             }
             return;
           }
-          localStorage.setItem("menuList", JSON.stringify(item));
+          CommonFun.goToZGManage(item)
+          this.$store.commit("digitalPark/activeMenuIndex","")
+          this.$store.commit("digitalPark/menuList",item)
           let routeAddress = item.routeAddress;
           if (routeAddress) {
             // 如果带有@字符，则跳转旧项目
