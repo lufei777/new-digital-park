@@ -11,7 +11,8 @@ module.exports = {
     proxyTable: [
       {
         context: ['/oaApi', '/user-service'],
-        target: 'http://39.98.130.147:8080'
+        // target: 'http://39.98.130.147:8080'
+        target:'http://192.168.1.232:8080'
         /* changeOrigin: true,//是否允许跨越*/
         /* pathRewrite: {
           '/user-service': ''
@@ -19,7 +20,8 @@ module.exports = {
       },
       {
         context: ['/vibe-web'],
-        target: 'http://39.98.130.147:8080'
+        target:'http://192.168.1.232:8080'
+        // target: 'http://39.98.130.147:8080'
       }
     ],
 

@@ -80,6 +80,7 @@ export default {
       return CommonFun.setMenuIndex(item)
     },
     onClickLastMenu(item){
+       CommonFun.goToZGManage(item)
        if(this.specialRoute){ //瀑布流
          this.setMenuList(item)
        }else{
@@ -97,15 +98,17 @@ export default {
         let secondMenu = firstMenu.childNode.find(second => {
           return second.id == item.secondMenuId;
         });
+        let menuTmp={}
         //菜单：如果是二级是客户端类概览页且点击的子集是跳网页，则不存全部菜单
         if(secondMenu.clientType==1 && item.clientType!=1 && item.level==3){
-          this.$store.commit("digitalPark/menuList",item);
+          menuTmp=item
         }else if(secondMenu.clientType==1 && item.clientType!=1 && item.level!=3){
           let node = this.findNode(secondMenu,item)
-          this.$store.commit("digitalPark/menuList",node);
+          menuTmp=node
         }else{
-          this.$store.commit("digitalPark/menuList",secondMenu);
+          menuTmp=secondMenu
         }
+        this.$store.commit("digitalPark/menuList",menuTmp);
         //快接入口菜单：概览类非二级菜单的快捷入口设置
         if(secondMenu.clientType==1){
           localStorage.setItem("shortcutList", JSON.stringify(secondMenu.childNode));
@@ -119,12 +122,12 @@ export default {
       this.loadPage(item);
     },
     setActiveIndex(menu){
-      if(menu.childNode.length!=0){
-        this.setActiveIndex(menu.childNode[0])
-      }else{
+      if(menu.childNode.length==0 || !this.specialRoute) {
         let activeTmp = CommonFun.setMenuIndex(menu)
         this.$store.commit("digitalPark/activeMenuIndex",activeTmp)
         // Cookies.set("activeMenuIndex",activeTmp);
+      }else{
+        this.setActiveIndex(menu.childNode[0])
       }
       return ;
     },

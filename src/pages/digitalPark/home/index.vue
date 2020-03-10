@@ -145,13 +145,14 @@ export default {
     onClickItemProduct(item) {
       Cookies.set("moduleType", 2);
       this.$store.commit("digitalPark/menuList",item);
-      // 192.168.1.69：9002/html
-      let routeAddress = item.routeAddress;
       // 跳转三维
       if (CommonFun.loadThreeD(item)) {
         return;
       }
+      CommonFun.goToZGManage(item)
       // 跳转路由
+      // 192.168.1.69：9002/html
+      let routeAddress = item.routeAddress;
       if (routeAddress) {
         // 如果带有@字符，则跳转旧项目
         CommonFun.setShortcutList(this.productList)
@@ -174,14 +175,14 @@ export default {
         language: Cookies.get("lang")
       });
       this.title=res[0].name
-      let zGChildNode = {
-        childNode:[],
-        id:"menu-22b039bb127541a691e21c8398759985",
-        name:"中钢物业管理",
-        routeAddress:"/zgPropertyManage",
-        level:2
-      }
-      res[0].childNode[2].childNode.push(zGChildNode)
+      // let zGChildNode = {
+      //   childNode:[],
+      //   id:"menu-22b039bb127541a691e21c8398759985",
+      //   name:"中钢物业管理",
+      //   routeAddress:"/zgPropertyManage",
+      //   level:2
+      // }
+      // res[0].childNode[2].childNode.push(zGChildNode)
       this.menuData = res[0];
       localStorage.setItem('menuTree',JSON.stringify(res))
     },
