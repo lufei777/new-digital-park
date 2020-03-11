@@ -77,7 +77,8 @@ module.exports = {
           loader: "less-loader"
         }
         ]
-      }]
+      }
+    ]
   },
   node: {
     // prevent webpack from injecting useless setImmediate polyfill because Vue

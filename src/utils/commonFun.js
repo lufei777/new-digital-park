@@ -1655,10 +1655,12 @@ class commonFun {
 
   // 跳转链接
   loadOldPage(item, routeOldProject) {
+    // 直接通过浏览器改变href跳转
     if (routeOldProject) {
       sessionStorage.setItem('park_home_Page', location.href);
       location.href = OLDPROJECTHOME + '?forward=' + item.split('@')[1];
     } else {
+      // 通过vibeWeb组件，改变路由跳转
       if (_.isObject(item)) {
         localStorage.setItem('show_menu', item.routeAddress)
         Cookies.set('activeMenuIndex', item.routeAddress)
@@ -1736,8 +1738,28 @@ class commonFun {
     }
   }
 
+  loadPage(item) {
+    if (item.routeAddress) {
+      if (item.routeAddress.indexOf("@") != -1) {
+        this.loadOldPage(item);
+      } else {
+        router.push(item.routeAddress);
+      }
+    } else {
+      router.push("/digitalPark/defaultPage");
+    }
+  }
+
   setShortcutList(shortcut){
     localStorage.setItem("shortcutList",JSON.stringify(shortcut))
+  }
+
+  goToZGManage(item){
+    //中钢物业管理客户端来处理
+    if(item.name=="物业系统"){
+      window.goToZGManage()
+      return ;
+    }
   }
 }
 export default new commonFun()

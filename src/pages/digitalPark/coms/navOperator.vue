@@ -52,6 +52,7 @@
 <script>
 import SystemManageApi from "@/service/api/systemManage";
 import { mapState } from "vuex";
+import CommonFun from '@/utils/commonFun'
 
 export default {
   name: "DigitalNavOperator",
@@ -151,7 +152,8 @@ export default {
       let secondLevelTree = firstLevelTree.childNode.find(
         item => item.name == "系统管理"
       );
-      localStorage.setItem("menuList", JSON.stringify(secondLevelTree));
+      // localStorage.setItem("menuList", JSON.stringify(secondLevelTree));
+      this.$store.commit("digitalPark/menuList",secondLevelTree)
     },
     onClickGoBack() { //点击返回首页
       if (Cookies.get("moduleType") == 2) {
@@ -184,13 +186,27 @@ export default {
         })
       );
       this.$router.push("/vibe-web");
-    }
+    },
+    loadPage(item) {
+      item  = JSON.parse(item)
+      this.$store.commit("digitalPark/activeMenuIndex",CommonFun.setMenuIndex(item))
+      if (item.routeAddress) {
+        if (item.routeAddress.indexOf("@") != -1) {
+          CommonFun.loadOldPage(item);
+        } else {
+          this.$router.push(item.routeAddress);
+        }
+      } else {
+        this.$router.push("/digitalPark/defaultPage");
+      }
+    },
   },
   mounted() {
     this.getUserInfo();
     window.CZClient={
       goToPersonal:this.onClickUserConfigure,  //跳转个人中心
-      goBack:this.onClickGoBack    //返回首页
+      goBack:this.onClickGoBack,    //返回首页
+      goToWebPage:this.loadPage
     }
   }
 };
