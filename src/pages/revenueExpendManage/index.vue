@@ -35,7 +35,8 @@ export default {
           id: "14",
           name: "预算管理",
           routeAddress: "/budgetmanage"
-        }{
+        },
+        {
           id: "15",
           name: "统计分析",
           routeAddress: "/statisticanalysis"
