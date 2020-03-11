@@ -133,16 +133,16 @@ let priorityType = [
     label: "紧急"
   }
 ];
-let officeLocationType =  [
-        {
-          value: 0,
-          label: "公司"
-        },
-        {
-          value: 1,
-          label: "现场"
-        }
-      ]
+let officeLocationType = [
+  {
+    value: 0,
+    label: "公司"
+  },
+  {
+    value: 1,
+    label: "现场"
+  }
+];
 import TaskManageApi from "../../service/api/taskManage";
 export default {
   name: "NewTask",
@@ -252,7 +252,7 @@ export default {
             span: 10,
             formslot: true
           },
-           {
+          {
             type: "select",
             label: "地点",
             prop: "officeLocation",
@@ -359,7 +359,7 @@ export default {
         urgent: this.model.urgent,
         taskPicList: this.model.taskPicList,
         delFlag: 1,
-        officeLocation:this.model.officeLocation
+        officeLocation: this.model.officeLocation
       };
     },
     taskId() {
@@ -374,6 +374,10 @@ export default {
     if (!this.taskId.id) {
       this.anotherTaskOperationShow = false;
       this.saveButtonShow = true;
+    }
+    if (this.taskId.allTaskStatus == "000") {
+      this.taskOperationShow = false;
+      this.anotherTaskOperationShow = false;
     }
     if (this.taskId.status == 1) {
       this.waitSend = true;
@@ -476,8 +480,8 @@ export default {
           this.changelistBy(res.deptId);
         }
         this.model.department = res.deptId;
-        this.model.taskType = res.type
-        this.model.urgent = res.urgent
+        this.model.taskType = res.type;
+        this.model.urgent = res.urgent;
         this.TempTaskId = res.id;
         this.model.taskName = res.taskName;
         this.model.beginTime = res.beginTime;
@@ -485,7 +489,7 @@ export default {
         this.model.designatorId = res.designatorId;
         this.designatorName = res.designatorName;
         this.model.description = res.description;
-        this.model.taskPicList = res.taskPics
+        this.model.taskPicList = res.taskPics;
       }
     },
     async dealTask() {
@@ -699,7 +703,12 @@ export default {
       this.designatorName = obj.fullName;
     },
     back() {
-      this.$router.push("aboutMe");
+      if (this.taskId.allTaskStatus == "000") {
+        this.$router.push("taskOverview");
+      } else {
+        this.$router.push("aboutMe");
+      }
+
     },
     async detailTask() {
       this.$refs[this.newTaskForm.ref].setColumnByProp("department", {
@@ -728,7 +737,7 @@ export default {
         this.model.description = res.description;
         this.model.taskType = res.type;
         this.model.urgent = res.urgent;
-        this.model.officeLocation = res.officeLocation
+        this.model.officeLocation = res.officeLocation;
       }
     },
     dispatch() {
@@ -822,14 +831,14 @@ export default {
       }
     }
   },
- async mounted() {
-   await this.deptTreeList();
+  async mounted() {
+    await this.deptTreeList();
     this.createPeople = JSON.parse(localStorage.getItem("userInfo")).fullName;
     if (this.taskId.id) {
       this.detailTask();
       this.operateLogList();
     }
-    console.log("judgeOperation", localStorage.getItem("judgeOperation"));
+    // console.log("judgeOperation", localStorage.getItem("judgeOperation"));
     if (localStorage.getItem("judgeOperation") == 1) {
       this.findTempTask();
     }

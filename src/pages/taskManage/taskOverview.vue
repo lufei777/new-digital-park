@@ -28,7 +28,11 @@
       </div>
       <CommonSelect />
       <div class="task-overview-table panel">
-        <z-table :ref="tableData.ref" :options="tableData"></z-table>
+        <z-table :ref="tableData.ref" :options="tableData">
+          <template slot="operation" slot-scope="obj">
+            <el-button type="text" @click="editRow(obj)">详情</el-button>
+          </template>
+        </z-table>
       </div>
     </div>
   </div>
@@ -62,11 +66,15 @@ export default {
       },
       tableData: {
         ref: "tableData",
+        operation: {
+          width: 150
+        },
         data: [],
         columnConfig: [],
         uiConfig: {
           height: "auto", //"", //高度
           selection: true, //是否多选
+          searchable: ["taskName", "officeLocation"],
           showIndex: true,
           pagination: {
             //是否分页，分页是否自定义
@@ -125,12 +133,12 @@ export default {
     onClickTreeNodeCallBack() {},
     async taskList() {
       let labelList = [
-        { label: "工单编号", prop: "tenantNumber" },
+        { label: "工单编号", prop: "taskNumber" },
         { label: "工单名称", prop: "taskName" },
         { label: "工单类型", prop: "typeText" },
         { label: "工单描述", prop: "description" },
-        { label: "创建时间", prop: "createTime " },
-        { label: "预计结束时间", prop: "endTime " },
+        { label: "开始时间", prop: "beginTime" },
+        { label: "预计结束时间", prop: "endTime" },
         { label: "优先级", prop: "priority" },
         { label: "状态", prop: "taskStatus" },
         { label: "创建人", prop: "founderName" },
@@ -197,6 +205,18 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val;
       this.taskList();
+    },
+    editRow(val) {
+       this.$router.push({
+          name: "NewTask",
+          query: {
+            extraOptions: {
+              disabled: true
+            },
+            id: val.scopeRow.row.id,
+            allTaskStatus: '000'
+          }
+        });
     },
     async homeTaskCount() {
       let res = await TaskManageApi.homeTaskCount();
