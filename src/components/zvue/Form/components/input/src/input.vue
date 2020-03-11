@@ -28,7 +28,7 @@
             v-model="filterText"
             v-if="filter"
           ></el-input>
-          <el-scrollbar style="height:180px;overflow-x:hidden !important;">
+          <el-scrollbar style="height:236px;overflow-x:hidden !important;">
             <el-tree
               :data="dicList"
               :node-key="valueKey"
@@ -432,7 +432,7 @@ export default {
   height: auto;
   overflow: hidden;
   min-width: 150px;
-  max-height: 250px;
+  max-height: 300px;
   background-color: #fff;
   position: absolute;
   z-index: 2001;

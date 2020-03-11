@@ -1,5 +1,5 @@
 <template>
-  <div class="el-form_wrapper" :style="{width:setPx(parentOption.width,'100%')}">
+  <div class="zvue-form-wrapper" :style="{width:setPx(parentOption.width,'100%')}">
     <el-form
       :ref="formRef"
       status-icon
@@ -27,7 +27,7 @@
           <template slot="header" v-if="$slots[group.prop+'Header']">
             <slot :name="`${group.prop}Header`"></slot>
           </template>
-          <div class="z-form_group">
+          <div class="zvue-form-group">
             <template v-for="(column, cindex) in group.forms">
               <el-col
                 :key="column.prop"
@@ -40,7 +40,7 @@
                 v-if="vaildDisplay(column)"
               >
                 <el-form-item
-                  :class="[_.isEmpty(column.label)?'el-form-item_emptylabel' : '']"
+                  :class="[_.isEmpty(column.label)?'zvue-form-item_emptylabel' : '']"
                   :label="column.label"
                   :prop="column.prop"
                   :required="column.required"
@@ -123,7 +123,7 @@
         <el-col :span="24" v-if="vaildData(parentOption.menuBtn,true)">
           <el-form-item>
             <!-- 菜单按钮组 -->
-            <div :class="`form_menu-${menuPosition}`">
+            <div :class="`zvue-form-menu-${menuPosition}`">
               <el-button
                 type="primary"
                 @click="submit"
@@ -522,7 +522,7 @@ export default {
 };
 </script>
 <style lang='less'>
-.el-form_wrapper {
+.zvue-form-wrapper {
   .z-input-number,
   .el-cascader,
   .el-date-editor.el-input,
@@ -534,13 +534,13 @@ export default {
     display: inline-block;
     height: 42px;
   }
-  .form_menu-center {
+  .zvue-form-menu-center {
     text-align: center;
   }
-  .form_menu-left {
+  .zvue-form-menu-left {
     text-align: left;
   }
-  .form_menu-right {
+  .zvue-form-menu-right {
     text-align: right;
   }
   .el-input-number__decrease,
@@ -588,7 +588,7 @@ export default {
     }
   }
   // 分组
-  .z-form_group {
+  .zvue-form-group {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -598,6 +598,10 @@ export default {
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     height: auto;
+  }
+  .el-tree-node__content {
+    padding-top: 0;
+    padding-bottom: 0;
   }
 }
 </style>
