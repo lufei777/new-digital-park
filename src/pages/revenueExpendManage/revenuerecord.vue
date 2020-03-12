@@ -19,7 +19,6 @@
 
     <template slot="table">
       <z-table :ref="tableData.ref" :options="tableData">
-
         <template slot="custom-top" slot-scope="{size}">
           <el-button :size="size" type="primary" @click="launchcharge">发起收费</el-button>
           <el-button :size="size" type="primary">导入</el-button>
@@ -28,7 +27,7 @@
         </template>
 
         <template slot="operation" slot-scope="{size,row}">
-          <el-button :size="size" type="text">详情</el-button>
+          <el-button :size="size" type="text" @click="detail(row)">详情</el-button>
           <!-- 已驳回 -->
           <template v-if="row.examineType === 0">
             <el-button :size="size" type="text">删除</el-button>
@@ -40,8 +39,8 @@
           </template>
           <!-- 待审核 -->
           <template v-if="row.examineType === 2">
-            <el-button :size="size" type="text">编辑</el-button>
-            <el-button :size="size" type="text">审核</el-button>
+            <el-button :size="size" type="text" @click="edit(row)">编辑</el-button>
+            <el-button :size="size" type="text" @click="check(row)">审核</el-button>
           </template>
         </template>
       </z-table>
@@ -244,6 +243,36 @@ export default {
         name: "launchcharge",
         query: {
           flag: "add"
+        }
+      });
+    },
+    detail(row) {
+      this.$router.push({
+        name: "launchcharge",
+        query: {
+          flag: "detail",
+          id: row.id,
+          model: row
+        }
+      });
+    },
+    check(row) {
+      this.$router.push({
+        name: "launchcharge",
+        query: {
+          flag: "check",
+          id: row.id,
+          model: row
+        }
+      });
+    },
+    edit(row) {
+      this.$router.push({
+        name: "launchcharge",
+        query: {
+          flag: "edit",
+          id: row.id,
+          model: row
         }
       });
     }

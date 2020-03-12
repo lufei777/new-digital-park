@@ -6,20 +6,13 @@
         <span>{{pageConfig.title}}</span>
       </span>
       <div class="form">
-        <z-form
-          :ref="leaseManageForm.ref"
-          :options="leaseManageForm"
-          v-model="model"
-          @submit="submit"
-        >
-          <template slot="btn" slot-scope="obj">
-            <div>
-              <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">搜索</el-button>
-              <el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>
-            </div>
-          </template>
-          <template slot="menuBtn" slot-scope="scope">
-            <el-button @click="back(scope)">返回</el-button>
+        <z-form :ref="formOptions.ref" :options="formOptions" v-model="model" @submit="submit">
+          <template slot="menuBtn" slot-scope="{size}">
+            <template v-if="pageConfig.flag === 'check'">
+              <el-button :size="size" type="primary" @click="pass">通过</el-button>
+              <el-button :size="size" type="danger" @click="reject">驳回</el-button>
+            </template>
+            <el-button :size="size" @click="back">返回</el-button>
           </template>
         </z-form>
       </div>
@@ -37,14 +30,25 @@ const incomeType = [
 
 const apiConfig = {
   add: {
+    flag: "add",
     title: "发起收费",
     api: leaseManageApi.addHouse
   },
   edit: {
+    flag: "edit",
     title: "编辑",
     api: leaseManageApi.editHouse
   },
   detail: {
+    flag: "detail",
+    title: "详情",
+    extraOptions: {
+      disabled: true,
+      submitBtn: false
+    }
+  },
+  check: {
+    flag: "check",
     title: "审核",
     extraOptions: {
       disabled: true,
@@ -57,7 +61,7 @@ export default {
   data() {
     return {
       model: {},
-      leaseManageForm: {
+      formOptions: {
         ref: "formRef",
         labelWidth: "100",
         menuPosition: "right",
@@ -197,6 +201,15 @@ export default {
   },
   created() {
     console.log(this.$route.query);
+    if (this.$route.query) {
+      let query = this.$route.query;
+      this.pageConfig = apiConfig[query.flag];
+      this.model = { ...this.model, ...query.model };
+      this.formOptions = {
+        ...this.formOptions,
+        ...this.pageConfig.extraOptions
+      };
+    }
   },
   methods: {
     submit(model, hide) {
@@ -218,12 +231,14 @@ export default {
     clearForm() {
       this.$refs[this.leaseManageForm.ref].resetForm();
     },
+    getPropertyDetail(row) {
+      return leaseManageApi.houseDetails(row);
+    },
     back() {
       this.$router.back();
     },
-    getPropertyDetail(row) {
-      return leaseManageApi.houseDetails(row);
-    }
+    pass() {},
+    reject() {}
   },
   watch: {}
 };

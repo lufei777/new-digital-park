@@ -50,7 +50,7 @@
                   :size="column.size || controlSize"
                   :label-width="setPx(column.width,parentOption.labelWidth || 90)"
                 >
-                <!-- 自定义label -->
+                  <!-- 自定义label -->
                   <template slot="label" v-if="column.labelslot">
                     <slot
                       :name="column.prop+'Label'"
@@ -162,7 +162,7 @@
                 v-if="vaildData(parentOption.emptyBtn,true)"
                 @click="resetForm"
               >{{vaildData(parentOption.emptyText,'清 空')}}</el-button>
-              <slot name="menuBtn" :size="controlSize"></slot>
+              <slot name="menuBtn" :disabled="allDisabled" :size="controlSize"></slot>
             </div>
           </el-form-item>
         </el-col>
