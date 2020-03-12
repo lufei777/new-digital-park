@@ -16,7 +16,7 @@
       <el-row :span="24">
         <!-- :display="item.display" -->
         <z-group
-          v-for="(group,index) in columnOption"
+          v-for="(group) in columnOption"
           v-show="vaildData(!group.hide,true)"
           :key="group.prop"
           :display="group.display"
@@ -50,6 +50,29 @@
                   :size="column.size || controlSize"
                   :label-width="setPx(column.width,parentOption.labelWidth || 90)"
                 >
+                <!-- 自定义label -->
+                  <template slot="label" v-if="column.labelslot">
+                    <slot
+                      :name="column.prop+'Label'"
+                      :column="column"
+                      :value="model[column.prop]"
+                      :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
+                      :size="column.size || controlSize"
+                      :dic="DIC[column.prop]"
+                    ></slot>
+                  </template>
+                  <!-- 自定义error -->
+                  <template slot="error" slot-scope="{error}" v-if="column.errorslot">
+                    <slot
+                      :name="column.prop+'Error'"
+                      :column="column"
+                      :error="error"
+                      :value="model[column.prop]"
+                      :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
+                      :size="column.size || controlSize"
+                      :dic="DIC[column.prop]"
+                    ></slot>
+                  </template>
                   <!-- 如果是禁用tooltip，则tabindex 为 -1 -->
                   <el-tooltip
                     :tabindex="!column.tip || column.type==='upload' ? -1 : 0"
@@ -598,10 +621,6 @@ export default {
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     height: auto;
-  }
-  .el-tree-node__content {
-    padding-top: 0;
-    padding-bottom: 0;
   }
 }
 </style>
