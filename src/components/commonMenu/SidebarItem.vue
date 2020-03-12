@@ -104,7 +104,7 @@ export default {
       CommonFun.loadPage(item);
       },
     setActiveIndex(menu) {
-      if (menu.childNode.length != 0) {
+      if (menu.childNode && menu.childNode.length != 0) {
         this.setActiveIndex(menu.childNode[0]);
       } else {
         let activeTmp = CommonFun.setMenuIndex(menu);

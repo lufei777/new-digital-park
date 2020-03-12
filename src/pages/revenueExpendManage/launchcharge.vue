@@ -12,18 +12,6 @@
           v-model="model"
           @submit="submit"
         >
-          <template slot="housepriceappend" slot-scope="obj">
-            <el-select
-              :disabled="obj.disabled"
-              class="empty-icon"
-              style="width:80px !important;"
-              v-model="model.priceType"
-            >
-              <template v-for="item in LeaseManageDic.PriceType">
-                <el-option :key="item.label" :label="item.label" :value="item.value"></el-option>
-              </template>
-            </el-select>
-          </template>
           <template slot="btn" slot-scope="obj">
             <div>
               <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">搜索</el-button>
@@ -39,21 +27,25 @@
   </div>
 </template>
 <script>
-import { LeaseManageDic } from "@/utils/dictionary";
 import leaseManageApi from "@/service/api/leaseManage";
-import commonApi from "@/service/api/common";
+
+const incomeType = [
+  { label: "租赁", value: 0 },
+  { label: "服务费", value: 1 },
+  { label: "专利费", value: 2 }
+];
 
 const apiConfig = {
   add: {
-    title: "新增房产",
+    title: "发起收费",
     api: leaseManageApi.addHouse
   },
   edit: {
-    title: "编辑房产",
+    title: "编辑",
     api: leaseManageApi.editHouse
   },
   detail: {
-    title: "查看房产",
+    title: "审核",
     extraOptions: {
       disabled: true,
       submitBtn: false
@@ -64,11 +56,9 @@ const apiConfig = {
 export default {
   data() {
     return {
-      model: {
-        priceType: LeaseManageDic.PriceType[0].value
-      },
+      model: {},
       leaseManageForm: {
-        ref: "leaseManageForm",
+        ref: "formRef",
         labelWidth: "100",
         menuPosition: "right",
         emptyBtn: false,
@@ -76,117 +66,118 @@ export default {
         forms: [
           {
             type: "input",
-            prop: "houseId",
-            readonly: true,
+            prop: "id",
             display: false
           },
           {
             type: "input",
-            label: "房产编号",
-            prop: "houseNumber",
+            label: "编号",
+            prop: "incomId",
             readonly: true,
-            clearable: true,
-            valueDefault: "FC-19112810000001",
+            valueDefault: "SZ-202003050001",
             span: 12,
-            tip: "该编号自动生成",
-            rules: {
-              required: true,
-              message: "如果没有自动生成，请联系管理员",
-              trigger: "change"
-            }
-          },
-          {
-            type: "tree",
-            label: "空间位置",
-            prop: "spaceId",
-            clearable: true,
-            span: 12,
-            props: {
-              label: "floor",
-              value: "floorId",
-              children: "nodes"
-            },
-            rules: {
-              required: true,
-              message: "请选择空间位置",
-              trigger: "change"
-            }
-          },
-          {
-            type: "radio",
-            label: "是否可出租",
-            prop: "isRent",
-            dicData: LeaseManageDic.isRent,
-            valueDefault: 1,
-            clearable: true,
-            span: 12
+            tip: "该编号自动生成"
           },
           {
             type: "input",
-            label: "面积",
-            prop: "houseArea",
-            // rawtype: "number",
-            dataType: "number",
-            append: "m²",
-            clearable: true,
-            span: 12
-          },
-          {
-            type: "input",
-            label: "房产名称",
-            prop: "houseName",
+            label: "收入名称",
+            prop: "incomeName",
             clearable: true,
             span: 12,
             rules: {
               required: true,
-              message: "必填",
-              trigger: "change"
+              trigger: "blur"
             }
           },
           {
-            type: "input",
-            label: "总价",
-            prop: "housePrice",
+            type: "date",
+            label: "发起时间",
+            prop: "launchDate",
+            format: "yyyy-MM-dd",
+            valueFormat: "timestamp",
+            valueDefault: _.now(),
             clearable: true,
             span: 12,
-            appendslot: "housepriceappend",
             rules: {
               required: true,
-              message: "必填，请填写总价",
+              trigger: "blur"
+            }
+          },
+          {
+            type: "date",
+            label: "截止时间",
+            prop: "endTime",
+            format: "yyyy-MM-dd",
+            valueFormat: "timestamp",
+            clearable: true,
+            span: 12,
+            rules: {
+              required: true,
               trigger: "blur"
             }
           },
           {
             type: "input",
-            label: "工程名称",
-            prop: "projectName",
+            label: "发起人",
+            prop: "launchName",
             clearable: true,
             span: 12,
-            row: true,
             rules: {
               required: true,
-              message: "必填",
-              trigger: "change"
+              trigger: "blur"
+            }
+          },
+          {
+            type: "input",
+            label: "应收金额",
+            prop: "receivMoney",
+            dataType: "number",
+            clearable: true,
+            span: 12,
+            append: "元",
+            rules: {
+              required: true,
+              trigger: "blur"
+            }
+          },
+          {
+            type: "select",
+            label: "收入类型",
+            prop: "incomeType",
+            clearable: true,
+            span: 12,
+            dicData: incomeType,
+            rules: {
+              required: true,
+              trigger: "blur"
+            }
+          },
+          {
+            type: "input",
+            label: "支付方",
+            prop: "payName",
+            clearable: true,
+            span: 12,
+            rules: {
+              required: true,
+              trigger: "blur"
             }
           },
           {
             type: "textarea",
-            label: "描述",
-            prop: "description",
+            label: "备注",
+            prop: "remarks",
             clearable: true,
-            span: 12,
-            maxlength: 255,
-            minRows: 8,
-            showWordLimit: true
+            span: 12
           },
           {
             type: "upload",
             listType: "picture-card",
-            label: "房屋照片",
+            label: "相关凭证",
             prop: "housePictureVOList",
-            span: 24,
             tip: "只能上传jpg/png文件。",
             action: "/oaApi/image/upload",
+            filesize: 3,
             accept: ["jpg", "jpeg", "png"],
             props: {
               label: "housePictureName",
@@ -196,37 +187,16 @@ export default {
               name: "fileName",
               url: "fileUrl",
               res: "data"
-            }
+            },
+            span: 24
           }
         ]
       },
-      LeaseManageDic,
       pageConfig: apiConfig.add
     };
   },
   created() {
     console.log(this.$route.query);
-    if (this.$route.query || this.$route.params) {
-      let { id, flag } = this.$route.query;
-      if (id) {
-        this.pageConfig = _.cloneDeep(apiConfig[flag]);
-        this.getPropertyDetail({ id }).then(res => {
-          this.model = { ...this.model, ...res };
-        });
-      }
-      // 传递过来额外的配置
-      this.leaseManageForm = {
-        ...this.leaseManageForm,
-        ...this.pageConfig.extraOptions
-      };
-    }
-    // 空间
-    commonApi.getAllFloorOfA3().then(res => {
-      // this.leaseManageForm.forms[2].dicData = res;
-      this.$refs[this.leaseManageForm.ref].setColumnByProp("spaceId", {
-        dicData: res
-      });
-    });
   },
   methods: {
     submit(model, hide) {
@@ -255,23 +225,7 @@ export default {
       return leaseManageApi.houseDetails(row);
     }
   },
-  watch: {
-    "model.isRent"(newVal, oldVal) {
-      if (newVal === LeaseManageDic.isRent[1].value) {
-        this.$refs[this.leaseManageForm.ref].setColumnByProp("housePrice", {
-          rules: []
-        });
-      } else {
-        this.$refs[this.leaseManageForm.ref].setColumnByProp("housePrice", {
-          rules: {
-            required: true,
-            message: "必填，请填写总价",
-            trigger: "blur"
-          }
-        });
-      }
-    }
-  }
+  watch: {}
 };
 </script>
 <style lang='less' scoped>

@@ -167,6 +167,7 @@
               :name="config.operationSlotName"
               :scopeRow="scopeRow"
               :row="scopeRow.row"
+              :column="scopeRow.column"
               :index="scopeRow.$index"
               :isEdit="vaildBoolean(scopeRow.row.$cellEdit,false)"
               :size="isMediumSize"

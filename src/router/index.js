@@ -25,6 +25,7 @@ import NewsManage from './news-manage'                        // 消息管理
 import MessageManage from './message-manage'                  // 信息发布
 import personalManage from './personal-manage';               // 人事管理
 import thirdParty from './third-party';
+import RevenueExpendManage from './revenue-expend-manage';    // 收入支出管理
 
 import helloRouter from './hello-router'
 
@@ -39,7 +40,7 @@ let DigitalRouters = flattenDeep(
     visitorManage, ParkingLotManage,
     taskManage, contractManage, NewsManage,
     MessageManage, personalManage,
-    thirdParty
+    thirdParty, RevenueExpendManage
   ]
 );
 
