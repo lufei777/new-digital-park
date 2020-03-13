@@ -76,12 +76,13 @@
                   <!-- 如果是禁用tooltip，则tabindex 为 -1 -->
                   <el-tooltip
                     :tabindex="!column.tip || column.type==='upload' ? -1 : 0"
-                    :disabled="!column.tip || column.type==='upload'"
+                    :disabled="textMode || !column.tip || column.type==='upload'"
                     :content="vaildData(column.tip,getPlaceholder(column))"
                     :placement="column.tipPlacement"
                   >
+                    <span v-if="textMode">{{displayText(column)}}</span>
                     <slot
-                      v-if="column.formslot"
+                      v-else-if="column.formslot"
                       :name="column.prop"
                       :value="model[column.prop]"
                       :column="column"
@@ -215,6 +216,10 @@ export default {
       default: () => {}
     },
     disabled: {
+      type: Boolean,
+      default: false
+    },
+    textMode: {
       type: Boolean,
       default: false
     }
@@ -443,6 +448,10 @@ export default {
           });
         });
       }
+    },
+    displayText(column) {
+      let prop = column.prop;
+      return this.modelTranslate[`$${prop}`] || this.model[prop];
     }
   },
   computed: {
