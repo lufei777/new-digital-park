@@ -6,7 +6,13 @@
         <span>{{pageConfig.title}}</span>
       </span>
       <div class="form">
-        <z-form :ref="formOptions.ref" :options="formOptions" v-model="model" @submit="submit">
+        <z-form
+          :ref="formOptions.ref"
+          :options="formOptions"
+          v-model="model"
+          @submit="submit"
+          v-bind="pageConfig.extraConfig"
+        >
           <template slot="menuBtn" slot-scope="{size}">
             <template v-if="pageConfig.flag === 'check'">
               <el-button :size="size" type="primary" @click="pass">通过</el-button>
@@ -45,6 +51,9 @@ const apiConfig = {
     extraOptions: {
       disabled: true,
       submitBtn: false
+    },
+    extraConfig: {
+      textMode: true
     }
   },
   check: {
@@ -53,6 +62,9 @@ const apiConfig = {
     extraOptions: {
       disabled: true,
       submitBtn: false
+    },
+    extraConfig: {
+      textMode: true
     }
   }
 };
