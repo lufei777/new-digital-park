@@ -1,5 +1,5 @@
 <template>
-  <div class="el-form_wrapper" :style="{width:setPx(parentOption.width,'100%')}">
+  <div class="zvue-form-wrapper" :style="{width:setPx(parentOption.width,'100%')}">
     <el-form
       :ref="formRef"
       status-icon
@@ -16,7 +16,7 @@
       <el-row :span="24">
         <!-- :display="item.display" -->
         <z-group
-          v-for="(group,index) in columnOption"
+          v-for="(group) in columnOption"
           v-show="vaildData(!group.hide,true)"
           :key="group.prop"
           :display="group.display"
@@ -27,7 +27,7 @@
           <template slot="header" v-if="$slots[group.prop+'Header']">
             <slot :name="`${group.prop}Header`"></slot>
           </template>
-          <div class="z-form_group">
+          <div class="zvue-form-group">
             <template v-for="(column, cindex) in group.forms">
               <el-col
                 :key="column.prop"
@@ -40,7 +40,7 @@
                 v-if="vaildDisplay(column)"
               >
                 <el-form-item
-                  :class="[_.isEmpty(column.label)?'el-form-item_emptylabel' : '']"
+                  :class="[_.isEmpty(column.label)?'zvue-form-item_emptylabel' : '']"
                   :label="column.label"
                   :prop="column.prop"
                   :required="column.required"
@@ -50,6 +50,29 @@
                   :size="column.size || controlSize"
                   :label-width="setPx(column.width,parentOption.labelWidth || 90)"
                 >
+                  <!-- 自定义label -->
+                  <template slot="label" v-if="column.labelslot">
+                    <slot
+                      :name="column.prop+'Label'"
+                      :column="column"
+                      :value="model[column.prop]"
+                      :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
+                      :size="column.size || controlSize"
+                      :dic="DIC[column.prop]"
+                    ></slot>
+                  </template>
+                  <!-- 自定义error -->
+                  <template slot="error" slot-scope="{error}" v-if="column.errorslot">
+                    <slot
+                      :name="column.prop+'Error'"
+                      :column="column"
+                      :error="error"
+                      :value="model[column.prop]"
+                      :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
+                      :size="column.size || controlSize"
+                      :dic="DIC[column.prop]"
+                    ></slot>
+                  </template>
                   <!-- 如果是禁用tooltip，则tabindex 为 -1 -->
                   <el-tooltip
                     :tabindex="!column.tip || column.type==='upload' ? -1 : 0"
@@ -123,7 +146,7 @@
         <el-col :span="24" v-if="vaildData(parentOption.menuBtn,true)">
           <el-form-item>
             <!-- 菜单按钮组 -->
-            <div :class="`form_menu-${menuPosition}`">
+            <div :class="`zvue-form-menu-${menuPosition}`">
               <el-button
                 type="primary"
                 @click="submit"
@@ -139,7 +162,7 @@
                 v-if="vaildData(parentOption.emptyBtn,true)"
                 @click="resetForm"
               >{{vaildData(parentOption.emptyText,'清 空')}}</el-button>
-              <slot name="menuBtn" :size="controlSize"></slot>
+              <slot name="menuBtn" :disabled="allDisabled" :size="controlSize"></slot>
             </div>
           </el-form-item>
         </el-col>
@@ -522,7 +545,7 @@ export default {
 };
 </script>
 <style lang='less'>
-.el-form_wrapper {
+.zvue-form-wrapper {
   .z-input-number,
   .el-cascader,
   .el-date-editor.el-input,
@@ -534,13 +557,13 @@ export default {
     display: inline-block;
     height: 42px;
   }
-  .form_menu-center {
+  .zvue-form-menu-center {
     text-align: center;
   }
-  .form_menu-left {
+  .zvue-form-menu-left {
     text-align: left;
   }
-  .form_menu-right {
+  .zvue-form-menu-right {
     text-align: right;
   }
   .el-input-number__decrease,
@@ -588,7 +611,7 @@ export default {
     }
   }
   // 分组
-  .z-form_group {
+  .zvue-form-group {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;

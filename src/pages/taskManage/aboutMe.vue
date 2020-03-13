@@ -273,7 +273,6 @@ export default {
       );
     },
     async sureDelete() {
-      console.log(this.taskId);
       await TaskManageApi.closeTask({
         taskId: this.taskId
       });
@@ -292,7 +291,6 @@ export default {
       this.showDeleteTip();
     },
     editRow(val) {
-      console.log("val", val);
       if (this.taskActiveName == "second") {
         this.$router.push({
           name: "NewTask",

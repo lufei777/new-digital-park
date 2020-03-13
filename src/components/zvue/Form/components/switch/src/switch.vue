@@ -7,6 +7,8 @@
     :active-value="active[valueKey]"
     :inactive-value="inactive[valueKey]"
     :inactive-text="inactive[labelKey]"
+    :active-color="activeColor"
+    :inactive-color="inactiveColor"
     :disabled="disabled"
     :readonly="readonly"
     :size="size"
@@ -20,7 +22,9 @@ export default {
   name: "zSwitch",
   mixins: [props(), events()],
   props: {
-    value: {}
+    value: {},
+    activeColor: {},
+    inactiveColor: {}
   },
   data() {
     return {};

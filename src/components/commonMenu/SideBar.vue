@@ -100,7 +100,7 @@ export default {
       // console.log(key,keyPath)
     },
     setActiveIndex(menu){
-      if(menu.childNode.length!=0){
+      if(menu.childNode && menu.childNode.length!=0){
         this.setActiveIndex(menu.childNode[0])
       }else{
         this.activeTmp = commonFun.setMenuIndex(menu)

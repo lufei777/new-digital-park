@@ -1,5 +1,5 @@
 <template>
-  <div class="el-table-wrapper" :style="{height:wrapperHeight}">
+  <div class="zvue-table-wrapper" :style="{height:wrapperHeight}">
     <div
       v-if="options.customTop"
       ref="customTop"
@@ -14,53 +14,52 @@
         :selectedData="selectedData"
       ></slot>
     </div>
-
-    <el-table
-      highlight-current-row
-      header-row-class-name="el-table-header"
-      cell-class-name="el-table-cell"
-      ref="dataBaseTable"
-      :row-key="rowKey"
-      :row-style="config.rowStyle"
-      :cell-style="config.cellStyle"
-      :header-cell-style="config.headerCellStyle"
-      :key="key"
-      :data="tableShowData"
-      :height="tableHeight"
-      :size="isMediumSize"
-      v-loading="loading"
-      @row-click="rowClick"
-      @row-dblclick="rowDblclick"
-      @sort-change="sortChange"
-      @select-all="selectAll"
-      @selection-change="selectionChange"
-      @select="select"
-    >
-      <!-- 多选 -->
-      <el-table-column
-        v-if="uiConfig.selection"
-        fixed="left"
-        type="selection"
-        :width="config.selectionWidth"
-        :selectable="_selectable"
-        align="center"
-      ></el-table-column>
-
-      <!-- 索引 -->
-      <el-table-column
-        v-if="uiConfig.showIndex"
-        fixed="left"
-        type="index"
-        :index="uiConfig.showIndex.handler"
-        :width="uiConfig.showIndex.width || config.indexWidth"
-        :align="uiConfig.showIndex.align || 'center'"
+    <div v-loading="loading" class="zvue-table-body">
+      <el-table
+        highlight-current-row
+        header-row-class-name="zvue-table-header"
+        cell-class-name="zvue-table-cell"
+        ref="dataBaseTable"
+        :row-key="rowKey"
+        :row-style="config.rowStyle"
+        :cell-style="config.cellStyle"
+        :header-cell-style="config.headerCellStyle"
+        :key="key"
+        :data="tableShowData"
+        :height="tableHeight"
+        :size="isMediumSize"
+        @row-click="rowClick"
+        @row-dblclick="rowDblclick"
+        @sort-change="sortChange"
+        @select-all="selectAll"
+        @selection-change="selectionChange"
+        @select="select"
       >
-        <template slot="header">{{uiConfig.showIndex.label || config.indexLabel}}</template>
-      </el-table-column>
-      <el-table-column width="1px"></el-table-column>
+        <!-- 多选 -->
+        <el-table-column
+          v-if="uiConfig.selection"
+          fixed="left"
+          type="selection"
+          :width="config.selectionWidth"
+          :selectable="_selectable"
+          align="center"
+        ></el-table-column>
 
-      <!-- 使用column组件会导致多选索引顺序错位 -->
-      <!-- <column :columnConfig="columnConfig">
+        <!-- 索引 -->
+        <el-table-column
+          v-if="uiConfig.showIndex"
+          fixed="left"
+          type="index"
+          :index="uiConfig.showIndex.handler"
+          :width="uiConfig.showIndex.width || config.indexWidth"
+          :align="uiConfig.showIndex.align || 'center'"
+        >
+          <template slot="header">{{uiConfig.showIndex.label || config.indexLabel}}</template>
+        </el-table-column>
+        <el-table-column width="1px"></el-table-column>
+
+        <!-- 使用column组件会导致多选索引顺序错位 -->
+        <!-- <column :columnConfig="columnConfig">
         <template v-for="col in columnConfig">
           <template slot-scope="{column}" :slot="`${col.prop}Header`">
             <slot :name="`${col.prop}Header`" :column="column"></slot>
@@ -69,132 +68,153 @@
             <slot :name="col.prop" :scopeRow="scopeRow"></slot>
           </template>
         </template>
-      </column>-->
+        </column>-->
 
-      <!-- 正常列 -->
-      <template v-for="col in columnConfig">
+        <!-- 正常列 -->
+        <template v-for="col in columnConfig">
+          <el-table-column
+            v-if="!col.hide"
+            show-overflow-tooltip
+            :key="col.label"
+            :prop="col.prop"
+            :label="col.label"
+            :width="col.width"
+            :fixed="col.fixed"
+            :sortable="col.sortable || false"
+            :align="col.align || options.align || config.align"
+            :header-align="col.headerAlign || options.headerAlign || config.headerAlign"
+            :render-header="col.renderHeader"
+          >
+            <template v-if="col.headerSlot" slot="header">
+              <slot :name="`${col.prop}Header`" :column="col"></slot>
+            </template>
+            <template slot-scope="scopeRow">
+              <slot
+                v-if="col.slot"
+                :name="col.prop"
+                :label="handleShowLabel(scopeRow.row,col,DIC[col.prop])"
+                :scopeRow="scopeRow"
+                :row="scopeRow.row"
+                :size="isMediumSize"
+                :column="col"
+                :disabled="col.disabled"
+                :isEdit="cellEditFlag(scopeRow.row,col)"
+                :dic="DIC[col.prop]"
+              ></slot>
+              <form-temp
+                v-else-if="cellEditFlag(scopeRow.row,col)"
+                v-model="scopeRow.row[col.prop]"
+                :column="col"
+                :size="isMediumSize"
+                :dic="DIC[col.prop]"
+                :upload-before="col.uploadBefore"
+                :upload-after="col.uploadAfter"
+                :disabled="col.disabled"
+                @click.native.stop
+              ></form-temp>
+              <template v-else>
+                <span
+                  v-if="['array'].includes(col.type)"
+                >{{_detailData(scopeRow.row[col.prop],col.dataType).join(' | ')}}</span>
+                <span v-else-if="col.displayAs=='switch' && ['switch'].includes(col.type)">
+                  <z-switch
+                    :size="isMediumSize"
+                    v-model="scopeRow.row[col.prop]"
+                    :activeColor="col.activeColor"
+                    :inactiveColor="col.inactiveColor"
+                    disabled
+                  />
+                </span>
+                <span v-else v-html="_columnFormatter(scopeRow,col)"></span>
+              </template>
+            </template>
+          </el-table-column>
+        </template>
+
+        <!-- 列操作 -->
         <el-table-column
-          v-if="!col.hide"
-          show-overflow-tooltip
-          :key="col.label"
-          :prop="col.prop"
-          :label="col.label"
-          :width="col.width"
-          :fixed="col.fixed"
-          :sortable="col.sortable || false"
-          :align="col.align || options.align || config.align"
-          :header-align="col.headerAlign || options.headerAlign || config.headerAlign"
-          :render-header="col.renderHeader"
+          v-if="btnConfig"
+          :fixed="btnConfig.fixed"
+          :prop="btnConfig.prop"
+          :label="btnConfig.label"
+          :width="btnConfig.width"
+          :align="btnConfig.align || options.align || config.align"
+          :header-align="btnConfig.headerAlign || config.headerAlign"
         >
-          <template v-if="col.headerSlot" slot="header">
-            <slot :name="`${col.prop}Header`" :column="col"></slot>
+          <!-- 搜索框 -->
+          <template v-if="uiConfig.searchable" slot="header">
+            <el-input v-model="searchVal" :size="isMediumSize" placeholder="检索" />
           </template>
+          <!-- 按钮 -->
           <template slot-scope="scopeRow">
+            <!-- 编辑按钮 -->
+            <el-button
+              type="text"
+              :size="isMediumSize"
+              @click.stop="rowCell(scopeRow.row,scopeRow.$index)"
+              v-if="vaildBoolean(parentOption.editBtn,config.editBtn)"
+            >{{_editBtnText(scopeRow.row,scopeRow.index)}}</el-button>
+            <!-- 取消按钮 -->
+            <el-button
+              v-if="scopeRow.row.$cellEdit && vaildBoolean(parentOption.calcelBtn,config.calcelBtn)"
+              type="text"
+              :size="isMediumSize"
+              @click.stop="rowCanel(scopeRow.row,scopeRow.$index)"
+            >取 消</el-button>
+            <!-- 操作列的slot -->
             <slot
-              v-if="col.slot"
-              :name="col.prop"
-              :label="handleShowLabel(scopeRow.row,col,DIC[col.prop])"
+              v-if="options.operation"
+              :name="config.operationSlotName"
               :scopeRow="scopeRow"
               :row="scopeRow.row"
+              :column="scopeRow.column"
+              :index="scopeRow.$index"
+              :isEdit="vaildBoolean(scopeRow.row.$cellEdit,false)"
               :size="isMediumSize"
-              :column="col"
-              :disabled="col.disabled"
-              :isEdit="cellEditFlag(scopeRow.row,col)"
-              :dic="DIC[col.prop]"
             ></slot>
-            <form-temp
-              v-else-if="cellEditFlag(scopeRow.row,col)"
-              v-model="scopeRow.row[col.prop]"
-              :column="col"
-              :size="isMediumSize"
-              :dic="DIC[col.prop]"
-              :upload-before="col.uploadBefore"
-              :upload-after="col.uploadAfter"
-              :disabled="col.disabled"
-              @click.native.stop
-            ></form-temp>
-            <template v-else>
-              <span v-html="_columnFormatter(scopeRow,col)"></span>
+            <!-- 基础模式，如删除，编辑。参数为scopeRow -->
+            <template v-for="btn in btnConfig.btns">
+              <!-- :size="btn.size || uiConfig.size" -->
+              <el-button
+                v-if="btn.type === 'basic' || !btn.type"
+                :size="btn.size || isMediumSize"
+                type="text"
+                :key="btn.label"
+                @click.stop="btn.handler(scopeRow)"
+              >
+                <i v-if="btn.icon" :class="btn.icon"></i>
+                {{btn.label}}
+              </el-button>
+              <!-- 带下拉按钮，参数为scopeRow -->
+              <z-dropdown
+                v-if="btn.type === 'dropDown'"
+                :size="btn.size || isMediumSize"
+                :key="btn.label"
+                :dropDown="btn"
+                :carryData="scopeRow"
+                :style="{display:'inline-block'}"
+              />
             </template>
           </template>
         </el-table-column>
-      </template>
+      </el-table>
 
-      <!-- 列操作 -->
-      <el-table-column
-        v-if="btnConfig"
-        :fixed="btnConfig.fixed"
-        :prop="btnConfig.prop"
-        :label="btnConfig.label"
-        :width="btnConfig.width"
-        :align="btnConfig.align || options.align || config.align"
-        :header-align="btnConfig.headerAlign || config.headerAlign"
+      <!-- 分页 -->
+      <div
+        :ref="config.paginationSlotName"
+        v-if="uiConfig.pagination"
+        class="zvue-table-pagination"
       >
-        <!-- 搜索框 -->
-        <template v-if="uiConfig.searchable" slot="header">
-          <el-input v-model="searchVal" :size="isMediumSize" placeholder="检索" />
-        </template>
-        <!-- 按钮 -->
-        <template slot-scope="scopeRow">
-          <!-- 编辑按钮 -->
-          <el-button
-            type="text"
-            :size="isMediumSize"
-            @click.stop="rowCell(scopeRow.row,scopeRow.$index)"
-            v-if="vaildBoolean(parentOption.editBtn,config.editBtn)"
-          >{{_editBtnText(scopeRow.row,scopeRow.index)}}</el-button>
-          <!-- 取消按钮 -->
-          <el-button
-            v-if="scopeRow.row.$cellEdit && vaildBoolean(parentOption.calcelBtn,config.calcelBtn)"
-            type="text"
-            :size="isMediumSize"
-            @click.stop="rowCanel(scopeRow.row,scopeRow.$index)"
-          >取 消</el-button>
-          <!-- 操作列的slot -->
-          <slot
-            v-if="options.operation"
-            :name="config.operationSlotName"
-            :scopeRow="scopeRow"
-            :size="isMediumSize"
-          ></slot>
-          <!-- 基础模式，如删除，编辑。参数为scopeRow -->
-          <template v-for="btn in btnConfig.btns">
-            <!-- :size="btn.size || uiConfig.size" -->
-            <el-button
-              v-if="btn.type === 'basic' || !btn.type"
-              :size="btn.size || isMediumSize"
-              type="text"
-              :key="btn.label"
-              @click.stop="btn.handler(scopeRow)"
-            >
-              <i v-if="btn.icon" :class="btn.icon"></i>
-              {{btn.label}}
-            </el-button>
-            <!-- 带下拉按钮，参数为scopeRow -->
-            <z-dropdown
-              v-if="btn.type === 'dropDown'"
-              :size="btn.size || isMediumSize"
-              :key="btn.label"
-              :dropDown="btn"
-              :carryData="scopeRow"
-              :style="{display:'inline-block'}"
-            />
-          </template>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <!-- 分页 -->
-    <div :ref="config.paginationSlotName" v-if="uiConfig.pagination" class="table-pagination">
-      <z-pagination
-        :key="`${options.ref}_pagination`"
-        :paginationConfig="uiConfig.pagination"
-        :currentPage="paginationObj.currentPage"
-        :pageSize="paginationObj.pageSize"
-        :total="uiConfig.pagination.total || tableData.length"
-        :handleSizeChange="_handleSizeChange"
-        :handleCurrentChange="_handleCurrentChange"
-      />
+        <z-pagination
+          :key="`${options.ref}_pagination`"
+          :paginationConfig="uiConfig.pagination"
+          :currentPage="paginationObj.currentPage"
+          :pageSize="paginationObj.pageSize"
+          :total="uiConfig.pagination.total || tableData.length"
+          :handleSizeChange="_handleSizeChange"
+          :handleCurrentChange="_handleCurrentChange"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -227,6 +247,10 @@ export default {
     propsHttp: {
       type: Object,
       default: () => ({})
+    },
+    load: {
+      type: Boolean,
+      default: false
     }
   },
   provide() {
@@ -614,6 +638,12 @@ export default {
           this.$message.warning(errors[0]);
         });
     },
+    _detailData(list, dataType) {
+      if (!Array.isArray(list) && ["string", "number"].includes(dataType)) {
+        return list.split(",");
+      }
+      return list;
+    },
     // 由于slot-scope和formatter不能共存只能如此
     _columnFormatter(scopeRow, currentColumn) {
       let row = scopeRow.row;
@@ -628,11 +658,7 @@ export default {
     // 全局初始化
     _globalColumnFormatter(row, column, currentColumn) {
       let value = row[column.property];
-      if (
-        this.validatenull(value) ||
-        (typeof value === "string" && value.trim().length === 0) ||
-        (Array.isArray(value) && value.length === 0)
-      ) {
+      if (this.validatenull(value)) {
         return "--";
       }
       return this.handleDetail(
@@ -651,9 +677,10 @@ export default {
       if (column.type === "cascader") {
         // 如果开启了elementUI级联的lazy模式，则从column.presentText中读值，此值在cascader的mounted中赋值
         if (column.props && column.props.lazy) {
-          result = column.presentText
+          result = (column.presentText || "")
             .split(column.separator || "\\")
             .join(DIC_SPLIT);
+          row["$" + column.prop] = result;
         }
         if (column.showAllLevels === false) {
           let list = result.split(DIC_SPLIT);
@@ -676,7 +703,8 @@ export default {
      */
     cellEditFlag(row, column) {
       // && column.slot !== true
-      return row.$cellEdit && column.cell;
+      // console.log("isEdit", row, column, row.$cellEdit && column.cell);
+      return !!(row.$cellEdit && column.cell);
     },
     //行单击事件
     rowClick(row, column, e) {
@@ -823,8 +851,6 @@ export default {
       this.$refs.dataBaseTable.doLayout();
       this.key++;
     },
-    //以下方法未添加
-    toggleRowExpansion() {},
     // 清除排序
     clearSort() {
       this.$refs.dataBaseTable.clearSort();
@@ -834,6 +860,8 @@ export default {
     clearFilter(columnKey) {
       this.$refs.dataBaseTable.clearFilter(columnKey);
     },
+    //以下方法未添加
+    toggleRowExpansion() {},
     sort() {},
 
     /**
@@ -1002,6 +1030,9 @@ export default {
     }
   },
   watch: {
+    load(newVal) {
+      this.loading = newVal;
+    },
     //开启服务器模式且已经加载完毕，执行已经保存的方法队列
     loading(val) {
       if (!val && this.methodsQueue.length > 0) {
@@ -1068,7 +1099,7 @@ export default {
 @TableFontFamily: "Microsoft YaHei";
 @TableFontSize: 14px;
 
-.el-table-wrapper {
+.zvue-table-wrapper {
   font-family: @TableFontFamily;
   font-size: @TableFontSize;
   width: 100%;
@@ -1097,7 +1128,7 @@ export default {
       }
     }
     // 列标题
-    .el-table-header {
+    .zvue-table-header {
       th {
         background-color: @headerBgc !important;
         color: @headerTextColor;
@@ -1107,7 +1138,7 @@ export default {
         width: auto !important;
       }
     }
-    .el-table-cell {
+    .zvue-table-cell {
       color: #666;
       font-weight: 400;
       button {
@@ -1143,7 +1174,7 @@ export default {
     }
   }
   // 分页
-  .table-pagination {
+  .zvue-table-pagination {
     margin-top: 20px;
     color: #bababa;
     background-color: #f4f5f7;

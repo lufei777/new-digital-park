@@ -131,8 +131,8 @@ export default {
               _this.model.houseArea = obj.houseArea;
               _this.model.projectName = obj.projectName;
               _this.model.housePrice = obj.housePrice;
-              _this.houseId = obj.houseId;
-              console.log("houseId", obj.houseId);
+              _this.houseId = obj.id;
+              console.log("houseId", obj);
             }
           },
           {
