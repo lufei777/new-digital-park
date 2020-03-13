@@ -15,7 +15,7 @@
         <!--class="search-icon"-->
         <!--&gt;{{$t('homeHeader.searchText')}}</el-button>-->
         <!--</el-input>-->
-        <NavOperator :moduleType.sync="moduleType" />
+        <NavOperator :moduleType.sync="moduleType" from-flag="1"/>
       </div>
       <div class="sidebar-container">
         <Sidebar :menu-data="menuData" :menuConfig="menuConfig" />
