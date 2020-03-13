@@ -1,5 +1,5 @@
 <template>
-  <div class="expenses-budget panel-container">
+  <div class="report-manage panel-container">
     <div class="condition-box radius-shadow">
       <z-form
         :ref="formData.ref"
@@ -17,16 +17,14 @@
       </z-form>
     </div>
 
-    <div class="expenses-budget-table panel">
+    <div class="report-manage-table panel">
       <z-table :ref="tableData.ref" :options="tableData">
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">
             <el-button :size="obj.size" type="primary">批量删除</el-button>
-            <el-button :size="obj.size" type="primary">批量审核</el-button>
-            <el-button :size="obj.size" type="primary">批量编辑</el-button>
             <el-button :size="obj.size" type="primary">导出</el-button>
             <el-button :size="obj.size" type="primary">导入</el-button>
-            <el-button :size="obj.size" type="primary">新增</el-button>
+            <el-button :size="obj.size" type="primary">上传</el-button>
           </div>
         </template>
       </z-table>
@@ -37,7 +35,7 @@
 <script>
 import CommonFun from "../../utils/commonFun";
 export default {
-  name: "ExpensesBudget",
+  name: "ReportManage",
   data() {
     return {
       model: {},
@@ -51,8 +49,8 @@ export default {
         forms: [
           {
             type: "input",
-            label: "收费名称",
-            prop: "budgetName",
+            label: "报表名称",
+            prop: "reportName",
             placeholder: "请输入",
             clearable: true,
             span: 4,
@@ -60,16 +58,16 @@ export default {
           },
           {
             type: "input",
-            label: "预算类型",
-            prop: "budgetType",
+            label: "报表类型",
+            prop: "reportType",
             placeholder: "请输入",
             clearable: true,
             span: 4
           },
           {
             type: "input",
-            label: "预算金额",
-            prop: "budgetSum",
+            label: "上传类型",
+            prop: "uploadType",
             placeholder: "请输入",
             clearable: true,
             span: 4
@@ -80,16 +78,9 @@ export default {
             span: 12
           },
           {
-            type: "input",
-            label: "预算状态",
-            prop: "paymentStatus",
-            placeholder: "请输入",
-            span: 4
-          },
-          {
             type: "date",
-            label: "提报日期",
-            prop: "initiateTime",
+            label: "上传日期",
+            prop: "reportTime",
             placeholder: "选择日期时间",
             // clearable: true,
             span: 4,
@@ -97,16 +88,22 @@ export default {
             valueFormat: "timestamp"
           },
           {
+            type: "input",
+            label: "上传人",
+            prop: "uploadpeople",
+            placeholder: "请输入",
+            span: 4
+          },
+          {
             prop: "btn",
             span: 6,
             pull: 4,
-            formslot: true
+            formslot: true,
           }
         ]
       },
       tableData: {
         ref: "tableData",
-        customTop: true,
         data: [],
         columnConfig: [],
         uiConfig: {
@@ -129,15 +126,7 @@ export default {
           width: 200,
           btns: [
             {
-              label: "详情",
-              handler: function(row) {}
-            },
-            {
-              label: "编辑",
-              handler: function(row) {}
-            },
-            {
-              label: "审核",
+              label: "查看",
               handler: function(row) {}
             },
             {
@@ -163,17 +152,13 @@ export default {
       this.$refs[this.formData.ref].resetForm();
     },
     getCleaningList() {
-      let res = CommonFun.expensesBudgetData;
+      let res = CommonFun.reportManageData;
       let labelList = [
-        { label: "预算名称", prop: "budgetName" },
-        { label: "预算类型", prop: "budgetType" },
-        { label: "预算金额", prop: "budgetSum" },
-        { label: "预算状态", prop: "budgetStatus" },
-        { label: "提报日期", prop: "reportTime" },
-        { label: "预算说明", prop: "budgetCause" },
-        { label: "提报人", prop: "reportPeople" },
-        { label: "审批人", prop: "approver" },
-        { label: "操作时间", prop: "operationTime" }
+        { label: "报表名称", prop: "reportName" },
+        { label: "报表类型", prop: "reportType" },
+        { label: "上传类型", prop: "uploadType" },
+        { label: "上传日期", prop: "uploaddate" },
+        { label: "上传人", prop: "uploadpeople" }
       ];
       this.tableData.columnConfig = labelList;
       this.tableData.data = res;
@@ -188,14 +173,14 @@ export default {
 </script>
 
 <style lang="less">
-.expenses-budget {
+.report-manage {
   .condition-box {
     margin-bottom: 20px;
     background: @white;
     padding: 20px;
     // background: pink;
   }
-  .expenses-budget-table {
+  .report-manage-table {
     background: @white;
     padding: 20px;
     .operator-box {

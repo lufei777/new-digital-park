@@ -2,13 +2,12 @@ export default [{
     path: '/revenueExpendManage',
     name: 'revenueExpendManage',
     meta: { title: '收支管理' },
-    // component: () => import('@/pages/commonProject/coms/commonIndex'),
-    component: () => import('@/pages/revenueExpendManage'),
-    redirect: '/revenuerecord',
+    component: () => import('@/pages/commonProject/coms/commonIndex'),
+    redirect: '/incomeRecord',
     children: [
         {
-            path: '/revenuerecord',
-            name: 'revenuerecord',
+            path: '/incomeRecord',
+            name: 'incomeRecord',
             meta: { title: '收入记录' },
             component: () => import('@/pages/revenueExpendManage/revenuerecord')
         },
@@ -19,15 +18,21 @@ export default [{
             component: () => import('@/pages/revenueExpendManage/launchcharge')
         },
         {
-            path: '/expendrecord',
-            name: 'expendrecord',
+            path: '/chargeManage',
+            name: 'ChargeManage',
+            meta: { title: '收费管理' },
+            component: () => import('@/pages/revenueExpendManage/chargeManage')
+        },
+        {
+            path: '/expenditureRecord',
+            name: 'expenditureRecord',
             meta: { title: '支出记录' },
             component: () => import('@/pages/revenueExpendManage/expendrecord')
         },
         {
-            path: '/budgetmanage',
-            name: 'budgetmanage',
-            meta: { title: '预算管理' },
+            path: '/expensesBudget',
+            name: 'expensesBudget',
+            meta: { title: '支出预算' },
             component: () => import('@/pages/revenueExpendManage/budgetmanage')
         },
         {
@@ -35,6 +40,12 @@ export default [{
             name: 'statisticanalysis',
             meta: { title: '统计分析' },
             component: () => import('@/pages/revenueExpendManage/statisticanalysis')
+        },
+        {
+            path: '/reportManage',
+            name: 'reportManage',
+            meta: { title: '统计分析' },
+            component: () => import('@/pages/revenueExpendManage/reportManage')
         }
     ],
 }]

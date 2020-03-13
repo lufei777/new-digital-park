@@ -1,5 +1,5 @@
 <template>
-  <div class="expenses-budget panel-container">
+  <div class="charge-manage panel-container">
     <div class="condition-box radius-shadow">
       <z-form
         :ref="formData.ref"
@@ -17,13 +17,11 @@
       </z-form>
     </div>
 
-    <div class="expenses-budget-table panel">
+    <div class="charge-manage-table panel">
       <z-table :ref="tableData.ref" :options="tableData">
         <template slot="custom-top" slot-scope="obj">
           <div class="operator-box flex-row-reverse">
             <el-button :size="obj.size" type="primary">批量删除</el-button>
-            <el-button :size="obj.size" type="primary">批量审核</el-button>
-            <el-button :size="obj.size" type="primary">批量编辑</el-button>
             <el-button :size="obj.size" type="primary">导出</el-button>
             <el-button :size="obj.size" type="primary">导入</el-button>
             <el-button :size="obj.size" type="primary">新增</el-button>
@@ -37,7 +35,7 @@
 <script>
 import CommonFun from "../../utils/commonFun";
 export default {
-  name: "ExpensesBudget",
+  name: "ChargeManage",
   data() {
     return {
       model: {},
@@ -52,7 +50,7 @@ export default {
           {
             type: "input",
             label: "收费名称",
-            prop: "budgetName",
+            prop: "chargeName",
             placeholder: "请输入",
             clearable: true,
             span: 4,
@@ -60,16 +58,16 @@ export default {
           },
           {
             type: "input",
-            label: "预算类型",
-            prop: "budgetType",
+            label: "收费类型",
+            prop: "chargeType",
             placeholder: "请输入",
             clearable: true,
             span: 4
           },
           {
             type: "input",
-            label: "预算金额",
-            prop: "budgetSum",
+            label: "收费金额",
+            prop: "chargeSum",
             placeholder: "请输入",
             clearable: true,
             span: 4
@@ -81,14 +79,14 @@ export default {
           },
           {
             type: "input",
-            label: "预算状态",
+            label: "缴费状态",
             prop: "paymentStatus",
             placeholder: "请输入",
             span: 4
           },
           {
             type: "date",
-            label: "提报日期",
+            label: "发起日期",
             prop: "initiateTime",
             placeholder: "选择日期时间",
             // clearable: true,
@@ -133,14 +131,6 @@ export default {
               handler: function(row) {}
             },
             {
-              label: "编辑",
-              handler: function(row) {}
-            },
-            {
-              label: "审核",
-              handler: function(row) {}
-            },
-            {
               label: "删除",
               handler: function(row) {}
             }
@@ -163,17 +153,15 @@ export default {
       this.$refs[this.formData.ref].resetForm();
     },
     getCleaningList() {
-      let res = CommonFun.expensesBudgetData;
+      let res = CommonFun.chargeManageData;
       let labelList = [
-        { label: "预算名称", prop: "budgetName" },
-        { label: "预算类型", prop: "budgetType" },
-        { label: "预算金额", prop: "budgetSum" },
-        { label: "预算状态", prop: "budgetStatus" },
-        { label: "提报日期", prop: "reportTime" },
-        { label: "预算说明", prop: "budgetCause" },
-        { label: "提报人", prop: "reportPeople" },
-        { label: "审批人", prop: "approver" },
-        { label: "操作时间", prop: "operationTime" }
+        { label: "收费名称", prop: "chargeName" },
+        { label: "收费类型", prop: "chargeType" },
+        { label: "收费金额", prop: "chargeSum" },
+        { label: "发起日期", prop: "reportTime" },
+        { label: "缴费状态", prop: "paymentStatus" },
+        { label: "登记人", prop: "registerpeople" },
+        { label: "费用事由", prop: "chargeCause" }
       ];
       this.tableData.columnConfig = labelList;
       this.tableData.data = res;
@@ -188,14 +176,14 @@ export default {
 </script>
 
 <style lang="less">
-.expenses-budget {
+.charge-manage {
   .condition-box {
     margin-bottom: 20px;
     background: @white;
     padding: 20px;
     // background: pink;
   }
-  .expenses-budget-table {
+  .charge-manage-table {
     background: @white;
     padding: 20px;
     .operator-box {

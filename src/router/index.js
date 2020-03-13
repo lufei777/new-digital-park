@@ -13,7 +13,7 @@ import EnergyRouter from './energy-router'                    // 能源管理
 import LeaseManage from './lease-manage'                      // 租赁管理
 import CleaningManage from './cleaning-manage'                // 保洁管理
 import CostManage from './cost-manage'                        // 费用管理
-import ReceiveSupportManage from './receive-support-manage'   // 收支管理
+// import ReceiveSupportManage from './receive-support-manage'   // 收支管理
 import PurchaseManage from './purchase-manage'                // 采购管理
 import StockManage from './stock-manage'                      // 库存管理
 import taskManage from './task-manage'                        // 任务管理
@@ -25,7 +25,7 @@ import NewsManage from './news-manage'                        // 消息管理
 import MessageManage from './message-manage'                  // 信息发布
 import personalManage from './personal-manage';               // 人事管理
 import thirdParty from './third-party';
-import RevenueExpendManage from './revenue-expend-manage';    // 收入支出管理
+import RevenueExpendManage from './revenue-expend-manage';    // 收支管理
 
 import helloRouter from './hello-router'
 
@@ -35,7 +35,7 @@ let DigitalRouters = flattenDeep(
     DigitalParkRouter, AssetManage,
     EnergyRouter, vibeWeb,
     LeaseManage, CleaningManage,
-    CostManage, ReceiveSupportManage,
+    CostManage,
     PurchaseManage, StockManage,
     visitorManage, ParkingLotManage,
     taskManage, contractManage, NewsManage,
