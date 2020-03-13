@@ -1,24 +1,6 @@
 <template>
   <div class="dashboard-park-home-page-new"  v-loading="loading">
-      <div class="dashboard-header flex-align-between" v-show="!hideHeader">
-        <div class="news-box">
-          <ul class="news-list hover-pointer" :style="{top}" @mouseenter="stopNews" @mouseleave="scrollNews">
-            <li v-for="(item,index) in newsList" :key="index" class="news-item">
-              <span>{{item.text}}</span>
-              <span>{{item.time}}</span>
-            </li>
-          </ul>
-        </div>
-        <div class="digital-title">
-          <div class="digital-title-text">
-            <i class="iconfont iconshuziyuanqu park-logo"></i>
-            <span>{{title}}</span>
-          </div>
-        </div>
-        <div class='dashboard-nav-operator'>
-          <NavOperator  :moduleType.sync="moduleType" :show-goback="showGoBack"/>
-        </div>
-      </div>
+    <Header from-flag="1" :moduleType.sync="moduleType" v-if="!hideHeader"/>
     <div class="dashboard-content-panel">
       <div class="dashboard-left">
         <draggable :list="proModuleList1" class="draggable-box1"
@@ -118,13 +100,15 @@
   import DigitalParkApi from '../../../service/api/digitalPark'
   import ItemProModule from '../coms/itemProModule'
   import CommonFun from '../../../utils/commonFun'
+  import Header from '../coms/header'
   export default {
     name: 'DashBoardHomePageNew',
     props:['curProModule','hideHeader'],
     components: {
       draggable,
       NavOperator,
-      ItemProModule
+      ItemProModule,
+      Header
     },
     data() {
         let menuTree = JSON.parse(localStorage.getItem('menuTree'))
@@ -132,11 +116,6 @@
           proModuleList1: [],
           proModuleList2: [],
           changeObj: {},
-          newsList: [{id: 1, time: '2019-10-10 10:10:10', text: '消息消息消息1111111'},
-            {id: 1, time: '2019-10-11 10:11:11', text: '消息消息消息2222222'},
-            {id: 3, time: '2019-10-12 10:12:12', text: '消息消息消息3333333'}],
-          newsTimer: '',
-          curNewsIndex: 0,
           fixedProList:[],
           showFixedProList:[],
           moduleType:"1",
@@ -150,9 +129,6 @@
         }
       },
      computed: {
-        top() {
-          return -this.curNewsIndex * 50 + 'px';
-        },
         pageFlag(){
           return  this.$route.path=='/digitalPark/dashboardHomePage'?1:2
         },
@@ -210,18 +186,6 @@
               this.updateProModule(evt.added,this.proModuleList2)
             }
           }
-        },
-        scrollNews() {
-          this.newsTimer = setInterval(() => {
-            if (this.curNewsIndex < this.newsList.length-1) {
-              this.curNewsIndex += 1;
-            } else {
-              this.curNewsIndex = 0;
-            }
-          }, 1500);
-        },
-        stopNews() {
-          clearInterval(this.newsTimer);
         },
         async getModulesByType(){
           let res = await DigitalParkApi.getModulesByType({
@@ -385,7 +349,6 @@
         event.preventDefault();
         event.stopPropagation();
       }
-      this.scrollNews()
       this.getModulesByType()
       this.getProductList()
     }
@@ -470,42 +433,38 @@
         /*margin-bottom: 10px;*/
       }
     }
-    .dashboard-header{
+    .large-size-screen-header{
       width:100%;
       padding:0 20px;
       box-sizing: border-box;
       height:60px;
       overflow: hidden;
       background: rgba(255,255,255,.1);
-    }
-    .news-box{
-      height:50px;
-      color:#FF7A00;
-    }
-    .news-list{
-      position: relative;
-      transition: top 0.5s;
-    }
-    .news-item{
-      line-height: 50px;
-    }
-    .digital-title{
-      font-size: 30px;
-      font-weight: bold;
-      color:@white;
-      height: 60px;
-      line-height: 60px;
-      text-align: center;
-      /*padding:0 180px;*/
-
-    }
-    .digital-title-text{
-      width:85%;
-      margin:0 auto;
-      /*text-align: center;*/
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
-      background-image: url('../../../../static/image/digitalPark/title_bg.png');
+      .news-box{
+        height:50px;
+        color:#FF7A00;
+      }
+      .news-list{
+        position: relative;
+        transition: top 0.5s;
+      }
+      .news-item{
+        line-height: 50px;
+      }
+      .digital-title{
+        font-size: 30px;
+        font-weight: bold;
+        color:@white;
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        background-image: url('../../../../static/image/digitalPark/title_bg.png');
+      }
+      .news-box,.digital-title,.dashboard-nav-operator{
+        flex: 1;
+      }
     }
     .dashboard-content-panel{
       display: flex;
@@ -548,9 +507,7 @@
       width:100%;
       height:100%;
     }
-    .news-box,.digital-title,.dashboard-nav-operator{
-      flex: 1;
-    }
+
     .dashboard-nav-operator{
       .digital-nav-operator{
         float: right;
@@ -589,9 +546,6 @@
         height:10px;
       }
     }
-    .park-logo{
-      font-size: 30px;
-      margin-right: 5px;
-    }
+
   }
 </style>

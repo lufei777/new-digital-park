@@ -5,6 +5,7 @@ import Login from '../pages/digitalPark/login/index'
 import HelloWorld from '../pages/helloWorld/helloWorld'
 import Announcement from '../pages/digitalPark/carouselLink/announcement'
 import News from '../pages/digitalPark/carouselLink/news'
+
 export default [{
   path: '/',
   redirect: '/digitalPark/homePage'
@@ -39,4 +40,8 @@ export default [{
   path:'/news',
   name:'News',
   component:News
+},{
+  path:'/largeSizeScreen',
+  name:'LargeSizeScreen',
+  component:()=>import("@/pages/largeSizeScreen/index")
 }]

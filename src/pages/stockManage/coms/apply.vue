@@ -264,7 +264,7 @@ export default {
           deptId
         });
         res.map(item => {
-          item.name = item.fullName;
+          item.name = item.name;
           item.leaf = true;
         });
         return res;

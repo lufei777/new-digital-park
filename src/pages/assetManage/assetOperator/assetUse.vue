@@ -176,6 +176,7 @@
         this.deptTree=res[0].childNode
 
         let list = this.insertNode(this.deptTree)
+        console.log("list",list)
         this.$refs['tableRef'].setColumnByProp("collarId", {
           dicData:list
         });
@@ -186,7 +187,7 @@
           deptId
         });
         res.map(item => {
-          item.name = item.fullName;
+          item.name = item.name;
           item.leaf = true;
         });
         this.userList=res

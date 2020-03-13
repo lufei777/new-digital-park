@@ -63,6 +63,7 @@ export default {
     onClickLastMenu(item) {
       if (this.specialRoute) {
         //瀑布流
+        CommonFun.goToZGManage(item)
         this.setMenuList(item);
       } else {
         this.setActiveIndex(item);

@@ -1735,7 +1735,7 @@ class commonFun {
         return item.routeAddress
       }
     } else {
-      return item.id
+      return item.id + ""
     }
   }
 

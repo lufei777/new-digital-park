@@ -16,7 +16,7 @@
       <!--<el-option label="English" value="en"></el-option>-->
       <!--</el-select><i>|</i>-->
     <!--</span>-->
-    <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoback">
+    <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoback && fromFlag!=2">
       <el-select v-model="myModuleType" placeholder="切换模式" @change="onClickChangeModel">
         <el-option :label="$t('homeHeader.waterfall')" value="2"></el-option>
         <el-option :label="$t('homeHeader.dashboard')" value="1"></el-option>
@@ -36,7 +36,7 @@
     <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
       <el-dropdown @command="onClickUserConfigure">
         <div class="flex-align user-config hover-pointer">
-          <div class="user-name">{{userInfo.fullName}}</div>
+          <div class="user-name">{{userInfo.name}}</div>
           <img class="avatar-img" :src="userInfo.headUrl" alt />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -57,7 +57,7 @@ import CommonFun from '@/utils/commonFun'
 export default {
   name: "DigitalNavOperator",
   components: {},
-  props: ["moduleType", "showGoback"],
+  props: ["moduleType", "showGoback","fromFlag"],
   data() {
     return {
       langValue: Cookies.get("lang") || "zh",
