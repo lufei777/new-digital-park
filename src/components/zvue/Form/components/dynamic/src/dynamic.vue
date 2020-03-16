@@ -55,17 +55,23 @@ export default {
     }
   },
   computed: {
+    tableMethods() {
+      return this.children.tableMethods;
+    },
     rowAdd() {
-      return this.children.tableMethods.rowAdd;
+      return this.tableMethods ? this.tableMethods.rowAdd : false;
     },
     rowDel() {
-      return this.children.tableMethods.rowDel;
+      return this.tableMethods ? this.tableMethods.rowDel : false;
     },
     viewBtn() {
       return this.children.viewBtn === false;
     },
     delBtn() {
       return this.children.delBtn === false;
+    },
+    addBtn() {
+      return this.children.addBtn === false;
     },
     columnOption() {
       return this.children.columnConfig || [];
@@ -74,6 +80,16 @@ export default {
       return Object.assign(
         (() => {
           let options = this.deepClone(this.children);
+          // 分页配置
+          if (options.uiConfig) {
+            options.uiConfig.pagination = false;
+            options.uiConfig.height = "auto";
+          } else {
+            options.uiConfig = {
+              pagination: false,
+              height: "auto"
+            };
+          }
           delete options.columnConfig;
           return options;
         })(),
@@ -87,7 +103,7 @@ export default {
               slot: true,
               // 如果使用headerSlot，会有省略号
               renderHeader: (h, { column, $index }) => {
-                if (this.options.addBtn === false) {
+                if (this.addBtn) {
                   return "序号";
                 }
                 return h("el-button", {
@@ -106,14 +122,24 @@ export default {
               }
             }
           ];
-          this.columnOption.forEach(ele => {
+          this.columnOption.forEach((ele, index) => {
+            // 设置默认值
+            if (ele.valueDefault) {
+              this.text.forEach((item, index) => {
+                if (!item[ele.prop]) {
+                  item[ele.prop] = ele.valueDefault;
+                }
+              });
+            }
+
             list.push(
               Object.assign(ele, {
                 cell: true,
-                disabled: this.disabled || this.viewBtn
+                disabled: ele.disabled || this.disabled || this.viewBtn
               })
             );
           });
+
           return {
             data: this.text,
             columnConfig: list

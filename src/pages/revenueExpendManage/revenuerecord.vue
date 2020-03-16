@@ -21,6 +21,7 @@
       <z-table :ref="tableData.ref" :options="tableData">
         <template slot="custom-top" slot-scope="{size}">
           <el-button :size="size" type="primary" @click="launchcharge">发起收费</el-button>
+          <el-button :size="size" type="primary" @click="entryRecord">录入记录</el-button>
           <el-button :size="size" type="primary">导入</el-button>
           <el-button :size="size" type="primary">导出</el-button>
           <el-button :size="size" type="primary">批量删除</el-button>
@@ -28,19 +29,19 @@
 
         <template slot="operation" slot-scope="{size,row}">
           <el-button :size="size" type="text" @click="detail(row)">详情</el-button>
-          <!-- 已驳回 -->
+          <!-- 待审核 -->
           <template v-if="row.examineType === 0">
-            <el-button :size="size" type="text">删除</el-button>
+            <el-button :size="size" type="text" @click="edit(row)">编辑</el-button>
+            <el-button :size="size" type="text" @click="check(row)">审核</el-button>
           </template>
           <!-- 已审核 -->
           <template v-if="row.examineType === 1">
-            <el-button :size="size" type="text">打印凭证</el-button>
+            <el-button :size="size" type="text">打印票据</el-button>
             <el-button :size="size" type="text">归档</el-button>
           </template>
-          <!-- 待审核 -->
+          <!-- 已驳回 -->
           <template v-if="row.examineType === 2">
-            <el-button :size="size" type="text" @click="edit(row)">编辑</el-button>
-            <el-button :size="size" type="text" @click="check(row)">审核</el-button>
+            <el-button :size="size" type="text">删除</el-button>
           </template>
         </template>
       </z-table>
@@ -52,9 +53,9 @@
 import FormTableTemplate from "./FormTableTemplate";
 
 const examineType = [
-  { label: "已驳回", value: 2 },
+  { label: "待审核", value: 0 },
   { label: "已审核", value: 1 },
-  { label: "待审核", value: 0 }
+  { label: "已驳回", value: 2 }
 ];
 const incomeType = [
   { label: "租赁", value: 0 },
@@ -143,8 +144,11 @@ export default {
             launchName: "房多多",
             receivMoney: 10000,
             incomeType: "",
+            payName: "钱某某",
             examineType: 2,
             endTime: "2021.01.01",
+            moneyState: 1,
+            tradeType: 0,
             remarks: "这是备注"
           },
           {
@@ -201,13 +205,14 @@ export default {
           { label: "发起时间", prop: "launchDate", type: "date" },
           { label: "入账时间", prop: "incomeDate", type: "date" },
           { label: "发起人", prop: "launchName" },
-          { label: "收入金额", prop: "receivMoney" },
+          { label: "应收金额", prop: "receivMoney" },
           {
             label: "收入类型",
             prop: "incomeType",
             type: "select",
             dicData: incomeType
           },
+          { label: "支付方", prop: "payName" },
           {
             label: "审核状态",
             prop: "examineType",
@@ -215,6 +220,18 @@ export default {
             dicData: examineType
           },
           { label: "截止日期", prop: "endTime", type: "date" },
+          {
+            label: "资金状态",
+            prop: "moneyState",
+            type: "select",
+            dicData: moneyState
+          },
+          {
+            label: "交易方式",
+            prop: "tradeType ",
+            type: "select",
+            dicData: tradeType
+          },
           { label: "备注", prop: "remarks" }
         ],
         uiConfig: {
@@ -238,42 +255,43 @@ export default {
     },
     batchDels() {},
     addTenant() {},
-    launchcharge(row, column) {
+    routePush({ flag, id, examineType, model }) {
       this.$router.push({
         name: "launchcharge",
         query: {
-          flag: "add"
+          flag,
+          id,
+          examineType,
+          model
         }
       });
     },
+    launchcharge(row, column) {
+      this.routePush({ flag: "add" });
+    },
+    entryRecord(row, column) {
+      this.routePush({ flag: "entry" });
+    },
     detail(row) {
-      this.$router.push({
-        name: "launchcharge",
-        query: {
-          flag: "detail",
-          id: row.id,
-          model: row
-        }
+      this.routePush({
+        flag: "detail",
+        id: row.id,
+        model: row,
+        examineType: row.examineType
       });
     },
     check(row) {
-      this.$router.push({
-        name: "launchcharge",
-        query: {
-          flag: "check",
-          id: row.id,
-          model: row
-        }
+      this.routePush({
+        flag: "check",
+        id: row.id,
+        model: row
       });
     },
     edit(row) {
-      this.$router.push({
-        name: "launchcharge",
-        query: {
-          flag: "edit",
-          id: row.id,
-          model: row
-        }
+      this.routePush({
+        flag: "edit",
+        id: row.id,
+        model: row
       });
     }
   },

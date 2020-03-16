@@ -1,6 +1,7 @@
 import { validatenull } from "./validate"
 import { DIC_PROPS, DIC_SPLIT, DIC_HTTP_PROPS, DIC_GROUP_SPLIT } from '../global/variable'
 import AXIOS from 'axios'
+
 export const deepClone = (value) => {
     return _.cloneDeep(value)
 }
@@ -35,7 +36,7 @@ export const miAjax = ({ axios = this.$axios || AXIOS, url, method = 'get', quer
 export const getPasswordChar = (result = '', char) => {
     return result;
 };
-export const findByValue = (dic, value, props, isTree, isGroup) => {
+export const findByValue = (dic, value, props, isTree, isGroup, dataType) => {
     // 如果为空直接返回
     if (validatenull(dic)) return value;
     let result = '';
@@ -45,9 +46,9 @@ export const findByValue = (dic, value, props, isTree, isGroup) => {
         for (let i = 0; i < value.length; i++) {
             const dicvalue = value[i];
             if (isTree) {
-                result.push(findLabelNode(dic, dicvalue, props) || dicvalue);
+                result.push(findLabelNode(dic, dicvalue, props, dataType) || dicvalue);
             } else {
-                result.push(findArrayLabel(dic, dicvalue, props, isGroup));
+                result.push(findArrayLabel(dic, dicvalue, props, isGroup, dataType));
             }
         }
         result = result.join(DIC_SPLIT).toString();
@@ -57,7 +58,7 @@ export const findByValue = (dic, value, props, isTree, isGroup) => {
     }
     return result;
 };
-export const findLabelNode = (dic, value, props) => {
+export const findLabelNode = (dic, value, props, dataType) => {
     let result = '';
     let rev = (dic1, value1, props1) => {
         const labelKey = props1.label || DIC_PROPS.label;
@@ -66,7 +67,7 @@ export const findLabelNode = (dic, value, props) => {
         for (let i = 0; i < dic1.length; i++) {
             const ele = dic1[i];
             const children = ele[childrenKey] || [];
-            if (ele[valueKey] === value1) {
+            if (ele[valueKey] === detailDataType(value1)) {
                 result = ele[labelKey];
             } else {
                 rev(children, value1, props1);
@@ -76,14 +77,14 @@ export const findLabelNode = (dic, value, props) => {
     rev(dic, value, props);
     return result;
 };
-export const findArrayLabel = (dic, value, props, isGroup) => {
+export const findArrayLabel = (dic, value, props, isGroup, dataType) => {
     const valueKey = props.value || DIC_PROPS.value;
     const labelKey = props.label || DIC_PROPS.label;
     const groupsKey = props.groups || DIC_PROPS.groups;
 
     if (!isGroup) {
         for (let i = 0; i < dic.length; i++) {
-            if (dic[i][valueKey] === value) {
+            if (dic[i][valueKey] === detailDataType(value)) {
                 return dic[i][labelKey];
             }
         }
@@ -94,7 +95,7 @@ export const findArrayLabel = (dic, value, props, isGroup) => {
             const groupLabel = dic[i][labelKey];
 
             for (let j = 0; j < groups.length; j++) {
-                if (groups[j][valueKey] === value) {
+                if (groups[j][valueKey] === detailDataType(value)) {
                     return groups[j][labelKey];
                 }
             }
@@ -170,4 +171,16 @@ export const filterDefaultParams = (model, modelTranslate, translate = false) =>
         }
     }
     return data;
+};
+/**
+ * 字符串数据类型转化
+ */
+export const detailDataType = (value, type) => {
+    if (type === 'number') {
+        return isNaN(Number(value)) ? '' : Number(value);
+    } else if (type === 'string') {
+        return value + '';
+    } else {
+        return value;
+    }
 };

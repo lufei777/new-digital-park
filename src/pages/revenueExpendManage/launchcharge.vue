@@ -14,7 +14,7 @@
           v-bind="pageConfig.extraConfig"
         >
           <template slot="menuBtn" slot-scope="{size}">
-            <template v-if="pageConfig.flag === 'check'">
+            <template v-if="isCheck">
               <el-button :size="size" type="primary" @click="pass">通过</el-button>
               <el-button :size="size" type="danger" @click="reject">驳回</el-button>
             </template>
@@ -27,7 +27,13 @@
 </template>
 <script>
 import leaseManageApi from "@/service/api/leaseManage";
+import { BooleanDic } from "@/utils/dictionary";
 
+const examineType = [
+  { label: "待审核", value: 0 },
+  { label: "已审核", value: 1 },
+  { label: "已驳回", value: 2 }
+];
 const incomeType = [
   { label: "租赁", value: 0 },
   { label: "服务费", value: 1 },
@@ -72,7 +78,9 @@ const apiConfig = {
 export default {
   data() {
     return {
-      model: {},
+      model: {
+        examineId: [{ checkPeople: "lxh" }]
+      },
       formOptions: {
         ref: "formRef",
         labelWidth: "100",
@@ -96,6 +104,18 @@ export default {
           },
           {
             type: "input",
+            label: "应收金额",
+            prop: "receivMoney",
+            dataType: "number",
+            span: 12,
+            append: "元",
+            rules: {
+              required: true,
+              trigger: "blur"
+            }
+          },
+          {
+            type: "input",
             label: "收入名称",
             prop: "incomeName",
             clearable: true,
@@ -106,8 +126,20 @@ export default {
             }
           },
           {
+            type: "select",
+            label: "收入类型",
+            prop: "incomeType",
+            clearable: true,
+            span: 12,
+            dicData: incomeType,
+            rules: {
+              required: true,
+              trigger: "blur"
+            }
+          },
+          {
             type: "date",
-            label: "发起时间",
+            label: "发起日期",
             prop: "launchDate",
             format: "yyyy-MM-dd",
             valueFormat: "timestamp",
@@ -120,11 +152,9 @@ export default {
             }
           },
           {
-            type: "date",
-            label: "截止时间",
-            prop: "endTime",
-            format: "yyyy-MM-dd",
-            valueFormat: "timestamp",
+            type: "input",
+            label: "支付方",
+            prop: "payName",
             clearable: true,
             span: 12,
             rules: {
@@ -144,34 +174,11 @@ export default {
             }
           },
           {
-            type: "input",
-            label: "应收金额",
-            prop: "receivMoney",
-            dataType: "number",
-            clearable: true,
-            span: 12,
-            append: "元",
-            rules: {
-              required: true,
-              trigger: "blur"
-            }
-          },
-          {
-            type: "select",
-            label: "收入类型",
-            prop: "incomeType",
-            clearable: true,
-            span: 12,
-            dicData: incomeType,
-            rules: {
-              required: true,
-              trigger: "blur"
-            }
-          },
-          {
-            type: "input",
-            label: "支付方",
-            prop: "payName",
+            type: "date",
+            label: "截止日期",
+            prop: "endTime",
+            format: "yyyy-MM-dd",
+            valueFormat: "timestamp",
             clearable: true,
             span: 12,
             rules: {
@@ -205,6 +212,15 @@ export default {
               res: "data"
             },
             span: 24
+          },
+          {
+            type: "radio",
+            label: "是否审核",
+            prop: "isNeedCheck",
+            dataType: "string",
+            dicData: BooleanDic.isOrNot,
+            valueDefault: 1,
+            span: 24
           }
         ]
       },
@@ -212,11 +228,15 @@ export default {
     };
   },
   created() {
-    console.log(this.$route.query);
     if (this.$route.query) {
-      let query = this.$route.query;
-      this.pageConfig = apiConfig[query.flag];
-      this.model = { ...this.model, ...query.model };
+      // 页面标识，传过来的model对象，id，examineType：审核类型
+      let { flag, model, id, examineType } = this.$route.query;
+
+      this.pageConfig = { ...apiConfig[flag], examineType };
+      this.model = { ...this.model, ...model };
+
+      this.formOptions.forms.push(this.checkPeopleReason);
+
       this.formOptions = {
         ...this.formOptions,
         ...this.pageConfig.extraOptions
@@ -252,7 +272,133 @@ export default {
     pass() {},
     reject() {}
   },
-  watch: {}
+  computed: {
+    isAdd() {
+      return this.pageConfig.flag === "add";
+    },
+    isDetail() {
+      return this.pageConfig.flag === "detail";
+    },
+    isEdit() {
+      return this.pageConfig.flag === "edit";
+    },
+    isCheck() {
+      return this.pageConfig.flag === "check";
+    },
+    Form() {
+      return this.$refs[this.formOptions.ref];
+    },
+    checkPeopleReason() {
+      const { pageConfig } = this;
+
+      let checkPeople = {
+        label: "审核人",
+        prop: "examineId",
+        type: "dynamic",
+        span: 12,
+        children: {
+          align: "center",
+          headerAlign: "center",
+          columnConfig: [
+            {
+              label: "审核人",
+              prop: "checkPeople"
+            }
+          ]
+        }
+      };
+
+      const mergeCheckPeople = (
+        checkPeople,
+        { flag = "", examineType = -1 }
+      ) => {
+        checkPeople = Object.assign(
+          { ...checkPeople, span: this.isCheck ? 12 : 24, disabled: false },
+          // 设置外层属性
+          (() => {
+            // 设置children columnConfig
+            let children = {
+              ...checkPeople.children,
+              addBtn: false,
+              delBtn: false
+            };
+            // 如果是审查
+            if (this.isCheck) {
+              children.columnConfig = [
+                {
+                  ...checkPeople.children.columnConfig[0],
+                  disabled: true
+                }
+              ];
+            } else {
+              // 如果是审查之外
+              children.columnConfig = [
+                {
+                  ...checkPeople.children.columnConfig[0],
+                  disabled: true,
+                  width: 200
+                },
+                {
+                  label: "是否通过",
+                  prop: "isPass",
+                  type: "switch",
+                  disabled: true,
+                  displayAs: "switch",
+                  activeColor: "green",
+                  inactiveColor: "red"
+                },
+                {
+                  label: "审核时间",
+                  prop: "passTime",
+                  type: "date",
+                  valueDefault: this.isDetail ? "" : _.now(),
+                  format: "yyyy-MM-dd",
+                  valueFormat: "timestamp"
+                },
+                {
+                  label: "审核原因",
+                  prop: "checkReason"
+                }
+              ];
+            }
+            return { children };
+          })()
+        );
+        return checkPeople;
+      };
+
+      if (this.isCheck) {
+        checkPeople = mergeCheckPeople(checkPeople, pageConfig);
+      }
+      if (this.isDetail) {
+        checkPeople = mergeCheckPeople(checkPeople, pageConfig);
+        delete checkPeople.disabled;
+      }
+
+      return checkPeople;
+    }
+  },
+  watch: {
+    "model.isNeedCheck": {
+      immediate: true,
+      handler(newVal, oldVal) {
+        this.$nextTick(() => {
+          // 是否需要审核
+          if (newVal == BooleanDic.isOrNot[0].value) {
+            // 是
+            this.Form.setColumnByProp("examineId", {
+              display: true
+            });
+          } else {
+            // 否
+            this.Form.setColumnByProp("examineId", {
+              display: false
+            });
+          }
+        });
+      }
+    }
+  }
 };
 </script>
 <style lang='less' scoped>

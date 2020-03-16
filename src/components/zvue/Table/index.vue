@@ -92,7 +92,7 @@
               <slot
                 v-if="col.slot"
                 :name="col.prop"
-                :label="handleShowLabel(scopeRow.row,col,DIC[col.prop])"
+                :label="handleDetail(scopeRow.row,col,DIC[col.prop])"
                 :scopeRow="scopeRow"
                 :row="scopeRow.row"
                 :size="isMediumSize"
@@ -104,6 +104,7 @@
               <form-temp
                 v-else-if="cellEditFlag(scopeRow.row,col)"
                 v-model="scopeRow.row[col.prop]"
+                :isCrud="true"
                 :column="col"
                 :size="isMediumSize"
                 :dic="DIC[col.prop]"
@@ -672,28 +673,19 @@ export default {
       result = detail(row, column, this.tableOption, DIC);
       if (!this.validatenull(DIC)) {
         row["$" + column.prop] = result;
-      }
-      // 如果是级联，则对结果进行处理
-      if (column.type === "cascader") {
-        // 如果开启了elementUI级联的lazy模式，则从column.presentText中读值，此值在cascader的mounted中赋值
-        if (column.props && column.props.lazy) {
-          result = (column.presentText || "")
-            .split(column.separator || "\\")
-            .join(DIC_SPLIT);
-          row["$" + column.prop] = result;
+      } else {
+        // 如果是级联，则对结果进行处理
+        if (column.type === "cascader") {
+          // 如果开启了elementUI级联的lazy模式，则从column.presentText中读值，此值在cascader的mounted中赋值
+          if (column.props && column.props.lazy) {
+            result = column.presentText;
+            row["$" + column.prop] = column.presentText;
+          }
+          if (column.showAllLevels === false) {
+            let list = result.split(DIC_SPLIT);
+            result = list[list.length - 1];
+          }
         }
-        if (column.showAllLevels === false) {
-          let list = result.split(DIC_SPLIT);
-          result = list[list.length - 1];
-        }
-      }
-      return result;
-    },
-    handleShowLabel(row, column, DIC) {
-      let result = "";
-      result = detail(row, column, this.tableOption, DIC);
-      if (!this.validatenull(DIC)) {
-        row["$" + column.prop] = result;
       }
       return result;
     },

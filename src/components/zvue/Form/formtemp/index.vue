@@ -112,6 +112,7 @@
     :focus="column.focus"
     :prependClick="column.prependClick"
     :nodeClick="column.nodeClick"
+    :isCrud="isCrud"
   >
     <template
       :slot="column.prop+'Type'"
@@ -128,11 +129,11 @@
       ></slot>
     </template>
     <!-- input的slot处睆 -->
-    <template v-if="column.prependslot" :slot="column.prependslot">
-      <slot :name="column.prependslot"></slot>
+    <template v-if="column.prependslot" :slot="column.prependslot" slot-scope="{prependClick}">
+      <slot :name="column.prependslot" :prependClick="prependClick"></slot>
     </template>
-    <template v-if="column.appendslot" :slot="column.appendslot">
-      <slot :name="column.appendslot"></slot>
+    <template v-if="column.appendslot" :slot="column.appendslot" slot-scope="{appendClick}">
+      <slot :name="column.appendslot" :appendClick="appendClick"></slot>
     </template>
   </component>
 </template>
@@ -180,6 +181,10 @@ export default {
       default: () => {
         return {};
       }
+    },
+    isCrud: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
