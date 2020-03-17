@@ -325,10 +325,12 @@ export default {
     findColumnIndex(prop, group = false) {
       let list = [];
       let result;
+      let hasForms = typeof this.options.forms !== "undefined";
       this.columnOption.forEach((column, index) => {
         const val = this.findArray(column.forms, prop, "prop");
         if (val !== -1) {
-          list.push(index);
+          // 如果有forms属性，则group的排序需要减一，因为forms会被当成一个group，添加在最前方
+          hasForms && index > 0 ? list.push(index - 1) : list.push(index);
           list.push(val);
           result = val;
         }
@@ -339,8 +341,8 @@ export default {
       return group ? list : result;
     },
     // 根据prop设置属性
-    setColumnByProp(prop, setOptions, isIsGroup) {
-      let isGroup = isIsGroup || typeof this.options.group !== "undefined";
+    setColumnByProp(prop, setOptions, isInGroup) {
+      let isGroup = isInGroup || typeof this.options.group !== "undefined";
       let options = this.options;
       let index = this.findColumnIndex(prop, isGroup);
       if (index !== -1) {
@@ -353,8 +355,9 @@ export default {
       } else {
         this.$message({
           type: "error",
-          message: `属性-${prop}-不存在`
+          message: `setColumnByProp -> 属性-${prop}-不存在`
         });
+        console.error(`setColumnByProp -> 属性-${prop}-不存在`);
       }
     },
     // 判断该项是否可用

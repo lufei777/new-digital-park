@@ -101,7 +101,7 @@ export default {
       default: () => ({})
     },
     filesize: {
-      type: Number
+      type: String
     },
     drag: {
       type: Boolean,
@@ -232,7 +232,9 @@ export default {
       this.loading = true;
       let file = config.file;
       this.file = config.file;
-      this.validateFile(file);
+      if (!this.validateFile(file)) {
+        return;
+      }
       // 设置额外头部
       const headers = Object.assign(this.headers, {
         "Content-Type": "multipart/form-data"
@@ -312,11 +314,25 @@ export default {
 
       if (!this.validatenull(acceptList) && !acceptList.includes(accept)) {
         this.hide("文件类型不符合");
-        return;
+        return false;
       }
-      if (!this.validatenull(filesize) && filesize / 1024 > this.filesize) {
-        this.hide("文件太大不符合");
-        return;
+      if (!this.validatenull(filesize) && this.isOversize(filesize)) {
+        this.hide(`文件太大，只能上传${this.filesize}大小文件`);
+        return false;
+      }
+
+      return true;
+    },
+    isOversize(filesize) {
+      let unit = this.filesize.toUpperCase();
+      let fileSizeLimit = parseFloat(this.filesize);
+
+      if (unit.indexOf("KB") != -1) {
+        return filesize / Math.pow(1024, 1) > fileSizeLimit;
+      } else if (unit.indexOf("MB") != -1) {
+        return filesize / Math.pow(1024, 2) > fileSizeLimit;
+      } else if (unit.indexOf("GB") != -1) {
+        return filesize / Math.pow(1024, 3) > fileSizeLimit;
       }
     },
     setVal() {
