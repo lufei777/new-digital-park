@@ -23,11 +23,19 @@
         </z-form>
       </div>
     </div>
+
+    <el-dialog title="请填写原因" :visible.sync="dialogVisible" width="30%">
+      <z-input type="textarea" v-model="model.reason"></z-input>
+      <span slot="footer">
+        <el-button @click="()=>{ this.dialogVisible = false }">取 消</el-button>
+        <el-button type="primary" @click="()=>{ this.dialogVisible = false }">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
-import leaseManageApi from "@/service/api/leaseManage";
-import { BooleanDic } from "@/utils/dictionary";
+import leaseManageApi from "api/leaseManage";
+import { BooleanDic } from "utils/dictionary";
 
 const examineType = [
   { label: "待审核", value: 0 },
@@ -78,6 +86,7 @@ const apiConfig = {
 export default {
   data() {
     return {
+      dialogVisible: false,
       model: {
         examineId: [{ checkPeople: "lxh" }]
       },
@@ -269,8 +278,12 @@ export default {
     back() {
       this.$router.back();
     },
-    pass() {},
-    reject() {}
+    pass() {
+      this.dialogVisible = true;
+    },
+    reject() {
+      this.dialogVisible = true;
+    }
   },
   computed: {
     isAdd() {
@@ -302,9 +315,17 @@ export default {
           columnConfig: [
             {
               label: "审核人",
-              prop: "checkPeople"
+              prop: "checkPeople",
+              rules: {
+                required: true,
+                trigger: "blur"
+              }
             }
           ]
+        },
+        rules: {
+          required: true,
+          message: "必填，请填写至少一位审核人"
         }
       };
 
@@ -367,11 +388,10 @@ export default {
         return checkPeople;
       };
 
-      if (this.isCheck) {
+      if (this.isCheck || this.isDetail) {
         checkPeople = mergeCheckPeople(checkPeople, pageConfig);
       }
       if (this.isDetail) {
-        checkPeople = mergeCheckPeople(checkPeople, pageConfig);
         delete checkPeople.disabled;
       }
 

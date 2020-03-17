@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import CommonFun from "../../utils/commonFun";
+import CommonFun from "utils/commonFun";
 export default {
   name: "ReportManage",
   data() {

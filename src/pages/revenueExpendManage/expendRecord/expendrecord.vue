@@ -47,7 +47,7 @@
   </FormTableTemplate>
 </template>
 <script>
-import FormTableTemplate from "./FormTableTemplate";
+import FormTableTemplate from "../FormTableTemplate";
 
 const examineType = [
   { label: "已驳回", value: 2 },

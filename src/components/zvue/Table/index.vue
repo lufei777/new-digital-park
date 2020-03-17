@@ -1129,6 +1129,9 @@ export default {
       button {
         width: auto !important;
       }
+      .cell {
+        text-overflow: unset;
+      }
     }
     .zvue-table-cell {
       color: #666;

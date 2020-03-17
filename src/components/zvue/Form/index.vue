@@ -287,6 +287,7 @@ export default {
           ) {
             if (currentRules.required) {
               currentRules.message = `必填，请填写${item.label}`;
+              currentRules.trigger = `change`;
             }
           }
           // 添加进rules

@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import FormTableTemplate from "./FormTableTemplate";
+import FormTableTemplate from "../FormTableTemplate";
 
 const examineType = [
   { label: "待审核", value: 0 },

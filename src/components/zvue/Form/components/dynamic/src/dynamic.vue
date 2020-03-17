@@ -1,17 +1,19 @@
 <template>
   <div>
     <z-table ref="crud" :options="options">
-      <!-- <template slot="indexHeader">
+      <template slot="indexHeader">
         <span v-if="options.addBtn === false">序号</span>
         <el-button
           v-else
+          size="mini"
           type="primary"
           @click="addRow"
           icon="el-icon-plus"
           :disabled="disabled"
           circle
+          :style="{height:'unset',padding:'7px !important'}"
         ></el-button>
-      </template>-->
+      </template>
       <template slot-scope="{scopeRow:scope}" slot="index">
         <el-button
           v-if="!delBtn && hoverList[scope.row.$index] && !disabled"
@@ -101,25 +103,7 @@ export default {
               fixed: true,
               width: 50,
               slot: true,
-              // 如果使用headerSlot，会有省略号
-              renderHeader: (h, { column, $index }) => {
-                if (this.addBtn) {
-                  return "序号";
-                }
-                return h("el-button", {
-                  attrs: {
-                    size: "mini",
-                    type: "primary",
-                    icon: "el-icon-plus",
-                    disabled: this.disabled,
-                    circle: true,
-                    style: "height: unset;padding:7px !important;"
-                  },
-                  on: {
-                    click: this.addRow
-                  }
-                });
-              }
+              headerSlot: true
             }
           ];
           this.columnOption.forEach((ele, index) => {
