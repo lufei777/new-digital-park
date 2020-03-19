@@ -37,6 +37,10 @@
 import leaseManageApi from "api/leaseManage";
 import { BooleanDic } from "utils/dictionary";
 
+const dateValueDefault = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
+console.log("dateValueDefault", dateValueDefault);
+const dateValueFormat = "yyyy-MM-dd HH:mm:ss";
+
 const examineType = [
   { label: "待审核", value: 0 },
   { label: "已审核", value: 1 },
@@ -163,9 +167,8 @@ export default {
             type: "date",
             label: "发起日期",
             prop: "launchDate",
-            format: "yyyy-MM-dd",
-            valueFormat: "timestamp",
-            valueDefault: _.now(),
+            valueFormat: dateValueFormat,
+            valueDefault: dateValueDefault,
             clearable: true,
             span: 12,
             rules: {
@@ -200,7 +203,7 @@ export default {
             label: "截止日期",
             prop: "endTime",
             format: "yyyy-MM-dd",
-            valueFormat: "timestamp",
+            valueFormat: dateValueFormat,
             clearable: true,
             span: 12,
             rules: {
@@ -259,7 +262,7 @@ export default {
           prop: "incomeDate",
           type: "date",
           format: "yyyy-MM-dd",
-          valueFormat: "timestamp",
+          valueFormat: dateValueFormat,
           rules: {
             required: true
           }
@@ -439,9 +442,9 @@ export default {
                   label: "审核时间",
                   prop: "passTime",
                   type: "date",
-                  valueDefault: this.isDetail ? "" : _.now(),
+                  valueDefault: this.isDetail ? "" : dateValueDefault,
                   format: "yyyy-MM-dd",
-                  valueFormat: "timestamp"
+                  valueFormat: dateValueFormat
                 },
                 {
                   label: "审核原因",

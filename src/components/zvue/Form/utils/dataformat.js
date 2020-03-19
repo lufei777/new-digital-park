@@ -77,7 +77,7 @@ export const getPlaceholder = function (column, type, isDisabled) {
  * 初始化数据格式
  */
 export const initVal = ({ listType, type, multiple, dataType, value, curentForm }) => {
-    
+
     // cascader 去除处理
     if (
         (['select', 'tree'].includes(type) && multiple) ||
@@ -104,7 +104,7 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
     }
 
     // 日期处理，不是很恰当，后面可能需要去除
-    if (dateList.includes(type) || ['time', 'timerange'].includes(type)) {
+    /* if (dateList.includes(type) || ['time', 'timerange'].includes(type)) {
         if (value instanceof Array && value.length > 0) {
             value = value.map(date => {
                 if (validatenull(date)) {
@@ -119,7 +119,7 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
         } else if (typeof value === "string" && value.length != 0) {
             value = new Date(value);
         }
-    }
+    } */
 
     // 如果是范围滑块，则需要初始化为[0,0]
     if (type === 'slider') {
@@ -141,15 +141,16 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
     }
 
     // 数据转换，解决数据不匹配问题
-    if (Array.isArray(value)) {
-        // 数据转化
-        value.map((ele, index) => {
-            value[index] = detailDataType(ele, dataType);
-        });
-    } else {
-        value = detailDataType(value, dataType);
+    if (dataType) {
+        if (Array.isArray(value)) {
+            // 数据转化
+            value.map((ele, index) => {
+                value[index] = detailDataType(ele, dataType);
+            });
+        } else {
+            value = detailDataType(value, dataType);
+        }
     }
-
     return value;
 };
 /**
