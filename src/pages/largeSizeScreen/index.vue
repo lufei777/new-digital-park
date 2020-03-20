@@ -1,27 +1,42 @@
 <template>
   <div class="large-size-screen">
-     <Normal />
+    <component :is="getComponent" :width="width" :height="height"></component>
   </div>
 </template>
 
 <script>
   import Normal from './normal'
+  import Dashboard from '@/pages/digitalPark/home/dashboardNew'
   export default {
     name: 'LargeSizeScreenNormal',
     components: {
-      Normal
+      Normal,
+      Dashboard
     },
     data () {
       return {
+        width:0,
+        height:0,
       }
     },
     computed:{
+      getComponent(){
+        this.width = document.body.offsetWidth
+        this.height = document.body.offsetHeight
+        // console.log(width,height)
+        if(this.width<2610 && this.height<1468){
+          return 'Dashboard'
+        }else{
+          return 'Normal'
+        }
+      }
     },
     watch:{
     },
     methods: {
     },
     mounted(){
+
     }
   }
 </script>

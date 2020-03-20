@@ -11,11 +11,11 @@
       <div class="digital-title">
         <div class="digital-title-text">
           <i class="iconfont iconshuziyuanqu park-logo"></i>
-          <span>{{title}}</span>
+          <span>{{headName}}</span>
         </div>
       </div>
       <div class='dashboard-nav-operator'>
-        <NavOperator :moduleType.sync="moduleType" :fromFlag="fromFlag" />
+        <NavOperator :moduleType.sync="moduleType" :fromFlag="fromFlag" :showGoBack="showGoBack"/>
       </div>
   </div>
 </template>
@@ -27,7 +27,7 @@
     components: {
       NavOperator
     },
-    props:["moduleType",'fromFlag'],
+    props:["moduleType",'fromFlag','headName','showGoBack'],
     data () {
       let menuTree = JSON.parse(localStorage.getItem('menuTree'))
       return {

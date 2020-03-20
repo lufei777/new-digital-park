@@ -1685,11 +1685,27 @@ class commonFun {
     if (item.level == 2 && item.clientType == 1) {
       router.push(`${item.routeAddress}?productId=${item.id}`)
       return true;
-    } else if (item.level != 2 && item.clientType == 1) {
-      window.goToClientPage(JSON.stringify(clientMenu), item.id)
+    } else if(item.level==3 && item.clientType==1 && item.name=="概览"){
+      router.push(`${item.routeAddress}?productId=${item.pid}`)
+      return true;
+    }else if (item.level != 2 && item.clientType == 1) {
+      let id = item.id
+      if(item.childNode.length){
+        id = this.getId(item)
+      }
+      console.log(clientMenu,id)
+      window.goToClientPage(JSON.stringify(clientMenu), id)
       return true;
     }
     return false;
+  }
+
+  getId(item){
+    if(item.childNode.length){
+      return this.getId(item.childNode[0])
+    }else{
+      return item.id
+    }
   }
 
   //导出

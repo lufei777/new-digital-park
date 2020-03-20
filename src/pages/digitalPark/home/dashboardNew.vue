@@ -1,6 +1,11 @@
 <template>
   <div class="dashboard-park-home-page-new"  v-loading="loading">
-    <Header from-flag="1" :moduleType.sync="moduleType" v-if="!hideHeader"/>
+    <Header v-if="!hideHeader"
+            from-flag="1"
+            :moduleType.sync="moduleType"
+            :headName="headName"
+            :showGoBack="showGoBack"
+    />
     <div class="dashboard-content-panel">
       <div class="dashboard-left">
         <draggable :list="proModuleList1" class="draggable-box1"
@@ -125,7 +130,7 @@
           innerObj:{},
           activeBtnIndex:2,
           clientMenu:{},
-          title:menuTree[0].name
+          headName:menuTree[0].name
         }
       },
      computed: {
@@ -143,8 +148,11 @@
         productId(){
           this.getProductList()
           let menuTree = JSON.parse(localStorage.getItem('menuTree'))
+          let menuList = JSON.parse(localStorage.getItem('menuList'))
           if(!this.productId){
-            this.title = menuTree[0].name
+            this.headName = menuTree[0].name
+          }else{
+            this.headName = menuList.name
           }
         },
       },
@@ -351,6 +359,9 @@
       }
       this.getModulesByType()
       this.getProductList()
+      if(this.productId){
+        this.headName = JSON.parse(localStorage.getItem('menuList')).name
+      }
     }
   }
 </script>

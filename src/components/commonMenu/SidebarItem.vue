@@ -66,11 +66,15 @@ export default {
         CommonFun.goToZGManage(item)
         this.setMenuList(item);
       } else {
+        if (CommonFun.loadThreeD(item, JSON.parse(localStorage.getItem('menuList')))) {
+          return;
+        }
         this.setActiveIndex(item);
         CommonFun.loadPage(item);
       }
     },
     setMenuList(item) {
+      let secondMenu={}
       if (item.level == 2) {
         this.$store.commit("digitalPark/menuList", item);
         this.normalShortcutList();
@@ -78,20 +82,20 @@ export default {
         let firstMenu = this.allMenuList.find(first => {
           return first.id == item.firstMenuId;
         });
-        let secondMenu = firstMenu.childNode.find(second => {
+        secondMenu = firstMenu.childNode.find(second => {
           return second.id == item.secondMenuId;
         });
         let menuTmp={}
-        //菜单：如果是二级是客户端类概览页且点击的子集是跳网页，则不存全部菜单
+        //菜单：如果二级是客户端类概览页且点击的子集为是跳网页，则不存全部菜单
         if(secondMenu.clientType==1 && item.clientType!=1 && item.level==3){
-          menuTmp=item
+          menuTmp = item
         }else if(secondMenu.clientType==1 && item.clientType!=1 && item.level!=3){
-          let node = this.findNode(secondMenu,item)
-          menuTmp=node
+          menuTmp = this.findNode(secondMenu,item,secondMenu)
         }else {
           menuTmp = secondMenu
         }
         this.$store.commit("digitalPark/menuList",menuTmp);
+
         //快接入口菜单：概览类非二级菜单的快捷入口设置
         if (secondMenu.clientType == 1) {
           localStorage.setItem("shortcutList", JSON.stringify(secondMenu.childNode));
@@ -99,9 +103,10 @@ export default {
           this.normalShortcutList();
         }
       }
-      if (CommonFun.loadThreeD(item, JSON.parse(localStorage.getItem("menuList")))) {
+      if (CommonFun.loadThreeD(item, secondMenu)) {
         return;
       }
+      this.setActiveIndex(item)
       CommonFun.loadPage(item);
       },
     setActiveIndex(menu) {
@@ -114,13 +119,17 @@ export default {
       }
       return;
     },
-    findNode(menu, obj) {
-      //menu起始是二级菜单
+    findNode(menu, obj,secondMenu) {
+      //menu起始是二级菜单,返回的是第三层
       menu.childNode.map(child => {
         if (child.id == obj.id) {
-          this.findMenu = menu;
+          if(obj.level==4){
+            this.findMenu = menu;
+          }else{
+            this.findNode(secondMenu,menu,secondMenu);
+          }
         } else {
-          this.findNode(child, obj);
+          this.findNode(child,obj,secondMenu);
         }
       });
       return this.findMenu;
