@@ -27,7 +27,7 @@
                 <el-option
                   v-for="item in assignList"
                   :key="item.id"
-                  :label="item.fullName"
+                  :label="item.name"
                   :value="item.id"
                 ></el-option>
               </el-select>
@@ -700,7 +700,7 @@ export default {
       obj = this.assignList.find(item => {
         return item.id === value;
       });
-      this.designatorName = obj.fullName;
+      this.designatorName = obj.name;
     },
     back() {
       if (this.taskId.allTaskStatus == "000") {
@@ -833,7 +833,7 @@ export default {
   },
   async mounted() {
     await this.deptTreeList();
-    this.createPeople = JSON.parse(localStorage.getItem("userInfo")).fullName;
+    this.createPeople = JSON.parse(localStorage.getItem("userInfo")).name;
     if (this.taskId.id) {
       this.detailTask();
       this.operateLogList();
