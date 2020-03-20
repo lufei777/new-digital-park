@@ -86,7 +86,7 @@
           }
         },
         checkList:[],
-        userName:userInfo.fullName,
+        userName:userInfo.name,
         checkDate:moment(new Date()).format('YYYY-MM-DD'),
         opinion:''
       }

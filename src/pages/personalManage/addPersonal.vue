@@ -70,7 +70,7 @@ export default {
               },
               {
                 label: "姓名",
-                prop: "fullName",
+                prop: "name",
                 type: "input",
                 rules: {
                   required: true,
@@ -148,7 +148,7 @@ export default {
                         deptId: node.data.id
                       }).then(res => {
                         res.map(item => {
-                          item.name = item.fullName;
+                          item.name = item.name;
                           item.leaf = true;
                         });
                         // console.log(res);

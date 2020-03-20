@@ -186,6 +186,7 @@
         let res = await SystemManageApi.listBy({
           deptId
         });
+        console.log(res)
         res.map(item => {
           item.name = item.name;
           item.leaf = true;
@@ -209,7 +210,7 @@
         let obj={
              id:_.uniqueId(),
              applyTime:moment(new Date()).format('YYYY-MM-DD'),
-             applyUser:userInfo.fullName,
+             applyUser:userInfo.name,
              name:'',
              collarId:'',
              specification:'',

@@ -7,7 +7,7 @@
       <BreadCrumb></BreadCrumb>
     </template>
     <template slot="navOperator" slot-scope="obj">
-      <NavOperator :style="obj.style" class="asset-nav-operator" :showGoback="true" />
+      <NavOperator :style="obj.style" class="asset-nav-operator" :showGoBack="true" />
     </template>
     <template slot="content">
       <router-view></router-view>

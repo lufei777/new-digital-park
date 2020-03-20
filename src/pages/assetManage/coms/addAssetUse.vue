@@ -70,7 +70,7 @@
             type: "input",
             label: "申请人",
             prop: "applyUser",
-            valueDefault:userInfo.fullName,
+            valueDefault:userInfo.name,
             disabled: true,
             span: 24,
           },{
@@ -150,7 +150,7 @@
           deptId
         });
         res.map(item => {
-          item.name = item.fullName;
+          item.name = item.name;
           item.leaf = true;
         });
         this.userList=res
@@ -173,7 +173,7 @@
       userChange(data){
         let userId = data.value[data.value.length-1]
         let user = this.userList.find((item)=>item.id==userId)
-        this.formModel.userName=user.fullName
+        this.formModel.userName=user.name
       }
     },
     mounted(){

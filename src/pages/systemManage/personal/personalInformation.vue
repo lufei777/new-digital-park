@@ -45,7 +45,7 @@
             {
               type: "input",
               label: "姓名",
-              prop: "fullName",
+              prop: "name",
               clearable: true,
               span: 24,
               rules: {
