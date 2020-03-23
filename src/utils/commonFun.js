@@ -1722,11 +1722,11 @@ class commonFun {
       let blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
       link.style.display = 'none'
       link.href = URL.createObjectURL(blob)
-
       link.download = decodeURIComponent(res.headers['content-disposition']) //下载后文件名
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
+
     }).catch(error => {
       that.$message({
         type: 'error',
