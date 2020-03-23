@@ -2,75 +2,24 @@
   <div class="large-size-screen-normal">
     <Header fromFlag="2" :headName="headName" />
     <div class="content flex">
-        <div class="basic-panel left-panel">
-          <draggable
-                :list="moduleList[0]"
-                v-bind="getOptions()"
-                @change="onOutChange"
-                @start="onOutStart"
-          >
-          <transition name="el-zoom-in-center" v-for="(item,index) in moduleList[0]" :key="index">
+        <draggable
+              class="drag-panel"
+              :list="moduleList"
+              v-bind="getOptions()"
+              @change="onOutChange"
+              @start="onOutStart"
+        >
+          <transition name="el-zoom-in-center" v-for="(item,index) in moduleList" :key="index">
               <draggable
-                class="out-drag-product"
+                :class="item?'out-drag-product':'center-show'"
                 :list="[item]"
-                :id="index"
                 v-bind="getInnerOptions()"
-                v-show="show"
+                v-show="animationFlag"
               >
                 {{item && item.id}}
               </draggable>
           </transition>
-          </draggable>
-        </div>
-        <div class="basic-panel  center-panel">
-          <transition name="el-zoom-in-center">
-             <div class="center-show" v-show="show"></div>
-          </transition>
-          <draggable
-            :list="moduleList[2]"
-            v-bind="getOptions()"
-            @change="onOutChange"
-            @start="onOutStart"
-            class="flex-align-around flex-wrap"
-          >
-            <transition
-              name="el-zoom-in-center"
-              v-for="(item,index) in moduleList[2]"
-              :key="index"
-            >
-              <draggable
-                class="out-drag-product"
-                :list="[item]"
-                :id="index"
-                v-bind="getInnerOptions()"
-                v-show="show"
-              >
-                {{item && item.id}}
-              </draggable>
-            </transition>
-          </draggable>
-        </div>
-
-        <div class="basic-panel right-panel">
-          <draggable
-            :list="moduleList[3]"
-            v-bind="getOptions()"
-            @change="onOutChange"
-            @start="onOutStart"
-          >
-          <transition name="el-zoom-in-center" v-for="(item,index) in moduleList[3]" :key="index">
-            <draggable
-              class="out-drag-product"
-              :list="[item]"
-              v-bind="getInnerOptions()"
-              v-show="show"
-            >
-              {{item&& item.id}}
-            </draggable>
-          </transition>
-          </draggable>
-        </div>
-        <!--</draggable>-->
+        </draggable>
     </div>
   </div>
 </template>
@@ -89,12 +38,17 @@
     data () {
       let menuTree = JSON.parse(localStorage.getItem('menuTree'))
       return {
-        moduleList:[[],[],[],[]],
-        allList:[],
-        show:false,
         headName:menuTree[0].name,
+        moduleList:[[],[],[],[]],
+        animationFlag:false,
         outDisable:false,
-        innerDisable:true
+        innerDisable:true,
+        centerIndex:0,
+        styleObj:{
+          panelStyle:{},
+          centerStyle:{},
+          dragStyle:{}
+        }
       }
     },
     computed:{
@@ -112,48 +66,62 @@
         // let res = {
         //   num:9,
         //   xLength:700,
-        //   yLength:400,
-        //   modules:[
-        //     [{id:1},{id:2},{id:3},{id:111}],
-        //     [],
-        //     [{id:4},{id:5},{id:9},{id:99}],
-        //     [{id:6},{id:7},{id:8},{id:66}],
-        //   ]
+        //   yLength:393,
+        //   modules:[{id:1},{id:2},null,{id:3},
+        //     {id:4},{id:5},{id:6},{id:7},{id:8},
+        //     {id:14},{id:15},{id:16},{id:17},{id:18},{id:19},{id:20},{id:187},{id:197},{id:207},{id:777},{id:888}],
+        //   xNum:6,
+        //   yNum:4
+        //
         // }
-
-          // [
-          // [{id:1},{id:2},{id:3},{id:111},{id:222},{id:333},{id:11},{id:22}],
-          //   [],
-          //   [{id:4},{id:5},{id:9},{id:99}],
-          //   [{id:6},{id:7},{id:8},{id:66},{id:77},{id:88},{id:166},{id:177}],
-          // ]
-
 
         let res = await DigitalParkApi.getLargeScreenModule({
           width:this.width,
           height:this.height
         })
-        let tmp=[]
-        res.modules.map((item)=>{
-          item.map((child)=>{
-            tmp.push(child)
-          })
-        })
-        this.allList = tmp
         this.moduleList = res.modules
-        let obj = {
-          width:res.xLength+'px',
-          height:res.yLength+'px',
-        }
-        let margin = res.yLength*3-1020
+        this.centerIndex = res.modules.findIndex(item=>JSON.stringify(item)=='null')
+        this.drawPageStyle(res)
         setTimeout(()=>{
-          $(".large-size-screen-normal .out-drag-product").css(obj)
-          $(".center-show").css({marginBottom:margin+'px'})
-          this.show=true
+          $(".drag-panel").css(this.styleObj.panelStyle)
+          $(".center-show").css(this.styleObj.centerStyle)
+          $(".large-size-screen-normal .out-drag-product").css(this.styleObj.dragStyle)
+          this.animationFlag=true
         },500)
       },
+      drawPageStyle(res){
+        let xLen  = res.xLength+20
+        let yLen  = res.yLength+20
+        console.log(xLen,yLen)
+        let paddingLeft =($(".content").width()-xLen*res.xNum)/2
+        let marginTop =($(".large-size-screen-normal").height()-160-yLen*res.yNum)/2
+
+        this.styleObj.panelStyle = {
+          "grid-template-columns": "repeat("+res.xNum+","+xLen+"px)",
+          "grid-template-rows": "repeat("+res.yNum+","+yLen+"px)",
+          // "padding-left":paddingLeft+"px",
+          // "margin-top":marginTop+"px"
+        }
+        console.log(paddingLeft,marginTop)
+        this.styleObj.centerStyle = {
+          "grid-column-start": this.centerIndex+1,
+          "grid-column-end": xLen<960?this.centerIndex+4:this.centerIndex+3,
+          "grid-row-start": 1,
+          "grid-row-end": xLen<960?4:3
+        }
+        console.log(  this.styleObj.centerStyle)
+        this.styleObj.dragStyle = {
+          width:res.xLength+'px',
+          height:res.yLength+'px',
+          "grid-column":'unset',
+          "grid-row":'unset'
+        }
+      },
       onOutChange(evt){
-        console.log("evt",evt)
+        console.log("evt",evt,this.moduleList)
+
+        $(".center-show").css(this.styleObj.centerStyle)
+        $(".large-size-screen-normal .out-drag-product").css(this.styleObj.dragStyle)
       },
       onOutStart(){
 
@@ -161,59 +129,43 @@
     },
     mounted(){
       this.getLargeScreenModuleList()
+      let _this = this
+      $(window).resize(function(){
+        _this.getLargeScreenModuleList()
+      })
     }
   }
 </script>
 
 <style lang="less">
   .large-size-screen-normal{
-    .out-draggable-box{
-      flex-wrap: wrap;
-    }
+    height: 100%;
     .out-drag-product{
       background:@mainHoverColor;
-      /*width:600px;*/
-      /*height:380px;*/
       font-size: 188px;
       text-align: center;
-      /*line-height: 380px;*/
       color:red;
-      margin-bottom:20px;
+      /*margin:0 20px 20px 20px;*/
+      /*margin:auto;*/
     }
-    .left-panel{
-      display: flex;
-      .out-drag-product{
-        float: right;
-        margin-left: 20px;
-      }
-    }
-    .right-panel{
-      .out-drag-product{
-        float: left;
-        margin-right: 20px;
-      }
-    }
-    .center-panel{
-      width:1920px;
-      padding:0 20px;
-      box-sizing: border-box;
-      text-align: center;
-      .out-drag-product{
-        /*float: left;*/
-        /*margin-right: 20px;*/
-        margin-bottom:20px;
-      }
+    .drag-panel{
+      display: grid;
+      width:100%;
+      /*padding:20px;*/
+      /*grid-template-columns: repeat(auto-fill,700px);*/
+      /*grid-template-rows: repeat(auto-fill,400px);*/
     }
     .center-show{
-      width:1880px !important;
+      width:1920px !important;
       height:1080px !important;
-      margin-bottom:20px;
       box-sizing: border-box;
       line-height: 1080px;
       background: pink;
-    }
-    .one{
-      background: yellow;
+      /*grid-row-start: 1;*/
+      /*grid-row-end: 4;*/
+      /*grid-column-start: 3;*/
+      /*grid-column-end: 6;*/
+      /*margin:0 20px 20px 20px;*/
     }
   }
 </style>

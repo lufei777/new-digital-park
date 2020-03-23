@@ -1,6 +1,6 @@
 <template>
   <div class="large-size-screen">
-    <component :is="getComponent" :width="width" :height="height"></component>
+    <component :is="curCom" :width="width" :height="height"></component>
   </div>
 </template>
 
@@ -17,26 +17,41 @@
       return {
         width:0,
         height:0,
+        curCom:''
       }
     },
     computed:{
+      // getComponent(){
+      //   this.width = document.body.offsetWidth
+      //   this.height = document.body.offsetHeight
+      //   // console.log(width,height)
+      //   if(this.width<2610 && this.height<1468){
+      //     return 'Dashboard'
+      //   }else{
+      //     return 'Normal'
+      //   }
+      // }
+    },
+    watch:{
+    },
+    methods: {
       getComponent(){
         this.width = document.body.offsetWidth
         this.height = document.body.offsetHeight
         // console.log(width,height)
         if(this.width<2610 && this.height<1468){
-          return 'Dashboard'
+          this.curCom = 'Dashboard'
         }else{
-          return 'Normal'
+          this.curCom = 'Normal'
         }
       }
     },
-    watch:{
-    },
-    methods: {
-    },
     mounted(){
-
+      let _this = this
+      this.getComponent()
+      $(window).resize(function(){
+        _this.getComponent()
+      })
     }
   }
 </script>

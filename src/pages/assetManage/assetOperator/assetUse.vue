@@ -175,10 +175,10 @@
         let res = await SystemManageApi.getDepartmentTree();
         this.deptTree=res[0].childNode
 
-        let list = this.insertNode(this.deptTree)
-        console.log("list",list)
+        // let list = this.insertNode(this.deptTree)
+        // console.log("list",list)
         this.$refs['tableRef'].setColumnByProp("collarId", {
-          dicData:list
+          dicData: this.deptTree
         });
       },
       async getUserList(id) {
