@@ -9,9 +9,9 @@
         <z-form
           :ref="formOptions.ref"
           :options="formOptions"
+          v-bind="pageConfig.extraOptions"
           v-model="model"
           @submit="submit"
-          v-bind="pageConfig.extraConfig"
         >
           <template slot="menuBtn" slot-scope="{size}">
             <template v-if="isCheck">
@@ -25,28 +25,27 @@
     </div>
 
     <el-dialog title="请填写原因" :visible.sync="dialogVisible" width="30%">
-      <z-input type="textarea" v-model="model.reason"></z-input>
+      <z-input type="textarea" v-model="model.examineIdea"></z-input>
       <span slot="footer">
         <el-button @click="()=>{ this.dialogVisible = false }">取 消</el-button>
-        <el-button type="primary" @click="()=>{ this.dialogVisible = false }">确 定</el-button>
+        <el-button type="primary" @click="comfirm">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 <script>
-import leaseManageApi from "api/leaseManage";
+import revenueExpendApi from "api/revenueExpendManage";
 import { BooleanDic } from "utils/dictionary";
 
 const dateValueDefault = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
-console.log("dateValueDefault", dateValueDefault);
 const dateValueFormat = "yyyy-MM-dd HH:mm:ss";
 
-const examineType = [
+const examineState = [
   { label: "待审核", value: 0 },
   { label: "已审核", value: 1 },
   { label: "已驳回", value: 2 }
 ];
-const incomeType = [
+const moduleId = [
   { label: "租赁", value: 0 },
   { label: "服务费", value: 1 },
   { label: "专利费", value: 2 }
@@ -65,32 +64,32 @@ const apiConfig = {
   add: {
     flag: "add",
     title: "发起收费",
-    api: leaseManageApi.addHouse
+    api: revenueExpendApi.launchBudget
   },
-  edit: {
-    flag: "edit",
-    title: "编辑",
-    api: leaseManageApi.editHouse
+  update: {
+    flag: "update",
+    title: "完善",
+    api: revenueExpendApi.updateMoneyState
   },
   detail: {
     flag: "detail",
     title: "详情",
-    extraOptions: {
+    extraConfig: {
       disabled: true,
       submitBtn: false
     },
-    extraConfig: {
+    extraOptions: {
       textMode: true
     }
   },
   check: {
     flag: "check",
     title: "审核",
-    extraOptions: {
+    extraConfig: {
       disabled: true,
       submitBtn: false
     },
-    extraConfig: {
+    extraOptions: {
       textMode: true
     }
   },
@@ -105,7 +104,7 @@ export default {
     return {
       dialogVisible: false,
       model: {
-        examineId: [{ checkPeople: "lxh" }]
+        // examineId: [{ checkPeople: "lxh" }]
       },
       formOptions: {
         ref: "formRef",
@@ -122,9 +121,8 @@ export default {
           {
             type: "input",
             label: "编号",
-            prop: "incomId",
+            prop: "recordId",
             readonly: true,
-            valueDefault: "SZ-202003050001",
             span: 12,
             tip: "该编号自动生成"
           },
@@ -143,7 +141,7 @@ export default {
           {
             type: "input",
             label: "收入名称",
-            prop: "incomeName",
+            prop: "recordName",
             clearable: true,
             span: 12,
             rules: {
@@ -154,10 +152,10 @@ export default {
           {
             type: "select",
             label: "收入类型",
-            prop: "incomeType",
+            prop: "moduleId",
             clearable: true,
             span: 12,
-            dicData: incomeType,
+            dicData: moduleId,
             rules: {
               required: true,
               trigger: "blur"
@@ -166,7 +164,7 @@ export default {
           {
             type: "date",
             label: "发起日期",
-            prop: "launchDate",
+            prop: "launchTime",
             valueFormat: dateValueFormat,
             valueDefault: dateValueDefault,
             clearable: true,
@@ -190,8 +188,28 @@ export default {
           {
             type: "input",
             label: "发起人",
-            prop: "launchName",
+            prop: "launchIdList",
+            type: "cascader",
+            dataType: "string",
             clearable: true,
+            dicData: [
+              {
+                label: "刘",
+                value: 1,
+                children: [
+                  { label: "晓", value: 2 },
+                  { label: "航", value: 2 }
+                ]
+              },
+              {
+                label: "李",
+                value: 21,
+                children: [
+                  { label: "盼", value: 22 },
+                  { label: "杰", value: 23 }
+                ]
+              }
+            ],
             span: 12,
             rules: {
               required: true,
@@ -227,14 +245,14 @@ export default {
                 type: "upload",
                 listType: "picture-card",
                 label: "相关凭证",
-                prop: "housePictureVOList",
+                prop: "recordImageList",
                 tip: "只能上传jpg/png文件，大小不超过3M。",
                 action: "/oaApi/image/upload",
                 filesize: "400kb",
                 accept: ["jpg", "jpeg", "png"],
                 props: {
-                  label: "housePictureName",
-                  value: "housePictureUrl"
+                  label: "recordId",
+                  value: "recordUrl"
                 },
                 propsHttp: {
                   name: "fileName",
@@ -259,7 +277,7 @@ export default {
       entryForms: [
         {
           label: "入账时间",
-          prop: "incomeDate",
+          prop: "incomeTime",
           type: "date",
           format: "yyyy-MM-dd",
           valueFormat: dateValueFormat,
@@ -293,13 +311,26 @@ export default {
   },
   created() {
     if (this.$route.query) {
-      // 页面标识，传过来的model对象，id，examineType：审核类型
-      let { flag, model, id, examineType } = this.$route.query;
+      // flag         页面标识
+      // recordId     记录id
+      // budgetType   页面类型 收入: 0   支出: 1
+      // examineState 审核状态
+      let { flag, budgetType, recordId, examineState } = this.$route.query;
 
-      this.pageConfig = { ...apiConfig[flag], examineType };
-      this.model = { ...this.model, ...model };
+      // 拿取记录id
+      if (recordId) {
+        this.model.recordId = recordId;
+        this.budgetType = budgetType;
+        this.getBudgetByRecordId(recordId, budgetType);
+      }
 
-      // 如果是录入则要拼接其他字段
+      // 赋值页面配置
+      this.pageConfig = {
+        ...apiConfig[flag],
+        budgetType
+      };
+
+      // 如果是录入则要拼接其他填写字段
       if (this.isEntry) {
         this.formOptions.forms = [
           ...this.formOptions.forms,
@@ -308,13 +339,21 @@ export default {
       }
       this.formOptions.group[0].forms.push(this.checkPeopleReason);
 
+      // 最后将配置合并
       this.formOptions = {
         ...this.formOptions,
-        ...this.pageConfig.extraOptions
+        ...this.pageConfig.extraConfig
       };
     }
+
+    revenueExpendApi.createRecordNum().then(res => {
+      this.model.recordId = res;
+    });
   },
   methods: {
+    clearForm() {
+      this.$refs[this.leaseManageForm.ref].resetForm();
+    },
     submit(model, hide) {
       this.pageConfig
         .api(model)
@@ -331,20 +370,36 @@ export default {
         console.log("搜索", res);
       });
     },
-    clearForm() {
-      this.$refs[this.leaseManageForm.ref].resetForm();
-    },
-    getPropertyDetail(row) {
-      return leaseManageApi.houseDetails(row);
+    async getBudgetByRecordId(recordId, budgetType) {
+      this.model = await revenueExpendApi.getBudgetByRecordId({
+        recordId,
+        budgetType
+      });
     },
     back() {
       this.$router.back();
     },
     pass() {
       this.dialogVisible = true;
+      this.comfirmApi = revenueExpendApi.recordToExamine;
     },
     reject() {
       this.dialogVisible = true;
+      this.comfirmApi = revenueExpendApi.recordToReject;
+    },
+    comfirm() {
+      this.dialogVisible = false;
+      this.comfirmApi({
+        recordId: this.model.recordId,
+        examineIdea: this.model.examineIdea
+      }).then(
+        () => {
+          this.back();
+        },
+        err => {
+          console.error(err);
+        }
+      );
     }
   },
   computed: {
@@ -361,8 +416,8 @@ export default {
       return this.pageConfig.flag === "detail";
     },
     // 编辑
-    isEdit() {
-      return this.pageConfig.flag === "edit";
+    isUpdate() {
+      return this.pageConfig.flag === "update";
     },
     // 审核
     isCheck() {
@@ -376,7 +431,7 @@ export default {
 
       let checkPeople = {
         label: "审核人",
-        prop: "examineId",
+        prop: "recordPersonList",
         type: "dynamic",
         span: 12,
         children: {
@@ -385,7 +440,28 @@ export default {
           columnConfig: [
             {
               label: "审核人",
-              prop: "checkPeople",
+              prop: "examineIdList",
+              type: "cascader",
+              dataType: "string",
+              clearable: true,
+              dicData: [
+                {
+                  label: "刘",
+                  value: 1,
+                  children: [
+                    { label: "晓", value: 2 },
+                    { label: "航", value: 2 }
+                  ]
+                },
+                {
+                  label: "李",
+                  value: 21,
+                  children: [
+                    { label: "盼", value: 22 },
+                    { label: "杰", value: 23 }
+                  ]
+                }
+              ],
               rules: {
                 required: true,
                 trigger: "blur"
@@ -399,12 +475,13 @@ export default {
         }
       };
 
-      const mergeCheckPeople = (
-        checkPeople,
-        { flag = "", examineType = -1 }
-      ) => {
-        checkPeople = Object.assign(
-          { ...checkPeople, span: this.isCheck ? 12 : 24, disabled: false },
+      const mergeCheckPeople = checkPeople => {
+        return Object.assign(
+          {
+            ...checkPeople,
+            span: this.isCheck ? 12 : 24,
+            disabled: false
+          },
           // 设置外层属性
           (() => {
             // 设置children columnConfig
@@ -431,7 +508,7 @@ export default {
                 },
                 {
                   label: "是否通过",
-                  prop: "isPass",
+                  prop: "choice",
                   type: "switch",
                   disabled: true,
                   displayAs: "switch",
@@ -440,7 +517,7 @@ export default {
                 },
                 {
                   label: "审核时间",
-                  prop: "passTime",
+                  prop: "examineTime",
                   type: "date",
                   valueDefault: this.isDetail ? "" : dateValueDefault,
                   format: "yyyy-MM-dd",
@@ -448,18 +525,17 @@ export default {
                 },
                 {
                   label: "审核原因",
-                  prop: "checkReason"
+                  prop: "examineIdea"
                 }
               ];
             }
             return { children };
           })()
         );
-        return checkPeople;
       };
 
       if (this.isCheck || this.isDetail) {
-        checkPeople = mergeCheckPeople(checkPeople, pageConfig);
+        checkPeople = mergeCheckPeople(checkPeople);
       }
       if (this.isDetail) {
         delete checkPeople.disabled;
@@ -474,15 +550,26 @@ export default {
         // 是否需要审核
         if (newVal == BooleanDic.isOrNot[0].value) {
           // 是
-          this.Form.setColumnByProp("examineId", {
+          this.Form.setColumnByProp("recordPersonList", {
             display: true
           });
         } else {
           // 否
-          this.Form.setColumnByProp("examineId", {
+          this.Form.setColumnByProp("recordPersonList", {
             display: false
           });
         }
+      });
+    },
+    "model.launchIdList"(newVal) {
+      if (typeof newVal === "string")
+        this.model.launchId = _.last(newVal.split(","));
+    },
+    "model.recordPersonList"(newVal) {
+      newVal.forEach((item, index) => {
+        if (typeof item.examineIdList === "string")
+          item.examineId = _.last(item.examineIdList.split(","));
+        item.examineLevel = index + 1;
       });
     }
   }

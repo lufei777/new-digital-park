@@ -1,13 +1,7 @@
 <template>
   <FormTableTemplate>
     <template slot="form">
-      <z-form
-        :ref="formData.ref"
-        :options="formData"
-        v-model="model"
-        @submit="submit"
-        @reset-change="resetChange"
-      >
+      <z-form :ref="formData.ref" :options="formData" v-model="model">
         <template slot="btn" slot-scope="obj">
           <div>
             <el-button :disabled="obj.disabled" type="primary" @click="onClickSearchBtn(obj)">搜索</el-button>
@@ -30,17 +24,17 @@
         <template slot="operation" slot-scope="{size,row}">
           <el-button :size="size" type="text" @click="detail(row)">详情</el-button>
           <!-- 待审核 -->
-          <template v-if="row.examineType === 0">
-            <el-button :size="size" type="text" @click="edit(row)">编辑</el-button>
+          <template v-if="row.examineState === 0">
+            <el-button :size="size" type="text" @click="update(row)">完善</el-button>
             <el-button :size="size" type="text" @click="check(row)">审核</el-button>
           </template>
           <!-- 已审核 -->
-          <template v-if="row.examineType === 1">
+          <template v-if="row.examineState === 1">
             <el-button :size="size" type="text">打印票据</el-button>
             <el-button :size="size" type="text">归档</el-button>
           </template>
           <!-- 已驳回 -->
-          <template v-if="row.examineType === 2">
+          <template v-if="row.examineState === 2">
             <el-button :size="size" type="text">删除</el-button>
           </template>
         </template>
@@ -51,13 +45,19 @@
 
 <script>
 import FormTableTemplate from "../FormTableTemplate";
+import revenueExpendApi from "api/revenueExpendManage";
 
-const examineType = [
+const budgetType = {
+  revenue: 0,
+  budget: 1
+};
+const examineState = [
   { label: "待审核", value: 0 },
   { label: "已审核", value: 1 },
-  { label: "已驳回", value: 2 }
+  { label: "已驳回", value: 2 },
+  { label: "审核中", value: 3 }
 ];
-const incomeType = [
+const moduleId = [
   { label: "租赁", value: 0 },
   { label: "服务费", value: 1 },
   { label: "专利费", value: 2 }
@@ -131,95 +131,35 @@ export default {
         ref: "tableData",
         customTop: true,
         customTopPosition: "right",
+        serverMode: {},
         operation: {
           width: 170
         },
-        data: [
-          {
-            id: "123",
-            incomId: "TradeCode21",
-            incomeName: "这是收入名称",
-            launchDate: "2020.01.01",
-            incomeDate: "",
-            launchName: "房多多",
-            receivMoney: 10000,
-            incomeType: "",
-            payName: "钱某某",
-            examineType: 2,
-            endTime: "2021.01.01",
-            moneyState: 1,
-            tradeType: 0,
-            remarks: "这是备注"
-          },
-          {
-            incomId: "TradeCode15",
-            incomeName: "这是收入名称",
-            launchDate: "2020.01.01",
-            incomeDate: "2020.01.01",
-            launchName: "房多多",
-            receivMoney: 10000,
-            incomeType: 1,
-            examineType: 2,
-            endTime: "2021.01.01",
-            remarks: "这是备注"
-          },
-          {
-            incomId: "TradeCode21",
-            incomeName: "这是收入名称",
-            launchDate: "2020.01.01",
-            incomeDate: "2020.01.01",
-            launchName: "房多多",
-            receivMoney: 10000,
-            incomeType: 1,
-            examineType: 1,
-            endTime: "",
-            remarks: "这是备注"
-          },
-          {
-            incomId: "TradeCode21",
-            incomeName: "这是收入名称",
-            launchDate: "2020.01.01",
-            incomeDate: "",
-            launchName: "房多多",
-            incomeType: 1,
-            examineType: 0,
-            endTime: "",
-            remarks: "这是备注"
-          },
-          {
-            incomId: "TradeCode15",
-            incomeName: "这是收入名称",
-            launchDate: "2020.01.01",
-            incomeDate: "",
-            launchName: "房多多",
-            receivMoney: 10000,
-            incomeType: 1,
-            examineType: 0,
-            endTime: "",
-            remarks: "这是备注"
-          }
-        ],
         columnConfig: [
-          { label: "编号", prop: "incomId" },
-          { label: "收入名称", prop: "incomeName" },
-          { label: "发起时间", prop: "launchDate", type: "date" },
-          { label: "入账时间", prop: "incomeDate", type: "date" },
+          { label: "编号", prop: "recordId", width: 200 },
+          { label: "收入名称", prop: "recordName" },
+          { label: "发起时间", prop: "launchTime", type: "date", width: 160 },
+          { label: "入账时间", prop: "incomeTime", type: "date", width: 160 },
           { label: "发起人", prop: "launchName" },
           { label: "应收金额", prop: "receivMoney" },
           {
             label: "收入类型",
-            prop: "incomeType",
+            prop: "moduleId",
             type: "select",
-            dicData: incomeType
+            dicData: moduleId
           },
           { label: "支付方", prop: "payName" },
           {
             label: "审核状态",
-            prop: "examineType",
+            prop: "examineState",
             type: "select",
-            dicData: examineType
+            dicData: examineState
           },
-          { label: "截止日期", prop: "endTime", type: "date" },
+          {
+            label: "截止日期",
+            prop: "endTime",
+            type: "date"
+          },
           {
             label: "资金状态",
             prop: "moneyState",
@@ -228,7 +168,7 @@ export default {
           },
           {
             label: "交易方式",
-            prop: "tradeType ",
+            prop: "tradeType",
             type: "select",
             dicData: tradeType
           },
@@ -241,9 +181,16 @@ export default {
       }
     };
   },
+  created() {
+    // 配置表格远程获取数据
+    this.tableData.serverMode = {
+      url: revenueExpendApi.getBudgetList,
+      data: {
+        budgetType: this.budgetType
+      }
+    };
+  },
   methods: {
-    submit() {},
-    resetChange() {},
     onClickSearchBtn(...args) {
       this.Form.getFormModel(res => {
         console.log("model", res);
@@ -255,14 +202,15 @@ export default {
     },
     batchDels() {},
     addTenant() {},
-    routePush({ flag, id, examineType, model }) {
+    routePush({ flag, row }) {
+      let { recordId, examineState, budgetType } = row || {};
       this.$router.push({
         name: "launchcharge",
         query: {
           flag,
-          id,
-          examineType,
-          model
+          recordId,
+          examineState,
+          budgetType
         }
       });
     },
@@ -273,29 +221,19 @@ export default {
       this.routePush({ flag: "entry" });
     },
     detail(row) {
-      this.routePush({
-        flag: "detail",
-        id: row.id,
-        model: row,
-        examineType: row.examineType
-      });
+      this.routePush({ flag: "detail", row });
     },
     check(row) {
-      this.routePush({
-        flag: "check",
-        id: row.id,
-        model: row
-      });
+      this.routePush({ flag: "check", row });
     },
-    edit(row) {
-      this.routePush({
-        flag: "edit",
-        id: row.id,
-        model: row
-      });
+    update(row) {
+      this.routePush({ flag: "update", row });
     }
   },
   computed: {
+    budgetType() {
+      return budgetType.revenue;
+    },
     Form() {
       return this.$refs[this.formData.ref];
     },
