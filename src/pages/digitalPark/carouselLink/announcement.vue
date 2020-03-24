@@ -1,7 +1,7 @@
 <template>
   <div class="announcement">
     <div class="nav-style">
-      <NavOperator :showGoback="true" class="nav-operator" />
+      <NavOperator :showGoBack="true" class="nav-operator" />
     </div>
     <div class="announcement-content">
       <div class="content-title">

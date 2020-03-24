@@ -147,6 +147,7 @@
       watch:{
         productId(){
           this.getProductList()
+          this.getModulesByType
           let menuTree = JSON.parse(localStorage.getItem('menuTree'))
           let menuList = JSON.parse(localStorage.getItem('menuList'))
           if(!this.productId){
@@ -282,7 +283,9 @@
         },
         onClickItemFixPro(item){
           if(this.hideHeader) return ; //配置页不进行后续操作
-          Cookies.set('moduleType',1)
+          if(!this.productId){
+            Cookies.set('moduleType',1)
+          }
           CommonFun.setShortcutList(this.fixedProList)
           //跳转三维客户端
           if(CommonFun.loadThreeD(item,this.clientMenu)){

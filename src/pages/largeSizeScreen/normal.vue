@@ -76,8 +76,8 @@
         // }
 
         let res = await DigitalParkApi.getLargeScreenModule({
-          width:this.width,
-          height:this.height
+          width:document.body.offsetWidth,
+          height:document.body.offsetHeight
         })
         this.moduleList = res.modules
         this.centerIndex = res.modules.findIndex(item=>JSON.stringify(item)=='null')
@@ -92,24 +92,24 @@
       drawPageStyle(res){
         let xLen  = res.xLength+20
         let yLen  = res.yLength+20
-        console.log(xLen,yLen)
+        // console.log(xLen,yLen)
         let paddingLeft =($(".content").width()-xLen*res.xNum)/2
         let marginTop =($(".large-size-screen-normal").height()-160-yLen*res.yNum)/2
 
         this.styleObj.panelStyle = {
           "grid-template-columns": "repeat("+res.xNum+","+xLen+"px)",
           "grid-template-rows": "repeat("+res.yNum+","+yLen+"px)",
-          // "padding-left":paddingLeft+"px",
-          // "margin-top":marginTop+"px"
+          "padding-left":paddingLeft+"px",
+          "margin-top":marginTop+"px"
         }
-        console.log(paddingLeft,marginTop)
+        // console.log(paddingLeft,marginTop)
         this.styleObj.centerStyle = {
           "grid-column-start": this.centerIndex+1,
           "grid-column-end": xLen<960?this.centerIndex+4:this.centerIndex+3,
           "grid-row-start": 1,
           "grid-row-end": xLen<960?4:3
         }
-        console.log(  this.styleObj.centerStyle)
+        // console.log(  this.styleObj.centerStyle)
         this.styleObj.dragStyle = {
           width:res.xLength+'px',
           height:res.yLength+'px',
@@ -131,7 +131,7 @@
       this.getLargeScreenModuleList()
       let _this = this
       $(window).resize(function(){
-        _this.getLargeScreenModuleList()
+         _this.getLargeScreenModuleList()
       })
     }
   }
@@ -161,6 +161,7 @@
       box-sizing: border-box;
       line-height: 1080px;
       background: pink;
+      margin:0 auto;
       /*grid-row-start: 1;*/
       /*grid-row-end: 4;*/
       /*grid-column-start: 3;*/

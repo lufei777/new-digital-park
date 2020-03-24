@@ -35,17 +35,25 @@
         res.elecList.map(item => {
           legendData.push(item.name);
           var itemObj = {
-            value: item.value,
+            value: item.value.toFixed(2),
             name: item.name
           };
           dataList.push(itemObj);
         });
         let seriesData =dataList
-        let titleText = this.moduleItem.moduleName
+        let seriesUi={
+          roseType:'radius',
+          radius:[20, 80],
+          label:{
+            emphasis:{
+              show:false
+            }
+          }
+        }
         let data = {
           legendData,
           seriesData,
-          // titleText,
+          seriesUi
         };
         ChartUtils.hollowPieChart(myChart,data);
 
