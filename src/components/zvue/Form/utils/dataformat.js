@@ -90,13 +90,18 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
             }
             value = [];
         }
-        if (Array.isArray(value)) return value;
-        else if (!validatenull(value)) {
+        if (Array.isArray(value)) {
+            return value;
+        } else if (!validatenull(value)) {
             const list = (value || '').split(',') || [];
             if (dataType === 'number') {
                 value = list.map(ele => Number(ele))
             } else {
                 value = list;
+            }
+            // 如果只有一项，则重新转换为字符串
+            if (list.length <= 1) {
+                value = list.join(',')
             }
         } else {
             value = [];

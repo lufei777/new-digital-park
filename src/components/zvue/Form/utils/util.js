@@ -61,13 +61,16 @@ export const findByValue = (dic, value, props, isTree, isGroup, dataType) => {
 };
 export const findLabelNode = (dic, value, props, dataType, isTree) => {
     let result;
+    let floors = 0;
+
     if (value instanceof Array) {
+        // 如果value是数组，则一层层查找，返回数组
         result = [];
+        value = value[floors]
     } else {
         result = '';
     }
 
-    let floors = 0;
     let rev = (dic1, value1, props1) => {
         const labelKey = props1.label || DIC_PROPS.label;
         const valueKey = props1.value || DIC_PROPS.value;
@@ -86,7 +89,8 @@ export const findLabelNode = (dic, value, props, dataType, isTree) => {
             }
         }
     };
-    rev(dic, value[floors], props);
+    rev(dic, value, props);
+    
     return result;
 };
 export const findArrayLabel = (dic, value, props, isGroup, dataType) => {
