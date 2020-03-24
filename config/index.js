@@ -10,19 +10,19 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: [
       {
-        context: ['/oaApi', '/user-service'],
+        context: ['/oaApi', '/user-service', '/vibe-web'],
         target: 'http://39.98.130.147:8080'
-        // target:'http://192.168.1.9:8080'
+        // target:'http://192.168.1.232:8080'
         /* changeOrigin: true,//是否允许跨越*/
         /* pathRewrite: {
           '/user-service': ''
         } */
       },
-      {
+      /* {
         context: ['/vibe-web'],
-        // target:'http://192.168.1.9:8080'
+        // target:'http://192.168.1.232:8080'
         target: 'http://39.98.130.147:8080'
-      }
+      } */
     ],
 
     // Various Dev Server settings

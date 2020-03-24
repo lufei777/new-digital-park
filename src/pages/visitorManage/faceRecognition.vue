@@ -10,7 +10,7 @@
       </span>
     </span>
     <iframe
-      src="http://site-facr.loiot.com"
+      src="http://vt.fothing.com"
       id="iframe"
       frameborder="0"
       width="100%"
@@ -29,7 +29,7 @@ export default {
     };
   },
   mounted() {
-    const iframe =  document.querySelector("#iframe");
+    const iframe = document.querySelector("#iframe");
     iframe.style.height = `${document.body.clientHeight}px`;
     iframe.onload = () => {
       this.back = true;

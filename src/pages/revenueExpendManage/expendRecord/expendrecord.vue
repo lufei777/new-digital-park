@@ -20,7 +20,7 @@
     <template slot="table">
       <z-table :ref="tableData.ref" :options="tableData">
         <template slot="custom-top" slot-scope="{size}">
-          <el-button :size="size" type="primary">发起收费</el-button>
+          <el-button :size="size" type="primary">发起支出</el-button>
           <el-button :size="size" type="primary">导入</el-button>
           <el-button :size="size" type="primary">导出</el-button>
           <el-button :size="size" type="primary">批量删除</el-button>
@@ -47,7 +47,7 @@
   </FormTableTemplate>
 </template>
 <script>
-import FormTableTemplate from "./FormTableTemplate";
+import FormTableTemplate from "../FormTableTemplate";
 
 const examineType = [
   { label: "已驳回", value: 2 },

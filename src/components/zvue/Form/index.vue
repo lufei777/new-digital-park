@@ -56,7 +56,7 @@
                       :name="column.prop+'Label'"
                       :column="column"
                       :value="model[column.prop]"
-                      :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
+                      :disabled="vaildDiabled(column,group)"
                       :size="column.size || controlSize"
                       :dic="DIC[column.prop]"
                     ></slot>
@@ -68,7 +68,7 @@
                       :column="column"
                       :error="error"
                       :value="model[column.prop]"
-                      :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
+                      :disabled="vaildDiabled(column,group)"
                       :size="column.size || controlSize"
                       :dic="DIC[column.prop]"
                     ></slot>
@@ -76,19 +76,19 @@
                   <!-- 如果是禁用tooltip，则tabindex 为 -1 -->
                   <el-tooltip
                     :tabindex="!column.tip || column.type==='upload' ? -1 : 0"
-                    :disabled="textMode || !column.tip || column.type==='upload'"
+                    :disabled="!column.tip || column.type==='upload'"
                     :content="vaildData(column.tip,getPlaceholder(column))"
                     :placement="column.tipPlacement"
                   >
                     <span v-if="textMode">{{displayText(column)}}</span>
                     <slot
-                      v-else-if="column.formslot"
+                      v-if="column.formslot"
                       :name="column.prop"
                       :value="model[column.prop]"
                       :column="column"
                       :label="model['$'+column.prop]"
                       :size="column.size || controlSize"
-                      :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
+                      :disabled="vaildDiabled(column,group)"
                       :dic="DIC[column.prop]"
                     ></slot>
                     <form-temp
@@ -98,7 +98,7 @@
                       :dic="DIC[column.prop]"
                       :upload-before="uploadBefore"
                       :upload-after="uploadAfter"
-                      :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
+                      :disabled="vaildDiabled(column,group)"
                     >
                       <!-- 自定义表单里内容 -->
                       <template
@@ -117,16 +117,26 @@
                         ></slot>
                       </template>
                       <!-- input的slot处理 -->
-                      <template v-if="column.prependslot" :slot="column.prependslot">
+                      <template
+                        v-if="column.prependslot"
+                        :slot="column.prependslot"
+                        slot-scope="{prependClick}"
+                      >
                         <slot
                           :name="column.prependslot"
-                          :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
+                          :disabled="vaildDiabled(column,group)"
+                          :clickevent="prependClick"
                         ></slot>
                       </template>
-                      <template v-if="column.appendslot" :slot="column.appendslot">
+                      <template
+                        v-if="column.appendslot"
+                        :slot="column.appendslot"
+                        slot-scope="{appendClick}"
+                      >
                         <slot
                           :name="column.appendslot"
-                          :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
+                          :disabled="vaildDiabled(column,group)"
+                          :clickevent="appendClick"
                         ></slot>
                       </template>
                     </form-temp>
@@ -213,7 +223,7 @@ export default {
     value: {
       type: Object,
       required: true,
-      default: () => {}
+      default: () => ({})
     },
     disabled: {
       type: Boolean,
@@ -247,6 +257,8 @@ export default {
     });
     // 初始化表单
     this.dataFormat();
+
+    this.$root._zForm = this;
   },
   methods: {
     deepClone,
@@ -275,6 +287,7 @@ export default {
           ) {
             if (currentRules.required) {
               currentRules.message = `必填，请填写${item.label}`;
+              currentRules.trigger = `change`;
             }
           }
           // 添加进rules
@@ -312,27 +325,48 @@ export default {
     findColumnIndex(prop, group = false) {
       let list = [];
       let result;
+      let hasForms = typeof this.options.forms !== "undefined";
       this.columnOption.forEach((column, index) => {
         const val = this.findArray(column.forms, prop, "prop");
         if (val !== -1) {
-          list.push(index);
+          // 如果有forms属性，则group的排序需要减一，因为forms会被当成一个group，添加在最前方
+          hasForms && index > 0 ? list.push(index - 1) : list.push(index);
           list.push(val);
           result = val;
         }
       });
+      if (list.length === 0) {
+        return -1;
+      }
       return group ? list : result;
     },
     // 根据prop设置属性
-    setColumnByProp(prop, setOptions) {
-      let isGroup = typeof this.options.group !== "undefined";
+    setColumnByProp(prop, setOptions, isInGroup) {
+      let isGroup = isInGroup || typeof this.options.group !== "undefined";
       let options = this.options;
       let index = this.findColumnIndex(prop, isGroup);
-      if (isGroup) {
-        var formsOption = options.group[index[0]].forms[index[1]];
+      if (index !== -1) {
+        if (isGroup) {
+          var formsOption = options.group[index[0]].forms[index[1]];
+        } else {
+          var formsOption = options.forms[index];
+        }
+        setDefaultValue(setOptions, formsOption, this);
       } else {
-        var formsOption = options.forms[this.findColumnIndex(prop)];
+        this.$message({
+          type: "error",
+          message: `setColumnByProp -> 属性-${prop}-不存在`
+        });
+        console.error(`setColumnByProp -> 属性-${prop}-不存在`);
       }
-      setDefaultValue(setOptions, formsOption, this);
+    },
+    // 判断该项是否可用
+    vaildDiabled(column, group) {
+      return this.vaildBoolean(
+        column.disabled,
+        group.disabled,
+        this.allDisabled
+      );
     },
     // 验证表单是否显隐
     vaildDisplay(column) {
@@ -349,7 +383,7 @@ export default {
       }
     },
     clearValidate() {
-      this.$refs[this.formRef].clearValidate();
+      this.Form.clearValidate();
     },
     /**
      * 清空表单字段
@@ -359,8 +393,8 @@ export default {
       const part = params.part;
       if (part) {
         this.columnOption.forEach(ele => {
-          ele.column.forEach(column => {
-            const prop = column.prop;
+          ele.forms.forEach(form => {
+            const prop = form.prop;
             this.model[prop] = this.modelDefault.tableForm[prop];
           });
         });
@@ -369,12 +403,14 @@ export default {
       }
       this.$emit("input", this.model);
       this.$emit("reset-change");
-      this.clearValidate();
+      this.$nextTick(() => {
+        this.clearValidate();
+      });
     },
     validate(callback) {
       if (!callback) {
         return new Promise((resolve, reject) => {
-          this.$refs[this.formRef].validate(valid => {
+          this.Form.validate(valid => {
             if (valid) {
               resolve(valid);
             } else {
@@ -384,7 +420,7 @@ export default {
           });
         });
       } else {
-        this.$refs[this.formRef].validate(valid => {
+        this.Form.validate(valid => {
           if (!valid) {
             this.$message.warning("表单未填写完整，请检查后再提交");
           }
@@ -494,7 +530,6 @@ export default {
         //处理级联属性
         // ele.forms = calcCascader(ele.forms);
       });
-      // console.log("columnOption", list);
       return list;
     },
     menuPosition() {
@@ -505,14 +540,15 @@ export default {
     },
     optionsDisabled() {
       return this.options.disabled;
+    },
+    Form() {
+      return this.$refs[this.formRef];
     }
   },
   watch: {
     model: {
       deep: true,
       handler(newVal, oldVal) {
-        // console.log("formTemp model change");
-        // console.log("*******", _.cloneDeep(newVal), _.cloneDeep(oldVal));
         if (!this.formCreate) {
           this.$emit("input", this.model);
           this.$emit("change", this.model);
@@ -521,9 +557,8 @@ export default {
     },
     value: {
       deep: true,
-      handler() {
-        // console.log("formTemp value change");
-        this.modelOld = deepClone(this.value);
+      handler(newVal, oldVal) {
+        this.modelOld = deepClone(oldVal);
         if (!this.formCreate) {
           this.formVal();
         } else {
@@ -592,6 +627,7 @@ export default {
     // 如果是禁用，隐藏上传的加号和上传按钮
     .el-upload_disabled {
       .el-upload--picture-card,
+      .el-upload__tip,
       .el-upload--text {
         display: none;
       }

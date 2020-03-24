@@ -50,14 +50,14 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.loginCheck) {
+  if (to.meta.loginCheck === false) {
+    next();
+  } else {
     if (!sessionStorage.getItem('token')) {
       router.push('/login');
     } else {
       next();
     }
-  } else {
-    next();
   }
 })
 export default router

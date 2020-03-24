@@ -33,22 +33,14 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
   (response) => {
-    // 服务端打印日志
-    if (response && process.server && response.config) {
-      console.log("======seperate line======");
-      console.log("axios from server url:", response.config.url);
-    }
     // code => 0：操作成功  101：报错  102：参数为空
     let res = response.data;
+    let message = res.message || res.errorMessage || (typeof res.data === 'string' ? res.data : '');
+
     if (res.successful && res.code === '0') {
-      // 服务端打印日志
-      if (process.server) {
-        console.log("response:", res);
-      }
       // 如果没有则返回空对象
       return (res || {}).data;
     } else if (res.code) {
-      let message = res.message || res.errorMessage || (typeof res.data === 'string' ? res.data : '');
       // 如果是登陆页面，则不进行message提示
       if (router.currentRoute.path == '/login') return;
       switch (res.code) {
