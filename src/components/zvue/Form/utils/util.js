@@ -43,23 +43,31 @@ export const findByValue = (dic, value, props, isTree, isGroup, dataType) => {
     props = props || DIC_PROPS;
     if (value instanceof Array) {
         result = [];
-        for (let i = 0; i < value.length; i++) {
-            const dicvalue = value[i];
-            if (isTree) {
-                result.push(findLabelNode(dic, dicvalue, props, dataType) || dicvalue);
-            } else {
+        // 如果是树，则传递整个数组为值
+        if (isTree) {
+            result = findLabelNode(dic, value, props, dataType, isTree) || value;
+        } else {
+            // 否则，一层层去查找
+            for (let i = 0; i < value.length; i++) {
+                const dicvalue = value[i];
                 result.push(findArrayLabel(dic, dicvalue, props, isGroup, dataType));
             }
         }
         result = result.join(DIC_SPLIT).toString();
-
     } else if (['string', 'number', 'boolean'].includes(typeof value)) {
-        result = findLabelNode(dic, value, props) || value;
+        result = findLabelNode(dic, value, props, dataType, false) || value;
     }
     return result;
 };
-export const findLabelNode = (dic, value, props, dataType) => {
-    let result = '';
+export const findLabelNode = (dic, value, props, dataType, isTree) => {
+    let result;
+    if (value instanceof Array) {
+        result = [];
+    } else {
+        result = '';
+    }
+
+    let floors = 0;
     let rev = (dic1, value1, props1) => {
         const labelKey = props1.label || DIC_PROPS.label;
         const valueKey = props1.value || DIC_PROPS.value;
@@ -68,13 +76,17 @@ export const findLabelNode = (dic, value, props, dataType) => {
             const ele = dic1[i];
             const children = ele[childrenKey] || [];
             if (ele[valueKey] === detailDataType(value1, dataType)) {
-                result = ele[labelKey];
-            } else {
-                rev(children, value1, props1);
+                // 如果是树，则找到root后，递归向下找
+                if (isTree) {
+                    result.push(ele[labelKey]);
+                    rev(children, value[++floors], props);
+                } else {
+                    result = ele[labelKey];
+                }
             }
         }
     };
-    rev(dic, value, props);
+    rev(dic, value[floors], props);
     return result;
 };
 export const findArrayLabel = (dic, value, props, isGroup, dataType) => {
