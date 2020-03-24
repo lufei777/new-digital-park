@@ -1,6 +1,6 @@
 <template>
   <div class="large-size-screen">
-    <component :is="curCom" :width="width" :height="height"></component>
+    <component :is="curCom" :ref="curCom"></component>
   </div>
 </template>
 
@@ -21,16 +21,6 @@
       }
     },
     computed:{
-      // getComponent(){
-      //   this.width = document.body.offsetWidth
-      //   this.height = document.body.offsetHeight
-      //   // console.log(width,height)
-      //   if(this.width<2610 && this.height<1468){
-      //     return 'Dashboard'
-      //   }else{
-      //     return 'Normal'
-      //   }
-      // }
     },
     watch:{
     },
@@ -38,7 +28,6 @@
       getComponent(){
         this.width = document.body.offsetWidth
         this.height = document.body.offsetHeight
-        // console.log(width,height)
         if(this.width<2610 && this.height<1468){
           this.curCom = 'Dashboard'
         }else{

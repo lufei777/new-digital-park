@@ -63,8 +63,11 @@ class chartUtils {
   //空心饼图
   hollowPieChart(dom, data) {
     let { legendUi={},legendUi:{textStyle:legendTextStyle}={} } = data
-    let { seriesUi={} } = data
+    let { seriesUi={},seriesUi:{label:seriesLabel={}}} = data
+    let {normal:seriesNormal={},emphasis:seriesEmphasis={}} = seriesLabel
     // console.log("1",legendTextStyle,legendUi)
+    // console.log(seriesLabel,seriesNormal,seriesEmphasis)
+    // console.log(seriesEmphasis.show==false)
     let option = {
       title: {
         text: data.titleText,
@@ -79,7 +82,7 @@ class chartUtils {
       tooltip: {
         trigger: 'item',
         formatter: "{a} <br/>{b}: {c} ({d}%)",
-        showDelay:300
+        showDelay:100
       },
       legend: {
         orient: 'vertical',
@@ -92,20 +95,21 @@ class chartUtils {
         },
         formatter:legendUi && legendUi.formatter || ''
       },
-      color: data.color || ['#4DA1FF', '#83D587', '#FFCE33', '#FF7B8C'],
+      color: data.color || ['#563ad2', '#25e4a3', '#ed5e50', '#66fbf9',"#de8536", "#dab54c","#325df9"],
       series: [{
         name:data.seriesName?data.seriesName:'',
         type: 'pie',
-        radius: ['50%', '70%'],
+        radius:seriesUi.radius || ['50%', '70%'],
         center:seriesUi.center || ['50%','50%'],
-        avoidLabelOverlap: false,
+        roseType: seriesUi.roseType,
+        // avoidLabelOverlap: false,
         label: {
           normal: {
             show: false,
             position: 'center'
           },
           emphasis: {
-            show: true,
+            show:seriesEmphasis.show==false?false:true,
             textStyle: {
               fontSize: '20',
               fontWeight: 'bold'

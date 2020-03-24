@@ -74,7 +74,9 @@
         </draggable>
       </div>
     </div>
-    <div class="copyright" v-if="copyrightShow">版权所有：©2019 京ICP备05080753号 京公网安备11010802013842号</div>
+    <div class="copyright" v-if="copyrightShow">
+      版权所有：©2019 京ICP备05080753号 京公网安备11010802013842号
+    </div>
   </div>
 </template>
 
@@ -115,7 +117,7 @@ export default {
         {url: require('../../../../static/image/digitalPark/lunbo3.png'), link: '/announcement'},
         {url: require('../../../../static/image/digitalPark/lunbo4.png'), link: '/news'},
       ],
-      copyrightShow:false
+      copyrightShow:false,
     };
   },
   computed: {
@@ -403,7 +405,7 @@ export default {
   }
   .item-module {
     /*background: pink;*/
-    margin: 30px 0;
+    /*margin: 30px 0;*/
     padding: 20px 0;
     height: 400px;
     font-size: 16px;
