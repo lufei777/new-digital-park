@@ -67,7 +67,7 @@ export const findLabelNode = (dic, value, props, dataType) => {
         for (let i = 0; i < dic1.length; i++) {
             const ele = dic1[i];
             const children = ele[childrenKey] || [];
-            if (ele[valueKey] === detailDataType(value1)) {
+            if (ele[valueKey] === detailDataType(value1, dataType)) {
                 result = ele[labelKey];
             } else {
                 rev(children, value1, props1);
@@ -84,7 +84,7 @@ export const findArrayLabel = (dic, value, props, isGroup, dataType) => {
 
     if (!isGroup) {
         for (let i = 0; i < dic.length; i++) {
-            if (dic[i][valueKey] === detailDataType(value)) {
+            if (dic[i][valueKey] === detailDataType(value, dataType)) {
                 return dic[i][labelKey];
             }
         }
@@ -95,7 +95,7 @@ export const findArrayLabel = (dic, value, props, isGroup, dataType) => {
             const groupLabel = dic[i][labelKey];
 
             for (let j = 0; j < groups.length; j++) {
-                if (groups[j][valueKey] === detailDataType(value)) {
+                if (groups[j][valueKey] === detailDataType(value, dataType)) {
                     return groups[j][labelKey];
                 }
             }
@@ -177,7 +177,7 @@ export const filterDefaultParams = (model, modelTranslate, translate = false) =>
  */
 export const detailDataType = (value, type) => {
     if (type === 'number') {
-        return isNaN(Number(value)) ? '' : Number(value);
+        return isNaN(Number(value)) ? undefined : Number(value);
     } else if (type === 'string') {
         return value + '';
     } else {
