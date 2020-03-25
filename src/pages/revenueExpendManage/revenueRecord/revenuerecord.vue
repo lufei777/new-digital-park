@@ -14,8 +14,8 @@
     <template slot="table">
       <z-table :ref="tableData.ref" :options="tableData">
         <template slot="custom-top" slot-scope="{size}">
-          <el-button :size="size" type="primary" @click="launchcharge">发起收费</el-button>
-          <el-button :size="size" type="primary" @click="entryRecord">录入记录</el-button>
+          <el-button :size="size" type="primary" @click="launchcharge">{{launchField}}</el-button>
+          <el-button :size="size" type="primary" @click="entryRecord">录入</el-button>
           <el-button :size="size" type="primary">导入</el-button>
           <el-button :size="size" type="primary">导出</el-button>
           <el-button :size="size" type="primary">批量删除</el-button>
@@ -222,10 +222,15 @@ export default {
         console.log(res);
       }); */
       // 配置表格远程获取数据
-      this.tableData.serverMode = {
-        url: "./static/mock/revenuiExpend.json",
-        type: "get"
-      };
+      if (this.budgetType === 0) {
+        this.tableData.serverMode = {
+          url: "./static/mock/revenue.json"
+        };
+      } else {
+        this.tableData.serverMode = {
+          url: "./static/mock/expend.json"
+        };
+      }
       /* this.tableData.serverMode = {
         url: revenueExpendApi.getBudgetList,
         data: {
@@ -304,6 +309,9 @@ export default {
     },
     Table() {
       return this.$refs[this.tableData.ref];
+    },
+    launchField() {
+      return this.budgetType === 0 ? "发起收费" : "发起支出";
     }
   },
   watch: {
