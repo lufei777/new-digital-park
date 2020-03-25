@@ -89,7 +89,7 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
             }
             value = [];
         }
-        if (Array.isArray(value)) {
+        if (Array.isArray(value) || typeof value === 'number') {
             return value;
         } else if (!validatenull(value)) {
             const list = (value || '').split(',') || [];

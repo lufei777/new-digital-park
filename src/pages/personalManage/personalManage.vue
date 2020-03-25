@@ -63,7 +63,7 @@ export default {
           {
             label: "姓名",
             type: "input",
-            prop: "name",
+            prop: "fullName",
             clearable: true,
             span: 4
           },
@@ -121,7 +121,7 @@ export default {
             fixed: "left"
           },
           {
-            prop: "name",
+            prop: "fullName",
             label: "姓名",
             fixed: "left",
             sortable: true
