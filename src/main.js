@@ -22,8 +22,9 @@ window.Cookies = Cookies
 
 // moment时间组件
 import moment from 'moment'
-Vue.prototype.$moment = moment;//赋值使用
 moment.locale('zh-cn');//需要汉化
+window.moment = moment;
+Vue.prototype.$moment = moment;//赋值使用
 
 // 拖拽插件
 import VueDND from 'awe-dnd'

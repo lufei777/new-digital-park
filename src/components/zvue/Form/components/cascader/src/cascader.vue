@@ -41,6 +41,7 @@
 import { validatenull } from "../../../utils/validate";
 import props from "../../../common/props";
 import events from "../../../common/events";
+import { DIC_SPLIT } from "../../../global/variable";
 
 export default {
   name: "zCascader",
@@ -81,6 +82,10 @@ export default {
     collapseTags: {
       type: Boolean,
       default: true
+    },
+    isCrud: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -125,6 +130,18 @@ export default {
         // 手动调用lazyLoad方法，可以加载异步数据
         elCascaderPanel.lazyLoad();
       }
+    },
+    findParentForm(current, cb) {
+      if (!current.modelTranslate) {
+        this.findParentForm(current.$parent, cb);
+      } else {
+        cb && cb(current);
+      }
+    },
+    setFromModelTranslate(presentText) {
+      this.findParentForm(this, zForm => {
+        this.$set(zForm.modelTranslate, `$${this.column.prop}`, presentText);
+      });
     }
   },
   watch: {
@@ -164,7 +181,13 @@ export default {
   mounted() {
     this.$refs["cascader"].$watch("presentText", (newVal, oldVal) => {
       if (newVal) {
-        this.$set(this.column, "presentText", newVal);
+        if (this.isCrud) {
+          newVal = (newVal || "").split(this.separator || "\\").join(DIC_SPLIT);
+          this.$set(this.column, "presentText", newVal);
+        } else {
+          // 赋值到modelTranslate
+          this.setFromModelTranslate(newVal);
+        }
       }
     });
   }

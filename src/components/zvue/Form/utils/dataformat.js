@@ -1,5 +1,6 @@
 import { KEY_COMPONENT_NAME } from '../global/variable'
 import { validatenull } from './validate'
+import { detailDataType } from './util';
 
 const dateList = [
     'dates',
@@ -13,6 +14,7 @@ const dateList = [
     'dategrpup',
     'year'
 ];
+export const dateTypeList = dateList;
 let typeMap = {
     'select': "select",
     "radio": "radio",
@@ -75,6 +77,7 @@ export const getPlaceholder = function (column, type, isDisabled) {
  * 初始化数据格式
  */
 export const initVal = ({ listType, type, multiple, dataType, value, curentForm }) => {
+
     // cascader 去除处理
     if (
         (['select', 'tree'].includes(type) && multiple) ||
@@ -83,24 +86,30 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
         // 头像框特殊处理
         if (listType === 'picture-img' && type === 'upload') {
             if (typeof value === 'string' && value.trim().length > 0) {
-                return [value];
+                value = [value];
             }
-            return [];
+            value = [];
         }
-        if (Array.isArray(value)) return value;
-        else if (!validatenull(value)) {
+        if (Array.isArray(value)) {
+            return value;
+        } else if (!validatenull(value)) {
             const list = (value || '').split(',') || [];
             if (dataType === 'number') {
-                return list.map(ele => Number(ele));
+                value = list.map(ele => Number(ele))
             } else {
-                return list;
+                value = list;
+            }
+            // 如果只有一项，则重新转换为字符串
+            if (list.length <= 1) {
+                value = list.join(',')
             }
         } else {
-            return [];
+            value = [];
         }
     }
+
     // 日期处理，不是很恰当，后面可能需要去除
-    if (dateList.includes(type) || ['time', 'timerange'].includes(type)) {
+    /* if (dateList.includes(type) || ['time', 'timerange'].includes(type)) {
         if (value instanceof Array && value.length > 0) {
             value = value.map(date => {
                 if (validatenull(date)) {
@@ -115,7 +124,8 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
         } else if (typeof value === "string" && value.length != 0) {
             value = new Date(value);
         }
-    }
+    } */
+
     // 如果是范围滑块，则需要初始化为[0,0]
     if (type === 'slider') {
         if (curentForm.range) {
@@ -125,12 +135,25 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
             })
         }
     }
+
     // 数字处理
     if ((type === 'number' || curentForm.rawtype === 'number'
         || dataType === 'number') && typeof value !== 'undefined') {
         value = parseFloat(value);
         if (isNaN(value)) {
             value = undefined;
+        }
+    }
+
+    // 数据转换，解决数据不匹配问题
+    if (dataType) {
+        if (Array.isArray(value)) {
+            // 数据转化
+            value.map((ele, index) => {
+                value[index] = detailDataType(ele, dataType);
+            });
+        } else {
+            value = detailDataType(value, dataType);
         }
     }
     return value;
