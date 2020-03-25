@@ -1674,11 +1674,7 @@ class commonFun {
   }
 
   loadThreeD(item, clientMenu) {
-    // const loadNames = ["安防管理", "机房动环", "智能建筑", "建筑监控", "消防管理"];
-    // if (loadNames.includes(item.name)) {
-    //   let clientName = item.name === "安防管理" ? "综合安防" : item.name;
-    //   Client.SkipToSigleBuild(clientName);
-    // }
+    //不需要clientMenu了
     if (typeof item === 'undefined') {
       return false;
     }
@@ -1693,8 +1689,15 @@ class commonFun {
       if(item.childNode.length){
         id = this.getId(item)
       }
-      console.log(clientMenu,id)
-      window.goToClientPage(JSON.stringify(clientMenu), id)
+      let menuTree = JSON.parse(localStorage.getItem("menuTree"))
+      let firstMenu = menuTree[0].childNode.find(first => {
+        return first.id == item.firstMenuId;
+      });
+      let secondMenu = firstMenu.childNode.find(second => {
+        return second.id == item.secondMenuId;
+      });
+      console.log(secondMenu,id)
+      window.goToClientPage(JSON.stringify(secondMenu), id)
       return true;
     }
     return false;

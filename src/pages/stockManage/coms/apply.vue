@@ -205,8 +205,8 @@ export default {
      getData(){
        return this.detailList;
      },
-      async getDepartmentTree() {
-        let res = await SystemManageApi.getDepartmentTree();
+      async getDeptUserTree() {
+        let res = await SystemManageApi.getDeptUserTree();
         this.deptTree=res[0].childNode
         this.$refs['formRef'].setColumnByProp("buyId", {
           dicData: this.deptTree
@@ -338,6 +338,9 @@ export default {
         }
         if (res) {
           this.model=res
+          // let userIdList=res.userIdList.split(",")
+          // this.model.buyId = userIdList.slice(0,3)
+          // this.model.acceptId = userIdList.slice(3,6)
           this.tableConfig.data=res.stockDetailsList
         }
       },
@@ -349,7 +352,7 @@ export default {
       }
   },
   async created() {
-    await this.getDepartmentTree();
+    await this.getDeptUserTree();
     await this.getProviderList();
     this.getApplyDetail();
   },

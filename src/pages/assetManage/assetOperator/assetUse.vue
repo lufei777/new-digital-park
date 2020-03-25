@@ -171,8 +171,8 @@
        }
     },
     methods: {
-      async getDepartmentTree() {
-        let res = await SystemManageApi.getDepartmentTree();
+      async getDeptUserTree() {
+        let res = await SystemManageApi.getDeptUserTree();
         this.deptTree=res[0].childNode
 
         // let list = this.insertNode(this.deptTree)
@@ -262,9 +262,9 @@
       },
       async rowUpdate(data,index,callback){
         console.log("baocun",data)
-        if(data.collarId && data.collarId instanceof Array){
-          data.collarId = data.collarId[data.collarId.length-1]
-        }
+        // if(data.collarId && data.collarId instanceof Array){
+        //   data.collarId = data.collarId[data.collarId.length-1]
+        // }
         data.isEdit=0
         await this.editAssetUseDetail(data)
         callback()
@@ -366,7 +366,7 @@
 
     },
     async mounted(){
-      await this.getDepartmentTree()
+      await this.getDeptUserTree()
       this.getAssetUseList()
       if(this.stockDealId){
         this.getCheckList()
