@@ -147,7 +147,7 @@
       watch:{
         productId(){
           this.getProductList()
-          this.getModulesByType
+          this.getModulesByType()
           let menuTree = JSON.parse(localStorage.getItem('menuTree'))
           let menuList = JSON.parse(localStorage.getItem('menuList'))
           if(!this.productId){
@@ -213,7 +213,7 @@
           if(this.productId){
             this.clientMenu = res.find((item)=>item.id==this.productId)
             this.fixedProList= this.clientMenu.childNode
-            this.title=this.clientMenu.name
+            this.headName=this.clientMenu.name
           }else{
             this.fixedProList=res
           }

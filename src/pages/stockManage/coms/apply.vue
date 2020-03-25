@@ -338,6 +338,9 @@ export default {
         }
         if (res) {
           this.model=res
+          let userIdList=res.userIdList.split(",")
+          this.model.buyId = userIdList.slice(0,3)
+          this.model.acceptId = userIdList.slice(3,6)
           this.tableConfig.data=res.stockDetailsList
         }
       },
