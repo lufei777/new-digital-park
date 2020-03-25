@@ -1,38 +1,40 @@
 <template>
   <div>
-    <div class="form panel">
+    <div class="panel">
       <span class="tip frist-tip flex-align">
         <span class="icon"></span>
         <span>{{pageConfig.title}}</span>
       </span>
-      <z-form
-        :ref="leaseManageForm.ref"
-        :options="leaseManageForm"
-        v-model="model"
-        @submit="submit"
-      >
-        <template slot="housepriceappend" slot-scope="obj">
-          <el-select
-            :disabled="obj.disabled"
-            class="empty-icon"
-            style="width:80px !important;"
-            v-model="model.priceType"
-          >
-            <template v-for="item in LeaseManageDic.PriceType">
-              <el-option :key="item.label" :label="item.label" :value="item.value"></el-option>
-            </template>
-          </el-select>
-        </template>
-        <template slot="btn" slot-scope="obj">
-          <div>
-            <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">搜索</el-button>
-            <el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>
-          </div>
-        </template>
-        <template slot="menuBtn" slot-scope="scope">
-          <el-button @click="back(scope)">返回</el-button>
-        </template>
-      </z-form>
+      <div class="form">
+        <z-form
+          :ref="leaseManageForm.ref"
+          :options="leaseManageForm"
+          v-model="model"
+          @submit="submit"
+        >
+          <template slot="housepriceappend" slot-scope="obj">
+            <el-select
+              :disabled="obj.disabled"
+              class="empty-icon"
+              style="width:80px !important;"
+              v-model="model.priceType"
+            >
+              <template v-for="item in LeaseManageDic.PriceType">
+                <el-option :key="item.label" :label="item.label" :value="item.value"></el-option>
+              </template>
+            </el-select>
+          </template>
+          <template slot="btn" slot-scope="obj">
+            <div>
+              <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">搜索</el-button>
+              <el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>
+            </div>
+          </template>
+          <template slot="menuBtn" slot-scope="scope">
+            <el-button @click="back(scope)">返回</el-button>
+          </template>
+        </z-form>
+      </div>
     </div>
   </div>
 </template>
@@ -61,7 +63,6 @@ const apiConfig = {
 
 export default {
   data() {
-    let _this = this;
     return {
       model: {
         priceType: LeaseManageDic.PriceType[0].value
@@ -69,9 +70,9 @@ export default {
       leaseManageForm: {
         ref: "leaseManageForm",
         labelWidth: "100",
-        size: "small",
         menuPosition: "right",
         emptyBtn: false,
+        width: "70%",
         forms: [
           {
             type: "input",
@@ -218,22 +219,6 @@ export default {
         ...this.leaseManageForm,
         ...this.pageConfig.extraOptions
       };
-
-      /* let params = this.$route.params;
-      // 传递过来的数据
-      if (!_.isEmpty(params.model)) {
-        this.pageConfig = _.cloneDeep(apiConfig.edit);
-        this.model = { ...this.model, ...params.model };
-      }
-      // 传递过来额外的配置
-      this.leaseManageForm = {
-        ...this.leaseManageForm,
-        ...params.extraOptions
-      };
-      // 如果有disabled属性，则为查看详情
-      if (this.leaseManageForm.disabled) {
-        this.pageConfig.title = "房产详情";
-      } */
     }
     // 空间
     commonApi.getAllFloorOfA3().then(res => {
@@ -290,7 +275,11 @@ export default {
 };
 </script>
 <style lang='less' scoped>
-.form {
+.panel {
+  .form {
+    display: flex;
+    justify-content: center;
+  }
   .tip {
     margin: 20px 0;
     .icon {

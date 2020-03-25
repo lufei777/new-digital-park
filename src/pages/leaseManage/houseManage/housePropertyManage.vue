@@ -243,16 +243,15 @@ export default {
       );
     },
     propertyLocation(obj) {
-      console.log(obj);
+      // console.log(obj);
     },
     search(...args) {
       this.$refs[this.leaseManageForm.ref].getFormModel(res => {
         console.log("model", res);
       });
-      console.log("搜索", ...args);
+      // console.log("搜索", ...args);
     },
-    clearForm(...args) {
-      console.log("清空", ...args);
+    clearForm() {
       this.$refs[this.leaseManageForm.ref].resetForm();
     },
     refreshTable() {

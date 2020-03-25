@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="el-input_tree" v-if="type==='tree'" v-clickout="closeBox">
+    <div class="zvue-input-tree" v-if="type==='tree'" v-clickout="closeBox">
       <el-input
         :size="size"
         v-model="labelShow"
@@ -19,7 +19,7 @@
         @click.native="disabled?'':open()"
       />
       <transition name="el-zoom-in-top">
-        <div class="el-input_tree_box" v-if="box" :style="treeStyle">
+        <div class="zvue-input_tree-box" v-if="box" :style="treeStyle">
           <div></div>
           <el-input
             size="mini"
@@ -28,22 +28,24 @@
             v-model="filterText"
             v-if="filter"
           ></el-input>
-          <el-scrollbar style="height:180px;overflow-x:hidden !important;">
+          <el-scrollbar style="height:236px;overflow-x:hidden !important;">
             <el-tree
+              ref="tree"
+              :highlight-current="!multiple"
               :data="dicList"
               :node-key="valueKey"
               :accordion="accordion"
               :show-checkbox="multiple"
-              :props="props"
+              :props="treeProps"
+              :lazy="lazy"
+              :load="treeLoad"
               :check-strictly="checkStrictly"
-              ref="tree"
-              highlight-current
               :current-node-key="multiple?'':text"
-              @check="checkChange"
               :filter-node-method="filterNode"
               :default-expanded-keys="defaultExpandedKeys?defaultExpandedKeys:(defaultExpandAll?keysList:[])"
               :default-checked-keys="defaultCheckedKeys?defaultCheckedKeys:keysList"
               :default-expand-all="defaultExpandAll"
+              @check="checkChange"
               @node-click.self="handleNodeClick"
             >
               <div style="width:100%;padding-right:10px;" slot-scope="{ data }">
@@ -86,13 +88,13 @@
     >
       <template slot="prepend" v-if="prepend || prependslot">
         <!-- <span @click="prependClick()">{{prepend}}</span> -->
-        <div @click="prependClick()" v-html="prepend"></div>
-        <slot :name="prependslot"></slot>
+        <div :style="pendStyle(prependClick)" @click="prependClick()" v-html="prepend"></div>
+        <slot v-if="prependslot" :name="prependslot" :prependClick="prependClick"></slot>
       </template>
       <template slot="append" v-if="append || appendslot">
         <!-- <span @click="appendClick()">{{append}}</span> -->
-        <div @click="appendClick()" v-html="append"></div>
-        <slot :name="appendslot"></slot>
+        <div :style="pendStyle(appendClick)" @click="appendClick()" v-html="append"></div>
+        <slot v-if="appendslot" :name="appendslot" :appendClick="appendClick"></slot>
       </template>
       <template slot="suffix" v-if="suffix">
         <div v-html="suffix"></div>
@@ -114,6 +116,13 @@ export default {
   name: "zInput",
   mixins: [props(), events()],
   props: {
+    nodeClick: Function,
+    treeLoad: Function,
+    checked: Function,
+    lazy: {
+      type: Boolean,
+      default: false
+    },
     rawtype: {
       type: String
     },
@@ -252,7 +261,7 @@ export default {
       };
       this.box = true;
       this.$nextTick(() => {
-        let boxHeight = document.querySelector(".el-input_tree_box")
+        let boxHeight = document.querySelector(".zvue-input_tree-box")
           .clientHeight;
         let bodyHeight = document.querySelector("body").clientHeight;
         let boxTop;
@@ -332,9 +341,21 @@ export default {
         this.$emit("change", result);
         callback();
       }
+    },
+    pendStyle(fn) {
+      if (typeof fn === "function") {
+        return {
+          cursor: "pointer"
+        };
+      }
     }
   },
   computed: {
+    treeProps() {
+      return Object.assign(this.props, {
+        isLeaf: this.leafKey
+      });
+    },
     typeParam: function() {
       if (this.rawtype) return this.rawtype;
       switch (this.type) {
@@ -419,7 +440,7 @@ export default {
 };
 </script>
 <style lang='less' scoped>
-.el-input_tree_box {
+.zvue-input_tree-box {
   padding: 3px 5px;
   border: 1px solid #e4e7ed;
   border-radius: 4px;
@@ -432,7 +453,7 @@ export default {
   height: auto;
   overflow: hidden;
   min-width: 150px;
-  max-height: 250px;
+  max-height: 300px;
   background-color: #fff;
   position: absolute;
   z-index: 2001;

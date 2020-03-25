@@ -1,6 +1,6 @@
 <template>
   <div class="digital-nav-operator flex-align">
-    <span class="nav-right-item long-text" v-if="showGoback" @click="onClickGoBack">
+    <span class="nav-right-item long-text" v-if="showGoBack" @click="onClickGoBack">
       <span style="color:#008DEA">
         <i class="iconfont iconshouye"></i>&nbsp;返回首页
       </span>
@@ -10,20 +10,20 @@
       <span @click="loadNews" style="color:#ED6C01">{{$t('homeHeader.news')}}(25)</span>
       <i>|</i>
     </span>
-    <!--<span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoback">-->
+    <!--<span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoBack">-->
       <!--<el-select v-model="langValue" placeholder="切换语言" @change="onClickChangeLang">-->
       <!--<el-option label="中文" value="zh"></el-option>-->
       <!--<el-option label="English" value="en"></el-option>-->
       <!--</el-select><i>|</i>-->
     <!--</span>-->
-    <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoback">
+    <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoBack && fromFlag!=2">
       <el-select v-model="myModuleType" placeholder="切换模式" @change="onClickChangeModel">
         <el-option :label="$t('homeHeader.waterfall')" value="2"></el-option>
         <el-option :label="$t('homeHeader.dashboard')" value="1"></el-option>
       </el-select>
       <i>|</i>
     </span>
-    <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoback">
+    <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoBack">
       <el-select v-model="setupValue" placeholder="设置" @change="onClickSetup">
         <el-option :label="$t('homeHeader.setup')" value="0" hidden></el-option>
         <el-option :label="$t('homeHeader.moduleConfig')" value="1"></el-option>
@@ -36,7 +36,7 @@
     <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
       <el-dropdown @command="onClickUserConfigure">
         <div class="flex-align user-config hover-pointer">
-          <div class="user-name">{{userInfo.fullName}}</div>
+          <div class="user-name">{{userInfo.name}}</div>
           <img class="avatar-img" :src="userInfo.headUrl" alt />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -57,7 +57,7 @@ import CommonFun from '@/utils/commonFun'
 export default {
   name: "DigitalNavOperator",
   components: {},
-  props: ["moduleType", "showGoback"],
+  props: ["moduleType", "showGoBack","fromFlag"],
   data() {
     return {
       langValue: Cookies.get("lang") || "zh",
@@ -110,6 +110,9 @@ export default {
         //如果是客户端
         if (localStorage.isCZClient=="true") {
           goBackClientLogin();
+          sessionStorage.removeItem("token");
+          this.$store.commit("digitalPark/activeMenuIndex","")
+          await SystemManageApi.logOut();
         } else {
           sessionStorage.removeItem("token");
           this.$store.commit("digitalPark/activeMenuIndex","")
@@ -164,7 +167,8 @@ export default {
       this.$store.commit("digitalPark/activeMenuIndex","")
     },
     async getUserInfo() {
-      this.userInfo = await SystemManageApi.getUserInfo();
+      let res = await SystemManageApi.getUserInfo();
+      this.userInfo  = res
       localStorage.setItem("userInfo", JSON.stringify(this.userInfo));
       this.$store.commit("digitalPark/updateUserInfo", false);
     },

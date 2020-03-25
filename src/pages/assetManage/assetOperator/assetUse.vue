@@ -175,9 +175,10 @@
         let res = await SystemManageApi.getDepartmentTree();
         this.deptTree=res[0].childNode
 
-        let list = this.insertNode(this.deptTree)
+        // let list = this.insertNode(this.deptTree)
+        // console.log("list",list)
         this.$refs['tableRef'].setColumnByProp("collarId", {
-          dicData:list
+          dicData: this.deptTree
         });
       },
       async getUserList(id) {
@@ -185,8 +186,9 @@
         let res = await SystemManageApi.listBy({
           deptId
         });
+        console.log(res)
         res.map(item => {
-          item.name = item.fullName;
+          item.name = item.name;
           item.leaf = true;
         });
         this.userList=res
@@ -208,7 +210,7 @@
         let obj={
              id:_.uniqueId(),
              applyTime:moment(new Date()).format('YYYY-MM-DD'),
-             applyUser:userInfo.fullName,
+             applyUser:userInfo.name,
              name:'',
              collarId:'',
              specification:'',

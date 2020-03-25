@@ -39,7 +39,7 @@
       </div>
       <div :class="isFull?'full-right-module-content':'right-module-content'">
         <div :class="isFull?'full-preview-panel':'preview-panel'" >
-          <DashboardNew v-if="type==1" :curProModule="curProModule" :hideHeader="true" ref="dashboard"/>
+          <DashboardNew v-if="type==1" :curProModule="curProModule" :hideHeader="true" ref="dashboard" />
           <HomePage v-if="type==2" :curProModule="curProModule"
                     :hideHeader="true"
                     ref="homePage"

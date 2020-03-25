@@ -10,19 +10,19 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: [
       {
-        context: ['/oaApi', '/user-service'],
-        // target: 'http://39.98.130.147:8080'
-        target:'http://192.168.1.232:8080'
+        context: ['/oaApi', '/user-service', '/vibe-web'],
+        target: 'http://39.98.130.147:8080'
+        // target:'http://192.168.1.232:8080'
         /* changeOrigin: true,//是否允许跨越*/
         /* pathRewrite: {
           '/user-service': ''
         } */
       },
-      {
+      /* {
         context: ['/vibe-web'],
-        target:'http://192.168.1.232:8080'
-        // target: 'http://39.98.130.147:8080'
-      }
+        // target:'http://192.168.1.232:8080'
+        target: 'http://39.98.130.147:8080'
+      } */
     ],
 
     // Various Dev Server settings
@@ -30,6 +30,7 @@ module.exports = {
     port: 8081, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
+
 
 
     notifyOnErrors: true,

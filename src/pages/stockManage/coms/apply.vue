@@ -67,37 +67,38 @@ export default {
             type: "cascader",
             label: "采购人",
             prop: "buyId",
+            dicData:[],
             showAllLevels: false,
             props: {
               label: "name",
               value: "id",
               children: "childNode",
-              lazy: true,
-              lazyLoad: async function(node, resolve) {
-                // const { level,data } = node;
-                // let nodes =[]
-                // if(level==0 || data.childNode.length){
-                //   resolve(nodes);
-                // }else{
-                //   let res =await _this.getUserList(node.data.id)
-                //   nodes=res
-                // }
-                // resolve(nodes);
-
-                const { level, data } = node;
-                let nodes = [];
-                if (level == 0) {
-                  _this.getDepartmentTree().then(_ => {
-                    resolve(_this.deptTree);
-                  });
-                  // resolve(nodes);
-                } else if (level === 2) {
-                  let res = await _this.getUserList(node.data.id);
-                  nodes = res;
-                  resolve(nodes);
-                }
-                resolve([]);
-              }
+              // lazy: true,
+              // lazyLoad: async function(node, resolve) {
+              //   // const { level,data } = node;
+              //   // let nodes =[]
+              //   // if(level==0 || data.childNode.length){
+              //   //   resolve(nodes);
+              //   // }else{
+              //   //   let res =await _this.getUserList(node.data.id)
+              //   //   nodes=res
+              //   // }
+              //   // resolve(nodes);
+              //
+              //   const { level, data } = node;
+              //   let nodes = [];
+              //   if (level == 0) {
+              //     _this.getDepartmentTree().then(_ => {
+              //       resolve(_this.deptTree);
+              //     });
+              //     // resolve(nodes);
+              //   } else if (level === 2) {
+              //     let res = await _this.getUserList(node.data.id);
+              //     nodes = res;
+              //     resolve(nodes);
+              //   }
+              //   resolve([]);
+              // }
             },
             span: 10
           },
@@ -113,27 +114,28 @@ export default {
             type: "cascader",
             label: "验收人",
             prop: "acceptId",
+            dicData:[],
             showAllLevels: false,
             props: {
               label: "name",
               value: "id",
               children: "childNode",
-              lazy: true,
-              lazyLoad: async function(node, resolve) {
-                const { level, data } = node;
-                let nodes = [];
-                if (level == 0) {
-                  _this.getDepartmentTree().then(_ => {
-                    resolve(_this.deptTree);
-                  });
-                  // resolve(nodes);
-                } else if (level === 2) {
-                  let res = await _this.getUserList(node.data.id);
-                  nodes = res;
-                  resolve(nodes);
-                }
-                resolve([]);
-              }
+              // lazy: true,
+              // lazyLoad: async function(node, resolve) {
+              //   const { level, data } = node;
+              //   let nodes = [];
+              //   if (level == 0) {
+              //     _this.getDepartmentTree().then(_ => {
+              //       resolve(_this.deptTree);
+              //     });
+              //     // resolve(nodes);
+              //   } else if (level === 2) {
+              //     let res = await _this.getUserList(node.data.id);
+              //     nodes = res;
+              //     resolve(nodes);
+              //   }
+              //   resolve([]);
+              // }
             },
             span: 10
           },
@@ -206,6 +208,12 @@ export default {
       async getDepartmentTree() {
         let res = await SystemManageApi.getDepartmentTree();
         this.deptTree=res[0].childNode
+        this.$refs['formRef'].setColumnByProp("buyId", {
+          dicData: this.deptTree
+        });
+        this.$refs['formRef'].setColumnByProp("acceptId", {
+          dicData: this.deptTree
+        });
       },
       async getProviderList() {
         let res = await AssetManageApi.getProviderList();
@@ -264,7 +272,7 @@ export default {
           deptId
         });
         res.map(item => {
-          item.name = item.fullName;
+          item.name = item.name;
           item.leaf = true;
         });
         return res;
@@ -273,11 +281,19 @@ export default {
         let res;
         let userIdList = ""; //方便回显采购人、验收人
         userIdList = [...this.model.buyId, ...this.model.acceptId].join(",");
+        let buyId = this.model.buyId,
+            acceptId = this.model.acceptId
+        if(buyId instanceof Array){
+          buyId = this.model.buyId[this.model.buyId.length - 1]
+        }
+        if(acceptId instanceof Array){
+          acceptId = this.model.acceptId[this.model.acceptId.length - 1]
+        }
         let obj = {
           ...this.model,
           ...{
-            buyId: this.model.buyId[this.model.buyId.length - 1],
-            acceptId: this.model.acceptId[this.model.acceptId.length - 1],
+            buyId: buyId,
+            acceptId: acceptId,
             stockDetailsList: this.tableConfig.data,
             userIdList
           }
@@ -322,9 +338,6 @@ export default {
         }
         if (res) {
           this.model=res
-          let userIdList=res.userIdList.split(",")
-          this.model.buyId = userIdList.slice(0,3)
-          this.model.acceptId = userIdList.slice(3,6)
           this.tableConfig.data=res.stockDetailsList
         }
       },

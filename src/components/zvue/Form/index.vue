@@ -1,5 +1,5 @@
 <template>
-  <div class="el-form_wrapper" :style="{width:setPx(parentOption.width,'100%')}">
+  <div class="zvue-form-wrapper" :style="{width:setPx(parentOption.width,'100%')}">
     <el-form
       :ref="formRef"
       status-icon
@@ -16,7 +16,7 @@
       <el-row :span="24">
         <!-- :display="item.display" -->
         <z-group
-          v-for="(group,index) in columnOption"
+          v-for="(group) in columnOption"
           v-show="vaildData(!group.hide,true)"
           :key="group.prop"
           :display="group.display"
@@ -27,7 +27,7 @@
           <template slot="header" v-if="$slots[group.prop+'Header']">
             <slot :name="`${group.prop}Header`"></slot>
           </template>
-          <div class="z-form_group">
+          <div class="zvue-form-group">
             <template v-for="(column, cindex) in group.forms">
               <el-col
                 :key="column.prop"
@@ -40,7 +40,7 @@
                 v-if="vaildDisplay(column)"
               >
                 <el-form-item
-                  :class="[_.isEmpty(column.label)?'el-form-item_emptylabel' : '']"
+                  :class="[_.isEmpty(column.label)?'zvue-form-item_emptylabel' : '']"
                   :label="column.label"
                   :prop="column.prop"
                   :required="column.required"
@@ -50,6 +50,29 @@
                   :size="column.size || controlSize"
                   :label-width="setPx(column.width,parentOption.labelWidth || 90)"
                 >
+                  <!-- 自定义label -->
+                  <template slot="label" v-if="column.labelslot">
+                    <slot
+                      :name="column.prop+'Label'"
+                      :column="column"
+                      :value="model[column.prop]"
+                      :disabled="vaildDiabled(column,group)"
+                      :size="column.size || controlSize"
+                      :dic="DIC[column.prop]"
+                    ></slot>
+                  </template>
+                  <!-- 自定义error -->
+                  <template slot="error" slot-scope="{error}" v-if="column.errorslot">
+                    <slot
+                      :name="column.prop+'Error'"
+                      :column="column"
+                      :error="error"
+                      :value="model[column.prop]"
+                      :disabled="vaildDiabled(column,group)"
+                      :size="column.size || controlSize"
+                      :dic="DIC[column.prop]"
+                    ></slot>
+                  </template>
                   <!-- 如果是禁用tooltip，则tabindex 为 -1 -->
                   <el-tooltip
                     :tabindex="!column.tip || column.type==='upload' ? -1 : 0"
@@ -57,6 +80,7 @@
                     :content="vaildData(column.tip,getPlaceholder(column))"
                     :placement="column.tipPlacement"
                   >
+                    <span v-if="textMode">{{displayText(column)}}</span>
                     <slot
                       v-if="column.formslot"
                       :name="column.prop"
@@ -64,7 +88,7 @@
                       :column="column"
                       :label="model['$'+column.prop]"
                       :size="column.size || controlSize"
-                      :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
+                      :disabled="vaildDiabled(column,group)"
                       :dic="DIC[column.prop]"
                     ></slot>
                     <form-temp
@@ -74,7 +98,7 @@
                       :dic="DIC[column.prop]"
                       :upload-before="uploadBefore"
                       :upload-after="uploadAfter"
-                      :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
+                      :disabled="vaildDiabled(column,group)"
                     >
                       <!-- 自定义表单里内容 -->
                       <template
@@ -93,16 +117,26 @@
                         ></slot>
                       </template>
                       <!-- input的slot处理 -->
-                      <template v-if="column.prependslot" :slot="column.prependslot">
+                      <template
+                        v-if="column.prependslot"
+                        :slot="column.prependslot"
+                        slot-scope="{prependClick}"
+                      >
                         <slot
                           :name="column.prependslot"
-                          :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
+                          :disabled="vaildDiabled(column,group)"
+                          :clickevent="prependClick"
                         ></slot>
                       </template>
-                      <template v-if="column.appendslot" :slot="column.appendslot">
+                      <template
+                        v-if="column.appendslot"
+                        :slot="column.appendslot"
+                        slot-scope="{appendClick}"
+                      >
                         <slot
                           :name="column.appendslot"
-                          :disabled="vaildBoolean(column.disabled,group.disabled,allDisabled)"
+                          :disabled="vaildDiabled(column,group)"
+                          :clickevent="appendClick"
                         ></slot>
                       </template>
                     </form-temp>
@@ -123,7 +157,7 @@
         <el-col :span="24" v-if="vaildData(parentOption.menuBtn,true)">
           <el-form-item>
             <!-- 菜单按钮组 -->
-            <div :class="`form_menu-${menuPosition}`">
+            <div :class="`zvue-form-menu-${menuPosition}`">
               <el-button
                 type="primary"
                 @click="submit"
@@ -139,7 +173,7 @@
                 v-if="vaildData(parentOption.emptyBtn,true)"
                 @click="resetForm"
               >{{vaildData(parentOption.emptyText,'清 空')}}</el-button>
-              <slot name="menuBtn" :size="controlSize"></slot>
+              <slot name="menuBtn" :disabled="allDisabled" :size="controlSize"></slot>
             </div>
           </el-form-item>
         </el-col>
@@ -189,9 +223,13 @@ export default {
     value: {
       type: Object,
       required: true,
-      default: () => {}
+      default: () => ({})
     },
     disabled: {
+      type: Boolean,
+      default: false
+    },
+    textMode: {
       type: Boolean,
       default: false
     }
@@ -219,6 +257,8 @@ export default {
     });
     // 初始化表单
     this.dataFormat();
+
+    this.$root._zForm = this;
   },
   methods: {
     deepClone,
@@ -247,6 +287,7 @@ export default {
           ) {
             if (currentRules.required) {
               currentRules.message = `必填，请填写${item.label}`;
+              currentRules.trigger = `change`;
             }
           }
           // 添加进rules
@@ -284,27 +325,48 @@ export default {
     findColumnIndex(prop, group = false) {
       let list = [];
       let result;
+      let hasForms = typeof this.options.forms !== "undefined";
       this.columnOption.forEach((column, index) => {
         const val = this.findArray(column.forms, prop, "prop");
         if (val !== -1) {
-          list.push(index);
+          // 如果有forms属性，则group的排序需要减一，因为forms会被当成一个group，添加在最前方
+          hasForms && index > 0 ? list.push(index - 1) : list.push(index);
           list.push(val);
           result = val;
         }
       });
+      if (list.length === 0) {
+        return -1;
+      }
       return group ? list : result;
     },
     // 根据prop设置属性
-    setColumnByProp(prop, setOptions) {
-      let isGroup = typeof this.options.group !== "undefined";
+    setColumnByProp(prop, setOptions, isInGroup) {
+      let isGroup = isInGroup || typeof this.options.group !== "undefined";
       let options = this.options;
       let index = this.findColumnIndex(prop, isGroup);
-      if (isGroup) {
-        var formsOption = options.group[index[0]].forms[index[1]];
+      if (index !== -1) {
+        if (isGroup) {
+          var formsOption = options.group[index[0]].forms[index[1]];
+        } else {
+          var formsOption = options.forms[index];
+        }
+        setDefaultValue(setOptions, formsOption, this);
       } else {
-        var formsOption = options.forms[this.findColumnIndex(prop)];
+        this.$message({
+          type: "error",
+          message: `setColumnByProp -> 属性-${prop}-不存在`
+        });
+        console.error(`setColumnByProp -> 属性-${prop}-不存在`);
       }
-      setDefaultValue(setOptions, formsOption, this);
+    },
+    // 判断该项是否可用
+    vaildDiabled(column, group) {
+      return this.vaildBoolean(
+        column.disabled,
+        group.disabled,
+        this.allDisabled
+      );
     },
     // 验证表单是否显隐
     vaildDisplay(column) {
@@ -321,7 +383,7 @@ export default {
       }
     },
     clearValidate() {
-      this.$refs[this.formRef].clearValidate();
+      this.Form.clearValidate();
     },
     /**
      * 清空表单字段
@@ -331,8 +393,8 @@ export default {
       const part = params.part;
       if (part) {
         this.columnOption.forEach(ele => {
-          ele.column.forEach(column => {
-            const prop = column.prop;
+          ele.forms.forEach(form => {
+            const prop = form.prop;
             this.model[prop] = this.modelDefault.tableForm[prop];
           });
         });
@@ -341,12 +403,14 @@ export default {
       }
       this.$emit("input", this.model);
       this.$emit("reset-change");
-      this.clearValidate();
+      this.$nextTick(() => {
+        this.clearValidate();
+      });
     },
     validate(callback) {
       if (!callback) {
         return new Promise((resolve, reject) => {
-          this.$refs[this.formRef].validate(valid => {
+          this.Form.validate(valid => {
             if (valid) {
               resolve(valid);
             } else {
@@ -356,7 +420,7 @@ export default {
           });
         });
       } else {
-        this.$refs[this.formRef].validate(valid => {
+        this.Form.validate(valid => {
           if (!valid) {
             this.$message.warning("表单未填写完整，请检查后再提交");
           }
@@ -420,6 +484,10 @@ export default {
           });
         });
       }
+    },
+    displayText(column) {
+      let prop = column.prop;
+      return this.modelTranslate[`$${prop}`] || this.model[prop];
     }
   },
   computed: {
@@ -462,7 +530,6 @@ export default {
         //处理级联属性
         // ele.forms = calcCascader(ele.forms);
       });
-      // console.log("columnOption", list);
       return list;
     },
     menuPosition() {
@@ -473,14 +540,15 @@ export default {
     },
     optionsDisabled() {
       return this.options.disabled;
+    },
+    Form() {
+      return this.$refs[this.formRef];
     }
   },
   watch: {
     model: {
       deep: true,
       handler(newVal, oldVal) {
-        // console.log("formTemp model change");
-        // console.log("*******", _.cloneDeep(newVal), _.cloneDeep(oldVal));
         if (!this.formCreate) {
           this.$emit("input", this.model);
           this.$emit("change", this.model);
@@ -489,9 +557,8 @@ export default {
     },
     value: {
       deep: true,
-      handler() {
-        // console.log("formTemp value change");
-        this.modelOld = deepClone(this.value);
+      handler(newVal, oldVal) {
+        this.modelOld = deepClone(oldVal);
         if (!this.formCreate) {
           this.formVal();
         } else {
@@ -522,7 +589,7 @@ export default {
 };
 </script>
 <style lang='less'>
-.el-form_wrapper {
+.zvue-form-wrapper {
   .z-input-number,
   .el-cascader,
   .el-date-editor.el-input,
@@ -534,13 +601,13 @@ export default {
     display: inline-block;
     height: 42px;
   }
-  .form_menu-center {
+  .zvue-form-menu-center {
     text-align: center;
   }
-  .form_menu-left {
+  .zvue-form-menu-left {
     text-align: left;
   }
-  .form_menu-right {
+  .zvue-form-menu-right {
     text-align: right;
   }
   .el-input-number__decrease,
@@ -560,6 +627,7 @@ export default {
     // 如果是禁用，隐藏上传的加号和上传按钮
     .el-upload_disabled {
       .el-upload--picture-card,
+      .el-upload__tip,
       .el-upload--text {
         display: none;
       }
@@ -588,7 +656,7 @@ export default {
     }
   }
   // 分组
-  .z-form_group {
+  .zvue-form-group {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;

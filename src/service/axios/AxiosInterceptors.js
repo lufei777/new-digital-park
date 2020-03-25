@@ -33,24 +33,16 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
   (response) => {
-    // 服务端打印日志
-    if (response && process.server && response.config) {
-      console.log("======seperate line======");
-      console.log("axios from server url:", response.config.url);
-    }
-    // 结果处理
+    // code => 0：操作成功  101：报错  102：参数为空
     let res = response.data;
-    if (res.successful) {
-      // 服务端打印日志
-      if (process.server) {
-        console.log("response:", res);
-      }
+    let message = res.message || res.errorMessage || (typeof res.data === 'string' ? res.data : '');
+
+    if (res.successful && res.code === '0') {
       // 如果没有则返回空对象
       return (res || {}).data;
     } else if (res.code) {
       // 如果是登陆页面，则不进行message提示
       if (router.currentRoute.path == '/login') return;
-      // 0：操作成功  101：报错  102：参数为空
       switch (res.code) {
         case '102':
           Message({
@@ -60,12 +52,12 @@ axios.interceptors.response.use(
           break;
         default:
           Message({
-            message: `${res.message || res.errorMessage}`,
+            message: message,
             type: 'error'
           });
           break;
       }
-      console.error(`${res.message || res.errorMessage}，错误代码:${res.code}`);
+      console.error(`${message}，错误代码:${res.code}`);
       return Promise.reject(res);
     } else {
       // 兼容旧接口

@@ -73,38 +73,6 @@ class commonFun {
     airConditioner,
     electricTransformerAndDistribution
   }
-  //this,删除的id,没有id时的提示信息，点击确定的回调函数
-  deleteTip(that, deleteId, msgTip, sureCallBack, cancelCallBack) {
-    if (!deleteId) {
-      that.$message({
-        type: 'warning',
-        message: msgTip,
-        duration: 1000
-      });
-      return;
-    }
-    that.$confirm('确定要删除吗?', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    }).then(() => {
-      sureCallBack()
-    }).catch((err) => {
-      if (err === 'cancel') {
-        that.$message({
-          type: 'info',
-          message: '已取消删除',
-        });
-        cancelCallBack && cancelCallBack()
-      } else {
-        that.$message({
-          type: 'error',
-          message: '出错,请在控制台查看错误信息',
-        });
-        console.error(err);
-      }
-    });
-  }
 
   menuData = {
     "id": 1,
@@ -1653,6 +1621,39 @@ class commonFun {
     type2: '图片'
   }]
 
+  //this,删除的id,没有id时的提示信息，点击确定的回调函数
+  deleteTip(that, deleteId, msgTip, sureCallBack, cancelCallBack) {
+    if (!deleteId) {
+      that.$message({
+        type: 'warning',
+        message: msgTip,
+        duration: 1000
+      });
+      return;
+    }
+    that.$confirm('确定要删除吗?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      sureCallBack && sureCallBack();
+    }).catch((err) => {
+      if (err === 'cancel') {
+        that.$message({
+          type: 'info',
+          message: '已取消删除',
+        });
+        cancelCallBack && cancelCallBack();
+      } else {
+        that.$message({
+          type: 'error',
+          message: '出错,请在控制台查看错误信息',
+        });
+        console.error(err);
+      }
+    });
+  }
+
   // 跳转链接
   loadOldPage(item, routeOldProject) {
     // 直接通过浏览器改变href跳转
@@ -1684,11 +1685,27 @@ class commonFun {
     if (item.level == 2 && item.clientType == 1) {
       router.push(`${item.routeAddress}?productId=${item.id}`)
       return true;
-    } else if (item.level != 2 && item.clientType == 1) {
-      window.goToClientPage(JSON.stringify(clientMenu), item.id)
+    } else if(item.level==3 && item.clientType==1 && item.name=="概览"){
+      router.push(`${item.routeAddress}?productId=${item.pid}`)
+      return true;
+    }else if (item.level != 2 && item.clientType == 1) {
+      let id = item.id
+      if(item.childNode.length){
+        id = this.getId(item)
+      }
+      console.log(clientMenu,id)
+      window.goToClientPage(JSON.stringify(clientMenu), id)
       return true;
     }
     return false;
+  }
+
+  getId(item){
+    if(item.childNode.length){
+      return this.getId(item.childNode[0])
+    }else{
+      return item.id
+    }
   }
 
   //导出
@@ -1705,11 +1722,11 @@ class commonFun {
       let blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
       link.style.display = 'none'
       link.href = URL.createObjectURL(blob)
-
       link.download = decodeURIComponent(res.headers['content-disposition']) //下载后文件名
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
+
     }).catch(error => {
       that.$message({
         type: 'error',
@@ -1719,22 +1736,22 @@ class commonFun {
   }
 
   //设置菜单index
-  setMenuIndex(item){
-    let arr = ['defaultPage','digitalPark/dashboardHomePage','stockInApply']
-    let flag=false
-    if(item.routeAddress){
-      arr.map((str)=>{
-        if(item.routeAddress.indexOf(str)!=-1){
-          flag=true
+  setMenuIndex(item) {
+    let arr = ['defaultPage', 'digitalPark/dashboardHomePage', 'stockInApply']
+    let flag = false
+    if (item.routeAddress) {
+      arr.map((str) => {
+        if (item.routeAddress.indexOf(str) != -1) {
+          flag = true
         }
       })
-      if(flag){
-        return item.id+item.routeAddress
-      }else{
+      if (flag) {
+        return item.id + item.routeAddress
+      } else {
         return item.routeAddress
       }
-    }else{
-      return item.id
+    } else {
+      return item.id + ""
     }
   }
 
@@ -1750,15 +1767,15 @@ class commonFun {
     }
   }
 
-  setShortcutList(shortcut){
-    localStorage.setItem("shortcutList",JSON.stringify(shortcut))
+  setShortcutList(shortcut) {
+    localStorage.setItem("shortcutList", JSON.stringify(shortcut))
   }
 
-  goToZGManage(item){
+  goToZGManage(item) {
     //中钢物业管理客户端来处理
-    if(item.name=="物业系统"){
+    if (item.name == "物业系统") {
       window.goToZGManage()
-      return ;
+      return;
     }
   }
 }

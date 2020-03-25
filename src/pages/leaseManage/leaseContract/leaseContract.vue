@@ -203,16 +203,17 @@ export default {
         this.cancelDelete
       );
     },
-    async sureDelete() {
-      await LeaseManageApi.removeContract({
+    sureDelete() {
+      LeaseManageApi.removeContract({
         contractIds: this.contractIds
+      }).then(res => {
+        this.$message({
+          type: "success",
+          message: "删除成功!"
+        });
+        this.contractIds = "";
+        this.contractList();
       });
-      this.$message({
-        type: "success",
-        message: "删除成功!"
-      });
-      this.contractIds = "";
-      this.contractList();
     },
     cancelDelete() {
       this.contractIds = "";

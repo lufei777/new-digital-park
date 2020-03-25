@@ -35,7 +35,9 @@
 <script>
 import { CommonDic, PersonalManageDic } from "@/utils/dictionary";
 import personalManageApi from "@/service/api/personalManage";
+import SystemManageApi from "@/service/api/systemManage";
 import commonFun from "@/utils/commonFun.js";
+
 let tableSendData = {
   pageNum: 1,
   pageSize: 10
@@ -61,7 +63,7 @@ export default {
           {
             label: "姓名",
             type: "input",
-            prop: "fullName",
+            prop: "name",
             clearable: true,
             span: 4
           },
@@ -119,7 +121,7 @@ export default {
             fixed: "left"
           },
           {
-            prop: "fullName",
+            prop: "name",
             label: "姓名",
             fixed: "left",
             sortable: true
@@ -128,13 +130,21 @@ export default {
             prop: "sex",
             label: "性别",
             fixed: "left",
+            type: "select",
             dicData: CommonDic.sexDic
           },
           {
-            prop: "orgName",
+            prop: "orgNameList",
             label: "所在部门",
             fixed: "left",
-            width: "120"
+            width: "120",
+            type: "cascader",
+            dataType: "number",
+            props: {
+              label: "name",
+              value: "id",
+              children: "childNode"
+            }
           },
           {
             prop: "position",
@@ -172,6 +182,14 @@ export default {
         }
       }
     };
+  },
+  created() {
+    SystemManageApi.getDepartmentTree().then(res => {
+      this.zTable.setColumnByProp("orgNameList", {
+        dataType: "number",
+        dicData: res[0].childNode
+      });
+    });
   },
   methods: {
     searchSubmit(model, hide) {
