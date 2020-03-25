@@ -36,6 +36,10 @@ class SystemManage {
     @get
     logOut() { }
 
+    //获取部门+人员
+    @url("/oaApi/dept/treeUser")
+    @get
+    getDeptUserTree(){}
 }
 
 export default new SystemManage()

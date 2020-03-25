@@ -4,7 +4,7 @@
       <div class="home-header-inner flex-align-between">
         <div class="header-nav-left">
           <h3 class="title">
-            <i class="iconfont iconshuziyuanqu park-logo"></i>
+            <i class="iconfont park-logo" :class="titleIcon"></i>
             <span>{{title}}</span>
           </h3>
         </div>
@@ -118,6 +118,7 @@ export default {
         {url: require('../../../../static/image/digitalPark/lunbo4.png'), link: '/news'},
       ],
       copyrightShow:false,
+      titleIcon:''
     };
   },
   computed: {
@@ -177,6 +178,7 @@ export default {
         language: Cookies.get("lang")
       });
       this.title=res[0].name
+      this.titleIcon  =res[0].icon
       // let zGChildNode = {
       //   childNode:[],
       //   id:"menu-22b039bb127541a691e21c8398759985",

@@ -213,7 +213,7 @@
           if(this.productId){
             this.clientMenu = res.find((item)=>item.id==this.productId)
             this.fixedProList= this.clientMenu.childNode
-            this.headName=this.clientMenu.name
+            this.headNames=this.clientMenu.name
           }else{
             this.fixedProList=res
           }
