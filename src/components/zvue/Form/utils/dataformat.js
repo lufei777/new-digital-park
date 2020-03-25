@@ -76,12 +76,11 @@ export const getPlaceholder = function (column, type, isDisabled) {
 /**
  * 初始化数据格式
  */
-export const initVal = ({ listType, type, multiple, dataType, value, curentForm }) => {
-
+export const initVal = ({ listType, type, multiple, dataType, value, curentForm = {} }) => {
     // cascader 去除处理
     if (
         (['select', 'tree'].includes(type) && multiple) ||
-        ['checkbox', 'dynamic', 'upload'].includes(type)
+        ['cascader', 'checkbox', 'dynamic', 'upload'].includes(type)
     ) {
         // 头像框特殊处理
         if (listType === 'picture-img' && type === 'upload') {

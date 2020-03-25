@@ -231,6 +231,7 @@ import init from "../Form/common/init";
 import { validatenull, asyncValidator } from "../Form/utils/validate";
 import { deepClone, vaildData, vaildBoolean } from "../Form/utils/util";
 import { detail } from "../Form/utils/detail";
+import { initVal } from "../Form/utils/dataformat";
 import { DIC_SPLIT } from "../Form/global/variable";
 
 //单双击冲突timer
@@ -670,6 +671,18 @@ export default {
     },
     handleDetail(row, column, DIC) {
       let result = row[column.prop];
+
+      if (typeof column.type === "undefined") return result || "-";
+
+      // 如果是级联，则需要对值进行处理
+      if (column.type === "cascader" && typeof result === "string") {
+        let list = result.split(",");
+        if (list.length > 1) {
+          row = _.cloneDeep(row);
+          row[column.prop] = list;
+        }
+      }
+      // 进行取值处理，取出对应的label值
       result = detail(row, column, this.tableOption, DIC);
       if (!this.validatenull(DIC)) {
         row["$" + column.prop] = result;

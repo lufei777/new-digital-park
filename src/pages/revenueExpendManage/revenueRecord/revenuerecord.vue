@@ -1,5 +1,5 @@
 <template>
-  <FormTableTemplate>
+  <FormTableTemplate v-if="reload">
     <template slot="form">
       <z-form :ref="formData.ref" :options="formData" v-model="model">
         <template slot="btn" slot-scope="obj">
@@ -47,10 +47,6 @@
 import FormTableTemplate from "../FormTableTemplate";
 import revenueExpendApi from "api/revenueExpendManage";
 
-const budgetType = {
-  revenue: 0,
-  budget: 1
-};
 const examineState = [
   { label: "待审核", value: 0 },
   { label: "已审核", value: 1 },
@@ -77,6 +73,7 @@ export default {
   components: { FormTableTemplate },
   data() {
     return {
+      reload: true,
       model: {},
       formData: {
         ref: "formData",
@@ -86,13 +83,13 @@ export default {
           {
             type: "input",
             label: "编号",
-            prop: "incomId",
+            prop: "recordId",
             span: 8
           },
           {
             type: "input",
             label: "收入名称",
-            prop: "incomeName",
+            prop: "recordName",
             span: 8
           },
           {
@@ -105,7 +102,7 @@ export default {
           {
             type: "date",
             label: "入账日期",
-            prop: "incomeDate",
+            prop: "incomeTime",
             placeholder: "选择日期时间",
             format: "yyyy-MM-dd",
             valueFormat: "timestamp",
@@ -138,9 +135,38 @@ export default {
         columnConfig: [
           { label: "编号", prop: "recordId", width: 200 },
           { label: "收入名称", prop: "recordName" },
-          { label: "发起时间", prop: "launchTime", type: "date", width: 160 },
-          { label: "入账时间", prop: "incomeTime", type: "date", width: 160 },
-          { label: "发起人", prop: "launchName" },
+          { label: "发起日期", prop: "launchTime", type: "date", width: 160 },
+          { label: "入账日期", prop: "incomeTime", type: "date", width: 160 },
+          {
+            label: "发起人",
+            prop: "launchIdList",
+            type: "cascader",
+            dataType: "number",
+            dicData: [
+              {
+                label: "刘",
+                value: 1,
+                children: [
+                  {
+                    label: "晓",
+                    value: 2,
+                    children: [{ label: "航", value: 3 }]
+                  }
+                ]
+              },
+              {
+                label: "李",
+                value: 21,
+                children: [
+                  {
+                    label: "盼",
+                    value: 22,
+                    children: [{ label: "杰", value: 23 }]
+                  }
+                ]
+              }
+            ]
+          },
           { label: "应收金额", prop: "receivMoney" },
           {
             label: "收入类型",
@@ -158,7 +184,8 @@ export default {
           {
             label: "截止日期",
             prop: "endTime",
-            type: "date"
+            type: "date",
+            width: 160
           },
           {
             label: "资金状态",
@@ -182,15 +209,45 @@ export default {
     };
   },
   created() {
-    // 配置表格远程获取数据
-    this.tableData.serverMode = {
-      url: revenueExpendApi.getBudgetList,
-      data: {
-        budgetType: this.budgetType
-      }
-    };
+    this.init();
   },
   methods: {
+    init() {
+      this.formatFormOptions(this.formData.forms);
+      this.formatFormOptions(this.tableData.columnConfig);
+      /* this.$axios({
+        url: "./static/mock/revenuiExpend.json",
+        type: "get"
+      }).then(res => {
+        console.log(res);
+      }); */
+      // 配置表格远程获取数据
+      this.tableData.serverMode = {
+        url: "./static/mock/revenuiExpend.json",
+        type: "get"
+      };
+      /* this.tableData.serverMode = {
+        url: revenueExpendApi.getBudgetList,
+        data: {
+          budgetType: this.budgetType
+        }
+      }; */
+    },
+    formatFormOptions(config) {
+      const fields = {
+        receivMoney: ["应收金额", "支出金额"],
+        recordName: ["收入名称", "支出名称"],
+        moduleId: ["收入类型", "支出类型"],
+        payName: ["收款方", "支付方"],
+        incomeTime: ["入账日期", "支出日期"]
+      };
+
+      config.forEach(item => {
+        if (item.prop in fields) {
+          this.$set(item, "label", fields[item.prop][this.budgetType]);
+        }
+      });
+    },
     onClickSearchBtn(...args) {
       this.Form.getFormModel(res => {
         console.log("model", res);
@@ -203,14 +260,14 @@ export default {
     batchDels() {},
     addTenant() {},
     routePush({ flag, row }) {
-      let { recordId, examineState, budgetType } = row || {};
+      let { recordId, examineState } = row || {};
       this.$router.push({
         name: "launchcharge",
         query: {
           flag,
           recordId,
           examineState,
-          budgetType
+          budgetType: this.budgetType
         }
       });
     },
@@ -228,17 +285,30 @@ export default {
     },
     update(row) {
       this.routePush({ flag: "update", row });
+    },
+    reloadPage() {
+      this.reload = false;
+      this.$nextTick(() => {
+        this.init();
+        this.model = {};
+        this.reload = true;
+      });
     }
   },
   computed: {
     budgetType() {
-      return budgetType.revenue;
+      return this.$route.meta.budgetType;
     },
     Form() {
       return this.$refs[this.formData.ref];
     },
     Table() {
       return this.$refs[this.tableData.ref];
+    }
+  },
+  watch: {
+    budgetType() {
+      this.reloadPage();
     }
   }
 };
