@@ -180,14 +180,15 @@ export default {
   },
   mounted() {
     this.$refs["cascader"].$watch("presentText", (newVal, oldVal) => {
-      if (newVal) {
-        if (this.isCrud) {
-          newVal = (newVal || "").split(this.separator || "\\").join(DIC_SPLIT);
-          this.$set(this.column, "presentText", newVal);
-        } else {
-          // 赋值到modelTranslate
-          this.setFromModelTranslate(newVal);
-        }
+      if (typeof newVal !== "string") {
+        newVal = "";
+      }
+      if (this.isCrud) {
+        newVal = newVal.split(this.separator || "\\").join(DIC_SPLIT);
+        this.$set(this.column, "presentText", newVal);
+      } else {
+        // 赋值到modelTranslate
+        this.setFromModelTranslate(newVal);
       }
     });
   }
