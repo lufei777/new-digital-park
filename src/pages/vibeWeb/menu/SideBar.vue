@@ -121,7 +121,22 @@ export default {
         return ;
       }else{
         this.$store.commit("digitalPark/menuList",item);
-        commonFun.loadPage(item)
+        // commonFun.loadPage(item)
+        if (item.routeAddress) {
+          if (item.routeAddress.indexOf("@") != -1) {
+            localStorage.setItem('show_menu', item.routeAddress)
+            Cookies.set('activeMenuIndex', item.routeAddress)
+            if(this.$route.path=="/vibe-web"){
+              location.reload()
+            }else{
+              this.$router.push('/vibe-web')
+            }
+          } else {
+            this.$router.push(item.routeAddress);
+          }
+        } else {
+          this.$router.push("/digitalPark/defaultPage");
+        }
       }
     },
   },

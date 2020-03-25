@@ -17,6 +17,13 @@
                 v-show="animationFlag"
               >
                 {{item && item.id}}
+                <!--<draggable>-->
+                  <!--<ItemProModule-->
+                    <!--class="inner-drag-content"-->
+                    <!--&lt;!&ndash;:moduleData="item"&ndash;&gt;-->
+                    <!--:type="1"-->
+                  <!--/>-->
+                <!--</draggable>-->
               </draggable>
           </transition>
         </draggable>
@@ -28,13 +35,14 @@
   import Header from '../digitalPark/coms/header'
   import draggable from 'vuedraggable'
   import DigitalParkApi from '@/service/api/digitalPark'
+  // import ItemProModule from '@/digitalPark/coms/itemProModule'
   export default {
     name: 'LargeSizeScreenNormal',
     components: {
       Header,
-      draggable
+      draggable,
+      // ItemProModule
     },
-    props:['width','height'],
     data () {
       let menuTree = JSON.parse(localStorage.getItem('menuTree'))
       return {
