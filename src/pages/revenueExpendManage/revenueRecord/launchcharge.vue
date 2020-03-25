@@ -197,16 +197,22 @@ export default {
                 label: "刘",
                 value: 1,
                 children: [
-                  { label: "晓", value: 2 },
-                  { label: "航", value: 2 }
+                  {
+                    label: "晓",
+                    value: 2,
+                    children: [{ label: "航", value: 3 }]
+                  }
                 ]
               },
               {
                 label: "李",
                 value: 21,
                 children: [
-                  { label: "盼", value: 22 },
-                  { label: "杰", value: 23 }
+                  {
+                    label: "盼",
+                    value: 22,
+                    children: [{ label: "杰", value: 23 }]
+                  }
                 ]
               }
             ],
@@ -276,7 +282,7 @@ export default {
       },
       entryForms: [
         {
-          label: "入账时间",
+          label: "入账日期",
           prop: "incomeTime",
           type: "date",
           format: "yyyy-MM-dd",
@@ -305,8 +311,7 @@ export default {
             required: true
           }
         }
-      ],
-      pageConfig: apiConfig.add
+      ]
     };
   },
   created() {
@@ -315,20 +320,19 @@ export default {
       // recordId     记录id
       // budgetType   页面类型 收入: 0   支出: 1
       // examineState 审核状态
-      let { flag, budgetType, recordId, examineState } = this.$route.query;
+      let { flag = "add", recordId, examineState } = this.$route.query;
+
+      // 有budgetType，则需要对options进行格式化
+      this.formatFormOptions(this.formOptions.forms);
 
       // 拿取记录id
       if (recordId) {
         this.model.recordId = recordId;
-        this.budgetType = budgetType;
-        this.getBudgetByRecordId(recordId, budgetType);
+        this.getBudgetByRecordId(recordId);
       }
 
       // 赋值页面配置
-      this.pageConfig = {
-        ...apiConfig[flag],
-        budgetType
-      };
+      this.pageConfig = { ...apiConfig[flag] };
 
       // 如果是录入则要拼接其他填写字段
       if (this.isEntry) {
@@ -346,15 +350,32 @@ export default {
       };
     }
 
+    // 自动获取当前账单编号
     revenueExpendApi.createRecordNum().then(res => {
       this.model.recordId = res;
     });
   },
   methods: {
+    formatFormOptions(config) {
+      const fields = {
+        receivMoney: ["应收金额", "支出金额"],
+        recordName: ["收入名称", "支出名称"],
+        moduleId: ["收入类型", "支出类型"],
+        payName: ["收款方", "支付方"],
+        incomeTime: ["入账日期", "支出日期"]
+      };
+
+      config.forEach(item => {
+        if (item.prop in fields) {
+          this.$set(item, "label", fields[item.prop][this.budgetType]);
+        }
+      });
+    },
     clearForm() {
       this.$refs[this.leaseManageForm.ref].resetForm();
     },
     submit(model, hide) {
+      model = { ...model, budgetType: this.budgetType };
       this.pageConfig
         .api(model)
         .then(res => {
@@ -370,10 +391,10 @@ export default {
         console.log("搜索", res);
       });
     },
-    async getBudgetByRecordId(recordId, budgetType) {
+    async getBudgetByRecordId(recordId) {
       this.model = await revenueExpendApi.getBudgetByRecordId({
         recordId,
-        budgetType
+        budgetType: this.budgetType
       });
     },
     back() {
@@ -449,16 +470,22 @@ export default {
                   label: "刘",
                   value: 1,
                   children: [
-                    { label: "晓", value: 2 },
-                    { label: "航", value: 2 }
+                    {
+                      label: "晓",
+                      value: 2,
+                      children: [{ label: "航", value: 3 }]
+                    }
                   ]
                 },
                 {
                   label: "李",
                   value: 21,
                   children: [
-                    { label: "盼", value: 22 },
-                    { label: "杰", value: 23 }
+                    {
+                      label: "盼",
+                      value: 22,
+                      children: [{ label: "杰", value: 23 }]
+                    }
                   ]
                 }
               ],
@@ -542,6 +569,9 @@ export default {
       }
 
       return checkPeople;
+    },
+    budgetType() {
+      return (this.$route.query && this.$route.query.budgetType) || 0;
     }
   },
   watch: {

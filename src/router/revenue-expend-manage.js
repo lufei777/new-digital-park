@@ -3,12 +3,12 @@ export default [{
     name: 'revenueExpendManage',
     meta: { title: '收支管理' },
     component: () => import('@/pages/commonProject/coms/commonIndex'),
-    redirect: '/incomeRecord',
+    redirect: '/incomeRecord?budgetType=0',
     children: [
         {
             path: '/incomeRecord',
             name: 'incomeRecord',
-            meta: { title: '收入记录' },
+            meta: { title: '收入记录', budgetType: 0 },
             component: () => import('@/pages/revenueExpendManage/revenueRecord/revenuerecord')
         },
         {
@@ -26,8 +26,9 @@ export default [{
         {
             path: '/expenditureRecord',
             name: 'expenditureRecord',
-            meta: { title: '支出记录' },
-            component: () => import('@/pages/revenueExpendManage/expendRecord/expendrecord')
+            meta: { title: '支出记录', budgetType: 1 },
+            component: () => import('@/pages/revenueExpendManage/revenueRecord/revenuerecord')
+            // component: () => import('@/pages/revenueExpendManage/expendRecord/expendrecord')
         },
         {
             path: '/expensesBudget',
