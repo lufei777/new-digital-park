@@ -70,7 +70,7 @@ export default {
               },
               {
                 label: "姓名",
-                prop: "name",
+                prop: "fullName",
                 type: "input",
                 rules: {
                   required: true,
@@ -98,6 +98,7 @@ export default {
                 label: "所在部门",
                 prop: "orgNameList",
                 // type: "input",
+                dataType: "number",
                 type: "cascader",
                 showAllLevels: false,
                 props: {
@@ -130,6 +131,7 @@ export default {
                 label: "直接上级",
                 prop: "superiorList",
                 // type: "input",
+                dataType: "number",
                 type: "cascader",
                 showAllLevels: false,
                 props: {
