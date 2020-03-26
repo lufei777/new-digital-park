@@ -91,16 +91,18 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
             }
         }
         if (Array.isArray(value) || typeof value === 'number') {
+            // 如果是数组，number不做处理，这两个elementUI官方级联支持
         } else if (!validatenull(value) && typeof value === 'string') {
             const list = (value || '').split(',') || [];
-            if (dataType === 'number') {
-                value = list.map(ele => Number(ele))
-            } else {
-                value = list;
-            }
-            // 如果只有一项，则重新转换为字符串
+            // 如果只有一项，则重新转换为字符串，对应一个id反显级联
             if (list.length <= 1) {
                 value = list.join(',')
+            } else {
+                if (dataType === 'number') {
+                    value = list.map(ele => Number(ele))
+                } else {
+                    value = list;
+                }
             }
         } else {
             value = [];
@@ -143,7 +145,7 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
             value = undefined;
         }
     } */
-    
+
     // 数据转换，解决数据不匹配问题
     if (dataType) {
         if (Array.isArray(value)) {
