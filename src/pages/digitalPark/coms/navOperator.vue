@@ -192,7 +192,7 @@ export default {
       this.$router.push("/vibe-web");
     },
     loadPage(item) {
-      item  = JSON.parse(item)
+
       this.$store.commit("digitalPark/activeMenuIndex",CommonFun.setMenuIndex(item))
       if (item.routeAddress) {
         if (item.routeAddress.indexOf("@") != -1) {
@@ -204,13 +204,19 @@ export default {
         this.$router.push("/digitalPark/defaultPage");
       }
     },
+    goToWebPage(item){
+      item  = JSON.parse(item)
+      console.log("itemfanfeifei",item)
+      this.$store.commit("digitalPark/menuList",item)
+      this.loadPage(item)
+    }
   },
   mounted() {
     this.getUserInfo();
     window.CZClient={
       goToPersonal:this.onClickUserConfigure,  //跳转个人中心
       goBack:this.onClickGoBack,    //返回首页
-      goToWebPage:this.loadPage
+      goToWebPage:this.goToWebPage
     }
   }
 };
