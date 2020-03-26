@@ -674,7 +674,7 @@ export default {
 
       if (typeof column.type === "undefined") return result || "-";
 
-      // 如果是级联，则需要对值进行处理
+      // 如果是级联，切值为字符串，则需要对值进行处理
       if (column.type === "cascader" && typeof result === "string") {
         let list = result.split(",");
         if (list.length > 1) {
@@ -689,12 +689,13 @@ export default {
       }
       // 如果是级联，则对结果进行处理
       if (column.type === "cascader") {
+        let { props, presentText, showAllLevels } = column;
         // 如果开启了elementUI级联的lazy模式，则从column.presentText中读值，此值在cascader的mounted中赋值
-        if (column.props && column.props.lazy) {
-          result = column.presentText;
-          row["$" + column.prop] = column.presentText;
+        if (props && props.lazy) {
+          result = presentText;
+          row["$" + prop] = presentText;
         }
-        if (column.showAllLevels === false) {
+        if (showAllLevels === false && typeof result === "string") {
           let list = result.split(DIC_SPLIT);
           result = list[list.length - 1];
         }

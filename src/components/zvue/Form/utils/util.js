@@ -76,8 +76,11 @@ export const findLabelNode = (dic, value, props, dataType, isTree) => {
                     result.push(ele[labelKey]);
                     rev(children, value[++floors], props);
                 } else {
-                    result = ele[labelKey];
+                    return result = ele[labelKey];
                 }
+            } else if (!isTree) {
+                // 如果不是树也往下遍历，例如只有一个Id需要反显的级联
+                rev(children, value, props);
             }
         }
     };
