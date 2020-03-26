@@ -86,12 +86,12 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
         if (listType === 'picture-img' && type === 'upload') {
             if (typeof value === 'string' && value.trim().length > 0) {
                 value = [value];
+            } else {
+                value = [];
             }
-            value = [];
         }
         if (Array.isArray(value) || typeof value === 'number') {
-            return value;
-        } else if (!validatenull(value)) {
+        } else if (!validatenull(value) && typeof value === 'string') {
             const list = (value || '').split(',') || [];
             if (dataType === 'number') {
                 value = list.map(ele => Number(ele))
@@ -136,21 +136,19 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
     }
 
     // 数字处理
-    if ((type === 'number' || curentForm.rawtype === 'number'
+    /* if ((type === 'number' || curentForm.rawtype === 'number'
         || dataType === 'number') && typeof value !== 'undefined') {
         value = parseFloat(value);
         if (isNaN(value)) {
             value = undefined;
         }
-    }
-
+    } */
+    
     // 数据转换，解决数据不匹配问题
     if (dataType) {
         if (Array.isArray(value)) {
             // 数据转化
-            value.map((ele, index) => {
-                value[index] = detailDataType(ele, dataType);
-            });
+            value = value.map((ele, index) => detailDataType(ele, dataType));
         } else {
             value = detailDataType(value, dataType);
         }

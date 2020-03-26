@@ -324,6 +324,9 @@ export default {
       return true;
     },
     isOversize(filesize) {
+      if (!this.filesize) {
+        return false;
+      }
       let unit = this.filesize.toUpperCase();
       let fileSizeLimit = parseFloat(this.filesize);
 

@@ -157,17 +157,26 @@ export default {
             label: "岗位级别"
           },
           {
-            prop: "superior",
-            label: "直接上级"
+            prop: "superiorList",
+            label: "直接上级",
+            type: "cascader",
+            dicData: [],
+            props: {
+              label: "name",
+              value: "id",
+              children: "childNode"
+            }
           },
           {
             prop: "status",
             label: "员工状态",
+            type: "select",
             dicData: PersonalManageDic.employeeStatus
           },
           {
             prop: "type",
             label: "员工类型",
+            type: "select",
             dicData: PersonalManageDic.employeeType
           },
           {
@@ -186,6 +195,13 @@ export default {
   created() {
     SystemManageApi.getDepartmentTree().then(res => {
       this.zTable.setColumnByProp("orgNameList", {
+        dataType: "number",
+        dicData: res[0].childNode
+      });
+    });
+
+    SystemManageApi.getDeptUserTree().then(res => {
+      this.zTable.setColumnByProp("superiorList", {
         dataType: "number",
         dicData: res[0].childNode
       });
