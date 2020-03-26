@@ -205,6 +205,7 @@ export default {
       }
     },
     goToWebPage(item){
+
       item  = JSON.parse(item)
       console.log("itemfanfeifei",item)
       this.$store.commit("digitalPark/menuList",item)
