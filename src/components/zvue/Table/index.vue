@@ -689,7 +689,7 @@ export default {
       }
       // 如果是级联，则对结果进行处理
       if (column.type === "cascader") {
-        let { props, presentText, showAllLevels } = column;
+        let { prop, props, presentText, showAllLevels } = column;
         // 如果开启了elementUI级联的lazy模式，则从column.presentText中读值，此值在cascader的mounted中赋值
         if (props && props.lazy) {
           result = presentText;
