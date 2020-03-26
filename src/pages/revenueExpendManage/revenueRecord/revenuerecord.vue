@@ -13,12 +13,12 @@
 
     <template slot="table">
       <z-table :ref="tableData.ref" :options="tableData">
-        <template slot="custom-top" slot-scope="{size}">
+        <template slot="custom-top" slot-scope="{size,selectedData}">
           <el-button :size="size" type="primary" @click="launchcharge">{{launchField}}</el-button>
           <el-button :size="size" type="primary" @click="entryRecord">录入</el-button>
           <el-button :size="size" type="primary">导入</el-button>
           <el-button :size="size" type="primary">导出</el-button>
-          <el-button :size="size" type="primary">批量删除</el-button>
+          <el-button :size="size" type="primary" @click="bulkDel(selectedData)">批量删除</el-button>
         </template>
 
         <template slot="operation" slot-scope="{size,row}">
@@ -46,6 +46,7 @@
 <script>
 import FormTableTemplate from "../FormTableTemplate";
 import revenueExpendApi from "api/revenueExpendManage";
+import systemManageApi from "api/systemManage";
 
 const examineState = [
   { label: "待审核", value: 0 },
@@ -79,6 +80,7 @@ export default {
         ref: "formData",
         labelWidth: "100",
         menuBtn: false,
+        size: "small",
         forms: [
           {
             type: "input",
@@ -141,31 +143,13 @@ export default {
             label: "发起人",
             prop: "launchIdList",
             type: "cascader",
+            showAllLevels: false,
             dataType: "number",
-            dicData: [
-              {
-                label: "刘",
-                value: 1,
-                children: [
-                  {
-                    label: "晓",
-                    value: 2,
-                    children: [{ label: "航", value: 3 }]
-                  }
-                ]
-              },
-              {
-                label: "李",
-                value: 21,
-                children: [
-                  {
-                    label: "盼",
-                    value: 22,
-                    children: [{ label: "杰", value: 23 }]
-                  }
-                ]
-              }
-            ]
+            props: {
+              label: "name",
+              value: "id",
+              children: "childNode"
+            }
           },
           { label: "应收金额", prop: "receivMoney" },
           {
@@ -202,6 +186,7 @@ export default {
           { label: "备注", prop: "remarks" }
         ],
         uiConfig: {
+          size: "small",
           height: "auto", //"", //高度
           selection: true //是否多选
         }
@@ -215,12 +200,6 @@ export default {
     init() {
       this.formatFormOptions(this.formData.forms);
       this.formatFormOptions(this.tableData.columnConfig);
-      /* this.$axios({
-        url: "./static/mock/revenuiExpend.json",
-        type: "get"
-      }).then(res => {
-        console.log(res);
-      }); */
       // 配置表格远程获取数据
       if (this.budgetType === 0) {
         this.tableData.serverMode = {
@@ -231,6 +210,12 @@ export default {
           url: "./static/mock/expend.json"
         };
       }
+
+      systemManageApi.getDeptUserTree().then(res => {
+        this.Table.setColumnByProp("launchIdList", {
+          dicData: res[0].childNode
+        });
+      });
       /* this.tableData.serverMode = {
         url: revenueExpendApi.getBudgetList,
         data: {
@@ -298,6 +283,12 @@ export default {
         this.model = {};
         this.reload = true;
       });
+    },
+    bulkDel(selectedData) {
+      let ids = selectedData.map(item => {
+        return item.recordId;
+      });
+      console.log("bulkDel -> ids", ids);
     }
   },
   computed: {

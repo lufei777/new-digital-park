@@ -24,14 +24,15 @@ export default function () {
                 let result = value;
                 this.text = result;
 
-                if (this.isString || this.isNumber) {
+                if (this.isString) {
                     if (this.multiple || ['checkbox', 'cascader', 'dynamic'].includes(this.type)) {
                         result = value.join(',')
-                    } else if (this.isNumber) {
-                        result = parseFloat(result);
-                        if (isNaN(result)) {
-                            result = undefined;
-                        }
+                    }
+                }
+                if (this.isNumber && !['checkbox', 'cascader', 'dynamic'].includes(this.type)) {
+                    result = parseFloat(result);
+                    if (isNaN(result)) {
+                        result = undefined;
                     }
                 }
 

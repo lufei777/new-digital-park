@@ -35,6 +35,7 @@
 </template>
 <script>
 import revenueExpendApi from "api/revenueExpendManage";
+import systemManageApi from "api/systemManage";
 import { BooleanDic } from "utils/dictionary";
 
 const dateValueDefault = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
@@ -112,6 +113,7 @@ export default {
         menuPosition: "right",
         emptyBtn: false,
         width: "70%",
+        size: "small",
         forms: [
           {
             type: "input",
@@ -190,32 +192,13 @@ export default {
             label: "发起人",
             prop: "launchIdList",
             type: "cascader",
-            dataType: "string",
+            dataType: "number",
+            props: {
+              label: "name",
+              value: "id",
+              children: "childNode"
+            },
             clearable: true,
-            dicData: [
-              {
-                label: "刘",
-                value: 1,
-                children: [
-                  {
-                    label: "晓",
-                    value: 2,
-                    children: [{ label: "航", value: 3 }]
-                  }
-                ]
-              },
-              {
-                label: "李",
-                value: 21,
-                children: [
-                  {
-                    label: "盼",
-                    value: 22,
-                    children: [{ label: "杰", value: 23 }]
-                  }
-                ]
-              }
-            ],
             span: 12,
             rules: {
               required: true,
@@ -354,6 +337,16 @@ export default {
     revenueExpendApi.createRecordNum().then(res => {
       this.model.recordId = res;
     });
+
+    // 获取全部人员
+    systemManageApi.getDeptUserTree().then(res => {
+      this.Form.setColumnByProp("examineIdList", {
+        dicData: res[0].childrenNode
+      });
+      this.Form.setColumnByProp("launchIdList", {
+        dicData: res[0].childrenNode
+      });
+    });
   },
   methods: {
     formatFormOptions(config) {
@@ -463,32 +456,13 @@ export default {
               label: "审核人",
               prop: "examineIdList",
               type: "cascader",
-              dataType: "string",
+              dataType: "number",
+              props: {
+                label: "name",
+                value: "id",
+                children: "childNode"
+              },
               clearable: true,
-              dicData: [
-                {
-                  label: "刘",
-                  value: 1,
-                  children: [
-                    {
-                      label: "晓",
-                      value: 2,
-                      children: [{ label: "航", value: 3 }]
-                    }
-                  ]
-                },
-                {
-                  label: "李",
-                  value: 21,
-                  children: [
-                    {
-                      label: "盼",
-                      value: 22,
-                      children: [{ label: "杰", value: 23 }]
-                    }
-                  ]
-                }
-              ],
               rules: {
                 required: true,
                 trigger: "blur"

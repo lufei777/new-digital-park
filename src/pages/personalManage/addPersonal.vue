@@ -190,7 +190,7 @@ export default {
                 type: "date",
                 rules: {
                   required: true,
-                  trigger: "blur"
+                  trigger: "change"
                 },
                 valueFormat: "yyyy-MM-dd"
               },
