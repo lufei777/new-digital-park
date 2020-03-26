@@ -262,9 +262,9 @@
       },
       async rowUpdate(data,index,callback){
         console.log("baocun",data)
-        // if(data.collarId && data.collarId instanceof Array){
-        //   data.collarId = data.collarId[data.collarId.length-1]
-        // }
+        if(data.collarId && data.collarId instanceof Array){
+          data.collarId = data.collarId[data.collarId.length-1]
+        }
         data.isEdit=0
         await this.editAssetUseDetail(data)
         callback()
