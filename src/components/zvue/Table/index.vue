@@ -918,22 +918,30 @@ export default {
     },
     //搜索指定的属性配置
     findColumnIndex(prop) {
-      let result;
-      this.columnConfig.forEach((column, index) => {
+      for (let index = 0; index < this.columnConfig.length; index++) {
+        const column = this.columnConfig[index];
         if (column.prop === prop) {
-          result = index;
+          return index;
         }
-      });
-      return result;
+      }
+      return -1;
     },
     // 根据prop设置属性
     setColumnByProp(prop, setOptions) {
       let index = this.findColumnIndex(prop);
-      for (const key in setOptions) {
-        if (setOptions.hasOwnProperty(key)) {
-          const element = setOptions[key];
-          this.$set(this.columnConfig[index], key, element);
+      if (index !== -1) {
+        for (const key in setOptions) {
+          if (setOptions.hasOwnProperty(key)) {
+            const element = setOptions[key];
+            this.$set(this.columnConfig[index], key, element);
+          }
         }
+      } else {
+        this.$message({
+          type: "error",
+          message: `setColumnByProp -> 属性-${prop}-不存在`
+        });
+        console.error(`setColumnByProp -> 属性-${prop}-不存在`);
       }
     }
   },

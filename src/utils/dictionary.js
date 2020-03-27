@@ -8,7 +8,17 @@ export const CommonDic = {
   }, {
     label: '保密',
     value: '0'
-  }]
+  }],
+  booleanDic: [
+    {
+      label: '是',
+      value: 1
+    },
+    {
+      label: '否',
+      value: 0
+    }
+  ]
 }
 
 export const LeaseManageDic = {
@@ -76,8 +86,8 @@ export const AssetDic = {
     1: '资产领用',
   },
 
-  assetStatus:{
-    0:'领用'
+  assetStatus: {
+    0: '领用'
   }
 }
 

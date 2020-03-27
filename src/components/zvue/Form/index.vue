@@ -163,13 +163,13 @@
                 @click="submit"
                 :size="controlSize"
                 icon="el-icon-check"
-                :loading="allDisabled"
+                :loading="vaildBoolean(parentOption.submitDisabled,allDisabled)"
                 v-if="vaildData(parentOption.submitBtn,true)"
               >{{vaildData(parentOption.submitText,'确 定')}}</el-button>
               <el-button
                 icon="el-icon-delete"
                 :size="controlSize"
-                :loading="allDisabled"
+                :loading="vaildBoolean(parentOption.emptyDisabled,allDisabled)"
                 v-if="vaildData(parentOption.emptyBtn,true)"
                 @click="resetForm"
               >{{vaildData(parentOption.emptyText,'清 空')}}</el-button>
@@ -342,7 +342,10 @@ export default {
     },
     // 根据prop设置属性
     setColumnByProp(prop, setOptions, isInGroup) {
-      let isGroup = isInGroup || typeof this.options.group !== "undefined";
+      let isGroup =
+        typeof isInGroup != "undefined"
+          ? isInGroup
+          : typeof this.options.group !== "undefined";
       let options = this.options;
       let index = this.findColumnIndex(prop, isGroup);
       if (index !== -1) {
@@ -491,37 +494,29 @@ export default {
     }
   },
   computed: {
-    propOption() {
-      let list = [];
-      this.columnOption.forEach(option => {
-        option.forms.forEach(form => {
-          list.push(form);
-        });
-      });
-      return list;
-    },
     parentOption() {
       let option = this.deepClone(this.tableOption);
-      let group = option.group;
-      let forms = option.forms;
-      if (!group) {
+
+      let hasGroup = option.group;
+      let hasForms = option.forms;
+
+      if (!hasGroup) {
         option = Object.assign(option, {
           group: [this.deepClone(option)]
         });
       }
-      if (group && forms) {
-        option.group.unshift({ forms });
+      if (hasGroup && hasForms) {
+        option.group.unshift({ forms: hasForms });
       }
       delete option.forms;
-      // console.log("parentOption", option);
+
       return option;
     },
     columnOption() {
       let list = [...this.parentOption.group] || [];
       list.forEach((ele, index) => {
-        ele.forms = ele.forms || [];
         // 循环列的全部属性
-        ele.forms.forEach((form, cindex) => {
+        (ele.forms || []).forEach((form, cindex) => {
           //动态计算列的位置，如果为隐藏状态则或则手机状态不计算
           if (form.hide !== true && form.display !== false && !this.isMobile) {
             form = calcCount(form, this.itemSpanDefault, cindex === 0);
@@ -529,6 +524,15 @@ export default {
         });
         //处理级联属性
         // ele.forms = calcCascader(ele.forms);
+      });
+      return list;
+    },
+    propOption() {
+      let list = [];
+      this.columnOption.forEach(option => {
+        option.forms.forEach(form => {
+          list.push(form);
+        });
       });
       return list;
     },

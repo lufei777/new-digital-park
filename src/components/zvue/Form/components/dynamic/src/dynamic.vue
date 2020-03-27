@@ -135,7 +135,7 @@ export default {
             }
 
             list.push(
-              Object.assign(ele, {
+              Object.assign(this.deepClone(ele), {
                 cell: true,
                 disabled: ele.disabled || this.disabled || this.viewBtn
               })
