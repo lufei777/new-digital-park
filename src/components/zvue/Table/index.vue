@@ -7,7 +7,7 @@
     >
       <slot
         :name="config.topSlotName"
-        :size="isMediumSize"
+        :size="controlSize"
         :columnConfig="columnConfig"
         :allData="allData"
         :tableShowData="tableShowData"
@@ -27,7 +27,8 @@
         :key="key"
         :data="tableShowData"
         :height="tableHeight"
-        :size="isMediumSize"
+        :size="controlSize"
+        @current-change="_currentChange"
         @row-click="rowClick"
         @row-dblclick="rowDblclick"
         @sort-change="sortChange"
@@ -95,7 +96,7 @@
                 :label="handleDetail(scopeRow.row,col,DIC[col.prop])"
                 :scopeRow="scopeRow"
                 :row="scopeRow.row"
-                :size="isMediumSize"
+                :size="controlSize"
                 :column="col"
                 :disabled="col.disabled"
                 :isEdit="cellEditFlag(scopeRow.row,col)"
@@ -106,7 +107,7 @@
                 v-model="scopeRow.row[col.prop]"
                 :isCrud="true"
                 :column="col"
-                :size="isMediumSize"
+                :size="controlSize"
                 :dic="DIC[col.prop]"
                 :upload-before="col.uploadBefore"
                 :upload-after="col.uploadAfter"
@@ -119,7 +120,7 @@
                 >{{_detailData(scopeRow.row[col.prop],col.dataType).join(' | ')}}</span>
                 <span v-else-if="col.displayAs=='switch' && ['switch'].includes(col.type)">
                   <z-switch
-                    :size="isMediumSize"
+                    :size="controlSize"
                     v-model="scopeRow.row[col.prop]"
                     :activeColor="col.activeColor"
                     :inactiveColor="col.inactiveColor"
@@ -144,14 +145,14 @@
         >
           <!-- 搜索框 -->
           <template v-if="uiConfig.searchable" slot="header">
-            <el-input v-model="searchVal" :size="isMediumSize" placeholder="检索" />
+            <el-input v-model="searchVal" :size="controlSize" placeholder="检索" />
           </template>
           <!-- 按钮 -->
           <template slot-scope="scopeRow">
             <!-- 编辑按钮 -->
             <el-button
               type="text"
-              :size="isMediumSize"
+              :size="controlSize"
               @click.stop="rowCell(scopeRow.row,scopeRow.$index)"
               v-if="vaildBoolean(parentOption.editBtn,config.editBtn)"
             >{{_editBtnText(scopeRow.row,scopeRow.index)}}</el-button>
@@ -159,7 +160,7 @@
             <el-button
               v-if="scopeRow.row.$cellEdit && vaildBoolean(parentOption.calcelBtn,config.calcelBtn)"
               type="text"
-              :size="isMediumSize"
+              :size="controlSize"
               @click.stop="rowCanel(scopeRow.row,scopeRow.$index)"
             >取 消</el-button>
             <!-- 操作列的slot -->
@@ -171,14 +172,14 @@
               :column="scopeRow.column"
               :index="scopeRow.$index"
               :isEdit="vaildBoolean(scopeRow.row.$cellEdit,false)"
-              :size="isMediumSize"
+              :size="controlSize"
             ></slot>
             <!-- 基础模式，如删除，编辑。参数为scopeRow -->
             <template v-for="btn in btnConfig.btns">
               <!-- :size="btn.size || uiConfig.size" -->
               <el-button
                 v-if="btn.type === 'basic' || !btn.type"
-                :size="btn.size || isMediumSize"
+                :size="btn.size || controlSize"
                 type="text"
                 :key="btn.label"
                 @click.stop="btn.handler(scopeRow)"
@@ -189,7 +190,7 @@
               <!-- 带下拉按钮，参数为scopeRow -->
               <z-dropdown
                 v-if="btn.type === 'dropDown'"
-                :size="btn.size || isMediumSize"
+                :size="btn.size || controlSize"
                 :key="btn.label"
                 :dropDown="btn"
                 :carryData="scopeRow"
@@ -231,7 +232,6 @@ import init from "../Form/common/init";
 import { validatenull, asyncValidator } from "../Form/utils/validate";
 import { deepClone, vaildData, vaildBoolean } from "../Form/utils/util";
 import { detail } from "../Form/utils/detail";
-import { initVal } from "../Form/utils/dataformat";
 import { DIC_SPLIT } from "../Form/global/variable";
 
 //单双击冲突timer
@@ -475,11 +475,6 @@ export default {
       // 分页有20px的margin-top
       this.tableHeight = _height - 20;
     },
-    //set
-    _setCurrentRowData(row) {
-      //设置当前选中行
-      this.currentRowData = row;
-    },
     _dataIndexInit() {
       //初始化序列的参数
       (this.isServerMode ? this.tableShowData : this.tableData).forEach(
@@ -521,12 +516,17 @@ export default {
       this.$emit("handle-pagination", pageSize, currentPage, this);
     },
     // 当前行是否可多选
-    _selectable: function(row, index) {
+    _selectable(row, index) {
       if (typeof this.tableMethods.selectable == "function") {
         return this.tableMethods.selectable(row, index);
       } else {
         return true;
       }
+    },
+    // 当前行发生变化
+    _currentChange(currentRow, oldCurrentRow) {
+      this.currentRowData = currentRow;
+      this.lastCurrentRowData = oldCurrentRow;
     },
 
     /**
@@ -689,7 +689,7 @@ export default {
       }
       // 如果是级联，则对结果进行处理
       if (column.type === "cascader") {
-        let { props, presentText, showAllLevels } = column;
+        let { prop, props, presentText, showAllLevels } = column;
         // 如果开启了elementUI级联的lazy模式，则从column.presentText中读值，此值在cascader的mounted中赋值
         if (props && props.lazy) {
           result = presentText;
@@ -721,8 +721,6 @@ export default {
       )
         return;
 
-      this._setCurrentRowData(row);
-
       clearTimeout(dblclickTimer);
       dblclickTimer = setTimeout(
         () => {
@@ -743,8 +741,6 @@ export default {
       )
         return;
 
-      this._setCurrentRowData(row);
-
       clearTimeout(dblclickTimer);
 
       this.tableMethods.rowDblclick &&
@@ -759,8 +755,6 @@ export default {
       }
 
       this.$refs.dataBaseTable.setCurrentRow(this.tableShowData[index]);
-
-      this._setCurrentRowData(this.tableShowData[index]);
     },
     //多选选择当前项
     toggleSelection(rowsIndex, selectedArr) {
@@ -867,7 +861,6 @@ export default {
     },
     //以下方法未添加
     toggleRowExpansion() {},
-    sort() {},
 
     /**
      * 外部调用方法
@@ -925,22 +918,30 @@ export default {
     },
     //搜索指定的属性配置
     findColumnIndex(prop) {
-      let result;
-      this.columnConfig.forEach((column, index) => {
+      for (let index = 0; index < this.columnConfig.length; index++) {
+        const column = this.columnConfig[index];
         if (column.prop === prop) {
-          result = index;
+          return index;
         }
-      });
-      return result;
+      }
+      return -1;
     },
     // 根据prop设置属性
     setColumnByProp(prop, setOptions) {
       let index = this.findColumnIndex(prop);
-      for (const key in setOptions) {
-        if (setOptions.hasOwnProperty(key)) {
-          const element = setOptions[key];
-          this.$set(this.columnConfig[index], key, element);
+      if (index !== -1) {
+        for (const key in setOptions) {
+          if (setOptions.hasOwnProperty(key)) {
+            const element = setOptions[key];
+            this.$set(this.columnConfig[index], key, element);
+          }
         }
+      } else {
+        this.$message({
+          type: "error",
+          message: `setColumnByProp -> 属性-${prop}-不存在`
+        });
+        console.error(`setColumnByProp -> 属性-${prop}-不存在`);
       }
     }
   },

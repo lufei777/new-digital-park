@@ -98,11 +98,7 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
             if (list.length <= 1) {
                 value = list.join(',')
             } else {
-                if (dataType === 'number') {
-                    value = list.map(ele => Number(ele))
-                } else {
-                    value = list;
-                }
+                value = list;
             }
         } else {
             value = [];

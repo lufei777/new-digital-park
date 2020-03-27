@@ -1,7 +1,7 @@
 <template>
   <FormTableTemplate v-if="reload">
     <template slot="form">
-      <z-form :ref="formData.ref" :options="formData" v-model="model">
+      <z-form :ref="formData.ref" :options="formData" v-model="model" @submit="searchSubmit">
         <template slot="btn" slot-scope="obj">
           <div>
             <el-button :disabled="obj.disabled" type="primary" @click="onClickSearchBtn(obj)">搜索</el-button>
@@ -13,29 +13,35 @@
 
     <template slot="table">
       <z-table :ref="tableData.ref" :options="tableData">
-        <template slot="custom-top" slot-scope="{size}">
+        <template slot="custom-top" slot-scope="{size,selectedData}">
           <el-button :size="size" type="primary" @click="launchcharge">{{launchField}}</el-button>
           <el-button :size="size" type="primary" @click="entryRecord">录入</el-button>
           <el-button :size="size" type="primary">导入</el-button>
           <el-button :size="size" type="primary">导出</el-button>
-          <el-button :size="size" type="primary">批量删除</el-button>
+          <el-button :size="size" type="primary" @click="bulkDel(selectedData)">批量删除</el-button>
         </template>
 
         <template slot="operation" slot-scope="{size,row}">
           <el-button :size="size" type="text" @click="detail(row)">详情</el-button>
+
           <!-- 待审核 -->
           <template v-if="row.examineState === 0">
-            <el-button :size="size" type="text" @click="update(row)">完善</el-button>
-            <el-button :size="size" type="text" @click="check(row)">审核</el-button>
+            <el-button v-if="!isLauncher(row)" :size="size" type="text" @click="check(row)">审核</el-button>
+            <!-- 作为发起人有删除 编辑-->
+            <template v-if="isLauncher(row)">
+              <el-button :size="size" type="text" @click="edit(row)">编辑</el-button>
+              <el-button :size="size" type="text" @click="del(row)">删除</el-button>
+            </template>
           </template>
+
           <!-- 已审核 -->
           <template v-if="row.examineState === 1">
             <el-button :size="size" type="text">打印票据</el-button>
-            <el-button :size="size" type="text">归档</el-button>
-          </template>
-          <!-- 已驳回 -->
-          <template v-if="row.examineState === 2">
-            <el-button :size="size" type="text">删除</el-button>
+            <!-- 作为发起人有完善 -->
+            <template v-if="isLauncher(row)">
+              <el-button :size="size" type="text" @click="update(row)">完善</el-button>
+              <el-button :size="size" type="text">归档</el-button>
+            </template>
           </template>
         </template>
       </z-table>
@@ -46,6 +52,8 @@
 <script>
 import FormTableTemplate from "../FormTableTemplate";
 import revenueExpendApi from "api/revenueExpendManage";
+import systemManageApi from "api/systemManage";
+import commonFun from "utils/commonFun.js";
 
 const examineState = [
   { label: "待审核", value: 0 },
@@ -68,6 +76,11 @@ const tradeType = [
   { label: "转账", value: 1 }
 ];
 
+let tableSendData = {
+  pageNum: 1,
+  pageSize: 10
+};
+
 export default {
   name: "RevenueRecord",
   components: { FormTableTemplate },
@@ -79,6 +92,7 @@ export default {
         ref: "formData",
         labelWidth: "100",
         menuBtn: false,
+        size: "small",
         forms: [
           {
             type: "input",
@@ -128,7 +142,7 @@ export default {
         ref: "tableData",
         customTop: true,
         customTopPosition: "right",
-        serverMode: {},
+        serverMode: { url: revenueExpendApi.getBudgetList },
         operation: {
           width: 170
         },
@@ -139,33 +153,7 @@ export default {
           { label: "入账日期", prop: "incomeTime", type: "date", width: 160 },
           {
             label: "发起人",
-            prop: "launchIdList",
-            type: "cascader",
-            dataType: "number",
-            dicData: [
-              {
-                label: "刘",
-                value: 1,
-                children: [
-                  {
-                    label: "晓",
-                    value: 2,
-                    children: [{ label: "航", value: 3 }]
-                  }
-                ]
-              },
-              {
-                label: "李",
-                value: 21,
-                children: [
-                  {
-                    label: "盼",
-                    value: 22,
-                    children: [{ label: "杰", value: 23 }]
-                  }
-                ]
-              }
-            ]
+            prop: "launchName"
           },
           { label: "应收金额", prop: "receivMoney" },
           {
@@ -202,8 +190,12 @@ export default {
           { label: "备注", prop: "remarks" }
         ],
         uiConfig: {
+          size: "small",
           height: "auto", //"", //高度
           selection: true //是否多选
+        },
+        tableMethods: {
+          selectable: row => this.isLauncher(row) && row.examineState === 0
         }
       }
     };
@@ -215,28 +207,18 @@ export default {
     init() {
       this.formatFormOptions(this.formData.forms);
       this.formatFormOptions(this.tableData.columnConfig);
-      /* this.$axios({
-        url: "./static/mock/revenuiExpend.json",
-        type: "get"
-      }).then(res => {
-        console.log(res);
-      }); */
       // 配置表格远程获取数据
-      if (this.budgetType === 0) {
-        this.tableData.serverMode = {
-          url: "./static/mock/revenue.json"
-        };
-      } else {
-        this.tableData.serverMode = {
-          url: "./static/mock/expend.json"
-        };
-      }
-      /* this.tableData.serverMode = {
-        url: revenueExpendApi.getBudgetList,
-        data: {
+      this.tableData.serverMode.data = Object.assign(
+        _.cloneDeep(tableSendData),
+        {
           budgetType: this.budgetType
         }
-      }; */
+      );
+      /* systemManageApi.getDeptUserTree().then(res => {
+        this.Table.setColumnByProp("launchIdList", {
+          dicData: res[0].childNode
+        });
+      }); */
     },
     formatFormOptions(config) {
       const fields = {
@@ -253,17 +235,20 @@ export default {
         }
       });
     },
-    onClickSearchBtn(...args) {
-      this.Form.getFormModel(res => {
-        console.log("model", res);
-      });
-      console.log("搜索", ...args);
+    searchSubmit(model, hide) {
+      hide();
+      this.tableData.serverMode.data = Object.assign(
+        _.cloneDeep(tableSendData),
+        model
+      );
+      this.refreshTable();
+    },
+    onClickSearchBtn() {
+      this.Form.submit();
     },
     clearForm(...args) {
       this.Form.resetForm();
     },
-    batchDels() {},
-    addTenant() {},
     routePush({ flag, row }) {
       let { recordId, examineState } = row || {};
       this.$router.push({
@@ -291,6 +276,37 @@ export default {
     update(row) {
       this.routePush({ flag: "update", row });
     },
+    del(row) {
+      this.bulkDel([row]);
+    },
+    edit(row) {
+      this.routePush({ flag: "edit", row });
+    },
+    bulkDel(selectedData) {
+      if (!selectedData.length) {
+        commonFun.deleteTip(this, false, "请选择数据");
+        return;
+      }
+
+      let ids = selectedData.map(item => {
+        return item.recordId;
+      });
+
+      commonFun.deleteTip(
+        this,
+        true,
+        "确定要删除吗?",
+        () => {
+          revenueExpendApi.deleteRecord(ids).then(res => {
+            this.refreshTable();
+          });
+        },
+        () => {}
+      );
+    },
+    isLauncher({ launchId }) {
+      return JSON.parse(localStorage.getItem("userInfo")).id === launchId;
+    },
     reloadPage() {
       this.reload = false;
       this.$nextTick(() => {
@@ -298,6 +314,9 @@ export default {
         this.model = {};
         this.reload = true;
       });
+    },
+    refreshTable() {
+      this.Table.refreshTable();
     }
   },
   computed: {

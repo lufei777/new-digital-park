@@ -210,7 +210,6 @@ export default {
   methods: {
     searchSubmit(model, hide) {
       hide();
-      let data = this.personalManageTable.serverMode.data;
       this.personalManageTable.serverMode.data = Object.assign(
         _.cloneDeep(tableSendData),
         model
