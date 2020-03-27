@@ -37,17 +37,14 @@ export default {
             top:'center',
             right:'30',
             textStyle:{
-              color:'#8FD3FA'
+              color:'#8FD3FA',
+              fontSize:this.moduleItem.largeScreen?this.moduleItem.fontSize:14
             },
           },
           seriesUi:{
             center:['35%','50%']
           }
       };
-      // $(window).resize(function(){
-      //   myPieChart.resize()
-      // }) ;
-      let resizeBox=$("#energy-electricity-proportion-chart").parents('.item-product-coms')
       ChartUtils.hollowPieChart(myPieChart, data);
     }
   },
