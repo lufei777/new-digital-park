@@ -54,27 +54,14 @@ import FormTableTemplate from "../FormTableTemplate";
 import revenueExpendApi from "api/revenueExpendManage";
 import systemManageApi from "api/systemManage";
 import commonFun from "utils/commonFun.js";
+import { RevenueExpendManageDic } from "utils/dictionary";
 
-const examineState = [
-  { label: "待审核", value: 0 },
-  { label: "已审核", value: 1 },
-  { label: "已驳回", value: 2 },
-  { label: "审核中", value: 3 }
-];
-const moduleId = [
-  { label: "租赁", value: 0 },
-  { label: "服务费", value: 1 },
-  { label: "专利费", value: 2 }
-];
-const moneyState = [
-  { label: "未到账", value: 0 },
-  { label: "已到账", value: 1 },
-  { label: "已逾期", value: 2 }
-];
-const tradeType = [
-  { label: "现金", value: 0 },
-  { label: "转账", value: 1 }
-];
+const dateValueDefault = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
+const dateValueFormat = "yyyy-MM-dd HH:mm:ss";
+const examineState = RevenueExpendManageDic.examineState;
+const moduleId = RevenueExpendManageDic.moduleId;
+const moneyState = RevenueExpendManageDic.moneyState;
+const tradeType = RevenueExpendManageDic.tradeType;
 
 let tableSendData = {
   pageNum: 1,
@@ -119,7 +106,7 @@ export default {
             prop: "incomeTime",
             placeholder: "选择日期时间",
             format: "yyyy-MM-dd",
-            valueFormat: "timestamp",
+            valueFormat: dateValueFormat,
             span: 8
           },
           {
@@ -128,7 +115,7 @@ export default {
             prop: "endTime",
             placeholder: "选择日期时间",
             format: "yyyy-MM-dd",
-            valueFormat: "timestamp",
+            valueFormat: dateValueFormat,
             span: 8
           },
           {
@@ -149,12 +136,9 @@ export default {
         columnConfig: [
           { label: "编号", prop: "recordId", width: 200 },
           { label: "收入名称", prop: "recordName" },
-          { label: "发起日期", prop: "launchTime", type: "date", width: 160 },
-          { label: "入账日期", prop: "incomeTime", type: "date", width: 160 },
-          {
-            label: "发起人",
-            prop: "launchName"
-          },
+          { label: "发起日期", prop: "launchTime", width: 160 },
+          { label: "入账日期", prop: "incomeTime", width: 160 },
+          { label: "发起人", prop: "launchName" },
           { label: "应收金额", prop: "receivMoney" },
           {
             label: "收入类型",
@@ -172,7 +156,6 @@ export default {
           {
             label: "截止日期",
             prop: "endTime",
-            type: "date",
             width: 160
           },
           {
@@ -221,13 +204,7 @@ export default {
       }); */
     },
     formatFormOptions(config) {
-      const fields = {
-        receivMoney: ["应收金额", "支出金额"],
-        recordName: ["收入名称", "支出名称"],
-        moduleId: ["收入类型", "支出类型"],
-        payName: ["收款方", "支付方"],
-        incomeTime: ["入账日期", "支出日期"]
-      };
+      const fields = RevenueExpendManageDic.fields;
 
       config.forEach(item => {
         if (item.prop in fields) {

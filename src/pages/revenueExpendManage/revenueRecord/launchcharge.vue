@@ -37,35 +37,16 @@
 import revenueExpendApi from "api/revenueExpendManage";
 import systemManageApi from "api/systemManage";
 import { CommonDic } from "utils/dictionary";
+import { RevenueExpendManageDic } from "utils/dictionary";
 
 const dateValueDefault = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
 const dateValueFormat = "yyyy-MM-dd HH:mm:ss";
 
-const examineType = [
-  { label: "待审核", value: 0 },
-  { label: "通过", value: 1 },
-  { label: "驳回", value: 2 }
-];
-const examineState = [
-  { label: "待审核", value: 0 },
-  { label: "已审核", value: 1 },
-  { label: "已驳回", value: 2 },
-  { label: "审核中", value: 3 }
-];
-const moduleId = [
-  { label: "租赁", value: 0 },
-  { label: "服务费", value: 1 },
-  { label: "专利费", value: 2 }
-];
-const moneyState = [
-  { label: "未到账", value: 0 },
-  { label: "已到账", value: 1 },
-  { label: "已逾期", value: 2 }
-];
-const tradeType = [
-  { label: "现金", value: 0 },
-  { label: "转账", value: 1 }
-];
+const examineState = RevenueExpendManageDic.examineState;
+const moduleId = RevenueExpendManageDic.moduleId;
+const moneyState = RevenueExpendManageDic.moneyState;
+const tradeType = RevenueExpendManageDic.tradeType;
+const examineType = RevenueExpendManageDic.examineType;
 
 const apiConfig = {
   add: {
@@ -321,7 +302,7 @@ export default {
       // examineState 审核状态
       let { flag = "add", recordId, examineState } = this.$route.query;
       // 赋值页面配置
-      this.pageConfig = { ...apiConfig[flag] };
+      this.pageConfig = apiConfig[flag];
 
       // 有budgetType，则需要对options进行格式化
       this.formOptions.group.forEach(group => {
@@ -391,13 +372,7 @@ export default {
       }
     },
     formatFormOptions(config) {
-      const fields = {
-        receivMoney: ["应收金额", "支出金额"],
-        recordName: ["收入名称", "支出名称"],
-        moduleId: ["收入类型", "支出类型"],
-        payName: ["收款方", "支付方"],
-        incomeTime: ["入账日期", "支出日期"]
-      };
+      const fields = RevenueExpendManageDic.fields;
 
       config.forEach(item => {
         if (item.prop in fields) {

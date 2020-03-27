@@ -1,7 +1,7 @@
 <template>
   <div>
     <z-table ref="crud" :options="options">
-      <template slot="indexHeader">
+      <!-- <template slot="indexHeader">
         <span v-if="addBtn">序号</span>
         <el-button
           v-else
@@ -13,10 +13,10 @@
           circle
           :style="{height:'unset',padding:'7px !important'}"
         ></el-button>
-      </template>
+      </template>-->
       <template slot-scope="{scopeRow:scope}" slot="index">
         <el-button
-          v-if="!delBtn && hoverList[scope.row.$index] && !disabled"
+          v-if="!delBtn && hoverList[scope.row.$index] && !allDisabled"
           @mouseout.native="mouseoutRow(scope.row.$index)"
           @click="delRow(scope.row.$index)"
           type="danger"
@@ -84,10 +84,12 @@ export default {
           let options = this.deepClone(this.children);
           // 分页配置
           if (options.uiConfig) {
+            options.uiConfig.size = this.children.size;
             options.uiConfig.pagination = false;
             options.uiConfig.height = "auto";
           } else {
             options.uiConfig = {
+              size: this.children.size,
               pagination: false,
               height: "auto"
             };
@@ -103,9 +105,10 @@ export default {
               fixed: true,
               width: 50,
               slot: true,
-              headerSlot: true
+              // headerSlot: true
               // 如果使用headerSlot，会有省略号
-              /* renderHeader: (h, { column, $index }) => {
+              // 使用headerSlot，disabled不能更新
+              renderHeader: (h, { column, $index }) => {
                 if (this.addBtn) {
                   return "序号";
                 }
@@ -115,13 +118,14 @@ export default {
                     type: "primary",
                     icon: "el-icon-plus",
                     disabled: this.disabled,
-                    circle: true
+                    circle: true,
+                    style: "height: unset;padding:7px !important;"
                   },
                   on: {
                     click: this.addRow
                   }
                 });
-              } */
+              }
             }
           ];
           this.columnOption.forEach((ele, index) => {
