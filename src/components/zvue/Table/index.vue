@@ -524,7 +524,7 @@ export default {
       }
     },
     // 当前行发生变化
-    _currentChange(currentRow, olCurrentRow) {
+    _currentChange(currentRow, oldCurrentRow) {
       this.currentRowData = currentRow;
       this.lastCurrentRowData = oldCurrentRow;
     },

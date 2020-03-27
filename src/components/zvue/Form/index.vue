@@ -286,9 +286,7 @@ export default {
             (!currentRules.message || currentRules.message.trim().length === 0)
           ) {
             if (currentRules.required) {
-              currentRules.message
-                ? ""
-                : (currentRules.message = `必填，请填写${item.label}`);
+              currentRules.message = `必填，请填写${item.label}`;
               currentRules.trigger ? "" : (currentRules.trigger = `change`);
             }
           }
