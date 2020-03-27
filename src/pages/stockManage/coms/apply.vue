@@ -231,7 +231,7 @@ export default {
         let data = {...obj,
           ...{
             assetId:obj.id || obj.assetId,
-            id:this.curDetail.id,
+            id:this.curDetail.id|| _.uniqueId(),
             description:obj.remark
           }
         }

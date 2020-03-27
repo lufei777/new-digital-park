@@ -40,10 +40,10 @@
         <img v-if="pageFlag==2" src="../../../../static/image/digitalPark/unity_priview.png"
              class="unity_priview"
              alt="">
-        <!--<iframe v-if="pageFlag==1"-->
-                <!--src="../../../../static/HomePage/index.html"-->
-                <!--frameborder="0"-->
-                <!--class="unity-frame"></iframe>-->
+        <iframe v-if="pageFlag==1"
+                src="../../../../static/HomePage/index.html"
+                frameborder="0"
+                class="unity-frame"></iframe>
 
       </div>
       <div class="dashboard-right">
@@ -145,15 +145,13 @@
         },
      },
       watch:{
-        productId(){
-          this.getProductList()
+        async productId(){
+          await this.getProductList()
           this.getModulesByType()
           let menuTree = JSON.parse(localStorage.getItem('menuTree'))
-          let menuList = JSON.parse(localStorage.getItem('menuList'))
+          // let menuList = JSON.parse(localStorage.getItem('menuList'))
           if(!this.productId){
             this.headName = menuTree[0].name
-          }else{
-            this.headName = menuList.name
           }
         },
       },
@@ -213,7 +211,7 @@
           if(this.productId){
             this.clientMenu = res.find((item)=>item.id==this.productId)
             this.fixedProList= this.clientMenu.childNode
-            this.headNames=this.clientMenu.name
+            this.headName=this.clientMenu.name
           }else{
             this.fixedProList=res
           }
@@ -362,9 +360,6 @@
       }
       this.getModulesByType()
       this.getProductList()
-      if(this.productId){
-        this.headName = JSON.parse(localStorage.getItem('menuList')).name
-      }
     }
   }
 </script>

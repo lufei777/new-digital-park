@@ -15,15 +15,13 @@
                 :list="[item]"
                 v-bind="getInnerOptions()"
                 v-show="animationFlag"
+                @start="onInnerStart"
               >
-                {{item && item.id}}
-                <!--<draggable>-->
-                  <!--<ItemProModule-->
-                    <!--class="inner-drag-content"-->
-                    <!--&lt;!&ndash;:moduleData="item"&ndash;&gt;-->
-                    <!--:type="1"-->
-                  <!--/>-->
-                <!--</draggable>-->
+                  <ItemProModule
+                    class="inner-drag-content"
+                    type="1"
+                    :moduleData="item?{...item,...{largeScreen:true}}:{}"
+                  />
               </draggable>
           </transition>
         </draggable>
@@ -35,19 +33,19 @@
   import Header from '../digitalPark/coms/header'
   import draggable from 'vuedraggable'
   import DigitalParkApi from '@/service/api/digitalPark'
-  // import ItemProModule from '@/digitalPark/coms/itemProModule'
+  import ItemProModule from '@/pages/digitalPark/coms/itemProModule'
   export default {
     name: 'LargeSizeScreenNormal',
     components: {
       Header,
       draggable,
-      // ItemProModule
+      ItemProModule
     },
     data () {
       let menuTree = JSON.parse(localStorage.getItem('menuTree'))
       return {
         headName:menuTree[0].name,
-        moduleList:[[],[],[],[]],
+        moduleList:[],
         animationFlag:false,
         outDisable:false,
         innerDisable:true,
@@ -65,10 +63,10 @@
     },
     methods: {
       getOptions(){
-        return {draggable:'.out-drag-product',group:"out-product"}
+        return {draggable:'.out-drag-product',group:"out-product",disabled:false}
       },
       getInnerOptions(){
-        return {draggable:'.inner-drag-content',group:'inner-product',disable:this.innerDisable}
+        return {draggable:'.inner-drag-content',group:'inner-product',disabled:true}
       },
       async getLargeScreenModuleList(){
         // let res = {
@@ -87,9 +85,11 @@
           width:document.body.offsetWidth,
           height:document.body.offsetHeight
         })
-        this.moduleList = res.modules
+        // res.modules[0].moduleList[0].componentName = 'productList'
+        this.moduleList = res.modules || []
         this.centerIndex = res.modules.findIndex(item=>JSON.stringify(item)=='null')
         this.drawPageStyle(res)
+
         setTimeout(()=>{
           $(".drag-panel").css(this.styleObj.panelStyle)
           $(".center-show").css(this.styleObj.centerStyle)
@@ -132,7 +132,10 @@
         $(".large-size-screen-normal .out-drag-product").css(this.styleObj.dragStyle)
       },
       onOutStart(){
-
+        console.log("lalala")
+      },
+      onInnerStart(){
+        console.log("inner lalala")
       }
     },
     mounted(){
@@ -148,11 +151,42 @@
 <style lang="less">
   .large-size-screen-normal{
     height: 100%;
+    font-size: @largeScreenFontSize;
+    color: @white;
+    .large-size-screen-header {
+      .digital-title-text{
+        font-size: 76px;
+      }
+      .park-logo{
+        font-size: 76px;
+        margin-right: 5px;
+      }
+    }
+    .digital-nav-operator{
+      font-size:@largeScreenFontSize;
+      .nav-right-item .el-input__inner{
+        font-size:@largeScreenFontSize;
+        color:@white;
+      }
+      .avatar-img{
+        width:50px;
+        height:50px;
+      }
+      .nav-right-item span{
+        width:140px;
+      }
+      .nav-right-item .el-input__suffix{
+         right:-55px;
+      }
+    }
     .out-drag-product{
-      background:@mainHoverColor;
-      font-size: 188px;
-      text-align: center;
-      color:red;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      background-image: url('../../../static/image/digitalPark/module_bg.png');
+      margin:auto;
+      /*font-size: 188px;*/
+      /*text-align: center;*/
+      /*color:red;*/
       /*margin:0 20px 20px 20px;*/
       /*margin:auto;*/
     }
@@ -168,7 +202,7 @@
       height:1080px !important;
       box-sizing: border-box;
       line-height: 1080px;
-      background: pink;
+      border:1px solid pink;
       margin:0 auto;
       /*grid-row-start: 1;*/
       /*grid-row-end: 4;*/
@@ -176,5 +210,18 @@
       /*grid-column-end: 6;*/
       /*margin:0 20px 20px 20px;*/
     }
+    .inner-drag-content{
+      height:100%;
+    }
+    .single-module-name{
+    }
+    .el-dropdown{
+      font-size:@largeScreenFontSize;
+      color:@white;
+    }
+  }
+  .el-select-dropdown__item,.el-dropdown-menu__item{
+    font-size:@largeScreenFontSize;
+    height:50px;
   }
 </style>

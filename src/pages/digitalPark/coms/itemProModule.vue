@@ -9,7 +9,7 @@
       <component v-for="(item,index) in moduleData.moduleList"
                  :key="index"
                  :is="item.componentName"
-                 :moduleItem="item"
+                 :moduleItem="{...item,...{largeScreen:moduleData.largeScreen,fontSize:30}}"
                  class="item-component flex-colum-center"
                  @click.native="onClickItemComponent(item)"
       />
