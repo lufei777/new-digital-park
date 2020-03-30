@@ -527,7 +527,7 @@ export default {
     };
   },
   created() {
-    if (this.$route.query) {
+    if (Object.keys(this.$route.query).length !== 0) {
       let params = this.$route.params;
       let flag = this.$route.query.flag;
       let model = JSON.parse(this.$route.query.model);

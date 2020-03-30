@@ -295,7 +295,7 @@ export default {
   },
   created() {
     this.init();
-    if (this.$route.query) {
+    if (Object.keys(this.$route.query).length !== 0) {
       // flag         页面标识
       // recordId     记录id
       // budgetType   页面类型 收入: 0   支出: 1

@@ -205,8 +205,7 @@ export default {
     };
   },
   created() {
-    console.log(this.$route.query);
-    if (this.$route.query || this.$route.params) {
+    if (Object.keys(this.$route.query).length !== 0) {
       let { id, flag } = this.$route.query;
       if (id) {
         this.pageConfig = _.cloneDeep(apiConfig[flag]);
