@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import axois from '../service/axios/AxiosInterceptors'
-import { flattenDeep } from '../utils/czUtils'
+import { flattenDeep } from 'utils/czUtils'
+import store from '../vuex/store'
 
 // 公共路由
 import vibeWeb from './vibeWeb'                               // 旧项目
@@ -59,5 +60,7 @@ router.beforeEach((to, from, next) => {
       next();
     }
   }
+
+  store.commit('digitalPark/activeMenuIndex', to.path);
 })
 export default router
