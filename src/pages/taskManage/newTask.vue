@@ -213,7 +213,7 @@ export default {
             offset: 2,
             rules: {
               required: true,
-              message: "请选择开始时间",
+              message: "请选择结束时间",
               trigger: "change"
             }
           },
@@ -708,7 +708,6 @@ export default {
       } else {
         this.$router.push("aboutMe");
       }
-
     },
     async detailTask() {
       this.$refs[this.newTaskForm.ref].setColumnByProp("department", {
