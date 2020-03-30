@@ -134,12 +134,13 @@ export default {
             dicData: CommonDic.sexDic
           },
           {
-            prop: "orgNameList",
+            prop: "orgName",
             label: "所在部门",
             fixed: "left",
             width: "120",
             type: "cascader",
             dataType: "number",
+            showAllLevels: false,
             props: {
               label: "name",
               value: "id",
@@ -157,10 +158,11 @@ export default {
             label: "岗位级别"
           },
           {
-            prop: "superiorList",
+            prop: "superior",
             label: "直接上级",
             type: "cascader",
-            dicData: [],
+            dataType: "number",
+            showAllLevels: false,
             props: {
               label: "name",
               value: "id",
@@ -194,15 +196,13 @@ export default {
   },
   created() {
     SystemManageApi.getDepartmentTree().then(res => {
-      this.zTable.setColumnByProp("orgNameList", {
-        dataType: "number",
+      this.zTable.setColumnByProp("orgName", {
         dicData: res[0].childNode
       });
     });
 
     SystemManageApi.getDeptUserTree().then(res => {
-      this.zTable.setColumnByProp("superiorList", {
-        dataType: "number",
+      this.zTable.setColumnByProp("superior", {
         dicData: res[0].childNode
       });
     });
@@ -210,7 +210,6 @@ export default {
   methods: {
     searchSubmit(model, hide) {
       hide();
-      let data = this.personalManageTable.serverMode.data;
       this.personalManageTable.serverMode.data = Object.assign(
         _.cloneDeep(tableSendData),
         model
@@ -223,6 +222,12 @@ export default {
         this.refreshTable();
       });
     },
+    bulkEdit(obj) {
+      console.log(obj);
+    },
+    getPropertyDetail(row) {
+      return leaseManageApi.houseDetails(row);
+    },
     addedProperty(obj) {
       this.$router.push({
         name: "addpersonal"
@@ -231,25 +236,15 @@ export default {
     bulkImport(obj) {
       this.$router.push({ name: "bulkimporthouseproperty" });
     },
-    bulkEdit(obj) {
-      console.log(obj);
-    },
-    getPropertyDetail(row) {
-      return leaseManageApi.houseDetails(row);
-    },
     propertyDetail({ scopeRow: { $index, row: model, _self } }) {
       // 为了区分messageId和userId，做的处理
       model["messageId"] = model.id;
 
       this.$router.push({
         name: "addpersonal",
-        params: {
-          extraOptions: {
-            disabled: true,
-            submitBtn: false,
-            emptyBtn: false
-          },
-          model
+        query: {
+          flag: "detail",
+          model: JSON.stringify(model)
         }
       });
     },
@@ -259,8 +254,9 @@ export default {
 
       this.$router.push({
         name: "addpersonal",
-        params: {
-          model
+        query: {
+          flag: "edit",
+          model: JSON.stringify(model)
         }
       });
     },

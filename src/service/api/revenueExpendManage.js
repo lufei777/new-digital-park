@@ -51,11 +51,27 @@ export default new class {
   recordToExamine() { }
 
   /**
+   * 编辑资金状态
+   * recordId    记录编号
+   */
+  @url('/oaApi/record/updateRecordByRecordId')
+  @post
+  updateRecordByRecordId() { }
+
+  /**
    * 修改资金状态
    * recordId    记录编号
    * moneyState   资金状态 0:未到账 1：已到账 2：已逾期
    */
-  @url('/oaApi/record/updateMoneyState')
-  @get
-  updateMoneyState() { }
+  @url('/oaApi/record/updateRecord')
+  @post
+  updateRecord() { }
+  
+  /**
+   * 删除资金
+   * ["SZ-229311847654752256","SZ-229311847654752258"]
+   */
+  @url('/oaApi/record/deleteRecord')
+  @post
+  deleteRecord() { }
 }

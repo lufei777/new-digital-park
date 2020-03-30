@@ -36,30 +36,17 @@
 <script>
 import revenueExpendApi from "api/revenueExpendManage";
 import systemManageApi from "api/systemManage";
-import { BooleanDic } from "utils/dictionary";
+import { CommonDic } from "utils/dictionary";
+import { RevenueExpendManageDic } from "utils/dictionary";
 
 const dateValueDefault = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
 const dateValueFormat = "yyyy-MM-dd HH:mm:ss";
 
-const examineState = [
-  { label: "待审核", value: 0 },
-  { label: "已审核", value: 1 },
-  { label: "已驳回", value: 2 }
-];
-const moduleId = [
-  { label: "租赁", value: 0 },
-  { label: "服务费", value: 1 },
-  { label: "专利费", value: 2 }
-];
-const moneyState = [
-  { label: "未到账", value: 0 },
-  { label: "已到账", value: 1 },
-  { label: "已逾期", value: 2 }
-];
-const tradeType = [
-  { label: "现金", value: 0 },
-  { label: "转账", value: 1 }
-];
+const examineState = RevenueExpendManageDic.examineState;
+const moduleId = RevenueExpendManageDic.moduleId;
+const moneyState = RevenueExpendManageDic.moneyState;
+const tradeType = RevenueExpendManageDic.tradeType;
+const examineType = RevenueExpendManageDic.examineType;
 
 const apiConfig = {
   add: {
@@ -67,10 +54,19 @@ const apiConfig = {
     title: "发起收费",
     api: revenueExpendApi.launchBudget
   },
+  edit: {
+    flag: "edit",
+    title: "编辑收费",
+    api: revenueExpendApi.updateRecordByRecordId
+  },
   update: {
     flag: "update",
     title: "完善",
-    api: revenueExpendApi.updateMoneyState
+    api: revenueExpendApi.updateRecord,
+    extraConfig: {
+      submitDisabled: false,
+      disabled: true
+    }
   },
   detail: {
     flag: "detail",
@@ -78,9 +74,6 @@ const apiConfig = {
     extraConfig: {
       disabled: true,
       submitBtn: false
-    },
-    extraOptions: {
-      textMode: true
     }
   },
   check: {
@@ -89,9 +82,6 @@ const apiConfig = {
     extraConfig: {
       disabled: true,
       submitBtn: false
-    },
-    extraOptions: {
-      textMode: true
     }
   },
   entry: {
@@ -104,9 +94,7 @@ export default {
   data() {
     return {
       dialogVisible: false,
-      model: {
-        // examineId: [{ checkPeople: "lxh" }]
-      },
+      model: {},
       formOptions: {
         ref: "formRef",
         labelWidth: "100",
@@ -114,114 +102,155 @@ export default {
         emptyBtn: false,
         width: "70%",
         size: "small",
-        forms: [
-          {
-            type: "input",
-            prop: "id",
-            display: false
-          },
-          {
-            type: "input",
-            label: "编号",
-            prop: "recordId",
-            readonly: true,
-            span: 12,
-            tip: "该编号自动生成"
-          },
-          {
-            type: "input",
-            label: "应收金额",
-            prop: "receivMoney",
-            dataType: "number",
-            span: 12,
-            append: "元",
-            rules: {
-              required: true,
-              trigger: "blur"
-            }
-          },
-          {
-            type: "input",
-            label: "收入名称",
-            prop: "recordName",
-            clearable: true,
-            span: 12,
-            rules: {
-              required: true,
-              trigger: "blur"
-            }
-          },
-          {
-            type: "select",
-            label: "收入类型",
-            prop: "moduleId",
-            clearable: true,
-            span: 12,
-            dicData: moduleId,
-            rules: {
-              required: true,
-              trigger: "blur"
-            }
-          },
-          {
-            type: "date",
-            label: "发起日期",
-            prop: "launchTime",
-            valueFormat: dateValueFormat,
-            valueDefault: dateValueDefault,
-            clearable: true,
-            span: 12,
-            rules: {
-              required: true,
-              trigger: "blur"
-            }
-          },
-          {
-            type: "input",
-            label: "支付方",
-            prop: "payName",
-            clearable: true,
-            span: 12,
-            rules: {
-              required: true,
-              trigger: "blur"
-            }
-          },
-          {
-            type: "input",
-            label: "发起人",
-            prop: "launchIdList",
-            type: "cascader",
-            dataType: "number",
-            props: {
-              label: "name",
-              value: "id",
-              children: "childNode"
-            },
-            clearable: true,
-            span: 12,
-            rules: {
-              required: true,
-              trigger: "blur"
-            }
-          },
-          {
-            type: "date",
-            label: "截止日期",
-            prop: "endTime",
-            format: "yyyy-MM-dd",
-            valueFormat: dateValueFormat,
-            clearable: true,
-            span: 12,
-            rules: {
-              required: true,
-              trigger: "blur"
-            }
-          }
-        ],
         group: [
           {
-            prop: "group1",
+            prop: "base",
+            forms: [
+              {
+                type: "input",
+                prop: "id",
+                display: false
+              },
+              {
+                type: "input",
+                label: "编号",
+                prop: "recordId",
+                readonly: true,
+                span: 12,
+                tip: "该编号自动生成",
+                tipPlacement: "top",
+                rules: { required: true }
+              },
+              {
+                type: "input",
+                label: "应收金额",
+                prop: "receivMoney",
+                dataType: "number",
+                span: 12,
+                append: "元",
+                rules: {
+                  required: true,
+                  trigger: "blur"
+                }
+              },
+              {
+                type: "input",
+                label: "收入名称",
+                prop: "recordName",
+                clearable: true,
+                span: 12,
+                rules: {
+                  required: true,
+                  trigger: "blur"
+                }
+              },
+              {
+                type: "select",
+                label: "收入类型",
+                prop: "moduleId",
+                clearable: true,
+                span: 12,
+                dicData: moduleId,
+                rules: {
+                  required: true,
+                  trigger: "blur"
+                }
+              },
+              {
+                type: "date",
+                label: "发起日期",
+                prop: "launchTime",
+                valueFormat: dateValueFormat,
+                valueDefault: dateValueDefault,
+                clearable: true,
+                span: 12,
+                rules: {
+                  required: true,
+                  trigger: "blur"
+                }
+              },
+              {
+                type: "date",
+                label: "截止日期",
+                prop: "endTime",
+                format: "yyyy-MM-dd",
+                valueFormat: dateValueFormat,
+                clearable: true,
+                span: 12,
+                rules: {
+                  required: true
+                }
+              },
+              {
+                type: "input",
+                label: "支付方",
+                prop: "payName",
+                clearable: true,
+                span: 12,
+                rules: {
+                  required: true,
+                  trigger: "blur"
+                }
+              },
+              {
+                type: "input",
+                label: "发起人",
+                prop: "launchIdList",
+                type: "cascader",
+                showAllLevels: false,
+                dataType: "number",
+                props: {
+                  label: "name",
+                  value: "id",
+                  children: "childNode"
+                },
+                clearable: true,
+                span: 12,
+                rules: {
+                  required: true,
+                  trigger: "blur"
+                }
+              }
+            ]
+          },
+          {
+            prop: "entry",
+            display: false,
+            forms: [
+              {
+                label: "入账日期",
+                prop: "incomeTime",
+                type: "date",
+                format: "yyyy-MM-dd",
+                valueFormat: dateValueFormat,
+                rules: {
+                  required: true
+                }
+              },
+              {
+                label: "资金状态",
+                prop: "moneyState",
+                type: "select",
+                dicData: moneyState,
+                valueDefault: 1,
+                rules: {
+                  required: true
+                }
+              },
+              {
+                label: "交易方式",
+                prop: "tradeType",
+                type: "select",
+                dicData: tradeType,
+                valueDefault: 0,
+                rules: {
+                  required: true
+                }
+              }
+            ]
+          },
+          {
+            prop: "checkPeopleReason",
             forms: [
               {
                 type: "textarea",
@@ -253,60 +282,32 @@ export default {
               {
                 type: "radio",
                 label: "是否审核",
-                prop: "isNeedCheck",
-                dataType: "string",
-                dicData: BooleanDic.isOrNot,
+                prop: "choice",
+                dicData: CommonDic.booleanDic,
                 valueDefault: 1,
                 span: 24
               }
             ]
           }
         ]
-      },
-      entryForms: [
-        {
-          label: "入账日期",
-          prop: "incomeTime",
-          type: "date",
-          format: "yyyy-MM-dd",
-          valueFormat: dateValueFormat,
-          rules: {
-            required: true
-          }
-        },
-        {
-          label: "资金状态",
-          prop: "moneyState",
-          type: "select",
-          dicData: moneyState,
-          valueDefault: 1,
-          rules: {
-            required: true
-          }
-        },
-        {
-          label: "交易方式",
-          prop: "tradeType",
-          type: "select",
-          dicData: tradeType,
-          valueDefault: 0,
-          rules: {
-            required: true
-          }
-        }
-      ]
+      }
     };
   },
   created() {
-    if (this.$route.query) {
+    this.init();
+    if (Object.keys(this.$route.query).length !== 0) {
       // flag         页面标识
       // recordId     记录id
       // budgetType   页面类型 收入: 0   支出: 1
       // examineState 审核状态
       let { flag = "add", recordId, examineState } = this.$route.query;
+      // 赋值页面配置
+      this.pageConfig = apiConfig[flag];
 
       // 有budgetType，则需要对options进行格式化
-      this.formatFormOptions(this.formOptions.forms);
+      this.formOptions.group.forEach(group => {
+        this.formatFormOptions(group.forms);
+      });
 
       // 拿取记录id
       if (recordId) {
@@ -314,17 +315,19 @@ export default {
         this.getBudgetByRecordId(recordId);
       }
 
-      // 赋值页面配置
-      this.pageConfig = { ...apiConfig[flag] };
-
-      // 如果是录入则要拼接其他填写字段
-      if (this.isEntry) {
-        this.formOptions.forms = [
-          ...this.formOptions.forms,
-          ...this.entryForms
-        ];
+      // 如果是录入 和 完善，则显示entry的group
+      if (this.isEntry || this.isUpdate || this.isDetail) {
+        this.getGroupByProp("entry").display = true;
+        if (this.isUpdate) {
+          this.disabledAllGroup();
+          this.getGroupByProp("entry").disabled = false;
+        }
       }
-      this.formOptions.group[0].forms.push(this.checkPeopleReason);
+
+      // 添加审核人表单
+      this.getGroupByProp("checkPeopleReason").forms.push(
+        this.checkPeopleReason
+      );
 
       // 最后将配置合并
       this.formOptions = {
@@ -332,31 +335,44 @@ export default {
         ...this.pageConfig.extraConfig
       };
     }
-
-    // 自动获取当前账单编号
-    revenueExpendApi.createRecordNum().then(res => {
-      this.model.recordId = res;
-    });
-
-    // 获取全部人员
-    systemManageApi.getDeptUserTree().then(res => {
-      this.Form.setColumnByProp("examineIdList", {
-        dicData: res[0].childrenNode
+  },
+  mounted() {
+    if (this.isEdit) {
+      this.Form.setColumnByProp("choice", {
+        disabled: true
       });
-      this.Form.setColumnByProp("launchIdList", {
-        dicData: res[0].childrenNode
-      });
-    });
+    }
   },
   methods: {
+    init() {
+      // 自动获取当前账单编号
+      revenueExpendApi.createRecordNum().then(res => {
+        this.model.recordId = res;
+      });
+
+      // 获取全部人员
+      systemManageApi.getDeptUserTree().then(res => {
+        this.Form.setColumnByProp("launchIdList", {
+          dicData: res[0].childNode
+        });
+      });
+    },
+    disabledAllGroup() {
+      for (let index = 0; index < this.formOptions.group.length; index++) {
+        let group = this.formOptions.group[index];
+        group.disabled = true;
+      }
+    },
+    getGroupByProp(prop) {
+      for (let index = 0; index < this.formOptions.group.length; index++) {
+        let group = this.formOptions.group[index];
+        if (group.prop === prop) {
+          return group;
+        }
+      }
+    },
     formatFormOptions(config) {
-      const fields = {
-        receivMoney: ["应收金额", "支出金额"],
-        recordName: ["收入名称", "支出名称"],
-        moduleId: ["收入类型", "支出类型"],
-        payName: ["收款方", "支付方"],
-        incomeTime: ["入账日期", "支出日期"]
-      };
+      const fields = RevenueExpendManageDic.fields;
 
       config.forEach(item => {
         if (item.prop in fields) {
@@ -372,7 +388,6 @@ export default {
       this.pageConfig
         .api(model)
         .then(res => {
-          console.log(res);
           this.$router.back();
         })
         .finally(msg => {
@@ -417,19 +432,19 @@ export default {
     }
   },
   computed: {
+    // 编辑
+    isEdit() {
+      return this.pageConfig.flag === "edit";
+    },
     // 录入
     isEntry() {
       return this.pageConfig.flag === "entry";
-    },
-    // 新增
-    isAdd() {
-      return this.pageConfig.flag === "add";
     },
     // 详情
     isDetail() {
       return this.pageConfig.flag === "detail";
     },
-    // 编辑
+    // 完善
     isUpdate() {
       return this.pageConfig.flag === "update";
     },
@@ -448,7 +463,9 @@ export default {
         prop: "recordPersonList",
         type: "dynamic",
         span: 12,
+        disabled: this.isEdit ? true : undefined,
         children: {
+          size: "small",
           align: "center",
           headerAlign: "center",
           columnConfig: [
@@ -457,6 +474,8 @@ export default {
               prop: "examineIdList",
               type: "cascader",
               dataType: "number",
+              dicUrl: systemManageApi.getDeptUserTree,
+              showAllLevels: false,
               props: {
                 label: "name",
                 value: "id",
@@ -508,13 +527,10 @@ export default {
                   width: 200
                 },
                 {
-                  label: "是否通过",
-                  prop: "choice",
-                  type: "switch",
-                  disabled: true,
-                  displayAs: "switch",
-                  activeColor: "green",
-                  inactiveColor: "red"
+                  label: "审核状态",
+                  prop: "examineType",
+                  type: "select",
+                  dicData: examineType
                 },
                 {
                   label: "审核时间",
@@ -549,10 +565,10 @@ export default {
     }
   },
   watch: {
-    "model.isNeedCheck"(newVal, oldVal) {
+    "model.choice"(newVal, oldVal) {
       this.$nextTick(() => {
         // 是否需要审核
-        if (newVal == BooleanDic.isOrNot[0].value) {
+        if (newVal == CommonDic.booleanDic[0].value) {
           // 是
           this.Form.setColumnByProp("recordPersonList", {
             display: true

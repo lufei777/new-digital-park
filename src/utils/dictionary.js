@@ -8,9 +8,20 @@ export const CommonDic = {
   }, {
     label: '保密',
     value: '0'
-  }]
+  }],
+  booleanDic: [
+    {
+      label: '是',
+      value: 1
+    },
+    {
+      label: '否',
+      value: 0
+    }
+  ]
 }
 
+// 租赁管理
 export const LeaseManageDic = {
   // 是否可出租
   isRent: [
@@ -76,11 +87,12 @@ export const AssetDic = {
     1: '资产领用',
   },
 
-  assetStatus:{
-    0:'领用'
+  assetStatus: {
+    0: '领用'
   }
 }
 
+// 人事管理
 export const PersonalManageDic = {
   employeeStatus: [
     {
@@ -197,6 +209,42 @@ export const PersonalManageDic = {
       value: "4"
     }
   ]
+}
+
+// 收支管理
+export const RevenueExpendManageDic = {
+  examineType: [
+    { label: "待审核", value: 0 },
+    { label: "通过", value: 1 },
+    { label: "驳回", value: 2 }
+  ],
+  examineState: [
+    { label: "待审核", value: 0 },
+    { label: "已审核", value: 1 },
+    { label: "已驳回", value: 2 },
+    { label: "审核中", value: 3 }
+  ],
+  moduleId: [
+    { label: "租赁", value: 0 },
+    { label: "服务费", value: 1 },
+    { label: "专利费", value: 2 }
+  ],
+  moneyState: [
+    { label: "未到账", value: 0 },
+    { label: "已到账", value: 1 },
+    { label: "已逾期", value: 2 }
+  ],
+  tradeType: [
+    { label: "现金", value: 0 },
+    { label: "转账", value: 1 }
+  ],
+  fields: {
+    receivMoney: ["应收金额", "支出金额"],
+    recordName: ["收入名称", "支出名称"],
+    moduleId: ["收入类型", "支出类型"],
+    payName: ["收款方", "支付方"],
+    incomeTime: ["入账日期", "支出日期"]
+  }
 }
 
 export const BooleanDic = {

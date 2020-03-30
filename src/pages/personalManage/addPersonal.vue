@@ -36,6 +36,15 @@ const apiConfig = {
   edit: {
     flag: "edit",
     title: "编辑人员"
+  },
+  detail: {
+    flag: "detail",
+    title: "查看人员",
+    extraOptions: {
+      disabled: true,
+      submitBtn: false,
+      emptyBtn: false
+    }
   }
 };
 // tabPanelOptions 和 options.group的顺序要一致
@@ -96,7 +105,7 @@ export default {
               }, */
               {
                 label: "所在部门",
-                prop: "orgNameList",
+                prop: "orgName",
                 // type: "input",
                 dataType: "number",
                 type: "cascader",
@@ -129,7 +138,7 @@ export default {
               },
               {
                 label: "直接上级",
-                prop: "superiorList",
+                prop: "superior",
                 // type: "input",
                 dataType: "number",
                 type: "cascader",
@@ -137,29 +146,7 @@ export default {
                 props: {
                   label: "name",
                   value: "id",
-                  children: "childNode",
-                  lazy: true,
-                  lazyLoad: function(node, resolve) {
-                    const { level, data } = node;
-                    if (level == 0) {
-                      SystemManageApi.getDepartmentTree().then(res => {
-                        resolve(res[0].childNode);
-                      });
-                    } else if (level === 2) {
-                      SystemManageApi.listBy({
-                        deptId: node.data.id
-                      }).then(res => {
-                        res.map(item => {
-                          item.name = item.name;
-                          item.leaf = true;
-                        });
-                        // console.log(res);
-                        resolve(res);
-                      });
-                    } else {
-                      resolve([]);
-                    }
-                  }
+                  children: "childNode"
                 },
                 rules: {
                   required: true,
@@ -540,12 +527,14 @@ export default {
     };
   },
   created() {
-    if (this.$route.query || this.$route.params) {
+    if (Object.keys(this.$route.query).length !== 0) {
       let params = this.$route.params;
+      let flag = this.$route.query.flag;
+      let model = JSON.parse(this.$route.query.model);
       // 传递过来的数据
-      if (!_.isEmpty(params.model)) {
-        this.pageConfig = _.cloneDeep(apiConfig.edit);
-        this.model = { ...this.model, ...params.model };
+      if (!_.isEmpty(model)) {
+        this.pageConfig = apiConfig[flag];
+        this.model = { ...this.model, ...model };
 
         this.userId = this.model.userId;
         this.messageId = this.model.messageId;
@@ -553,16 +542,17 @@ export default {
       // 传递过来额外的配置
       this.options = {
         ...this.options,
-        ...params.extraOptions
+        ...this.pageConfig.extraOptions
       };
-      // 如果有disabled属性，则为查看详情
-      if (this.options.disabled) {
-        this.pageConfig.title = "人员详情";
-      }
     }
 
     SystemManageApi.getDepartmentTree().then(res => {
-      this.$refs[this.options.ref].setColumnByProp("orgNameList", {
+      this.$refs[this.options.ref].setColumnByProp("orgName", {
+        dicData: res[0].childNode
+      });
+    });
+    SystemManageApi.getDeptUserTree().then(res => {
+      this.$refs[this.options.ref].setColumnByProp("superior", {
         dicData: res[0].childNode
       });
     });
@@ -670,7 +660,7 @@ export default {
   },
   computed: {
     isEdit() {
-      return this.pageConfig.flag === "edit";
+      return this.pageConfig.flag !== "add";
     },
     isBaseInfo() {
       return this.apiName.length === 0;
