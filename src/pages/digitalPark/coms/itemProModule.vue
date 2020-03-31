@@ -40,16 +40,15 @@
 
 <script>
   import draggable from 'vuedraggable'
-  import CommonFun from '../../../utils/commonFun'
+  import comsImport from './js/comsImport'
   import DigitalParkApi from '../../../service/api/digitalPark'
-  // import operateIncome from '../coms/operateIncome'
+  import CommonFun from '@/utils/commonFun'
   export default {
     name: 'ItemProModule',
     props:['moduleData','type','userProModuleList','hideHeader'],
     components: {
-      ...CommonFun.exportComs,
+      ...comsImport.exportComsList,
       draggable,
-      // operateIncome
     },
     data () {
       return {
@@ -114,13 +113,15 @@
         }
       },
       onClickItemComponent(item){
+        //需要后台配合修改
          if(this.hideHeader) return ;  //配置页点击不进行操作
          console.log(item)
-         let menuList = JSON.parse(localStorage.getItem('menuList'))
+         // let menuList = JSON.parse(localStorage.getItem('menuList'))
          item.level=3
-         if(CommonFun.loadThreeD(item,menuList)){
-          return;
-         }
+         // if(CommonFun.loadClientPage(item,menuList)){
+         //  return;
+         // }
+         CommonFun.loadPage(item)
       },
       onClickMoreBtn(){
         Cookies.set('moduleType',2)
@@ -131,20 +132,7 @@
              }
           })
         })
-        let routeAddress = this.moduleData.routeAddress
-        console.log(this.moduleData)
-        if(routeAddress){
-          // 如果带有@字符，则跳转旧项目
-          if(routeAddress.indexOf('@') != -1){
-            CommonFun.loadOldPage(this.moduleData);
-          }else{
-            setTimeout(()=>{
-              this.$router.push(routeAddress);
-            },500)
-          }
-        }else{
-          this.$router.push('/digitalPark/defaultPage?type=2')
-        }
+        CommonFun.loadPage(this.moduleData)
       }
     },
     mounted(){
