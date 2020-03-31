@@ -130,7 +130,7 @@ export default {
 .inspection-coms {
   .my-chart {
     margin-top: 20px;
-    // background: @white;
+    background: transparent;
     .ganged-log-header {
       width: 100%;
       height: 50px;
