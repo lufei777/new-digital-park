@@ -120,20 +120,20 @@
       </div>
     </div>
     <!-- 能耗分类分项占比图 -->
-    <div class="tip flex-align">
-      <span class="icon"></span>
-      <span>能耗分类分项占比图</span>
-    </div>
+    <!--<div class="tip flex-align">-->
+      <!--<span class="icon"></span>-->
+      <!--<span>能耗分类分项占比图</span>-->
+    <!--</div>-->
 
-    <div class="pieCharts flex-align-between">
-      <div class="pieChart box">
-        <div ref="pieChart1" class="chart-inner"></div>
-      </div>
-      <div class="pieChart box">
-        <div ref="pieChart2" class="chart-inner"></div>
-      </div>
-      <!-- <div class="pieChart box"></div> -->
-    </div>
+    <!--<div class="pieCharts flex-align-between">-->
+      <!--<div class="pieChart box">-->
+        <!--<div ref="pieChart1" class="chart-inner"></div>-->
+      <!--</div>-->
+      <!--<div class="pieChart box">-->
+        <!--<div ref="pieChart2" class="chart-inner"></div>-->
+      <!--</div>-->
+      <!--&lt;!&ndash; <div class="pieChart box"></div> &ndash;&gt;-->
+    <!--</div>-->
 
     <div class="tip flex-align">
       <span class="icon"></span>
@@ -226,12 +226,12 @@ export default {
         { label: "建筑楼层", prop: "floor", sortable: false },
         { label: "综合耗能", prop: "elecAndWaterSum", sortable: "custom" },
         { label: "总用电量", prop: "elecSum", sortable: "custom" },
-        { label: "照明用电", prop: "zmElec", sortable: "custom" },
-        { label: "空调用电", prop: "zmElec", sortable: "custom" }
+        // { label: "照明用电", prop: "zmElec", sortable: "custom" },
+        // { label: "空调用电", prop: "zmElec", sortable: "custom" }
         // { label: "特殊用电", prop: "tsElec", sortable: "custom" },
         // { label: "其他用电", prop: "tsElec", sortable: "custom" },
         // { label: "动力用电", prop: "dlElec", sortable: "custom" },
-        // { label: "总用水量", prop: "waterSum", sortable: "custom" },
+        { label: "总用水量", prop: "waterSum", sortable: "custom" },
         // { label: "生活用水", prop: "shWater", sortable: "custom" },
         // { label: "生活污水", prop: "wsWater", sortable: "custom" },
         // { label: "空调用水", prop: "ktWater", sortable: "custom" },

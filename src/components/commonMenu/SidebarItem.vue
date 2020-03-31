@@ -63,13 +63,13 @@ export default {
     onClickLastMenu(item) {
       if (this.specialRoute) {
         //瀑布流
-        CommonFun.goToZGManage(item)
+        // CommonFun.goToZGManage(item)
         this.setMenuList(item);
       } else {
-        if (CommonFun.loadThreeD(item, JSON.parse(localStorage.getItem('menuList')))) {
-          return;
-        }
-        this.setActiveIndex(item);
+        // if (CommonFun.loadClientPage(item, JSON.parse(localStorage.getItem('menuList')))) {
+        //   return;
+        // }
+        // this.setActiveIndex(item);
         CommonFun.loadPage(item);
       }
     },
@@ -103,12 +103,12 @@ export default {
           this.normalShortcutList();
         }
       }
-      if (CommonFun.loadThreeD(item, secondMenu)) {
-        return;
-      }
-      this.setActiveIndex(item)
+      // if (CommonFun.loadClientPage(item, secondMenu)) {
+      //   return;
+      // }
+      // this.setActiveIndex(item)
       CommonFun.loadPage(item);
-      },
+    },
     setActiveIndex(menu) {
       if (menu.childNode && menu.childNode.length != 0) {
         this.setActiveIndex(menu.childNode[0]);

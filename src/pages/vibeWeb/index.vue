@@ -19,6 +19,7 @@ import commonIndexLayout from "../commonProject/coms/commonIndexLayout";
 import Sidebar from "./menu/SideBar";
 import NavOperator from "../digitalPark/coms/navOperator";
 import myIframe from "./iframe";
+import CommonFun from '@/utils/commonFun'
 
 export default {
   name: "CommonIndexLayout",
@@ -33,9 +34,10 @@ export default {
     let menuList = JSON.parse(localStorage.getItem("menuList"));
     let show_menu = localStorage.getItem("show_menu");
     console.log(menuList.childNode);
+    let iframeSrc = Cookies.get("activeMenuIndex")
     return {
       iframeConfig: {
-        src: show_menu.split("@")[1]
+        src: iframeSrc.split("@")[1]
       },
       menuList: menuList.childNode,
       menuConfig: {
@@ -53,7 +55,8 @@ export default {
         },
         handleClose(...args) {
           _this.handleClose(args);
-        }
+        },
+
       }
     };
   },
@@ -83,6 +86,11 @@ export default {
       }
     },
     handleSelect(key, keyPath, curDom) {
+      // console.log(key, keyPath,curDom.$vnode.context.item)
+      let item = curDom.$vnode.context.item
+      if (CommonFun.loadClientPage(item)) {
+        return;
+      }
       this.loadPage(key, keyPath);
     },
     handleOpen(key, keyPath) {
@@ -92,7 +100,7 @@ export default {
       console.log("handleClose", args);
     },
     loadPage(key, keyPath) {
-      console.log(key,keyPath)
+      // console.log(111,key,keyPath)
       // 如果key没有值，则默认keyPath第一个
       if (key.length === 0) {
         key = keyPath[0];

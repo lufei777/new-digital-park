@@ -191,25 +191,18 @@ export default {
       );
       this.$router.push("/vibe-web");
     },
-    loadPage(item) {
-
-      this.$store.commit("digitalPark/activeMenuIndex",CommonFun.setMenuIndex(item))
-      if (item.routeAddress) {
-        if (item.routeAddress.indexOf("@") != -1) {
-          CommonFun.loadOldPage(item);
-        } else {
-          this.$router.push(item.routeAddress);
-        }
-      } else {
-        this.$router.push("/digitalPark/defaultPage");
-      }
-    },
-    goToWebPage(item){
-
+    goToWebPage(item,obj){
+      //如果只有第一个参数，渲染的menu就是此对象的childNode；
+      //如果有第二个参数,渲染的menu就是当前点击的子菜单所在的二级菜单，obj为当前点击的子菜单
       item  = JSON.parse(item)
+      let curMenu = item
+      if(obj){
+        obj = JSON.parse(obj)
+        curMenu = obj
+      }
       console.log("itemfanfeifei",item)
       this.$store.commit("digitalPark/menuList",item)
-      this.loadPage(item)
+      CommonFun.loadPage(curMenu)
     }
   },
   mounted() {

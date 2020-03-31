@@ -112,7 +112,7 @@ export default {
     },
     onClickItemShortcut(item){
       this.$store.commit("digitalPark/activeMenuIndex","");
-      if(commonFun.loadThreeD(item,JSON.parse(localStorage.getItem("menuList")))){
+      if(commonFun.loadClientPage(item,JSON.parse(localStorage.getItem("menuList")))){
         return ;
       }else{
         this.$store.commit("digitalPark/menuList",item);

@@ -148,27 +148,8 @@ export default {
     onClickItemProduct(item) {
       Cookies.set("moduleType", 2);
       this.$store.commit("digitalPark/menuList",item);
-      // 跳转三维
-      if (CommonFun.loadThreeD(item)) {
-        return;
-      }
-      CommonFun.goToZGManage(item)
-      // 跳转路由
-      // 192.168.1.69：9002/html
-      let routeAddress = item.routeAddress;
-      if (routeAddress) {
-        // 如果带有@字符，则跳转旧项目
-        CommonFun.setShortcutList(this.productList)
-        if (routeAddress.indexOf("@") != -1) {
-          CommonFun.loadOldPage(item);
-        } else {
-          // setTimeout(() => {
-            this.$router.push(item.routeAddress);
-          // }, 300);
-        }
-      } else {
-        this.$router.push("/digitalPark/defaultPage");
-      }
+      CommonFun.setShortcutList(this.productList)
+      CommonFun.loadPage(item)
     },
     onShowMoreProduct() {
       this.showMoreProduct = !this.showMoreProduct;
