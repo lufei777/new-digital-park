@@ -106,7 +106,6 @@
   </div>
 </template>
 <script>
-
 import props from "../../../common/props";
 import events from "../../../common/events";
 import { validatenull } from "../../../utils/validate";
@@ -459,8 +458,5 @@ export default {
   position: absolute;
   z-index: 2001;
   overflow: hidden;
-  .el-scrollbar__wrap {
-    overflow-x: hidden;
-  }
 }
 </style>
