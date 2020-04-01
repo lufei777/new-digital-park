@@ -182,6 +182,7 @@
   </div>
 </template>
 <script>
+
 import {
   deepClone,
   vaildData,
@@ -614,7 +615,7 @@ export default {
     border: none !important;
     background: none;
   }
-  .z-form-upload {
+  .zvue-form-upload {
     // 头像上传
     .picture-list .el-upload {
       border: 1px dashed #d9d9d9;
@@ -651,7 +652,7 @@ export default {
   // 下拉树的样式调整
   .zvue-input-tree {
     .el-scrollbar__wrap {
-      overflow-x: hidden !important;
+      overflow-x: hidden;
     }
     .el-tree-node__content {
       padding: 0;

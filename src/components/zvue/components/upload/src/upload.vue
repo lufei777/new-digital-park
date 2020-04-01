@@ -1,5 +1,5 @@
 <template>
-  <div class="z-form-upload" v-loading.lock="loading">
+  <div class="zvue-form-upload" v-loading.lock="loading">
     <el-upload
       :class="{'picture-list':listType=='picture-img','el-upload_disabled':disabled}"
       :action="action"
