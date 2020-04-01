@@ -98,17 +98,17 @@ export default {
   },
   methods: {
     handleSelect(key, keyPath) {
-      if (key) {
-        if (key.indexOf("null") != -1) {
-          this.$router.push("/digitalPark/defaultPage");
-        } else if (key.indexOf("@") != -1) {
-          commonFun.loadOldPage(key, true);
-        } else {
-          key = key.slice(key.indexOf("/"));
-          this.$router.push(key);
-          // Cookies.set("activeMenuIndex", key);
-        }
-      }
+      // if (key) {
+      //   if (key.indexOf("null") != -1) {
+      //     this.$router.push("/digitalPark/defaultPage");
+      //   } else if (key.indexOf("@") != -1) {
+      //     commonFun.loadOldPage(key, true);
+      //   } else {
+      //     key = key.slice(key.indexOf("/"));
+      //     this.$router.push(key);
+      //     // Cookies.set("activeMenuIndex", key);
+      //   }
+      // }
     },
     handleOpen(key) {},
     handleClose(key) {},
@@ -117,14 +117,13 @@ export default {
     },
     onClickItemShortcut(item){
       this.$store.commit("digitalPark/activeMenuIndex","");
-      if(commonFun.loadThreeD(item,JSON.parse(localStorage.getItem("menuList")))){
+      if(commonFun.loadClientPage(item)){
         return ;
       }else{
         this.$store.commit("digitalPark/menuList",item);
         // commonFun.loadPage(item)
         if (item.routeAddress) {
           if (item.routeAddress.indexOf("@") != -1) {
-            localStorage.setItem('show_menu', item.routeAddress)
             Cookies.set('activeMenuIndex', item.routeAddress)
             if(this.$route.path=="/vibe-web"){
               location.reload()

@@ -31,7 +31,7 @@ export default {
       let res = await CommonApi.getAlarmProportion();
       this.rlarmProportionData = res;
       this.rlarmProportionData.alarms.map(item => {
-        item.numberPercentage = ((item.number / res.allAlarm) * 100).toFixed(2);
+        item.numberPercentage =res.allAlarm?((item.number / res.allAlarm) * 100).toFixed(2):0;
       });
     }
   },

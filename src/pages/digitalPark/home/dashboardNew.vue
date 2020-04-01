@@ -210,6 +210,9 @@
           })
           if(this.productId){
             this.clientMenu = res.find((item)=>item.id==this.productId)
+            if(this.clientMenu.childNode[0].name=="概览"){
+              this.clientMenu.childNode.shift()
+            }
             this.fixedProList= this.clientMenu.childNode
             this.headName=this.clientMenu.name
           }else{
@@ -285,29 +288,31 @@
             Cookies.set('moduleType',1)
           }
           CommonFun.setShortcutList(this.fixedProList)
-          //跳转三维客户端
-          if(CommonFun.loadThreeD(item,this.clientMenu)){
-            if(item.level==2){
-              this.getModulesByType()
-            }
-            return;
-          }
-          CommonFun.goToZGManage(item)
-          this.$store.commit("digitalPark/activeMenuIndex","")
           this.$store.commit("digitalPark/menuList",item)
-          let routeAddress = item.routeAddress;
-          if (routeAddress) {
-            // 如果带有@字符，则跳转旧项目
-            if (routeAddress.indexOf("@") != -1) {
-              CommonFun.loadOldPage(item);
-            } else {
-              setTimeout(() => {
-                this.$router.push(item.routeAddress);
-              }, 500);
-            }
-          } else {
-            this.$router.push("/digitalPark/defaultPage");
-          }
+          CommonFun.loadPage(item)
+          //跳转三维客户端
+          // if(CommonFun.loadClientPage(item,this.clientMenu)){
+          //   if(item.level==2){
+          //     this.getModulesByType()
+          //   }
+          //   return;
+          // }
+          // CommonFun.goToZGManage(item)
+          // this.$store.commit("digitalPark/activeMenuIndex","")
+
+          // let routeAddress = item.routeAddress;
+          // if (routeAddress) {
+          //   // 如果带有@字符，则跳转旧项目
+          //   if (routeAddress.indexOf("@") != -1) {
+          //     CommonFun.loadOldPage(item);
+          //   } else {
+          //     setTimeout(() => {
+          //       this.$router.push(item.routeAddress);
+          //     }, 500);
+          //   }
+          // } else {
+          //   this.$router.push("/digitalPark/defaultPage");
+          // }
         },
         getInnerOptions(){
           return {draggable:'.inner-drag-content',disabled:!this.innerDragFlag,group:'product'}

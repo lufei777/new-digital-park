@@ -79,7 +79,7 @@
             {
               type: "input",
               label: "邮箱",
-              prop: "email",
+              prop: "mail",
               clearable: true,
               span: 24,
               rules: {
@@ -90,7 +90,7 @@
             {
               type: "input",
               label: "手机号",
-              prop: "telephone",
+              prop: "phone",
               clearable: true,
               span: 24,
               rules: {

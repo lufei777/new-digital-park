@@ -220,8 +220,8 @@
       color:@white;
     }
   }
-  .el-select-dropdown__item,.el-dropdown-menu__item{
+ /* .el-select-dropdown__item,.el-dropdown-menu__item{
     font-size:@largeScreenFontSize;
     height:50px;
-  }
+  }*/
 </style>

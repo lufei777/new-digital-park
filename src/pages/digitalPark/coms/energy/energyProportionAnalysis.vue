@@ -57,7 +57,7 @@ export default {
     initChart(res) {
       let vm = this;
       let myChart = echarts.init(this.$refs.myChart ||document.getElementById('energy-proportion-analysis-chart'));
-      let xAxis = res.value.map(item => item.date.slice(0, 7));
+      let xAxis = res.value && res.value.map(item => item.date && item.date.slice(0, 7));
       let dqzh = {
         name: "当期综合能耗",
         type: "bar",

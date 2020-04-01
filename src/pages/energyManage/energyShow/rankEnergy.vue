@@ -3,8 +3,9 @@
     <div class="out-box radius-shadow">
         <ConditionSelect :showEnergy="false" :get-data-flag="getDataFlag"/>
     </div>
-    <div class="flex-align-between">
-      <div class="rank-box radius-shadow flex-align-center">
+    <!--flex-align-center-->
+    <div class="flex">
+      <div class="rank-box radius-shadow flex-align-center" style="margin-right:20px;">
         <h4 class="rank-tip">总用电量</h4>
         <span class="rank-value">{{overViewData.elecSum}}<span>kwh</span></span>
       </div>
@@ -12,8 +13,8 @@
         <h4 class="rank-tip">总用水量</h4>
         <span class="rank-value">{{overViewData.waterSum}}<span>m³</span></span>
       </div>
-      <div class="rank-box radius-shadow my-chart" ref="myChart1"></div>
-      <div class="rank-box radius-shadow my-chart" ref="myChart2"></div>
+      <!--<div class="rank-box radius-shadow my-chart" ref="myChart1"></div>-->
+      <!--<div class="rank-box radius-shadow my-chart" ref="myChart2"></div>-->
     </div>
     <div class="table-box radius-shadow">
       <div class="table-tip">{{commonTip}}能耗展示排名</div>
@@ -137,12 +138,12 @@
           {label: '建筑楼层', prop:'floor'},
           {label:'综合耗能',prop:'elecAndWaterSum',sortable:'custom'},
           {label:'总用电量',prop:'elecSum',sortable:'custom'},
-          {label:'照明用电',prop:'zmElec',sortable:'custom'},
-          {label:'空调用电',prop:'zmElec',sortable:'custom'},
+          // {label:'照明用电',prop:'zmElec',sortable:'custom'},
+          // {label:'空调用电',prop:'zmElec',sortable:'custom'},
           // {label:'特殊用电',prop:'tsElec',sortable:'custom'},
           // {label:'其他用电',prop:'tsElec',sortable:'custom'},
           // {label:'动力用电',prop:'dlElec',sortable:'custom'},
-          // {label:'总用水量',prop:'waterSum',sortable:'custom'},
+          {label:'总用水量',prop:'waterSum',sortable:'custom'},
           // {label:'生活用水',prop:'shWater',sortable:'custom'},
           // {label:'生活污水',prop:'wsWater',sortable:'custom'},
           // {label:'空调用水',prop:'ktWater',sortable:'custom'},

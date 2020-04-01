@@ -69,13 +69,13 @@
   import draggable from 'vuedraggable'
   import HomePage from '../home/index'
   import Dashboard from '../home/dashboard'
-  import CommonFun from '../../../utils/commonFun'
+  import comsImport from '../coms/js/comsImport'
   import {mapState} from 'vuex'
   import DashboardNew from '../home/dashboardNew'
   export default {
     name: 'ModuleConfigure',
     components: {
-      ...CommonFun.exportComs,
+      ...comsImport.exportComsList,
       Dashboard,
       draggable,
       HomePage,

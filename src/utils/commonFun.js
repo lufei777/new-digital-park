@@ -1,81 +1,7 @@
-import energyProportionAnalysis from '../pages/digitalPark/coms/energy/energyProportionAnalysis'
-import energyElectricityProportion from '../pages/digitalPark/coms/energy/energyElectricityProportion'
-import operateIncome from '../pages/digitalPark/coms/income/operateIncome'
-import buildingStatusProportion from '../pages/digitalPark/coms/statis/buildingStatusProportion'
-import assetTypeProportion from '../pages/digitalPark/coms/asset/assetTypeProportion'
-import energyConsumptionRanking from '../pages/digitalPark/coms/energy/energyConsumptionRanking'
-import buildingEarlyWarningAlarm from '../pages/digitalPark/coms/alarm/buildingEarlyWarningAlarm'
-import operateExpenditure from '../pages/digitalPark/coms/income/operateExpenditure'
-import assetGrowthStatistics from '../pages/digitalPark/coms/asset/assetGrowthStatistics'
-import taskRanking from '../pages/digitalPark/coms/task/taskRanking'
-import attendanceDetail from '../pages/digitalPark/coms/duty/attendanceDetail'
-import taskPersonTask from '../pages/digitalPark/coms/task/taskPersonTask'
-import TestModuleOne from '../pages/digitalPark/coms/energy/TestModuleOne'
-import TestModuleTwo from '../pages/digitalPark/coms/parking/TestModuleTwo'
-import TestModuleThree from '../pages/digitalPark/coms/energy/TestModuleThree'
-import emergencies from '../pages/digitalPark/coms/alarm/emergencies'
-import escapeRoutes from '../pages/digitalPark/coms/alarm/escapeRoutes'
-import saleStatistics from '../pages/digitalPark/coms/statis/saleStatistics'
-import inventoryAnalysis from '../pages/digitalPark/coms/stock/inventoryAnalysis'
-import messageRelease from '../pages/digitalPark/coms/message/messageRelease'
-import environmentalMonitoring from '../pages/digitalPark/coms/buildMonitor/environmentalMonitoring'
-import waterSupplyAndDrainage from '../pages/digitalPark/coms/buildMonitor/waterSupplyAndDrainage'
-import hvac from '../pages/digitalPark/coms/buildMonitor/hvac'
-import elevatorMonitoring from '../pages/digitalPark/coms/buildMonitor/elevatorMonitoring'
-import accessControl from '../pages/digitalPark/coms/security/accessControl'
-import intrusionAlarm from '../pages/digitalPark/coms/security/intrusionAlarm'
-import videoMonitoring from '../pages/digitalPark/coms/security/videoMonitoring'
-import inspection from '../pages/digitalPark/coms/security/inspection'
-import healthDegree from '../pages/digitalPark/coms/fire/healthDegree'
-import gangedLog from '../pages/digitalPark/coms/fire/gangedLog'
-import deviceTypeAlarmProportion from '../pages/digitalPark/coms/fire/deviceTypeAlarmProportion'
-import alarmNews from '../pages/digitalPark/coms/alarm/alarmNews'
-import UPSMonitoring from '../pages/digitalPark/coms/computerRoomRing/UPSMonitoring'
-import airConditioner from '../pages/digitalPark/coms/computerRoomRing/airConditioner'
-import electricTransformerAndDistribution from '../pages/digitalPark/coms/computerRoomRing/electricTransformerAndDistribution'
-import productList from '../pages/digitalPark/coms/common/productList'
 import router from '@/router'
 import axios from 'axios'
+import store from '@/vuex/store';
 class commonFun {
-  exportComs = {
-    energyProportionAnalysis,
-    energyElectricityProportion,
-    operateIncome,
-    buildingStatusProportion,
-    assetTypeProportion,
-    energyConsumptionRanking,
-    buildingEarlyWarningAlarm,
-    operateExpenditure,
-    assetGrowthStatistics,
-    taskRanking,
-    attendanceDetail,
-    taskPersonTask,
-    TestModuleOne,
-    TestModuleTwo,
-    TestModuleThree,
-    emergencies,
-    escapeRoutes,
-    saleStatistics,
-    inventoryAnalysis,
-    messageRelease,
-    environmentalMonitoring,
-    waterSupplyAndDrainage,
-    hvac,
-    elevatorMonitoring,
-    videoMonitoring,
-    accessControl,
-    intrusionAlarm,
-    inspection,
-    healthDegree,
-    gangedLog,
-    deviceTypeAlarmProportion,
-    alarmNews,
-    UPSMonitoring,
-    airConditioner,
-    electricTransformerAndDistribution,
-    productList
-  }
-
   menuData = {
     "id": 1,
     "parent": 0,
@@ -1656,26 +1582,28 @@ class commonFun {
     });
   }
 
-  // 跳转链接
-  loadOldPage(item, routeOldProject) {
-    // 直接通过浏览器改变href跳转
-    if (routeOldProject) {
-      sessionStorage.setItem('park_home_Page', location.href);
-      location.href = OLDPROJECTHOME + '?forward=' + item.split('@')[1];
-    } else {
-      // 通过vibeWeb组件，改变路由跳转
-      if (_.isObject(item)) {
-        localStorage.setItem('show_menu', item.routeAddress)
-        Cookies.set('activeMenuIndex', item.routeAddress)
-      } else {
-        localStorage.setItem('show_menu', item)
-        Cookies.set('activeMenuIndex', item)
+  //重新整合跳转，包括跳旧项目、新项目、客户端
+  loadPage(item){
+    store.commit("digitalPark/activeMenuIndex",this.setMenuIndex(item))
+    if (item.routeAddress) {
+      //客户端
+      if(this.loadClientPage(item)){
+        return ;
       }
-      router.push('/vibe-web')
+      //旧项目
+      if (item.routeAddress.indexOf("@") != -1) {
+        router.push('/vibe-web')
+      } else {
+        //新项目
+        this.goToZGManage(item)   //特殊处理中钢
+        router.push(item.routeAddress);
+      }
+    } else {
+      router.push("/digitalPark/defaultPage");
     }
   }
 
-  loadThreeD(item, clientMenu) {
+  loadClientPage(item, clientMenu) {
     //不需要clientMenu了
     if (typeof item === 'undefined') {
       return false;
@@ -1699,7 +1627,7 @@ class commonFun {
         return second.id == item.secondMenuId;
       });
       console.log(secondMenu,id)
-      window.goToClientPage(JSON.stringify(secondMenu), id)
+      window.goToClientPage(JSON.stringify(secondMenu),id+"")
       return true;
     }
     return false;
@@ -1757,18 +1685,6 @@ class commonFun {
       }
     } else {
       return item.id + ""
-    }
-  }
-
-  loadPage(item) {
-    if (item.routeAddress) {
-      if (item.routeAddress.indexOf("@") != -1) {
-        this.loadOldPage(item);
-      } else {
-        router.push(item.routeAddress);
-      }
-    } else {
-      router.push("/digitalPark/defaultPage");
     }
   }
 
