@@ -1590,12 +1590,14 @@ class commonFun {
       if(this.loadClientPage(item)){
         return ;
       }
-      //旧项目
       if (item.routeAddress.indexOf("@") != -1) {
+        //旧项目
         router.push('/vibe-web')
-      } else {
+      } else if(item.name=="物业系统"){
+        console.log("客户端方法跳中钢")
+        window.goToZGManage()
+      }else{
         //新项目
-        this.goToZGManage(item)   //特殊处理中钢
         router.push(item.routeAddress);
       }
     } else {
