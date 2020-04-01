@@ -124,7 +124,6 @@ export default {
         // commonFun.loadPage(item)
         if (item.routeAddress) {
           if (item.routeAddress.indexOf("@") != -1) {
-            localStorage.setItem('show_menu', item.routeAddress)
             Cookies.set('activeMenuIndex', item.routeAddress)
             if(this.$route.path=="/vibe-web"){
               location.reload()

@@ -175,7 +175,7 @@ export default {
     loadNews() {  //点击消息
       Cookies.set('moduleType',this.cookieModuleType)
       // loadNews TODO
-      localStorage.setItem("show_menu", "@/html/alarm/alarm_index.html");
+      // localStorage.setItem("show_menu", "@/html/alarm/alarm_index.html");
       localStorage.setItem(
         "menuList",
         JSON.stringify({
@@ -189,6 +189,7 @@ export default {
           ]
         })
       );
+      this.$store.commit("digitalPark/activeMenuIndex",'@/html/alarm/alarm_index.html')
       this.$router.push("/vibe-web");
     },
     goToWebPage(item,obj){
