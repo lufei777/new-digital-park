@@ -60,4 +60,5 @@ export const detail = (row = {}, column = {}, option = {}, dic = []) => {
     );
     return result;
   }
+  return result;
 };
