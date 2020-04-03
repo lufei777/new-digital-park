@@ -190,11 +190,10 @@ export default {
             disabled: true
           },
           {
-            type: "datetime",
+            type: "date",
             label: "签约时间",
             prop: "contractTime",
-            valueFormat: "yyyy-MM-dd HH:mm:ss",
-            placeholder: "选择日期时间",
+            valueFormat: "yyyy-MM-dd",
             clearable: true,
             sapn: 12,
             rules: {
@@ -204,11 +203,10 @@ export default {
             }
           },
           {
-            type: "datetime",
+            type: "date",
             label: "到期时间",
             prop: "expireTime",
-            valueFormat: "yyyy-MM-dd HH:mm:ss",
-            placeholder: "选择日期时间",
+            valueFormat: "yyyy-MM-dd",
             clearable: true,
             sapn: 12,
             rules: {

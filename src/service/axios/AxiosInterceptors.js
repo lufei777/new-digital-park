@@ -38,6 +38,10 @@ axios.interceptors.response.use(
     let message = res.message || res.errorMessage || (typeof res.data === 'string' ? res.data : '');
 
     if (res.successful && res.code === '0') {
+      msgInfo({
+        message: message,
+        type: 'success'
+      });
       // 如果没有则返回空对象
       return (res || {}).data;
     } else if (res.code) {
@@ -45,13 +49,13 @@ axios.interceptors.response.use(
       if (router.currentRoute.path == '/login') return;
       switch (res.code) {
         case '102':
-          Message({
+          msgInfo({
             message: '参数为空',
             type: 'error'
           });
           break;
         default:
-          Message({
+          msgInfo({
             message: message,
             type: 'error'
           });
@@ -69,7 +73,7 @@ axios.interceptors.response.use(
     if (error.response) {
       let response = error.response;
       // let redirect = error.response.headers["X-SSO-Redirect"] || error.response.headers["x-sso-redirect"];
-      // 响应头状态匹配
+      // 响应头状态匹配 401: token失效
       switch (response.status) {
         case 401:
           calcelSource.source.cancel();  // 取消所有请求
@@ -87,7 +91,7 @@ axios.interceptors.response.use(
     } else {
       if (!window.navigator.onLine) {
         // 断网处理
-        Message({
+        msgInfo({
           message: `网络好像出了点问题~`,
           type: 'error'
         });
@@ -106,6 +110,15 @@ function getCancelSource() {
   const source = CancelToken.source();
   return {
     source
+  }
+}
+
+function msgInfo({ message, type }) {
+  if (typeof message === 'string' && message.trim().length > 0) {
+    Message({
+      message: message,
+      type: type
+    });
   }
 }
 
