@@ -119,21 +119,21 @@
         <div ref="myChart" class="my-chart"></div>
       </div>
     </div>
-    <!-- 能耗分类分项占比图 -->
-    <!--<div class="tip flex-align">-->
-      <!--<span class="icon"></span>-->
-      <!--<span>能耗分类分项占比图</span>-->
-    <!--</div>-->
+     能耗分类分项占比图
+    <div class="tip flex-align">
+      <span class="icon"></span>
+      <span>能耗分类分项占比图</span>
+    </div>
 
-    <!--<div class="pieCharts flex-align-between">-->
-      <!--<div class="pieChart box">-->
-        <!--<div ref="pieChart1" class="chart-inner"></div>-->
-      <!--</div>-->
-      <!--<div class="pieChart box">-->
-        <!--<div ref="pieChart2" class="chart-inner"></div>-->
-      <!--</div>-->
-      <!--&lt;!&ndash; <div class="pieChart box"></div> &ndash;&gt;-->
-    <!--</div>-->
+    <div class="pieCharts flex-align-between">
+      <div class="pieChart box">
+        <div ref="pieChart1" class="chart-inner"></div>
+      </div>
+      <div class="pieChart box">
+        <div ref="pieChart2" class="chart-inner"></div>
+      </div>
+      <!-- <div class="pieChart box"></div> -->
+    </div>
 
     <div class="tip flex-align">
       <span class="icon"></span>
