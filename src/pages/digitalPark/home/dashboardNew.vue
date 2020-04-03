@@ -40,10 +40,10 @@
         <img v-if="pageFlag==2" src="../../../../static/image/digitalPark/unity_priview.png"
              class="unity_priview"
              alt="">
-        <iframe v-if="pageFlag==1"
-                src="../../../../static/HomePage/index.html"
-                frameborder="0"
-                class="unity-frame"></iframe>
+        <!--<iframe v-if="pageFlag==1"-->
+                <!--src="../../../../static/HomePage/index.html"-->
+                <!--frameborder="0"-->
+                <!--class="unity-frame"></iframe>-->
 
       </div>
       <div class="dashboard-right">
@@ -80,8 +80,12 @@
             <!---->
             <!--</el-tooltip>-->
             <div class="fixed-pro-item hover-pointer"
-                 v-for="(item) in showFixedProList" :key="item.id"
+                 v-for="(item,index) in showFixedProList"
+                 :key="item.id"
+                 :style="{backgroundImage:'url('+item.bg+')'}"
                  @click="onClickItemFixPro(item)"
+                 @mouseenter="changeItemBg(index,1)"
+                 @mouseleave="changeItemBg(index,2)"
             >{{item.name}}</div>
           </div>
           <div v-if="fixedProList.length>16" class="flex-align-center turn-page">
@@ -106,6 +110,7 @@
   import ItemProModule from '../coms/itemProModule'
   import CommonFun from '../../../utils/commonFun'
   import Header from '../coms/header'
+  import Vue from 'vue'
   export default {
     name: 'DashBoardHomePageNew',
     props:['curProModule','hideHeader'],
@@ -208,16 +213,21 @@
           let res = await DigitalParkApi.getProductList({
             language:Cookies.get('lang')
           })
+          let tmp=[]
           if(this.productId){
             this.clientMenu = res.find((item)=>item.id==this.productId)
             if(this.clientMenu.childNode[0].name=="概览"){
               this.clientMenu.childNode.shift()
             }
-            this.fixedProList= this.clientMenu.childNode
+            tmp = this.clientMenu.childNode
             this.headName=this.clientMenu.name
           }else{
-            this.fixedProList=res
+            tmp=res
           }
+          tmp.map((item)=>{
+            item.bg='../../../../static/image/digitalPark/tag_large_bg.png'
+          })
+          this.fixedProList = tmp
           this.showFixedProList=this.fixedProList.length>16?this.fixedProList.slice(0,16):this.fixedProList
         },
         getOptions(){
@@ -290,29 +300,6 @@
           CommonFun.setShortcutList(this.fixedProList)
           this.$store.commit("digitalPark/menuList",item)
           CommonFun.loadPage(item)
-          //跳转三维客户端
-          // if(CommonFun.loadClientPage(item,this.clientMenu)){
-          //   if(item.level==2){
-          //     this.getModulesByType()
-          //   }
-          //   return;
-          // }
-          // CommonFun.goToZGManage(item)
-          // this.$store.commit("digitalPark/activeMenuIndex","")
-
-          // let routeAddress = item.routeAddress;
-          // if (routeAddress) {
-          //   // 如果带有@字符，则跳转旧项目
-          //   if (routeAddress.indexOf("@") != -1) {
-          //     CommonFun.loadOldPage(item);
-          //   } else {
-          //     setTimeout(() => {
-          //       this.$router.push(item.routeAddress);
-          //     }, 500);
-          //   }
-          // } else {
-          //   this.$router.push("/digitalPark/defaultPage");
-          // }
         },
         getInnerOptions(){
           return {draggable:'.inner-drag-content',disabled:!this.innerDragFlag,group:'product'}
@@ -356,6 +343,17 @@
             this.showFixedProList=this.fixedProList.slice(16)
             this.activeBtnIndex=1
           }
+        },
+        changeItemBg(index,flag){
+           if(flag==1){
+             Vue.set( this.showFixedProList,index,
+               {...this.showFixedProList[index],...{bg:"../../../../static/image/digitalPark/tag_large_bg2.png"}}
+               )
+           }else{
+             Vue.set( this.showFixedProList,index,
+               {...this.showFixedProList[index],...{bg:"../../../../static/image/digitalPark/tag_large_bg.png"}}
+               )
+           }
         }
     },
     mounted(){
@@ -509,7 +507,7 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      background-image: url('../../../../static/image/digitalPark/tag_large_bg.png') ;
+      /*background-image: url('../../../../static/image/digitalPark/tag_large_bg.png') ;*/
     }
     .carousel-box{
       width:95%;

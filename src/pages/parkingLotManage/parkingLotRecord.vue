@@ -87,6 +87,7 @@ export default {
         ref: "leaseManageTable",
         data: [
           {
+            id:1,
             tccmc: "三里屯停车场_1",
             ktcws: 100,
             cwzs: 1000,
@@ -95,6 +96,7 @@ export default {
             rwps: 900
           },
           {
+            id:2,
             tccmc: "三里屯停车场_2",
             ktcws: 100,
             cwzs: 520,

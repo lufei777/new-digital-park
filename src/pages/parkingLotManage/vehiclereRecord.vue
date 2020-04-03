@@ -86,6 +86,7 @@ export default {
         ref: "leaseManageTable",
         data: [
           {
+            id:1,
             clhm: "京A00000",
             tczt: "黄色",
             kh: "2015-08-09 12:05",
@@ -95,6 +96,7 @@ export default {
             cdh: "5号",
             kkxjtdmc: "一号闸"
           },{
+            id:2,
             clhm: "京A00800",
             tczt: "红色",
             kh: "2015-08-09 12:05",

@@ -1,6 +1,7 @@
 <template>
   <div class="environmental-monitoring">
-    <div class="flex-align-between envir-content">
+    <div  class="module-item-top-name">{{moduleItem.moduleName}}</div>
+    <div class="flex-align-center envir-content">
       <img src="../../../../../static/image/digitalPark/home_environment.png" alt="">
       <div>
         <div v-for="(item,index) in envirData" :key="index" class="item-envir">
@@ -8,7 +9,6 @@
         </div>
       </div>
     </div>
-    <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
@@ -43,7 +43,8 @@
 <style lang="less">
   .environmental-monitoring {
     img{
-      width:150px;
+      width:50%;
+      margin-right: 5%;
     }
     .envir-content{
       width:80%;
@@ -52,6 +53,7 @@
     .item-envir{
       margin-bottom: 10px;
       color:@dashboardColor;
+      text-align: left;
     }
   }
 </style>

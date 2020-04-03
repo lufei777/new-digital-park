@@ -9,10 +9,10 @@
     <div v-if="fixedProList.length>16" class="flex-align-center turn-page">
             <span class="left-btn hover-pointer iconfont iconzuo"
                   :class="activeBtnIndex==1?'active-btn':''"
-                  @click="onClickTurnPageBtn(1)"
+                  @click.stop="onClickTurnPageBtn(1)"
             ></span>
       <span class="right-btn hover-pointer iconfont iconyou" :class="activeBtnIndex==2?'active-btn':''"
-            @click="onClickTurnPageBtn(2)"></span>
+            @click.stop="onClickTurnPageBtn(2)"></span>
     </div>
   </div>
 </template>
@@ -47,8 +47,22 @@
         }else{
           this.fixedProList=res
         }
-        this.showFixedProList=this.fixedProList.length>16?this.fixedProList.slice(0,16):this.fixedProList
+        this.showFixedProList=this.fixedProList.length>12?this.fixedProList.slice(0,12):this.fixedProList
       },
+      onClickTurnPageBtn(flag){
+        if(flag==1){
+          this.showFixedProList=this.fixedProList.slice(0,12)
+          this.activeBtnIndex=2
+        }else{
+          this.showFixedProList=this.fixedProList.slice(12)
+          this.activeBtnIndex=1
+        }
+      },
+      onClickItemFixPro(item){
+        this.$store.commit("digitalPark/menuList",item)
+        console.log(window.top.location.origin+item.routeAddress)
+        this.$store.commit("digitalPark/largeScreenIframeSrc",window.top.location.origin+'/#'+item.routeAddress)
+      }
     },
     mounted(){
       this.getProductList()
@@ -61,8 +75,9 @@
   .product-list{
     flex-grow: 1;
     box-sizing: border-box;
-    padding-top:10px;
     overflow: hidden;
+    width:100%;
+    padding:10px 20px;
     &:after{
       width:40%;
       content:''
@@ -70,8 +85,8 @@
   }
   .fixed-pro-item{
     width:23%;
-    font-size: 12px;
-    padding:10px 0;
+    height:80px;
+    line-height: 80px;
     flex-shrink: 0;
     float:left;
     margin:15px 1% 1%;
@@ -81,18 +96,19 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     background-image: url('../../../../../static/image/digitalPark/tag_large_bg.png') ;
+    text-align: center;
   }
   .turn-page{
-    margin-bottom: 10px;
+    margin-bottom:20px;
     span{
-      width:20px;
-      height:20px;
+      width:50px;
+      height:50px;
       border-radius: 5px;
       background:#4F89B2;
       color:#333;
       text-align: center;
-      line-height: 20px;
-      font-size: 5px;
+      line-height: 50px;
+      font-size: 30px;
     }
     .active-btn{
       color:#00bfee;
@@ -104,8 +120,8 @@
       margin-right:20px;
     }
     img{
-      width:10px;
-      height:10px;
+      width:50px;
+      height:50px;
     }
   }
 }
