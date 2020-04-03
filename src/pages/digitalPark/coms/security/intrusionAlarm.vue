@@ -1,5 +1,6 @@
 <template>
   <div class="intrusion-alarm">
+    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div class="my-chart" ref="myChart"></div>
   </div>
 </template>
@@ -11,6 +12,7 @@
     name: 'intrusionAlarm',
     components: {
     },
+    props: ["moduleItem"],
     data () {
       return {
       }
@@ -46,18 +48,16 @@
           legendData,
           seriesData,
           legendUi:{
-            top:'center',
-            right:'20',
-            textStyle:{
-              color:'#8FD3FA'
-            },
-            formatter:function(name){
-              let obj=res.find((item)=>item.name==name)
-              return name+':'+obj.value
+            ...this.moduleItem.legendUi,
+            ...{
+              formatter:function(name){
+                let obj=res.find((item)=>item.name==name)
+                return name+'：'+obj.value
+              }
             }
           },
           seriesUi:{
-            center:['35%','50%']
+            center:['40%','50%']
           },
           color:['red','gray']
         };

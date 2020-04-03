@@ -86,6 +86,7 @@ export default {
         ref: "leaseManageTable",
         data: [
           {
+            id:1,
             clhm: "京A00000",
             tczt: "停车",
             kh: 1657842564521,
@@ -99,6 +100,7 @@ export default {
             rcdztdmc: "一号闸"
           },
           {
+            id:2,
             clhm: "京P58486",
             tczt: "停车",
             kh: 1284597564123,
@@ -112,6 +114,7 @@ export default {
             rcdztdmc: "二号闸"
           },
           {
+            id:3,
             clhm: "京B85949",
             tczt: "停车",
             kh: 1578654986234,
@@ -124,6 +127,7 @@ export default {
             ccsj: "2017-10-11 13:12",
             rcdztdmc: "一号闸"
           },{
+            id:4,
             clhm: "京B54793",
             tczt: "停车",
             kh: 1589786543126,
@@ -137,6 +141,7 @@ export default {
             rcdztdmc: "一号闸"
           },
           {
+            id:5,
             clhm: "京B58467",
             tczt: "停车",
             kh: 1584698723654,

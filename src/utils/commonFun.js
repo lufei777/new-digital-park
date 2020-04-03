@@ -908,7 +908,7 @@ class commonFun {
     approver: "程琳",
     operationTime: "2019-12-10"
   }, {
-    id: 1,
+    id: 2,
     budgetName: "十二月维修费",
     budgetType: "维修费",
     budgetSum: "1000元",
@@ -919,7 +919,7 @@ class commonFun {
     approver: "程琳",
     operationTime: "2019-12-10"
   }, {
-    id: 1,
+    id: 3,
     budgetName: "十二月维修费",
     budgetType: "维修费",
     budgetSum: "1000元",
@@ -1645,6 +1645,16 @@ class commonFun {
 
   //导出
   exportMethod(data, that) {
+    if(localStorage.isCZClient=="true"){
+      console.log("客户端导出")
+      window.czClientChoosedownLoadFile()
+    }else{
+      this.webPageExportMethod(data,that)
+    }
+  }
+
+  webPageExportMethod(data,that){
+    // let clientUrl = localStorage.getItem("clientExportUrl") || ''
     axios({
       headers: {
         'X-SSO-Token': sessionStorage.getItem('token')
@@ -1653,15 +1663,14 @@ class commonFun {
       url: `${data.url}${data.params ? '?' + data.params : ''}`,
       responseType: 'blob',
     }).then((res) => {
-      const link = document.createElement('a')
-      let blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
-      link.style.display = 'none'
-      link.href = URL.createObjectURL(blob)
-      link.download = decodeURIComponent(res.headers['content-disposition']) //下载后文件名
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-
+        const link = document.createElement('a')
+        let blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+        link.style.display = 'none'
+        link.href = URL.createObjectURL(blob)
+        link.download = decodeURIComponent(res.headers['content-disposition']) //下载后文件名
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
     }).catch(error => {
       that.$message({
         type: 'error',

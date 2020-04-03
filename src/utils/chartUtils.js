@@ -87,7 +87,9 @@ class chartUtils {
       legend: {
         orient: legendUi.orient || 'vertical',
         right: legendUi.right || '',
-        top:legendUi.top || '',
+        //只要top字段存在（不管设置与否），则bottom属性不起作用，所以若想设置top，请单独再组件里设置
+        // top:legendUi.top || '',
+        bottom:legendUi.bottom || '',
         data: data.legendData,
         textStyle:{
           fontSize:legendTextStyle.fontSize || 14,

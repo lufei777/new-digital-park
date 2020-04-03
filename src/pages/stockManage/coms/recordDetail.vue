@@ -54,7 +54,8 @@
     data() {
       let _this = this
       let checkQuantity = (rule, value, callback) => {
-        if ((!Number(value) || value<0) && value!="") {
+        if ((!Number(value) || value<0) && value!="" && value!=0) {
+          console.log(!Number(value),value<0,value)
           callback(new Error("请输入正数"));
         } else if(value>_this.curRow.quantity){
           callback(new Error("实收数量应小于等于入库数量"));
@@ -84,7 +85,7 @@
         curRow:{},
         curIndex:{},
         formData:{
-          actualQuantity:0,
+          actualQuantity:'',
           description:''
         },
         rules: {
@@ -131,7 +132,7 @@
               {label:'备注',prop:'description'}]]
           if(this.fromFlag==3){
             res.stockDetailsList.map((item)=>{
-              item.actualQuantity=0
+              item.actualQuantity=''
               item.description=''
             })
           }
@@ -143,6 +144,19 @@
       },
       async onClickCheckBtn(){
         console.log(this.tableConfig.data)
+        let tmp =[]
+        this.tableConfig.data.map((item,index)=>{
+          if(item.actualQuantity==''){
+            tmp.push(index+1)
+          }
+        })
+        if(tmp.length){
+          this.$message({
+            type: 'warning',
+            message:`请填写第${tmp.join("、")}行实收数量！`,
+          });
+          return ;
+        }
         let res = await StockManageApi.checkStockApply({
           id:this.detailId,
           stockDetailsList:this.tableConfig.data
@@ -157,6 +171,10 @@
         this.showEditModal=true
         this.curRow=row
         this.curIndex=index+(this.curPage-1)*this.pageSize
+        this.formData={
+          actualQuantity:this.curRow.actualQuantity,
+          description:this.curRow.description
+        }
       },
       onClickSureBtn(){
         this.$refs['formRef'].validate((valid) => {

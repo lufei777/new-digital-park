@@ -11,7 +11,7 @@
         >
           <transition name="el-zoom-in-center" v-for="(item,index) in moduleList" :key="index">
               <draggable
-                :class="item?'out-drag-product':'center-show'"
+                :class="item.id!=0?'out-drag-product':'center-show'"
                 :list="[item]"
                 v-bind="getInnerOptions()"
                 v-show="animationFlag"
@@ -85,9 +85,9 @@
           width:document.body.offsetWidth,
           height:document.body.offsetHeight
         })
-        // res.modules[0].moduleList[0].componentName = 'productList'
+        // res.modules[1] = null
         this.moduleList = res.modules || []
-        this.centerIndex = res.modules.findIndex(item=>JSON.stringify(item)=='null')
+        this.centerIndex = res.modules.findIndex(item=>item.id==0)
         this.drawPageStyle(res)
 
         setTimeout(()=>{

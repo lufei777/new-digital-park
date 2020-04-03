@@ -95,6 +95,7 @@ export default {
         ref: "leaseManageTable",
         data: [
           {
+            id:1,
             clhm: "京A00000",
             tczt: "停车",
             kh: 1657842564521,
@@ -111,6 +112,7 @@ export default {
             tcsc: "30分钟",
             bz: "拉入黑名单"
           },{
+            id:2,
             clhm: "京A48659",
             tczt: "停车",
             kh: 4589456231587,
@@ -127,6 +129,7 @@ export default {
             tcsc: "2小时",
             bz: "拉入黑名单"
           },{
+            id:3,
             clhm: "京A49586",
             tczt: "停车",
             kh: 1589456726541,

@@ -1,5 +1,6 @@
 <template>
   <div class="elevator-monitor-coms">
+    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div class="chart-box flex my-chart">
       <div class="chart-box-item">
         <div class="chart1" ref="myChart1"></div>
@@ -10,7 +11,6 @@
         <span>扶梯</span>
       </div>
     </div>
-    <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
@@ -60,6 +60,11 @@
           legendUi
         };
         ChartUtils.hollowPieChart(myChart,data);
+        myChart.setOption({
+          legend:{
+            left:'center'
+          }
+        })
       },
       initChart2(res){
         let dataList =[{

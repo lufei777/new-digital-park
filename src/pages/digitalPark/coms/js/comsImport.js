@@ -33,7 +33,8 @@ import alarmNews from '../alarm/alarmNews'
 import UPSMonitoring from '../computerRoomRing/UPSMonitoring'
 import airConditioner from '../computerRoomRing/airConditioner'
 import electricTransformerAndDistribution from '../computerRoomRing/electricTransformerAndDistribution'
-import productList from '../common/productList'
+import productList from '../largeScreen/productList'
+import largeScreen from '../largeScreen/largeScreen'
 class exportComs {
   exportComsList = {
     energyProportionAnalysis,
@@ -71,7 +72,8 @@ class exportComs {
     UPSMonitoring,
     airConditioner,
     electricTransformerAndDistribution,
-    productList
+    productList,
+    largeScreen
   }
 }
 export default new exportComs()

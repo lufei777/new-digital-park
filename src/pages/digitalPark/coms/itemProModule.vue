@@ -9,9 +9,9 @@
       <component v-for="(item,index) in moduleData.moduleList"
                  :key="index"
                  :is="item.componentName"
-                 :moduleItem="{...item,...{largeScreen:moduleData.largeScreen,fontSize:30}}"
+                 :moduleItem="moduleItemData(item)"
                  class="item-component flex-colum-center"
-                 @click.native="onClickItemComponent(item)"
+                 @click.self="onClickItemComponent(item)"
       />
     </div>
 
@@ -54,6 +54,8 @@
       return {
         menuTree:JSON.parse(localStorage.getItem('menuTree'))
       }
+    },
+    computed:{
     },
     methods: {
       getOptions(){
@@ -133,6 +135,23 @@
           })
         })
         CommonFun.loadPage(this.moduleData)
+      },
+      moduleItemData(item){
+        return {
+          ...item,
+          ...{
+             largeScreen:this.moduleData.largeScreen,
+             legendUi:{
+              bottom:'20',
+              right:'20',
+              textStyle:{
+                color:'#8FD3FA',
+                fontSize:this.moduleData.largeScreen?30:14
+              },
+            },
+            fontSize:30
+          }
+        }
       }
     },
     mounted(){
@@ -158,7 +177,7 @@
      align-items: center;
      flex-direction: column;
      overflow: hidden;
-     padding:0 10px 10px 10px;
+     padding:0 10px;
      box-sizing: border-box;
     .component-box{
       /*height:100%;*/
@@ -195,6 +214,12 @@
     }
     .single-module-name{
       margin-bottom: 10px;
+    }
+    .module-item-top-name{
+      width:100%;
+      text-align: left;
+      padding-left:5%;
+      box-sizing: border-box;
     }
   }
 </style>
