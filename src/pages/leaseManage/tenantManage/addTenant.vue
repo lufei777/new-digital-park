@@ -22,7 +22,7 @@
             <h3>营业执照/企业经营许可证</h3>
           </template>
           <template slot="otherImageText">
-            <h3>其他证明</h3>
+            <h3>合同文件</h3>
           </template>
         </z-form>
       </div>
