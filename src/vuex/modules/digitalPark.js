@@ -6,7 +6,8 @@ const state = {
   stockInApplyTab:'0',
   stockInReApplyId:'',
   activeMenuIndex:Cookies.get("activeMenuIndex"),
-  menuList:JSON.parse(localStorage.getItem("menuList"))
+  menuList:JSON.parse(localStorage.getItem("menuList")),
+  largeScreenIframeSrc:''
 }
 
 const mutations={
@@ -32,6 +33,9 @@ const mutations={
   menuList(state,data){
     state.menuList = data
     localStorage.setItem("menuList",JSON.stringify(data))
+  },
+  largeScreenIframeSrc(state,data){
+    state.largeScreenIframeSrc = data
   },
 }
 
