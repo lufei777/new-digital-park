@@ -110,6 +110,7 @@
   import ItemProModule from '../coms/itemProModule'
   import CommonFun from '../../../utils/commonFun'
   import Header from '../coms/header'
+  import Vue from 'vue'
   export default {
     name: 'DashBoardHomePageNew',
     props:['curProModule','hideHeader'],
@@ -344,15 +345,15 @@
           }
         },
         changeItemBg(index,flag){
-          console.log(index,flag)
            if(flag==1){
-             console.log("enter")
-             this.showFixedProList[index].bg="../../../../static/image/digitalPark/tag_large_bg2.png"
+             Vue.set( this.showFixedProList,index,
+               {...this.showFixedProList[index],...{bg:"../../../../static/image/digitalPark/tag_large_bg2.png"}}
+               )
            }else{
-             console.log("leave")
-             this.showFixedProList[index].bg="../../../../static/image/digitalPark/tag_large_bg.png"
+             Vue.set( this.showFixedProList,index,
+               {...this.showFixedProList[index],...{bg:"../../../../static/image/digitalPark/tag_large_bg.png"}}
+               )
            }
-           console.log(this.showFixedProList[index].bg)
         }
     },
     mounted(){
