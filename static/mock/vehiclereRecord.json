@@ -1,0 +1,27 @@
+{
+  "list": [
+    {
+      "id": 1,
+      "carNum": "京A00000",
+      "carColor": "黄色",
+      "carDirection": "左侧",
+      "carInAndOut": "出",
+      "parkName": "数字园区一号停车场",
+      "laneNum": "5号",
+      "channelName": "一号闸",
+      "deviceName": "123号"
+    },
+    {
+      "id": 2,
+      "carNum": "京A00800",
+      "carColor": "红色",
+      "carDirection": "左侧",
+      "carInAndOut": "进",
+      "parkName": "数字园区二号停车场",
+      "laneNum": "8号",
+      "channelName": "一号闸",
+      "deviceName": "456号"
+    }
+  ],
+  "total": 2
+}

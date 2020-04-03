@@ -1,13 +1,7 @@
 <template>
   <div class="panel-container">
-    <div id="houseproperty-form" class="panel">
-      <z-form
-        :ref="leaseManageForm.ref"
-        :options="leaseManageForm"
-        v-model="model"
-        @submit="submit"
-        @reset-change="resetChange"
-      >
+    <div class="panel">
+      <z-form :ref="formOptions.ref" :options="formOptions" v-model="model" @submit="submit">
         <template slot="btn" slot-scope="obj">
           <div>
             <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">搜索</el-button>
@@ -18,12 +12,9 @@
     </div>
 
     <div class="table panel">
-      <z-table :ref="leaseManageTable.ref" :options="leaseManageTable">
-        <template slot="operation" slot-scope="obj">
-          <el-button type="text" @click="propertyDetail(obj)">详情</el-button>
-          <el-button type="text" @click="propertyEdit(obj)">编辑</el-button>
-          <el-button type="text" @click="propertyDel(obj)">删除</el-button>
-          <el-button type="text" @click="propertyLocation(obj)">定位</el-button>
+      <z-table :ref="tableOptions.ref" :options="tableOptions">
+        <template slot="operation" slot-scope="{row}">
+          <el-button type="text" @click="propertyDetail(row)">详情</el-button>
         </template>
       </z-table>
     </div>
@@ -33,12 +24,16 @@
 import leaseManageApi from "@/service/api/leaseManage";
 import commonFun from "@/utils/commonFun.js";
 
+let tableSendData = {
+  pageNum: 1,
+  pageSize: 10
+};
 export default {
   data() {
     return {
       model: {},
-      leaseManageForm: {
-        ref: "leaseManageForm",
+      formOptions: {
+        ref: "Form",
         size: "small",
         menuPosition: "right",
         menuBtn: false,
@@ -91,109 +86,111 @@ export default {
           }
         ]
       },
-      leaseManageTable: {
-        ref: "leaseManageTable",
+      tableOptions: {
+        ref: "Table",
+        operation: true,
         data: [
           {
-            id:1,
-            clhm: "京A00000",
-            tczt: "停车",
-            kh: 1657842564521,
-            tccmc: "数字园区1号停车场",
-            yhlb: "个人",
-            tccsfje: 500,
-            sfgz: "规则一",
-            sflx: "类型一",
-            yhje: "30元",
-            rcsj: "2015-08-09 12:05",
-            ccsj: "2015-08-09 16:12",
-            sfsj: "2015-08-09 16:12",
-            rcdztdmc: "一号闸",
-            tcsc: "30分钟",
-            bz: "拉入黑名单"
-          },{
-            id:2,
-            clhm: "京A48659",
-            tczt: "停车",
-            kh: 4589456231587,
-            tccmc: "数字园区1号停车场",
-            yhlb: "个人",
-            tccsfje: 500,
-            sfgz: "规则一",
-            sflx: "类型一",
-            yhje: "10元",
-            rcsj: "2015-08-09 12:05",
-            ccsj: "2015-08-09 16:12",
-            sfsj: "2015-08-09 16:12",
-            rcdztdmc: "一号闸",
-            tcsc: "2小时",
-            bz: "拉入黑名单"
-          },{
-            id:3,
-            clhm: "京A49586",
-            tczt: "停车",
-            kh: 1589456726541,
-            tccmc: "数字园区1号停车场",
-            yhlb: "个人",
-            tccsfje: 500,
-            sfgz: "规则一",
-            sflx: "类型一",
-            yhje: "5元",
-            rcsj: "2015-08-09 12:05",
-            ccsj: "2015-08-09 16:12",
-            sfsj: "2015-08-09 16:12",
-            rcdztdmc: "一号闸",
-            tcsc: "5小时",
-            bz: "拉入黑名单"
+            id: 1,
+            carNum: "京A00000",
+            cardNum: 1657842564521,
+            parkName: "数字园区1号停车场",
+            amountReceived: 500,
+            feeRule: "规则一",
+            feeType: "类型一",
+            discount: "30元",
+            carInTime: "2015-08-09 12:05",
+            carOutTime: "2015-08-09 16:12",
+            feeTime: "2015-08-09 16:12",
+            feeTerminal: "一号闸",
+            timeLength: "30分钟",
+            remark: "拉入黑名单"
+          },
+          {
+            id: 2,
+            carNum: "京A48659",
+            cardNum: 4589456231587,
+            parkName: "数字园区1号停车场",
+            amountReceived: 500,
+            feeRule: "规则一",
+            feeType: "类型一",
+            discount: "10元",
+            carInTime: "2015-08-09 12:05",
+            carOutTime: "2015-08-09 16:12",
+            feeTime: "2015-08-09 16:12",
+            feeTerminal: "一号闸",
+            timeLength: "2小时",
+            remark: "拉入黑名单"
+          },
+          {
+            id: 3,
+            carNum: "京A49586",
+            cardNum: 1589456726541,
+            parkName: "数字园区1号停车场",
+            amountReceived: 500,
+            feeRule: "规则一",
+            feeType: "类型一",
+            discount: "5元",
+            carInTime: "2015-08-09 12:05",
+            carOutTime: "2015-08-09 16:12",
+            feeTime: "2015-08-09 16:12",
+            feeTerminal: "一号闸",
+            timeLength: "5小时",
+            remark: "拉入黑名单"
           }
         ],
         columnConfig: [
           {
-            prop: "clhm",
+            prop: "id",
+            label: "id信息",
+            hide: true
+          },
+          {
+            prop: "carNum",
             label: "车辆号码",
             fixed: "left"
           },
           {
-            prop: "kh",
+            prop: "cardNum",
             label: "卡号",
             fixed: "left"
           },
           {
-            prop: "rcsj",
+            prop: "carInTime",
             label: "入场时间"
           },
           {
-            prop: "ccsj",
+            prop: "carOutTime",
             label: "出场时间"
           },
           {
-            prop: "tcsc",
+            prop: "timeLength",
             label: "停车时长"
           },
           {
-            prop: "tccsfje",
+            prop: "amountReceived",
             label: "实收金额(元)",
             fixed: "left"
           },
           {
-            prop: "sfgz",
+            prop: "feeRule",
             label: "收费规则"
           },
           {
-            prop: "sflx",
+            prop: "feeType",
             label: "收费类型"
           },
           {
-            prop: "yhje",
+            prop: "discount",
             label: "优惠金额(元)"
           },
           {
-            prop: "sfsj",
+            prop: "feeTime",
             label: "收费时间",
             width: 150
           },
           {
-            prop: "bz",
+            prop: "remark",
             label: "备注",
             width: 150
           }
@@ -202,107 +199,48 @@ export default {
           height: "auto",
           customTopPosition: "right",
           selection: true,
-          showIndex: {
-            label: "序号"
-          }
+          showIndex: true
         }
       }
     };
   },
   methods: {
-    submit() {},
-    resetChange() {},
-    deleteRow(ids) {
-      leaseManageApi.removeHouse({ houseIds: ids }).then(res => {
-        this.refreshTable();
-      });
-    },
-    addedProperty(obj) {
-      this.$router.push({
-        name: "editHouseProperty"
-      });
-    },
-    bulkImport(obj) {
-      this.$router.push({ name: "bulkimporthouseproperty" });
-    },
-    bulkDel({ selectedData }) {
-      if (!selectedData.length) {
-        commonFun.deleteTip(this, false, "请选择数据");
-        return;
-      }
-      let ids = _.reduce(
-        selectedData,
-        (result, cur, curindex) => {
-          return result + "," + cur.houseId;
-        },
-        ""
-      );
-      commonFun.deleteTip(
-        this,
-        true,
-        "确定要删除吗?",
-        () => {
-          this.deleteRow(ids);
-        },
-        () => {}
-      );
-    },
-    bulkEdit(obj) {
-      console.log(obj);
-    },
-    propertyDetail({ scopeRow: { $index, row, _self } }) {
-      leaseManageApi.houseDetails(row).then(res => {
-        this.$router.push({
-          name: "editHouseProperty",
-          params: {
-            extraOptions: {
-              disabled: true
-            },
-            model: _.cloneDeep(res)
-          }
-        });
-      });
-    },
-    propertyEdit({ scopeRow: { $index, row, _self } }) {
-      this.$router.push({
-        name: "editHouseProperty",
-        params: {
-          model: _.cloneDeep(row)
-        }
-      });
-    },
-    propertyDel({ scopeRow: { $index, row, _self } }) {
-      commonFun.deleteTip(
-        this,
-        true,
-        "确定要删除吗?",
-        () => {
-          this.deleteRow(row.houseId);
-        },
-        () => {}
-      );
-    },
-    propertyLocation(obj) {
-      console.log(obj);
-    },
     search(...args) {
-      this.$refs[this.leaseManageForm.ref].getFormModel(res => {
-        console.log("model", res);
-      });
-      console.log("搜索", ...args);
+      this.Form.submit();
     },
-    clearForm(...args) {
-      console.log("清空", ...args);
-      this.$refs[this.leaseManageForm.ref].resetForm();
+    submit(model, hide) {
+      hide();
+      this.tableOptions.serverMode.data = Object.assign(
+        _.cloneDeep(tableSendData),
+        model
+      );
+      this.refreshTable();
+    },
+    clearForm() {
+      this.Form.resetForm();
     },
     refreshTable() {
-      this.$refs[this.leaseManageTable.ref].refreshTable();
+      this.Table.refreshTable();
+    },
+    propertyDetail(row) {
+      this.$router.push({
+        name: "parkingdetail",
+        query: {
+          flag: "feeBasedInfo",
+          model: JSON.stringify(row)
+        }
+      });
+    }
+  },
+  computed: {
+    Form() {
+      return this.$refs[this.formOptions.ref];
+    },
+    Table() {
+      return this.$refs[this.tableOptions.ref];
     }
   }
 };
 </script>
-<style lang='less'>
-#houseproperty-form .el-form-item {
-  margin-bottom: 0;
-}
-</style>
+
+

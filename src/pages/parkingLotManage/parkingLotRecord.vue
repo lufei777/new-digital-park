@@ -1,13 +1,7 @@
 <template>
   <div class="panel-container">
     <div id="houseproperty-form" class="panel">
-      <z-form
-        :ref="leaseManageForm.ref"
-        :options="leaseManageForm"
-        v-model="model"
-        @submit="submit"
-        @reset-change="resetChange"
-      >
+      <z-form :ref="formOptions.ref" :options="formOptions" v-model="model" @submit="submit">
         <template slot="btn" slot-scope="obj">
           <div>
             <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">搜索</el-button>
@@ -18,7 +12,7 @@
     </div>
 
     <div class="table panel">
-      <z-table :ref="leaseManageTable.ref" :options="leaseManageTable">
+      <z-table :ref="tableOptions.ref" :options="tableOptions">
         <template slot="operation" slot-scope="obj">
           <el-button type="text" @click="propertyDetail(obj)">详情</el-button>
           <el-button type="text" @click="propertyEdit(obj)">编辑</el-button>
@@ -33,12 +27,16 @@
 import leaseManageApi from "@/service/api/leaseManage";
 import commonFun from "@/utils/commonFun.js";
 
+let tableSendData = {
+  pageNum: 1,
+  pageSize: 10
+};
 export default {
   data() {
     return {
       model: {},
-      leaseManageForm: {
-        ref: "leaseManageForm",
+      formOptions: {
+        ref: "Form",
         size: "small",
         menuPosition: "right",
         menuBtn: false,
@@ -46,7 +44,7 @@ export default {
           {
             type: "input",
             label: "停车场名称",
-            prop: "houseNumber",
+            prop: "parkName",
             placeholder: "请输入",
             width: 100,
             clearable: true,
@@ -55,7 +53,7 @@ export default {
           {
             type: "number",
             label: "车位总数",
-            prop: "houseName",
+            prop: "totalLot",
             clearable: true,
             span: 4,
             minRows: 0
@@ -63,7 +61,7 @@ export default {
           {
             type: "select",
             label: "可停车位数",
-            prop: "housePrice",
+            prop: "idleLot",
             clearable: true,
             dicData: [
               { label: "10车位以上", value: 1 },
@@ -83,56 +81,45 @@ export default {
           }
         ]
       },
-      leaseManageTable: {
-        ref: "leaseManageTable",
-        data: [
-          {
-            id:1,
-            tccmc: "三里屯停车场_1",
-            ktcws: 100,
-            cwzs: 1000,
-            rkgs: 4,
-            ckgs: 4,
-            rwps: 900
-          },
-          {
-            id:2,
-            tccmc: "三里屯停车场_2",
-            ktcws: 100,
-            cwzs: 520,
-            rkgs: 4,
-            ckgs: 4,
-            rwps: 420
-          }
-        ],
+      tableOptions: {
+        ref: "Table",
+        serverMode: {
+          url: "./static/mock/parkingLotRecord.json",
+          data: tableSendData
+        },
         columnConfig: [
           {
-            prop: "tccmc",
+            prop: "parkName",
             label: "停车场名称",
             fixed: "left"
           },
           {
-            prop: "ktcws",
+            prop: "idleLot",
             label: "可停车位数",
             fixed: "left"
           },
           {
-            prop: "cwzs",
+            prop: "usedLot",
+            label: "已停车位",
+            fixed: "left"
+          },
+          {
+            prop: "totalLot",
             label: "车位总数",
             fixed: "left"
           },
           {
-            prop: "rkgs",
+            prop: "entranceNum",
             label: "入口个数",
             fixed: "left"
           },
           {
-            prop: "ckgs",
+            prop: "exitNum",
             label: "出口个数",
             fixed: "left"
           },
           {
-            prop: "rwps",
+            prop: "esidualScreenNum",
             label: "余位屏数"
           }
         ],
@@ -146,99 +133,31 @@ export default {
     };
   },
   methods: {
-    submit() {},
-    resetChange() {},
-    deleteRow(ids) {
-      leaseManageApi.removeHouse({ houseIds: ids }).then(res => {
-        this.refreshTable();
-      });
-    },
-    addedProperty(obj) {
-      this.$router.push({
-        name: "editHouseProperty"
-      });
-    },
-    bulkImport(obj) {
-      this.$router.push({ name: "bulkimporthouseproperty" });
-    },
-    bulkDel({ selectedData }) {
-      if (!selectedData.length) {
-        commonFun.deleteTip(this, false, "请选择数据");
-        return;
-      }
-      let ids = _.reduce(
-        selectedData,
-        (result, cur, curindex) => {
-          return result + "," + cur.houseId;
-        },
-        ""
-      );
-      commonFun.deleteTip(
-        this,
-        true,
-        "确定要删除吗?",
-        () => {
-          this.deleteRow(ids);
-        },
-        () => {}
-      );
-    },
-    bulkEdit(obj) {
-      console.log(obj);
-    },
-    propertyDetail({ scopeRow: { $index, row, _self } }) {
-      leaseManageApi.houseDetails(row).then(res => {
-        this.$router.push({
-          name: "editHouseProperty",
-          params: {
-            extraOptions: {
-              disabled: true
-            },
-            model: _.cloneDeep(res)
-          }
-        });
-      });
-    },
-    propertyEdit({ scopeRow: { $index, row, _self } }) {
-      this.$router.push({
-        name: "editHouseProperty",
-        params: {
-          model: _.cloneDeep(row)
-        }
-      });
-    },
-    propertyDel({ scopeRow: { $index, row, _self } }) {
-      commonFun.deleteTip(
-        this,
-        true,
-        "确定要删除吗?",
-        () => {
-          this.deleteRow(row.houseId);
-        },
-        () => {}
-      );
-    },
-    propertyLocation(obj) {
-      console.log(obj);
-    },
     search(...args) {
-      this.$refs[this.leaseManageForm.ref].getFormModel(res => {
-        console.log("model", res);
-      });
-      console.log("搜索", ...args);
+      this.Form.submit();
     },
-    clearForm(...args) {
-      console.log("清空", ...args);
-      this.$refs[this.leaseManageForm.ref].resetForm();
+    submit(model, hide) {
+      hide();
+      this.tableOptions.serverMode.data = Object.assign(
+        _.cloneDeep(tableSendData),
+        model
+      );
+      this.refreshTable();
+    },
+    clearForm() {
+      this.Form.resetForm();
     },
     refreshTable() {
-      this.$refs[this.leaseManageTable.ref].refreshTable();
+      this.Table.refreshTable();
+    }
+  },
+  computed: {
+    Form() {
+      return this.$refs[this.formOptions.ref];
+    },
+    Table() {
+      return this.$refs[this.tableOptions.ref];
     }
   }
 };
 </script>
-<style lang='less'>
-#houseproperty-form .el-form-item {
-  margin-bottom: 0;
-}
-</style>

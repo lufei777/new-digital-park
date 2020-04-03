@@ -8,7 +8,7 @@ export default [{
     children: [{
         path: 'accessrecord',
         name: 'accessrecord',
-        meta: { title: '车辆出入记录' },
+        meta: { title: '出入记录' },
         component: () => import('@/pages/parkingLotManage/accessRecord')
     }, {
         path: 'vehiclerecord',
@@ -25,5 +25,10 @@ export default [{
         name: 'feebasedinfo',
         meta: { title: '收费信息' },
         component: () => import('@/pages/parkingLotManage/feeBasedInfo'),
+    }, {
+        path: 'parkingdetail',
+        name: 'parkingdetail',
+        meta: { title: '详情查看' },
+        component: () => import('@/pages/parkingLotManage/parkingdetail'),
     }],
 }]
