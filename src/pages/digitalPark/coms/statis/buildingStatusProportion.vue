@@ -1,7 +1,7 @@
 <template>
   <div class="building-status-proportion">
+    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div ref="myChart" class="my-chart" id="building-status-proportion-chart"></div>
-    <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
@@ -33,17 +33,7 @@ export default {
         legend,
         color,
         textStyleColor,
-        legendUi:{
-            top:'center',
-            right:'30',
-            textStyle:{
-              color:'#8FD3FA',
-              fontSize:this.moduleItem.largeScreen?this.moduleItem.fontSize:14
-            },
-          },
-          seriesUi:{
-            center:['35%','50%']
-          }
+        legendUi: this.moduleItem.legendUi
       };
       ChartUtils.hollowPieChart(myPieChart, data);
     }
@@ -57,6 +47,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
 .building-status-proportion {
-  
+
 }
 </style>

@@ -77,6 +77,14 @@
     <div class="copyright" v-if="copyrightShow">
       版权所有：©2019 京ICP备05080753号 京公网安备11010802013842号
     </div>
+    <!--<div class="test-grid">-->
+      <!--<div></div>-->
+      <!--<div></div>-->
+      <!--<div></div>-->
+      <!--<div></div>-->
+      <!--<div></div>-->
+      <!--<div></div>-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -477,6 +485,17 @@ export default {
     text-align: center;
     background: rgb(96, 98, 102);
     color: #ccc;
+  }
+  .test-grid{
+    display: grid;
+    width:100%;
+    padding:20px;
+    grid-template-columns: repeat(auto-fill,700px);
+    grid-template-rows: repeat(auto-fill,400px);
+    div{
+      background:pink;
+      border:1px solid #ccc;
+    }
   }
 }
 

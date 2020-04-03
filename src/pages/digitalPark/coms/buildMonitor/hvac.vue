@@ -1,5 +1,6 @@
 <template>
   <div class="hvac-coms">
+    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div class="flex-align-center water-content">
       <div v-for="(item,index) in hvacData" :key="index" class="item-water">
         <span>{{item.title}}</span>
@@ -9,7 +10,6 @@
         </div>
       </div>
     </div>
-    <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
@@ -49,6 +49,7 @@
     .item-water{
       padding:20px;
       color:@dashboardColor;
+      text-align: center;
     }
     .item-count{
       margin-top: 10px;

@@ -1,5 +1,6 @@
 <template>
   <div class="video-monitoring">
+    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div class="my-chart" ref="myChart"></div>
   </div>
 </template>
@@ -11,6 +12,7 @@
     name: 'videoMonitoring',
     components: {
     },
+    props: ["moduleItem"],
     data () {
       return {
       }
@@ -47,18 +49,16 @@
           legendData,
           seriesData:res,
           legendUi:{
-            top:'center',
-            right:'10',
-            textStyle:{
-              color:'#8FD3FA'
-            },
-            formatter:function(name){
-              let obj=res.find((item)=>item.name==name)
-              return name+'：'+obj.value
+            ...this.moduleItem.legendUi,
+            ...{
+              formatter:function(name){
+                let obj=res.find((item)=>item.name==name)
+                return name+'：'+obj.value
+              }
             }
           },
           seriesUi:{
-            center:['35%','50%']
+            center:['40%','50%']
           }
         };
         ChartUtils.hollowPieChart(myChart,data);
