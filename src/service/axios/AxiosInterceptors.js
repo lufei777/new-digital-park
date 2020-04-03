@@ -35,7 +35,7 @@ axios.interceptors.response.use(
   (response) => {
     // code => 0：操作成功  101：报错  102：参数为空
     let res = response.data;
-    let message = res.message || res.errorMessage || (typeof res.data === 'string' ? res.data : '');
+    let message = res.message || res.errorMessage;
 
     if (res.successful && res.code === '0') {
       msgInfo({
@@ -47,20 +47,10 @@ axios.interceptors.response.use(
     } else if (res.code) {
       // 如果是登陆页面，则不进行message提示
       if (router.currentRoute.path == '/login') return;
-      switch (res.code) {
-        case '102':
-          msgInfo({
-            message: '参数为空',
-            type: 'error'
-          });
-          break;
-        default:
-          msgInfo({
-            message: message,
-            type: 'error'
-          });
-          break;
-      }
+      msgInfo({
+        message: message,
+        type: 'error'
+      });
       console.error(`${message}，错误代码:${res.code}`);
       return Promise.reject(res);
     } else {
