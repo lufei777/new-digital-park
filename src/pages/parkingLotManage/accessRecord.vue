@@ -1,13 +1,7 @@
 <template>
   <div class="panel-container">
-    <div id="houseproperty-form" class="panel">
-      <z-form
-        :ref="leaseManageForm.ref"
-        :options="leaseManageForm"
-        v-model="model"
-        @submit="submit"
-        @reset-change="resetChange"
-      >
+    <div class="panel">
+      <z-form :ref="formOptions.ref" :options="formOptions" v-model="model" @submit="submit">
         <template slot="btn" slot-scope="obj">
           <div>
             <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">搜索</el-button>
@@ -18,12 +12,9 @@
     </div>
 
     <div class="table panel">
-      <z-table :ref="leaseManageTable.ref" :options="leaseManageTable">
-        <template slot="operation" slot-scope="obj">
-          <el-button type="text" @click="propertyDetail(obj)">详情</el-button>
-          <el-button type="text" @click="propertyEdit(obj)">编辑</el-button>
-          <el-button type="text" @click="propertyDel(obj)">删除</el-button>
-          <el-button type="text" @click="propertyLocation(obj)">定位</el-button>
+      <z-table :ref="tableOptions.ref" :options="tableOptions">
+        <template slot="operation" slot-scope="{row}">
+          <el-button type="text" @click="propertyDetail(row)">详情</el-button>
         </template>
       </z-table>
     </div>
@@ -33,12 +24,16 @@
 import leaseManageApi from "@/service/api/leaseManage";
 import commonFun from "@/utils/commonFun.js";
 
+let tableSendData = {
+  pageNum: 1,
+  pageSize: 10
+};
 export default {
   data() {
     return {
       model: {},
-      leaseManageForm: {
-        ref: "leaseManageForm",
+      formOptions: {
+        ref: "Form",
         size: "small",
         menuPosition: "right",
         menuBtn: false,
@@ -82,129 +77,136 @@ export default {
           }
         ]
       },
-      leaseManageTable: {
-        ref: "leaseManageTable",
+      tableOptions: {
+        ref: "Table",
+        operation: true,
+        // serverMode: {
+        //   url: "./static/mock/vehiclereRecord.json",
+        //   data: tableSendData
+        // },
         data: [
           {
-            id:1,
-            clhm: "京A00000",
-            tczt: "停车",
-            kh: 1657842564521,
-            tccmc: "数字园区1号停车场",
-            yhlb: "个人",
-            tccsfje: 200,
-            rcfs: "刷卡",
-            ccfs: "刷卡",
-            rcsj: "2017-10-16 12:05",
-            ccsj: "2017-10-16 16:12",
-            rcdztdmc: "一号闸"
+            id: 1,
+            carNum: "京A00000",
+            parkingState: "停车",
+            cardNum: 1657842564521,
+            parkName: "数字园区1号停车场",
+            userType: "个人",
+            charge: 200,
+            inMode: "刷卡",
+            outMode: "刷卡",
+            inTime: "2017-10-16 12:05",
+            outTime: "2017-10-16 16:12",
+            inChannelName: "一号闸"
           },
           {
-            id:2,
-            clhm: "京P58486",
-            tczt: "停车",
-            kh: 1284597564123,
-            tccmc: "数字园区6号停车场",
-            yhlb: "个人",
-            tccsfje: 100,
-            rcfs: "刷卡",
-            ccfs: "刷卡",
-            rcsj: "2015-06-19 12:05",
-            ccsj: "2015-06-20 16:12",
-            rcdztdmc: "二号闸"
+            id: 2,
+            carNum: "京P58486",
+            parkingState: "停车",
+            cardNum: 1284597564123,
+            parkName: "数字园区6号停车场",
+            userType: "个人",
+            charge: 100,
+            inMode: "刷卡",
+            outMode: "刷卡",
+            inTime: "2015-06-19 12:05",
+            outTime: "2015-06-20 16:12",
+            inChannelName: "二号闸"
           },
           {
-            id:3,
-            clhm: "京B85949",
-            tczt: "停车",
-            kh: 1578654986234,
-            tccmc: "数字园区8号停车场",
-            yhlb: "个人",
-            tccsfje: 320,
-            rcfs: "刷卡",
-            ccfs: "刷卡",
-            rcsj: "2017-10-11 11:05",
-            ccsj: "2017-10-11 13:12",
-            rcdztdmc: "一号闸"
-          },{
-            id:4,
-            clhm: "京B54793",
-            tczt: "停车",
-            kh: 1589786543126,
-            tccmc: "数字园区3号停车场",
-            yhlb: "个人",
-            tccsfje: 150,
-            rcfs: "刷卡",
-            ccfs: "刷卡",
-            rcsj: "2017-10-09 12:05",
-            ccsj: "2017-10-10 10:12",
-            rcdztdmc: "一号闸"
+            id: 3,
+            carNum: "京B85949",
+            parkingState: "停车",
+            cardNum: 1578654986234,
+            parkName: "数字园区8号停车场",
+            userType: "个人",
+            charge: 320,
+            inMode: "刷卡",
+            outMode: "刷卡",
+            inTime: "2017-10-11 11:05",
+            outTime: "2017-10-11 13:12",
+            inChannelName: "一号闸"
           },
           {
-            id:5,
-            clhm: "京B58467",
-            tczt: "停车",
-            kh: 1584698723654,
-            tccmc: "数字园区2号停车场",
-            yhlb: "个人",
-            tccsfje: 130,
-            rcfs: "刷卡",
-            ccfs: "刷卡",
-            rcsj: "2017-08-09 12:05",
-            ccsj: "2017-08-09 16:12",
-            rcdztdmc: "三号闸"
+            id: 4,
+            carNum: "京B54793",
+            parkingState: "停车",
+            cardNum: 1589786543126,
+            parkName: "数字园区3号停车场",
+            userType: "个人",
+            charge: 150,
+            inMode: "刷卡",
+            outMode: "刷卡",
+            inTime: "2017-10-09 12:05",
+            outTime: "2017-10-10 10:12",
+            inChannelName: "一号闸"
+          },
+          {
+            id: 5,
+            carNum: "京B58467",
+            parkingState: "停车",
+            cardNum: 1584698723654,
+            parkName: "数字园区2号停车场",
+            userType: "个人",
+            charge: 130,
+            inMode: "刷卡",
+            outMode: "刷卡",
+            inTime: "2017-08-09 12:05",
+            outTime: "2017-08-09 16:12",
+            inChannelName: "三号闸"
           }
         ],
         columnConfig: [
+          { id: "id", prop: "id信息" },
           {
-            prop: "clhm",
+            prop: "carNum",
             label: "车辆号码",
             fixed: "left"
           },
           {
-            prop: "tczt",
+            prop: "parkingState",
             label: "停车状态",
             fixed: "left"
           },
           {
-            prop: "kh",
+            prop: "cardNum",
             label: "卡号",
             fixed: "left"
           },
           {
-            prop: "tccmc",
+            prop: "parkName",
             label: "停车场名称",
             fixed: "left"
           },
           {
-            prop: "yhlb",
+            prop: "userType",
             label: "用户类别",
             fixed: "left"
           },
           {
-            prop: "tccsfje",
+            prop: "charge",
             label: "停车场收费金额(元)",
             fixed: "left",
             width: 150
           },
           {
-            prop: "rcfs",
+            prop: "inMode",
             label: "入场方式"
           },
           {
-            prop: "ccfs",
+            prop: "outMode",
             label: "出场方式"
           },
           {
-            prop: "rcsj",
+            prop: "inTime",
             label: "入场时间"
           },
           {
-            prop: "ccsj",
+            prop: "outTime",
             label: "出场时间"
           },
           {
-            prop: "rcdztdmc",
+            prop: "inChannelName",
             label: "入场道闸通道名称",
             width: 150
           }
@@ -219,99 +221,42 @@ export default {
     };
   },
   methods: {
-    submit() {},
-    resetChange() {},
-    deleteRow(ids) {
-      leaseManageApi.removeHouse({ houseIds: ids }).then(res => {
-        this.refreshTable();
-      });
-    },
-    addedProperty(obj) {
-      this.$router.push({
-        name: "editHouseProperty"
-      });
-    },
-    bulkImport(obj) {
-      this.$router.push({ name: "bulkimporthouseproperty" });
-    },
-    bulkDel({ selectedData }) {
-      if (!selectedData.length) {
-        commonFun.deleteTip(this, false, "请选择数据");
-        return;
-      }
-      let ids = _.reduce(
-        selectedData,
-        (result, cur, curindex) => {
-          return result + "," + cur.houseId;
-        },
-        ""
-      );
-      commonFun.deleteTip(
-        this,
-        true,
-        "确定要删除吗?",
-        () => {
-          this.deleteRow(ids);
-        },
-        () => {}
-      );
-    },
-    bulkEdit(obj) {
-      console.log(obj);
-    },
-    propertyDetail({ scopeRow: { $index, row, _self } }) {
-      leaseManageApi.houseDetails(row).then(res => {
-        this.$router.push({
-          name: "editHouseProperty",
-          params: {
-            extraOptions: {
-              disabled: true
-            },
-            model: _.cloneDeep(res)
-          }
-        });
-      });
-    },
-    propertyEdit({ scopeRow: { $index, row, _self } }) {
-      this.$router.push({
-        name: "editHouseProperty",
-        params: {
-          model: _.cloneDeep(row)
-        }
-      });
-    },
-    propertyDel({ scopeRow: { $index, row, _self } }) {
-      commonFun.deleteTip(
-        this,
-        true,
-        "确定要删除吗?",
-        () => {
-          this.deleteRow(row.houseId);
-        },
-        () => {}
-      );
-    },
-    propertyLocation(obj) {
-      console.log(obj);
-    },
     search(...args) {
-      this.$refs[this.leaseManageForm.ref].getFormModel(res => {
-        console.log("model", res);
-      });
-      console.log("搜索", ...args);
+      this.Form.submit();
     },
-    clearForm(...args) {
-      console.log("清空", ...args);
-      this.$refs[this.leaseManageForm.ref].resetForm();
+    submit(model, hide) {
+      hide();
+      this.tableOptions.serverMode.data = Object.assign(
+        _.cloneDeep(tableSendData),
+        model
+      );
+      this.refreshTable();
+    },
+    clearForm() {
+      this.Form.resetForm();
     },
     refreshTable() {
-      this.$refs[this.leaseManageTable.ref].refreshTable();
+      this.Table.refreshTable();
+    },
+    propertyDetail(row) {
+      this.$router.push({
+        name: "parkingdetail",
+        query: {
+          flag: "accessRecord",
+          model: JSON.stringify(row)
+        }
+      });
+    }
+  },
+  computed: {
+    Form() {
+      return this.$refs[this.formOptions.ref];
+    },
+    Table() {
+      return this.$refs[this.tableOptions.ref];
     }
   }
 };
 </script>
-<style lang='less'>
-#houseproperty-form .el-form-item {
-  margin-bottom: 0;
-}
-</style>
+
+

@@ -877,7 +877,7 @@ class commonFun {
     registerpeople: "何炎东",
     chargeCause: "缴纳的房租"
   }, {
-    id: 1,
+    id: 3,
     chargeName: "十月房租",
     chargeType: "房租",
     chargeSum: "30000",
@@ -886,7 +886,7 @@ class commonFun {
     registerpeople: "李祥祥",
     chargeCause: "缴纳的房租"
   }, {
-    id: 1,
+    id: 4,
     chargeName: "十月房租",
     chargeType: "房租",
     chargeSum: "20000",

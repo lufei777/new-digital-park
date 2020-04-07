@@ -47,20 +47,10 @@ axios.interceptors.response.use(
     } else if (res.code) {
       // 如果是登陆页面，则不进行message提示
       if (router.currentRoute.path == '/login') return;
-      switch (res.code) {
-        case '102':
-          msgInfo({
-            message: '参数为空',
-            type: 'error'
-          });
-          break;
-        default:
-          msgInfo({
-            message: message,
-            type: 'error'
-          });
-          break;
-      }
+      msgInfo({
+        message: message,
+        type: 'error'
+      });
       console.error(`${message}，错误代码:${res.code}`);
       return Promise.reject(res);
     } else {
