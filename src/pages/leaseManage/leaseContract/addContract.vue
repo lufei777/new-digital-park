@@ -211,7 +211,7 @@ export default {
             sapn: 12,
             rules: {
               required: true,
-              message: "请选择开始时间",
+              message: "请选择到期时间",
               trigger: "change"
             }
           },
@@ -361,27 +361,29 @@ export default {
     }
   },
   methods: {
-    async submit() {
-      let res;
+    async submit(model, hide) {
+      let apiConfig;
+      let params;
       if (this.editContractId) {
-        let params = {
+        params = {
           ...this.addContractParams,
           ...{
             contractId: this.editContractId,
             telephone: this.model.telephone
           }
         };
-        res = await LeaseManageApi.editContract(params);
+        apiConfig = LeaseManageApi.editContract;
       } else {
-        res = await LeaseManageApi.addContract(this.addContractParams);
+        params = this.addContractParams;
+        apiConfig = LeaseManageApi.addContract;
       }
-      if (res) {
-        this.$message({
-          type: "success",
-          message: res
+      let res = await apiConfig(params)
+        .then(value => {
+          this.$router.push("/leaseContract");
+        })
+        .finally(msg => {
+          hide();
         });
-      }
-      this.$router.push("/leaseContract");
     },
     async editContract() {
       if (res) {

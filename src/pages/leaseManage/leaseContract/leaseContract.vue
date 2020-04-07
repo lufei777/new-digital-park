@@ -124,6 +124,9 @@ export default {
         operation: {
           width: 200
         },
+        props: {
+          rowKey: "contractId"
+        },
         data: [],
         columnConfig: [],
         uiConfig: {
