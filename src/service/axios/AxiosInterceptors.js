@@ -38,10 +38,10 @@ axios.interceptors.response.use(
     let message = res.message || res.errorMessage;
 
     if (res.successful && res.code === '0') {
-      msgInfo({
-        message: message,
-        type: 'success'
-      });
+      // msgInfo({
+      //   message: message,
+      //   type: 'success'
+      // });
       // 如果没有则返回空对象
       return (res || {}).data;
     } else if (res.code) {

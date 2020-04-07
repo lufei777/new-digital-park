@@ -82,12 +82,16 @@ export default {
             keyPath[0].substring(0, keyPath[0].lastIndexOf("/")) + keyPath[1];
         }
       }
-
+      //应急预案和总体评估的备份type参数
+      if(key=='@/html/docms/index.html?openid=emergency'){
+        localStorage.setItem('backupType',4)
+      }else if(key=='@/html/docms/index.html?openid=assess'){
+        localStorage.setItem('backupType',5)
+      }
+      this.$store.commit("digitalPark/activeMenuIndex", key);
       if (key.indexOf("@") != -1) {
-        this.$store.commit("digitalPark/activeMenuIndex", key);
         this.iframeConfig.src = key.replace("@", "");
       } else {
-        this.$store.commit("digitalPark/activeMenuIndex", key);
         this.$router.push(key);
       }
     }

@@ -1,5 +1,6 @@
 <template>
   <div class="inspection-coms">
+    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div class="my-chart">
       <div class="ganged-log-header">
         <span style="width:25%">值班日期</span>
@@ -19,7 +20,6 @@
       </ul>
       <!-- <zTable :ref="tableConfig.ref" :options="tableConfig"></zTable> -->
     </div>
-    <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
@@ -118,10 +118,20 @@ export default {
         });
       }
       // this.initChart(tmp)
+    },
+    setStyle(){
+      $(".ganged-log-header,.my-chart ul li").css({
+        fontSize:this.moduleItem.largeScreen?this.moduleItem.fontSize+'px':14+'px'
+      })
+      $(".my-chart ul li span").css({
+        lineHeight:this.moduleItem.largeScreen?50+'px':30+'px',
+        height:this.moduleItem.largeScreen?50+'px':30+'px'
+      })
     }
   },
   mounted() {
     this.getSpectionData();
+    this.setStyle()
   }
 };
 </script>
@@ -150,7 +160,7 @@ export default {
         width: 100%;
         // float: left;
         height: 30px;
-        font-size: 14px;
+        /*font-size: 14px;*/
         color: #8fd3fa;
         span {
           float: left;

@@ -54,14 +54,18 @@ router.beforeEach((to, from, next) => {
   if (to.meta.loginCheck === false) {
     next();
   } else {
+
     if (!sessionStorage.getItem('token')) {
       router.push('/login');
     } else {
       next();
     }
   }
-  if (to.path != '/vibe-web') {
-    store.commit('digitalPark/activeMenuIndex', to.path);
+  // if (to.path != '/vibe-web') {
+  //   store.commit('digitalPark/activeMenuIndex', to.path);
+  // }
+  if(window.name === 'largeScreen'){
+    store.commit("digitalPark/menuList",JSON.parse(localStorage.menuList));
   }
 })
 export default router

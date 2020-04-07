@@ -48,6 +48,11 @@ export default {
       menuData:state=>state.digitalPark.menuList
     })
   },
+  watch:{
+    menuData(){
+      console.log("this.menuData",this.menuData)
+    }
+  },
   methods: {
     onClickCollapseBtn() {
       this.menuConfig.isCollapse = !this.menuConfig.isCollapse;
