@@ -1624,7 +1624,7 @@ class commonFun {
     }else if (item.level != 2 && item.clientType == 1) {
       let id = item.id
       if(item.childNode.length){
-        id = this.getId(item)
+        id = this.getLastItem(item).id
       }
       let menuTree = JSON.parse(localStorage.getItem("menuTree"))
       let firstMenu = menuTree[0].childNode.find(first => {
@@ -1640,11 +1640,11 @@ class commonFun {
     return false;
   }
 
-  getId(item){
+  getLastItem(item){
     if(item.childNode.length){
-      return this.getId(item.childNode[0])
+      return this.getLastItem(item.childNode[0])
     }else{
-      return item.id
+      return item
     }
   }
 
@@ -1675,7 +1675,8 @@ class commonFun {
   }
 
   //设置菜单index
-  setMenuIndex(item) {
+  setMenuIndex(item,from) {
+    //from 1->代表是渲染菜单的时候使用item本身，不传则为点击的时候找到item的最子集
     let arr = ['defaultPage', 'digitalPark/dashboardHomePage', 'stockInApply']
     let flag = false
     if (item.routeAddress) {
@@ -1685,9 +1686,9 @@ class commonFun {
         }
       })
       if (flag) {
-        return this.getId(item) + item.routeAddress
+        return from==1?(item.id+item.routeAddress):this.getLastItem(item).id + item.routeAddress
       } else {
-        return item.routeAddress
+        return from==1?item.routeAddress:this.getLastItem(item).routeAddress
       }
     } else {
       return item.id + ""
