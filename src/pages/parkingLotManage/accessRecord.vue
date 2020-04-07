@@ -80,84 +80,12 @@ export default {
       tableOptions: {
         ref: "Table",
         operation: true,
-        // serverMode: {
-        //   url: "./static/mock/vehiclereRecord.json",
-        //   data: tableSendData
-        // },
-        data: [
-          {
-            id: 1,
-            carNum: "京A00000",
-            parkingState: "停车",
-            cardNum: 1657842564521,
-            parkName: "数字园区1号停车场",
-            userType: "个人",
-            charge: 200,
-            inMode: "刷卡",
-            outMode: "刷卡",
-            inTime: "2017-10-16 12:05",
-            outTime: "2017-10-16 16:12",
-            inChannelName: "一号闸"
-          },
-          {
-            id: 2,
-            carNum: "京P58486",
-            parkingState: "停车",
-            cardNum: 1284597564123,
-            parkName: "数字园区6号停车场",
-            userType: "个人",
-            charge: 100,
-            inMode: "刷卡",
-            outMode: "刷卡",
-            inTime: "2015-06-19 12:05",
-            outTime: "2015-06-20 16:12",
-            inChannelName: "二号闸"
-          },
-          {
-            id: 3,
-            carNum: "京B85949",
-            parkingState: "停车",
-            cardNum: 1578654986234,
-            parkName: "数字园区8号停车场",
-            userType: "个人",
-            charge: 320,
-            inMode: "刷卡",
-            outMode: "刷卡",
-            inTime: "2017-10-11 11:05",
-            outTime: "2017-10-11 13:12",
-            inChannelName: "一号闸"
-          },
-          {
-            id: 4,
-            carNum: "京B54793",
-            parkingState: "停车",
-            cardNum: 1589786543126,
-            parkName: "数字园区3号停车场",
-            userType: "个人",
-            charge: 150,
-            inMode: "刷卡",
-            outMode: "刷卡",
-            inTime: "2017-10-09 12:05",
-            outTime: "2017-10-10 10:12",
-            inChannelName: "一号闸"
-          },
-          {
-            id: 5,
-            carNum: "京B58467",
-            parkingState: "停车",
-            cardNum: 1584698723654,
-            parkName: "数字园区2号停车场",
-            userType: "个人",
-            charge: 130,
-            inMode: "刷卡",
-            outMode: "刷卡",
-            inTime: "2017-08-09 12:05",
-            outTime: "2017-08-09 16:12",
-            inChannelName: "三号闸"
-          }
-        ],
+        serverMode: {
+          url: "./static/mock/accessRecord.json",
+          data: tableSendData
+        },
         columnConfig: [
-          { id: "id", prop: "id信息" },
+          { id: "id", prop: "id信息", hide: true },
           {
             prop: "carNum",
             label: "车辆号码",

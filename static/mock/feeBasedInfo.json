@@ -1,0 +1,53 @@
+{
+  "list": [
+    {
+      "id": 1,
+      "carNum": "京A00000",
+      "cardNum": 1657842564521,
+      "parkName": "数字园区1号停车场",
+      "amountReceived": 500,
+      "feeRule": "规则一",
+      "feeType": "类型一",
+      "discount": "30元",
+      "carInTime": "2015-08-09 12:05",
+      "carOutTime": "2015-08-09 16:12",
+      "feeTime": "2015-08-09 16:12",
+      "feeTerminal": "一号闸",
+      "timeLength": "30分钟",
+      "remark": "拉入黑名单"
+    },
+    {
+      "id": 2,
+      "carNum": "京A48659",
+      "cardNum": 4589456231587,
+      "parkName": "数字园区1号停车场",
+      "amountReceived": 500,
+      "feeRule": "规则一",
+      "feeType": "类型一",
+      "discount": "10元",
+      "carInTime": "2015-08-09 12:05",
+      "carOutTime": "2015-08-09 16:12",
+      "feeTime": "2015-08-09 16:12",
+      "feeTerminal": "一号闸",
+      "timeLength": "2小时",
+      "remark": "拉入黑名单"
+    },
+    {
+      "id": 3,
+      "carNum": "京A49586",
+      "cardNum": 1589456726541,
+      "parkName": "数字园区1号停车场",
+      "amountReceived": 500,
+      "feeRule": "规则一",
+      "feeType": "类型一",
+      "discount": "5元",
+      "carInTime": "2015-08-09 12:05",
+      "carOutTime": "2015-08-09 16:12",
+      "feeTime": "2015-08-09 16:12",
+      "feeTerminal": "一号闸",
+      "timeLength": "5小时",
+      "remark": "拉入黑名单"
+    }
+  ],
+  "total": 3
+}
