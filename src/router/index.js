@@ -60,8 +60,5 @@ router.beforeEach((to, from, next) => {
       next();
     }
   }
-  if (to.path != '/vibe-web') {
-    store.commit('digitalPark/activeMenuIndex', to.path);
-  }
 })
 export default router
