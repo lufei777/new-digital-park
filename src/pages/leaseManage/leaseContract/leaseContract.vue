@@ -124,6 +124,9 @@ export default {
         operation: {
           width: 200
         },
+        props: {
+          rowKey: "contractId"
+        },
         data: [],
         columnConfig: [],
         uiConfig: {
@@ -207,10 +210,10 @@ export default {
       LeaseManageApi.removeContract({
         contractIds: this.contractIds
       }).then(res => {
-        this.$message({
-          type: "success",
-          message: "删除成功!"
-        });
+        // this.$message({
+        //   type: "success",
+        //   message: "删除成功!"
+        // });
         this.contractIds = "";
         this.contractList();
       });

@@ -118,6 +118,9 @@ export default {
         operation: {
           width: 200
         },
+        props: {
+          rowKey: "tenantId"
+        },
         data: [],
         columnConfig: [],
         uiConfig: {
