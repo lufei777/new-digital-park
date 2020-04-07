@@ -1,0 +1,25 @@
+{
+  "list": [
+    {
+      "id": 1,
+      "parkName": "三里屯停车场_1",
+      "idleLot": 100,
+      "totalLot": 1000,
+      "usedLot": 900,
+      "entranceNum": 4,
+      "exitNum": 4,
+      "esidualScreenNum": 900
+    },
+    {
+      "id": 2,
+      "parkName": "三里屯停车场_2",
+      "idleLot": 100,
+      "totalLot": 520,
+      "usedLot": 420,
+      "entranceNum": 4,
+      "exitNum": 4,
+      "esidualScreenNum": 420
+    }
+  ],
+  "total": 2
+}

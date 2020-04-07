@@ -138,6 +138,7 @@ export default {
           {
             prop: "houseStatus",
             label: "房产状态",
+            type: "select",
             dicData: LeaseManageDic.HouseStatus
           },
           {
@@ -159,11 +160,11 @@ export default {
             }
           },
           {
-            prop: "qysj",
+            prop: "contractTime",
             label: "签约时间"
           },
           {
-            prop: "zhxm",
+            prop: "tenantName",
             label: "租户姓名"
           }
         ],

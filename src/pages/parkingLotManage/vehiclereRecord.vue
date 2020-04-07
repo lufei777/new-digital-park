@@ -1,13 +1,7 @@
 <template>
   <div class="panel-container">
-    <div id="houseproperty-form" class="panel">
-      <z-form
-        :ref="leaseManageForm.ref"
-        :options="leaseManageForm"
-        v-model="model"
-        @submit="submit"
-        @reset-change="resetChange"
-      >
+    <div class="panel">
+      <z-form :ref="formOptions.ref" :options="formOptions" v-model="model" @submit="submit">
         <template slot="btn" slot-scope="obj">
           <div>
             <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">搜索</el-button>
@@ -18,7 +12,7 @@
     </div>
 
     <div class="table panel">
-      <z-table :ref="leaseManageTable.ref" :options="leaseManageTable">
+      <z-table :ref="tableOptions.ref" :options="tableOptions">
         <template slot="operation" slot-scope="obj">
           <el-button type="text" @click="propertyDetail(obj)">详情</el-button>
           <el-button type="text" @click="propertyEdit(obj)">编辑</el-button>
@@ -33,16 +27,25 @@
 import leaseManageApi from "@/service/api/leaseManage";
 import commonFun from "@/utils/commonFun.js";
 
+let tableSendData = {
+  pageNum: 1,
+  pageSize: 10
+};
 export default {
   data() {
     return {
       model: {},
-      leaseManageForm: {
-        ref: "leaseManageForm",
+      formOptions: {
+        ref: "Form",
         size: "small",
         menuPosition: "right",
         menuBtn: false,
         forms: [
+          {
+            prop: "id",
+            label: "id信息",
+            hide: true
+          },
           {
             type: "input",
             label: "车牌号码",
@@ -51,24 +54,24 @@ export default {
             clearable: true,
             span: 4
           },
-          {
+          /* {
             type: "datetime",
             label: "抓拍时间",
             prop: "houseName",
             clearable: true,
             span: 4
-          },
+          }, */
           {
             type: "input",
             label: "行车方向",
-            prop: "housePrice",
+            prop: "carDirection",
             clearable: true,
             span: 4
           },
           {
             type: "input",
             label: "停车场名称",
-            prop: "houseStatus",
+            prop: "parkName",
             placeholder: "请输入",
             clearable: true,
             width: 100,
@@ -82,69 +85,53 @@ export default {
           }
         ]
       },
-      leaseManageTable: {
-        ref: "leaseManageTable",
-        data: [
-          {
-            id:1,
-            clhm: "京A00000",
-            tczt: "黄色",
-            kh: "2015-08-09 12:05",
-            tccmc: "左侧",
-            yhlb: "出",
-            rcdztdmc: "数字园区一号停车场",
-            cdh: "5号",
-            kkxjtdmc: "一号闸"
-          },{
-            id:2,
-            clhm: "京A00800",
-            tczt: "红色",
-            kh: "2015-08-09 12:05",
-            tccmc: "左侧",
-            yhlb: "出",
-            rcdztdmc: "数字园区二号停车场",
-            cdh: "8号",
-            kkxjtdmc: "一号闸"
-          }
-        ],
+      tableOptions: {
+        ref: "Table",
+        serverMode: {
+          url: "./static/mock/vehiclereRecord.json",
+          data: tableSendData
+        },
         columnConfig: [
           {
-            prop: "clhm",
+            prop: "carNum",
             label: "车辆号码",
             fixed: "left"
           },
           {
-            prop: "tczt",
+            prop: "carColor",
             label: "车辆颜色",
             fixed: "left"
           },
-          {
+          /* {
             prop: "kh",
             label: "抓拍时间",
             fixed: "left"
-          },
+          }, */
           {
-            prop: "tccmc",
+            prop: "carDirection",
             label: "行车方向",
             fixed: "left"
           },
           {
-            prop: "yhlb",
+            prop: "carInAndOut",
             label: "车辆进出类型",
             fixed: "left"
           },
           {
-            prop: "rcdztdmc",
-            label: "停车场名称",
-            width: 150
+            prop: "parkName",
+            label: "停车场名称"
           },
           {
-            prop: "cdh",
+            prop: "laneNum",
             label: "车道号"
           },
           {
-            prop: "kkxjtdmc",
+            prop: "channelName",
             label: "卡口相机通道名称"
+          },
+          {
+            prop: "deviceName",
+            label: "设备名称"
           }
         ],
         uiConfig: {
@@ -157,99 +144,32 @@ export default {
     };
   },
   methods: {
-    submit() {},
-    resetChange() {},
-    deleteRow(ids) {
-      leaseManageApi.removeHouse({ houseIds: ids }).then(res => {
-        this.refreshTable();
-      });
-    },
-    addedProperty(obj) {
-      this.$router.push({
-        name: "editHouseProperty"
-      });
-    },
-    bulkImport(obj) {
-      this.$router.push({ name: "bulkimporthouseproperty" });
-    },
-    bulkDel({ selectedData }) {
-      if (!selectedData.length) {
-        commonFun.deleteTip(this, false, "请选择数据");
-        return;
-      }
-      let ids = _.reduce(
-        selectedData,
-        (result, cur, curindex) => {
-          return result + "," + cur.houseId;
-        },
-        ""
-      );
-      commonFun.deleteTip(
-        this,
-        true,
-        "确定要删除吗?",
-        () => {
-          this.deleteRow(ids);
-        },
-        () => {}
-      );
-    },
-    bulkEdit(obj) {
-      console.log(obj);
-    },
-    propertyDetail({ scopeRow: { $index, row, _self } }) {
-      leaseManageApi.houseDetails(row).then(res => {
-        this.$router.push({
-          name: "editHouseProperty",
-          params: {
-            extraOptions: {
-              disabled: true
-            },
-            model: _.cloneDeep(res)
-          }
-        });
-      });
-    },
-    propertyEdit({ scopeRow: { $index, row, _self } }) {
-      this.$router.push({
-        name: "editHouseProperty",
-        params: {
-          model: _.cloneDeep(row)
-        }
-      });
-    },
-    propertyDel({ scopeRow: { $index, row, _self } }) {
-      commonFun.deleteTip(
-        this,
-        true,
-        "确定要删除吗?",
-        () => {
-          this.deleteRow(row.houseId);
-        },
-        () => {}
-      );
-    },
-    propertyLocation(obj) {
-      console.log(obj);
-    },
     search(...args) {
-      this.$refs[this.leaseManageForm.ref].getFormModel(res => {
-        console.log("model", res);
-      });
-      console.log("搜索", ...args);
+      this.Form.submit();
     },
-    clearForm(...args) {
-      console.log("清空", ...args);
-      this.$refs[this.leaseManageForm.ref].resetForm();
+    submit(model, hide) {
+      hide();
+      this.tableOptions.serverMode.data = Object.assign(
+        _.cloneDeep(tableSendData),
+        model
+      );
+      this.refreshTable();
+    },
+    clearForm() {
+      this.Form.resetForm();
     },
     refreshTable() {
-      this.$refs[this.leaseManageTable.ref].refreshTable();
+      this.Table.refreshTable();
+    }
+  },
+  computed: {
+    Form() {
+      return this.$refs[this.formOptions.ref];
+    },
+    Table() {
+      return this.$refs[this.tableOptions.ref];
     }
   }
 };
 </script>
-<style lang='less'>
-#houseproperty-form .el-form-item {
-  margin-bottom: 0;
-}
-</style>
+
