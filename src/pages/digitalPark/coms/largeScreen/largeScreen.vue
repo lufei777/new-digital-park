@@ -1,6 +1,10 @@
 <template>
   <div class="large-screen-center-show">
-    <iframe :src="largeScreenIframeSrc" frameborder="0" width="100%" height="100%"></iframe>
+    <iframe ref="irm" name="largeScreen"
+            :src="largeScreenIframeSrc"
+            v-if="iframeRender"
+            frameborder="0" width="100%" height="100%"
+    ></iframe>
   </div>
 </template>
 
@@ -8,7 +12,7 @@
   import {mapState} from 'vuex'
   import DigitalParkApi from '@/service/api/digitalPark'
   export default {
-    name: 'productList',
+    name: 'largeScreenCenterShow',
     components: {
     },
     props:['largeScreenCenterShow'],
@@ -17,6 +21,7 @@
         fixedProList:[],
         showFixedProList:[],
         activeBtnIndex:2,
+        iframeRender:true
       }
     },
     computed:{
@@ -25,33 +30,25 @@
       })
     },
     watch:{
-    },
-    methods: {
-      async getProductList(){
-        let res = await DigitalParkApi.getProductList({
-          language:Cookies.get('lang')
-        })
-        if(this.productId){
-          this.clientMenu = res.find((item)=>item.id==this.productId)
-          this.fixedProList= this.clientMenu.childNode
-          this.headNames=this.clientMenu.name
-        }else{
-          this.fixedProList=res
-        }
-        this.showFixedProList=this.fixedProList.length>12?this.fixedProList.slice(0,12):this.fixedProList
-      },
-      onClickTurnPageBtn(flag){
-        if(flag==1){
-          this.showFixedProList=this.fixedProList.slice(0,12)
-          this.activeBtnIndex=2
-        }else{
-          this.showFixedProList=this.fixedProList.slice(12)
-          this.activeBtnIndex=1
+      largeScreenIframeSrc(){
+        // this.iframeRender = false;
+        // this.$nextTick(() => {
+        //   this.iframeRender = true;
+        //   console.dir(this.$refs['irm'].contentWindow);
+        // })
+        console.log(this.largeScreenIframeSrc)
+        if(this.largeScreenIframeSrc.indexOf('vibe-web')!=-1){
+          this.iframeRender=false
+          this.$nextTick(() => {
+            this.iframeRender = true;
+          })
         }
       }
     },
+    methods: {
+    },
     mounted(){
-      this.getProductList()
+      console.dir(this.$refs['irm'].contentWindow);
     }
   }
 </script>

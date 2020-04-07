@@ -39,8 +39,15 @@ const mutations={
   },
 }
 
+const getters = {
+  getMenuList(state){
+    return state.menuList
+  }
+}
+
 export default {
   namespaced: true,
   state,
-  mutations
+  mutations,
+  getters
 }

@@ -1592,6 +1592,11 @@ class commonFun {
       }
       if (item.routeAddress.indexOf("@") != -1) {
         //旧项目
+        if(item.routeAddress=='@/html/docms/index.html?openid=emergency'){
+          localStorage.setItem('backupType',4)
+        }else if(item.routeAddress=='@/html/docms/index.html?openid=assess'){
+          localStorage.setItem('backupType',5)
+        }
         router.push('/vibe-web')
       } else if(item.name=="物业系统"){
         console.log("客户端方法跳中钢")
@@ -1645,16 +1650,6 @@ class commonFun {
 
   //导出
   exportMethod(data, that) {
-    if(localStorage.isCZClient=="true"){
-      console.log("客户端导出")
-      window.czClientChoosedownLoadFile()
-    }else{
-      this.webPageExportMethod(data,that)
-    }
-  }
-
-  webPageExportMethod(data,that){
-    // let clientUrl = localStorage.getItem("clientExportUrl") || ''
     axios({
       headers: {
         'X-SSO-Token': sessionStorage.getItem('token')
@@ -1663,14 +1658,14 @@ class commonFun {
       url: `${data.url}${data.params ? '?' + data.params : ''}`,
       responseType: 'blob',
     }).then((res) => {
-        const link = document.createElement('a')
-        let blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
-        link.style.display = 'none'
-        link.href = URL.createObjectURL(blob)
-        link.download = decodeURIComponent(res.headers['content-disposition']) //下载后文件名
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
+      const link = document.createElement('a')
+      let blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+      link.style.display = 'none'
+      link.href = URL.createObjectURL(blob)
+      link.download = decodeURIComponent(res.headers['content-disposition']) //下载后文件名
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
     }).catch(error => {
       that.$message({
         type: 'error',
@@ -1690,7 +1685,7 @@ class commonFun {
         }
       })
       if (flag) {
-        return item.id + item.routeAddress
+        return this.getId(item) + item.routeAddress
       } else {
         return item.routeAddress
       }

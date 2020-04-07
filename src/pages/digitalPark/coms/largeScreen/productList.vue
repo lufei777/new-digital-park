@@ -19,6 +19,7 @@
 
 <script>
   import DigitalParkApi from '@/service/api/digitalPark'
+  import CommonFun from '@/utils/commonFun'
   export default {
     name: 'productList',
     components: {
@@ -60,8 +61,15 @@
       },
       onClickItemFixPro(item){
         this.$store.commit("digitalPark/menuList",item)
-        console.log(window.top.location.origin+item.routeAddress)
-        this.$store.commit("digitalPark/largeScreenIframeSrc",window.top.location.origin+'/#'+item.routeAddress)
+        this.$store.commit('digitalPark/activeMenuIndex',CommonFun.setMenuIndex(item))
+        if(item.routeAddress.indexOf('@')!=-1){
+          console.log(window.top.location.origin+'/#/vibe-web')
+          this.$store.commit("digitalPark/largeScreenIframeSrc",
+            window.top.location.origin+'/#/vibe-web?updateId='+_.uniqueId())
+        }else{
+          console.log(window.top.location.origin+item.routeAddress)
+          this.$store.commit("digitalPark/largeScreenIframeSrc",window.top.location.origin+'/#'+item.routeAddress)
+        }
       }
     },
     mounted(){

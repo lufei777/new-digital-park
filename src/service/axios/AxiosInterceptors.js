@@ -35,13 +35,13 @@ axios.interceptors.response.use(
   (response) => {
     // code => 0：操作成功  101：报错  102：参数为空
     let res = response.data;
-    let message = res.message || res.errorMessage || (typeof res.data === 'string' ? res.data : '');
+    let message = res.message || res.errorMessage;
 
     if (res.successful && res.code === '0') {
-      msgInfo({
-        message: message,
-        type: 'success'
-      });
+      // msgInfo({
+      //   message: message,
+      //   type: 'success'
+      // });
       // 如果没有则返回空对象
       return (res || {}).data;
     } else if (res.code) {
