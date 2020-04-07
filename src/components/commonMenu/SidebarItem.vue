@@ -58,18 +58,13 @@ export default {
       this.setMenuList(item);
     },
     getMenuIndex(item) {
-      return CommonFun.setMenuIndex(item);
+      return CommonFun.setMenuIndex(item,1);
     },
     onClickLastMenu(item) {
       if (this.specialRoute) {
         //瀑布流
-        // CommonFun.goToZGManage(item)
         this.setMenuList(item);
       } else {
-        // if (CommonFun.loadClientPage(item, JSON.parse(localStorage.getItem('menuList')))) {
-        //   return;
-        // }
-        // this.setActiveIndex(item);
         CommonFun.loadPage(item);
       }
     },
@@ -103,21 +98,7 @@ export default {
           this.normalShortcutList();
         }
       }
-      // if (CommonFun.loadClientPage(item, secondMenu)) {
-      //   return;
-      // }
-      // this.setActiveIndex(item)
       CommonFun.loadPage(item);
-    },
-    setActiveIndex(menu) {
-      if (menu.childNode && menu.childNode.length != 0) {
-        this.setActiveIndex(menu.childNode[0]);
-      } else {
-        let activeTmp = CommonFun.setMenuIndex(menu);
-        this.$store.commit("digitalPark/activeMenuIndex", activeTmp);
-        // Cookies.set("activeMenuIndex",activeTmp);
-      }
-      return;
     },
     findNode(menu, obj,secondMenu) {
       //menu起始是二级菜单,返回的是第三层

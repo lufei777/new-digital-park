@@ -102,7 +102,11 @@
         let yLen  = res.yLength+20
         // console.log(xLen,yLen)
         let paddingLeft =($(".content").width()-xLen*res.xNum)/2
-        let marginTop =($(".large-size-screen-normal").height()-160-yLen*res.yNum)/2
+        let heightOther = ($(".large-size-screen-normal").height()-160-yLen*res.yNum)
+        let margin = heightOther/2/(res.yNum)
+        console.log("margin",margin)
+         yLen = yLen +margin
+        let marginTop =heightOther/2/2
 
         this.styleObj.panelStyle = {
           "grid-template-columns": "repeat("+res.xNum+","+xLen+"px)",
@@ -122,7 +126,7 @@
           width:res.xLength+'px',
           height:res.yLength+'px',
           "grid-column":'unset',
-          "grid-row":'unset'
+          "grid-row":'unset',
         }
       },
       onOutChange(evt){
@@ -203,7 +207,8 @@
       box-sizing: border-box;
       line-height: 1080px;
       border:1px solid pink;
-      margin:0 auto;
+      /*margin:0 auto;*/
+      margin:auto;
       /*grid-row-start: 1;*/
       /*grid-row-end: 4;*/
       /*grid-column-start: 3;*/
