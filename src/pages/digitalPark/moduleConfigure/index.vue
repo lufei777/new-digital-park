@@ -228,6 +228,7 @@
         this.isFull=false
       },
       onDragStart(evt){
+        console.log("start-evt",evt)
         this.curDrag=evt.item.id
         if(this.type==2) {
           this.$refs.homePage.setItemModuleDragFlag('start')
@@ -255,6 +256,7 @@
         }
       },
       onDragMove(evt){
+        console.log("move-evt",evt)
 
       },
       contentBg(item){
@@ -284,6 +286,7 @@
     position: relative;
     height: 100%;
     overflow: hidden;
+    background: @white;
     .left-module-list{
       width:8%;
       height: 100%;
