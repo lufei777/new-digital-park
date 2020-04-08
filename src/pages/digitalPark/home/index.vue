@@ -85,6 +85,7 @@
       <!--<div></div>-->
       <!--<div></div>-->
     <!--</div>-->
+    <!--<el-button @click="fun">11111111111</el-button>-->
   </div>
 </template>
 
@@ -153,6 +154,9 @@ export default {
     }
   },
   methods: {
+    fun(){
+      this.$router.push('/test')
+    },
     onClickItemProduct(item) {
       Cookies.set("moduleType", 2);
       this.$store.commit("digitalPark/menuList",item);
