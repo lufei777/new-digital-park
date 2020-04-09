@@ -152,28 +152,21 @@ export default {
   }
   .el-menu {
     border-right: none;
-  }
-  .el-submenu__title,
-  .el-menu-item {
-    /*font-size: 18px;*/
-    &:hover {
-      background-color: #015f9c !important;
-      color: @white !important;
-      i {
-        color: @white;
+    .el-submenu__title,
+    .el-menu-item {
+      &:hover {
+        background-color: @secondaryColor !important;
+        color: @white !important;
+        i {
+          color: @white;
+        }
       }
     }
-  }
-  .nest-menu {
-    /*font-size: 16px;*/
-  }
-  .el-menu-item.is-active {
-    background-color: #008dea !important;
-    color: @white;
-  }
-  .el-submenu.is-active {
-    background-color: #008dea !important;
-    color: @white;
+    .el-submenu.is-active,
+    .el-menu-item.is-active {
+      background-color: @mainBgColor !important;
+      color: @white;
+    }
   }
 }
 </style>
