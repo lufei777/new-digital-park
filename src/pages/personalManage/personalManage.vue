@@ -69,10 +69,17 @@ export default {
           },
           {
             label: "部门",
-            type: "input",
             prop: "orgName",
+            type: "cascader",
+            dataType: "number",
             clearable: true,
-            span: 4
+            span: 4,
+            showAllLevels: false,
+            props: {
+              label: "name",
+              value: "id",
+              children: "childNode"
+            }
           },
           {
             label: "岗位",
@@ -197,6 +204,9 @@ export default {
   created() {
     SystemManageApi.getDepartmentTree().then(res => {
       this.zTable.setColumnByProp("orgName", {
+        dicData: res[0].childNode
+      });
+      this.zForm.setColumnByProp("orgName", {
         dicData: res[0].childNode
       });
     });
