@@ -3,29 +3,28 @@
     <div class="out-box radius-shadow">
         <ConditionSelect :showEnergy="false" :get-data-flag="getDataFlag"/>
     </div>
-    <!--flex-align-center-->
-    <!--<div class="flex-align-between">-->
-      <!--<div class="rank-box radius-shadow flex-align-center">-->
-        <!--<h4 class="rank-tip">总用电量</h4>-->
-        <!--<span class="rank-value">{{overViewData.elecSum}}<span>kwh</span></span>-->
-      <!--</div>-->
-      <!--<div class="rank-box radius-shadow flex-align-center">-->
-        <!--<h4 class="rank-tip">总用水量</h4>-->
-        <!--<span class="rank-value">{{overViewData.waterSum}}<span>m³</span></span>-->
-      <!--</div>-->
-      <!--<div class="rank-box radius-shadow my-chart" ref="myChart1"></div>-->
-      <!--<div class="rank-box radius-shadow my-chart" ref="myChart2"></div>-->
-    <!--</div>-->
-    <div class="flex">
-      <div class="rank-box radius-shadow flex-align-center" style="margin-right: 1%;width:49%">
-      <h4 class="rank-tip">总用电量</h4>
-      <span class="rank-value">{{overViewData.elecSum}}<span>kwh</span></span>
+    <div class="flex-align-between">
+      <div class="rank-box radius-shadow flex-align-center">
+        <h4 class="rank-tip">总用电量</h4>
+        <span class="rank-value">{{overViewData.elecSum}}<span>kwh</span></span>
       </div>
-      <div class="rank-box radius-shadow flex-align-center" style="width:50%">
-      <h4 class="rank-tip">总用水量</h4>
-      <span class="rank-value">{{overViewData.waterSum}}<span>m³</span></span>
+      <div class="rank-box radius-shadow flex-align-center">
+        <h4 class="rank-tip">总用水量</h4>
+        <span class="rank-value">{{overViewData.waterSum}}<span>m³</span></span>
       </div>
+      <div class="rank-box radius-shadow my-chart" ref="myChart1"></div>
+      <div class="rank-box radius-shadow my-chart" ref="myChart2"></div>
     </div>
+    <!--<div class="flex">-->
+      <!--<div class="rank-box radius-shadow flex-align-center" style="margin-right: 1%;width:49%">-->
+      <!--<h4 class="rank-tip">总用电量</h4>-->
+      <!--<span class="rank-value">{{overViewData.elecSum}}<span>kwh</span></span>-->
+      <!--</div>-->
+      <!--<div class="rank-box radius-shadow flex-align-center" style="width:50%">-->
+      <!--<h4 class="rank-tip">总用水量</h4>-->
+      <!--<span class="rank-value">{{overViewData.waterSum}}<span>m³</span></span>-->
+      <!--</div>-->
+    <!--</div>-->
     <div class="table-box radius-shadow">
       <div class="table-tip">{{commonTip}}能耗展示排名</div>
       <z-table :ref="tableConfig.ref" :options="tableConfig"></z-table>

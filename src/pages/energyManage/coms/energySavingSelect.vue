@@ -157,22 +157,22 @@ export default {
     onTimeChange() {},
     async getEnergyList() {
       let res = await CommonApi.getEnergyListByGroup();
-      // if (this.energySaveFlag == 3 || this.energySaveFlag == 4) {
-      //   this.energySubentryData = res[1].energyType;
-      //   this.energySubentry = res[1].energyType[0].id;
-      // } else if (this.energySaveFlag == 1 || this.energySaveFlag == 2) {
-      //   this.energySubentryData = res[0].energyType;
-      //   this.energySubentry = res[0].energyType[0].id;
-      // }
+      if (this.energySaveFlag == 3 || this.energySaveFlag == 4) {
+        this.energySubentryData = res[1].energyType;
+        this.energySubentry = res[1].energyType[0].id;
+      } else if (this.energySaveFlag == 1 || this.energySaveFlag == 2) {
+        this.energySubentryData = res[0].energyType;
+        this.energySubentry = res[0].energyType[0].id;
+      }
 
       //中钢
-      if (this.energySaveFlag == 3 || this.energySaveFlag == 4) {
-        this.energySubentryData = [res[1]]
-        this.energySubentry = res[1].id;
-      } else if (this.energySaveFlag == 1 || this.energySaveFlag == 2) {
-        this.energySubentryData = [res[0]]
-        this.energySubentry = res[0].id;
-      }
+      // if (this.energySaveFlag == 3 || this.energySaveFlag == 4) {
+      //   this.energySubentryData = [res[1]]
+      //   this.energySubentry = res[1].id;
+      // } else if (this.energySaveFlag == 1 || this.energySaveFlag == 2) {
+      //   this.energySubentryData = [res[0]]
+      //   this.energySubentry = res[0].id;
+      // }
 
     },
     async getAllFloorOfA3() {

@@ -119,19 +119,19 @@
         <div ref="myChart" class="my-chart"></div>
       </div>
     </div>
-    <!--<div class="tip flex-align">-->
-      <!--<span class="icon"></span>-->
-      <!--<span>能耗分类分项占比图</span>-->
-    <!--</div>-->
-    <!--<div class="pieCharts flex-align-between">-->
-      <!--<div class="pieChart box">-->
-        <!--<div ref="pieChart1" class="chart-inner"></div>-->
-      <!--</div>-->
-      <!--<div class="pieChart box">-->
-        <!--<div ref="pieChart2" class="chart-inner"></div>-->
-      <!--</div>-->
-      <!--&lt;!&ndash; <div class="pieChart box"></div> &ndash;&gt;-->
-    <!--</div>-->
+    <div class="tip flex-align">
+      <span class="icon"></span>
+      <span>能耗分类分项占比图</span>
+    </div>
+    <div class="pieCharts flex-align-between">
+      <div class="pieChart box">
+        <div ref="pieChart1" class="chart-inner"></div>
+      </div>
+      <div class="pieChart box">
+        <div ref="pieChart2" class="chart-inner"></div>
+      </div>
+      <!-- <div class="pieChart box"></div> -->
+    </div>
 
     <div class="tip flex-align">
       <span class="icon"></span>
@@ -361,54 +361,29 @@ export default {
     },
     piechart1(res) {
       let myPieChart = this.$echarts.init(this.$refs.pieChart1);
-      // let legendData = [];
-      // let dataList = [];
-      // res.elecList.map(item => {
-      //   legendData.push(item.name);
-      //   var itemObj = {
-      //     value: item.value,
-      //     name: item.name
-      //   };
-      //   dataList.push(itemObj);
-      // });
-      // let seriesData = dataList;
-      // let titleText = "当年分项用电占比";
-      // let data = {
-      //   legendData,
-      //   seriesData,
-      //   titleText,
-      //   legendUi:{
-      //       top:'10',
-      //       right:'30',
-      //     },
-      //     seriesUi:{
-      //       center:['35%','50%']
-      //     }
-      // };
-      let dataList =[{
-        value:0,
-        name:'上升'
-      },{
-        value:0,
-        name:'下降'
-      },{
-        value:0,
-        name:'停止'
-      }]
-      let legendData = ['上升','下降','停止'];
-      let seriesData =dataList
-      let legendUi={
-        // orient: 'horizontal',
-        bottom:20,
-        right:20,
-        textStyle:{
-          color:'#8FD3FA',
-        }
-      }
+      let legendData = [];
+      let dataList = [];
+      res.elecList.map(item => {
+        legendData.push(item.name);
+        var itemObj = {
+          value: item.value,
+          name: item.name
+        };
+        dataList.push(itemObj);
+      });
+      let seriesData = dataList;
+      let titleText = "当年分项用电占比";
       let data = {
         legendData,
         seriesData,
-        legendUi
+        titleText,
+        legendUi:{
+            top:'10',
+            right:'30',
+          },
+          seriesUi:{
+            center:['35%','50%']
+          }
       };
       ChartUtils.hollowPieChart(myPieChart, data);
     },

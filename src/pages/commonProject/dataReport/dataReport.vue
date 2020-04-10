@@ -56,23 +56,23 @@
       name:'日',
       id:'daily'
   }]
-  // let energyList = [{
-  //   name:'电',
-  //   id:'electricity'
-  // },{
-  //   name:'水',
-  //   id:'water'
-  // },{
-  //   name:'热',
-  //   id:'gas'
-  // }]
   let energyList = [{
     name:'电',
     id:'electricity'
   },{
     name:'水',
     id:'water'
+  },{
+    name:'热',
+    id:'gas'
   }]
+  // let energyList = [{
+  //   name:'电',
+  //   id:'electricity'
+  // },{
+  //   name:'水',
+  //   id:'water'
+  // }]
   export default {
     name: 'DataReport',
     components: {
