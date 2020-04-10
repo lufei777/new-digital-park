@@ -37,7 +37,7 @@
         this.initChart(tmp)
       },
       initChart(res){
-        let myChart = echarts.init(this.$refs.myChart);
+        let myChart = this.$echarts.init(this.$refs.myChart);
         let legendData = [];
         let dataList = res;
         res.map(item => {

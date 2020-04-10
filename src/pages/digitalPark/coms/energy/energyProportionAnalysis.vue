@@ -1,5 +1,6 @@
 <template>
   <div class="energy-proportion-analysis">
+    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div class="select-box">
       <el-select v-model="energy" placeholder="请选择" @change="energyChange" size="mini">
         <el-option
@@ -11,7 +12,6 @@
       </el-select>
     </div>
     <div ref="myChart" class="my-chart" id="energy-proportion-analysis-chart"></div>
-    <div class="child-module-name">{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
@@ -25,6 +25,20 @@ export default {
   data() {
     return {
       energy: 34,
+      // energyList: [
+      //   {
+      //     value: 34,
+      //     label: "电"
+      //   },
+      //   {
+      //     value: 37,
+      //     label: "水"
+      //   },
+      //   {
+      //     value: 38,
+      //     label: "热"
+      //   }
+      // ],
       energyList: [
         {
           value: 34,
@@ -33,10 +47,6 @@ export default {
         {
           value: 37,
           label: "水"
-        },
-        {
-          value: 38,
-          label: "热"
         }
       ]
     };
@@ -56,8 +66,9 @@ export default {
     },
     initChart(res) {
       let vm = this;
-      let myChart = echarts.init(this.$refs.myChart ||document.getElementById('energy-proportion-analysis-chart'));
-      let xAxis = res.value && res.value.map(item => item.date && item.date.slice(0, 7));
+      let myChart = this.$echarts.init(this.$refs.myChart ||document.getElementById('energy-proportion-analysis-chart'));
+      let xAxis = res.value && res.value.map(item => item.date?item.date.slice(0, 7):'');
+
       let dqzh = {
         name: "当期综合能耗",
         type: "bar",
@@ -93,7 +104,7 @@ export default {
       ];
       let yAxis = res.unit;
       let data2 = {
-        // legendData,
+        legendData:[],
         xAxis,
         yAxis,
         series,

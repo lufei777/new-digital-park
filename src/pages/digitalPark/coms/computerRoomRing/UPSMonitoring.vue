@@ -27,7 +27,7 @@ export default {
       this.initChart(res);
     },
     initChart(res) {
-      let myChart = echarts.init(this.$refs.myChart);
+      let myChart = this.$echarts.init(this.$refs.myChart);
       let legendData = res.legend;
       let data = {
         legendData,

@@ -111,18 +111,27 @@
           if(this.$route.path=='/digitalPark/homePage'){
             // await DigitalParkApi.updateUserProModules(this.userProModuleList)
           }
-
         }
       },
       onClickItemComponent(item){
+        return ;
         //需要后台配合修改
-         if(this.hideHeader) return ;  //配置页点击不进行操作
-         console.log(item)
-         // let menuList = JSON.parse(localStorage.getItem('menuList'))
-         item.level=3
-         // if(CommonFun.loadClientPage(item,menuList)){
-         //  return;
-         // }
+          if(this.hideHeader) return ;  //配置页点击不进行操作
+          let firstMenu = menuTree[0].childNode.find(first => {
+            return first.id == item.firstMenuId;
+          });
+          let secondMenu = firstMenu.childNode.find(second => {
+            return second.id == item.secondMenuId;
+          });
+          let menuTmp ={}
+          if(secondMenu.clientType==1 && item.clientType!=1 && item.level==3){
+            menuTmp = item
+          }else if(secondMenu.clientType==1 && item.clientType!=1 && item.level!=3){
+            menuTmp = this.findNode(secondMenu,item,secondMenu)
+          }else {
+            menuTmp = secondMenu
+          }
+        this.$store.commit("digitalPark/menuList",menuTmp);
          CommonFun.loadPage(item)
       },
       onClickMoreBtn(){
@@ -152,7 +161,22 @@
             fontSize:30
           }
         }
-      }
+      },
+      findNode(menu, obj,secondMenu) {
+        //menu起始是二级菜单,返回的是第三层
+        menu.childNode.map(child => {
+          if (child.id == obj.id) {
+            if(obj.level==4){
+              this.findMenu = menu;
+            }else{
+              this.findNode(secondMenu,menu,secondMenu);
+            }
+          } else {
+            this.findNode(child,obj,secondMenu);
+          }
+        });
+        return this.findMenu;
+      },
     },
     mounted(){
       document.body.ondrop = function (event) {

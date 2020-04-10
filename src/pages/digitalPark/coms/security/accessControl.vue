@@ -26,20 +26,20 @@
         let res = await CommonApi.getHomeInterfaceMonitor({
           homeId:7
         })
-        let tmp=[{
-          name:'开启门禁',
-          value:res.open
-        },{
-          name:'关闭门禁',
-          value:res.close
-        },{
-          name:'未连接',
-          value:res.unconnected
-        }]
-        this.initChart(tmp)
+        // let tmp=[{
+        //   name:'开启门禁',
+        //   value:res.open
+        // },{
+        //   name:'关闭门禁',
+        //   value:res.close
+        // },{
+        //   name:'未连接',
+        //   value:res.unconnected
+        // }]
+        this.initChart(res)
       },
       initChart(res){
-        let myChart = echarts.init(this.$refs.myChart);
+        let myChart = this.$echarts.init(this.$refs.myChart);
         let legendData = [];
         let dataList = res;
         res.map(item => {

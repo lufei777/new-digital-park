@@ -211,7 +211,7 @@
         this.initZoomChart(res)
       },
       initZoomChart(res){
-        this.myChart = echarts.init(this.$refs.myChart);
+        this.myChart = this.$echarts.init(this.$refs.myChart);
         let titleText = `${this.tmpCommonTip}趋势对比`
         let legendData = this.floorNameList.split("、")
         let xAxis
@@ -279,14 +279,14 @@
         this.initTbhbChart(res)
       },
       initTbhbChart(res) {
-        this.myChart = echarts.init(this.$refs.myChart);
+        this.myChart = this.$echarts.init(this.$refs.myChart);
         let xAxis
         if(this.selectParams.selectType==3 && this.selectParams.radioType==0){
-          xAxis = res.value.map((item)=>item.date.slice(0,16))
+          xAxis = res.value.map((item)=>item.date && item.date.slice(0,16))
         }else if(this.selectParams.selectType==2 && this.selectParams.radioType==1){
-          xAxis = res.value.map((item)=>item.date.slice(0,7))
+          xAxis = res.value.map((item)=>item.date && item.date.slice(0,7))
         }else{
-          xAxis = res.value.map((item)=>item.date.slice(0,10))
+          xAxis = res.value.map((item)=>item.date && item.date.slice(0,10))
         }
         let dqzh={
           name:'当期综合能耗',
@@ -377,7 +377,7 @@
         this.initTypeChart(res)
       },
       initTypeChart(res){
-        this.myChart = echarts.init(this.$refs.myChart);
+        this.myChart = this.$echarts.init(this.$refs.myChart);
         let titleText =`${this.tmpCommonTip}趋势对比`
         let xAxis = []
         if(this.selectType==3 && this.radioType==0){
@@ -452,7 +452,7 @@
         this.initTimeEnergyChart(res)
       },
       initTimeEnergyChart(res){
-        this.myChart = echarts.init(this.$refs.myChart);
+        this.myChart = this.$echarts.init(this.$refs.myChart);
         let titleText =`${this.tmpCommonTip}柱状图`
         let legendData = []
         let xAxis
@@ -500,7 +500,7 @@
         this.initCategoryPieChart(res)
       },
       initCategoryBarChart(res){
-        let myChart1 = echarts.init(this.$refs.myChart1);
+        let myChart1 = this.$echarts.init(this.$refs.myChart1);
         let titleText =`${this.floorNameList}${this.selectParams.startTime}`+
           `${this.selectParams.lastTime?'至'+this.selectParams.lastTime:''}用${this.selectParams.energy[0].name}分项能耗统计`
         let legendData = []
@@ -521,7 +521,7 @@
         ChartUtils.handleBarChart(myChart1,data)
       },
       initCategoryPieChart(res){
-        let myChart2 = echarts.init(this.$refs.myChart2);
+        let myChart2 = this.$echarts.init(this.$refs.myChart2);
         let titleText =`${this.floorNameList}${this.selectParams.startTime}`+
           `${this.selectParams.lastTime?'至'+this.selectParams.lastTime:''}用${this.selectParams.energy[0].name}分项能耗占比分析`
         let legendData = res.map((item)=>item.name)

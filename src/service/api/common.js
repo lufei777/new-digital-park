@@ -297,6 +297,11 @@ class CommonApi {
   @url("/vibe-web/countMonitorStatus")
   @get
   getCountMonitorStatus(){}
+
+  @url("/vibe-web/homeInterfaceAssetDevice")
+  @get
+  getVideoMonitoringStatus(){}
+
 }
 
 export default new CommonApi()

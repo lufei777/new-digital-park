@@ -35,6 +35,8 @@ import airConditioner from '../computerRoomRing/airConditioner'
 import electricTransformerAndDistribution from '../computerRoomRing/electricTransformerAndDistribution'
 import productList from '../largeScreen/productList'
 import largeScreen from '../largeScreen/largeScreen'
+import videoMonitoringStatus from '../buildMonitor/videoMonitoringStatus'
+import doorMagnetic from '../fire/doorMagnetic'
 class exportComs {
   exportComsList = {
     energyProportionAnalysis,
@@ -73,7 +75,9 @@ class exportComs {
     airConditioner,
     electricTransformerAndDistribution,
     productList,
-    largeScreen
+    largeScreen,
+    videoMonitoringStatus,
+    doorMagnetic
   }
 }
 export default new exportComs()

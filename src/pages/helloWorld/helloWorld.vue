@@ -18,22 +18,38 @@
         <!--{{item}}-->
       <!--</div>-->
     <!--</draggable>-->
-    <div class="boxList">
-      <div v-for="(item,index) in proModuleList2" :key="index" class="item-product" :data-id="item.id">
-         {{item.id}}
+    <!--<div class="boxList">-->
+      <!--<div v-for="(item,index) in proModuleList2" :key="index" class="item-product" :data-id="item.id">-->
+         <!--{{item.id}}-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="boxList2">-->
+      <!--<div v-for="(item,index) in proModuleList1" :key="index" class="item-product" :data-id="item.id">-->
+        <!--{{item.id}}-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<transition name="el-zoom-in-center" >-->
+      <!--<div class="item-product"  v-show="animationFlag"></div>-->
+    <!--</transition>-->
+
+    <div class="pieCharts flex-align-between">
+      <div class="pieChart box">
+        <div ref="pieChart1" class="chart-inner"></div>
       </div>
-    </div>
-    <div class="boxList">
-      <div v-for="(item,index) in proModuleList1" :key="index" class="item-product" :data-id="item.id">
-        {{item.id}}
+      <div class="pieChart box">
+        <div ref="pieChart2" class="chart-inner"></div>
       </div>
+      <!-- <div class="pieChart box"></div> -->
     </div>
   </div>
+
 </template>
 
 <script>
+  import echarts from 'echarts'
   import {mapState} from 'vuex'
   import draggable from 'vuedraggable'
+  import ChartUtils from '@/utils/chartUtils'
   var dv = document.getElementById('dv');
   var x = 0;
   var y = 0;
@@ -52,6 +68,7 @@
         proModuleList2:[{id:1,name:{name2:2}},{id:2,name:{name2:3}},{id:3,name:{name2:4}}],
         isDown:false,
         proModuleList1:[{id:4,name:{name2:2}},{id:5,name:{name2:3}},{id:6,name:{name2:4}}],
+        animationFlag:false
       }
     },
     computed:{
@@ -121,13 +138,49 @@
       onUpdate(evt){
         console.log("update-evt",evt)
         console.log("this.",this.proModuleList2)
-      }
+      },
+      initChart1(res){
+        let dataList =[{
+          value:0,
+          name:'上升'
+        },{
+          value:0,
+          name:'下降'
+        },{
+          value:0,
+          name:'停止'
+        }]
+        let myPieChart = this.$echarts.init(this.$refs.pieChart1);
+        let legendData = ['上升','下降','停止'];
+        let seriesData =dataList
+        let legendUi={
+          // orient: 'horizontal',
+          bottom:20,
+          right:20,
+          textStyle:{
+            color:'#8FD3FA',
+            fontSize:14
+          }
+        }
+        let data = {
+          legendData,
+          seriesData,
+          legendUi
+        };
+        ChartUtils.hollowPieChart(myPieChart,data);
+        // myChart.setOption({
+        //   legend:{
+        //     left:'center'
+        //   }
+        // })
+      },
     },
     mounted(){
-      document.body.ondrop = function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
+      // document.body.ondrop = function (event) {
+      //   event.preventDefault();
+      //   event.stopPropagation();
+      // }
+      this.initChart1()
     }
   }
 
@@ -160,15 +213,19 @@
     //     // console.log(tmp)
     //   }
     // });
-    $( ".boxList" ).sortable({
-      revert: true
-    });
-    $( ".item-product" ).draggable({
-      connectToSortable: ".boxList",
-      // containment: "boxList"
-      // helper: "clone",
-      // revert: "invalid"
-    });
+    // $( ".boxList2" ).sortable({
+    //   revert: true
+    // });
+    // $( ".boxList" ).sortable({
+    //   revert: true
+    // });
+    // // $( ".item-product" ).draggable({
+    // //   connectToSortable: ".boxList",
+    // //   // containment: "boxList"
+    // //   // helper: "clone",
+    // //   // revert: "invalid"
+    // // });
+    // $( ".boxList, .item-product" ).disableSelection();
     // $( ".item-product" ).disableSelection();
   })
 </script>
@@ -182,16 +239,42 @@
       width:100px;
       height:100px;
       background: pink;
-      /*margin:20px auto;*/
+      margin:20px auto;
     }
     .drag-box{
       background: yellow;
     }
-    .boxList{
+    .boxList,.boxList2{
       float: left;
-      width:40%;
+      width:100px;
+      /*width:40%;*/
       margin-right: 10%;
       background: yellowgreen;
+    }
+    .my-chart{
+      width:100%;
+      height:90%;
+    }
+    .pieCharts {
+      width: 100%;
+      height: 435px;
+      /*background: #fff;*/
+      box-sizing: border-box;
+      margin-bottom: 15px;
+      .pieChart {
+        width: 49%;
+        height: 100%;
+        // background: transparent;
+        border-radius: 6px;
+        box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.1);
+        /*padding:10px;*/
+        box-sizing: border-box;
+        background-color: @white;
+      }
+    }
+    .chart-inner{
+      width:100%;
+      height:100%;
     }
   }
   #dv {
@@ -200,10 +283,6 @@
     background-color:blue;
     border-radius:50%;
     /*position:absolute;*/
-  }
-  .boxList{
-    width:100%;
-    height:500px;
   }
 
 </style>

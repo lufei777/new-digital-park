@@ -1,16 +1,17 @@
 <template>
   <div class="elevator-monitor-coms">
     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
-    <div class="chart-box flex my-chart">
-      <div class="chart-box-item">
-        <div class="chart1" ref="myChart1"></div>
-        <span>直梯</span>
-      </div>
-      <div class="chart-box-item">
-        <div class="chart1" ref="myChart2"></div>
-        <span>扶梯</span>
-      </div>
-    </div>
+    <!--<div class="chart-box flex my-chart">-->
+      <!--<div class="chart-box-item">-->
+        <!--<div class="chart1" ref="myChart1"></div>-->
+        <!--<span>直梯</span>-->
+      <!--</div>-->
+      <!--<div class="chart-box-item">-->
+        <!--<div class="chart1" ref="myChart2"></div>-->
+        <!--<span>扶梯</span>-->
+      <!--</div>-->
+    <!--</div>-->
+    <div class="my-chart" ref="myChart1"></div>
   </div>
 </template>
 
@@ -31,24 +32,26 @@
           homeId:4
         })
         this.initChart1(res)
-        this.initChart2(res)
+        // this.initChart2(res)
       },
       initChart1(res){
         let dataList =[{
-          value:res[0].up,
+          value:parseFloat(res[0].up),
           name:'上升'
         },{
-          value:res[0].down,
+          value:parseFloat(res[0].down),
           name:'下降'
         },{
-          value:res[0].stop,
+          value:parseFloat(res[0].stop),
           name:'停止'
         }]
-        let myChart = echarts.init(this.$refs.myChart1);
+        let myChart = this.$echarts.init(this.$refs.myChart1);
         let legendData = ['上升','下降','停止'];
         let seriesData =dataList
         let legendUi={
-          orient: 'horizontal',
+          // orient: 'horizontal',
+          bottom:20,
+          right:20,
           textStyle:{
             color:'#8FD3FA',
             fontSize:this.moduleItem.largeScreen?this.moduleItem.fontSize:14
@@ -60,11 +63,11 @@
           legendUi
         };
         ChartUtils.hollowPieChart(myChart,data);
-        myChart.setOption({
-          legend:{
-            left:'center'
-          }
-        })
+        // myChart.setOption({
+        //   legend:{
+        //     left:'center'
+        //   }
+        // })
       },
       initChart2(res){
         let dataList =[{
@@ -77,7 +80,7 @@
           value:res[1].stop,
           name:'停止'
         }]
-        let myChart = echarts.init(this.$refs.myChart2);
+        let myChart = this.$echarts.init(this.$refs.myChart2);
         let seriesData =dataList
         let data = {
           seriesData,

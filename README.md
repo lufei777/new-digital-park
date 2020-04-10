@@ -298,5 +298,17 @@
  ...大致同上
   1）seriesName
   2）seriesData 
+  
+ 
+  ```
+  部署中钢要修改的文件：
+  1.energyManage/energyShow/rankEnergy  去掉两个饼状图和表格的分项用水/电
+  2.energyManage/home/homePage   去掉两个饼状图和表格的分项用水/电
+  3.digitalPark/coms/buildMonitor/elevator....   去掉扶梯
+  4.components/confitionSelect  只有水电
+  5.dataReport
+  6.evergySavingSelect
+
+ ```
 
 
