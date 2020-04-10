@@ -132,29 +132,29 @@
           this.curEnergy=[res[0].energyType[0],res[0].energyType[1]]
         }else{
            let tmp=[]
-          //  if(this.fromFlag==1){
-          //    res.map((item)=>{
-          //      tmp.push(item)
-          //      item.energyType.map((val)=>{
-          //        tmp.push(val)
-          //      })
-          //    })
-          //  }else if(this.fromFlag==2 || this.fromFlag==4){
-          //    res.map((item)=>{
-          //      item.energyType.map((val)=>{
-          //        tmp.push(val)
-          //      })
-          //    })
-          //  }else if(this.fromFlag==5){
-          //   res.map((item)=>{
-          //     tmp.push(item)
-          //   })
-          // }
-           if(this.fromFlag==1 || this.fromFlag==2 || this.fromFlag==4 || this.fromFlag==5 ){
+           if(this.fromFlag==1){
              res.map((item)=>{
                tmp.push(item)
+               item.energyType.map((val)=>{
+                 tmp.push(val)
+               })
              })
-           }
+           }else if(this.fromFlag==2 || this.fromFlag==4){
+             res.map((item)=>{
+               item.energyType.map((val)=>{
+                 tmp.push(val)
+               })
+             })
+           }else if(this.fromFlag==5){
+            res.map((item)=>{
+              tmp.push(item)
+            })
+          }
+           // if(this.fromFlag==1 || this.fromFlag==2 || this.fromFlag==4 || this.fromFlag==5 ){
+           //   res.map((item)=>{
+           //     tmp.push(item)
+           //   })
+           // }
            if(this.fromFlag){
              this.energyList = tmp
              this.curEnergyId=tmp[0].id

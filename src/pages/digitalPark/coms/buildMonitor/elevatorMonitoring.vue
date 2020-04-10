@@ -1,17 +1,17 @@
 <template>
   <div class="elevator-monitor-coms">
     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
-    <!--<div class="chart-box flex my-chart">-->
-      <!--<div class="chart-box-item">-->
-        <!--<div class="chart1" ref="myChart1"></div>-->
-        <!--<span>直梯</span>-->
-      <!--</div>-->
-      <!--<div class="chart-box-item">-->
-        <!--<div class="chart1" ref="myChart2"></div>-->
-        <!--<span>扶梯</span>-->
-      <!--</div>-->
-    <!--</div>-->
-    <div class="my-chart" ref="myChart1"></div>
+    <div class="chart-box flex my-chart">
+      <div class="chart-box-item large-item">
+        <div class="chart1" ref="myChart1"></div>
+        <span>直梯</span>
+      </div>
+      <div class="chart-box-item small-item">
+        <div class="chart1" ref="myChart2"></div>
+        <span>扶梯</span>
+      </div>
+    </div>
+    <!--<div class="my-chart" ref="myChart1"></div>-->
   </div>
 </template>
 
@@ -32,7 +32,7 @@
           homeId:4
         })
         this.initChart1(res)
-        // this.initChart2(res)
+        this.initChart2(res)
       },
       initChart1(res){
         let dataList =[{
@@ -46,7 +46,7 @@
           name:'停止'
         }]
         let myChart = this.$echarts.init(this.$refs.myChart1);
-        let legendData = ['上升','下降','停止'];
+        let legendData = []//['上升','下降','停止'];
         let seriesData =dataList
         let legendUi={
           // orient: 'horizontal',
@@ -60,14 +60,17 @@
         let data = {
           legendData,
           seriesData,
-          legendUi
+          // legendUi
         };
         ChartUtils.hollowPieChart(myChart,data);
-        // myChart.setOption({
-        //   legend:{
-        //     left:'center'
-        //   }
-        // })
+        myChart.setOption({
+          legend:{
+            orient: 'horizontal',
+            left:'center',
+            bottom:'',
+            right:''
+          }
+        })
       },
       initChart2(res){
         let dataList =[{
@@ -83,6 +86,7 @@
         let myChart = this.$echarts.init(this.$refs.myChart2);
         let seriesData =dataList
         let data = {
+          legendData:[],
           seriesData,
         };
         ChartUtils.hollowPieChart(myChart,data);
@@ -108,6 +112,12 @@
     .chart1{
       width:90%;
       height:100%;
+    }
+    .large-item{
+       /*width:55%;*/
+    }
+    .small-item{
+      /*width:45%;*/
     }
   }
 </style>
