@@ -87,7 +87,7 @@
         })
         // res.modules[1] = null
         this.moduleList = res.modules || []
-        this.centerIndex = res.modules.findIndex(item=>item.id==0)
+        this.centerIndex = res.modules.findIndex(item=>item.id==0 && item.moduleList)
         this.drawPageStyle(res)
 
         setTimeout(()=>{

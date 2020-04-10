@@ -26,9 +26,6 @@ moment.locale('zh-cn');//需要汉化
 window.moment = moment;
 Vue.prototype.$moment = moment;//赋值使用
 
-// 拖拽插件
-import VueDND from 'awe-dnd'
-Vue.use(VueDND)
 
 import axios from '@/service/axios/AxiosInterceptors.js'
 Vue.prototype.$axios = axios;
@@ -65,6 +62,10 @@ Vue.use(VueFragment.Plugin);
 if (!Cookies.get('moduleType')) {
   Cookies.set('moduleType', 2)
 }
+
+//charts
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts;
 
 Vue.config.productionTip = false
 

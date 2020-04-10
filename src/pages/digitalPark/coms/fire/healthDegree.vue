@@ -1,7 +1,7 @@
 <template>
   <div class="health-degree">
+    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div class="my-chart" ref="myChart"></div>
-    <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
@@ -33,7 +33,7 @@ export default {
       // D77443
     },
     initChart(res) {
-      let myChart = echarts.init(this.$refs.myChart);
+      let myChart = this.$echarts.init(this.$refs.myChart);
       let legendData = [];
       let color = ["#D77443", "#0088FF", "#66FBF9"];
       res.map(item => {

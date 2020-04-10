@@ -28,7 +28,7 @@ export default {
     },
     initChart(res) {
       //document.getElementById('test-module-three-chart')this.$refs.myChart
-      let myChart = echarts.init(this.$refs.myChart || document.getElementById('test-module-three-chart'));
+      let myChart = this.$echarts.init(this.$refs.myChart || document.getElementById('test-module-three-chart'));
       let legendData = [];
       let dataList = [];
       res.elecList.map(item => {

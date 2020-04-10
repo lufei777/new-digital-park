@@ -1,5 +1,6 @@
 <template>
-  <div class="intrusion-alarm">
+  <div class="door-magnetic-coms">
+    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div class="my-chart" ref="myChart"></div>
   </div>
 </template>
@@ -8,9 +9,10 @@
   import ChartUtils from '@/utils/chartUtils'
   import CommonApi from '@/service/api/common'
   export default {
-    name: 'healthDegree',
+    name: '',
     components: {
     },
+    props: ["moduleItem"],
     data () {
       return {
       }
@@ -20,19 +22,11 @@
     watch:{
     },
     methods: {
-     async getInstrusionData(){
-       let res = await CommonApi.getHomeInterfaceMonitor({
-         homeId:8
-       })
-       
-       let tmp = [{
-          name:'报警点数',
-          value:res.alarm
-       },{
-         name:'未报警点数',
-         value:res.normal
-       }]
-        this.initChart(tmp)
+      async getAccessData(){
+        let res = await CommonApi.getHomeInterfaceMonitor({
+          homeId:11
+        })
+        this.initChart(res)
       },
       initChart(res){
         let myChart = this.$echarts.init(this.$refs.myChart);
@@ -46,26 +40,24 @@
           legendData,
           seriesData,
           legendUi:{
-            top:'center',
-            right:'20',
-            textStyle:{
-              color:'#8FD3FA'
-            },
-            formatter:function(name){
-              let obj=res.find((item)=>item.name==name)
-              return name+':'+obj.value
+            ...this.moduleItem.legendUi,
+            ...{
+              formatter:function(name){
+                let obj=res.find((item)=>item.name==name)
+                return name+'：'+obj.value
+              }
             }
           },
           seriesUi:{
-            center:['35%','50%']
+            center:['40%','50%']
           },
-          color:['red','gray']
+          color:['#83D587','red','yellow']
         };
         ChartUtils.hollowPieChart(myChart,data);
       }
     },
     mounted(){
-      this.getInstrusionData()
+      this.getAccessData()
     }
   }
 </script>

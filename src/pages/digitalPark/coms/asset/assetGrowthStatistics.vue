@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     initChart(){
-      let myChart = echarts.init(this.$refs.myChart || document.getElementById('asset-growth-statistics-chart'));
+      let myChart = this.$echarts.init(this.$refs.myChart || document.getElementById('asset-growth-statistics-chart'));
       let option = {
         xAxis: {
           type: 'category',

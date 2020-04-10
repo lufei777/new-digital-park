@@ -91,7 +91,7 @@
                         [this.monitor1.text+'均方差',this.monitor2.text+'均方差'],
                        ]
            for(let i=1;i<=4;i++){
-               this['myChart'+i]=echarts.init(this.$refs['myChart'+i])
+               this['myChart'+i]=this.$echarts.init(this.$refs['myChart'+i])
                let xAxis =res.xAxis
                let data={
                  titleText:'',

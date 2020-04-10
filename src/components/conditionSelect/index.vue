@@ -68,6 +68,7 @@
     name:'ConditionSelect',
     components: {
     },
+    //fromFlag 1:空间对比 2:同比环比分析 3:能耗对比 4:分时能耗 5:分项能耗
     props:['isGroup','showEnergy','fromFlag','getDataFlag'],
     data () {
       return {
@@ -120,7 +121,6 @@
       async getEnergyList(){
         let res = await CommonApi.getEnergyListByGroup()
         if(this.isGroup){
-          console.log(1)
           res.map((item,index)=>{
             item.disabled=false
             if(index!=0){
@@ -131,21 +131,26 @@
           this.curEnergyId=[res[0].energyType[0].id,res[0].energyType[1].id]
           this.curEnergy=[res[0].energyType[0],res[0].energyType[1]]
         }else{
-          let tmp=[]
-           if(this.fromFlag==1){
-             res.map((item)=>{
-               tmp.push(item)
-               item.energyType.map((val)=>{
-                 tmp.push(val)
-               })
-             })
-           }else if(this.fromFlag==2 || this.fromFlag==4){
-             res.map((item)=>{
-                   item.energyType.map((val)=>{
-                     tmp.push(val)
-                   })
-                 })
-           }else if(this.fromFlag==5){
+           let tmp=[]
+          //  if(this.fromFlag==1){
+          //    res.map((item)=>{
+          //      tmp.push(item)
+          //      item.energyType.map((val)=>{
+          //        tmp.push(val)
+          //      })
+          //    })
+          //  }else if(this.fromFlag==2 || this.fromFlag==4){
+          //    res.map((item)=>{
+          //      item.energyType.map((val)=>{
+          //        tmp.push(val)
+          //      })
+          //    })
+          //  }else if(this.fromFlag==5){
+          //   res.map((item)=>{
+          //     tmp.push(item)
+          //   })
+          // }
+           if(this.fromFlag==1 || this.fromFlag==2 || this.fromFlag==4 || this.fromFlag==5 ){
              res.map((item)=>{
                tmp.push(item)
              })

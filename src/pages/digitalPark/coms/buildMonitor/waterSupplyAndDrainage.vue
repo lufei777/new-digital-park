@@ -48,7 +48,7 @@
        height:95%;
      }
     .item-water{
-      padding:20px;
+      padding:0 20px;
       color:@dashboardColor;
       text-align: center;
     }

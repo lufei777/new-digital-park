@@ -81,7 +81,7 @@
             name:'均方差'
         }]
         let legendData=['最大值','最小值','平均值','均方差']
-          this.myChart=echarts.init(this.$refs.myChart)
+          this.myChart=this.$echarts.init(this.$refs.myChart)
           let xAxis =res.xAxis
           let data={
             titleText:'',

@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     initChart(){
-      let myChart = echarts.init(this.$refs.myChart || document.getElementById('asset-type-proportion-chart'));
+      let myChart = this.$echarts.init(this.$refs.myChart || document.getElementById('asset-type-proportion-chart'));
       let option = {
         tooltip: {
           trigger: 'axis',

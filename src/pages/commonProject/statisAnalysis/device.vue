@@ -67,7 +67,7 @@ export default {
       });
     },
     createPieEcharts(res) {
-      this.myChart = echarts.init(this.$refs.myChart);
+      this.myChart = this.$echarts.init(this.$refs.myChart);
       let titleText = "传感器状态统计";
       let legendData = ["不可用", "正常", "警告", "错误"];
       let seriesData = res.values;
@@ -97,7 +97,7 @@ export default {
       });
     },
     createColumnEcharts(data) {
-      let myColumnEcharts = echarts.init(this.$refs.myColumnEcharts);
+      let myColumnEcharts = this.$echarts.init(this.$refs.myColumnEcharts);
       let option = {
         tooltip: {
           trigger: "axis",

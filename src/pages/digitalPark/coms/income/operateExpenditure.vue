@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     initChart() {
-      let myChart = echarts.init(this.$refs.myChart);
+      let myChart = this.$echarts.init(this.$refs.myChart);
       let option = {
         tooltip: {
           trigger: "axis"

@@ -36,7 +36,7 @@
         this.initChart(tmp)
       },
       initChart(res){
-        let myChart = echarts.init(this.$refs.myChart);
+        let myChart = this.$echarts.init(this.$refs.myChart);
         let legendData = [];
         let total=0
         res.map(item => {
