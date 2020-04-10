@@ -18,7 +18,12 @@
           <el-button :size="size" type="primary" @click="entryRecord">录入</el-button>
           <el-button :size="size" type="primary">导入</el-button>
           <el-button :size="size" type="primary">导出</el-button>
-          <el-button :size="size" type="primary" @click="bulkDel(selectedData)">批量删除</el-button>
+          <el-button
+            :disabled="!(selectedData.length > 0)"
+            :size="size"
+            type="primary"
+            @click="bulkDel(selectedData)"
+          >批量删除</el-button>
         </template>
 
         <template slot="operation" slot-scope="{size,row}">
@@ -131,7 +136,7 @@ export default {
         customTopPosition: "right",
         serverMode: { url: revenueExpendApi.getBudgetList },
         operation: {
-          width: 170
+          width: 190
         },
         columnConfig: [
           { label: "编号", prop: "recordId", width: 200 },
@@ -260,10 +265,10 @@ export default {
       this.routePush({ flag: "edit", row });
     },
     bulkDel(selectedData) {
-      if (!selectedData.length) {
+      /* if (!selectedData.length) {
         commonFun.deleteTip(this, false, "请选择数据");
         return;
-      }
+      } */
 
       let ids = selectedData.map(item => {
         return item.recordId;

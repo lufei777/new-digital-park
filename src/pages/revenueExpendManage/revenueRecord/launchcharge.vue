@@ -302,7 +302,8 @@ export default {
       // examineState 审核状态
       let { flag = "add", recordId, examineState } = this.$route.query;
       // 赋值页面配置
-      this.pageConfig = this.formatPageConfig(apiConfig[flag]);
+      this.pageConfig = apiConfig[flag];
+      this.formatPageConfig(this.pageConfig);
       // 有budgetType，则需要对options进行格式化
       this.formOptions.group.forEach(group => {
         this.formatFormOptions(group.forms);
@@ -376,9 +377,10 @@ export default {
       });
     },
     formatPageConfig(config) {
-      const titles = RevenueExpendManageDic.titles;
-      config.title = titles[config.flag][this.budgetType];
-      return config;
+      if (this.isAdd || this.isEdit) {
+        const titles = RevenueExpendManageDic.titles;
+        config.title = titles[config.flag][this.budgetType];
+      }
     },
     clearForm() {
       this.$refs[this.leaseManageForm.ref].resetForm();
