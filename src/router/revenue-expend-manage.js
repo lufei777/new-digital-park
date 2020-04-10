@@ -14,7 +14,7 @@ export default [{
         {
             path: '/launchcharge',
             name: 'launchcharge',
-            meta: { title: '发起收费' },
+            meta: { title: '发起记录' },
             component: () => import('@/pages/revenueExpendManage/revenueRecord/launchcharge')
         },
         {

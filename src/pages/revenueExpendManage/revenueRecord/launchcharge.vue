@@ -302,19 +302,16 @@ export default {
       // examineState 审核状态
       let { flag = "add", recordId, examineState } = this.$route.query;
       // 赋值页面配置
-      this.pageConfig = apiConfig[flag];
-
+      this.pageConfig = this.formatPageConfig(apiConfig[flag]);
       // 有budgetType，则需要对options进行格式化
       this.formOptions.group.forEach(group => {
         this.formatFormOptions(group.forms);
       });
-
       // 拿取记录id
       if (recordId) {
         this.model.recordId = recordId;
         this.getBudgetByRecordId(recordId);
       }
-
       // 如果是录入 和 完善，则显示entry的group
       if (this.isEntry || this.isUpdate || this.isDetail) {
         this.getGroupByProp("entry").display = true;
@@ -323,12 +320,10 @@ export default {
           this.getGroupByProp("entry").disabled = false;
         }
       }
-
       // 添加审核人表单
       this.getGroupByProp("checkPeopleReason").forms.push(
         this.checkPeopleReason
       );
-
       // 最后将配置合并
       this.formOptions = {
         ...this.formOptions,
@@ -379,6 +374,11 @@ export default {
           this.$set(item, "label", fields[item.prop][this.budgetType]);
         }
       });
+    },
+    formatPageConfig(config) {
+      const titles = RevenueExpendManageDic.titles;
+      config.title = titles[config.flag][this.budgetType];
+      return config;
     },
     clearForm() {
       this.$refs[this.leaseManageForm.ref].resetForm();
@@ -432,6 +432,10 @@ export default {
     }
   },
   computed: {
+    // 发起
+    isAdd() {
+      return this.pageConfig.flag === "add";
+    },
     // 编辑
     isEdit() {
       return this.pageConfig.flag === "edit";
@@ -561,7 +565,11 @@ export default {
       return checkPeople;
     },
     budgetType() {
-      return (this.$route.query && this.$route.query.budgetType) || 0;
+      if (this.$route.query) {
+        const budgetType = this.$route.query.budgetType;
+        return typeof budgetType != "undefined" ? budgetType : 0;
+      }
+      return 0;
     }
   },
   watch: {

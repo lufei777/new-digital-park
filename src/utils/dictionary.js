@@ -244,6 +244,10 @@ export const RevenueExpendManageDic = {
     moduleId: ["收入类型", "支出类型"],
     payName: ["收款方", "支付方"],
     incomeTime: ["入账日期", "支出日期"]
+  },
+  titles: {
+    add: ['发起收费', '发起支出'],
+    edit: ['编辑收费', '编辑支出']
   }
 }
 
