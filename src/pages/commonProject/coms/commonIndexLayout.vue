@@ -47,6 +47,7 @@ export default {
       this.$emit("onclickcollapsebtn");
     },
     computedHeight() {
+      console.log(this);
       this.content = document.querySelector(".content");
       this.routerView = document.querySelector(".router-view");
       const deviceWidth = document.body.clientWidth;
@@ -62,7 +63,7 @@ export default {
     });
     window.addEventListener(
       "resize",
-      _.throttle(this.computedHeight, 200).call(this)
+      _.throttle(this.computedHeight.bind(this), 200)
     );
   }
 };
