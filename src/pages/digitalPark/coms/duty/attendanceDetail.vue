@@ -1,7 +1,7 @@
 <template>
   <div class="attendance-detail">
+    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <z-table :ref="leaseManageTable.ref" :options="leaseManageTable"></z-table>
-    <div style="margin-bottom:10px;">{{moduleItem.moduleName}}</div>
   </div>
 </template>
 

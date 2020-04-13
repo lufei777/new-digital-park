@@ -11,7 +11,7 @@
                  :is="item.componentName"
                  :moduleItem="moduleItemData(item)"
                  class="item-component flex-colum-center"
-                 @click.self="onClickItemComponent(item)"
+                 @click.native="onClickItemComponent(item)"
       />
     </div>
 
@@ -114,10 +114,18 @@
         }
       },
       onClickItemComponent(item){
-        return ;
+         console.log("clickitem",item)
         //需要后台配合修改
           if(this.hideHeader) return ;  //配置页点击不进行操作
-          let firstMenu = menuTree[0].childNode.find(first => {
+
+          if(!item.routeAddress){
+            this.$message({
+              type:'warning',
+              message:'该模块还未配置路由~'
+            })
+            return;
+          }
+          let firstMenu = this.menuTree[0].childNode.find(first => {
             return first.id == item.firstMenuId;
           });
           let secondMenu = firstMenu.childNode.find(second => {
@@ -131,18 +139,20 @@
           }else {
             menuTmp = secondMenu
           }
-        this.$store.commit("digitalPark/menuList",menuTmp);
+         this.$store.commit("digitalPark/menuList",menuTmp);
+          item.childNode=[]
          CommonFun.loadPage(item)
       },
-      onClickMoreBtn(){
+      onClickMoreBtn(){s
         Cookies.set('moduleType',2)
         this.menuTree[0].childNode.map((item)=>{
           item.childNode.map((child)=>{
-             if(child.id==this.moduleData.menuId){
-               localStorage.setItem("menuList",JSON.stringify(child))
-             }
+            if(child.id==this.moduleData.menuId){
+              this.$store.commit("digitalPark/menuList",child);
+            }
           })
         })
+        this.moduleData.childNode = []
         CommonFun.loadPage(this.moduleData)
       },
       moduleItemData(item){

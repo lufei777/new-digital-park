@@ -1,5 +1,6 @@
 <template>
   <div class="operate-income">
+    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div class="select-box">
       <el-button size="mini" :style="Bg">年报</el-button>
       <el-button size="mini">月报</el-button>
@@ -14,7 +15,6 @@
     </div>
 
     <div ref="myChart" class="my-chart" id="operate-income-chart"></div>
-    <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
@@ -72,10 +72,10 @@
         // window.onresize = myChart.resize;
         let resizeBox = $("#operate-income-chart").parents(".item-product-coms");
         ChartUtils.handlePieChart(myChart, data, resizeBox);
-        myChart.on("click", params => {
-          console.log(params);
-          console.log("routeAddress", this.routeAddress);
-        });
+        // myChart.on("click", params => {
+        //   console.log(params);
+        //   console.log("routeAddress", this.routeAddress);
+        // });
 
         // let option={
         //    // title:{
