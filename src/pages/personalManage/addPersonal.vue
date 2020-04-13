@@ -563,6 +563,15 @@ export default {
     });
   },
   methods: {
+    hasId() {
+      let id = this.model.id;
+      if (typeof id === "string" && id.length != 0) {
+        return true;
+      } else if (typeof id === "number") {
+        return true;
+      }
+      return false;
+    },
     nextStep({ model = {}, hide = () => {}, step = ++this.step }) {
       this.resetForm(); // 重置form
       hide(); // 隐藏提交状态
@@ -595,7 +604,7 @@ export default {
       this.step = Number(index);
     },
     submit(model, hide) {
-      if (this.pageConfig.flag === "edit" && this.model.id.length > 0) {
+      if (this.pageConfig.flag === "edit" && this.hasId()) {
         // 更新信息
         this.updateInfo(model, hide);
       } else {
