@@ -1,5 +1,6 @@
 <template>
   <div class="ganged-log">
+    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div class="my-chart">
       <div class="ganged-log-header">
         <span style="width:14%">序号</span>
@@ -16,7 +17,6 @@
         </li>
       </ul>
     </div>
-    <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 

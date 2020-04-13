@@ -2,11 +2,11 @@
   <div class="task-person-task">
     <!--<div ref="pieCharts" class="my-chart" id="task-person-task-chart"></div>-->
     <!--<div class="my-chart">-->
+    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <img
       style="width:96%;height:auto;"
       src="../../../../../static/image/digitalPark/renwu1_tmp.png" alt="">
   <!--</div>-->
-    <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 

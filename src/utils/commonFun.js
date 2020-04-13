@@ -1610,7 +1610,7 @@ class commonFun {
 
   loadClientPage(item) {
     if (item.name == "物业系统") {
-      invokeClientMethod('goToZGManage');
+      this.invokeClientMethod('goToZGManage');
       return true;
     }
     if (typeof item === 'undefined') {
@@ -1637,7 +1637,7 @@ class commonFun {
           return second.id == item.secondMenuId;
         });
         // console.log(secondMenu, id)
-        invokeClientMethod('goToClientPage', JSON.stringify(secondMenu), id + "");
+        this.invokeClientMethod('goToClientPage', JSON.stringify(secondMenu), id + "");
         return true;
       }
     }

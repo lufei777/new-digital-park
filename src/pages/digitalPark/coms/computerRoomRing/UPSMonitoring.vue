@@ -1,7 +1,7 @@
 <template>
   <div class="ups-monitoring">
+    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div class="my-chart" ref="myChart"></div>
-    <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 

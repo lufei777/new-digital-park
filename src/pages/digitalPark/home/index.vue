@@ -119,6 +119,7 @@ export default {
       menuConfig: {
         mode: "horizontal",
         bgColor: "#fff",
+        activeTextColor:"#606266",
         textColor: "#606266",
         specialRoute: true
       },

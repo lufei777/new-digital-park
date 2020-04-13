@@ -1,7 +1,7 @@
 <template>
   <div class="operate-expenditure">
+     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
      <div ref="myChart" class="my-chart"></div>
-    <div>{{moduleItem.moduleName}}</div>
     <!--<z-charts :options="chartConfig"></z-charts>-->
   </div>
 </template>
