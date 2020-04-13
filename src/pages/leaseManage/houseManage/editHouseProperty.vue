@@ -5,7 +5,7 @@
         <span class="icon"></span>
         <span>{{pageConfig.title}}</span>
       </span>
-      <div class="form">
+      <div v-loading="pageLoading" class="form">
         <z-form
           :ref="leaseManageForm.ref"
           :options="leaseManageForm"
@@ -64,6 +64,7 @@ const apiConfig = {
 export default {
   data() {
     return {
+      pageLoading: false,
       model: {
         priceType: LeaseManageDic.PriceType[0].value
       },
@@ -209,9 +210,7 @@ export default {
       let { id, flag } = this.$route.query;
       if (id) {
         this.pageConfig = _.cloneDeep(apiConfig[flag]);
-        this.getPropertyDetail({ id }).then(res => {
-          this.model = { ...this.model, ...res };
-        });
+        this.getPropertyDetail(id);
       }
       // 传递过来额外的配置
       this.leaseManageForm = {
@@ -250,8 +249,16 @@ export default {
     back() {
       this.$router.back();
     },
-    getPropertyDetail(row) {
-      return leaseManageApi.houseDetails(row);
+    getPropertyDetail(id) {
+      this.pageLoading = true;
+      leaseManageApi
+        .houseDetails({ id })
+        .then(res => {
+          this.model = { ...this.model, ...res };
+        })
+        .finally(() => {
+          this.pageLoading = false;
+        });
     }
   },
   watch: {
