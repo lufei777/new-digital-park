@@ -221,7 +221,6 @@
   </div>
 </template>
 <script>
-
 // import column from "./components/column";
 import config from "../../../global/config";
 import props from "../../../common/props";
@@ -427,11 +426,6 @@ export default {
         .then(res => {
           this._setTableData(res[this.listKey]);
           this.setPaginationTotal(res[this.totalKey]);
-        })
-        .catch(err => {
-          //加载中结束
-          this.loading = false;
-          throw err;
         })
         .finally(() => {
           //加载中结束

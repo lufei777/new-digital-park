@@ -49,7 +49,6 @@
 </template>
 
 <script>
-
 import props from "../../../common/props";
 import events from "../../../common/events";
 import { validatenull } from "../../../utils/validate";
@@ -102,7 +101,7 @@ export default {
       default: () => ({})
     },
     filesize: {
-      type: String
+      type: [String, Number]
     },
     drag: {
       type: Boolean,
@@ -327,6 +326,9 @@ export default {
     isOversize(filesize) {
       if (!this.filesize) {
         return false;
+      }
+      if (typeof this.filesize === "number") {
+        this.filesize = this.filesize.toString() + "kb";
       }
       let unit = this.filesize.toUpperCase();
       let fileSizeLimit = parseFloat(this.filesize);
