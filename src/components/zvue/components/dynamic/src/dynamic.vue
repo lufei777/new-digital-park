@@ -12,7 +12,7 @@
           :disabled="disabled"
           circle
         ></el-button>
-      </template>-->
+      </template> -->
       <template slot-scope="{scopeRow:scope}" slot="index">
         <el-button
           v-if="!delBtn && hoverList[scope.row.$index] && !disabled"
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+
 import props from "../../../common/props";
 import events from "../../../common/events";
 import { deepClone } from "../../../utils/util";
@@ -88,7 +89,7 @@ export default {
             options.uiConfig.height = "auto";
           } else {
             options.uiConfig = {
-              size: this.children.size,
+              size: this.children.size || 'small',
               pagination: false,
               height: "auto"
             };

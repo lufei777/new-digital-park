@@ -3,7 +3,6 @@
     <div class="out-box radius-shadow">
         <ConditionSelect :showEnergy="false" :get-data-flag="getDataFlag"/>
     </div>
-    <!--flex-align-center-->
     <div class="flex-align-between">
       <div class="rank-box radius-shadow flex-align-center">
         <h4 class="rank-tip">总用电量</h4>
@@ -16,6 +15,16 @@
       <div class="rank-box radius-shadow my-chart" ref="myChart1"></div>
       <div class="rank-box radius-shadow my-chart" ref="myChart2"></div>
     </div>
+    <!--<div class="flex">-->
+      <!--<div class="rank-box radius-shadow flex-align-center" style="margin-right: 1%;width:49%">-->
+      <!--<h4 class="rank-tip">总用电量</h4>-->
+      <!--<span class="rank-value">{{overViewData.elecSum}}<span>kwh</span></span>-->
+      <!--</div>-->
+      <!--<div class="rank-box radius-shadow flex-align-center" style="width:50%">-->
+      <!--<h4 class="rank-tip">总用水量</h4>-->
+      <!--<span class="rank-value">{{overViewData.waterSum}}<span>m³</span></span>-->
+      <!--</div>-->
+    <!--</div>-->
     <div class="table-box radius-shadow">
       <div class="table-tip">{{commonTip}}能耗展示排名</div>
       <z-table :ref="tableConfig.ref" :options="tableConfig"></z-table>
@@ -74,7 +83,7 @@
         this.initWaterChart(this.overViewData)
       },
       initElecChart(res){
-        let myChart1 = echarts.init(this.$refs.myChart1);
+        let myChart1 = this.$echarts.init(this.$refs.myChart1);
         let titleText =`${this.commonTip}分项耗电占比分析`
         let legendData = res.elecList && res.elecList.map((item)=>item.name)
         let series=[]
@@ -92,7 +101,7 @@
         ChartUtils.handlePieChart(myChart1,data)
       },
       initWaterChart(res){
-        let myChart2 = echarts.init(this.$refs.myChart2);
+        let myChart2 = this.$echarts.init(this.$refs.myChart2);
         let titleText =`${this.commonTip}分项耗水占比分析`
         let legendData=['生活用水','生活污水','空调用水','消防用水','其他用水']
         // let legendData = res.waterList && res.waterList.map((item)=>item.name)

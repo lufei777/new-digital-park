@@ -1,7 +1,7 @@
 <template>
   <div class="asset-type-proportion">
+    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div ref="myChart" class="my-chart" id="asset-type-proportion-chart"></div>
-    <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     initChart(){
-      let myChart = echarts.init(this.$refs.myChart || document.getElementById('asset-type-proportion-chart'));
+      let myChart = this.$echarts.init(this.$refs.myChart || document.getElementById('asset-type-proportion-chart'));
       let option = {
         tooltip: {
           trigger: 'axis',

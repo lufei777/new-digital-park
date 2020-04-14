@@ -1,6 +1,7 @@
 import router from '@/router'
 import axios from 'axios'
-import store from '@/vuex/store';
+import store from '@/vuex/store';
+const Message = require("element-ui").Message
 class commonFun {
   menuData = {
     "id": 1,
@@ -549,7 +550,7 @@ class commonFun {
     remark: "我是备注"
   }, {
     regionName: "办公室",
-    id:5,
+    id: 5,
     regionType: "房屋",
     executeMethod: "周期保洁",
     regionNature: "自有",
@@ -1583,12 +1584,12 @@ class commonFun {
   }
 
   //重新整合跳转，包括跳旧项目、新项目、客户端
-  loadPage(item){
-    store.commit("digitalPark/activeMenuIndex",this.setMenuIndex(item))
+  loadPage(item) {
+    store.commit("digitalPark/activeMenuIndex", this.setMenuIndex(item))
     if (item.routeAddress) {
       //客户端
-      if(this.loadClientPage(item)){
-        return ;
+      if (this.loadClientPage(item)) {
+        return;
       }
       if (item.routeAddress.indexOf("@") != -1) {
         //旧项目
@@ -1598,10 +1599,7 @@ class commonFun {
           localStorage.setItem('backupType',5)
         }
         router.push('/vibe-web')
-      } else if(item.name=="物业系统"){
-        console.log("客户端方法跳中钢")
-        window.goToZGManage()
-      }else{
+      } else {
         //新项目
         router.push(item.routeAddress);
       }
@@ -1610,40 +1608,61 @@ class commonFun {
     }
   }
 
-  loadClientPage(item, clientMenu) {
-    //不需要clientMenu了
+  loadClientPage(item) {
+    if (item.name == "物业系统") {
+      this.invokeClientMethod('goToZGManage');
+      return true;
+    }
     if (typeof item === 'undefined') {
       return false;
     }
-    if (item.level == 2 && item.clientType == 1) {
-      router.push(`${item.routeAddress}?productId=${item.id}`)
-      return true;
-    } else if(item.level==3 && item.clientType==1 && item.name=="概览"){
-      router.push(`${item.routeAddress}?productId=${item.pid}`)
-      return true;
-    }else if (item.level != 2 && item.clientType == 1) {
-      let id = item.id
-      if(item.childNode.length){
-        id = this.getLastItem(item).id
+    // 如果clientType是 1 ，表明是客户端
+    if (item.clientType == 1) {
+      if (item.level == 2) {
+        router.push(`${item.routeAddress}?productId=${item.id}`)
+        return true;
+      } else if (item.level == 3 && item.name == "概览") {
+        router.push(`${item.routeAddress}?productId=${item.pid}`)
+        return true;
+      } else {
+        let id = item.id
+        if (item.childNode.length) {
+          id = this.getLastItem(item).id
+        }
+        let menuTree = JSON.parse(localStorage.getItem("menuTree"))
+        let firstMenu = menuTree[0].childNode.find(first => {
+          return first.id == item.firstMenuId;
+        });
+        let secondMenu = firstMenu.childNode.find(second => {
+          return second.id == item.secondMenuId;
+        });
+        // console.log(secondMenu, id)
+        this.invokeClientMethod('goToClientPage', JSON.stringify(secondMenu), id + "");
+        return true;
       }
-      let menuTree = JSON.parse(localStorage.getItem("menuTree"))
-      let firstMenu = menuTree[0].childNode.find(first => {
-        return first.id == item.firstMenuId;
-      });
-      let secondMenu = firstMenu.childNode.find(second => {
-        return second.id == item.secondMenuId;
-      });
-      console.log(secondMenu,id)
-      window.goToClientPage(JSON.stringify(secondMenu),id+"")
-      return true;
     }
+    /* if (item.level == 2 && item.clientType == 1) {
+    } else if (item.level == 3 && item.clientType == 1 && item.name == "概览") {
+    } else if (item.level != 2 && item.clientType == 1) { } */
     return false;
   }
 
-  getLastItem(item){
-    if(item.childNode.length){
+  // 访问客户端方法
+  invokeClientMethod(name, ...args) {
+    if (window[name]) {
+      window[name].apply(null, args);
+    } else {
+      Message({
+        message: '请在客户端中访问',
+        type: 'warning'
+      })
+    }
+  }
+
+  getLastItem(item) {
+    if (item.childNode.length) {
       return this.getLastItem(item.childNode[0])
-    }else{
+    } else {
       return item
     }
   }
@@ -1675,7 +1694,7 @@ class commonFun {
   }
 
   //设置菜单index
-  setMenuIndex(item,from) {
+  setMenuIndex(item, from) {
     //from 1->代表是渲染菜单的时候使用item本身，不传则为点击的时候找到item的最子集
     let arr = ['defaultPage', 'digitalPark/dashboardHomePage', 'stockInApply']
     let flag = false
@@ -1686,9 +1705,9 @@ class commonFun {
         }
       })
       if (flag) {
-        return from==1?(item.id+item.routeAddress):this.getLastItem(item).id + item.routeAddress
+        return from == 1 ? (item.id + item.routeAddress) : this.getLastItem(item).id + item.routeAddress
       } else {
-        return from==1?item.routeAddress:this.getLastItem(item).routeAddress
+        return from == 1 ? item.routeAddress : this.getLastItem(item).routeAddress
       }
     } else {
       return item.id + ""

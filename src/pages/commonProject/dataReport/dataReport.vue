@@ -38,7 +38,8 @@
       <el-button @click="onClickLookBtn" type="primary">查看报表</el-button>
       <el-button @click="onClickExportBtn" type="primary">导出报表</el-button>
     </div>
-    <p v-html="tableData"></p>
+    <p v-html="tableData" v-if="tableData"></p>
+    <p v-if="!tableData" class="no-data">暂无数据 ~</p>
   </div>
 </template>
 
@@ -65,6 +66,13 @@
     name:'热',
     id:'gas'
   }]
+  // let energyList = [{
+  //   name:'电',
+  //   id:'electricity'
+  // },{
+  //   name:'水',
+  //   id:'water'
+  // }]
   export default {
     name: 'DataReport',
     components: {
@@ -139,6 +147,11 @@
     }
     .el-button{
       margin:0 10px;
+    }
+    .no-data{
+      text-align: center;
+      margin-top:20%;
+      font-size: 16px;
     }
     .small-select  .el-select{
        width:100px;

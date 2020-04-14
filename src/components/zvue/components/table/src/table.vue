@@ -221,7 +221,6 @@
   </div>
 </template>
 <script>
-
 // import column from "./components/column";
 import config from "../../../global/config";
 import props from "../../../common/props";
@@ -427,11 +426,6 @@ export default {
         .then(res => {
           this._setTableData(res[this.listKey]);
           this.setPaginationTotal(res[this.totalKey]);
-        })
-        .catch(err => {
-          //加载中结束
-          this.loading = false;
-          throw err;
         })
         .finally(() => {
           //加载中结束
@@ -1108,27 +1102,17 @@ export default {
 @headerTextColor: #666;
 @TableFontFamily: "Microsoft YaHei";
 @TableFontSize: 14px;
+@borderColor: #e5eaf2;
 
 .zvue-table-wrapper {
   font-family: @TableFontFamily;
   font-size: @TableFontSize;
   width: 100%;
   .el-table {
+    border: 1px solid @borderColor;
+    border-bottom: 0px;
     .el-table__fixed-right-patch {
       background-color: @headerBgc;
-      border: 1px solid #e5eaf2;
-      border-left: 0px;
-    }
-    .el-table__header,
-    .el-table__body {
-      border: 1px solid #e5eaf2;
-      border-bottom: 0px;
-    }
-    .el-table__header {
-      border-right: 0px;
-    }
-    .el-table__body {
-      border-top: 0px;
     }
     // 去除多选宽度不够会显示省略号
     .el-table-column--selection {
@@ -1158,18 +1142,6 @@ export default {
         width: auto !important;
       }
     }
-    // 当前行
-    .current-row {
-      td {
-        background-color: #f5fafb !important;
-      }
-      .edit-row-input {
-        display: block;
-      }
-      .edit-row-input + span {
-        display: none;
-      }
-    }
     // 下拉
     .el-dropdown {
       margin-left: 10px;
@@ -1181,9 +1153,6 @@ export default {
       .el-icon--right {
         margin-left: 0;
       }
-    }
-    .edit-row-input {
-      display: none;
     }
   }
   // 分页

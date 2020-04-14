@@ -59,7 +59,6 @@ import EnergyApi from "../../../service/api/energy";
 import TreeModal from '../../../components/treeModal/index'
 import moment from "moment";
 import CommonFun from '../../../utils/commonFun'
-let activeNav;
 export default {
   name: "EnergySavingSelect",
   components: {
@@ -133,8 +132,6 @@ export default {
   },
   computed: {
     tabTitle() {
-      activeNav =
-        Cookies.get("activeNav") && JSON.parse(Cookies.get("activeNav"));
       let tmp = this.energySubentryData.find(item => {
         return item.id == this.energySubentry;
       });
@@ -167,6 +164,16 @@ export default {
         this.energySubentryData = res[0].energyType;
         this.energySubentry = res[0].energyType[0].id;
       }
+
+      //中钢
+      // if (this.energySaveFlag == 3 || this.energySaveFlag == 4) {
+      //   this.energySubentryData = [res[1]]
+      //   this.energySubentry = res[1].id;
+      // } else if (this.energySaveFlag == 1 || this.energySaveFlag == 2) {
+      //   this.energySubentryData = [res[0]]
+      //   this.energySubentry = res[0].id;
+      // }
+
     },
     async getAllFloorOfA3() {
       this.treeModalConfig.treeList = await CommonApi.getAllFloorOfA3()

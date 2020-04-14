@@ -7,7 +7,11 @@
         </template>
       </el-tabs>
 
-      <div class="flex-align-center" style="align-items:flex-start;background:#fff;">
+      <div
+        v-loading="tabLoading"
+        class="flex-align-center"
+        style="align-items:flex-start;background:#fff;"
+      >
         <z-form :ref="options.ref" :options="options" v-model="model" @submit="submit">
           <template slot="menuBtn" slot-scope="scope">
             <!-- <el-button @click="lastStep">上一步</el-button>
@@ -52,6 +56,7 @@ const apiConfig = {
 export default {
   data() {
     return {
+      tabLoading: false,
       model: {},
       options: {
         ref: "form",
@@ -558,6 +563,15 @@ export default {
     });
   },
   methods: {
+    hasId() {
+      let id = this.model.id;
+      if (typeof id === "string" && id.length != 0) {
+        return true;
+      } else if (typeof id === "number") {
+        return true;
+      }
+      return false;
+    },
     nextStep({ model = {}, hide = () => {}, step = ++this.step }) {
       this.resetForm(); // 重置form
       hide(); // 隐藏提交状态
@@ -590,7 +604,7 @@ export default {
       this.step = Number(index);
     },
     submit(model, hide) {
-      if (this.pageConfig.flag === "edit" && this.model.id.length > 0) {
+      if (this.pageConfig.flag === "edit" && this.hasId()) {
         // 更新信息
         this.updateInfo(model, hide);
       } else {
@@ -626,12 +640,19 @@ export default {
         });
     },
     getInfo(cb) {
+      this.tabLoading = true;
       // 更新信息
       PersonalManageApi[`getUser${this.apiName}Message`](
         Object.assign({}, this.getIdField)
-      ).then(res => {
-        cb(res);
-      });
+      ).then(
+        res => {
+          cb(res);
+          this.tabLoading = false;
+        },
+        err => {
+          this.tabLoading = false;
+        }
+      );
     },
     resetForm() {
       this.$refs[this.options.ref].resetForm();

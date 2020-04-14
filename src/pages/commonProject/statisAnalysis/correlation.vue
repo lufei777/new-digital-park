@@ -70,7 +70,7 @@
          this.getCorrelationData()
       },
       initChart(result){
-        this.myChart = echarts.init(this.$refs.myChart);
+        this.myChart = this.$echarts.init(this.$refs.myChart);
         let data = result.points;
         let myRegression = ecStat.regression('linear', data);
         let name1 = this.monitor1.text+' ('+ result.unit1 + ')';

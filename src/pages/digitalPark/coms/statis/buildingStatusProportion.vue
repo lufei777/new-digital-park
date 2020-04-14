@@ -21,7 +21,7 @@ export default {
       this.createPieCharts(res);
     },
     createPieCharts(res) {
-      let myPieChart = echarts.init(this.$refs.myChart || document.getElementById('building-status-proportion-chart'));
+      let myPieChart = this.$echarts.init(this.$refs.myChart || document.getElementById('building-status-proportion-chart'));
       let legendData = res.legend;
       let legend = "right";
       let color = ["#30475B", "#66FBF9", "#0088FF", "#D77443"];

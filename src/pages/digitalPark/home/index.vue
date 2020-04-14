@@ -22,8 +22,8 @@
       </div>
     </div>
 
-    <el-carousel height="360px" :interval="6000" v-if="!hideHeader"  ref="carousel" @click.native="linkTo">
-      <el-carousel-item  v-for="item in imgs" v-bind:key="item.url" >
+    <el-carousel height="360px" :interval="6000" v-if="!hideHeader">
+      <el-carousel-item  v-for="item in imgs" :key="item.url" @click.native="linkTo(item)">
         <img  class="carousel-img" :src="item.url"/>
       </el-carousel-item>
     </el-carousel>
@@ -85,6 +85,7 @@
       <!--<div></div>-->
       <!--<div></div>-->
     <!--</div>-->
+    <!--<el-button @click="fun">11111111111</el-button>-->
   </div>
 </template>
 
@@ -118,6 +119,7 @@ export default {
       menuConfig: {
         mode: "horizontal",
         bgColor: "#fff",
+        activeTextColor:"#606266",
         textColor: "#606266",
         specialRoute: true
       },
@@ -153,6 +155,9 @@ export default {
     }
   },
   methods: {
+    fun(){
+      this.$router.push('/test')
+    },
     onClickItemProduct(item) {
       Cookies.set("moduleType", 2);
       this.$store.commit("digitalPark/menuList",item);
@@ -294,9 +299,9 @@ export default {
     async sureUpdateUserProModules() {
       await DigitalParkApi.updateUserProModules(this.userProModuleList);
     },
-    linkTo () {
-      let activeIndex = this.$refs.carousel.activeIndex
-      this.$router.push(this.imgs[activeIndex].link)
+    linkTo (item) {
+      // let activeIndex = this.$refs.carousel.activeIndex
+      this.$router.push(item.link)
     }
   },
   mounted() {

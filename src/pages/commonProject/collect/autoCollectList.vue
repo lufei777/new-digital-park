@@ -58,7 +58,13 @@ export default {
       tableConfig: {
         ref: "tableRef",
         data: [],
-        columnConfig: [],
+        columnConfig: [
+          { label: "序号", prop: "xulie" },
+          { label: "时间", prop: "time" },
+          { label: "表名称", prop: "name" },
+          { label: "数值", prop: "value" },
+          { label: "所属空间", prop: "caption" }
+        ],
         uiConfig: {
           height: "auto",
           pagination: {
@@ -83,13 +89,6 @@ export default {
         size: 10
       };
       let res = await CommonApi.getAutoCollectList(params);
-      this.tableConfig.columnConfig = [
-        { label: "序号", prop: "xulie" },
-        { label: "时间", prop: "time" },
-        { label: "表名称", prop: "name" },
-        { label: "数值", prop: "value" },
-        { label: "所属空间", prop: "caption" }
-      ];
       this.tableConfig.data = res.value;
       this.tableConfig.uiConfig.pagination.total = res.total;
     },

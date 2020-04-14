@@ -5,7 +5,7 @@
         <span class="icon"></span>
         <span>{{pageConfig.title}}</span>
       </span>
-      <div class="form">
+      <div v-loading="pageLoading" class="form">
         <z-form
           :ref="leaseManageForm.ref"
           :options="leaseManageForm"
@@ -23,12 +23,6 @@
                 <el-option :key="item.label" :label="item.label" :value="item.value"></el-option>
               </template>
             </el-select>
-          </template>
-          <template slot="btn" slot-scope="obj">
-            <div>
-              <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">搜索</el-button>
-              <el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>
-            </div>
           </template>
           <template slot="menuBtn" slot-scope="scope">
             <el-button @click="back(scope)">返回</el-button>
@@ -64,6 +58,7 @@ const apiConfig = {
 export default {
   data() {
     return {
+      pageLoading: false,
       model: {
         priceType: LeaseManageDic.PriceType[0].value
       },
@@ -209,9 +204,7 @@ export default {
       let { id, flag } = this.$route.query;
       if (id) {
         this.pageConfig = _.cloneDeep(apiConfig[flag]);
-        this.getPropertyDetail({ id }).then(res => {
-          this.model = { ...this.model, ...res };
-        });
+        this.getPropertyDetail(id);
       }
       // 传递过来额外的配置
       this.leaseManageForm = {
@@ -250,8 +243,16 @@ export default {
     back() {
       this.$router.back();
     },
-    getPropertyDetail(row) {
-      return leaseManageApi.houseDetails(row);
+    getPropertyDetail(id) {
+      this.pageLoading = true;
+      leaseManageApi
+        .houseDetails({ id })
+        .then(res => {
+          this.model = { ...this.model, ...res };
+        })
+        .finally(() => {
+          this.pageLoading = false;
+        });
     }
   },
   watch: {

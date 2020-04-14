@@ -119,12 +119,10 @@
         <div ref="myChart" class="my-chart"></div>
       </div>
     </div>
-     能耗分类分项占比图
     <div class="tip flex-align">
       <span class="icon"></span>
       <span>能耗分类分项占比图</span>
     </div>
-
     <div class="pieCharts flex-align-between">
       <div class="pieChart box">
         <div ref="pieChart1" class="chart-inner"></div>
@@ -147,7 +145,6 @@
 </template>
 
 <script>
-import echarts from "echarts";
 import EnergyApi from "../../../service/api/energy";
 import CommonApi from "../../../service/api/common";
 import ChartUtils from "../../../utils/chartUtils";
@@ -259,7 +256,7 @@ export default {
     },
     createCharts(res) {
       let resData = res.value;
-      let myChart = echarts.init(this.$refs.myChart);
+      let myChart = this.$echarts.init(this.$refs.myChart);
       let xAxis = resData.map(item => item.date);
       let legendData = [
         "2018",
@@ -363,7 +360,7 @@ export default {
       myChart.setOption(option);
     },
     piechart1(res) {
-      let myPieChart = echarts.init(this.$refs.pieChart1);
+      let myPieChart = this.$echarts.init(this.$refs.pieChart1);
       let legendData = [];
       let dataList = [];
       res.elecList.map(item => {
@@ -388,11 +385,10 @@ export default {
             center:['35%','50%']
           }
       };
-      window.onresize = myPieChart.resize;
       ChartUtils.hollowPieChart(myPieChart, data);
     },
     piechart2(res){
-      let myPieChart = echarts.init(this.$refs.pieChart2);
+      let myPieChart = this.$echarts.init(this.$refs.pieChart2);
       let legendData = ["生活用水", "消防用水", "空调用水", "其他用水"];
       let dataList = [
         {

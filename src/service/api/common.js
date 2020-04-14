@@ -309,6 +309,10 @@ class CommonApi {
   @url("/vibe-web/device_data/probesHistoryExportExcel")
   @get
   getProbesHistoryExportExcel(){}
+  @url("/vibe-web/homeInterfaceAssetDevice")
+  @get
+  getVideoMonitoringStatus(){}
+
 }
 
 export default new CommonApi()

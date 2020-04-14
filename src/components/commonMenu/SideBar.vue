@@ -22,7 +22,7 @@
         :background-color="menuConfig.bgColor"
         :text-color="menuConfig.textColor"
         :unique-opened="true"
-        :active-text-color="menuConfig.activeTextColor"
+        :active-text-color="menuConfig.activeTextColor || '#fff'"
         :collapse="menuConfig.isCollapse"
         @select="handleSelect"
       >

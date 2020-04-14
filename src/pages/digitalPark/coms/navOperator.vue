@@ -7,7 +7,7 @@
       <i>|</i>
     </span>
     <span class="nav-right-item">
-      <span @click="loadNews" style="color:#ED6C01">{{$t('homeHeader.news')}}(25)</span>
+      <span @click="loadNews" style="color:#ED6C01">{{$t('homeHeader.news')}}({{alarmListCount}})</span>
       <i>|</i>
     </span>
     <!--<span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoBack">-->
@@ -51,6 +51,7 @@
 
 <script>
 import SystemManageApi from "@/service/api/systemManage";
+import CommonApi from "@/service/api/common";
 import { mapState } from "vuex";
 import CommonFun from '@/utils/commonFun'
 
@@ -64,7 +65,8 @@ export default {
       userValue: "0",
       setupValue: "0",
       userInfo: {},
-      avatar: "../../../../static/image/digitalPark/default_avatar.png"
+      avatar: "../../../../static/image/digitalPark/default_avatar.png",
+      alarmListCount:0
     };
   },
   computed: {
@@ -204,10 +206,20 @@ export default {
       console.log("itemfanfeifei",item)
       this.$store.commit("digitalPark/menuList",item)
       CommonFun.loadPage(curMenu)
+    },
+    async getAlarmList(){
+      let res = await CommonApi.getAlarmMessageList({
+        pageNum:1,
+        start:'',
+        end:'',
+        pageCount:10,
+      })
+      this.alarmListCount = res.total
     }
   },
   mounted() {
     this.getUserInfo();
+    this.getAlarmList()
     window.CZClient={
       goToPersonal:this.onClickUserConfigure,  //跳转个人中心
       goBack:this.onClickGoBack,    //返回首页

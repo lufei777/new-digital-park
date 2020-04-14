@@ -1,7 +1,7 @@
 <template>
   <div class="ups-monitoring">
+    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div class="my-chart" ref="myChart"></div>
-    <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
@@ -27,7 +27,7 @@ export default {
       this.initChart(res);
     },
     initChart(res) {
-      let myChart = echarts.init(this.$refs.myChart);
+      let myChart = this.$echarts.init(this.$refs.myChart);
       let legendData = res.legend;
       let data = {
         legendData,

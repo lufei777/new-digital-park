@@ -1,5 +1,6 @@
 <template>
   <div class="alarm-news">
+    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div class="my-chart">
       <div v-for="(item,index) in alarmList"
            :key="index"
@@ -7,7 +8,6 @@
       >
         {{index+1}}.{{item.caption}}</div>
     </div>
-    <div>{{moduleItem.moduleName}}</div>
   </div>
 </template>
 
@@ -35,36 +35,6 @@
           start:'',
           end:''
         })
-        if(!res.rows.length){
-          res.rows = [ {
-            "assetId":1329480383,
-            "id":50613,
-            "caption":"中钢大厦->A座->一层->强电井烟感->强电井烟感",
-            "state":2,
-            "errorMessage":"强电井烟感为报警状态",
-            "startTime":"2020-04-01 10:07:38",
-            "duration":null,
-            "auto":1,
-            "handled":1,
-            "endTime":null,
-            "alarmRuleId":0,
-            "system":"消防系统"
-          },
-          {
-            "assetId":597995067,
-            "id":50612,
-            "caption":"中钢大厦->A座->二十七层->弱电间温感->弱电间温感",
-            "state":2,
-            "errorMessage":"弱电间温感为报警状态",
-            "startTime":"2020-04-01 10:07:14",
-            "duration":null,
-            "auto":1,
-            "handled":1,
-            "endTime":null,
-            "alarmRuleId":0,
-            "system":"消防系统"
-          }]
-        }
         this.alarmList=res.rows
       }
     },
