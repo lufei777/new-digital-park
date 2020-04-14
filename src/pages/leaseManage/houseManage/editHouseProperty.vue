@@ -24,12 +24,6 @@
               </template>
             </el-select>
           </template>
-          <template slot="btn" slot-scope="obj">
-            <div>
-              <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">搜索</el-button>
-              <el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>
-            </div>
-          </template>
           <template slot="menuBtn" slot-scope="scope">
             <el-button @click="back(scope)">返回</el-button>
           </template>
