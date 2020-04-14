@@ -48,7 +48,6 @@
     methods: {
     },
     mounted(){
-      console.dir(this.$refs['irm'].contentWindow);
     }
   }
 </script>

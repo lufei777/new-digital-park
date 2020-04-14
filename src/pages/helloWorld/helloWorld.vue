@@ -28,19 +28,7 @@
         <!--{{item.id}}-->
       <!--</div>-->
     <!--</div>-->
-    <!--<transition name="el-zoom-in-center" >-->
-      <!--<div class="item-product"  v-show="animationFlag"></div>-->
-    <!--</transition>-->
 
-    <!--<div class="pieCharts flex-align-between">-->
-      <!--<div class="pieChart box">-->
-        <!--<div ref="pieChart1" class="chart-inner"></div>-->
-      <!--</div>-->
-      <!--<div class="pieChart box">-->
-        <!--<div ref="pieChart2" class="chart-inner"></div>-->
-      <!--</div>-->
-      <!--&lt;!&ndash; <div class="pieChart box"></div> &ndash;&gt;-->
-    <!--</div>-->
   </div>
 
 </template>
@@ -145,6 +133,7 @@
       //   event.preventDefault();
       //   event.stopPropagation();
       // }
+      $(".boxList").dad()
     }
   }
 
