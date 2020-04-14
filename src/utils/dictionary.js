@@ -253,3 +253,21 @@ export const BooleanDic = {
     { label: "否", value: "2" }
   ]
 }
+
+//导出数据
+export const ExportData = {
+  timeType: [
+    {
+      label: "年",
+      value: 1
+    },
+    {
+      label: "月",
+      value: 2
+    },
+    {
+      label: "日",
+      value: 3
+    }
+  ]
+}

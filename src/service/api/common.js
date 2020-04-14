@@ -297,6 +297,18 @@ class CommonApi {
   @url("/vibe-web/countMonitorStatus")
   @get
   getCountMonitorStatus(){}
+
+  @url("/vibe-web/asset/queryDeviceBySpaceId")
+  @get
+  getQueryDeviceBySpaceId(){}
+
+  @url("/vibe-web/device_data/probeHistoryValue")
+  @get
+  getProbeHistoryValue(){}
+
+  @url("/vibe-web/device_data/probesHistoryExportExcel")
+  @get
+  getProbesHistoryExportExcel(){}
 }
 
 export default new CommonApi()
