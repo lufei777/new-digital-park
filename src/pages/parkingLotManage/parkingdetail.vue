@@ -5,7 +5,11 @@
       <span>详情查看</span>
     </span>
     <div class="form">
-      <z-form :options="formOptions" v-model="model"></z-form>
+      <z-form :options="formOptions" v-model="model">
+        <template slot="menuBtn" slot-scope="{size}">
+          <el-button type="primary" @click="() => {$router.back()}" :size="size">返回</el-button>
+        </template>
+      </z-form>
     </div>
   </div>
 </template>
@@ -233,7 +237,10 @@ export default {
       model: {},
       formOptions: {
         size: "small",
-        width: "70%"
+        width: "70%",
+        disabled: true,
+        submitBtn: false,
+        emptyBtn: false
       }
     };
   },
