@@ -21,7 +21,7 @@
   </div>
 </template>
 <script>
-import leaseManageApi from "@/service/api/leaseManage";
+import parkingLotManageApi from "@/service/api/parkingLotManage";
 import commonFun from "@/utils/commonFun.js";
 
 let tableSendData = {
@@ -81,7 +81,7 @@ export default {
         ref: "Table",
         operation: true,
         serverMode: {
-          url: "./static/mock/accessRecord.json",
+          url: parkingLotManageApi.getCarEntryExit,
           data: tableSendData
         },
         columnConfig: [

@@ -223,7 +223,7 @@ export default {
     },
     handleError(msg) {
       console.error(new Error(msg));
-      this.$message.error("上传失败");
+      this.$message.error(typeof msg === "string" ? msg : "上传失败");
     },
     delete(file) {
       if (this.isArray || this.isString) {
