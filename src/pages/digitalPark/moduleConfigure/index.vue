@@ -1,21 +1,19 @@
 <template>
   <div class="module-configure flex-column" v-loading="loading">
     <div v-show="!isFull">
-      <div class="set-tip">模式设置</div>
-      <div class="module-change">
+      <div class="set-tip">模块设置</div>
+      <div class="module-change" v-if="type!=3">
         <el-button @click="onClickModuleBtn('2')" :class="type==2?'moduleBtnBg':'defaultBtn'">{{$t('homeHeader.waterfall')}}</el-button>
         <el-button @click="onClickModuleBtn('1')" :class="type==1?'moduleBtnBg':'defaultBtn'">{{$t('homeHeader.dashboard')}}</el-button>
       </div>
     </div>
     <div :class="isFull?'full-main-container':'main-container'">
-      <!--<el-scrollbar wrap-class="scrollbar-wrapper" :native="false">-->
         <div :class="isFull?'hide':'left-module-list'">
             <div v-for="item in proModuleList"
                :key="item.id"
                :class="['item-left-pro','hover-pointer',item.activeFlag?'active-pro':'']"
                @click="onClickItemProModule(item)">{{item.name}}</div>
         </div>
-      <!--</el-scrollbar>-->
       <div class="module-content-list" v-show="!isFull">
 
         <draggable :list="contentList"
@@ -45,6 +43,7 @@
                     ref="homePage"
                     :forceFallback="forceBack"
           ></HomePage>
+          <LargeSizeScreen v-if="type==3"></LargeSizeScreen>
         </div>
         <div class="operator-box" v-if="!isFull">
           <el-button  @click="onClickSureBtn" class="defaultBtn">确认</el-button>
@@ -72,6 +71,7 @@
   import comsImport from '../coms/js/comsImport'
   import {mapState} from 'vuex'
   import DashboardNew from '../home/dashboardNew'
+  import LargeSizeScreen from '../../largeSizeScreen/index'
   export default {
     name: 'ModuleConfigure',
     components: {
@@ -79,7 +79,8 @@
       Dashboard,
       draggable,
       HomePage,
-      DashboardNew
+      DashboardNew,
+      LargeSizeScreen
     },
     data() {
       return {
@@ -116,7 +117,7 @@
       async getProModules() {
         let res = await DigitalParkApi.getProModules({
           language:Cookies.get('lang'),
-          chart:this.type //是否显示非图表类
+          chart:this.type==1?1:2 //是否显示非图表类
         })
         this.loading=false
         res[0].activeFlag=true

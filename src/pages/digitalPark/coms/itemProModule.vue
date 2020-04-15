@@ -132,16 +132,18 @@
             return second.id == item.secondMenuId;
           });
           let menuTmp ={}
-          if(secondMenu.clientType==1 && item.clientType!=1 && item.level==3){
+          console.log("secondi",secondMenu)
+          if(secondMenu.clientType==1 && item.clientType!=1 && item.status==3){
             menuTmp = item
-          }else if(secondMenu.clientType==1 && item.clientType!=1 && item.level!=3){
+          }else if(secondMenu.clientType==1 && item.clientType!=1 && item.status!=3){
             menuTmp = this.findNode(secondMenu,item,secondMenu)
           }else {
             menuTmp = secondMenu
           }
-         this.$store.commit("digitalPark/menuList",menuTmp);
+          this.$store.commit("digitalPark/menuList",menuTmp);
           item.childNode=[]
-         CommonFun.loadPage(item)
+          item.level=item.status
+          CommonFun.loadPage(item)
       },
       onClickMoreBtn(){s
         Cookies.set('moduleType',2)
@@ -174,18 +176,23 @@
       },
       findNode(menu, obj,secondMenu) {
         //menu起始是二级菜单,返回的是第三层
-        menu.childNode.map(child => {
-          if (child.id == obj.id) {
-            if(obj.level==4){
-              this.findMenu = menu;
-            }else{
-              this.findNode(secondMenu,menu,secondMenu);
-            }
-          } else {
-            this.findNode(child,obj,secondMenu);
-          }
-        });
-        return this.findMenu;
+        // menu.childNode.map(child => {
+        //   if (child.id == obj.id) {
+        //     if(obj.status==3){
+        //       this.findMenu = child;
+        //     }else if(obj.status==4){
+        //       this.findMenu = menu;
+        //     }else{
+        //       this.findNode(secondMenu,menu,secondMenu);
+        //     }
+        //   } else {
+        //     this.findNode(child,obj,secondMenu);
+        //   }
+        // });
+        // return this.findMenu;
+        menu.childNode.map((child)=>{
+          // if(child.id==obj.id)
+        })
       },
     },
     mounted(){
