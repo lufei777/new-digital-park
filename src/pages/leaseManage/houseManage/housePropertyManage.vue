@@ -149,6 +149,7 @@ export default {
             prop: "housePrice",
             label: "总价",
             formatter(row, value) {
+              // debugger;
               let pirceTypeLabel = "";
               if (typeof row.priceType == "number") {
                 pirceTypeLabel =

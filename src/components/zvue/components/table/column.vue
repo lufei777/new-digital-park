@@ -107,12 +107,11 @@ export default {
       let row = scopeRow.row;
       let column = scopeRow.column;
 
-      /* if (typeof currentColumn.formatter === "function") {
-        return currentColumn.formatter(row, column);
+      if (typeof currentColumn.formatter === "function") {
+        return currentColumn.formatter(row, row[currentColumn.prop], currentColumn.label, currentColumn);
       } else {
         return this._globalColumnFormatter(row, column, currentColumn);
-      }  */
-      return this._globalColumnFormatter(row, column, currentColumn);
+      }
     },
     // 全局初始化
     _globalColumnFormatter(row, column, currentColumn) {
