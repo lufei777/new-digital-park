@@ -148,14 +148,14 @@ export default {
           {
             prop: "housePrice",
             label: "总价",
-            formatter(row, column) {
+            formatter(row, value) {
               let pirceTypeLabel = "";
               if (typeof row.priceType == "number") {
                 pirceTypeLabel =
                   LeaseManageDic.PriceType[row.priceType - 1].label;
               }
-              return row[column.property]
-                ? `${row[column.property]} ${pirceTypeLabel}`
+              return value
+                ? `${value} ${pirceTypeLabel}`
                 : "--";
             }
           },
