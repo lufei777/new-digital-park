@@ -298,6 +298,17 @@ class CommonApi {
   @get
   getCountMonitorStatus(){}
 
+  @url("/vibe-web/asset/queryDeviceBySpaceId")
+  @get
+  getQueryDeviceBySpaceId(){}
+
+  @url("/vibe-web/device_data/probeHistoryValue")
+  @get
+  getProbeHistoryValue(){}
+
+  @url("/vibe-web/device_data/probesHistoryExportExcel")
+  @get
+  getProbesHistoryExportExcel(){}
   @url("/vibe-web/homeInterfaceAssetDevice")
   @get
   getVideoMonitoringStatus(){}

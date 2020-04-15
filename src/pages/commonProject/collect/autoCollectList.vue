@@ -30,7 +30,7 @@
           :clearable="false"
         ></el-date-picker>
       </div>
-      <el-button type="primary" @click="getAutoCollectList">确定</el-button>
+      <el-button type="primary" @click="onClickSrueBtn">确定</el-button>
     </div>
     <div class="table-box panel">
       <div class="operator-box">
@@ -92,6 +92,11 @@ export default {
       this.tableConfig.data = res.value;
       this.tableConfig.uiConfig.pagination.total = res.total;
     },
+    onClickSrueBtn() {
+      this.curPage = 1;
+      this.$refs["tableRef"].setCurrentPage(1);
+      this.getAutoCollectList();
+    },
     handleCurrentChange(val) {
       this.curPage = val;
       this.getAutoCollectList();
@@ -118,7 +123,7 @@ export default {
     }
   },
   mounted() {
-    this.getAutoCollectList();
+    this.onClickSrueBtn();
   }
 };
 </script>

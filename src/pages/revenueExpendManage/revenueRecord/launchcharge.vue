@@ -5,7 +5,7 @@
         <span class="icon"></span>
         <span>{{pageConfig.title}}</span>
       </span>
-      <div class="form">
+      <div v-loading="pageLoading" class="form">
         <z-form
           :ref="formOptions.ref"
           :options="formOptions"
@@ -93,6 +93,7 @@ const apiConfig = {
 export default {
   data() {
     return {
+      pageLoading: false,
       dialogVisible: false,
       model: {},
       formOptions: {
@@ -402,10 +403,12 @@ export default {
       });
     },
     async getBudgetByRecordId(recordId) {
+      this.pageLoading = true;
       this.model = await revenueExpendApi.getBudgetByRecordId({
         recordId,
         budgetType: this.budgetType
       });
+      this.pageLoading = false;
     },
     back() {
       this.$router.back();

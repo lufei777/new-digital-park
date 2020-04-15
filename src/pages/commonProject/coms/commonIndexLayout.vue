@@ -47,7 +47,6 @@ export default {
       this.$emit("onclickcollapsebtn");
     },
     computedHeight() {
-      console.log(this);
       this.content = document.querySelector(".content");
       this.routerView = document.querySelector(".router-view");
       const deviceWidth = document.body.clientWidth;
