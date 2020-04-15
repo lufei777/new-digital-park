@@ -58,7 +58,7 @@ import CommonFun from '@/utils/commonFun'
 export default {
   name: "DigitalNavOperator",
   components: {},
-  props: ["moduleType", "showGoBack","fromFlag"],
+  props: ["moduleType", "showGoBack","fromFlag"],  //fromFlag 1：仪表盘 2: 大屏
   data() {
     return {
       langValue: Cookies.get("lang") || "zh",
@@ -133,18 +133,22 @@ export default {
       }
     },
     onClickSetup(val) { //点击设置
-      Cookies.set('moduleType',this.cookieModuleType)
+      Cookies.set('moduleType', this.cookieModuleType)
       if (val == 1) {
+        let type = this.moduleType
+        if (this.fromFlag == 2) {
+          type = 3
+        }
         this.$router.push(
-          `/digitalPark/moduleConfigure?type=${this.moduleType}&updateDragFlag=true`
+          `/digitalPark/moduleConfigure?type=${type}&updateDragFlag=true`
         );
       } else {
         this.setSystemMenu()
         if (val == 2) {
-          this.$store.commit("digitalPark/activeMenuIndex","/personalInformation")
+          this.$store.commit("digitalPark/activeMenuIndex", "/personalInformation")
           this.$router.push("/personalInformation")
         } else if (val == 3) {
-          this.$store.commit("digitalPark/activeMenuIndex","/modifyPassword")
+          this.$store.commit("digitalPark/activeMenuIndex", "/modifyPassword")
           this.$router.push("/modifyPassword")
         }
       }

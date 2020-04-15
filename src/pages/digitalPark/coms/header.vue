@@ -27,7 +27,7 @@
     components: {
       NavOperator
     },
-    props:["moduleType",'fromFlag','headName','showGoBack'],
+    props:["moduleType",'fromFlag','headName','showGoBack'], //fromFlag 1：仪表盘 2:大屏
     data () {
       let menuTree = JSON.parse(localStorage.getItem('menuTree'))
       return {
