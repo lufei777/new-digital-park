@@ -38,8 +38,8 @@ export default {
             fixed: "left",
             hide: false,
             sortable: "custom",
-            formatter: function(row, column) {
-              return row[column.property] ? row[column.property] : "--";
+            formatter: function(row, value) {
+              return value ? value : "--";
             }
           },
           {
@@ -48,8 +48,8 @@ export default {
             fixed: "left",
             sortable: "custom",
             hide: false,
-            formatter: function(row, column) {
-              return row[column.property] ? row[column.property] : "--";
+            formatter: function(row,value) {
+              return value ? value : "--";
             }
           },
           {
@@ -58,8 +58,8 @@ export default {
             fixed: "left",
             sortable: false,
             hide: false,
-            formatter: function(row, column) {
-              return row[column.property] ? row[column.property] : "--";
+            formatter: function(row,value) {
+              return value ? value : "--";
             }
           },
           {
@@ -68,8 +68,8 @@ export default {
             fixed: "right",
             sortable: false,
             hide: false,
-            formatter: function(row, column) {
-              return row[column.property] ? row[column.property] : "--";
+            formatter: function(row,value) {
+              return value ? value : "--";
             }
           },
           {
@@ -78,8 +78,8 @@ export default {
             fixed: "right",
             sortable: false,
             hide: false,
-            formatter: function(row, column) {
-              return row[column.property] ? row[column.property] : "--";
+            formatter: function(row,value) {
+              return value ? value : "--";
             }
           },
           {
@@ -88,8 +88,8 @@ export default {
             fixed: "right",
             sortable: false,
             hide: false,
-            formatter: function(row, column) {
-              return row[column.property] ? row[column.property] : "--";
+            formatter: function(row,value) {
+              return value ? value : "--";
             }
           },
           {
@@ -98,8 +98,8 @@ export default {
             fixed: "right",
             sortable: false,
             hide: false,
-            formatter: function(row, column) {
-              return row[column.property] ? row[column.property] : "--";
+            formatter: function(row,value) {
+              return value ? value : "--";
             }
           },
           {
@@ -108,8 +108,8 @@ export default {
             fixed: "right",
             sortable: false,
             hide: false,
-            formatter: function(row, column) {
-              switch (row[column.property]) {
+            formatter: function(row,value) {
+              switch (value) {
                 case 1:
                   return "闲置";
                   break;

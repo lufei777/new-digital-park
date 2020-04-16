@@ -179,8 +179,8 @@ export default {
         {
           label: "表类型",
           prop: "meterType",
-          formatter: function(row, column) {
-            return row[column.property] ? "虚表" : "实表";
+          formatter: function(row, value) {
+            return value ? "虚表" : "实表";
           }
         },
         { label: "分项类别", prop: "itemizeCaption" }

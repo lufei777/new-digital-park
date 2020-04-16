@@ -217,5 +217,9 @@ export default {
     :focus="column.focus"
     :prependClick="column.prependClick"
     :nodeClick="column.nodeClick"
+
+    // upload
+    onlyButton
+    buttonText
  */
 </script>

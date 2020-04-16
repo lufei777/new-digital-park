@@ -136,19 +136,13 @@ export default {
           {
             prop: "houseStatus1",
             label: "房产状态",
-            formatter: function(row, column) {
+            formatter: function(row, value) {
               let HouseStatus = LeaseManageDic.HouseStatus;
-              let rowValue = row[column.property];
+              let rowValue = value;
               let res = _.find(HouseStatus, (cur, key, obj) => {
                 return cur.value === rowValue;
               });
               return res ? res.label : "";
-              /* if (value === HouseStatus.Rented.value) {
-                return HouseStatus.Rented.label;
-              }
-              if (value === HouseStatus.BeRent.value) {
-                return HouseStatus.BeRent.label;
-              } */
             }
           },
           {
