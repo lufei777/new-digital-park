@@ -1636,7 +1636,7 @@ class commonFun {
         let secondMenu = firstMenu.childNode.find(second => {
           return second.id == item.secondMenuId;
         });
-        // console.log(secondMenu, id)
+        console.log(secondMenu, id)
         this.invokeClientMethod('goToClientPage', JSON.stringify(secondMenu), id + "");
         return true;
       }

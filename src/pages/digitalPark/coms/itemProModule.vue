@@ -113,39 +113,38 @@
           }
         }
       },
-      onClickItemComponent(item){
-         console.log("clickitem",item)
+      onClickItemComponent(item) {
+        console.log("clickitem", item)
         //需要后台配合修改
-          if(this.hideHeader) return ;  //配置页点击不进行操作
+        if (this.hideHeader) return;  //配置页点击不进行操作
 
-          if(!item.routeAddress){
-            this.$message({
-              type:'warning',
-              message:'该模块还未配置路由~'
-            })
-            return;
-          }
-          let firstMenu = this.menuTree[0].childNode.find(first => {
-            return first.id == item.firstMenuId;
-          });
-          let secondMenu = firstMenu.childNode.find(second => {
-            return second.id == item.secondMenuId;
-          });
-          let menuTmp ={}
-          console.log("secondi",secondMenu)
-          if(secondMenu.clientType==1 && item.clientType!=1 && item.status==3){
-            menuTmp = item
-          }else if(secondMenu.clientType==1 && item.clientType!=1 && item.status!=3){
-            menuTmp = this.findNode(secondMenu,item,secondMenu)
-          }else {
-            menuTmp = secondMenu
-          }
-          this.$store.commit("digitalPark/menuList",menuTmp);
-          item.childNode=[]
-          item.level=item.status
-          CommonFun.loadPage(item)
+        if (!item.routeAddress) {
+          this.$message({
+            type: 'warning',
+            message: '该模块还未配置路由~'
+          })
+          return;
+        }
+        let firstMenu = this.menuTree[0].childNode.find(first => {
+          return first.id == item.firstMenuId;
+        });
+
+        let secondMenu = firstMenu && firstMenu.childNode.find(second => {
+          return second.id == item.secondMenuId;
+        });
+        let menuTmp = {}
+        if (secondMenu.clientType == 1) {
+          menuTmp = this.findNode(secondMenu, item, secondMenu)
+        } else {
+          menuTmp = secondMenu
+        }
+        console.log("menuTmp", menuTmp)
+        this.$store.commit("digitalPark/menuList", menuTmp);
+        item.childNode = []
+        item.id = item.forwardId || item.pid
+        CommonFun.loadPage(item)
       },
-      onClickMoreBtn(){s
+      onClickMoreBtn(){
         Cookies.set('moduleType',2)
         this.menuTree[0].childNode.map((item)=>{
           item.childNode.map((child)=>{
@@ -176,23 +175,21 @@
       },
       findNode(menu, obj,secondMenu) {
         //menu起始是二级菜单,返回的是第三层
-        // menu.childNode.map(child => {
-        //   if (child.id == obj.id) {
-        //     if(obj.status==3){
-        //       this.findMenu = child;
-        //     }else if(obj.status==4){
-        //       this.findMenu = menu;
-        //     }else{
-        //       this.findNode(secondMenu,menu,secondMenu);
-        //     }
-        //   } else {
-        //     this.findNode(child,obj,secondMenu);
-        //   }
-        // });
-        // return this.findMenu;
-        menu.childNode.map((child)=>{
-          // if(child.id==obj.id)
-        })
+          menu.childNode.map((child)=>{
+            if(child.id==(obj.forwardId || obj.pid)){
+              if(obj.level==3){
+                this.findMenu = child
+              }
+              if(obj.level==4){
+                this.findMenu = menu
+              }else{
+                this.findNode(secondMenu,menu,secondMenu);
+              }
+            }else{
+              this.findNode(child,obj,secondMenu);
+            }
+          })
+        return this.findMenu;
       },
     },
     mounted(){

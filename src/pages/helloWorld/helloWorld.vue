@@ -18,12 +18,27 @@
           :class="'item-product'+item.id">{{item.id}}
       </li>
     </ul>
-    <draggable :list="proModuleList1"
+    <!--<draggable :list="proModuleList1"
                @start="onDragStart"
                :move="onDragMove"
                @end="onDragEnd"
     >
       <div v-for="item in proModuleList1" class="item-product">{{item.id}}</div>
+    </draggable>-->
+    <draggable
+      forceFallback
+      fallbackClass
+      :list="proModuleList1"
+      :move="onDragMove"
+      :options="{
+        forceFallback:true,
+        fallbackClass:true,
+        animation:200
+      }"
+      @start="onDragStart"
+      @end="onDragEnd"
+    >
+      <div v-for="item in proModuleList1" :key="item.id" class="item-product">{{item.id}}</div>
     </draggable>
   </div>
 
@@ -54,7 +69,14 @@
         articleNew: state => state.test.articleNew
       })
     },
-    watch: {},
+    watch: {
+      proModuleList1(...args){
+        console.log('proModuleList1',...args)
+      },
+      proModuleList2(...args){
+        console.log('proModuleList1',...args)
+      }
+    },
     methods: {
       onDragStart(evt) {
         console.log("start-evt", evt)
@@ -97,15 +119,19 @@
 
       $("#sortable1 li").draggable({
         connectToSortable: "#sortable1,#sortable2",
+        containment:'parent',
         create: function (event, ui) {
           // console.log("create1",event,ui)
         },
         start: function (event, ui) {
           // console.log("start1",event,ui)
+          // $( "#sortable0 li" ).draggable("disable")
         },
         stop: function (evt, ui) {
-          // console.log("stop1",evt,ui)
-          // console.log($(this))
+          /*debugger
+          // debugger
+          console.log("stop1",evt,ui)
+          console.log($(this))
           if ($(this).parent("#sortable1").length) {
             let tmpArr = []
             for (let i = 0; i < $("#sortable1 li").length; i++) {
@@ -119,6 +145,7 @@
             })
             _this.proModuleList1 = tmpArr
           } else {
+            console.log("next",$(this).nextSibling)
             console.log("change")
             let curIndex = $(this).attr("data-index")
             let curNode = _this.proModuleList1[curIndex]
@@ -136,72 +163,9 @@
                 index = i
               }
             })
-            Vue.set(_this.proModuleList1, curIndex, _this.proModuleList2[index])
-            Vue.set(_this.proModuleList2, index, curNode)
-            // let arr = [..._this.proModuleList1, ..._this.proModuleList2]
-            // arr.map((item,index)=>{
-            //   item.position = $("#sortable1 li").eq(index).offset()
-            // })
-            // _this.proModuleList1=arr.slice(0,3)
-            // _this.proModuleList2 = arr.slice(3)
-            console.log(_this.proModuleList1, _this.proModuleList2)
-          }
+          }*/
         },
       });
-
-      // $("#sortable2 li").draggable({
-      //   connectToSortable: "#sortable1,#sortable2",
-      //   create: function (event, ui) {
-      //     // console.log("create1",event,ui)
-      //   },
-      //   start: function (event, ui) {
-      //     // console.log("start1",event,ui)
-      //   },
-      //   stop: function (evt, ui) {
-      //     // console.log("stop1",evt,ui)
-      //     // console.log($(this))
-      //     if ($(this).parent("#sortable2").length) {
-      //       let tmpArr = []
-      //       for (let i = 0; i < $("#sortable2 li").length; i++) {
-      //         let index = $("#sortable2 li").eq(i).attr("data-index")
-      //         let tmpObj = _this.proModuleList2[index]
-      //         tmpObj.position = $("#sortable2 li").eq(i).offset()
-      //         tmpArr.push(tmpObj)
-      //       }
-      //       tmpArr.map((item) => {
-      //         console.log("tmp", item.id)
-      //       })
-      //       _this.proModuleList2 = tmpArr
-      //     } else {
-      //       console.log("change")
-      //       let curIndex = $(this).attr("data-index")
-      //       let curNode = _this.proModuleList2[curIndex]
-      //       let left = evt.toElement.offsetLeft
-      //       let top = evt.toElement.offsetTop
-      //       console.log(curIndex,curNode.position,top,left)
-      //       let tmp = []
-      //       _this.proModuleList1.map((item) => {
-      //         tmp.push(Math.abs(item.position.top - top))
-      //       })
-      //       let min = tmp[0], index = 0
-      //       tmp.map((item, i) => {
-      //         if (item < min) {
-      //           min = item
-      //           index = i
-      //         }
-      //       })
-      //       Vue.set(_this.proModuleList2, curIndex, _this.proModuleList1[index])
-      //       Vue.set(_this.proModuleList1, index, curNode)
-      //       // let arr = [..._this.proModuleList1, ..._this.proModuleList2]
-      //       // arr.map((item,index)=>{
-      //       //   item.position = $("#sortable1 li").eq(index).offset()
-      //       // })
-      //       // _this.proModuleList1=arr.slice(0,3)
-      //       // _this.proModuleList2 = arr.slice(3)
-      //       console.log(_this.proModuleList1, _this.proModuleList2)
-      //     }
-      //   },
-      // });
 
       $("#sortable1, #sortable2").sortable({
         connectWith: ".connectedSortable"

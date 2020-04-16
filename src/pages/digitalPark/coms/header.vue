@@ -29,12 +29,10 @@
     },
     props:["moduleType",'fromFlag','headName','showGoBack'], //fromFlag 1：仪表盘 2:大屏
     data () {
-      let menuTree = JSON.parse(localStorage.getItem('menuTree'))
       return {
         newsList: [{id: 1, time: '2019-10-10 10:10:10', text: '消息消息消息1111111'},
           {id: 1, time: '2019-10-11 10:11:11', text: '消息消息消息2222222'},
           {id: 3, time: '2019-10-12 10:12:12', text: '消息消息消息3333333'}],
-        title:menuTree[0].name,
         curNewsIndex:0,
         newsTimer:''
       }
