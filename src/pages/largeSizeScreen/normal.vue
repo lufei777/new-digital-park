@@ -42,9 +42,10 @@
       ItemProModule
     },
     data () {
-      let menuTree = JSON.parse(localStorage.getItem('menuTree'))
+      // let menuTree = JSON.parse(localStorage.getItem('menuTree'))
+      let menuTree=[{name:'数字园区管理平台'}]
       return {
-        headName:menuTree[0].name,
+        headName:'',
         moduleList:[],
         animationFlag:false,
         outDisable:false,
@@ -140,9 +141,17 @@
       },
       onInnerStart(){
         console.log("inner lalala")
-      }
+      },
+      async getMenuTree() {
+        let res = await DigitalParkApi.getMenuTree({
+          language: Cookies.get("lang")
+        });
+        localStorage.setItem('menuTree',JSON.stringify(res))
+        this.headName = res[0].name
+      },
     },
     mounted(){
+      this.getMenuTree()
       this.getLargeScreenModuleList()
       let _this = this
       $(window).resize(function(){
