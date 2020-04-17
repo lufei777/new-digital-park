@@ -11,7 +11,7 @@
                  :is="item.componentName"
                  :moduleItem="moduleItemData(item)"
                  class="item-component flex-colum-center"
-                 @click.native="onClickItemComponent(item)"
+                 @click.native.self="onClickItemComponent(item)"
       />
     </div>
 
@@ -114,7 +114,7 @@
         }
       },
       onClickItemComponent(item) {
-        console.log("clickitem", item)
+        // console.log("clickitem", item)
         //需要后台配合修改
         if (this.hideHeader) return;  //配置页点击不进行操作
 
@@ -138,7 +138,7 @@
         } else {
           menuTmp = secondMenu
         }
-        console.log("menuTmp", menuTmp)
+        // console.log("menuTmp", menuTmp)
         this.$store.commit("digitalPark/menuList", menuTmp);
         item.childNode = []
         item.id = item.forwardId || item.pid

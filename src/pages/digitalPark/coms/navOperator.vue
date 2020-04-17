@@ -24,11 +24,11 @@
       <i>|</i>
     </span>
     <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoBack">
-      <el-select v-model="setupValue" placeholder="设置" @change="onClickSetup">
+      <el-select v-model="setupValue" placeholder="设置" @change="onClickSetup" class="{'large-select':fromFlag==2}">
         <el-option :label="$t('homeHeader.setup')" value="0" hidden></el-option>
-        <el-option :label="$t('homeHeader.moduleConfig')" value="1"></el-option>
-        <el-option :label="$t('homeHeader.personalCenter')" value="2"></el-option>
-        <el-option :label="$t('homeHeader.changePassword')" value="3"></el-option>
+        <el-option :label="$t('homeHeader.moduleConfig')" value="1" :class="{'large-item':fromFlag==2}"></el-option>
+        <el-option :label="$t('homeHeader.personalCenter')" value="2" :class="{'large-item':fromFlag==2}"></el-option>
+        <el-option :label="$t('homeHeader.changePassword')" value="3" :class="{'large-item':fromFlag==2}"></el-option>
         <!--<el-option :label="$t('homeHeader.skin')" value="2"></el-option>-->
       </el-select>
       <i>|</i>
@@ -39,10 +39,10 @@
           <div class="user-name">{{userInfo.name}}</div>
           <img class="avatar-img" :src="userInfo.headUrl" alt />
         </div>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="1">{{$t('homeHeader.personalCenter')}}</el-dropdown-item>
-          <el-dropdown-item command="2">{{$t('homeHeader.changePassword')}}</el-dropdown-item>
-          <el-dropdown-item command="3">{{$t('homeHeader.signOut')}}</el-dropdown-item>
+        <el-dropdown-menu slot="dropdown" :class="{'large-dropdown':fromFlag==2}">
+          <el-dropdown-item command="1" :class="{'large-item':fromFlag==2}">{{$t('homeHeader.personalCenter')}}</el-dropdown-item>
+          <el-dropdown-item command="2" :class="{'large-item':fromFlag==2}">{{$t('homeHeader.changePassword')}}</el-dropdown-item>
+          <el-dropdown-item command="3" :class="{'large-item':fromFlag==2}">{{$t('homeHeader.signOut')}}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </span>
@@ -83,7 +83,7 @@ export default {
     }),
     cookieModuleType(){
      return this.moduleType || Cookies.get('moduleType')
-    }
+    },
   },
   watch: {
     updateUserInfo() {
@@ -181,7 +181,6 @@ export default {
     loadNews() {  //点击消息
       Cookies.set('moduleType',this.cookieModuleType)
       // loadNews TODO
-      // localStorage.setItem("show_menu", "@/html/alarm/alarm_index.html");
       localStorage.setItem(
         "menuList",
         JSON.stringify({
@@ -195,8 +194,14 @@ export default {
           ]
         })
       );
-      this.$store.commit("digitalPark/activeMenuIndex",'@/html/alarm/alarm_index.html')
-      this.$router.push("/vibe-web");
+      if(this.fromFlag==2){
+        this.$store.commit("digitalPark/largeScreenIframeSrc",
+          window.top.location.origin+'/#/vibe-web?updateId='+_.uniqueId())
+      }else{
+        this.$store.commit("digitalPark/activeMenuIndex",'@/html/alarm/alarm_index.html')
+        this.$router.push("/vibe-web");
+      }
+
     },
     goToWebPage(item,obj){
       //如果只有第一个参数，渲染的menu就是此对象的childNode；
@@ -296,5 +301,13 @@ export default {
       right: -25px;
     }
   }
+}
+.large-select,.large-dropdown{
+   width:200px;
+}
+.large-item{
+   font-size: 30px;
+   margin-bottom: 20px;
+   text-align: center;
 }
 </style>

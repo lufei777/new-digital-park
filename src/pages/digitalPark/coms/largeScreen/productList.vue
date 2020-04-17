@@ -60,12 +60,27 @@
         }
       },
       onClickItemFixPro(item){
+        if(item.level==2 && item.clientType==1){
+          let tmpObj = item
+          tmpObj.childNode.splice(0,1)
+          let curNode = CommonFun.getLastItem(tmpObj)
+          console.log("curNode",curNode)
+          if(localStorage.isCZClient=="true"){
+            window.goToClientPage(JSON.stringify(item), curNode.id + "")
+          }else{
+            this.$message({
+              type:'warning',
+              message:'请在客户端中访问'
+            })
+          }
+          return ;
+        }
         this.$store.commit("digitalPark/menuList",item)
         this.$store.commit('digitalPark/activeMenuIndex',CommonFun.setMenuIndex(item))
         if(item.routeAddress.indexOf('@')!=-1){
           console.log(window.top.location.origin+'/#/vibe-web')
           this.$store.commit("digitalPark/largeScreenIframeSrc",
-            window.top.location.origin+'/#/vibe-web?updateId='+_.uniqueId())
+                             window.top.location.origin+'/#/vibe-web?updateId='+_.uniqueId())
         }else{
           console.log(window.top.location.origin+item.routeAddress)
           this.$store.commit("digitalPark/largeScreenIframeSrc",window.top.location.origin+'/#'+item.routeAddress)
