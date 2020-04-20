@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import { flattenDeep } from 'utils/czUtils'
 import store from '../vuex/store'
+import axois from '../service/axios/AxiosInterceptors'
 
 import helloRouter from './hello-router'
 // 公共路由
@@ -42,6 +43,18 @@ const router = new Router({
   "routes": DigitalRouters
 })
 
+// router.beforeEach((to, from, next) => {
+//   if (typeof to.meta.loginCheck === 'boolean' && !to.meta.loginCheck) {
+//     next()
+//   } else {
+//     axois.get('/oaApi/user/login').then(() => {
+//       next()
+//     }).catch(() => {
+//
+//     })
+//   }
+// })
+//
 router.beforeEach((to, from, next) => {
   if (to.meta.loginCheck === false) {
     next();

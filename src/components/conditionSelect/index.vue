@@ -71,6 +71,7 @@
     //fromFlag 1:空间对比 2:同比环比分析 3:能耗对比 4:分时能耗 5:分项能耗
     props:['isGroup','showEnergy','fromFlag','getDataFlag'],
     data () {
+      let curSystem = window.czSystemConfig.curSystem
       return {
         energyList:[],
         // dateTypeList,
@@ -79,7 +80,7 @@
         dateType:'month',
         radio:'0',
         // startTime:moment(new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000*10)).format("YYYY-MM"),
-        startTime:"2019-02",
+        startTime:curSystem=='zg'?moment().format('YYYY-MM'):"2019-02",
         lastTime:'',
         showLastTime:false,
         curEnergy:[]
@@ -87,15 +88,6 @@
     },
     computed: {
       dateTypeList(){
-        // if(this.activeIndex==2){
-        //   return [{
-        //     name:'年',
-        //     id:1
-        //   },{
-        //     name:'月',
-        //     id:2
-        //   }]
-        // }else{
           return [{
             name:'年',
             id:1
@@ -106,7 +98,6 @@
             name:'日',
             id:3
           }]
-        // }
       }
     },
     watch:{
@@ -131,30 +122,33 @@
           this.curEnergyId=[res[0].energyType[0].id,res[0].energyType[1].id]
           this.curEnergy=[res[0].energyType[0],res[0].energyType[1]]
         }else{
-           let tmp=[]
-           if(this.fromFlag==1){
-             res.map((item)=>{
-               tmp.push(item)
-               item.energyType.map((val)=>{
-                 tmp.push(val)
-               })
-             })
-           }else if(this.fromFlag==2 || this.fromFlag==4){
-             res.map((item)=>{
-               item.energyType.map((val)=>{
-                 tmp.push(val)
-               })
-             })
-           }else if(this.fromFlag==5){
-            res.map((item)=>{
-              tmp.push(item)
-            })
+          let tmp=[]
+          if(window.czSystemConfig.curSystem=='zg'){
+            if(this.fromFlag==1 || this.fromFlag==2 || this.fromFlag==4 || this.fromFlag==5 ){
+              res.map((item)=>{
+                tmp.push(item)
+              })
+            }
+          }else{
+            if(this.fromFlag==1){
+              res.map((item)=>{
+                tmp.push(item)
+                item.energyType.map((val)=>{
+                  tmp.push(val)
+                })
+              })
+            }else if(this.fromFlag==2 || this.fromFlag==4){
+              res.map((item)=>{
+                item.energyType.map((val)=>{
+                  tmp.push(val)
+                })
+              })
+            }else if(this.fromFlag==5){
+              res.map((item)=>{
+                tmp.push(item)
+              })
+            }
           }
-           // if(this.fromFlag==1 || this.fromFlag==2 || this.fromFlag==4 || this.fromFlag==5 ){
-           //   res.map((item)=>{
-           //     tmp.push(item)
-           //   })
-           // }
            if(this.fromFlag){
              this.energyList = tmp
              this.curEnergyId=tmp[0].id

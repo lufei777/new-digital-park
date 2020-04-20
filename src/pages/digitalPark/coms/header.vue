@@ -1,7 +1,9 @@
 <template>
   <div class="large-size-screen-header flex-align-between">
       <div class="news-box">
-        <ul class="news-list hover-pointer" :style="{top}" @mouseenter="stopNews" @mouseleave="scrollNews">
+        <ul class="news-list hover-pointer" :style="{top}"
+            @mouseenter="stopNews" @mouseleave="scrollNews"  v-if="curSystem!='zg'"
+        >
           <li v-for="(item,index) in newsList" :key="index" class="news-item">
             <span>{{item.text}}</span>
             <span>{{item.time}}</span>
@@ -41,6 +43,9 @@
       top() {
         return this.fromFlag==1? -this.curNewsIndex * 50 + 'px': -this.curNewsIndex * 160 + 'px'
       },
+      curSystem(){
+        return window.czSystemConfig.curSystem
+      }
     },
     watch:{
     },

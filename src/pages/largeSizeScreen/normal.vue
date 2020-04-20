@@ -52,10 +52,10 @@
         innerDisable: true,
         centerIndex: 0,
         styleObj: {
-          panelStyle: {},
-          centerStyle: {},
-          dragStyle: {},
-          centerSize:{}
+          panelStyle: {}, //面板样式
+          centerStyle: {}, //中心样式
+          dragStyle: {},  //小模块样式
+          centerSize:{}  //中心大小
         },
         moduleMaxWidth: 960, //模块最大的宽度
         widthPercent: 1, //配置页时是原来大屏的百分之多少
@@ -74,7 +74,7 @@
         return {draggable: '.inner-drag-content', group: 'inner-product', disabled: true}
       },
       async getLargeScreenModuleList() {
-        this.setConfigParams()
+        this.setConfigParams()  //配置页时需要缩小
         let res = await DigitalParkApi.getLargeScreenModule({
           width: document.body.offsetWidth,
           height: document.body.offsetHeight,
@@ -86,13 +86,11 @@
         this.drawPageStyle(res)
 
         setTimeout(() => {
-          if (this.fromFlag == 1) {
-            this.styleObj.centerSize={
-              "width": parseInt(($(".center-show").width() * this.widthPercent)) + 'px',
-              "height": parseInt(($(".center-show").height() * this.heightPercent)) + 'px'
-            }
-            $(".center-show").css(this.styleObj.centerSize)
+          this.styleObj.centerSize={
+            "width": parseInt(($(".center-show").width() * this.widthPercent)) + 'px',
+            "height": parseInt(($(".center-show").height() * this.heightPercent)) + 'px'
           }
+          $(".center-show").css(this.styleObj.centerSize)
           $(".drag-panel").css(this.styleObj.panelStyle)
           $(".center-show").css(this.styleObj.centerStyle)
           $(".large-size-screen-normal .out-drag-product").css(this.styleObj.dragStyle)
@@ -105,7 +103,7 @@
         let paddingLeft = ($(".content").width() - xLen * res.xNum) / 2
         let heightOther = ($(".large-size-screen-normal").height() - this.headerHeight - yLen * res.yNum)
         let margin = heightOther / 2 / (res.yNum)
-        console.log("margin", margin)
+        // console.log("margin", margin)
         yLen = yLen + margin
         let marginTop = heightOther / 2 / 2
 
@@ -115,7 +113,7 @@
           "padding-left": paddingLeft + "px",
           "margin-top": marginTop + "px"
         }
-        console.log("len", xLen, this.moduleMaxWidth)
+        // console.log("len", xLen, this.moduleMaxWidth)
         this.styleObj.centerStyle = {
           "grid-column-start": this.centerIndex + 1,
           "grid-column-end": xLen < this.moduleMaxWidth ? this.centerIndex + 4 : this.centerIndex + 3,
@@ -129,7 +127,7 @@
           "grid-column": 'unset',
           "grid-row": 'unset',
         }
-        console.log(this.styleObj.centerStyle)
+        // console.log(this.styleObj.centerStyle)
       },
       onOutChange(evt) {
         // console.log("evt", evt, this.moduleList)
@@ -172,13 +170,18 @@
       this.getMenuTree()
       this.getLargeScreenModuleList()
       let _this = this
-      $(window).resize(function () {
-        $(".center-show").css({
+      $(window).resize(async function () {
+       await _this.getLargeScreenModuleList()
+        let obj = {
           width:"1920px",
           height:'1080px'
-        })
-        _this.getLargeScreenModuleList()
+        }
+        $(".center-show").css(obj)
+        console.log("sizechange", $(".center-show").length,obj)
       })
+    },
+    created(){
+
     }
   }
 </script>
