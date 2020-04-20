@@ -1,7 +1,7 @@
 <template>
   <div class="zvue-table-wrapper" :style="{height:wrapperHeight}">
     <div
-      v-if="options.customTop"
+      v-if="options.customTop || $scopedSlots['custom-top']"
       ref="customTop"
       :style="{textAlign:options.customTopPosition || config.customTopPosition,height:'auto',padding:'0 20px 20px'}"
     >
@@ -57,9 +57,9 @@
         >
           <template slot="header">{{uiConfig.showIndex.label || config.indexLabel}}</template>
         </el-table-column>
+
         <!-- 解决使用column组件多选索引顺序错位 -->
         <el-table-column width="1px"></el-table-column>
-
         <column :columnConfig="columnConfig">
           <template v-for="col in columnConfig" slot-scope="{column}" :slot="`${col.prop}Header`">
             <slot :name="`${col.prop}Header`" :column="column"></slot>
@@ -76,12 +76,12 @@
         <!-- 列操作 -->
         <el-table-column
           v-if="btnConfig"
-          :fixed="btnConfig.fixed"
+          :fixed="btnConfig.fixed || 'right'"
           :prop="btnConfig.prop"
           :label="btnConfig.label"
           :width="btnConfig.width"
-          :align="btnConfig.align || options.align || config.align"
-          :header-align="btnConfig.headerAlign || config.headerAlign"
+          :align="btnConfig.align || options.align || 'center'"
+          :header-align="btnConfig.headerAlign || 'center'"
         >
           <!-- 搜索框 -->
           <template v-if="uiConfig.searchable" slot="header">
@@ -105,7 +105,7 @@
             >取 消</el-button>
             <!-- 操作列的slot -->
             <slot
-              v-if="options.operation"
+              v-if="options.operation || $scopedSlots.operation"
               :name="config.operationSlotName"
               :scopeRow="scopeRow"
               :row="scopeRow.row"

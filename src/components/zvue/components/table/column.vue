@@ -2,13 +2,21 @@
   <span>
     <!-- 正常列 -->
     <template v-for="col in columnConfig">
+      <multi-header-column
+        v-if="col.children && col.children.length"
+        :key="col.label"
+        :col="col"
+        :align="col.align || parentOption.align || config.align"
+        :header-align="col.headerAlign || parentOption.headerAlign || config.headerAlign"
+      ></multi-header-column>
       <el-table-column
-        v-if="!col.hide"
+        v-else-if="!col.hide"
         show-overflow-tooltip
         :key="col.label"
         :prop="col.prop"
         :label="col.label"
         :width="col.width"
+        :min-width="col.minWidth"
         :fixed="col.fixed"
         :sortable="col.sortable || false"
         :align="col.align || parentOption.align || config.align"
@@ -68,10 +76,16 @@ import { detail } from "../../utils/detail";
 import { validatenull } from "../../utils/validate";
 import formTemp from "../formtemp";
 import { DIC_SPLIT } from "../../global/variable";
+import multiHeaderColumn from './multiHeaderColumn';
 
 export default {
   name: "column",
   inject: ["crud"],
+  provide() {
+    return {
+      multiColumn: this
+    }
+  },
   props: {
     columnConfig: {
       type: Array,
@@ -79,7 +93,7 @@ export default {
       default: []
     }
   },
-  components: { formTemp },
+  components: { formTemp, multiHeaderColumn },
   data() {
     return {
       DIC: this.crud.DIC,
