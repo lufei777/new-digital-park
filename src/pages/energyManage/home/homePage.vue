@@ -102,7 +102,7 @@
     </div>
     <div class="ratio-Figure">
       <div class="barLineChartTitle flex-align-between">
-        <p>2019与2018年度同比及2019环比柱状折线图分析</p>
+        <p>{{chartText}}</p>
         <div class="energy-class">
           <span>能源类型：</span>
           <el-select v-model="dateType" placeholder="请选择" @change="DateTypeChange">
@@ -196,7 +196,13 @@ export default {
       }
     };
   },
-  methods: {
+  computed:{
+    chartText(){
+      return `${moment().add(-1,'y').format("YYYY")}与${moment().format("YYYY")}年度同比环比柱状折线图分析`
+    }
+},
+
+methods: {
     async getEnergyOverView() {
       this.energyOverview = await EnergyApi.getEnergyOverView({
         redioType: 0,
@@ -258,15 +264,16 @@ export default {
       let resData = res.value;
       let myChart = this.$echarts.init(this.$refs.myChart);
       let xAxis = resData.map(item => item.date);
-      let legendData = [
-        "2018",
-        "2019",
-        "综合能耗同比增长率",
-        "综合能耗环比增长率"
-      ];
+        let legendData = [
+          moment().add(-1,'y').format("YYYY"),
+          moment().format("YYYY"),
+          "综合能耗同比增长率",
+          "综合能耗环比增长率"
+        ];
+
       let series = [
         {
-          name: "2018",
+          name:moment().add(-1,'y').format("YYYY"),
           type: "bar",
           data: resData.map(item => item.tqzh),
           itemStyle: {
@@ -280,7 +287,7 @@ export default {
           }
         },
         {
-          name: "2019",
+          name: moment().format("YYYY"),
           type: "bar",
           data: resData.map(item => item.dqzh),
           itemStyle: {

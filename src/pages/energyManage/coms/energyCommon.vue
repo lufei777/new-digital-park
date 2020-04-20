@@ -358,13 +358,13 @@
           {label:'同期综合能耗(kwh)',prop:'dqzh',sortable:'custom'},
           {label:'上期综合能耗(kwh)',prop:'tqzh',sortable:'custom'},
           {label:'综合能耗同比增长率(%)',prop:'tbzz',sortable:'custom',
-            formatter: function(row, column) {
-              return row[column.property]+"%";
+            formatter: function(row, value) {
+              return value+"%";
             }
           },
           {label:'综合能耗环比增长率(%)',prop:'hbzz',sortable:'custom',
-            formatter: function(row, column) {
-              return row[column.property]+"%";
+            formatter: function(row, value) {
+              return value+"%";
             }
           }]
          if(res && res.value){

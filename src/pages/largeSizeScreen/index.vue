@@ -1,6 +1,6 @@
 <template>
   <div class="large-size-screen">
-    <component :is="curCom" :ref="curCom"></component>
+    <component :is="curCom" :ref="curCom" :fromFlag="fromFlag"></component>
   </div>
 </template>
 
@@ -13,6 +13,7 @@
       Normal,
       Dashboard
     },
+    props:['fromFlag'],  //fromFlag 1代表配置页
     data () {
       return {
         width:0,

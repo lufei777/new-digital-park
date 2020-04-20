@@ -56,8 +56,8 @@ export default {
       let params = {
         redioType: 1,
         selectType: 2,
-        startTime: "2019-01",
-        lastTime: "2019-12",
+        startTime:new Date().getFullYear() + "-" + "01",
+        lastTime:new Date().getFullYear() + "-" + "12",
         floorId: 1,
         catalog: this.energy
       };

@@ -223,7 +223,7 @@ export default {
     },
     handleError(msg) {
       console.error(new Error(msg));
-      this.$message.error("上传失败");
+      this.$message.error(typeof msg === "string" ? msg : "上传失败");
     },
     delete(file) {
       if (this.isArray || this.isString) {
@@ -238,7 +238,11 @@ export default {
     },
     show(data) {
       this.loading = false;
-      this.handleSuccess(data);
+      if (typeof data === "object" && data != null) {
+        this.handleSuccess(data);
+      } else {
+        this.$message.success("上传成功");
+      }
     },
     hide(msg) {
       this.loading = false;

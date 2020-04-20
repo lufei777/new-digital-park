@@ -173,14 +173,6 @@ export default {
       });
       this.title=res[0].name
       this.titleIcon  =res[0].icon
-      // let zGChildNode = {
-      //   childNode:[],
-      //   id:"menu-22b039bb127541a691e21c8398759985",
-      //   name:"中钢物业管理",
-      //   routeAddress:"/zgPropertyManage",
-      //   level:2
-      // }
-      // res[0].childNode[2].childNode.push(zGChildNode)
       this.menuData = res[0];
       localStorage.setItem('menuTree',JSON.stringify(res))
     },

@@ -1,21 +1,19 @@
 <template>
   <div class="module-configure flex-column" v-loading="loading">
     <div v-show="!isFull">
-      <div class="set-tip">模式设置</div>
-      <div class="module-change">
+      <div class="set-tip">模块设置</div>
+      <div class="module-change" v-if="type!=3">
         <el-button @click="onClickModuleBtn('2')" :class="type==2?'moduleBtnBg':'defaultBtn'">{{$t('homeHeader.waterfall')}}</el-button>
         <el-button @click="onClickModuleBtn('1')" :class="type==1?'moduleBtnBg':'defaultBtn'">{{$t('homeHeader.dashboard')}}</el-button>
       </div>
     </div>
     <div :class="isFull?'full-main-container':'main-container'">
-      <!--<el-scrollbar wrap-class="scrollbar-wrapper" :native="false">-->
         <div :class="isFull?'hide':'left-module-list'">
             <div v-for="item in proModuleList"
                :key="item.id"
-               :class="['item-left-pro','hover-pointer',item.activeFlag?'active-pro':'']"
+               :class="[type==3?'large-item-left-pro':'item-left-pro','hover-pointer',item.activeFlag?'active-pro':'']"
                @click="onClickItemProModule(item)">{{item.name}}</div>
         </div>
-      <!--</el-scrollbar>-->
       <div class="module-content-list" v-show="!isFull">
 
         <draggable :list="contentList"
@@ -39,12 +37,17 @@
       </div>
       <div :class="isFull?'full-right-module-content':'right-module-content'">
         <div :class="isFull?'full-preview-panel':'preview-panel'" >
-          <DashboardNew v-if="type==1" :curProModule="curProModule" :hideHeader="true" ref="dashboard" />
+          <DashboardNew v-if="type==1" :curProModule="curProModule"
+                        :hideHeader="true" ref="dashboard"
+          />
           <HomePage v-if="type==2" :curProModule="curProModule"
                     :hideHeader="true"
                     ref="homePage"
                     :forceFallback="forceBack"
-          ></HomePage>
+          />
+          <LargeSizeScreen v-if="type==3"
+                           fromFlag="1"
+          />
         </div>
         <div class="operator-box" v-if="!isFull">
           <el-button  @click="onClickSureBtn" class="defaultBtn">确认</el-button>
@@ -72,6 +75,7 @@
   import comsImport from '../coms/js/comsImport'
   import {mapState} from 'vuex'
   import DashboardNew from '../home/dashboardNew'
+  import LargeSizeScreen from '../../largeSizeScreen/index'
   export default {
     name: 'ModuleConfigure',
     components: {
@@ -79,7 +83,8 @@
       Dashboard,
       draggable,
       HomePage,
-      DashboardNew
+      DashboardNew,
+      LargeSizeScreen
     },
     data() {
       return {
@@ -97,7 +102,7 @@
     },
     computed:{
       type(){
-        return this.$route.query.type
+        return this.$route.query.type  //1仪表盘 2瀑布流 3 大屏
       },
       ...mapState({
         dragFlag:state=>state.digitalPark.dragFlag
@@ -116,7 +121,7 @@
       async getProModules() {
         let res = await DigitalParkApi.getProModules({
           language:Cookies.get('lang'),
-          chart:this.type //是否显示非图表类
+          chart:this.type==1?1:2 //是否显示非图表类
         })
         this.loading=false
         res[0].activeFlag=true
@@ -195,14 +200,6 @@
           await this.$refs.homePage.sureUpdateUserProModules()
           // this.$router.push(`/digitalPark/homePage`)
         }
-
-        // setTimeout(()=>{
-        //   if(this.type==1){
-        //     this.$router.push(`/digitalPark/dashboardHomePage`)
-        //   }else{
-        //     this.$router.push(`/digitalPark/homePage`)
-        //   }
-        // },1000)
       },
       onClickModuleBtn(val){
         this.$router.push(`/digitalPark/moduleConfigure?type=${val}`)
@@ -299,10 +296,14 @@
       font-size: 16px;
       overflow: auto;
     }
-    .item-left-pro{
+    .item-left-pro,.large-item-left-pro{
       display: block;
       padding:12px 0;
       color:#ddeeff;
+    }
+    .large-item-left-pro{
+      font-size:30px;
+      padding:24px;
     }
     .active-pro{
       background:rgba(2,87,255,1);
@@ -318,7 +319,7 @@
       border-radius:2px;
     }
     .right-module-content{
-      width: 70%;
+      width: 72%;
       float: left;
       height: 100%;
       display: flex;
@@ -346,8 +347,8 @@
       flex-grow: 1;
     }
     .preview-panel{
-      width:98%;
-      height:85%;
+      width:100%;
+      height:90%;
       margin:10px auto;
       box-sizing: border-box;
       overflow: auto;
@@ -445,6 +446,7 @@
         background: #EDEDED;
       }
     }
+
   }
 
 </style>

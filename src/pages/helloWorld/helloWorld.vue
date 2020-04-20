@@ -1,255 +1,238 @@
 <template>
   <div class="hello">
-    <!--<img src="../../../static/image/digitalPark/login_bg.png" alt="">-->
-    <!--<el-button type="primary" @click="onClickBtn">change</el-button>-->
-    <!--<div class="div1"></div>-->
-    <!--<div class="div2"></div>-->
-    <!--<div id="dv" @mousedown="fun1" @mousemove="fun2" @mouseup="fun3"></div>-->
-    <!--<draggable class="drag-box"-->
-               <!--v-bind="getOptions()"-->
-               <!--@start="onRightStart"-->
-               <!--@change="onRightChange"-->
-               <!--:move="onRightMove"-->
-               <!--@end="onRightEnd"-->
-               <!--@update="onUpdate"-->
-               <!--:list="proModuleList2"-->
-    <!--&gt;-->
-      <!--<div v-for="(item,index) in proModuleList2" :key="index" class="item-product">-->
-        <!--{{item}}-->
-      <!--</div>-->
-    <!--</draggable>-->
-    <div class="boxList">
-      <div v-for="(item,index) in proModuleList2" :key="index" class="item-product" :data-id="item.id">
-         {{item.id}}
-      </div>
-    </div>
-    <!--<div class="boxList2">-->
-      <!--<div v-for="(item,index) in proModuleList1" :key="index" class="item-product" :data-id="item.id">-->
-        <!--{{item.id}}-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--<transition name="el-zoom-in-center" >-->
-      <!--<div class="item-product"  v-show="animationFlag"></div>-->
-    <!--</transition>-->
-
-    <!--<div class="pieCharts flex-align-between">-->
-      <!--<div class="pieChart box">-->
-        <!--<div ref="pieChart1" class="chart-inner"></div>-->
-      <!--</div>-->
-      <!--<div class="pieChart box">-->
-        <!--<div ref="pieChart2" class="chart-inner"></div>-->
-      <!--</div>-->
-      <!--&lt;!&ndash; <div class="pieChart box"></div> &ndash;&gt;-->
-    <!--</div>-->
+    <ul id="sortable0">
+      <li v-for="item in proModuleList0" :key="item.id"
+          :data-id="item.id"
+          :class="'item-product'+item.id">{{item.id}}
+      </li>
+    </ul>
+    <ul id="sortable1" class="connectedSortable">
+      <li v-for="(item,index) in proModuleList1" :key="item.id"
+          :data-index="index"
+          :class="'item-product'+item.id">{{item.id}}
+      </li>
+    </ul>
+    <ul id="sortable2" class="connectedSortable">
+      <li v-for="(item,index) in proModuleList2" :key="item.id"
+          :data-index="index"
+          :class="'item-product'+item.id">{{item.id}}
+      </li>
+    </ul>
+    <!--<draggable :list="proModuleList1"
+               @start="onDragStart"
+               :move="onDragMove"
+               @end="onDragEnd"
+    >
+      <div v-for="item in proModuleList1" class="item-product">{{item.id}}</div>
+    </draggable>-->
+    <draggable
+      forceFallback
+      fallbackClass
+      :list="proModuleList1"
+      :move="onDragMove"
+      :options="{
+        forceFallback:true,
+        fallbackClass:true,
+        animation:200
+      }"
+      @start="onDragStart"
+      @end="onDragEnd"
+    >
+      <div v-for="item in proModuleList1" :key="item.id" class="item-product">{{item.id}}</div>
+    </draggable>
   </div>
 
 </template>
 
 <script>
-  import echarts from 'echarts'
+  import Vue from 'vue'
   import {mapState} from 'vuex'
   import draggable from 'vuedraggable'
-  import ChartUtils from '@/utils/chartUtils'
-  var dv = document.getElementById('dv');
-  var x = 0;
-  var y = 0;
-  var l = 0;
-  var t = 0;
-  // var this.isDown = false;
-  // let proModuleList2=[1,2,3]
-  window.dragVue = {
+
+  export default {
     name: 'HelloWorld',
     components: {
       draggable
     },
-    data () {
+    data() {
       return {
         msg: 'Welcome to my basic vue demo',
-        proModuleList2:[{id:1,name:{name2:2}},{id:2,name:{name2:3}},{id:3,name:{name2:4}}],
-        isDown:false,
-        proModuleList1:[{id:4,name:{name2:2}},{id:5,name:{name2:3}},{id:6,name:{name2:4}}],
-        animationFlag:false
+        proModuleList0: [{id: 7, name: {name2: 2}}, {id: 8, name: {name2: 3}}, {id: 9, name: {name2: 4}}],
+        proModuleList1: [{id: 1, name: {name2: 2}}, {id: 2, name: {name2: 3}}, {id: 3, name: {name2: 4}}],
+        proModuleList2: [{id: 4, name: {name2: 2}}, {id: 5, name: {name2: 3}}, {id: 6, name: {name2: 4}}],
+        animationFlag: false,
+        isDown: false,
       }
     },
-    computed:{
+    computed: {
       ...mapState({
-        articleNew:state=>state.test.articleNew
+        articleNew: state => state.test.articleNew
       })
     },
-    watch:{
-      articleNew(){
-        if(this.articleNew){
-          console.log('lalalala')
-        }
+    watch: {
+      proModuleList1(...args){
+        console.log('proModuleList1',...args)
+      },
+      proModuleList2(...args){
+        console.log('proModuleList1',...args)
       }
     },
     methods: {
-      onClickBtn(){
-        this.$store.commit('test/articleNew',true)
+      onDragStart(evt) {
+        console.log("start-evt", evt)
       },
-      onRightStart(evt){
-        console.log("start-evt",evt)
+      onDragMove(evt) {
+        console.log("move-evt", evt)
       },
-      onRightMove(evt){
-        console.log("move-evt",evt)
-      },
-      onRightChange(evt){
-        console.log("change-evt",evt)
-      },
-      onRightEnd(evt){
-        console.log("end-evt",evt)
-      },
-      fun1(e){
-        dv = document.getElementById('dv');
-        x = e.clientX;
-        y = e.clientY;
-
-        //获取左部和顶部的偏移量
-        l = dv.offsetLeft;
-        t = dv.offsetTop;
-        //开关打开
-        this.isDown = true;
-        //设置样式
-        dv.style.cursor = 'move';
-      },
-      fun2(e){
-        dv = document.getElementById('dv');
-        if (this.isDown == false) {
-          return;
-        }
-        //获取x和y
-        var nx = e.clientX;
-        var ny = e.clientY;
-        //计算移动后的左偏移量和顶部的偏移量
-        var nl = nx - (x - l);
-        var nt = ny - (y - t);
-
-        dv.style.left = nl + 'px';
-        dv.style.top = nt + 'px';
-      },
-      fun3(){
-        dv = document.getElementById('dv');
-        this.isDown = false;
-        dv.style.cursor = 'default';
-      },
-      getOptions(){
-        return {draggable:'.item-product',group:"out-product",disabled:false}
-      },
-      onUpdate(evt){
-        console.log("update-evt",evt)
-        console.log("this.",this.proModuleList2)
-      },
+      onDragEnd(evt) {
+        console.log("end-evt", evt)
+      }
     },
-    mounted(){
-      // document.body.ondrop = function (event) {
-      //   event.preventDefault();
-      //   event.stopPropagation();
-      // }
+    mounted() {
+      let _this = this
+      let arr = [..._this.proModuleList1, ..._this.proModuleList2]
+      arr.map((item)=>{
+        item.position=$(".item-product"+item.id).offset()
+      })
+      // console.log("arr",arr)
+      $( "#sortable0 li" ).draggable({
+        connectToSortable: "#sortable1,#sortable2",
+        helper: "clone",
+        revert: "invalid",
+        stop: function (event, ui) {
+          let arr = [..._this.proModuleList1, ..._this.proModuleList2]
+          arr.map((item) => {
+            // let obj = _this.proModuleList0.find((pro)=>{
+            //   return pro.id==item.id
+            // })
+            // console.log("obj",obj)
+            //模拟7是被拖拽克隆的
+            let obj = {
+              id: 7
+            }
+            if (obj) {
+              $("#sortable0 .item-product" + obj.id).draggable('disable')
+            }
+          })
+        },
+      });
+
+      $("#sortable1 li").draggable({
+        connectToSortable: "#sortable1,#sortable2",
+        containment:'parent',
+        create: function (event, ui) {
+          // console.log("create1",event,ui)
+        },
+        start: function (event, ui) {
+          // console.log("start1",event,ui)
+          // $( "#sortable0 li" ).draggable("disable")
+        },
+        stop: function (evt, ui) {
+          /*debugger
+          // debugger
+          console.log("stop1",evt,ui)
+          console.log($(this))
+          if ($(this).parent("#sortable1").length) {
+            let tmpArr = []
+            for (let i = 0; i < $("#sortable1 li").length; i++) {
+              let index = $("#sortable1 li").eq(i).attr("data-index")
+              let tmpObj = _this.proModuleList1[index]
+              tmpObj.position = $("#sortable1 li").eq(i).offset()
+              tmpArr.push(tmpObj)
+            }
+            tmpArr.map((item) => {
+              console.log("tmp", item.id)
+            })
+            _this.proModuleList1 = tmpArr
+          } else {
+            console.log("next",$(this).nextSibling)
+            console.log("change")
+            let curIndex = $(this).attr("data-index")
+            let curNode = _this.proModuleList1[curIndex]
+            let left = evt.toElement.offsetLeft
+            let top = evt.toElement.offsetTop
+            console.log(curIndex,curNode.position,top,left)
+            let tmp = []
+            _this.proModuleList2.map((item) => {
+              tmp.push(Math.abs(item.position.top - top))
+            })
+            let min = tmp[0], index = 0
+            tmp.map((item, i) => {
+              if (item < min) {
+                min = item
+                index = i
+              }
+            })
+          }*/
+        },
+      });
+
+      $("#sortable1, #sortable2").sortable({
+        connectWith: ".connectedSortable"
+      }).disableSelection();
     }
+
   }
 
-  export default dragVue;
-
-  $(function(){
-    // $(".item-product").Tdrag({
-    //   scope:".hello",
-    //   pos:true,
-    //   dragChange:true,
-    //   changeMode:"sort",
-    //   animation_options:{//运动时的参数
-    //     duration:500,//每次运动的时间
-    //     easing:"ease-out"//移动时的特效，ease-out、ease-in、linear
-    //   },
-    //   cbStart:function(evt){
-    //     // console.log("start",evt)
-    //     // console.log($(".item-product").attr("index"))
-    //     // $(".item-product").eq(index)
-    //   },
-    //   cbEnd:function(evt){
-    //     // console.log($(".item-product").length)
-    //     let tmp =[]
-    //     for(let i=0;i<$(".item-product").length;i++){
-    //       // console.log($(".item-product").eq(i).attr("index"))
-    //       let index = $(".item-product").eq(i).attr("index")
-    //
-    //       tmp.push(dragVue.data().proModuleList2[index])
-    //     }
-    //     // console.log(tmp)
-    //   }
-    // });
-    // $( ".boxList2" ).sortable({
-    //   revert: true
-    // });
-    // $( ".boxList" ).sortable({
-    //   revert: true
-    // });
-    // // $( ".item-product" ).draggable({
-    // //   connectToSortable: ".boxList",
-    // //   // containment: "boxList"
-    // //   // helper: "clone",
-    // //   // revert: "invalid"
-    // // });
-    // $( ".boxList, .item-product" ).disableSelection();
-    // $( ".item-product" ).disableSelection();
-
-    $(".boxList").dad()
-  })
+  // $(function(){
+  //    $("#sortable0 li" ).draggable({
+  //      helper: "clone",
+  //      appendTo:'#sortable1',
+  //      connectToSortable: "#sortable1,#sortable2",
+  //      stop:function( event, ui ){
+  //        //console.log(event,ui)
+  //
+  //      },
+  //      start:function(evt,ui){
+  //
+  //      }
+  //    })
+  //
+  //   $( "#sortable0,#sortable1, #sortable2" ).sortable({
+  //     connectWith: ".connectedSortable"
+  //   }).disableSelection();
+  // })
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-  .hello{
-    height:100%;
+  .hello {
+    height: 100%;
     background: @white;
-    .item-product{
-      width:100px;
-      height:100px;
-      background: pink;
-      margin:20px;
+
+    #sortable1, #sortable2, #sortable0 {
+      list-style-type: none;
+      margin: 0;
+      padding: 0 0 2.5em;
       float: left;
+      margin-right: 10px;
     }
-    .drag-box{
-      background: yellow;
+
+    #sortable1 li, #sortable2 li, #sortable0 li {
+      margin: 0 5px 5px 5px;
+      padding: 5px;
+      font-size: 1.2em;
+      width: 120px;
+      background: pink
     }
-    .boxList,.boxList2{
-      float: left;
-      /*width:100px;*/
-      /*width:40%;*/
-      margin-right: 10%;
+
+    #sortable2 li {
       background: yellowgreen;
     }
-    .my-chart{
-      width:100%;
-      height:90%;
+
+    #sortable0 li {
+      background: #b1dfbb;
     }
-    .pieCharts {
-      width: 100%;
-      height: 435px;
-      /*background: #fff;*/
-      box-sizing: border-box;
-      margin-bottom: 15px;
-      .pieChart {
-        width: 49%;
-        height: 100%;
-        // background: transparent;
-        border-radius: 6px;
-        box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.1);
-        /*padding:10px;*/
-        box-sizing: border-box;
-        background-color: @white;
-      }
+
+    .item-product {
+      width: 200px;
+      height: 200px;
+      background: pink;
+      margin: 20px auto;
+      font-size: 30px;
+      text-align: center;
+      line-height: 200px;
     }
-    .chart-inner{
-      width:100%;
-      height:100%;
-    }
-  }
-  #dv {
-    width:100px;
-    height:100px;
-    background-color:blue;
-    border-radius:50%;
-    /*position:absolute;*/
   }
 
 </style>

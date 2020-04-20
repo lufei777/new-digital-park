@@ -209,11 +209,11 @@ export default {
                  label:key,
                  prop:key,
                  width:widthSet,
-                 formatter:function(row,column){
-                   if (row[column.property] > parseFloat(row.参考指标)) {
-                     return `<span class="styleRed">${row[column.property]}</span>`;
+                 formatter:function(row,value){
+                   if (value > parseFloat(row.参考指标)) {
+                     return `<span class="styleRed">${value}</span>`;
                    } else {
-                     return `<span>${ row[column.property] ? row[column.property] : "--"}</span>`;
+                     return `<span>${ value ? value : "--"}</span>`;
                    }
                   },
                })
