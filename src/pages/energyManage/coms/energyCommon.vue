@@ -1,17 +1,12 @@
 <template>
   <div class="energy-common">
-    <!--<ZoomNavigation :floorList="floorList"-->
-                    <!--:defaultChecked="defaultChecked"-->
-                    <!--:isMultiple="isZoomMultiple"-->
-                    <!--:fromFlag="fromFlag"-->
-                    <!--:selectCallBack="selectZoomCallBack"-->
-                    <!--:defaultExpandedKeys="defaultExpandedKeys"-->
-    <!--/>-->
     <div class="common-tree-box radius-shadow">
       <Tree :tree-list="floorList" :tree-config="treeConfig"/>
     </div>
     <div class="right-content">
-      <ConditionSelect :isGroup="isEnergyByGroup" :showEnergy="true" :fromFlag="fromFlag" :getDataFlag="getDataFlag"/>
+      <ConditionSelect :isGroup="isEnergyByGroup" :showEnergy="true"
+                       :fromFlag="fromFlag" :getDataFlag="getDataFlag"
+      />
       <div ref="myChart" :class="fromFlag==5?'hide':'my-chart radius-shadow'"></div>
       <div class="flex-align-around radius-shadow two-chart" v-if="fromFlag==5">
         <div ref="myChart1" class="my-chart category-chart"></div>
@@ -282,11 +277,11 @@
         this.myChart = this.$echarts.init(this.$refs.myChart);
         let xAxis
         if(this.selectParams.selectType==3 && this.selectParams.radioType==0){
-          xAxis = res.value.map((item)=>item.date && item.date.slice(0,16))
+          xAxis = res.value.map((item)=>item.date && item.date.slice(0,16) ||'')
         }else if(this.selectParams.selectType==2 && this.selectParams.radioType==1){
-          xAxis = res.value.map((item)=>item.date && item.date.slice(0,7))
+          xAxis = res.value.map((item)=>item.date && item.date.slice(0,7) || '')
         }else{
-          xAxis = res.value.map((item)=>item.date && item.date.slice(0,10))
+          xAxis = res.value.map((item)=>item.date && item.date.slice(0,10) || '')
         }
         let dqzh={
           name:'当期综合能耗',

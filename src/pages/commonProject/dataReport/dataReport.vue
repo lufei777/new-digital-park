@@ -56,7 +56,15 @@
       name:'日',
       id:'daily'
   }]
-  let energyList = [{
+
+  let curSystem  = window.czSystemConfig.curSystem
+  let energyList = curSystem=='zg'?[{
+      name:'电',
+      id:'electricity'
+    },{
+      name:'水',
+      id:'water'
+    }]:[{
     name:'电',
     id:'electricity'
   },{
@@ -66,13 +74,6 @@
     name:'热',
     id:'gas'
   }]
-  // let energyList = [{
-  //   name:'电',
-  //   id:'electricity'
-  // },{
-  //   name:'水',
-  //   id:'water'
-  // }]
   export default {
     name: 'DataReport',
     components: {
@@ -81,15 +82,15 @@
       return {
         curDateType:'monthly',
         dateTypeList:dateTypeList,
-        pickerType:'month',
+        pickerType:curSystem=='zg'?'date':'month',
         // startTime:moment(new Date(new Date().getTime()-28*24*60*60*1000*11)).format('YYYY-MM'),
         // endTime:moment(new Date(new Date().getTime()-30*24*60*60*1000*10)).format('YYYY-MM'),
-        startTime:"2019-01",
-        endTime:"2019-04",
+        startTime:curSystem=='zg'?moment().startOf('month').format("YYYY-MM-DD"):"2019-01",
+        endTime:curSystem=='zg'?moment().format('YYYY-MM-DD'):"2019-04",
         energyList:energyList,
         curEnergy:'electricity',
         tableData:'',
-        valueFormat:"YYYY-MM"
+        valueFormat:curSystem=='zg'?"YYYY-MM":'YYY-MM-DD'
       }
     },
     computed:{

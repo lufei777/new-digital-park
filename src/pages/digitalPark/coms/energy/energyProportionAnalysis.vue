@@ -23,6 +23,7 @@ export default {
   components: {},
   props: ["moduleItem", "routeAddress"],
   data() {
+    let curSystem = window.czSystemConfig.curSystem
     return {
       energy: 34,
       // energyList: [
@@ -39,7 +40,7 @@ export default {
       //     label: "热"
       //   }
       // ],
-      energyList: [
+      energyList:curSystem=='zg'?[
         {
           value: 34,
           label: "电"
@@ -48,7 +49,19 @@ export default {
           value: 37,
           label: "水"
         }
-      ]
+      ]:[
+        {
+          value: 34,
+          label: "电"
+        },
+        {
+          value: 37,
+          label: "水"
+        },
+        {
+          value: 38,
+          label: "热"
+        }],
     };
   },
   methods: {

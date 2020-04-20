@@ -3,7 +3,7 @@
     <div class="out-box radius-shadow">
         <ConditionSelect :showEnergy="false" :get-data-flag="getDataFlag"/>
     </div>
-    <div class="flex-align-between">
+    <div class="flex-align-between" v-if="systemConfig!='zg'">
       <div class="rank-box radius-shadow flex-align-center">
         <h4 class="rank-tip">总用电量</h4>
         <span class="rank-value">{{overViewData.elecSum}}<span>kwh</span></span>
@@ -15,16 +15,16 @@
       <div class="rank-box radius-shadow my-chart" ref="myChart1"></div>
       <div class="rank-box radius-shadow my-chart" ref="myChart2"></div>
     </div>
-    <!--<div class="flex">-->
-      <!--<div class="rank-box radius-shadow flex-align-center" style="margin-right: 1%;width:49%">-->
-      <!--<h4 class="rank-tip">总用电量</h4>-->
-      <!--<span class="rank-value">{{overViewData.elecSum}}<span>kwh</span></span>-->
-      <!--</div>-->
-      <!--<div class="rank-box radius-shadow flex-align-center" style="width:50%">-->
-      <!--<h4 class="rank-tip">总用水量</h4>-->
-      <!--<span class="rank-value">{{overViewData.waterSum}}<span>m³</span></span>-->
-      <!--</div>-->
-    <!--</div>-->
+    <div class="flex" v-if="systemConfig=='zg'">
+      <div class="rank-box radius-shadow flex-align-center" style="margin-right: 1%;width:49%">
+      <h4 class="rank-tip">总用电量</h4>
+      <span class="rank-value">{{overViewData.elecSum}}<span>kwh</span></span>
+      </div>
+      <div class="rank-box radius-shadow flex-align-center" style="width:50%">
+      <h4 class="rank-tip">总用水量</h4>
+      <span class="rank-value">{{overViewData.waterSum}}<span>m³</span></span>
+      </div>
+    </div>
     <div class="table-box radius-shadow">
       <div class="table-tip">{{commonTip}}能耗展示排名</div>
       <z-table :ref="tableConfig.ref" :options="tableConfig"></z-table>
@@ -75,12 +75,17 @@
       commonTip(){
         return `${this.selectParams.startTime}${this.selectParams.lastTime?'至'+this.selectParams.lastTime:''}`
       },
+      systemConfig(){
+        return window.czSystemConfig.curSystem
+      }
     },
     methods: {
       async getEnergyOverView(){
         this.overViewData = await EnergyApi.getEnergyOverView(this.selectParams)
-        this.initElecChart(this.overViewData)
-        this.initWaterChart(this.overViewData)
+        if(this.systemConfig != 'zg'){
+          this.initElecChart(this.overViewData)
+          this.initWaterChart(this.overViewData)
+        }
       },
       initElecChart(res){
         let myChart1 = this.$echarts.init(this.$refs.myChart1);
@@ -145,7 +150,6 @@
         this.tableConfig.columnConfig = [
           {label:'排名', prop:'xulie'},
           {label: '建筑楼层', prop:'floor'},
-          {label:'综合耗能',prop:'elecAndWaterSum',sortable:'custom'},
           {label:'总用电量',prop:'elecSum',sortable:'custom'},
           // {label:'照明用电',prop:'zmElec',sortable:'custom'},
           // {label:'空调用电',prop:'zmElec',sortable:'custom'},

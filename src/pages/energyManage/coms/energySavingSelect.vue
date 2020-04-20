@@ -67,6 +67,7 @@ export default {
   props: ["energySaveFlag"],
   data() {
     let _this = this;
+    let curSystem = window.czSystemConfig.curSystem
     return {
       curEnergy: "", //楼层检索
       curEnergyId:"0",
@@ -77,7 +78,7 @@ export default {
       energySubentryData: [],
       floorSelectData: "",
       // startTime: moment(new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000*10)).format("YYYY-MM"),
-      startTime: "2019-02",
+      startTime: curSystem=='zg'?moment().format('YYYY-MM'):"2019-02",
       page: 1,
       tableData: {
         total: 0

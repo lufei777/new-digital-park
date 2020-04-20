@@ -119,20 +119,21 @@
         <div ref="myChart" class="my-chart"></div>
       </div>
     </div>
-    <div class="tip flex-align">
-      <span class="icon"></span>
-      <span>能耗分类分项占比图</span>
-    </div>
-    <div class="pieCharts flex-align-between">
-      <div class="pieChart box">
-        <div ref="pieChart1" class="chart-inner"></div>
+    <div v-if="curSystem!='zg'">
+      <div class="tip flex-align">
+        <span class="icon"></span>
+        <span>能耗分类分项占比图</span>
       </div>
-      <div class="pieChart box">
-        <div ref="pieChart2" class="chart-inner"></div>
+      <div class="pieCharts flex-align-between">
+        <div class="pieChart box">
+          <div ref="pieChart1" class="chart-inner"></div>
+        </div>
+        <div class="pieChart box">
+          <div ref="pieChart2" class="chart-inner"></div>
+        </div>
+        <!-- <div class="pieChart box"></div> -->
       </div>
-      <!-- <div class="pieChart box"></div> -->
     </div>
-
     <div class="tip flex-align">
       <span class="icon"></span>
       <span>能耗排名列表</span>
@@ -152,24 +153,26 @@ export default {
   name: "HomePage",
   data() {
     let _this = this;
-    return {
-      energyOverview: {},
-      currentTime: new Date().getFullYear() + "-" + "01",
-      BeforeTime: new Date().getFullYear() + "-" + "12",
-      options: [
-        {
+    let curSystem  = window.czSystemConfig.curSystem
+    let options = [{
           value: 34,
           label: "电"
         },
         {
           value: 37,
           label: "水"
-        },
+        }]
+    return {
+      energyOverview: {},
+      currentTime: new Date().getFullYear() + "-" + "01",
+      BeforeTime: new Date().getFullYear() + "-" + "12",
+      options:curSystem=='zg'?options:
         {
+        ...options, ...{
           value: 38,
           label: "热"
         }
-      ],
+       },
       dateType: "电",
       catalog: 34,
       currentPage: 1, //当前页
@@ -199,18 +202,23 @@ export default {
   computed:{
     chartText(){
       return `${moment().add(-1,'y').format("YYYY")}与${moment().format("YYYY")}年度同比环比柱状折线图分析`
+    },
+    curSystem(){
+      return window.czSystemConfig.curSystem
     }
 },
 
-methods: {
+  methods: {
     async getEnergyOverView() {
       this.energyOverview = await EnergyApi.getEnergyOverView({
         redioType: 0,
-        startTime: 2019,
-        selectType: 1
+        startTime: this.curSystem=='zg'?moment().format('YYYY'):2019,
+        selectType: this.curSystem=='zg'?3:1
       });
-      this.piechart1(this.energyOverview);
-      this.piechart2(this.energyOverview);
+      if(this.curSystem!="zg"){
+        this.piechart1(this.energyOverview);
+        this.piechart2(this.energyOverview);
+      }
     },
     async getEnergyEcharts() {
       let res = await CommonApi.getTbhbChart({
@@ -227,7 +235,6 @@ methods: {
       let labelList = [
         { label: "排名", prop: "xulie", sortable: false },
         { label: "建筑楼层", prop: "floor", sortable: false },
-        { label: "综合耗能", prop: "elecAndWaterSum", sortable: "custom" },
         { label: "总用电量", prop: "elecSum", sortable: "custom" },
         // { label: "照明用电", prop: "zmElec", sortable: "custom" },
         // { label: "空调用电", prop: "zmElec", sortable: "custom" }
@@ -244,8 +251,8 @@ methods: {
       this.homePageTableConfig.columnConfig = labelList;
       let res = await EnergyApi.getEnergyRanking({
         redioType: 0,
-        startTime: 2019,
-        selectType: 1,
+        startTime: this.curSystem=='zg'?moment().format('YYYY'):2019,
+        selectType: this.curSystem=='zg'?3:1,
         page: this.currentPage,
         rankType: this.rankType,
         size: 10,
@@ -263,7 +270,7 @@ methods: {
     createCharts(res) {
       let resData = res.value;
       let myChart = this.$echarts.init(this.$refs.myChart);
-      let xAxis = resData.map(item => item.date);
+      let xAxis = resData.map(item =>item.date?item.date:'');
         let legendData = [
           moment().add(-1,'y').format("YYYY"),
           moment().format("YYYY"),
@@ -433,7 +440,7 @@ methods: {
             center:['35%','50%']
           }
       };
-      window.onresize = myPieChart.resize;
+      // window.onresize = myPieChart.resize;
       ChartUtils.hollowPieChart(myPieChart, data);
     },
     handleCurrentChange(val) {

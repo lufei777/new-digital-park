@@ -1,7 +1,7 @@
 <template>
   <div class="elevator-monitor-coms">
     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
-    <div class="chart-box flex my-chart">
+    <div class="chart-box flex my-chart" v-if="curSystem!='zg'">
       <div class="chart-box-item large-item">
         <div class="chart1" ref="myChart1"></div>
         <span>直梯</span>
@@ -11,7 +11,7 @@
         <span>扶梯</span>
       </div>
     </div>
-    <!--<div class="my-chart" ref="myChart1"></div>-->
+    <div class="my-chart" ref="myChart1" v-if="curSystem=='zg'"></div>
   </div>
 </template>
 
@@ -26,13 +26,20 @@
 
       };
     },
+    computed:{
+      curSystem(){
+        return window.czSystemConfig.curSystem
+      }
+    },
     methods: {
       async getEnvironmentData(){
         let res = await CommonApi.getHomeInterfaceMonitor({
           homeId:4
         })
         this.initChart1(res)
-        this.initChart2(res)
+        if(this.curSystem!='zg'){
+          this.initChart2(res)
+        }
       },
       initChart1(res){
         let dataList =[{
@@ -57,20 +64,25 @@
             fontSize:this.moduleItem.largeScreen?this.moduleItem.fontSize:14
           }
         }
+        if(this.curSystem=='zg'){
+          legendData = ['上升','下降','停止']
+        }
         let data = {
           legendData,
           seriesData,
-          // legendUi
+          legendUi
         };
         ChartUtils.hollowPieChart(myChart,data);
-        myChart.setOption({
-          legend:{
-            orient: 'horizontal',
-            left:'center',
-            bottom:'',
-            right:''
-          }
-        })
+        if(this.curSystem!='zg'){
+          myChart.setOption({
+            legend:{
+              orient: 'horizontal',
+              left:'center',
+              bottom:'',
+              right:''
+            }
+          })
+        }
       },
       initChart2(res){
         let dataList =[{
