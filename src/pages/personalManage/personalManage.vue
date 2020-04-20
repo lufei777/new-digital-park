@@ -191,7 +191,7 @@ export default {
           {
             prop: "officeAddress",
             label: "办公地点",
-            fixed: "right"
+            fixed: true
           }
         ],
         uiConfig: {
