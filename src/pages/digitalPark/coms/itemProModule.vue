@@ -162,8 +162,8 @@
           ...{
              largeScreen:this.moduleData.largeScreen,
              legendUi:{
-              bottom:'20',
-              right:'20',
+              bottom:'3%',
+              right:'3%',
               textStyle:{
                 color:'#8FD3FA',
                 fontSize:this.moduleData.largeScreen?30:14

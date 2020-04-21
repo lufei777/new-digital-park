@@ -65,6 +65,7 @@ class chartUtils {
     let { legendUi={},legendUi:{textStyle:legendTextStyle={}}={} } = data
     let { seriesUi={},seriesUi:{label:seriesLabel={}}={}} = data
     let {normal:seriesNormal={},emphasis:seriesEmphasis={}} = seriesLabel
+    // console.log("data",data)
     // console.log("1",legendTextStyle,legendUi)
     // console.log(seriesLabel,seriesNormal,seriesEmphasis)
     // console.log(seriesEmphasis.show==false)
@@ -86,10 +87,10 @@ class chartUtils {
       },
       legend: {
         orient: legendUi.orient || 'vertical',
-        right: legendUi.right || '20',
+        right: legendUi.right || '3%',
         //只要top字段存在（不管设置与否），则bottom属性不起作用，所以若想设置top，请单独再组件里设置
         // top:legendUi.top || '',
-        bottom:legendUi.bottom || '20',
+        bottom:legendUi.bottom || '3%',
         data: data.legendData,
         textStyle:{
           fontSize:legendTextStyle.fontSize || 14,
@@ -104,7 +105,7 @@ class chartUtils {
         radius:seriesUi.radius || ['50%', '70%'],
         center:seriesUi.center || ['50%','50%'],
         roseType: seriesUi.roseType,
-        // avoidLabelOverlap: false,
+        avoidLabelOverlap: true,
         label: {
           normal: {
             show: false,

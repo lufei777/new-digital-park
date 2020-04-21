@@ -139,7 +139,7 @@
       <span>能耗排名列表</span>
     </div>
     <div class="tabulation">
-      <div class="tabulation-title">2019年A3能耗排名展示(按综合能耗排名)</div>
+      <div class="tabulation-title">能耗排名展示</div>
       <z-table :ref="homePageTableConfig.ref" :options="homePageTableConfig"></z-table>
     </div>
   </div>
@@ -396,7 +396,7 @@ export default {
             right:'30',
           },
           seriesUi:{
-            center:['35%','50%']
+            center:['50%','50%']
           }
       };
       ChartUtils.hollowPieChart(myPieChart, data);
@@ -437,7 +437,7 @@ export default {
             right:'30',
           },
           seriesUi:{
-            center:['35%','50%']
+            center:['50%','50%']
           }
       };
       // window.onresize = myPieChart.resize;

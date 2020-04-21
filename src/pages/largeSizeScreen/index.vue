@@ -1,6 +1,6 @@
 <template>
   <div class="large-size-screen">
-    <component :is="curCom" :ref="curCom" :fromFlag="fromFlag"></component>
+    <component :is="curCom" :ref="curCom" :fullStatus="fullStatus"></component>
   </div>
 </template>
 
@@ -13,7 +13,7 @@
       Normal,
       Dashboard
     },
-    props:['fromFlag'],  //fromFlag 1代表配置页
+    props:['fullStatus'],  //配置页时是否是全屏状态
     data () {
       return {
         width:0,
@@ -34,6 +34,10 @@
         }else{
           this.curCom = 'Normal'
         }
+      },
+      getLargeScreenModuleList(){
+        this.$refs[this.curCom].getLargeScreenModuleList &&
+        this.$refs[this.curCom].getLargeScreenModuleList()
       }
     },
     mounted(){

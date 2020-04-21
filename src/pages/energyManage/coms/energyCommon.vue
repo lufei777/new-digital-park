@@ -283,14 +283,17 @@
         }else{
           xAxis = res.value.map((item)=>item.date && item.date.slice(0,10) || '')
         }
+        // res.value[0].dqzh=100
         let dqzh={
           name:'当期综合能耗',
           type:'bar',
+          barWidth : 60,
           data:res.value.map((item)=>item.dqzh)
         }
         let tqzh={
           name:'同期综合能耗',
           type:'bar',
+          barWidth : 60,
           data:res.value.map((item)=>item.tqzh)
         }
         let tbzz={

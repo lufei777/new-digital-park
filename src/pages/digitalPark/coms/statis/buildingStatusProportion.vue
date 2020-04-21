@@ -23,17 +23,18 @@ export default {
     createPieCharts(res) {
       let myPieChart = this.$echarts.init(this.$refs.myChart || document.getElementById('building-status-proportion-chart'));
       let legendData = res.legend;
-      let legend = "right";
       let color = ["#30475B", "#66FBF9", "#0088FF", "#D77443"];
       let textStyleColor = '#8FD3FA'
       let seriesData = res.values;
       let data = {
         legendData,
         seriesData,
-        legend,
         color,
         textStyleColor,
-        legendUi: this.moduleItem.legendUi
+        legendUi: this.moduleItem.legendUi,
+        seriesUi:{
+          center:['50%','50%']
+        }
       };
       ChartUtils.hollowPieChart(myPieChart, data);
     }
