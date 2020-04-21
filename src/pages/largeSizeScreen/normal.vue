@@ -42,7 +42,7 @@
       draggable,
       ItemProModule
     },
-    props: ['fromFlag'],  //fromFlag 1:配置页
+    props: ['fullStatus'],  //配置页时是否是全屏状态
     data() {
       return {
         headName: '',
@@ -55,7 +55,7 @@
           panelStyle: {}, //面板样式
           centerStyle: {}, //中心样式
           dragStyle: {},  //小模块样式
-          centerSize:{}  //中心大小
+          centerSize: {}  //中心大小
         },
         moduleMaxWidth: 960, //模块最大的宽度
         widthPercent: 1, //配置页时是原来大屏的百分之多少
@@ -65,7 +65,12 @@
       }
     },
     computed: {},
-    watch: {},
+    watch: {
+      fullStatus(){
+        console.log("this.full",this.fullStatus)
+        this.getLargeScreenModuleList()
+      }
+    },
     methods: {
       getOptions() {
         return {draggable: '.out-drag-product', group: "out-product", disabled: false}
@@ -73,8 +78,9 @@
       getInnerOptions() {
         return {draggable: '.inner-drag-content', group: 'inner-product', disabled: true}
       },
-      async getLargeScreenModuleList() {
-        this.setConfigParams()  //配置页时需要缩小
+      async getLargeScreenModuleList(flag) {
+        this.setConfigParams(flag)  //配置页时需要缩小或还原
+
         let res = await DigitalParkApi.getLargeScreenModule({
           width: document.body.offsetWidth,
           height: document.body.offsetHeight,
@@ -86,7 +92,7 @@
         this.drawPageStyle(res)
 
         setTimeout(() => {
-          this.styleObj.centerSize={
+          this.styleObj.centerSize = {
             "width": parseInt(($(".center-show").width() * this.widthPercent)) + 'px',
             "height": parseInt(($(".center-show").height() * this.heightPercent)) + 'px'
           }
@@ -103,7 +109,6 @@
         let paddingLeft = ($(".content").width() - xLen * res.xNum) / 2
         let heightOther = ($(".large-size-screen-normal").height() - this.headerHeight - yLen * res.yNum)
         let margin = heightOther / 2 / (res.yNum)
-        // console.log("margin", margin)
         yLen = yLen + margin
         let marginTop = heightOther / 2 / 2
 
@@ -113,26 +118,31 @@
           "padding-left": paddingLeft + "px",
           "margin-top": marginTop + "px"
         }
-        // console.log("len", xLen, this.moduleMaxWidth)
+
         this.styleObj.centerStyle = {
           "grid-column-start": this.centerIndex + 1,
           "grid-column-end": xLen < this.moduleMaxWidth ? this.centerIndex + 4 : this.centerIndex + 3,
           "grid-row-start": 1,
           "grid-row-end": xLen < this.moduleMaxWidth ? 4 : 3,
         }
-        // console.log(  this.styleObj.centerStyle)
+
         this.styleObj.dragStyle = {
           width: res.xLength + 'px',
           height: res.yLength + 'px',
           "grid-column": 'unset',
           "grid-row": 'unset',
         }
-        // console.log(this.styleObj.centerStyle)
+
       },
-      onOutChange(evt) {
+      async onOutChange(evt) {
         // console.log("evt", evt, this.moduleList)
-        $(".center-show").css({...this.styleObj.centerStyle,...this.styleObj.centerSize})
+        $(".center-show").css({...this.styleObj.centerStyle, ...this.styleObj.centerSize})
         $(".large-size-screen-normal .out-drag-product").css(this.styleObj.dragStyle)
+        let tmp = _.cloneDeep(this.moduleList)
+        let index = tmp.findIndex(item => item.id == 0 && item.moduleList.length)
+        tmp.splice(index, 1)
+        // await DigitalParkApi.updateUserProModules(tmp)
+        // this.getLargeScreenModuleList()
       },
       onOutStart() {
         // console.log("lalala")
@@ -148,22 +158,33 @@
         this.headName = res[0].name
       },
       setConfigParams() {
-        if (this.fromFlag == 1) {
+        if (this.fullStatus == 'noFull') {
           let baseWidth = $(".preview-panel").width() / $(".module-configure").width()
-          let baseHeight = $(".preview-panel").height() / $(".module-configure").height()
           this.widthPercent = parseFloat((parseInt(baseWidth * 100) / 100).toFixed(2))
-          this.heightPercent = parseFloat((parseInt(baseHeight * 100) / 100).toFixed(2))
-          this.moduleMaxWidth = parseInt((this.moduleMaxWidth * this.widthPercent))
-          this.moduleMargin = parseInt((this.moduleMargin * this.widthPercent))
-          this.headerHeight = parseInt((this.headerHeight * this.heightPercent))
-
-          $(".large-size-screen-header").css({
-            height: this.headerHeight + 'px'
-          })
           $(".park-logo,.digital-title-text").css({
             "fontSize": "40px"
           })
+        }else if(this.fullStatus=="full"){
+          this.widthPercent = 1
+          $(".park-logo,.digital-title-text").css({
+            "fontSize": "76px"
+          })
+          $(".center-show").css({
+            width: '1920px',
+            height: '1080px'
+          })
+          this.moduleMaxWidth = 960
+          this.moduleMargin = 20
+          this.headerHeight = 160
         }
+        this.heightPercent = this.widthPercent
+        this.moduleMaxWidth = parseInt((this.moduleMaxWidth * this.widthPercent))
+        this.moduleMargin = parseInt((this.moduleMargin * this.widthPercent))
+        this.headerHeight = parseInt((this.headerHeight * this.heightPercent))
+
+        $(".large-size-screen-header").css({
+          height: this.headerHeight + 'px'
+        })
       }
     },
     mounted() {
@@ -171,16 +192,16 @@
       this.getLargeScreenModuleList()
       let _this = this
       $(window).resize(async function () {
-       await _this.getLargeScreenModuleList()
+        await _this.getLargeScreenModuleList()
         let obj = {
-          width:"1920px",
-          height:'1080px'
+          width: "1920px",
+          height: '1080px'
         }
         $(".center-show").css(obj)
-        console.log("sizechange", $(".center-show").length,obj)
+        console.log("sizechange", $(".center-show").length, obj)
       })
     },
-    created(){
+    created() {
 
     }
   }
@@ -252,8 +273,8 @@
     .center-show {
       /*width: 1920px !important;*/
       /*height: 1080px !important;*/
-      width:1920px;
-      height:1080px;
+      width: 1920px;
+      height: 1080px;
       box-sizing: border-box;
       border: 1px solid pink;
       /*margin:0 auto;*/

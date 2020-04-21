@@ -1,13 +1,13 @@
 <template>
   <div class="elevator-monitor-coms">
     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
-    <div class="chart-box flex my-chart" v-if="curSystem!='zg'">
-      <div class="chart-box-item large-item">
-        <div class="chart1" ref="myChart1"></div>
+    <div class="my-chart flex" v-if="curSystem!='zg'">
+      <div class="chart-item-box">
+        <div ref="myChart1" class="chart-item"></div>
         <span>直梯</span>
       </div>
-      <div class="chart-box-item small-item">
-        <div class="chart1" ref="myChart2"></div>
+      <div class="chart-item-box">
+        <div ref="myChart2" class="chart-item"></div>
         <span>扶梯</span>
       </div>
     </div>
@@ -114,22 +114,27 @@
   .elevator-monitor-coms {
     .chart-box{
       width:100%;
-      height:100%;
+      /*height:100%;*/
+      flex-grow: 1;
     }
-    .chart-box-item{
+    /*.chart-box-item{*/
+      /*width:50%;*/
+      /*height:90%;*/
+      /*text-align: center;*/
+    /*}*/
+    /*.chart1{*/
+      /*width:90%;*/
+      /*height:90%;*/
+      /*flex-grow: 1;*/
+    /*}*/
+    .chart-item-box{
       width:50%;
-      height:90%;
-      text-align: center;
-    }
-    .chart1{
-      width:90%;
       height:100%;
     }
-    .large-item{
-       /*width:55%;*/
-    }
-    .small-item{
-      /*width:45%;*/
+    .chart-item{
+      width:100%;
+      height:90%;
+      flex-grow: 1;
     }
   }
 </style>
