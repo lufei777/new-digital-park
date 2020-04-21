@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import { flattenDeep } from 'utils/czUtils'
 import store from '../vuex/store'
+import { getToken } from '@/utils/auth' // get token from cookie
 
 import helloRouter from './hello-router'
 // 公共路由
@@ -43,14 +44,19 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.loginCheck === false) {
-    next();
-  } else {
-
-    if (!sessionStorage.getItem('token')) {
-      router.push('/login');
+  const hasToken = getToken();
+  
+  if (hasToken) {
+    if (to.path === '/login') {
+      next({ path: '/' })
     } else {
       next();
+    }
+  } else {
+    if (to.meta.loginCheck === false) {
+      next();
+    } else {
+      next({ path: '/login' })
     }
   }
   // if (to.path != '/vibe-web') {

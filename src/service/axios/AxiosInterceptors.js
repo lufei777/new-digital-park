@@ -1,5 +1,6 @@
 import axiosOrigin from "axios";
 import router from '@/router'
+import { getToken } from '@/utils/auth';
 
 let calcelSource = getCancelSource();
 const Message = require("element-ui").Message
@@ -14,8 +15,8 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.interceptors.request.use(
   (config) => {
     let redirectHref = window.location.href;
-    if (sessionStorage.token) {
-      config.headers['X-SSO-Token'] = sessionStorage.token;
+    if (getToken()) {
+      config.headers['X-SSO-Token'] = getToken();
       redirectHref = location.origin + '/#/digitalPark/homePage';
     }
     config.headers['X-Requested-With'] = 'XMLHttpRequest';
