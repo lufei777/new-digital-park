@@ -11,12 +11,16 @@
       <i>|</i>
     </span>
     <!--<span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoBack">-->
-      <!--<el-select v-model="langValue" placeholder="切换语言" @change="onClickChangeLang">-->
-      <!--<el-option label="中文" value="zh"></el-option>-->
-      <!--<el-option label="English" value="en"></el-option>-->
-      <!--</el-select><i>|</i>-->
+    <!--<el-select v-model="langValue" placeholder="切换语言" @change="onClickChangeLang">-->
+    <!--<el-option label="中文" value="zh"></el-option>-->
+    <!--<el-option label="English" value="en"></el-option>-->
+    <!--</el-select><i>|</i>-->
     <!--</span>-->
-    <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoBack && fromFlag!=2">
+    <span
+      class="nav-right-item"
+      :class="moduleType==1?'dashboard-nav':''"
+      v-if="!showGoBack && fromFlag!=2"
+    >
       <el-select v-model="myModuleType" placeholder="切换模式" @change="onClickChangeModel">
         <el-option :label="$t('homeHeader.waterfall')" value="2"></el-option>
         <el-option :label="$t('homeHeader.dashboard')" value="1"></el-option>
@@ -24,11 +28,28 @@
       <i>|</i>
     </span>
     <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoBack">
-      <el-select v-model="setupValue" placeholder="设置" @change="onClickSetup" class="{'large-select':fromFlag==2}">
+      <el-select
+        v-model="setupValue"
+        placeholder="设置"
+        @change="onClickSetup"
+        class="{'large-select':fromFlag==2}"
+      >
         <el-option :label="$t('homeHeader.setup')" value="0" hidden></el-option>
-        <el-option :label="$t('homeHeader.moduleConfig')" value="1" :class="{'large-item':fromFlag==2}"></el-option>
-        <el-option :label="$t('homeHeader.personalCenter')" value="2" :class="{'large-item':fromFlag==2}"></el-option>
-        <el-option :label="$t('homeHeader.changePassword')" value="3" :class="{'large-item':fromFlag==2}"></el-option>
+        <el-option
+          :label="$t('homeHeader.moduleConfig')"
+          value="1"
+          :class="{'large-item':fromFlag==2}"
+        ></el-option>
+        <el-option
+          :label="$t('homeHeader.personalCenter')"
+          value="2"
+          :class="{'large-item':fromFlag==2}"
+        ></el-option>
+        <el-option
+          :label="$t('homeHeader.changePassword')"
+          value="3"
+          :class="{'large-item':fromFlag==2}"
+        ></el-option>
         <!--<el-option :label="$t('homeHeader.skin')" value="2"></el-option>-->
       </el-select>
       <i>|</i>
@@ -40,9 +61,18 @@
           <img class="avatar-img" :src="userInfo.headUrl" alt />
         </div>
         <el-dropdown-menu slot="dropdown" :class="{'large-dropdown':fromFlag==2}">
-          <el-dropdown-item command="1" :class="{'large-item':fromFlag==2}">{{$t('homeHeader.personalCenter')}}</el-dropdown-item>
-          <el-dropdown-item command="2" :class="{'large-item':fromFlag==2}">{{$t('homeHeader.changePassword')}}</el-dropdown-item>
-          <el-dropdown-item command="3" :class="{'large-item':fromFlag==2}">{{$t('homeHeader.signOut')}}</el-dropdown-item>
+          <el-dropdown-item
+            command="1"
+            :class="{'large-item':fromFlag==2}"
+          >{{$t('homeHeader.personalCenter')}}</el-dropdown-item>
+          <el-dropdown-item
+            command="2"
+            :class="{'large-item':fromFlag==2}"
+          >{{$t('homeHeader.changePassword')}}</el-dropdown-item>
+          <el-dropdown-item
+            command="3"
+            :class="{'large-item':fromFlag==2}"
+          >{{$t('homeHeader.signOut')}}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </span>
@@ -52,24 +82,28 @@
 <script>
 import SystemManageApi from "@/service/api/systemManage";
 import CommonApi from "@/service/api/common";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import CommonFun from '@/utils/commonFun'
 
 export default {
   name: "DigitalNavOperator",
   components: {},
-  props: ["moduleType", "showGoBack","fromFlag"],  //fromFlag 1：仪表盘 2: 大屏
+  props: ["moduleType", "showGoBack", "fromFlag"],  //fromFlag 1：仪表盘 2: 大屏
   data() {
     return {
       langValue: Cookies.get("lang") || "zh",
       userValue: "0",
       setupValue: "0",
-      userInfo: {},
+      // userInfo: {},
       avatar: "../../../../static/image/digitalPark/default_avatar.png",
-      alarmListCount:0
+      alarmListCount: 0
     };
   },
   computed: {
+    ...mapState({
+      updateUserInfo: state => state.digitalPark.updateUserInfo,
+      userInfo: state => state.user.userInfo
+    }),
     myModuleType: {
       set() {
         this.onClickChangeModel();
@@ -78,23 +112,21 @@ export default {
         return this.moduleType;
       }
     },
-    ...mapState({
-      updateUserInfo: state => state.digitalPark.updateUserInfo
-    }),
-    cookieModuleType(){
-     return this.moduleType || Cookies.get('moduleType')
+    cookieModuleType() {
+      return this.moduleType || Cookies.get('moduleType')
     },
   },
   watch: {
-    updateUserInfo() {
+    /* updateUserInfo() {
       if (this.updateUserInfo) {
         this.getUserInfo();
       }
-    }
+    } */
   },
   methods: {
+    ...mapActions('user', ['logout']),
     onClickChangeModel(val) {
-      Cookies.set('moduleType',val)
+      Cookies.set('moduleType', val)
       if (val == 1) {
         this.$router.replace("/digitalPark/dashboardHomePage");
       } else {
@@ -107,27 +139,25 @@ export default {
       this.$parent.handleLangChange && this.$parent.handleLangChange();
     },
     async onClickUserConfigure(val) { //点击用户
-      Cookies.set('moduleType',this.cookieModuleType)
+      Cookies.set('moduleType', this.cookieModuleType)
       if (val == 3) {
-        //如果是客户端
-        if (localStorage.isCZClient=="true") {
-          goBackClientLogin();
-          sessionStorage.removeItem("token");
-          this.$store.commit("digitalPark/activeMenuIndex","")
-          await SystemManageApi.logOut();
-        } else {
-          sessionStorage.removeItem("token");
-          this.$store.commit("digitalPark/activeMenuIndex","")
-          await SystemManageApi.logOut();
-          this.$router.push("/login");
-        }
+        this.logout().then(_ => {
+          //如果是客户端
+          if (localStorage.isCZClient == "true") {
+            goBackClientLogin();
+          } else {
+            this.$router.push("/login");
+          }
+        })
+        // 清空菜单列表
+        this.$store.commit("digitalPark/activeMenuIndex", "");
       } else {
         this.setSystemMenu()
         if (val == 1) {
-          this.$store.commit("digitalPark/activeMenuIndex","/personalInformation")
+          this.$store.commit("digitalPark/activeMenuIndex", "/personalInformation")
           this.$router.push("/personalInformation")
         } else if (val == 2) {
-          this.$store.commit("digitalPark/activeMenuIndex","/modifyPassword")
+          this.$store.commit("digitalPark/activeMenuIndex", "/modifyPassword")
           this.$router.push("/modifyPassword")
         }
       }
@@ -153,7 +183,7 @@ export default {
         }
       }
     },
-    setSystemMenu(){
+    setSystemMenu() {
       let menuTree = JSON.parse(localStorage.getItem("menuTree"));
       let firstLevelTree = menuTree[0].childNode.find(
         item => item.name == "基础功能"
@@ -162,7 +192,7 @@ export default {
         item => item.name == "系统管理"
       );
       // localStorage.setItem("menuList", JSON.stringify(secondLevelTree));
-      this.$store.commit("digitalPark/menuList",secondLevelTree)
+      this.$store.commit("digitalPark/menuList", secondLevelTree)
     },
     onClickGoBack() { //点击返回首页
       if (Cookies.get("moduleType") == 2) {
@@ -170,16 +200,17 @@ export default {
       } else {
         this.$router.push("/digitalPark/dashboardHomePage");
       }
-      this.$store.commit("digitalPark/activeMenuIndex","")
+      this.$store.commit("digitalPark/activeMenuIndex", "")
     },
-    async getUserInfo() {
+    /* async getUserInfo() {
       let res = await SystemManageApi.getUserInfo();
-      this.userInfo  = res
+      this.userInfo = res
       localStorage.setItem("userInfo", JSON.stringify(this.userInfo));
       this.$store.commit("digitalPark/updateUserInfo", false);
-    },
+      this.setUserInfo(res)
+    }, */
     loadNews() {  //点击消息
-      Cookies.set('moduleType',this.cookieModuleType)
+      Cookies.set('moduleType', this.cookieModuleType)
       // loadNews TODO
       localStorage.setItem(
         "menuList",
@@ -187,53 +218,54 @@ export default {
           name: "消息管理",
           childNode: [
             {
-              id:'1',
+              id: '1',
               name: "预警报警列表",
               routeAddress: "@/html/alarm/alarm_index.html"
             }
           ]
         })
       );
-      if(this.fromFlag==2){
+      if (this.fromFlag == 2) {
         this.$store.commit("digitalPark/largeScreenIframeSrc",
-          window.top.location.origin+'/#/vibe-web?updateId='+_.uniqueId())
-      }else{
-        this.$store.commit("digitalPark/activeMenuIndex",'@/html/alarm/alarm_index.html')
+          window.top.location.origin + '/#/vibe-web?updateId=' + _.uniqueId())
+      } else {
+        this.$store.commit("digitalPark/activeMenuIndex", '@/html/alarm/alarm_index.html')
         this.$router.push("/vibe-web");
       }
 
     },
-    goToWebPage(item,obj){
+    goToWebPage(item, obj) {
       //如果只有第一个参数，渲染的menu就是此对象的childNode；
       //如果有第二个参数,渲染的menu就是当前点击的子菜单所在的二级菜单，obj为当前点击的子菜单
-      item  = JSON.parse(item)
+      item = JSON.parse(item)
       let curMenu = item
-      if(obj){
+      if (obj) {
         obj = JSON.parse(obj)
         curMenu = obj
       }
-      console.log("itemfanfeifei",item)
-      this.$store.commit("digitalPark/menuList",item)
+      // console.log("itemfanfeifei", item)
+      this.$store.commit("digitalPark/menuList", item)
       CommonFun.loadPage(curMenu)
     },
-    async getAlarmList(){
+    async getAlarmList() {
       let res = await CommonApi.getAlarmMessageList({
-        pageNum:1,
-        start:'',
-        end:'',
-        pageCount:10,
+        pageNum: 1,
+        start: '',
+        end: '',
+        pageCount: 10,
       })
       this.alarmListCount = res.total
     }
   },
+  created() {
+    this.getAlarmList();
+  },
   mounted() {
-    this.getUserInfo();
-    this.getAlarmList()
-    window.CZClient={
-      goToPersonal:this.onClickUserConfigure,  //跳转个人中心
-      goBack:this.onClickGoBack,    //返回首页
-      goToWebPage:this.goToWebPage,
-      webPageExportMethod:CommonFun.webPageExportMethod
+    window.CZClient = {
+      goToPersonal: this.onClickUserConfigure,  //跳转个人中心
+      goBack: this.onClickGoBack,    //返回首页
+      goToWebPage: this.goToWebPage,
+      webPageExportMethod: CommonFun.webPageExportMethod
     }
   }
 };
@@ -302,12 +334,13 @@ export default {
     }
   }
 }
-.large-select,.large-dropdown{
-   width:200px;
+.large-select,
+.large-dropdown {
+  width: 200px;
 }
-.large-item{
-   font-size: 30px;
-   margin-bottom: 20px;
-   text-align: center;
+.large-item {
+  font-size: 30px;
+  margin-bottom: 20px;
+  text-align: center;
 }
 </style>

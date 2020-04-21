@@ -63,8 +63,7 @@ const pageForms = {
     },
     {
       prop: "amountReceived",
-      label: "实收金额(元)",
-      width: 114
+      label: "实收金额(元)"
     },
     {
       prop: "feeRule",
@@ -76,13 +75,11 @@ const pageForms = {
     },
     {
       prop: "discount",
-      label: "优惠金额(元)",
-      width: 114
+      label: "优惠金额(元)"
     },
     {
       prop: "coupon",
-      label: "优惠券编号",
-      width: 104
+      label: "优惠券编号"
     },
     {
       prop: "discountType",
@@ -115,26 +112,35 @@ const pageForms = {
     {
       prop: "inImageBig",
       label: "入场抓拍照片(大图)",
-      width: 156
+      row: true
     },
     {
       prop: "inImageSmall",
       label: "入场抓拍照片(小图)",
-      width: 156
+      row: true
     },
     {
       prop: "outImageBig",
       label: "出场抓拍照片(大图)",
-      width: 156
+      row: true
     },
     {
       prop: "outImageSmall",
       label: "出场抓拍照片(小图)",
-      width: 156
+      row: true
     }
   ],
   accessRecord: [
     { id: "id", prop: "id信息", hide: true },
+    {
+      prop: "parkName",
+      label: "停车场名称"
+    },
+    {
+      prop: "charge",
+      label: "收费金额(元)",
+      row: true
+    },
     {
       prop: "carNum",
       label: "车辆号码"
@@ -152,18 +158,8 @@ const pageForms = {
       label: "卡号"
     },
     {
-      prop: "parkName",
-      label: "停车场名称",
-      width: 104
-    },
-    {
       prop: "userType",
       label: "用户类别"
-    },
-    {
-      prop: "charge",
-      label: "停车场收费金额(元)",
-      width: 156
     },
     {
       prop: "inMode",
@@ -191,43 +187,40 @@ const pageForms = {
     },
     {
       prop: "inChannelNum",
-      label: "入场车道号",
-      width: 104
+      label: "入场车道号"
     },
     {
       prop: "outChannelNum",
-      label: "出场车道号",
-      width: 104
+      label: "出场车道号"
     },
     {
       prop: "inChannelName",
-      label: "入场道闸通道",
-      width: 119
+      label: "入场道闸通道"
     },
     {
       prop: "outChannelName",
       label: "出场道闸通道",
-      width: 119
+      row: true
     },
     {
       prop: "inImageBig",
       label: "入场抓拍照片(大图)",
-      width: 156
+      row: true
     },
     {
       prop: "inImageSmall",
       label: "入场抓拍照片(小图)",
-      width: 156
+      row: true
     },
     {
       prop: "outImageBig",
       label: "出场抓拍照片(大图)",
-      width: 156
+      row: true
     },
     {
       prop: "outImageSmall",
       label: "出场抓拍照片(小图)",
-      width: 156
+      row: true
     }
   ]
 };
@@ -240,7 +233,9 @@ export default {
         width: "70%",
         disabled: true,
         submitBtn: false,
-        emptyBtn: false
+        emptyBtn: false,
+        labelWidth: 150,
+        labelPosition: 'right'
       }
     };
   },
