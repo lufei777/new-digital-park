@@ -49,11 +49,13 @@ export default {
     computedHeight() {
       this.content = document.querySelector(".content");
       this.routerView = document.querySelector(".router-view");
-      const deviceWidth = document.body.clientWidth;
-      const deviceHeight = document.body.clientHeight;
-      this.routerViewHeight = Number(deviceHeight);
-      this.routerView.style.height = this.routerViewHeight - 110 + "px";
-      this.content.style.height = this.routerViewHeight - 110 + "px";
+      if (this.content && this.routerView) {
+        const deviceWidth = document.body.clientWidth;
+        const deviceHeight = document.body.clientHeight;
+        this.routerViewHeight = Number(deviceHeight);
+        this.routerView.style.height = this.routerViewHeight - 110 + "px";
+        this.content.style.height = this.routerViewHeight - 110 + "px";
+      }
     }
   },
   mounted() {
