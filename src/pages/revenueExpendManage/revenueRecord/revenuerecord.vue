@@ -60,6 +60,7 @@ import revenueExpendApi from "api/revenueExpendManage";
 import systemManageApi from "api/systemManage";
 import commonFun from "utils/commonFun.js";
 import { RevenueExpendManageDic } from "utils/dictionary";
+import { mapState } from 'vuex';
 
 const dateValueDefault = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
 const dateValueFormat = "yyyy-MM-dd HH:mm:ss";
@@ -283,11 +284,11 @@ export default {
             this.refreshTable();
           });
         },
-        () => {}
+        () => { }
       );
     },
     isLauncher({ launchId }) {
-      return JSON.parse(localStorage.getItem("userInfo")).id === launchId;
+      return this.userInfo.id === launchId;
     },
     reloadPage() {
       this.reload = false;
@@ -302,6 +303,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('user', ['userInfo']),
     budgetType() {
       return this.$route.meta.budgetType;
     },

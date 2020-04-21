@@ -1,7 +1,9 @@
 import axiosOrigin from "axios";
 import router from '@/router'
-const Message = require("element-ui").Message
+import { getToken } from '@/utils/auth';
+
 let calcelSource = getCancelSource();
+const Message = require("element-ui").Message
 
 let config = {
   timeout: 100000
@@ -11,12 +13,11 @@ axios.defaults.headers.get["Content-Type"] = "application/x-www-form-urlencoded"
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 axios.interceptors.request.use(
-  function (config) {
-    let redirectHref = sessionStorage.getItem('logout')
-      ? location.origin + '/#/digitalPark/homePage'
-      : window.location.href;
-    if (sessionStorage.token) {
-      config.headers['X-SSO-Token'] = sessionStorage.token;
+  (config) => {
+    let redirectHref = window.location.href;
+    if (getToken()) {
+      config.headers['X-SSO-Token'] = getToken();
+      redirectHref = location.origin + '/#/digitalPark/homePage';
     }
     config.headers['X-Requested-With'] = 'XMLHttpRequest';
     config.headers['X-Requested-InPage'] = redirectHref;
@@ -26,7 +27,7 @@ axios.interceptors.request.use(
 
     return config;
   },
-  function (error) {
+  (error) => {
     return Promise.reject(error);
   }
 );
@@ -95,6 +96,7 @@ axios.interceptors.response.use(
   }
 );
 
+// 获取请求取消 calcelToken，在每次取消请求后，重新获取
 function getCancelSource() {
   const CancelToken = axiosOrigin.CancelToken;
   const source = CancelToken.source();
@@ -103,6 +105,7 @@ function getCancelSource() {
   }
 }
 
+// 统一提示
 function msgInfo({ message, type }) {
   if (typeof message === 'string' && message.trim().length > 0) {
     Message({
@@ -111,5 +114,17 @@ function msgInfo({ message, type }) {
     });
   }
 }
+
+// 页面跳转，取消所有正在进行的请求
+setTimeout(() => {
+  router.beforeEach((to, from, next) => {
+    if (calcelSource.source.cancel) {
+      calcelSource.source.cancel();  // 取消所有请求
+      calcelSource = getCancelSource();
+    }
+
+    next();
+  })
+}, 0);
 
 export default axios;

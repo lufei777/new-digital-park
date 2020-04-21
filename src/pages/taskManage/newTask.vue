@@ -101,6 +101,8 @@
 </template>
 
 <script>
+import TaskManageApi from "../../service/api/taskManage";
+import { mapState } from 'vuex';
 let workOrderType = [
   {
     value: "1",
@@ -143,7 +145,6 @@ let officeLocationType = [
     label: "现场"
   }
 ];
-import TaskManageApi from "../../service/api/taskManage";
 export default {
   name: "NewTask",
   data() {
@@ -346,6 +347,7 @@ export default {
     };
   },
   computed: {
+    ...mapState('user', ['userInfo']),
     paramsData() {
       return {
         taskName: this.model.taskName,
@@ -661,7 +663,7 @@ export default {
         this.$router.push("/aboutMe");
       }
     },
-    resetChange() {},
+    resetChange() { },
     // 递归判断列表，把最后的children设为undefined
     getTreeData(data) {
       for (var i = 0; i < data.length; i++) {
@@ -832,7 +834,7 @@ export default {
   },
   async mounted() {
     await this.deptTreeList();
-    this.createPeople = JSON.parse(localStorage.getItem("userInfo")).name;
+    this.createPeople = this.userInfo.name;
     if (this.taskId.id) {
       this.detailTask();
       this.operateLogList();

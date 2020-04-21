@@ -57,6 +57,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 let workOrderType = [
   {
     value: 1,
@@ -258,6 +260,7 @@ export default {
     };
   },
   computed: {
+    ...mapState('user', ['userInfo']),
     paramsData() {
       return {
         taskName: this.model.taskName,
@@ -414,7 +417,7 @@ export default {
   },
   mounted() {
     this.deptTreeList();
-    this.createPeople = JSON.parse(localStorage.getItem("userInfo")).name;
+    this.createPeople = this.userInfo.name;
     if (this.taskId.id) {
       this.detailTask();
     }
