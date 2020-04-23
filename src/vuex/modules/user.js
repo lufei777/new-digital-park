@@ -49,6 +49,15 @@ const actions = {
       removeUserInfo();
       resolve();
     })
+  },
+  resetToken({ commit }) {
+    return new Promise((resolve, reject) => {
+      commit('setToken', '');
+      commit('setUserInfo', {});
+      removeToken();
+      removeUserInfo();
+      resolve();
+    })
   }
 }
 

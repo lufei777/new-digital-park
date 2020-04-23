@@ -1,5 +1,5 @@
 <template>
-  <div class="park-home-page" v-loading="loading">
+  <div class="park-home-page">
     <div class="home-header" v-show="!hideHeader">
       <div class="home-header-inner flex-align-between">
         <div class="header-nav-left">
@@ -15,7 +15,7 @@
         <!--class="search-icon"-->
         <!--&gt;{{$t('homeHeader.searchText')}}</el-button>-->
         <!--</el-input>-->
-        <NavOperator :moduleType.sync="moduleType" from-flag="1"/>
+        <NavOperator :moduleType.sync="moduleType" from-flag="1" />
       </div>
       <div class="sidebar-container">
         <Sidebar :menu-data="menuData" :menuConfig="menuConfig" />
@@ -23,11 +23,12 @@
     </div>
 
     <el-carousel height="360px" :interval="6000" v-if="!hideHeader">
-      <el-carousel-item  v-for="item in imgs" :key="item.url" @click.native="linkTo(item)">
-        <img  class="carousel-img" :src="item.url"/>
+      <el-carousel-item v-for="item in imgs" :key="item.url" @click.native="linkTo(item)">
+        <img style="backgroundColor:#dcdfe6" class="carousel-img" :src="item.url" />
       </el-carousel-item>
     </el-carousel>
-    <div class="home-header-wrapper">
+
+    <div class="home-header-wrapper" v-loading="loading">
       <div class="home-center">
         <div class="product-module">
           <div class="flex-align-between module-title">
@@ -37,10 +38,7 @@
               @click="onShowMoreProduct"
             >{{showMoreProduct?$t('fold'):$t('more')}}</span>
           </div>
-          <ul
-            class="flex-align-start production-list"
-            :style="showMoreProduct?'':{height:'160px'}"
-          >
+          <ul class="flex-align-start production-list" :style="showMoreProduct?'':{height:'160px'}">
             <li
               v-for="(item,index) in productList"
               :key="index"
@@ -73,17 +71,20 @@
           />
         </draggable>
       </div>
-    </div>
-    <div class="copyright" v-if="copyrightShow">
-      版权所有：©2019 京ICP备05080753号 京公网安备11010802013842号
+      <div class="copyright" v-if="copyrightShow">
+        <span>版权所有：©2019 京ICP备05080753号</span>
+        <a href="http://http://www.beian.gov.cn/portal/index.do" target="_blank">
+          <span>京公网安备11010802013842号</span>
+        </a>
+      </div>
     </div>
     <!--<div class="test-grid">-->
-      <!--<div></div>-->
-      <!--<div></div>-->
-      <!--<div></div>-->
-      <!--<div></div>-->
-      <!--<div></div>-->
-      <!--<div></div>-->
+    <!--<div></div>-->
+    <!--<div></div>-->
+    <!--<div></div>-->
+    <!--<div></div>-->
+    <!--<div></div>-->
+    <!--<div></div>-->
     <!--</div>-->
     <!--<el-button @click="fun">11111111111</el-button>-->
   </div>
@@ -112,23 +113,23 @@ export default {
       productList: [],
       showMoreProduct: false,
       modelValue: "1",
-      menuData:{},
+      menuData: {},
       userProModuleList: [],
       moduleType: "2",
-      loading: true,
+      loading: false,
       menuConfig: {
         mode: "horizontal",
         bgColor: "#fff",
-        activeTextColor:"#606266",
+        activeTextColor: "#606266",
         textColor: "#606266",
         specialRoute: true
       },
       imgs: [
-        {url: require('../../../../static/image/digitalPark/lunbo3.png'), link: '/announcement'},
-        {url: require('../../../../static/image/digitalPark/lunbo4.png'), link: '/news'},
+        { url: require('../../../../static/image/digitalPark/lunbo3.png'), link: '/announcement' },
+        { url: require('../../../../static/image/digitalPark/lunbo4.png'), link: '/news' },
       ],
-      copyrightShow:false,
-      titleIcon:''
+      copyrightShow: false,
+      titleIcon: ''
     };
   },
   computed: {
@@ -155,12 +156,12 @@ export default {
     }
   },
   methods: {
-    fun(){
+    fun() {
       this.$router.push('/test')
     },
     onClickItemProduct(item) {
       Cookies.set("moduleType", 2);
-      this.$store.commit("digitalPark/menuList",item);
+      this.$store.commit("digitalPark/menuList", item);
       CommonFun.setShortcutList(this.productList)
       CommonFun.loadPage(item)
     },
@@ -171,19 +172,26 @@ export default {
       let res = await DigitalParkApi.getMenuTree({
         language: Cookies.get("lang")
       });
-      this.title=res[0].name
-      this.titleIcon  =res[0].icon
+      this.title = res[0].name
+      this.titleIcon = res[0].icon
       this.menuData = res[0];
-      localStorage.setItem('menuTree',JSON.stringify(res))
+      localStorage.setItem('menuTree', JSON.stringify(res))
     },
     getItemBg(item) {
       let backgroundImage = "";
+      let color = "#fff";
       try {
         backgroundImage =
-          "url(" + require("../../../../static/image/digitalPark/" + item.productBgUrl + ".png") + ")";
-      } catch (error) {}
+          `url(${require((`../../../../static/image/digitalPark/${item.productBgUrl}.png`))})`;
+        // "url(" + require("../../../../static/image/digitalPark/" + item.productBgUrl + ".png") + ")";
+      } catch (error) {
+        color = "#000"
+      }
       return {
-        backgroundImage
+        cursor: 'pointer',
+        backgroundImage,
+        backgroundColor: '#dcdfe6',
+        color
       };
     },
     onClickChangeModel(val) {
@@ -200,6 +208,7 @@ export default {
       this.productList = res;
     },
     async getModulesByType() {
+      this.loading = true;
       let res = await DigitalParkApi.getModulesByType({
         type: 2,
         language: Cookies.get("lang")
@@ -211,7 +220,7 @@ export default {
       this.userProModuleList = res;
       this.loading = false;
       // 客户端loading消失
-      if(localStorage.getItem('isCZClient')){
+      if (localStorage.getItem('isCZClient')) {
         hideClientLoading && window.hideClientLoading()
       }
     },
@@ -291,14 +300,14 @@ export default {
     async sureUpdateUserProModules() {
       await DigitalParkApi.updateUserProModules(this.userProModuleList);
     },
-    linkTo (item) {
+    linkTo(item) {
       // let activeIndex = this.$refs.carousel.activeIndex
       this.$router.push(item.link)
     }
   },
   mounted() {
     document.title = this.title;
-    document.body.ondrop = function(event) {
+    document.body.ondrop = function (event) {
       event.preventDefault();
       event.stopPropagation();
     };
@@ -308,7 +317,7 @@ export default {
     setTimeout(() => {
       this.copyrightShow = true
     }, 2000);
-    localStorage.setItem("home",true)
+    localStorage.setItem("home", true)
   }
 };
 </script>
@@ -388,7 +397,7 @@ export default {
   }
   .home-center {
     /*width: 1500px;*/
-    width:78%;
+    width: 78%;
     margin: 0 auto;
   }
   .item-module {
@@ -422,9 +431,9 @@ export default {
       background-repeat: no-repeat;
       background-size: 100% 100%;
       margin-bottom: 20px;
-      margin-right:1.4%;
+      margin-right: 1.4%;
     }
-    li:nth-child(6n){
+    li:nth-child(6n) {
       margin-right: 0px;
     }
     span:hover {
@@ -459,7 +468,7 @@ export default {
     margin: 0 auto;
     padding-top: 10px;
   }
-  .sidebar-container .common-menu .el-submenu .el-submenu__title{
+  .sidebar-container .common-menu .el-submenu .el-submenu__title {
     font-size: 16px;
   }
   .el-menu--horizontal .el-menu-item {
@@ -475,28 +484,34 @@ export default {
     margin-bottom: 0 !important;
   }
   .copyright {
+    display: flex;
+    justify-content: space-around;
     width: 100%;
     height: 30px;
     line-height: 30px;
     font-size: 14px;
     text-align: center;
-    background: rgb(96, 98, 102);
-    color: #ccc;
+    background: #fafafa;
+    color: #bbb;
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
   }
-  .test-grid{
+  .test-grid {
     display: grid;
-    width:100%;
-    padding:20px;
-    grid-template-columns: repeat(auto-fill,700px);
-    grid-template-rows: repeat(auto-fill,400px);
-    div{
-      background:pink;
-      border:1px solid #ccc;
+    width: 100%;
+    padding: 20px;
+    grid-template-columns: repeat(auto-fill, 700px);
+    grid-template-rows: repeat(auto-fill, 400px);
+    div {
+      background: pink;
+      border: 1px solid #ccc;
     }
   }
 }
 
-.el-menu--horizontal{
+.el-menu--horizontal {
   .el-menu-item,
   .el-submenu__title {
     font-size: 16px;

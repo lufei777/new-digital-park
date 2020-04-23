@@ -82,7 +82,7 @@
 <script>
 import SystemManageApi from "@/service/api/systemManage";
 import CommonApi from "@/service/api/common";
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 import CommonFun from '@/utils/commonFun'
 
 export default {
@@ -124,7 +124,6 @@ export default {
     } */
   },
   methods: {
-    ...mapActions('user', ['logout']),
     onClickChangeModel(val) {
       Cookies.set('moduleType', val)
       if (val == 1) {
@@ -141,7 +140,7 @@ export default {
     async onClickUserConfigure(val) { //点击用户
       Cookies.set('moduleType', this.cookieModuleType)
       if (val == 3) {
-        this.logout().then(_ => {
+        this.$store.dispatch('user/logout').then(() => {
           //如果是客户端
           if (localStorage.isCZClient == "true") {
             goBackClientLogin();
