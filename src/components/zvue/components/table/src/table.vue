@@ -1027,6 +1027,10 @@ export default {
         margin-left: 0;
       }
     }
+    // 空表头空数据1px问题解决
+    .el-table__empty-block{
+      width: 100% !important;
+    }
   }
   // 分页
   .zvue-table-pagination {

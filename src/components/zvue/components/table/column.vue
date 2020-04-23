@@ -4,7 +4,7 @@
     <template v-for="col in columnConfig">
       <multi-header-column
         v-if="col.children && col.children.length"
-        :key="col.label"
+        :key="col.prop"
         :col="col"
         :align="col.align || parentOption.align || config.align"
         :header-align="col.headerAlign || parentOption.headerAlign || config.headerAlign"
@@ -12,7 +12,7 @@
       <el-table-column
         v-else-if="!col.hide"
         show-overflow-tooltip
-        :key="col.label"
+        :key="col.prop"
         :prop="col.prop"
         :label="col.label"
         :width="col.width"
