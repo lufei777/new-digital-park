@@ -314,6 +314,15 @@ class CommonApi {
   @get
   getVideoMonitoringStatus(){}
 
+  //获取上月最后一天表示数
+  @url("/vibe-web/energyCount/energy/getLastNumber")
+  @get
+  getLastNumber(){}
+
+  //获取上月最后一天表示数
+  @url("/vibe-web/energyCount/energy/getLastNumberExcel")
+  @get
+  exportLastNumber(){}
 }
 
 export default new CommonApi()

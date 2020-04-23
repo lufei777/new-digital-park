@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     initChart(){
-      let myChart = this.$echarts.init(this.$refs.myChart || document.getElementById('asset-type-proportion-chart'));
+      let myChart = this.$echarts.init(this.$refs.myChart);
       let option = {
         tooltip: {
           trigger: 'axis',
@@ -81,7 +81,12 @@ export default {
         ]
       };
 
+      $(window).resize(function () {
+        myChart.resize()
+      })
+
       myChart.setOption(option)
+
     }
   },
   mounted() {

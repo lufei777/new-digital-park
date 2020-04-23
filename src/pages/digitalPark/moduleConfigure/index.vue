@@ -64,12 +64,12 @@
       </div>
     </div>
     <div v-show='isFull'
-         :class="isFull?'large-esc-full-btn':'esc-full-btn'"
+         :class="type==3?'large-esc-full-btn':'esc-full-btn'"
           class="hover-pointer"
          @click="onClickEscBtn"
     >
       <img src="../../../../static/image/digitalPark/esc_btn.png" alt="">
-      <span>退出全屏</span>
+      <span>退出</span>
     </div>
   </div>
 </template>
@@ -97,7 +97,7 @@
     },
     data() {
       return {
-        proModuleList: [],
+        proModuleList: [{}],
         contentList: [],
         isFull: false,
         curProModule: {},
@@ -128,6 +128,7 @@
       },
       isFull() {
         this.fullStatus = this.isFull ? 'full' : 'noFull'
+        this.changeFontSize()
       }
     },
     methods: {
@@ -159,17 +160,14 @@
       },
       onClickFullScreenBtn() {
         this.isFull = !this.isFull
-        // let erd = elementResizeDetectorMaker()
-        // let that = this
-        // erd.listenTo($(".item-product-coms").eq(0), function () {
-        //   that.$nextTick(function () {
-        //     $(window).resize()
-        //   })
-
-        // this.fullStatus = this.isFull?'full':'noFull'
-        // if(this.type==3){
-        //   this.$refs.largeSizeScreen.getLargeScreenModuleList()
-        // }
+        let erd = elementResizeDetectorMaker()
+        let that = this
+        erd.listenTo($(".item-product-coms").eq(0), function () {
+          that.$nextTick(function () {
+            $(window).resize()
+          })
+        })
+        // $(window).resize()
       },
       onDragChange() {
 
@@ -190,6 +188,7 @@
           language: Cookies.get('lang')
         })
         this.userProModuleList = res
+        console.log("length",$(".item-drag-product").length)
       },
       setItemDragFlag(userList, res = this.proModuleList) {
         res.map((item) => {
@@ -243,17 +242,19 @@
         this.isFull = false
       },
       onDragStart(evt) {
-        console.log("start-evt", evt)
+        // console.log("start-evt", evt)
         this.curDrag = evt.item.id
         if (this.type == 2) {
           this.$refs.homePage.setItemModuleDragFlag('start')
           this.forceBack = false
-        } else {
+        } else if(this.type == 1){
           this.$refs.dashboard.setInnerDragFlag(true)
+        } else if(this.type == 3){
+          this.$refs.largeSizeScreen.setInnerDragFlag(false)
         }
       },
       onDragEnd(evt) {
-        console.log('end',evt)
+        // console.log('end',evt)
         this.curDrag = ''
         if (this.type == 2) {
           this.$refs.homePage.setItemModuleDragFlag('end')
@@ -292,6 +293,16 @@
           })
           this.$refs.largeSizeScreen.getLargeScreenModuleList()
         }
+      },
+      changeFontSize(){
+        if(this.isFull){
+          $(".dashboard-park-home-page-new .item-drag-product,.dashboard-park-home-page-new .fixed-prod-module").
+          removeClass('smallFontSize')
+        }else{
+          console.log("dashboard-park-home-page-new ",$(".dashboard-park-home-page-new .item-drag-product").length)
+          $(".dashboard-park-home-page-new .item-drag-product,.dashboard-park-home-page-new .fixed-prod-module").
+          addClass('smallFontSize')
+        }
       }
     },
     async mounted() {
@@ -302,6 +313,7 @@
       await this.getModulesByType()
       this.getProModules()
       this.controlHeader()
+      this.changeFontSize()
     }
   }
 </script>
@@ -509,6 +521,22 @@
     .defaultBtn {
       border: 1px solid #0257FF;
       color: #0257FF;
+    }
+
+    .module-item-top-name{
+      width:100%;
+      text-align: left;
+      padding-left:5%;
+      box-sizing: border-box;
+    }
+
+    .dashboard-park-home-page-new{
+      /*.item-drag-product,.fixed-prod-module{*/
+        /*font-size: 12px;*/
+      /*}*/
+      .smallFontSize{
+        font-size: 12px;
+      }
     }
 
     .left-module-list, .module-content-list, .preview-panel {

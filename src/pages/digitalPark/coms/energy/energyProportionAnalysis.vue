@@ -85,11 +85,13 @@ export default {
       let dqzh = {
         name: "当期综合能耗",
         type: "bar",
+        barMaxWidth:80,
         data: res.value.map(item => item.dqzh)
       };
       let tqzh = {
         name: "同期综合能耗",
         type: "bar",
+        barMaxWidth:80,
         barGap: "-100%",
         data: res.value.map(item => item.tqzh)
       };

@@ -38,6 +38,10 @@
       getLargeScreenModuleList(){
         this.$refs[this.curCom].getLargeScreenModuleList &&
         this.$refs[this.curCom].getLargeScreenModuleList()
+      },
+      setInnerDragFlag(flag){
+        this.$refs[this.curCom].setInnerDragFlag &&
+        this.$refs[this.curCom].setInnerDragFlag(flag)
       }
     },
     mounted(){
