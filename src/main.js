@@ -7,10 +7,15 @@ import router from './router/index'
 import Vuex from 'vuex'
 import store from './vuex/store'
 
+import LangEN from './utils/lang/en.js'
+import LangZH from './utils/lang/zh.js'
+
 // ElementUi
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-Vue.use(ElementUI)
+Vue.use(ElementUI, LangZH[window.__CZ_SYSTEM] ? {
+  locale: LangZH[window.__CZ_SYSTEM].elementUI
+} : {})
 
 // 自适应表格列
 import AFTableColumn from 'af-table-column'
@@ -39,8 +44,6 @@ if (!Cookies.get('lang')) {
   Cookies.set('lang', 'zh')
 }
 import VueI18n from 'vue-i18n'
-import LangEN from './utils/lang/en.js'
-import LangZH from './utils/lang/zh.js'
 Vue.use(VueI18n)
 const i18n = new VueI18n({
   locale: Cookies.get('lang'),

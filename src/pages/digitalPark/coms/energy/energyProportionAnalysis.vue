@@ -23,7 +23,7 @@ export default {
   components: {},
   props: ["moduleItem", "routeAddress"],
   data() {
-    let curSystem = window.czSystemConfig.curSystem
+    let curSystem = window.__CZ_SYSTEM
     return {
       energy: 34,
       // energyList: [

@@ -76,7 +76,7 @@
         return `${this.selectParams.startTime}${this.selectParams.lastTime?'至'+this.selectParams.lastTime:''}`
       },
       systemConfig(){
-        return window.czSystemConfig.curSystem
+        return window.__CZ_SYSTEM
       }
     },
     methods: {
