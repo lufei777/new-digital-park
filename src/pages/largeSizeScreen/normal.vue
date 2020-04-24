@@ -9,12 +9,13 @@
         @change="onOutChange"
         @start="onOutStart"
       >
-        <transition name="el-zoom-in-center" v-for="(item,index) in moduleList" :key="index">
-          <draggable
+        <!--<transition name="el-zoom-in-center" v-for="(item,index) in moduleList" :key="index">-->
+          <draggable v-for="(item,index) in moduleList" :key="index"
             :class="item.id==0 && item.moduleList?'center-show':'out-drag-product'"
             :list="[item]"
+            :id="item.id"
             v-bind="getInnerOptions()"
-            v-show="animationFlag"
+
             @change="onInnerChange"
           >
             <ItemProModule
@@ -23,7 +24,7 @@
               :moduleData="item?{...item,...{largeScreen:true}}:{}"
             />
           </draggable>
-        </transition>
+        <!--</transition>-->
       </draggable>
     </div>
   </div>
@@ -62,14 +63,16 @@
         widthPercent: 1, //配置页时是原来大屏的百分之多少
         heightPercent: 1, //配置页时是原来大屏的百分之多少
         moduleMargin: 20,  //模块间距
-        headerHeight: 160   //顶部高度
+        headerHeight: 160,   //顶部高度
+        innerObj:{}
       }
     },
     computed: {},
     watch: {
       fullStatus(){
-        console.log("this.full",this.fullStatus)
         this.getLargeScreenModuleList()
+      },
+      moduleList(){
       }
     },
     methods: {
@@ -78,6 +81,13 @@
       },
       getInnerOptions() {
         return {draggable: '.inner-drag-content', group: 'product', disabled: this.innerDisable}
+      },
+      async getMenuTree() {
+        let res = await DigitalParkApi.getMenuTree({
+          language: Cookies.get("lang")
+        });
+        localStorage.setItem('menuTree', JSON.stringify(res))
+        this.headName = res[0].name
       },
       async getLargeScreenModuleList(flag) {
         this.setConfigParams(flag)  //配置页时需要缩小或还原
@@ -133,35 +143,6 @@
           "grid-column": 'unset',
           "grid-row": 'unset',
         }
-
-      },
-      async onOutChange(evt) {
-        // console.log("evt", evt, this.moduleList)
-        $(".center-show").css({...this.styleObj.centerStyle, ...this.styleObj.centerSize})
-        $(".large-size-screen-normal .out-drag-product").css(this.styleObj.dragStyle)
-        let tmp = _.cloneDeep(this.moduleList)
-        let index = tmp.findIndex(item => item.id == 0 && item.moduleList.length)
-        tmp.splice(index, 1)
-        let obj={
-          width: document.body.offsetWidth,
-          height: document.body.offsetHeight,
-          modules:tmp
-        }
-        await DigitalParkApi.updateLargeScreenModule(obj)
-        // this.getLargeScreenModuleList()
-      },
-      onOutStart() {
-        // console.log("lalala")
-      },
-      onInnerChange() {
-        // console.log("inner lalala")
-      },
-      async getMenuTree() {
-        let res = await DigitalParkApi.getMenuTree({
-          language: Cookies.get("lang")
-        });
-        localStorage.setItem('menuTree', JSON.stringify(res))
-        this.headName = res[0].name
       },
       setConfigParams() {
         if (this.fullStatus == 'noFull') {
@@ -192,9 +173,50 @@
           height: this.headerHeight + 'px'
         })
       },
-      setInnerDragFlag(val){
+      async onOutChange(evt) {
+        // console.log("evt", evt, this.moduleList)
+        $(".center-show").css({...this.styleObj.centerStyle, ...this.styleObj.centerSize})
+        $(".large-size-screen-normal .out-drag-product").css(this.styleObj.dragStyle)
+        let tmp = _.cloneDeep(this.moduleList)
+        let index = tmp.findIndex(item => item.id == 0 && item.moduleList.length)
+        tmp.splice(index, 1)
+        let obj={
+          width: document.body.offsetWidth,
+          height: document.body.offsetHeight,
+          modules:tmp
+        }
+        console.log(this.moduleList)
+        // await DigitalParkApi.updateLargeScreenModule(obj)
+        // this.getLargeScreenModuleList()
+      },
+      onOutStart() {
+        // console.log("lalala")
+      },
+      onInnerChange(evt) {
+        console.log("inner lalala",evt)
+        if(evt.added){
+          this.innerObj={
+            id:_.uniqueId(),
+            menuId:evt.added.element.pid,
+            menuName:evt.added.element.menuName,
+            type:1,
+            moduleList:[evt.added.element]
+          }
+        }
+      },
+      setInnerDisable(val){
          this.innerDisable=val
-         console.log(this.innerDisable)
+      },
+      updateInnerModule(id){
+        if(!id) return ;
+        let index = this.moduleList.findIndex((item)=>{
+          return item.id == id
+        })
+        if(index != -1){
+          this.moduleList[index] = this.innerObj
+          this.$parent.setItemDragFlag &&
+          this.$parent.setItemDragFlag(this.moduleList)
+        }
       }
     },
     mounted() {
@@ -266,8 +288,8 @@
       background-size: 100% 100%;
       background-image: url('../../../static/image/digitalPark/module_bg.png');
       margin: auto;
-      width:690px;
-      height:388px;
+      width:700px;
+      height:418px;
       overflow: hidden;
       .item-content{
         height:100%;
