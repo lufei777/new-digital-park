@@ -8,7 +8,7 @@
           <el-option label="水" value="37"></el-option>
         </el-select>
       </div>
-      <div class="block">
+      <div class="block" v-if="curSystem!='zg'">
         <span class="demonstration">开始时间：</span>
         <el-date-picker
           v-model="startTime"
@@ -19,7 +19,7 @@
           :clearable="false"
         ></el-date-picker>
       </div>
-      <div class="block">
+      <div class="block" v-if="curSystem!='zg'">
         <span class="demonstration">结束时间：</span>
         <el-date-picker
           v-model="endTime"
@@ -34,7 +34,7 @@
     </div>
     <div class="table-box panel">
       <div class="operator-box">
-        <el-button type="primary" @click="handleExport">导出</el-button>
+        <el-button type="primary" @click="handleExport" v-if="tableConfig.data.length">导出</el-button>
       </div>
       <z-table :ref="tableConfig.ref" :options="tableConfig" />
     </div>
@@ -49,6 +49,22 @@ export default {
   name: "AutoCollectList",
   data() {
     let _this = this;
+    let curSystem = window.czSystemConfig.curSystem
+    let column1 =  [
+        { label: "序号", prop: "xulie" },
+        { label: "时间", prop: "time" },
+        { label: "表名称", prop: "name" },
+        { label: "数值", prop: "value" },
+        { label: "所属空间", prop: "caption" }
+      ]
+    let column2 = [
+      { label: "年度", prop: "year" },
+      { label: "月份", prop: "month" },
+      { label: "电表号", prop: "nameId" },
+      { label: "电表名称", prop: "name" },
+      { label: "本次表示数", prop: "value" }
+    ]
+    console.log(this.curSystem,curSystem)
     return {
       startTime: "",
       endTime: "",
@@ -58,13 +74,7 @@ export default {
       tableConfig: {
         ref: "tableRef",
         data: [],
-        columnConfig: [
-          { label: "序号", prop: "xulie" },
-          { label: "时间", prop: "time" },
-          { label: "表名称", prop: "name" },
-          { label: "数值", prop: "value" },
-          { label: "所属空间", prop: "caption" }
-        ],
+        columnConfig:curSystem=='zg'?column2:column1,
         uiConfig: {
           height: "auto",
           pagination: {
@@ -77,6 +87,11 @@ export default {
         tableMethods: {}
       }
     };
+  },
+  computed:{
+    curSystem() {
+      return window.czSystemConfig.curSystem;
+    }
   },
   methods: {
     onTimeChange(flag) {},
@@ -95,31 +110,35 @@ export default {
     onClickSrueBtn() {
       this.curPage = 1;
       this.$refs["tableRef"].setCurrentPage(1);
-      this.getAutoCollectList();
+      if(this.curSystem=='zg'){
+         this.getLastMonthData()
+      }else{
+        this.getAutoCollectList();
+      }
     },
     handleCurrentChange(val) {
       this.curPage = val;
       this.getAutoCollectList();
     },
     handleExport() {
-      let params =
-        "catalog=" +
-        this.curEnergy +
-        "&startTime=" +
-        this.startTime +
-        "&endTime=" +
-        this.endTime +
+      let params = "catalog=" + this.curEnergy + "&startTime=" + this.startTime + "&endTime=" + this.endTime +
         "&page=" +
         this.curPage +
         "&size=10";
-      let url = `/vibe-web/energyCount/energy/getBaseRepresentationNumberExcel`;
-      CommonFun.exportMethod(
-        {
-          url,
-          params
-        },
-        this
-      );
+      let url =''
+      if(this.curSystem == 'zg'){
+        url='/vibe-web/energyCount/energy/getLastNumberExcel'
+      }else{
+        url = `/vibe-web/energyCount/energy/getBaseRepresentationNumberExcel`
+      }
+      CommonFun.exportMethod({url, params}, this);
+    },
+    async getLastMonthData(){
+      let res = await CommonApi.getLastNumber({
+        catalog : this.curEnergy,
+        page : this.curPage
+      })
+      this.tableConfig.data=res.list
     }
   },
   mounted() {

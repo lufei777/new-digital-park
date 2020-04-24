@@ -130,7 +130,7 @@
           showFixedProList:[],
           moduleType:"1",
           loading:true,
-          innerDragFlag:false,
+          innerDisable:true,
           outDragFlag:false,
           innerObj:{},
           activeBtnIndex:2,
@@ -154,7 +154,6 @@
           await this.getProductList()
           this.getModulesByType()
           let menuTree = JSON.parse(localStorage.getItem('menuTree'))
-          // let menuList = JSON.parse(localStorage.getItem('menuList'))
           if(!this.productId){
             this.headName = menuTree[0].name
           }
@@ -237,7 +236,7 @@
           // console.log("start",evt)
           this.$parent.setContentListDragFlag &&
           this.$parent.setContentListDragFlag(false)
-          // this.innerDragFlag=false
+          // this.innerDisable=false
         },
         onLeftMove(evt){
           console.log('move',evt)
@@ -245,7 +244,7 @@
         onLeftEnd(){
           this.$parent.setContentListDragFlag &&
           this.$parent.setContentListDragFlag(true)
-          // this.innerDragFlag=true
+          // this.innerDisable=true
         },
         onRightMove(evt){
           // console.log('move2',evt)
@@ -302,7 +301,7 @@
           CommonFun.loadPage(item)
         },
         getInnerOptions(){
-          return {draggable:'.inner-drag-content',disabled:!this.innerDragFlag,group:'product'}
+          return {draggable:'.inner-drag-content',disabled:this.innerDisable,group:'product'}
         },
         onLeftInnerStart(evt){
           console.log('left-inner-start',evt)
@@ -323,13 +322,13 @@
         },
         onRightInnerStart(){},
         onRightInnerEnd(){},
-        setInnerDragFlag(val){
-          this.innerDragFlag=val
+        setInnerDisable(val){
+          this.innerDisable=val
         },
         updateInnerModule(id,flag){
           if(flag=='left'){
             this.proModuleList1[id]=this.innerObj
-          }else{
+          }else if(flag=='right'){
             this.proModuleList2[id]=this.innerObj
           }
           this.$parent.setItemDragFlag &&

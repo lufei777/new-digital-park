@@ -1,17 +1,17 @@
 <template>
   <div class="operate-income">
     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
-    <div class="select-box">
-      <el-button size="mini" :style="Bg">年报</el-button>
-      <el-button size="mini">月报</el-button>
-      <el-select v-model="income" placeholder="请选择" size="mini">
-        <el-option
-          v-for="item in incomeLabel"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
-      </el-select>
+    <div class="select-box flex">
+      <div  class="change-date hover-pointer" :style="Bg">年报</div>
+      <div class="change-date hover-pointer">月报</div>
+      <!--<el-select v-model="income" placeholder="请选择" size="mini">-->
+        <!--<el-option-->
+          <!--v-for="item in incomeLabel"-->
+          <!--:key="item.value"-->
+          <!--:label="item.label"-->
+          <!--:value="item.value"-->
+        <!--&gt;</el-option>-->
+      <!--</el-select>-->
     </div>
 
     <div ref="myChart" class="my-chart" id="operate-income-chart"></div>
@@ -48,10 +48,7 @@
       initChart(res) {
         let myChart = this.$echarts.init(this.$refs.myChart || document.getElementById('operate-income-chart'));
         let legendData = [];
-        let legend = "right";
         let color = ["#418CF0", "#FCB441", "#E0400A", "#056492"];
-        let textStyleColor = "#8FD3FA";
-        //FCB441
         let dataList = [];
         res.map(item => {
           legendData.push(item.name);
@@ -61,29 +58,21 @@
           };
           dataList.push(itemObj);
         });
-        let series = dataList;
         let data = {
           legendData,
-          series,
-          legend,
+          seriesData:dataList,
           color,
-          textStyleColor
+          seriesUi:{
+            radius:'50%'
+          },
+          legendUi:{
+            textStyle:{
+              color:'#8FD3FA'
+            }
+          }
         };
-        // window.onresize = myChart.resize;
         let resizeBox = $("#operate-income-chart").parents(".item-product-coms");
-        ChartUtils.handlePieChart(myChart, data, resizeBox);
-        // myChart.on("click", params => {
-        //   console.log(params);
-        //   console.log("routeAddress", this.routeAddress);
-        // });
-
-        // let option={
-        //    // title:{
-        //    //   left:'center',
-        //    //   bottom:'-20px'
-        //    // }
-        // }
-        // myChart.setOption(option)
+        ChartUtils.hollowPieChart(myChart, data, resizeBox);
       },
       Bg() {
         return {
@@ -107,18 +96,20 @@
     //   margin:0 auto;
   }
   .operate-income {
-    .el-button {
+    .change-date {
       border: none;
       //  background: none;
-      background: url("../../../../../static/image/digitalPark/tag_bg.png") no-repeat
-      center;
+      background: url("../../../../../static/image/digitalPark/tag_bg.png") no-repeat center;
       background-size: 100% 100%;
       color:#FFFEFE;
+      padding:5px 20px;
+      margin-right: 20px;
     }
     .select-box{
       width:100%;
       padding:0 10px;
       box-sizing: border-box;
+      margin-top: 10px;
     }
     .el-select{
       width:90px;

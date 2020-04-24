@@ -38,7 +38,20 @@
       getLargeScreenModuleList(){
         this.$refs[this.curCom].getLargeScreenModuleList &&
         this.$refs[this.curCom].getLargeScreenModuleList()
+      },
+      setInnerDragFlag(flag){
+        this.$refs[this.curCom].setInnerDragFlag &&
+        this.$refs[this.curCom].setInnerDragFlag(flag)
+      },
+      updateInnerModule(id){
+        this.$refs[this.curCom].updateInnerModule &&
+        this.$refs[this.curCom].updateInnerModule(id)
+      },
+      setItemDragFlag(list){
+        this.$parent.setItemDragFlag &&
+        this.$parent.setItemDragFlag(list)
       }
+
     },
     mounted(){
       let _this = this
