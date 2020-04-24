@@ -268,6 +268,10 @@
       margin: auto;
       width:690px;
       height:388px;
+      overflow: hidden;
+      .item-content{
+        height:100%;
+      }
       /*font-size: 188px;*/
       /*text-align: center;*/
       /*color:red;*/

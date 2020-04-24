@@ -117,6 +117,9 @@
       ...mapState({
         dragFlag: state => state.digitalPark.dragFlag
       }),
+      // curCom(){
+      //   return this.type==1?'dashboard':this.type==2?'homePage':'largeSizeScreen'
+      // }
     },
     watch: {
       dragFlag() {
@@ -273,7 +276,7 @@
         }
       },
       onDragMove(evt) {
-        console.log("move-evt", evt)
+        // console.log("move-evt", evt)
 
       },
       contentBg(item) {
@@ -292,6 +295,7 @@
             height:'1080px'
           })
           this.$refs.largeSizeScreen.getLargeScreenModuleList()
+        }else{
         }
       },
       changeFontSize(){

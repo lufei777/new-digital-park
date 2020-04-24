@@ -1,5 +1,5 @@
 window.czSystemConfig = {
-  curSystem:'zg',
+  curSystem:'',
 }
 
 

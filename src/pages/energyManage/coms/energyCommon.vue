@@ -267,6 +267,8 @@
           this.tableConfig.columnConfig=columnConfig
           this.tableConfig.data=tmp
           this.tableConfig.uiConfig.pagination.total = res.total;
+        }else{
+          this.tableConfig.data=[]
         }
       },
       async getTbhbChart(){
@@ -350,10 +352,11 @@
           }
         }
         let res = await CommonApi.getTbhbTable(tableParams)
+        let unit ="("+res.unit.split("（")[1]
         this.tableConfig.columnConfig = [{label:'排名',prop:'xulie'},
-          {label:'当期综合能耗(kwh)',prop:'date'},
-          {label:'同期综合能耗(kwh)',prop:'dqzh',sortable:'custom'},
-          {label:'上期综合能耗(kwh)',prop:'tqzh',sortable:'custom'},
+          {label:`当期综合能耗${unit}`,prop:'date'},
+          {label:`同期综合能耗${unit}`,prop:'dqzh',sortable:'custom'},
+          {label:`上期综合能耗${unit}`,prop:'tqzh',sortable:'custom'},
           {label:'综合能耗同比增长率(%)',prop:'tbzz',sortable:'custom',
             formatter: function(row, value) {
               return value+"%";
@@ -366,6 +369,8 @@
           }]
          if(res && res.value){
            this.tableConfig.data=res.value
+         }else{
+           this.tableConfig.data=[]
          }
       },
       async getTypeChart(){
