@@ -1,10 +1,7 @@
-window.czSystemConfig = {
-  curSystem:'',
-}
+/**
+ * __CZ_SYSTEM
+ * ''  数字园区
+ * zg  中钢
+ */
 
-
-/*
-curSystem :
-   'zg'  //中钢
-   ''   //通用数字园区
-*/
+window.__CZ_SYSTEM = '';

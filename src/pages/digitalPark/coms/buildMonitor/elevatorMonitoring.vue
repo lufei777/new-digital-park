@@ -28,7 +28,7 @@
     },
     computed:{
       curSystem(){
-        return window.czSystemConfig.curSystem
+        return window.__CZ_SYSTEM
       }
     },
     methods: {
