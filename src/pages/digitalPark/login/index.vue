@@ -36,7 +36,7 @@
 
 <script>
 import SystemManageApi from '@/service/api/systemManage'
-import { mapMutations, mapActions } from 'vuex';
+import { mapMutations } from 'vuex';
 export default {
   name: 'DigitalParkLogin',
   components: {
@@ -52,7 +52,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions('user', ['login']),
     onInputChange(flag, evt) {
       let divEle = "", iconEle
       if (flag == 1) {
@@ -76,12 +75,10 @@ export default {
         username: this.name.trim(),
         password: this.pwd.trim()
       }
-      this.login(params).then(res => {
+      this.$store.dispatch('user/login', params).then(res => {
         Cookies.set('username', this.name)
         Cookies.set('moduleType', 2)
         this.$router.push("/digitalPark/homePage")
-        // 获取用户信息  跳转页面再获取用户信息，否则会将请求取消掉
-        this.$store.dispatch('user/getUserInfo');
       }).catch(err => {
         this.errTip = '用户名或密码错误'
         this.showErrTip = true

@@ -15,7 +15,7 @@ export default [{
         {
             path: '/addpersonal',
             name: 'addpersonal',
-            meta: { title: '添加人员' },
+            meta: { title: '人员维护' },
             component: () => import('@/pages/personalManage/addPersonal')
         }
     ],

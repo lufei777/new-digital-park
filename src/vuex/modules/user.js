@@ -37,7 +37,7 @@ const actions = {
       let userInfo = await SystemManageApi.getUserInfo();
       commit('setUserInfo', userInfo);
       setUserInfo(userInfo);
-      resolve();
+      resolve(userInfo);
     })
   },
   logout({ commit }) {

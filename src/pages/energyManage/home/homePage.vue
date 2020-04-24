@@ -153,7 +153,7 @@ export default {
   name: "HomePage",
   data() {
     let _this = this;
-    let curSystem  = window.czSystemConfig.curSystem
+    let curSystem  = window.__CZ_SYSTEM
     let options = [{
           value: 34,
           label: "电"
@@ -204,7 +204,7 @@ export default {
       return `${moment().add(-1,'y').format("YYYY")}与${moment().format("YYYY")}年度同比环比柱状折线图分析`
     },
     curSystem(){
-      return window.czSystemConfig.curSystem
+      return window.__CZ_SYSTEM
     }
 },
 

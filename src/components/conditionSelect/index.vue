@@ -71,7 +71,7 @@
     //fromFlag 1:空间对比 2:同比环比分析 3:能耗对比 4:分时能耗 5:分项能耗
     props:['isGroup','showEnergy','fromFlag','getDataFlag'],
     data () {
-      let curSystem = window.czSystemConfig.curSystem
+      let curSystem = window.__CZ_SYSTEM
       return {
         energyList:[],
         // dateTypeList,
@@ -123,7 +123,7 @@
           this.curEnergy=[res[0].energyType[0],res[0].energyType[1]]
         }else{
           let tmp=[]
-          if(window.czSystemConfig.curSystem=='zg'){
+          if(window.__CZ_SYSTEM=='zg'){
             if(this.fromFlag==1 || this.fromFlag==2 || this.fromFlag==4 || this.fromFlag==5 ){
               res.map((item)=>{
                 tmp.push(item)

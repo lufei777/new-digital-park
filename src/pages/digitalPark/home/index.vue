@@ -318,6 +318,8 @@ export default {
       this.copyrightShow = true
     }, 2000);
     localStorage.setItem("home", true)
+    // 获取用户信息
+    this.$store.dispatch('user/getUserInfo');
   }
 };
 </script>
