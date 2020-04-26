@@ -57,7 +57,7 @@
       id:'daily'
   }]
 
-  let curSystem  = window.czSystemConfig.curSystem
+  let curSystem  = window.__CZ_SYSTEM
   let energyList = curSystem=='zg'?[{
       name:'电',
       id:'electricity'

@@ -67,7 +67,7 @@ export default {
   props: ["energySaveFlag"],
   data() {
     let _this = this;
-    let curSystem = window.czSystemConfig.curSystem
+    let curSystem = window.__CZ_SYSTEM
     return {
       curEnergy: "", //楼层检索
       curEnergyId:"0",

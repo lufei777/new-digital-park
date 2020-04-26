@@ -153,7 +153,7 @@ export default {
   name: "HomePage",
   data() {
     let _this = this;
-    let curSystem  = window.czSystemConfig.curSystem
+    let curSystem  = window.__CZ_SYSTEM
     let options = [{
           value: 34,
           label: "电"
@@ -167,12 +167,12 @@ export default {
       currentTime: new Date().getFullYear() + "-" + "01",
       BeforeTime: new Date().getFullYear() + "-" + "12",
       options:curSystem=='zg'?options:
-        {
-        ...options, ...{
-          value: 38,
-          label: "热"
-        }
-       },
+        [
+        ...options, ...[{
+            value: 38,
+            label: "热"
+         }]
+        ],
       dateType: "电",
       catalog: 34,
       currentPage: 1, //当前页
@@ -204,7 +204,7 @@ export default {
       return `${moment().add(-1,'y').format("YYYY")}与${moment().format("YYYY")}年度同比环比柱状折线图分析`
     },
     curSystem(){
-      return window.czSystemConfig.curSystem
+      return window.__CZ_SYSTEM
     }
 },
 
@@ -283,6 +283,7 @@ export default {
           name:moment().add(-1,'y').format("YYYY"),
           type: "bar",
           data: resData.map(item => item.tqzh),
+          barMaxWidth:80,
           itemStyle: {
             normal: {
               color: "rgb(136,108,255)", //圈圈的颜色
@@ -297,6 +298,7 @@ export default {
           name: moment().format("YYYY"),
           type: "bar",
           data: resData.map(item => item.dqzh),
+          barMaxWidth:80,
           itemStyle: {
             normal: {
               color: "rgb(77,124,254)", //圈圈的颜色

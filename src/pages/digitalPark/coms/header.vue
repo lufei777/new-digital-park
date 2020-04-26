@@ -44,7 +44,7 @@
         return this.fromFlag==1? -this.curNewsIndex * 50 + 'px': -this.curNewsIndex * 160 + 'px'
       },
       curSystem(){
-        return window.czSystemConfig.curSystem
+        return window.__CZ_SYSTEM
       }
     },
     watch:{
