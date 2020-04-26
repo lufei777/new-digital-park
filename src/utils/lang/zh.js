@@ -1,4 +1,6 @@
-import DigitalParkApi from '../../service/api/digitalPark'
+import DigitalParkApi from '../../service/api/digitalPark';
+import { ProjectName } from '../dictionary';
+const { ZG } = ProjectName;
 // async function getMenu(){
 //   let menu =await DigitalParkApi.getMenu()
 //   return menu
@@ -20,7 +22,7 @@ let obj = {
   proEntry: '功能模块入口',
   more: "更多",
   fold: '收起',
-  zg: {
+  [ZG]: {
     elementUI: {
       el: {
         colorpicker: {

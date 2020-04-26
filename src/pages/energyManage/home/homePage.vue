@@ -119,7 +119,7 @@
         <div ref="myChart" class="my-chart"></div>
       </div>
     </div>
-    <div v-if="curSystem!='zg'">
+    <div v-if="!iszg">
       <div class="tip flex-align">
         <span class="icon"></span>
         <span>能耗分类分项占比图</span>
@@ -149,6 +149,7 @@
 import EnergyApi from "../../../service/api/energy";
 import CommonApi from "../../../service/api/common";
 import ChartUtils from "../../../utils/chartUtils";
+import {isZG} from '@/utils/project';
 export default {
   name: "HomePage",
   data() {
@@ -166,7 +167,7 @@ export default {
       energyOverview: {},
       currentTime: new Date().getFullYear() + "-" + "01",
       BeforeTime: new Date().getFullYear() + "-" + "12",
-      options:curSystem=='zg'?options:
+      options:isZG()?options:
         {
         ...options, ...{
           value: 38,
@@ -205,6 +206,9 @@ export default {
     },
     curSystem(){
       return window.__CZ_SYSTEM
+    },
+    iszg(){
+      return isZG();
     }
 },
 
@@ -212,10 +216,10 @@ export default {
     async getEnergyOverView() {
       this.energyOverview = await EnergyApi.getEnergyOverView({
         redioType: 0,
-        startTime: this.curSystem=='zg'?moment().format('YYYY'):2019,
-        selectType: this.curSystem=='zg'?3:1
+        startTime: this.iszg?moment().format('YYYY'):2019,
+        selectType: this.iszg?3:1
       });
-      if(this.curSystem!="zg"){
+      if(!this.iszg){
         this.piechart1(this.energyOverview);
         this.piechart2(this.energyOverview);
       }
@@ -251,8 +255,8 @@ export default {
       this.homePageTableConfig.columnConfig = labelList;
       let res = await EnergyApi.getEnergyRanking({
         redioType: 0,
-        startTime: this.curSystem=='zg'?moment().format('YYYY'):2019,
-        selectType: this.curSystem=='zg'?3:1,
+        startTime: this.iszg?moment().format('YYYY'):2019,
+        selectType: this.iszg?3:1,
         page: this.currentPage,
         rankType: this.rankType,
         size: 10,
