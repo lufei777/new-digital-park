@@ -264,7 +264,6 @@ export default {
       goToPersonal: this.onClickUserConfigure,  //跳转个人中心
       goBack: this.onClickGoBack,    //返回首页
       goToWebPage: this.goToWebPage,
-      webPageExportMethod: CommonFun.webPageExportMethod
     }
   }
 };

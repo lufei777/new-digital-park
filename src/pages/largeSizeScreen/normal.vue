@@ -44,7 +44,7 @@
       draggable,
       ItemProModule
     },
-    props: ['fullStatus'],  //配置页时是否是全屏状态
+    props: ['fullStatus'],  //配置页时是否是全屏状态:full noFull
     data() {
       return {
         headName: '',
@@ -117,11 +117,11 @@
       drawPageStyle(res) {
         let xLen = res.xModule.length + this.moduleMargin
         let yLen = res.yModule.length + this.moduleMargin
-        let paddingLeft = ($(".content").width() - xLen * res.xModule.num) / 2
+        let paddingLeft = parseInt(($(".content").width() - xLen * res.xModule.num) / 2)
         let heightOther = ($(".large-size-screen-normal").height() - this.headerHeight - yLen * res.yModule.num)
-        let margin = heightOther / 2 / (res.xModule.num)
+        let margin = parseInt(heightOther / 2 / (res.xModule.num))
         yLen = yLen + margin
-        let marginTop = heightOther / 2 / 2
+        let marginTop = parseInt(heightOther / 2 / 2)
 
         this.styleObj.panelStyle = {
           "grid-template-columns": "repeat(" + res.xModule.num + "," + xLen + "px)",
@@ -177,16 +177,9 @@
         // console.log("evt", evt, this.moduleList)
         $(".center-show").css({...this.styleObj.centerStyle, ...this.styleObj.centerSize})
         $(".large-size-screen-normal .out-drag-product").css(this.styleObj.dragStyle)
-        let tmp = _.cloneDeep(this.moduleList)
-        let index = tmp.findIndex(item => item.id == 0 && item.moduleList.length)
-        tmp.splice(index, 1)
-        let obj={
-          width: document.body.offsetWidth,
-          height: document.body.offsetHeight,
-          modules:tmp
+        if(!this.fullStatus){  //不是在配置页
+          this.updateLargeScreenModule()
         }
-        console.log(this.moduleList)
-        // await DigitalParkApi.updateLargeScreenModule(obj)
         // this.getLargeScreenModuleList()
       },
       onOutStart() {
@@ -216,6 +209,23 @@
           this.moduleList[index] = this.innerObj
           this.$parent.setItemDragFlag &&
           this.$parent.setItemDragFlag(this.moduleList)
+        }
+      },
+      async updateLargeScreenModule(){
+        let tmp = _.cloneDeep(this.moduleList)
+        let index = tmp.findIndex(item => item.id == 0 && item.moduleList.length)
+        tmp.splice(index, 1)
+        let obj={
+          width: document.body.offsetWidth,
+          height: document.body.offsetHeight,
+          modules:tmp
+        }
+        let res = await DigitalParkApi.updateLargeScreenModule(obj)
+        if(this.fullStatus){
+          this.$message({
+            type:'success',
+            message:'更新成功'
+          })
         }
       }
     },
@@ -304,6 +314,7 @@
     .drag-panel {
       display: grid;
       width: 100%;
+      overflow: hidden;
       /*padding:20px;*/
       /*grid-template-columns: repeat(auto-fill,700px);*/
       /*grid-template-rows: repeat(auto-fill,400px);*/
