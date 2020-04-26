@@ -102,8 +102,8 @@ class chartUtils {
       series: [{
         name:data.seriesName?data.seriesName:'',
         type: 'pie',
-        radius:seriesUi.radius || ['50%', '70%'],
-        center:seriesUi.center || ['50%','50%'],
+        radius:seriesUi.radius || ['40%', '60%'],
+        center:seriesUi.center || ['40%','50%'],
         roseType: seriesUi.roseType,
         avoidLabelOverlap: true,
         label: {
@@ -123,59 +123,6 @@ class chartUtils {
       }]
     };
 
-    // let option = {
-    //   title: {
-    //     text: data.titleText,
-    //     left: '4%',
-    //     padding: [24, 0],
-    //     textStyle: {
-    //       color: '#666666FF',
-    //       fontWeight:'500',
-    //       align: 'top'
-    //     }
-    //   },
-    //   tooltip: {
-    //     trigger: 'item',
-    //     formatter: "{a} <br/>{b}: {c} ({d}%)",
-    //     showDelay:100
-    //   },
-    //   legend: {
-    //     orient: 'vertical',
-    //     // right: legendUi.right || '',
-    //     //只要top字段存在（不管设置与否），则bottom属性不起作用，所以若想设置top，请单独再组件里设置
-    //     // top:legendUi.top || '',
-    //     // bottom:legendUi.bottom || '',
-    //     data: data.legendData,
-    //     textStyle:{
-    //       fontSize: 14,
-    //       color:'gray'
-    //     },
-    //     formatter:legendUi && legendUi.formatter || ''
-    //   },
-    //   color: data.color || ['#563ad2', '#25e4a3', '#ed5e50', '#66fbf9',"#de8536", "#dab54c","#325df9"],
-    //   series: [{
-    //     name:data.seriesName?data.seriesName:'',
-    //     type: 'pie',
-    //     radius:['50%', '70%'],
-    //     center: ['50%','50%'],
-    //     // roseType: seriesUi.roseType,
-    //     // avoidLabelOverlap: false,
-    //     label: {
-    //       normal: {
-    //         show: false,
-    //         position: 'center'
-    //       },
-    //       emphasis: {
-    //         show:true,
-    //         textStyle: {
-    //           fontSize: '20',
-    //           fontWeight: 'bold'
-    //         }
-    //       }
-    //     },
-    //     data: data.seriesData
-    //   }]
-    // };
     $(window).resize(function(){
       dom.resize()
     })
@@ -219,19 +166,10 @@ class chartUtils {
         }
       ]
     };
-    // window.onresize = dom.resize;
-    // window.addEventListener("resize", () => {
-    //   dom.resize();
-    // })
     $(window).resize(function(){
       dom.resize()
     })
-    // if(resizeBox){
-    //   let erd = elementResizeDetectorMaker()
-    //   erd.listenTo(resizeBox, function () {
-    //     dom.resize();
-    //   })
-    // }
+
     dom.setOption(option, true)
 
   }

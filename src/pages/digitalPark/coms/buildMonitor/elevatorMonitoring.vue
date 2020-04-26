@@ -131,6 +131,7 @@
     .chart-item-box{
       width:50%;
       height:100%;
+      text-align: center;
     }
     .chart-item{
       width:100%;

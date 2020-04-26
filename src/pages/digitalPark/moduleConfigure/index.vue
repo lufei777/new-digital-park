@@ -23,10 +23,8 @@
 
         <draggable :list="contentList"
                    v-bind="getOptions()"
-                   @change="onDragChange"
                    @start="onDragStart"
                    @end="onDragEnd"
-                   :move="onDragMove"
                    class="content-drag-box"
 
         >
@@ -64,12 +62,12 @@
       </div>
     </div>
     <div v-show='isFull'
-         :class="isFull?'large-esc-full-btn':'esc-full-btn'"
+         :class="type==3?'large-esc-full-btn':'esc-full-btn'"
           class="hover-pointer"
          @click="onClickEscBtn"
     >
       <img src="../../../../static/image/digitalPark/esc_btn.png" alt="">
-      <span>退出全屏</span>
+      <span>退出</span>
     </div>
   </div>
 </template>
@@ -97,7 +95,7 @@
     },
     data() {
       return {
-        proModuleList: [],
+        proModuleList: [{}],
         contentList: [],
         isFull: false,
         curProModule: {},
@@ -117,6 +115,9 @@
       ...mapState({
         dragFlag: state => state.digitalPark.dragFlag
       }),
+      curCom(){
+        return this.type==1?'dashboard':this.type==2?'homePage':'largeSizeScreen'
+      }
     },
     watch: {
       dragFlag() {
@@ -128,6 +129,7 @@
       },
       isFull() {
         this.fullStatus = this.isFull ? 'full' : 'noFull'
+        this.changeFontSize()
       }
     },
     methods: {
@@ -157,32 +159,8 @@
           }, 500);
         }
       },
-      onClickFullScreenBtn() {
-        this.isFull = !this.isFull
-        // let erd = elementResizeDetectorMaker()
-        // let that = this
-        // erd.listenTo($(".item-product-coms").eq(0), function () {
-        //   that.$nextTick(function () {
-        //     $(window).resize()
-        //   })
-
-        // this.fullStatus = this.isFull?'full':'noFull'
-        // if(this.type==3){
-        //   this.$refs.largeSizeScreen.getLargeScreenModuleList()
-        // }
-      },
-      onDragChange() {
-
-      },
-      getOptions() {
-        return {
-          group: {name: 'product', pull: 'clone'},
-          draggable: '.item-drag-product',
-          disabled: !this.contentListDragFlag,
-          ghostClass: 'drag-shadow',
-          dragClass: 'drag-shadow',
-          chosenClass: 'drag-shadow'
-        }
+      onClickModuleBtn(val) {
+        this.$router.push(`/digitalPark/moduleConfigure?type=${val}`)
       },
       async getModulesByType() {
         let res = await DigitalParkApi.getModulesByType({
@@ -190,6 +168,16 @@
           language: Cookies.get('lang')
         })
         this.userProModuleList = res
+        console.log("length",$(".item-drag-product").length)
+      },
+      async getLargeScreenModuleList() {
+        let res = await DigitalParkApi.getLargeScreenModule({
+          width: document.body.offsetWidth,
+          height: document.body.offsetHeight,
+          widthPercent: this.widthPercent,
+          heightPercent: this.heightPercent
+        })
+        this.userProModuleList = res.modules || []
       },
       setItemDragFlag(userList, res = this.proModuleList) {
         res.map((item) => {
@@ -218,9 +206,6 @@
           // this.$router.push(`/digitalPark/homePage`)
         }
       },
-      onClickModuleBtn(val) {
-        this.$router.push(`/digitalPark/moduleConfigure?type=${val}`)
-      },
       onClickGoBackBtn() {
         if (this.type == 1) {
           this.$router.push(`/digitalPark/dashboardHomePage`)
@@ -230,50 +215,30 @@
           this.$router.push(`/largeSizeScreen`)
         }
       },
-      controlHeader() {
-        $("body").mousemove((e) => {
-          if (e.clientY < 50) {
-            this.showEsc = true
-          } else {
-            this.showEsc = false
-          }
-        })
+      onClickFullScreenBtn() {
+        this.isFull = !this.isFull
+        // if(this.type!=3){
+          let erd = elementResizeDetectorMaker()
+          let that = this
+          erd.listenTo($(".item-product-coms").eq(0), function () {
+            that.$nextTick(function () {
+              $(window).resize()
+            })
+          })
+        // }
+      },
+      onClickResetBtn(){
+        if(this.type==3){
+          $(".center-show").css({
+            width:'1920px',
+            height:'1080px'
+          })
+          this.$refs.largeSizeScreen.getLargeScreenModuleList()
+        }else{
+        }
       },
       onClickEscBtn() {
         this.isFull = false
-      },
-      onDragStart(evt) {
-        console.log("start-evt", evt)
-        this.curDrag = evt.item.id
-        if (this.type == 2) {
-          this.$refs.homePage.setItemModuleDragFlag('start')
-          this.forceBack = false
-        } else {
-          this.$refs.dashboard.setInnerDragFlag(true)
-        }
-      },
-      onDragEnd(evt) {
-        console.log('end',evt)
-        this.curDrag = ''
-        if (this.type == 2) {
-          this.$refs.homePage.setItemModuleDragFlag('end')
-          this.forceBack = true
-        } else if(this.type==1){
-          this.$refs.dashboard.setInnerDragFlag(false)
-          let targetId = $(evt.to).attr('id')
-          let classStr = $(evt.to).attr('class')
-          let flag = classStr.indexOf('left-item-drag-product') != -1 ? 'left' :
-            classStr.indexOf('right-item-drag-product') != -1 ? 'right' : ''
-          if (flag) {
-            this.$refs.dashboard.updateInnerModule(targetId, flag)
-          }
-        }else if(this.type==3){
-
-        }
-      },
-      onDragMove(evt) {
-        console.log("move-evt", evt)
-
       },
       contentBg(item) {
         if (this.curDrag == item.id) {
@@ -284,24 +249,65 @@
           return {}
         }
       },
-      onClickResetBtn(){
-        if(this.type==3){
-          $(".center-show").css({
-            width:'1920px',
-            height:'1080px'
-          })
-          this.$refs.largeSizeScreen.getLargeScreenModuleList()
+      getOptions() {
+        return {
+          group: {name: 'product', pull: 'clone'},
+          draggable: '.item-drag-product',
+          disabled: !this.contentListDragFlag,
+          ghostClass: 'drag-shadow',
+          dragClass: 'drag-shadow',
+          chosenClass: 'drag-shadow'
         }
-      }
+      },
+      onDragStart(evt) {
+        // console.log("start-evt", evt)
+        this.curDrag = evt.item.id
+        if (this.type == 2) {
+          this.$refs[this.curCom].setItemModuleDragFlag('start')
+          this.forceBack = false
+        } else{
+          this.$refs[this.curCom].setInnerDisable(false)
+        }
+      },
+      onDragEnd(evt) {
+        // console.log('end',evt)
+        this.curDrag = ''
+        if (this.type == 2) {
+          this.$refs[this.curCom].setItemModuleDragFlag('end')
+          this.forceBack = true
+        } else{
+          this.$refs[this.curCom].setInnerDisable(true)
+          let targetId = $(evt.to).attr('id')
+          let flag
+          if(this.type==1) {
+            let classStr = $(evt.to).attr('class')
+            flag = classStr.indexOf('left-item-drag-product') != -1 ? 'left' :
+                   classStr.indexOf('right-item-drag-product') != -1 ? 'right' : ''
+          }
+          this.$refs[this.curCom].updateInnerModule(targetId,flag)
+        }
+      },
+      changeFontSize(){
+        let dom = $(".dashboard-park-home-page-new .item-drag-product,.dashboard-park-home-page-new .fixed-prod-module")
+        if(this.isFull){
+          dom.removeClass('smallFontSize')
+        }else{
+          dom.addClass('smallFontSize')
+        }
+      },
     },
     async mounted() {
       document.body.ondrop = function (event) {
         event.preventDefault();
         event.stopPropagation();
       }
-      await this.getModulesByType()
+      if(this.type==3){
+        await this.getLargeScreenModuleList()
+      }else{
+        await this.getModulesByType()
+      }
       this.getProModules()
-      this.controlHeader()
+      this.changeFontSize()
     }
   }
 </script>
@@ -509,6 +515,22 @@
     .defaultBtn {
       border: 1px solid #0257FF;
       color: #0257FF;
+    }
+
+    .module-item-top-name{
+      width:100%;
+      text-align: left;
+      padding-left:5%;
+      box-sizing: border-box;
+    }
+
+    .dashboard-park-home-page-new{
+      /*.item-drag-product,.fixed-prod-module{*/
+        /*font-size: 12px;*/
+      /*}*/
+      .smallFontSize{
+        font-size: 12px;
+      }
     }
 
     .left-module-list, .module-content-list, .preview-panel {

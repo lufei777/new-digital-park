@@ -149,31 +149,31 @@
 import EnergyApi from "../../../service/api/energy";
 import CommonApi from "../../../service/api/common";
 import ChartUtils from "../../../utils/chartUtils";
-import {isZG} from '@/utils/project';
+import { isZG } from '@/utils/project';
 export default {
   name: "HomePage",
   data() {
     let _this = this;
-    let curSystem  = window.__CZ_SYSTEM
+    let curSystem = window.__CZ_SYSTEM
     let options = [{
-          value: 34,
-          label: "电"
-        },
-        {
-          value: 37,
-          label: "水"
-        }]
+      value: 34,
+      label: "电"
+    },
+    {
+      value: 37,
+      label: "水"
+    }]
     return {
       energyOverview: {},
       currentTime: new Date().getFullYear() + "-" + "01",
       BeforeTime: new Date().getFullYear() + "-" + "12",
-      options:isZG()?options:
-        {
-        ...options, ...{
-          value: 38,
-          label: "热"
-        }
-       },
+      options: isZG() ? options :
+        [
+          ...options, ...[{
+            value: 38,
+            label: "热"
+          }]
+        ],
       dateType: "电",
       catalog: 34,
       currentPage: 1, //当前页
@@ -198,29 +198,29 @@ export default {
           sortChange: _this.sortTable
         }
       },
-      tableLoad:false
+      tableLoad: false
     };
   },
-  computed:{
-    chartText(){
-      return `${moment().add(-1,'y').format("YYYY")}与${moment().format("YYYY")}年度同比环比柱状折线图分析`
+  computed: {
+    chartText() {
+      return `${moment().add(-1, 'y').format("YYYY")}与${moment().format("YYYY")}年度同比环比柱状折线图分析`
     },
-    curSystem(){
+    curSystem() {
       return window.__CZ_SYSTEM
     },
-    iszg(){
+    iszg() {
       return isZG();
     }
-},
+  },
 
   methods: {
     async getEnergyOverView() {
       this.energyOverview = await EnergyApi.getEnergyOverView({
         redioType: 0,
-        startTime: this.iszg?moment().format('YYYY'):2019,
-        selectType: this.iszg?3:1
+        startTime: this.iszg ? moment().format('YYYY') : 2019,
+        selectType: this.iszg ? 3 : 1
       });
-      if(!this.iszg){
+      if (!this.iszg) {
         this.piechart1(this.energyOverview);
         this.piechart2(this.energyOverview);
       }
@@ -257,8 +257,8 @@ export default {
       this.tableLoad = true;
       let res = await EnergyApi.getEnergyRanking({
         redioType: 0,
-        startTime: this.iszg?moment().format('YYYY'):2019,
-        selectType: this.iszg?3:1,
+        startTime: this.iszg ? moment().format('YYYY') : 2019,
+        selectType: this.iszg ? 3 : 1,
         page: this.currentPage,
         rankType: this.rankType,
         size: 10,
@@ -277,19 +277,20 @@ export default {
     createCharts(res) {
       let resData = res.value;
       let myChart = this.$echarts.init(this.$refs.myChart);
-      let xAxis = resData.map(item =>item.date?item.date:'');
-        let legendData = [
-          moment().add(-1,'y').format("YYYY"),
-          moment().format("YYYY"),
-          "综合能耗同比增长率",
-          "综合能耗环比增长率"
-        ];
+      let xAxis = resData.map(item => item.date ? item.date : '');
+      let legendData = [
+        moment().add(-1, 'y').format("YYYY"),
+        moment().format("YYYY"),
+        "综合能耗同比增长率",
+        "综合能耗环比增长率"
+      ];
 
       let series = [
         {
-          name:moment().add(-1,'y').format("YYYY"),
+          name: moment().add(-1, 'y').format("YYYY"),
           type: "bar",
           data: resData.map(item => item.tqzh),
+          barMaxWidth: 80,
           itemStyle: {
             normal: {
               color: "rgb(136,108,255)", //圈圈的颜色
@@ -304,6 +305,7 @@ export default {
           name: moment().format("YYYY"),
           type: "bar",
           data: resData.map(item => item.dqzh),
+          barMaxWidth: 80,
           itemStyle: {
             normal: {
               color: "rgb(77,124,254)", //圈圈的颜色
@@ -398,17 +400,17 @@ export default {
         legendData,
         seriesData,
         titleText,
-        legendUi:{
-            top:'10',
-            right:'30',
-          },
-          seriesUi:{
-            center:['50%','50%']
-          }
+        legendUi: {
+          top: '10',
+          right: '30',
+        },
+        seriesUi: {
+          center: ['50%', '50%']
+        }
       };
       ChartUtils.hollowPieChart(myPieChart, data);
     },
-    piechart2(res){
+    piechart2(res) {
       let myPieChart = this.$echarts.init(this.$refs.pieChart2);
       let legendData = ["生活用水", "消防用水", "空调用水", "其他用水"];
       let dataList = [
@@ -439,13 +441,13 @@ export default {
         legendData,
         seriesData,
         titleText,
-         legendUi:{
-            top:'10',
-            right:'30',
-          },
-          seriesUi:{
-            center:['50%','50%']
-          }
+        legendUi: {
+          top: '10',
+          right: '30',
+        },
+        seriesUi: {
+          center: ['50%', '50%']
+        }
       };
       // window.onresize = myPieChart.resize;
       ChartUtils.hollowPieChart(myPieChart, data);
@@ -486,7 +488,7 @@ export default {
     }
   }
   .frist-tip {
-    margin-top: 0px!important;
+    margin-top: 0px !important;
   }
   .overview-list {
     flex-wrap: wrap;
