@@ -6,13 +6,6 @@
       </span>
       <el-divider direction="vertical"></el-divider>
     </span>
-    <span class="nav-right-item">
-      <el-badge class="nav-news" :max="99" :value="alarmListCount" @click.native="loadNews">
-        <i class="el-icon-message-solid"></i>
-      </el-badge>
-      <!-- <span @click="loadNews" style="color:#ED6C01">{{$t('homeHeader.news')}}({{alarmListCount}})</span> -->
-      <el-divider direction="vertical"></el-divider>
-    </span>
     <!--<span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoBack">-->
     <!--<el-select v-model="langValue" placeholder="切换语言" @change="onClickChangeLang">-->
     <!--<el-option label="中文" value="zh"></el-option>-->
@@ -55,6 +48,13 @@
         ></el-option>
         <!--<el-option :label="$t('homeHeader.skin')" value="2"></el-option>-->
       </el-select>
+      <el-divider direction="vertical"></el-divider>
+    </span>
+    <span class="nav-right-item">
+      <el-badge class="nav-news" :max="99" :value="alarmListCount" @click.native="loadNews">
+        <i class="el-icon-message-solid"></i>
+      </el-badge>
+      <!-- <span @click="loadNews" style="color:#ED6C01">{{$t('homeHeader.news')}}({{alarmListCount}})</span> -->
       <el-divider direction="vertical"></el-divider>
     </span>
     <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">

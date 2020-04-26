@@ -1,3 +1,4 @@
+// token
 const TokenKey = 'token';
 export const setToken = (token) => {
   return localStorage.setItem(TokenKey, token)
@@ -11,6 +12,7 @@ export const removeToken = () => {
   return;
 }
 
+// 用户信息
 const UserInfoKey = 'userInfo';
 export const setUserInfo = (userInfo) => {
   return localStorage.setItem(UserInfoKey, JSON.stringify(userInfo))
@@ -22,6 +24,7 @@ export const removeUserInfo = () => {
   return localStorage.removeItem(UserInfoKey)
 }
 
+// 是否是客户端判断
 const IsCZClientKey = 'isCZClient';
 export const setIsCZClient = (boolean) => {
   return localStorage.setItem(IsCZClientKey, boolean)
