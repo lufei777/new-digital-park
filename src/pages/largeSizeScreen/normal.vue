@@ -9,13 +9,14 @@
         @change="onOutChange"
         @start="onOutStart"
       >
-        <transition name="el-zoom-in-center" v-for="(item,index) in moduleList" :key="index">
-          <draggable
+        <!--<transition name="el-zoom-in-center" v-for="(item,index) in moduleList" :key="index">-->
+          <draggable v-for="(item,index) in moduleList" :key="index"
             :class="item.id==0 && item.moduleList?'center-show':'out-drag-product'"
             :list="[item]"
+            :id="item.id"
             v-bind="getInnerOptions()"
-            v-show="animationFlag"
-            @start="onInnerStart"
+
+            @change="onInnerChange"
           >
             <ItemProModule
               class="inner-drag-content"
@@ -23,7 +24,7 @@
               :moduleData="item?{...item,...{largeScreen:true}}:{}"
             />
           </draggable>
-        </transition>
+        <!--</transition>-->
       </draggable>
     </div>
   </div>
@@ -34,6 +35,7 @@
   import draggable from 'vuedraggable'
   import DigitalParkApi from '@/service/api/digitalPark'
   import ItemProModule from '@/pages/digitalPark/coms/itemProModule'
+  import CommonFun from '@/utils/commonFun'
 
   export default {
     name: 'LargeSizeScreenNormal',
@@ -46,7 +48,7 @@
     data() {
       return {
         headName: '',
-        moduleList: [],
+        moduleList: CommonFun.modules,
         animationFlag: false,
         outDisable: false,
         innerDisable: true,
@@ -61,22 +63,31 @@
         widthPercent: 1, //配置页时是原来大屏的百分之多少
         heightPercent: 1, //配置页时是原来大屏的百分之多少
         moduleMargin: 20,  //模块间距
-        headerHeight: 160   //顶部高度
+        headerHeight: 160,   //顶部高度
+        innerObj:{}
       }
     },
     computed: {},
     watch: {
       fullStatus(){
-        console.log("this.full",this.fullStatus)
         this.getLargeScreenModuleList()
+      },
+      moduleList(){
       }
     },
     methods: {
       getOptions() {
-        return {draggable: '.out-drag-product', group: "out-product", disabled: false}
+        return {draggable: '.out-drag-product', group: "out-product", disabled: this.outDisable}
       },
       getInnerOptions() {
-        return {draggable: '.inner-drag-content', group: 'inner-product', disabled: true}
+        return {draggable: '.inner-drag-content', group: 'product', disabled: this.innerDisable}
+      },
+      async getMenuTree() {
+        let res = await DigitalParkApi.getMenuTree({
+          language: Cookies.get("lang")
+        });
+        localStorage.setItem('menuTree', JSON.stringify(res))
+        this.headName = res[0].name
       },
       async getLargeScreenModuleList(flag) {
         this.setConfigParams(flag)  //配置页时需要缩小或还原
@@ -104,17 +115,17 @@
         }, 500)
       },
       drawPageStyle(res) {
-        let xLen = res.xLength + this.moduleMargin
-        let yLen = res.yLength + this.moduleMargin
-        let paddingLeft = ($(".content").width() - xLen * res.xNum) / 2
-        let heightOther = ($(".large-size-screen-normal").height() - this.headerHeight - yLen * res.yNum)
-        let margin = heightOther / 2 / (res.yNum)
+        let xLen = res.xModule.length + this.moduleMargin
+        let yLen = res.yModule.length + this.moduleMargin
+        let paddingLeft = ($(".content").width() - xLen * res.xModule.num) / 2
+        let heightOther = ($(".large-size-screen-normal").height() - this.headerHeight - yLen * res.yModule.num)
+        let margin = heightOther / 2 / (res.xModule.num)
         yLen = yLen + margin
         let marginTop = heightOther / 2 / 2
 
         this.styleObj.panelStyle = {
-          "grid-template-columns": "repeat(" + res.xNum + "," + xLen + "px)",
-          "grid-template-rows": "repeat(" + res.yNum + "," + yLen + "px)",
+          "grid-template-columns": "repeat(" + res.xModule.num + "," + xLen + "px)",
+          "grid-template-rows": "repeat(" + res.yModule.num + "," + yLen + "px)",
           "padding-left": paddingLeft + "px",
           "margin-top": marginTop + "px"
         }
@@ -127,35 +138,11 @@
         }
 
         this.styleObj.dragStyle = {
-          width: res.xLength + 'px',
-          height: res.yLength + 'px',
+          width: res.xModule.length + 'px',
+          height: res.yModule.length + 'px',
           "grid-column": 'unset',
           "grid-row": 'unset',
         }
-
-      },
-      async onOutChange(evt) {
-        // console.log("evt", evt, this.moduleList)
-        $(".center-show").css({...this.styleObj.centerStyle, ...this.styleObj.centerSize})
-        $(".large-size-screen-normal .out-drag-product").css(this.styleObj.dragStyle)
-        let tmp = _.cloneDeep(this.moduleList)
-        let index = tmp.findIndex(item => item.id == 0 && item.moduleList.length)
-        tmp.splice(index, 1)
-        // await DigitalParkApi.updateUserProModules(tmp)
-        // this.getLargeScreenModuleList()
-      },
-      onOutStart() {
-        // console.log("lalala")
-      },
-      onInnerStart() {
-        // console.log("inner lalala")
-      },
-      async getMenuTree() {
-        let res = await DigitalParkApi.getMenuTree({
-          language: Cookies.get("lang")
-        });
-        localStorage.setItem('menuTree', JSON.stringify(res))
-        this.headName = res[0].name
       },
       setConfigParams() {
         if (this.fullStatus == 'noFull') {
@@ -185,6 +172,51 @@
         $(".large-size-screen-header").css({
           height: this.headerHeight + 'px'
         })
+      },
+      async onOutChange(evt) {
+        // console.log("evt", evt, this.moduleList)
+        $(".center-show").css({...this.styleObj.centerStyle, ...this.styleObj.centerSize})
+        $(".large-size-screen-normal .out-drag-product").css(this.styleObj.dragStyle)
+        let tmp = _.cloneDeep(this.moduleList)
+        let index = tmp.findIndex(item => item.id == 0 && item.moduleList.length)
+        tmp.splice(index, 1)
+        let obj={
+          width: document.body.offsetWidth,
+          height: document.body.offsetHeight,
+          modules:tmp
+        }
+        console.log(this.moduleList)
+        // await DigitalParkApi.updateLargeScreenModule(obj)
+        // this.getLargeScreenModuleList()
+      },
+      onOutStart() {
+        // console.log("lalala")
+      },
+      onInnerChange(evt) {
+        console.log("inner lalala",evt)
+        if(evt.added){
+          this.innerObj={
+            id:_.uniqueId(),
+            menuId:evt.added.element.pid,
+            menuName:evt.added.element.menuName,
+            type:1,
+            moduleList:[evt.added.element]
+          }
+        }
+      },
+      setInnerDisable(val){
+         this.innerDisable=val
+      },
+      updateInnerModule(id){
+        if(!id) return ;
+        let index = this.moduleList.findIndex((item)=>{
+          return item.id == id
+        })
+        if(index != -1){
+          this.moduleList[index] = this.innerObj
+          this.$parent.setItemDragFlag &&
+          this.$parent.setItemDragFlag(this.moduleList)
+        }
       }
     },
     mounted() {
@@ -202,7 +234,8 @@
       })
     },
     created() {
-
+      let res = CommonFun.largeScreenDefaultData
+      this.drawPageStyle(res)
     }
   }
 </script>
@@ -255,6 +288,12 @@
       background-size: 100% 100%;
       background-image: url('../../../static/image/digitalPark/module_bg.png');
       margin: auto;
+      width:700px;
+      height:418px;
+      overflow: hidden;
+      .item-content{
+        height:100%;
+      }
       /*font-size: 188px;*/
       /*text-align: center;*/
       /*color:red;*/
