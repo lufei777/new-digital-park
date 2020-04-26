@@ -1,14 +1,14 @@
-import Cookies from 'js-cookie';
-
 const TokenKey = 'token';
 export const setToken = (token) => {
-  return Cookies.set(TokenKey, token)
+  return localStorage.setItem(TokenKey, token)
 }
 export const getToken = () => {
-  return Cookies.get(TokenKey)
+  return localStorage.getItem(TokenKey)
 }
 export const removeToken = () => {
-  return Cookies.remove(TokenKey)
+  localStorage.removeItem(TokenKey);
+  removeIsCZClient();
+  return;
 }
 
 const UserInfoKey = 'userInfo';
@@ -20,4 +20,18 @@ export const getUserInfo = () => {
 }
 export const removeUserInfo = () => {
   return localStorage.removeItem(UserInfoKey)
+}
+
+const IsCZClientKey = 'isCZClient';
+export const setIsCZClient = (boolean) => {
+  return localStorage.setItem(IsCZClientKey, boolean)
+}
+export const getIsCZClient = () => {
+  return localStorage.getItem(IsCZClientKey);
+}
+export const IsCZClient = () => {
+  return JSON.parse(getIsCZClient()) === true;
+}
+export const removeIsCZClient = () => {
+  return localStorage.removeItem(IsCZClientKey)
 }

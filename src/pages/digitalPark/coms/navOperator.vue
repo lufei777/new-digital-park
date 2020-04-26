@@ -84,6 +84,7 @@ import SystemManageApi from "@/service/api/systemManage";
 import CommonApi from "@/service/api/common";
 import { mapState } from "vuex";
 import CommonFun from '@/utils/commonFun'
+import { IsCZClient } from '@/utils/auth';
 
 export default {
   name: "DigitalNavOperator",
@@ -142,7 +143,7 @@ export default {
       if (val == 3) {
         this.$store.dispatch('user/logout').then(() => {
           //如果是客户端
-          if (localStorage.isCZClient == "true") {
+          if (IsCZClient()) {
             goBackClientLogin();
           } else {
             this.$router.push("/login");

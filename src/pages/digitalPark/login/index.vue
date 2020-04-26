@@ -37,6 +37,7 @@
 <script>
 import SystemManageApi from '@/service/api/systemManage'
 import { mapMutations } from 'vuex';
+import { setToken, setIsCZClient } from '@/utils/auth';
 export default {
   name: 'DigitalParkLogin',
   components: {
@@ -93,6 +94,14 @@ export default {
     }
   },
   mounted() {
+    window.CZClient = {
+      setToken: (token, isCZClient = true) => {
+        setToken(token);
+        setIsCZClient(isCZClient);
+        // window.location.reload();
+        this.$router.push('/digitalPark/homePage');
+      }
+    }
   }
 }
 </script>

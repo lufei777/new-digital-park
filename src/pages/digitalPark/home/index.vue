@@ -98,6 +98,7 @@ import NavOperator from "../coms/navOperator";
 import draggable from "vuedraggable";
 import ItemProModule from "../coms/itemProModule";
 import { mapState } from "vuex";
+import { IsCZClient } from '@/utils/auth';
 export default {
   name: "DigitalHomePage",
   props: ["hideHeader", "curProModule", "forceFallback"],
@@ -220,7 +221,7 @@ export default {
       this.userProModuleList = res;
       this.loading = false;
       // 客户端loading消失
-      if (localStorage.getItem('isCZClient')) {
+      if (IsCZClient()) {
         hideClientLoading && window.hideClientLoading()
       }
     },

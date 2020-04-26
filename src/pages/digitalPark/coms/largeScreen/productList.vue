@@ -20,6 +20,8 @@
 <script>
   import DigitalParkApi from '@/service/api/digitalPark'
   import CommonFun from '@/utils/commonFun'
+  import { IsCZClient } from '@/utils/auth';
+
   export default {
     name: 'productList',
     components: {
@@ -65,7 +67,7 @@
           tmpObj.childNode.splice(0,1)
           let curNode = CommonFun.getLastItem(tmpObj)
           console.log("curNode",curNode)
-          if(localStorage.isCZClient=="true"){
+          if(IsCZClient()){
             window.goToClientPage(JSON.stringify(item), curNode.id + "")
           }else{
             this.$message({
