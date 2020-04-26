@@ -222,7 +222,7 @@ export default {
       this.loading = false;
       // 客户端loading消失
       if (IsCZClient()) {
-        hideClientLoading && window.hideClientLoading()
+        window.hideClientLoading && window.hideClientLoading()
       }
     },
     async onDragChange(evt) {

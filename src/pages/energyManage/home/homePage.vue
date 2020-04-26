@@ -140,7 +140,7 @@
     </div>
     <div class="tabulation">
       <div class="tabulation-title">能耗排名展示</div>
-      <z-table :ref="homePageTableConfig.ref" :options="homePageTableConfig"></z-table>
+      <z-table :load="tableLoad" :ref="homePageTableConfig.ref" :options="homePageTableConfig"></z-table>
     </div>
   </div>
 </template>
@@ -197,7 +197,8 @@ export default {
         tableMethods: {
           sortChange: _this.sortTable
         }
-      }
+      },
+      tableLoad:false
     };
   },
   computed:{
@@ -253,6 +254,7 @@ export default {
         // { label: "其他用水", prop: "qtWater", sortable: "custom" }
       ];
       this.homePageTableConfig.columnConfig = labelList;
+      this.tableLoad = true;
       let res = await EnergyApi.getEnergyRanking({
         redioType: 0,
         startTime: this.iszg?moment().format('YYYY'):2019,
@@ -261,10 +263,11 @@ export default {
         rankType: this.rankType,
         size: 10,
         rank: this.rank
-      });
+      }).catch(() => this.tableLoad = false);
       if (res && res.total) {
         this.homePageTableConfig.data = res.value;
         this.homePageTableConfig.uiConfig.pagination.total = res.total;
+        this.tableLoad = false;
       }
     },
     DateTypeChange(value) {

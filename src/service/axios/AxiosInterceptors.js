@@ -16,7 +16,7 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.interceptors.request.use(
   (config) => {
     let redirectHref = window.location.href;
-    if (store.getters.token) {
+    if (getToken()) {
       config.headers['X-SSO-Token'] = getToken();
       redirectHref = location.origin + '/#/digitalPark/homePage';
     }
