@@ -2,7 +2,7 @@
   <div class="digital-park-login" @click="showErrTip=false">
     <img src="../../../../static/image/digitalPark/logo.png" class="logo-img" alt />
     <div class="login-box flex-column flex-align" v-loading="loading">
-      <span class="login-title">数字园区综合管理平台</span>
+      <span class="login-title">{{this.title}}</span>
       <div class="flex-item flex-align border-basic name-box">
         <i class="iconfont iconzhanghao login-icon name-icon"></i>
         <el-input
@@ -38,6 +38,7 @@
 import SystemManageApi from '@/service/api/systemManage'
 import { mapMutations } from 'vuex';
 import { setToken, setIsCZClient } from '@/utils/auth';
+import { getProjectTitle } from '@/utils/project';
 export default {
   name: 'DigitalParkLogin',
   components: {
@@ -91,6 +92,14 @@ export default {
 
         console.error(err);
       })
+    }
+  },
+  computed: {
+    projectName() {
+      return window.__CZ_SYSTEM;
+    },
+    title() {
+      return getProjectTitle() || '数字园区综合管理平台';
     }
   },
   mounted() {

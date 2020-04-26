@@ -1,6 +1,14 @@
-import { ProjectName } from './dictionary';
+import { ProjectName, Title } from './dictionary';
 const { ZG } = ProjectName;
 
+export const getProjectName = () => {
+  return window.__CZ_SYSTEM;
+}
+
 export const isZG = () => {
-  return window.__CZ_SYSTEM === ZG;
+  return getProjectName() === ZG;
+}
+
+export const getProjectTitle = () => {
+  return Title[getProjectName()];
 }
