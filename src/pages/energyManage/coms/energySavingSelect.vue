@@ -59,6 +59,7 @@ import EnergyApi from "../../../service/api/energy";
 import TreeModal from '../../../components/treeModal/index'
 import moment from "moment";
 import CommonFun from '../../../utils/commonFun'
+import {isZG} from '@/utils/project';
 export default {
   name: "EnergySavingSelect",
   components: {
@@ -67,7 +68,6 @@ export default {
   props: ["energySaveFlag"],
   data() {
     let _this = this;
-    let curSystem = window.__CZ_SYSTEM
     return {
       curEnergy: "", //楼层检索
       curEnergyId:"0",
@@ -78,7 +78,7 @@ export default {
       energySubentryData: [],
       floorSelectData: "",
       // startTime: moment(new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000*10)).format("YYYY-MM"),
-      startTime: curSystem=='zg'?moment().format('YYYY-MM'):"2019-02",
+      startTime: isZG()?moment().format('YYYY-MM'):"2019-02",
       page: 1,
       tableData: {
         total: 0

@@ -64,6 +64,7 @@
   import {mapState} from 'vuex'
   import moment from 'moment'
   import CommonApi from '../../service/api/common'
+  import {isZG} from '@/utils/project';
   export default {
     name:'ConditionSelect',
     components: {
@@ -80,7 +81,7 @@
         dateType:'month',
         radio:'0',
         // startTime:moment(new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000*10)).format("YYYY-MM"),
-        startTime:curSystem=='zg'?moment().format('YYYY-MM'):"2019-02",
+        startTime:isZG()?moment().format('YYYY-MM'):"2019-02",
         lastTime:'',
         showLastTime:false,
         curEnergy:[]
@@ -123,7 +124,7 @@
           this.curEnergy=[res[0].energyType[0],res[0].energyType[1]]
         }else{
           let tmp=[]
-          if(window.__CZ_SYSTEM=='zg'){
+          if(isZG()){
             if(this.fromFlag==1 || this.fromFlag==2 || this.fromFlag==4 || this.fromFlag==5 ){
               res.map((item)=>{
                 tmp.push(item)

@@ -3,7 +3,7 @@
     <div class="out-box radius-shadow">
         <ConditionSelect :showEnergy="false" :get-data-flag="getDataFlag"/>
     </div>
-    <div class="flex-align-between" v-if="systemConfig!='zg'">
+    <div class="flex-align-between" v-if="!iszg">
       <div class="rank-box radius-shadow flex-align-center">
         <h4 class="rank-tip">总用电量</h4>
         <span class="rank-value">{{overViewData.elecSum}}<span>kwh</span></span>
@@ -15,7 +15,7 @@
       <div class="rank-box radius-shadow my-chart" ref="myChart1"></div>
       <div class="rank-box radius-shadow my-chart" ref="myChart2"></div>
     </div>
-    <div class="flex" v-if="systemConfig=='zg'">
+    <div class="flex" v-if="iszg">
       <div class="rank-box radius-shadow flex-align-center" style="margin-right: 1%;width:49%">
       <h4 class="rank-tip">总用电量</h4>
       <span class="rank-value">{{overViewData.elecSum}}<span>kwh</span></span>
@@ -37,6 +37,7 @@
   import ChartUtils from '../../../utils/chartUtils'
   import EnergyApi from '../../../service/api/energy'
   import ConditionSelect from '../../../components/conditionSelect/index'
+  import {isZG} from '@/utils/project';
   export default {
     name: 'TimeEnergy',
     components: {
@@ -75,14 +76,14 @@
       commonTip(){
         return `${this.selectParams.startTime}${this.selectParams.lastTime?'至'+this.selectParams.lastTime:''}`
       },
-      systemConfig(){
-        return window.__CZ_SYSTEM
+      iszg(){
+        return isZG();
       }
     },
     methods: {
       async getEnergyOverView(){
         this.overViewData = await EnergyApi.getEnergyOverView(this.selectParams)
-        if(this.systemConfig != 'zg'){
+        if(!this.iszg){
           this.initElecChart(this.overViewData)
           this.initWaterChart(this.overViewData)
         }

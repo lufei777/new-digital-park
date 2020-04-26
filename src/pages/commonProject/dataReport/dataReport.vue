@@ -46,6 +46,7 @@
 <script>
   import moment from 'moment'
   import CommonApi from '../../../service/api/common'
+  import {isZG} from '@/utils/project';
   let dateTypeList=[{
       name:'年',
       id:'year'
@@ -58,7 +59,7 @@
   }]
 
   let curSystem  = window.__CZ_SYSTEM
-  let energyList = curSystem=='zg'?[{
+  let energyList = isZG()?[{
       name:'电',
       id:'electricity'
     },{
@@ -82,15 +83,15 @@
       return {
         curDateType:'monthly',
         dateTypeList:dateTypeList,
-        pickerType:curSystem=='zg'?'date':'month',
+        pickerType:isZG()?'date':'month',
         // startTime:moment(new Date(new Date().getTime()-28*24*60*60*1000*11)).format('YYYY-MM'),
         // endTime:moment(new Date(new Date().getTime()-30*24*60*60*1000*10)).format('YYYY-MM'),
-        startTime:curSystem=='zg'?moment().startOf('month').format("YYYY-MM-DD"):"2019-01",
-        endTime:curSystem=='zg'?moment().format('YYYY-MM-DD'):"2019-04",
+        startTime:isZG()?moment().startOf('month').format("YYYY-MM-DD"):"2019-01",
+        endTime:isZG()?moment().format('YYYY-MM-DD'):"2019-04",
         energyList:energyList,
         curEnergy:'electricity',
         tableData:'',
-        valueFormat:curSystem=='zg'?"YYYY-MM":'YYY-MM-DD'
+        valueFormat:isZG()?"YYYY-MM":'YYY-MM-DD'
       }
     },
     computed:{

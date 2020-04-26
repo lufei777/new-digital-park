@@ -1,7 +1,7 @@
 import axiosOrigin from "axios";
 import router from '@/router'
 import store from '@/vuex/store';
-import { getToken, removeToken } from '@/utils/auth';
+import { getToken, IsCZClient } from '@/utils/auth';
 
 let calcelSource = getCancelSource();
 const Message = require("element-ui").Message
@@ -16,7 +16,7 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.interceptors.request.use(
   (config) => {
     let redirectHref = window.location.href;
-    if (store.getters.token) {
+    if (getToken()) {
       config.headers['X-SSO-Token'] = getToken();
       redirectHref = location.origin + '/#/digitalPark/homePage';
     }
@@ -70,7 +70,7 @@ axios.interceptors.response.use(
         case 401:
           calcelSource.source.cancel();  // 取消所有请求
           store.dispatch('user/resetToken').then(() => {
-            if (localStorage.isCZClient == 'true') {
+            if (IsCZClient()) {
               //如果是客户端
               window.goBackClientLogin();
             } else {
