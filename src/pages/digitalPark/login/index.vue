@@ -26,7 +26,14 @@
       <div class="flex-item">
         <el-checkbox v-model="checked">自动登录</el-checkbox>
       </div>
-      <div class="flex-item login-btn" @click="onClickLoginBtn">登录</div>
+      <el-button
+        class="flex-item"
+        :style="{ height:'60px','fontSize':'22px' }"
+        type="primary"
+        @click="onClickLoginBtn"
+      >登陆</el-button>
+
+      <!-- <div class="flex-item login-btn" @click="onClickLoginBtn">登录</div> -->
       <div v-show="showErrTip" class="flex-item error-box">
         <span>{{errTip}}</span>
       </div>
