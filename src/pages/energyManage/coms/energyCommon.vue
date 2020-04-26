@@ -473,11 +473,23 @@
         let data={
           titleText,
           legendData,
-          xAxis,
           yAxis,
           series
         }
+         let option = {
+          xAxis:[
+            {
+               type: 'category',
+               data: xAxis,
+               axisLabel: {  
+                    interval:0,  
+                    rotate:40  
+                }  
+            }
+          ]
+        }
         ChartUtils.handleBarChart(this.myChart,data)
+         this.myChart.setOption(option);
       },
       async getTimeEnergyTable(){
         let tableParams = {...this.commonParams,...{
