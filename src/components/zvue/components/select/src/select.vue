@@ -19,6 +19,7 @@
     @focus="handleFocus"
     @blur="handleBlur"
     @click.native="handleClick"
+    v-loadmore="load"
   >
     <template v-if="group">
       <el-option-group
@@ -40,7 +41,7 @@
     </template>
     <template v-else>
       <el-option
-        v-for="oitem in netDic"
+        v-for="oitem in visibleDic"
         :disabled="oitem.disabled"
         :key="getLabelText(oitem)"
         :label="getLabelText(oitem)"
@@ -48,6 +49,14 @@
       >
         <slot :name="`${prop}Type`" :labelkey="labelKey" :valuekey="valueKey" :item="oitem"></slot>
       </el-option>
+      <p
+        v-if="noMore"
+        :style="{
+        textAlign:'center',
+        fontSize:'12px',
+        color:'#666'
+        }"
+      >没有更多了~</p>
     </template>
   </el-select>
 </template>
@@ -63,6 +72,10 @@ export default {
   name: "zSelect",
   mixins: [props(), events()],
   props: {
+    infinitescroll: {
+      type: Boolean,
+      default: false
+    },
     drag: {
       type: Boolean,
       default: false
@@ -92,13 +105,30 @@ export default {
       default: false
     }
   },
+  directives: {
+    loadmore: {
+      bind(el, binding) {
+        // 获取element-ui定义好的scroll盒子
+        const SELECTWRAP_DOM = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap')
+        SELECTWRAP_DOM.addEventListener('scroll', function () {
+
+          const CONDITION = this.scrollHeight - this.scrollTop <= this.clientHeight
+          if (CONDITION) {
+            binding.value()
+          }
+        })
+      }
+    }
+  },
   data() {
     return {
-      defaultDic: [],
+      // 默认显示20条
+      start: 0,
+      end: 10,
+      pageSize: 10,
       netDic: []
     };
   },
-  created() {},
   methods: {
     validatenull,
     handleRemoteMethod(query) {
@@ -110,17 +140,38 @@ export default {
       }).then(res => {
         _.isArray(res) && this.validatenull(res) ? "" : (this.netDic = res);
       });
+    },
+    load() {
+      if (this.noMore) {
+        return;
+      }
+      this.end += this.pageSize;
     }
   },
-  computed: {},
+  computed: {
+    visibleDic() {
+      let tempArr = [];
+      if (this.inifitescroll) {
+        tempArr = this.netDic.slice(this.start, this.end);
+      } else {
+        tempArr = this.netDic;
+      }
+      return tempArr;
+    },
+    noMore() {
+      return this.end >= this.netDic.length;
+    }
+  },
   watch: {
     dic: {
       immediate: true,
       handler(val) {
         this.netDic = val;
-        this.defaultDic = val;
+        this.end = 10;
+        // this.defaultDic = val;
       }
-    } /* ,
+    }
+    /* 会触发两次change ,
     text: {
       // immediate: true,
       handler(value) {
