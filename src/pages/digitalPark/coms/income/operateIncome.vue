@@ -2,7 +2,7 @@
   <div class="operate-income">
     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div class="select-box flex">
-      <div  class="change-date hover-pointer" :style="Bg">年报</div>
+      <div  class="change-date hover-pointer" :style="Bg" @click.stop="onClick1">年报</div>
       <div class="change-date hover-pointer">月报</div>
       <!--<el-select v-model="income" placeholder="请选择" size="mini">-->
         <!--<el-option-->
@@ -81,6 +81,9 @@
             require("../../../../../static/image/digitalPark/module_bg.png") +
             ")"
         };
+      },
+      onClick1(){
+        console.log("13mofmawgwepk")
       }
     },
     mounted() {

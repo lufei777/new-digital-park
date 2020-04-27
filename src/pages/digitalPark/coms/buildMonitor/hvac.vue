@@ -44,10 +44,11 @@
 <style lang="less">
   .hvac-coms {
     .water-content{
-      height:95%;
+      /*height:95%;*/
+      flex-grow: 1;
     }
     .item-water{
-      padding:20px;
+      padding:0 20px;
       color:@dashboardColor;
       text-align: center;
     }

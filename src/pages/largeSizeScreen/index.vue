@@ -50,8 +50,11 @@
       setItemDragFlag(list){
         this.$parent.setItemDragFlag &&
         this.$parent.setItemDragFlag(list)
+      },
+      sureUpdateUserProModules(){
+        this.$refs[this.curCom].updateLargeScreenModule &&
+        this.$refs[this.curCom].updateLargeScreenModule()
       }
-
     },
     mounted(){
       let _this = this

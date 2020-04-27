@@ -198,13 +198,7 @@
         this.contentListDragFlag = val
       },
       async onClickSureBtn() {
-        if (this.type == 1) {
-          await this.$refs.dashboard.sureUpdateUserProModules()
-          // this.$router.push(`/digitalPark/dashboardHomePage`)
-        } else {
-          await this.$refs.homePage.sureUpdateUserProModules()
-          // this.$router.push(`/digitalPark/homePage`)
-        }
+         await this.$refs[this.curCom].sureUpdateUserProModules()
       },
       onClickGoBackBtn() {
         if (this.type == 1) {
@@ -392,9 +386,10 @@
 
     .preview-panel {
       width: 100%;
-      height: 70%;
+      /*overflow: auto;*/
+      height: 90%;
       /*margin:10px auto;*/
-      margin: 10% 0 0 0;
+      margin: 5% 0 0 0;
       box-sizing: border-box;
       overflow: auto;
     }

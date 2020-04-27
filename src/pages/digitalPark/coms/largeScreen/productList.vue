@@ -102,19 +102,20 @@
     box-sizing: border-box;
     overflow: hidden;
     width:100%;
-    padding:10px 20px;
+    /*padding:10px 20px;*/
     &:after{
       width:40%;
       content:''
     }
   }
   .fixed-pro-item{
+    font-size: 28px;
     width:23%;
-    height:80px;
-    line-height: 80px;
+    height:75px;
+    line-height: 75px;
     flex-shrink: 0;
     float:left;
-    margin:15px 1% 1%;
+    margin:1%;
     background-repeat: no-repeat;
     background-size: 100% 100%;
     overflow: hidden;
@@ -126,14 +127,14 @@
   .turn-page{
     margin-bottom:20px;
     span{
-      width:50px;
-      height:50px;
+      width:40px;
+      height:40px;
       border-radius: 5px;
       background:#4F89B2;
       color:#333;
       text-align: center;
-      line-height: 50px;
-      font-size: 30px;
+      line-height: 40px;
+      font-size: 24px;
     }
     .active-btn{
       color:#00bfee;
