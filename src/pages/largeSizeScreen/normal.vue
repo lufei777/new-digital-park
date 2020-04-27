@@ -11,17 +11,19 @@
       >
         <!--<transition name="el-zoom-in-center" v-for="(item,index) in moduleList" :key="index">-->
           <draggable v-for="(item,index) in moduleList" :key="index"
-            :class="item.id==0 && item.moduleList?'center-show':'out-drag-product'"
+            :class="getClass(item)"
             :list="[item]"
             :id="item.id"
             v-bind="getInnerOptions()"
-
             @change="onInnerChange"
           >
             <ItemProModule
               class="inner-drag-content"
               type="1"
-              :moduleData="item?{...item,...{largeScreen:true}}:{}"
+              :moduleData="item?{...item,...{largeScreen:true,$index:index}}:{}"
+              @mouseenter="changeBg(item,1)"
+              @mouseleave="changeBg(item,-1)"
+              @click.native="changeBg(item,1)"
             />
           </draggable>
         <!--</transition>-->
@@ -48,7 +50,7 @@
     data() {
       return {
         headName: '',
-        moduleList: CommonFun.modules,
+        moduleList:[],// CommonFun.largeScreenDefaultData.modules,
         animationFlag: false,
         outDisable: false,
         innerDisable: true,
@@ -76,6 +78,16 @@
       }
     },
     methods: {
+      getClass(item){
+        // console.log(item)
+        let centerFlag= item.id==0 && item.moduleList
+        return{
+         'center-show':centerFlag,
+          'out-drag-product':!centerFlag,
+          'out-drag-product-normal':!centerFlag && item.bgStatus=='normal',
+          'out-drag-product-hover':!centerFlag && item.bgStatus=='hover',
+        }
+      },
       getOptions() {
         return {draggable: '.out-drag-product', group: "out-product", disabled: this.outDisable}
       },
@@ -97,6 +109,9 @@
           height: document.body.offsetHeight,
           widthPercent: this.widthPercent,
           heightPercent: this.heightPercent
+        })
+        res.modules.map((item)=>{
+          item.bgStatus='normal'
         })
         this.moduleList = res.modules || []
         this.centerIndex = res.modules.findIndex(item => item.id == 0 && item.moduleList)
@@ -227,6 +242,18 @@
             message:'更新成功'
           })
         }
+      },
+      changeBg(item,flag){
+        console.log(item)
+        // debugger
+        this.moduleList.map((item)=>{
+          item.bgStatus='normal'
+        })
+        if(flag==1 && item.menuName!='功能模块入口'){
+          item.bgStatus='hover'
+        }
+
+        // flag==1?item.bgStatus='hover':'normal'
       }
     },
     mounted() {
@@ -270,7 +297,15 @@
     .digital-nav-operator {
       font-size: @largeScreenFontSize;
 
+      .nav-right-item{
+        /*width:230px;*/
+        text-align: right;
+        span{
+          width:200px;
+        }
+      }
       .nav-right-item .el-input__inner {
+        width:150px;
         font-size: @largeScreenFontSize;
         color: @white;
       }
@@ -279,13 +314,15 @@
         width: 50px;
         height: 50px;
       }
-
-      .nav-right-item span {
-        width: 200px;
+      .nav-right-item .el-select{
+        width:180px;
       }
 
       .nav-right-item .el-input__suffix {
-        right: -85px;
+        width:30px;
+        .el-input__suffix-inner{
+          width:100%;
+        }
       }
 
       .el-select .el-input .el-select__caret {
@@ -293,13 +330,12 @@
       }
     }
 
-    .out-drag-product {
+    .out-drag-product,.out-drag-product-hover {
       background-repeat: no-repeat;
       background-size: 100% 100%;
-      background-image: url('../../../static/image/digitalPark/module_bg.png');
       margin: auto;
-      width:700px;
-      height:418px;
+      width:940px;
+      height:528px;
       overflow: hidden;
       .item-content{
         height:100%;
@@ -309,6 +345,12 @@
       /*color:red;*/
       /*margin:0 20px 20px 20px;*/
       /*margin:auto;*/
+    }
+    .out-drag-product-normal{
+      background-image: url('../../../static/image/digitalPark/content_bg3.png');
+    }
+    .out-drag-product-hover{
+      background-image: url('../../../static/image/digitalPark/content_bg4.png');
     }
 
     .drag-panel {

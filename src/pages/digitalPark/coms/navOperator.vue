@@ -12,10 +12,15 @@
     <!--<el-option label="English" value="en"></el-option>-->
     <!--</el-select><el-divider direction="vertical"></el-divider>-->
     <!--</span>-->
-    <span
-      class="nav-right-item"
-      :class="moduleType==1?'dashboard-nav':''"
-      v-if="!showGoBack && fromFlag!=2"
+    <span class="nav-right-item">
+      <!--<el-badge class="nav-news" :max="99" :value="alarmListCount" @click.native="loadNews">-->
+      <!--<i class="el-icon-message-solid"></i>-->
+      <!--</el-badge>-->
+       <span @click="loadNews" style="color:#ED6C01">{{$t('homeHeader.news')}}({{alarmListCount}})</span>
+      <el-divider direction="vertical"></el-divider>
+    </span>
+    <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''"
+          v-if="!showGoBack && fromFlag!=2"
     >
       <el-select v-model="myModuleType" placeholder="切换模式" @change="onClickChangeModel">
         <el-option :label="$t('homeHeader.waterfall')" value="2"></el-option>
@@ -48,13 +53,6 @@
         ></el-option>
         <!--<el-option :label="$t('homeHeader.skin')" value="2"></el-option>-->
       </el-select>
-      <el-divider direction="vertical"></el-divider>
-    </span>
-    <span class="nav-right-item">
-      <el-badge class="nav-news" :max="99" :value="alarmListCount" @click.native="loadNews">
-        <i class="el-icon-message-solid"></i>
-      </el-badge>
-      <!-- <span @click="loadNews" style="color:#ED6C01">{{$t('homeHeader.news')}}({{alarmListCount}})</span> -->
       <el-divider direction="vertical"></el-divider>
     </span>
     <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
@@ -257,7 +255,7 @@ export default {
         end: '',
         pageCount: 10,
       })
-      this.alarmListCount = res.total
+      this.alarmListCount = res.total>99?'99+':99
     }
   },
   created() {

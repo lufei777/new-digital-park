@@ -1,12 +1,12 @@
 <template>
   <div class="elevator-monitor-coms">
     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
-    <div class="my-chart flex" v-if="!iszg">
+    <div class="my-chart flex">
       <div class="chart-item-box">
         <div ref="myChart1" class="chart-item"></div>
         <span>直梯</span>
       </div>
-      <div class="chart-item-box">
+      <div class="chart-item-box"  v-if="!iszg">
         <div ref="myChart2" class="chart-item"></div>
         <span>扶梯</span>
       </div>
@@ -38,7 +38,7 @@
           homeId:4
         })
         this.initChart1(res)
-        if(this.iszg){
+        if(!this.iszg){
           this.initChart2(res)
         }
       },
