@@ -4,17 +4,13 @@
       <span style="color:#008DEA">
         <i class="iconfont iconshouye"></i>&nbsp;返回首页
       </span>
-      <i>|</i>
-    </span>
-    <span class="nav-right-item">
-      <span @click="loadNews" style="color:#ED6C01">{{$t('homeHeader.news')}}({{alarmListCount}})</span>
-      <i>|</i>
+      <el-divider direction="vertical"></el-divider>
     </span>
     <!--<span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoBack">-->
     <!--<el-select v-model="langValue" placeholder="切换语言" @change="onClickChangeLang">-->
     <!--<el-option label="中文" value="zh"></el-option>-->
     <!--<el-option label="English" value="en"></el-option>-->
-    <!--</el-select><i>|</i>-->
+    <!--</el-select><el-divider direction="vertical"></el-divider>-->
     <!--</span>-->
     <span
       class="nav-right-item"
@@ -25,7 +21,7 @@
         <el-option :label="$t('homeHeader.waterfall')" value="2"></el-option>
         <el-option :label="$t('homeHeader.dashboard')" value="1"></el-option>
       </el-select>
-      <i>|</i>
+      <el-divider direction="vertical"></el-divider>
     </span>
     <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''" v-if="!showGoBack">
       <el-select
@@ -52,7 +48,14 @@
         ></el-option>
         <!--<el-option :label="$t('homeHeader.skin')" value="2"></el-option>-->
       </el-select>
-      <i>|</i>
+      <el-divider direction="vertical"></el-divider>
+    </span>
+    <span class="nav-right-item">
+      <el-badge class="nav-news" :max="99" :value="alarmListCount" @click.native="loadNews">
+        <i class="el-icon-message-solid"></i>
+      </el-badge>
+      <!-- <span @click="loadNews" style="color:#ED6C01">{{$t('homeHeader.news')}}({{alarmListCount}})</span> -->
+      <el-divider direction="vertical"></el-divider>
     </span>
     <span class="nav-right-item" :class="moduleType==1?'dashboard-nav':''">
       <el-dropdown @command="onClickUserConfigure">
@@ -84,6 +87,7 @@ import SystemManageApi from "@/service/api/systemManage";
 import CommonApi from "@/service/api/common";
 import { mapState } from "vuex";
 import CommonFun from '@/utils/commonFun'
+import { IsCZClient } from '@/utils/auth';
 
 export default {
   name: "DigitalNavOperator",
@@ -142,7 +146,7 @@ export default {
       if (val == 3) {
         this.$store.dispatch('user/logout').then(() => {
           //如果是客户端
-          if (localStorage.isCZClient == "true") {
+          if (IsCZClient()) {
             goBackClientLogin();
           } else {
             this.$router.push("/login");
@@ -297,6 +301,15 @@ export default {
     }
     .el-input__suffix {
       right: -15px;
+    }
+    .nav-news {
+      margin: 0 25px;
+      font-size: 18px;
+      cursor: pointer;
+      color: @mainBgColor;
+      &:hover {
+        color: @secondaryColor;
+      }
     }
   }
   .dashboard-nav {

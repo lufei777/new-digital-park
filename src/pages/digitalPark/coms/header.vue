@@ -2,7 +2,7 @@
   <div class="large-size-screen-header flex-align-between">
       <div class="news-box">
         <ul class="news-list hover-pointer" :style="{top}"
-            @mouseenter="stopNews" @mouseleave="scrollNews"  v-if="curSystem!='zg'"
+            @mouseenter="stopNews" @mouseleave="scrollNews"  v-if="!iszg"
         >
           <li v-for="(item,index) in newsList" :key="index" class="news-item">
             <span>{{item.text}}</span>
@@ -24,6 +24,7 @@
 
 <script>
   import NavOperator from '@/pages/digitalPark/coms/navOperator'
+  import {isZG} from '@/utils/project';
   export default {
     name: 'LargeSizeScreenHeader',
     components: {
@@ -43,8 +44,8 @@
       top() {
         return this.fromFlag==1? -this.curNewsIndex * 50 + 'px': -this.curNewsIndex * 160 + 'px'
       },
-      curSystem(){
-        return window.__CZ_SYSTEM
+      iszg(){
+        return isZG();
       }
     },
     watch:{

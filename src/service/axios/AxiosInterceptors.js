@@ -1,13 +1,14 @@
 import axiosOrigin from "axios";
 import router from '@/router'
 import store from '@/vuex/store';
-import { getToken, removeToken } from '@/utils/auth';
+import { getToken, IsCZClient } from '@/utils/auth';
 
 let calcelSource = getCancelSource();
 const Message = require("element-ui").Message
 
 let config = {
-  timeout: 100000
+  // 一分钟超时
+  timeout: 60000
 };
 let axios = axiosOrigin.create(config);
 axios.defaults.headers.get["Content-Type"] = "application/x-www-form-urlencoded";
@@ -16,8 +17,9 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.interceptors.request.use(
   (config) => {
     let redirectHref = window.location.href;
-    if (store.getters.token) {
-      config.headers['X-SSO-Token'] = getToken();
+    let hasToken = getToken();
+    if (hasToken) {
+      config.headers['X-SSO-Token'] = hasToken;
       redirectHref = location.origin + '/#/digitalPark/homePage';
     }
     config.headers['X-Requested-With'] = 'XMLHttpRequest';
@@ -40,10 +42,6 @@ axios.interceptors.response.use(
     let message = res.message || res.errorMessage;
 
     if (res.successful && res.code === '0') {
-      // msgInfo({
-      //   message: message,
-      //   type: 'success'
-      // });
       // 如果没有则返回空对象
       return (res || {}).data;
     } else if (res.code) {
@@ -69,8 +67,9 @@ axios.interceptors.response.use(
       switch (response.status) {
         case 401:
           calcelSource.source.cancel();  // 取消所有请求
+          // 重置token并进行下一步操作
           store.dispatch('user/resetToken').then(() => {
-            if (localStorage.isCZClient == 'true') {
+            if (IsCZClient()) {
               //如果是客户端
               window.goBackClientLogin();
             } else {
@@ -118,7 +117,7 @@ function msgInfo({ message, type }) {
   }
 }
 
-// 页面跳转，取消所有正在进行的请求
+// 页面跳转，取消页面跳转之前所有正在进行的请求
 setTimeout(() => {
   router.beforeEach((to, from, next) => {
     if (calcelSource.source.cancel) {

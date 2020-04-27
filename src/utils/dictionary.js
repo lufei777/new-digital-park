@@ -94,6 +94,7 @@ export const AssetDic = {
 
 // 人事管理
 export const PersonalManageDic = {
+  // 员工状态
   employeeStatus: [
     {
       label: "临时",
@@ -108,6 +109,7 @@ export const PersonalManageDic = {
       value: "3"
     }
   ],
+  // 员工类型
   employeeType: [
     {
       label: "外包",
@@ -122,20 +124,24 @@ export const PersonalManageDic = {
       value: "3"
     }
   ],
+  // 户口类型
   residenceType: [
     { label: "城市", value: "1" },
     { label: "农村", value: "2" }
   ],
+  // 婚姻状况
   maritalStatus: [
     { label: "已婚", value: "1" },
     { label: "未婚", value: "2" }
   ],
+  // 政治面貌
   politicalStatus: [
     { label: "中共党员", value: "0" },
     { label: "中共预备党员", value: "1" },
     { label: "共青团员", value: "2" },
     { label: "群众", value: "3" }
   ],
+  // 教育背景
   educationBackground: [
     {
       label: "本科",
@@ -177,6 +183,7 @@ export const PersonalManageDic = {
       value: "0"
     }
   ],
+  // 学位
   degree: [
     {
       label: "学士",
@@ -191,6 +198,7 @@ export const PersonalManageDic = {
       value: "2"
     }
   ],
+  // 健康状况
   healthStatus: [
     {
       label: "优秀",
@@ -213,31 +221,37 @@ export const PersonalManageDic = {
 
 // 收支管理
 export const RevenueExpendManageDic = {
+  // 审核类型
   examineType: [
     { label: "待审核", value: 0 },
     { label: "通过", value: 1 },
     { label: "驳回", value: 2 }
   ],
+  // 审核状态
   examineState: [
     { label: "待审核", value: 0 },
     { label: "已审核", value: 1 },
     { label: "已驳回", value: 2 },
     { label: "审核中", value: 3 }
   ],
+  // 费用名称
   moduleId: [
     { label: "租赁", value: 0 },
     { label: "服务费", value: 1 },
     { label: "专利费", value: 2 }
   ],
+  // 资金状态
   moneyState: [
     { label: "未到账", value: 0 },
     { label: "已到账", value: 1 },
     { label: "已逾期", value: 2 }
   ],
+  //  收费类型
   tradeType: [
     { label: "现金", value: 0 },
     { label: "转账", value: 1 }
   ],
+  // 收支和指出对应的不同名称
   fields: {
     receivMoney: ["应收金额", "支出金额"],
     recordName: ["收入名称", "支出名称"],
@@ -245,6 +259,7 @@ export const RevenueExpendManageDic = {
     payName: ["收款方", "支付方"],
     incomeTime: ["入账日期", "支出日期"]
   },
+  // 收支和指出对应的不同title
   titles: {
     add: ['发起收费', '发起支出'],
     edit: ['编辑收费', '编辑支出']
@@ -274,4 +289,15 @@ export const ExportData = {
       value: 3
     }
   ]
+}
+
+// 项目名称
+export const ProjectName = {
+  // 中钢
+  ZG: 'zg'
+}
+
+// 根据项目显示不同的title
+export const Title = {
+  [ProjectName.ZG]: '中钢大厦数字建筑运管平台'
 }

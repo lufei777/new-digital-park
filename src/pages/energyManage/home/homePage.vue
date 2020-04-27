@@ -119,7 +119,7 @@
         <div ref="myChart" class="my-chart"></div>
       </div>
     </div>
-    <div v-if="curSystem!='zg'">
+    <div v-if="!iszg">
       <div class="tip flex-align">
         <span class="icon"></span>
         <span>能耗分类分项占比图</span>
@@ -140,7 +140,7 @@
     </div>
     <div class="tabulation">
       <div class="tabulation-title">能耗排名展示</div>
-      <z-table :ref="homePageTableConfig.ref" :options="homePageTableConfig"></z-table>
+      <z-table :load="tableLoad" :ref="homePageTableConfig.ref" :options="homePageTableConfig"></z-table>
     </div>
   </div>
 </template>
@@ -149,29 +149,30 @@
 import EnergyApi from "../../../service/api/energy";
 import CommonApi from "../../../service/api/common";
 import ChartUtils from "../../../utils/chartUtils";
+import { isZG } from '@/utils/project';
 export default {
   name: "HomePage",
   data() {
     let _this = this;
-    let curSystem  = window.__CZ_SYSTEM
+    let curSystem = window.__CZ_SYSTEM
     let options = [{
-          value: 34,
-          label: "电"
-        },
-        {
-          value: 37,
-          label: "水"
-        }]
+      value: 34,
+      label: "电"
+    },
+    {
+      value: 37,
+      label: "水"
+    }]
     return {
       energyOverview: {},
       currentTime: new Date().getFullYear() + "-" + "01",
       BeforeTime: new Date().getFullYear() + "-" + "12",
-      options:curSystem=='zg'?options:
+      options: isZG() ? options :
         [
-        ...options, ...[{
+          ...options, ...[{
             value: 38,
             label: "热"
-         }]
+          }]
         ],
       dateType: "电",
       catalog: 34,
@@ -196,26 +197,30 @@ export default {
         tableMethods: {
           sortChange: _this.sortTable
         }
-      }
+      },
+      tableLoad: false
     };
   },
-  computed:{
-    chartText(){
-      return `${moment().add(-1,'y').format("YYYY")}与${moment().format("YYYY")}年度同比环比柱状折线图分析`
+  computed: {
+    chartText() {
+      return `${moment().add(-1, 'y').format("YYYY")}与${moment().format("YYYY")}年度同比环比柱状折线图分析`
     },
-    curSystem(){
+    curSystem() {
       return window.__CZ_SYSTEM
+    },
+    iszg() {
+      return isZG();
     }
-},
+  },
 
   methods: {
     async getEnergyOverView() {
       this.energyOverview = await EnergyApi.getEnergyOverView({
         redioType: 0,
-        startTime: this.curSystem=='zg'?moment().format('YYYY'):2019,
-        selectType: this.curSystem=='zg'?3:1
+        startTime: this.iszg ? moment().format('YYYY') : 2019,
+        selectType: this.iszg ? 3 : 1
       });
-      if(this.curSystem!="zg"){
+      if (!this.iszg) {
         this.piechart1(this.energyOverview);
         this.piechart2(this.energyOverview);
       }
@@ -249,18 +254,20 @@ export default {
         // { label: "其他用水", prop: "qtWater", sortable: "custom" }
       ];
       this.homePageTableConfig.columnConfig = labelList;
+      this.tableLoad = true;
       let res = await EnergyApi.getEnergyRanking({
         redioType: 0,
-        startTime: this.curSystem=='zg'?moment().format('YYYY'):2019,
-        selectType: this.curSystem=='zg'?3:1,
+        startTime: this.iszg ? moment().format('YYYY') : 2019,
+        selectType: this.iszg ? 3 : 1,
         page: this.currentPage,
         rankType: this.rankType,
         size: 10,
         rank: this.rank
-      });
+      }).catch(() => this.tableLoad = false);
       if (res && res.total) {
         this.homePageTableConfig.data = res.value;
         this.homePageTableConfig.uiConfig.pagination.total = res.total;
+        this.tableLoad = false;
       }
     },
     DateTypeChange(value) {
@@ -270,20 +277,20 @@ export default {
     createCharts(res) {
       let resData = res.value;
       let myChart = this.$echarts.init(this.$refs.myChart);
-      let xAxis = resData.map(item =>item.date?item.date:'');
-        let legendData = [
-          moment().add(-1,'y').format("YYYY"),
-          moment().format("YYYY"),
-          "综合能耗同比增长率",
-          "综合能耗环比增长率"
-        ];
+      let xAxis = resData.map(item => item.date ? item.date : '');
+      let legendData = [
+        moment().add(-1, 'y').format("YYYY"),
+        moment().format("YYYY"),
+        "综合能耗同比增长率",
+        "综合能耗环比增长率"
+      ];
 
       let series = [
         {
-          name:moment().add(-1,'y').format("YYYY"),
+          name: moment().add(-1, 'y').format("YYYY"),
           type: "bar",
           data: resData.map(item => item.tqzh),
-          barMaxWidth:80,
+          barMaxWidth: 80,
           itemStyle: {
             normal: {
               color: "rgb(136,108,255)", //圈圈的颜色
@@ -298,7 +305,7 @@ export default {
           name: moment().format("YYYY"),
           type: "bar",
           data: resData.map(item => item.dqzh),
-          barMaxWidth:80,
+          barMaxWidth: 80,
           itemStyle: {
             normal: {
               color: "rgb(77,124,254)", //圈圈的颜色
@@ -393,17 +400,17 @@ export default {
         legendData,
         seriesData,
         titleText,
-        legendUi:{
-            top:'10',
-            right:'30',
-          },
-          seriesUi:{
-            center:['50%','50%']
-          }
+        legendUi: {
+          top: '10',
+          right: '30',
+        },
+        seriesUi: {
+          center: ['50%', '50%']
+        }
       };
       ChartUtils.hollowPieChart(myPieChart, data);
     },
-    piechart2(res){
+    piechart2(res) {
       let myPieChart = this.$echarts.init(this.$refs.pieChart2);
       let legendData = ["生活用水", "消防用水", "空调用水", "其他用水"];
       let dataList = [
@@ -434,13 +441,13 @@ export default {
         legendData,
         seriesData,
         titleText,
-         legendUi:{
-            top:'10',
-            right:'30',
-          },
-          seriesUi:{
-            center:['50%','50%']
-          }
+        legendUi: {
+          top: '10',
+          right: '30',
+        },
+        seriesUi: {
+          center: ['50%', '50%']
+        }
       };
       // window.onresize = myPieChart.resize;
       ChartUtils.hollowPieChart(myPieChart, data);
@@ -481,7 +488,7 @@ export default {
     }
   }
   .frist-tip {
-    margin-top: 0px!important;
+    margin-top: 0px !important;
   }
   .overview-list {
     flex-wrap: wrap;

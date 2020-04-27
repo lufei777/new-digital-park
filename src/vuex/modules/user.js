@@ -16,6 +16,7 @@ const mutations = {
 }
 
 const actions = {
+  // 登陆
   login({ commit, dispatch }, payload) {
     return new Promise((resolve, reject) => {
       SystemManageApi.login(payload).then(token => {
@@ -23,6 +24,7 @@ const actions = {
           // 设置token
           setToken(token);
           commit('setToken', token);
+          // 将token返回
           resolve(token);
         } else {
           reject(token)
@@ -32,24 +34,29 @@ const actions = {
       })
     })
   },
+  // 获取用户信息
   getUserInfo({ commit }) {
     return new Promise(async (resolve, reject) => {
-      let userInfo = await SystemManageApi.getUserInfo();
+      let userInfo = await SystemManageApi.getUserInfo().catch(err => reject(reject));
       commit('setUserInfo', userInfo);
       setUserInfo(userInfo);
+      // 将信息返回
       resolve(userInfo);
     })
   },
+  // 退出登陆
   logout({ commit }) {
     return new Promise(async (resolve, reject) => {
-      await SystemManageApi.logOut();
+      await SystemManageApi.logOut().catch(err => reject(reject));
       commit('setToken', '');
       commit('setUserInfo', {});
+      // 清除token，清除用户信息
       removeToken();
       removeUserInfo();
       resolve();
     })
   },
+  // 重置token和用户信息
   resetToken({ commit }) {
     return new Promise((resolve, reject) => {
       commit('setToken', '');

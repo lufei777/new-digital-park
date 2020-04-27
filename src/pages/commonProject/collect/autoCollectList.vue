@@ -49,7 +49,7 @@ export default {
   name: "AutoCollectList",
   data() {
     let _this = this;
-    let curSystem = window.czSystemConfig.curSystem
+    let curSystem = window.__CZ_SYSTEM
     let column1 =  [
         { label: "序号", prop: "xulie" },
         { label: "时间", prop: "time" },
@@ -90,7 +90,7 @@ export default {
   },
   computed:{
     curSystem() {
-      return window.czSystemConfig.curSystem;
+      return window.__CZ_SYSTEM;
     }
   },
   methods: {

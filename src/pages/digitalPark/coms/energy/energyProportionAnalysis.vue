@@ -18,12 +18,13 @@
 <script>
 import CommonApi from "../../../../service/api/common";
 import ChartUtils from "../../../../utils/chartUtils";
+import {isZG} from '@/utils/project';
+
 export default {
   name: "EnergyProportionAnalysis",
   components: {},
   props: ["moduleItem", "routeAddress"],
   data() {
-    let curSystem = window.__CZ_SYSTEM
     return {
       energy: 34,
       // energyList: [
@@ -40,7 +41,7 @@ export default {
       //     label: "热"
       //   }
       // ],
-      energyList:curSystem=='zg'?[
+      energyList:isZG()?[
         {
           value: 34,
           label: "电"

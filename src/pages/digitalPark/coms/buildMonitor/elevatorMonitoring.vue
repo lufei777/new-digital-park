@@ -1,7 +1,7 @@
 <template>
   <div class="elevator-monitor-coms">
     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
-    <div class="my-chart flex" v-if="curSystem!='zg'">
+    <div class="my-chart flex" v-if="!iszg">
       <div class="chart-item-box">
         <div ref="myChart1" class="chart-item"></div>
         <span>直梯</span>
@@ -11,13 +11,14 @@
         <span>扶梯</span>
       </div>
     </div>
-    <div class="my-chart" ref="myChart1" v-if="curSystem=='zg'"></div>
+    <div class="my-chart" ref="myChart1" v-if="iszg"></div>
   </div>
 </template>
 
 <script>
   import CommonApi from '@/service/api/common'
   import ChartUtils from '@/utils/chartUtils'
+  import {isZG} from '@/utils/project';
   export default {
     name: "elevatorMonitoring",
     props: ["moduleItem"],
@@ -27,8 +28,8 @@
       };
     },
     computed:{
-      curSystem(){
-        return window.__CZ_SYSTEM
+      iszg(){
+        return isZG();
       }
     },
     methods: {
@@ -37,7 +38,7 @@
           homeId:4
         })
         this.initChart1(res)
-        if(this.curSystem!='zg'){
+        if(this.iszg){
           this.initChart2(res)
         }
       },
@@ -64,7 +65,7 @@
             fontSize:this.moduleItem.largeScreen?this.moduleItem.fontSize:14
           }
         }
-        if(this.curSystem=='zg'){
+        if(this.iszg){
           legendData = ['上升','下降','停止']
         }
         let data = {
@@ -73,7 +74,7 @@
           legendUi
         };
         ChartUtils.hollowPieChart(myChart,data);
-        if(this.curSystem!='zg'){
+        if(!this.iszg){
           myChart.setOption({
             legend:{
               orient: 'horizontal',

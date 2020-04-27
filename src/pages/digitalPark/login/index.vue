@@ -2,7 +2,7 @@
   <div class="digital-park-login" @click="showErrTip=false">
     <img src="../../../../static/image/digitalPark/logo.png" class="logo-img" alt />
     <div class="login-box flex-column flex-align" v-loading="loading">
-      <span class="login-title">数字园区综合管理平台</span>
+      <span class="login-title">{{this.title}}</span>
       <div class="flex-item flex-align border-basic name-box">
         <i class="iconfont iconzhanghao login-icon name-icon"></i>
         <el-input
@@ -26,7 +26,14 @@
       <div class="flex-item">
         <el-checkbox v-model="checked">自动登录</el-checkbox>
       </div>
-      <div class="flex-item login-btn" @click="onClickLoginBtn">登录</div>
+      <el-button
+        class="flex-item"
+        :style="{ height:'60px','fontSize':'22px' }"
+        type="primary"
+        @click="onClickLoginBtn"
+      >登陆</el-button>
+
+      <!-- <div class="flex-item login-btn" @click="onClickLoginBtn">登录</div> -->
       <div v-show="showErrTip" class="flex-item error-box">
         <span>{{errTip}}</span>
       </div>
@@ -37,6 +44,8 @@
 <script>
 import SystemManageApi from '@/service/api/systemManage'
 import { mapMutations } from 'vuex';
+import { setToken, setIsCZClient } from '@/utils/auth';
+import { getProjectTitle } from '@/utils/project';
 export default {
   name: 'DigitalParkLogin',
   components: {
@@ -92,7 +101,23 @@ export default {
       })
     }
   },
+  computed: {
+    projectName() {
+      return window.__CZ_SYSTEM;
+    },
+    title() {
+      return getProjectTitle() || '数字园区综合管理平台';
+    }
+  },
   mounted() {
+    window.CZClient = {
+      setToken: (token, isCZClient = true) => {
+        setToken(token);
+        setIsCZClient(isCZClient);
+        // window.location.reload();
+        this.$router.push('/digitalPark/homePage');
+      }
+    }
   }
 }
 </script>

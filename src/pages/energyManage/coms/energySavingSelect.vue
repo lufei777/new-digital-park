@@ -59,6 +59,7 @@ import EnergyApi from "../../../service/api/energy";
 import TreeModal from '../../../components/treeModal/index'
 import moment from "moment";
 import CommonFun from '../../../utils/commonFun'
+import {isZG} from '@/utils/project';
 export default {
   name: "EnergySavingSelect",
   components: {
@@ -67,7 +68,6 @@ export default {
   props: ["energySaveFlag"],
   data() {
     let _this = this;
-    let curSystem = window.__CZ_SYSTEM
     return {
       curEnergy: "", //楼层检索
       curEnergyId:"0",
@@ -78,7 +78,7 @@ export default {
       energySubentryData: [],
       floorSelectData: "",
       // startTime: moment(new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000*10)).format("YYYY-MM"),
-      startTime: curSystem=='zg'?moment().format('YYYY-MM'):"2019-02",
+      startTime: isZG()?moment().format('YYYY-MM'):"2019-02",
       page: 1,
       tableData: {
         total: 0
@@ -160,6 +160,13 @@ export default {
       let res = await CommonApi.getEnergyListByGroup();
       if (this.energySaveFlag == 3 || this.energySaveFlag == 4) {
         this.energySubentryData = res[1].energyType;
+        this.energySubentryData.unshift({
+            energyType: null,
+            id: 37,
+            name: "水",
+            parent: 37
+        })
+        console.log("this.energySubentryData",this.energySubentryData)
         this.energySubentry = res[1].energyType[0].id;
       } else if (this.energySaveFlag == 1 || this.energySaveFlag == 2) {
         this.energySubentryData = res[0].energyType;

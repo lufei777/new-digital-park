@@ -120,7 +120,7 @@ export default {
     box-sizing: border-box;
   }
   .collapse-icon {
-    font-size: 24px;
+    font-size: 20px;
     line-height: 70px;
     padding-right: 20px;
     color: #969ca8;
@@ -136,7 +136,9 @@ export default {
   }
   .asset-nav-operator-box {
     float: right;
-    line-height: 70px;
+    display: flex;
+    height: 100%;
+    // line-height: 70px;
   }
   .common-tree-box {
     padding: 20px 0;
