@@ -160,6 +160,13 @@ export default {
       let res = await CommonApi.getEnergyListByGroup();
       if (this.energySaveFlag == 3 || this.energySaveFlag == 4) {
         this.energySubentryData = res[1].energyType;
+        this.energySubentryData.unshift({
+            energyType: null,
+            id: 37,
+            name: "水",
+            parent: 37
+        })
+        console.log("this.energySubentryData",this.energySubentryData)
         this.energySubentry = res[1].energyType[0].id;
       } else if (this.energySaveFlag == 1 || this.energySaveFlag == 2) {
         this.energySubentryData = res[0].energyType;
