@@ -11,7 +11,7 @@
                  :is="item.componentName"
                  :moduleItem="moduleItemData(item)"
                  class="item-component flex-colum-center"
-                 @click.native.self="onClickItemComponent(item)"
+                 @click.native="onClickItemComponent(item)"
       />
     </div>
 
@@ -116,7 +116,7 @@
       onClickItemComponent(item) {
         // console.log("clickitem", item)
         //需要后台配合修改
-        if (this.hideHeader) return;  //配置页点击不进行操作
+        if (this.hideHeader || item.moduleName=="功能模块入口") return;  //配置页点击不进行操作
 
         if (!item.routeAddress) {
           this.$message({
@@ -139,10 +139,10 @@
           menuTmp = secondMenu
         }
         // console.log("menuTmp", menuTmp)
-        this.$store.commit("digitalPark/menuList", menuTmp);
+        this.$store.commit("digitalPark/menuList", menuTmp||{});
         item.childNode = []
         item.id = item.forwardId || item.pid
-        CommonFun.loadPage(item)
+        CommonFun.loadPage(item,this.moduleData.largeScreen)
       },
       onClickMoreBtn(){
         Cookies.set('moduleType',2)

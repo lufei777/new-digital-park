@@ -1835,24 +1835,33 @@ class commonFun {
   }
 
   //重新整合跳转，包括跳旧项目、新项目、客户端
-  loadPage(item) {
+  loadPage(item,largeScreenFlag) {
+    if(largeScreenFlag) return ;
     store.commit("digitalPark/activeMenuIndex", this.setMenuIndex(item))
     if (item.routeAddress) {
       //客户端
       if (this.loadClientPage(item)) {
         return;
-      }
-      if (item.routeAddress.indexOf("@") != -1) {
+      }else if (item.routeAddress.indexOf("@") != -1) {
         //旧项目
         if (item.routeAddress == '@/html/docms/index.html?openid=emergency') {
           localStorage.setItem('backupType', 4)
         } else if (item.routeAddress == '@/html/docms/index.html?openid=assess') {
           localStorage.setItem('backupType', 5)
         }
-        router.push('/vibe-web')
-      } else {
-        //新项目
+        if(largeScreenFlag){
+            store.commit("digitalPark/largeScreenIframeSrc",
+            window.top.location.origin+'/#/vibe-web?updateId='+_.uniqueId())
+        }else{
+             router.push('/vibe-web')
+        }
+      }else {
+      //新项目
+      if(largeScreenFlag) {
+        store.commit("digitalPark/largeScreenIframeSrc", window.top.location.origin + '/#' + item.routeAddress)
+      }else{
         router.push(item.routeAddress);
+      }
       }
     } else {
       router.push("/digitalPark/defaultPage");

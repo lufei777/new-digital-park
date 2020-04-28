@@ -47,7 +47,7 @@
       margin-right: 5%;
     }
     .envir-content{
-      width:80%;
+      width:85%;
       height:95%;
     }
     .item-envir{
