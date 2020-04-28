@@ -132,6 +132,9 @@
       width:50%;
       height:100%;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .chart-item{
       width:100%;

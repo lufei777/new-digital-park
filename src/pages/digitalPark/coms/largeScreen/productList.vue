@@ -43,6 +43,9 @@
         let res = await DigitalParkApi.getProductList({
           language:Cookies.get('lang')
         })
+        // $(".fixed-pro-item").css({
+        //   height:$(".product-list").height()/3
+        // })
         if(this.productId){
           this.clientMenu = res.find((item)=>item.id==this.productId)
           this.fixedProList= this.clientMenu.childNode
