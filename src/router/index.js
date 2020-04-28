@@ -43,21 +43,9 @@ const router = new Router({
   "routes": DigitalRouters
 })
 
-// router.beforeEach((to, from, next) => {
-//   if (typeof to.meta.loginCheck === 'boolean' && !to.meta.loginCheck) {
-//     next()
-//   } else {
-//     axois.get('/oaApi/user/login').then(() => {
-//       next()
-//     }).catch(() => {
-//
-//     })
-//   }
-// })
-//
 router.beforeEach((to, from, next) => {
   const hasToken = getToken();
-  
+
   if (hasToken) {
     if (to.path === '/login') {
       next({ path: '/' })
