@@ -304,7 +304,7 @@
         }
       }
       .nav-right-item .el-input__inner {
-        width:150px;
+        // width:150px;
         font-size: @largeScreenFontSize;
         color: @white;
       }
@@ -319,6 +319,7 @@
 
       .nav-right-item .el-input__suffix {
         width:30px;
+        right: 10px;
         .el-input__suffix-inner{
           width:100%;
         }

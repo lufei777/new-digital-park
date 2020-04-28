@@ -229,11 +229,24 @@
         let data={
           titleText,
           legendData,
-          xAxis,
+          // xAxis,
           yAxis,
           series
         }
+        let option = {
+          xAxis:[
+            {
+               type: 'category',
+               data: xAxis,
+               axisLabel: {  
+                    interval:1,  
+                    rotate:40  
+                }  
+            }
+          ]
+        }
         ChartUtils.handleBarChart(this.myChart,data)
+        this.myChart.setOption(option)
       },
       async getZoomCompareTable(){
         let tableParams = {...this.commonParams,...{
@@ -318,7 +331,7 @@
         let data2={
           titleText,
           legendData,
-          xAxis,
+          // xAxis,
           yAxis,
           series,
           showSecondY:true
@@ -339,6 +352,16 @@
               }
             }
           ],
+          xAxis:[
+            {
+               type: 'category',
+               data: xAxis,
+               axisLabel: {  
+                    interval:0,  
+                    rotate:40  
+                }  
+            }
+          ]
         }
         ChartUtils.handleBarChart(this.myChart,data2)
         this.myChart.setOption(option)
@@ -402,11 +425,23 @@
         let data={
           titleText,
           legendData,
-          xAxis,
           yAxis,
           series
         }
+        let option = {
+          xAxis:[
+            {
+               type: 'category',
+               data: xAxis,
+               axisLabel: {  
+                    interval:0,  
+                    rotate:40  
+                }  
+            }
+          ]
+        }
         ChartUtils.handleBarChart(this.myChart,data)
+        this.myChart.setOption(option);
       },
       async getTypeTable(){
         let tableParams = {...this.commonParams,...{
@@ -489,7 +524,7 @@
           ]
         }
         ChartUtils.handleBarChart(this.myChart,data)
-         this.myChart.setOption(option);
+        this.myChart.setOption(option);
       },
       async getTimeEnergyTable(){
         let tableParams = {...this.commonParams,...{
