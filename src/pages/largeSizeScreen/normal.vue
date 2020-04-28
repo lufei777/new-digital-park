@@ -116,8 +116,7 @@
         this.moduleList = res.modules || []
         this.centerIndex = res.modules.findIndex(item => item.id == 0 && item.moduleList)
         this.drawPageStyle(res)
-
-        setTimeout(() => {
+        this.$nextTick(()=> {
           this.styleObj.centerSize = {
             "width": parseInt(($(".center-show").width() * this.widthPercent)) + 'px',
             "height": parseInt(($(".center-show").height() * this.heightPercent)) + 'px'
@@ -127,7 +126,7 @@
           $(".center-show").css(this.styleObj.centerStyle)
           $(".large-size-screen-normal .out-drag-product").css(this.styleObj.dragStyle)
           this.animationFlag = true
-        }, 500)
+        })
       },
       drawPageStyle(res) {
         let xLen = res.xModule.length + this.moduleMargin
