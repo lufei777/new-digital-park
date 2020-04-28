@@ -16,20 +16,22 @@
     </div>
 
      <draggable
-       v-if="type==2"
+        v-if="type==2"
         v-bind="getOptions()"
         :list="moduleData.moduleList"
         @start="onStart"
         :move="onMove"
         @end="onEnd"
         @change="onChange"
-        class="component-box com-width-border"
+        class="component-box flex-align-between"
+        :class="moduleData.moduleList.length<2?'radius-shadow':''"
         :id="moduleData.menuId"
       >
         <component
           v-for="(item,index) in moduleData.moduleList"
           :key="index"
-          :class="['flex-colum-center','drag-component',moduleData.moduleList.length>1?'two-component':'item-component']"
+          :class="['flex-colum-center','drag-component',
+                   moduleData.moduleList.length>1?'two-component radius-shadow':'item-component']"
           style="height: 100%;"
           :is="item.componentName"
           :moduleItem="item"
@@ -219,8 +221,9 @@
      box-sizing: border-box;
     .component-box{
       /*height:100%;*/
-      width:100%;
+      width:99%;
       flex-grow: 1;
+      box-sizing: border-box;
     }
     .item-component{
       height:100%;
@@ -231,7 +234,7 @@
     }
     .two-component{
       height:100%;
-      width:50%;
+      width:49%;
       float: left;
     }
     .my-chart{

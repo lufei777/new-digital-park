@@ -33,6 +33,10 @@ class EnergyApi {
   @url('/vibe-web/energyCount/energy/night')
   @get
   getEnergySavingNight(){}
+
+  @url("/vibe-web/getEnergyModule")
+  @get
+  getEnergyModuleData(){}
 }
 
 export default new EnergyApi()
