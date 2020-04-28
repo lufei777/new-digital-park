@@ -291,6 +291,40 @@ export const ExportData = {
   ]
 }
 
+// 错误提示
+export const AssetState = {
+  NORMAL: {
+    text: "NORMAL",
+    value: 1,
+    desc: '传感器状态正常',
+    valueStr: "正常"
+  },
+  WARNING: {
+    text: "WARNING",
+    value: 2,
+    desc: '监测值达到告警条件',
+    valueStr: "告警"
+  },
+  ERROR: {
+    text: "ERROR",
+    value: 3,
+    desc: '数据采集过程中发生错误',
+    valueStr: "错误"
+  },
+  INITIALIZE: {
+    text: "INITIALIZE",
+    value: 4,
+    desc: '正在获取数据',
+    valueStr: "初始化"
+  },
+  FAILURE: {
+    text: "FAILURE",
+    value: 5,
+    desc: '数据传输通信故障',
+    valueStr: "通信故障"
+  }
+}
+
 // 项目名称
 export const ProjectName = {
   // 中钢

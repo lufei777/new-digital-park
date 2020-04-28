@@ -29,9 +29,9 @@
 </template>
 
 <script>
-import echarts from "echarts";
-import CommonApi from "../../../service/api/common";
-import ChartUtils from "../../../utils/chartUtils";
+import CommonApi from "api/common";
+import ChartUtils from "utils/chartUtils";
+import commonFun from 'utils/commonFun';
 export default {
   name: "DeviceAnalysis",
   components: {},
@@ -80,8 +80,14 @@ export default {
           left: "left",
           top: 50
         },
-        color: ["dimGrey", "green", "orange", "red"]
+        color: ["dimGrey", "green", "orange", "red"],
+        toolbox: {
+          show: true,
+          feature: Object.assign({}, commonFun.chartsToolBox('assetStateTip').feature),
+          tooltip: commonFun.chartsToolBox('assetStateTip').tooltip
+        }
       };
+      console.log("createPieEcharts -> option", option)
       let data = {
         titleText,
         legendData,
@@ -91,7 +97,7 @@ export default {
       ChartUtils.hollowPieChart(this.myChart, data);
       this.myChart.setOption(option);
       let that = this;
-      this.myChart.on("click", function(val) {
+      this.myChart.on("click", function (val) {
         that.chartIndex = val.dataIndex;
         that.getTableData(val.dataIndex);
       });
@@ -126,7 +132,7 @@ export default {
             data: data.values,
             itemStyle: {
               normal: {
-                color: function(params) {
+                color: function (params) {
                   var colorList = ["dimGrey", "green", "orange", "red"];
                   return colorList[params.dataIndex];
                 }
@@ -172,7 +178,7 @@ export default {
     width: 49.5%;
     height: 450px;
     // margin:0 auto;
-    overflow: hidden;
+    // overflow: hidden;
     float: left;
   }
   .my-chart {
