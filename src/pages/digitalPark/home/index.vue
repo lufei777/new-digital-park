@@ -407,8 +407,9 @@ export default {
     /*background: pink;*/
     /*margin: 30px 0;*/
     padding: 20px 0;
-    height: 400px;
+    height:548px;
     font-size: 16px;
+    box-sizing: border-box;
   }
   .module-title {
     padding: 10px 0;
