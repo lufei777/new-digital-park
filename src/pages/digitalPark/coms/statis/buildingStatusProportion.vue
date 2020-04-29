@@ -33,7 +33,7 @@ export default {
         textStyleColor,
         legendUi: this.moduleItem.legendUi,
         seriesUi:{
-          center:['50%','50%']
+          // center:['50%','50%']
         }
       };
       ChartUtils.hollowPieChart(myPieChart, data);

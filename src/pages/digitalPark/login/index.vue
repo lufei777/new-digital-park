@@ -88,6 +88,7 @@ export default {
         Cookies.set('username', this.name)
         Cookies.set('moduleType', 2)
         this.$router.push("/digitalPark/homePage")
+        this.$store.dispatch('user/getUserInfo')
       }).catch(err => {
         this.errTip = '用户名或密码错误'
         this.showErrTip = true

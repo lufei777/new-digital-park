@@ -18,7 +18,8 @@ export const setUserInfo = (userInfo) => {
   return localStorage.setItem(UserInfoKey, JSON.stringify(userInfo))
 }
 export const getUserInfo = () => {
-  return JSON.parse(localStorage.getItem(UserInfoKey)) || {};
+  let tmp = localStorage.getItem(UserInfoKey);
+  return JSON.parse(tmp === 'undefined' ? '{}' : tmp) || {};
 }
 export const removeUserInfo = () => {
   return localStorage.removeItem(UserInfoKey)
