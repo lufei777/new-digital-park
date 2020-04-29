@@ -340,7 +340,7 @@ export default {
   .item-row-detail-table {
     margin-top: 20px;
     tr:nth-child(5) td {
-      border-bottom: 1px solid @mainBg;
+      border-bottom: 1px solid #EBEEF5;
     }
   }
   .item-row-detail-tip {
