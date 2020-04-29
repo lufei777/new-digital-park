@@ -177,8 +177,10 @@ export default {
         telephone: this.model.telephone,
         houseNumber: this.model.houseNumber
       });
+      console.log(999,res.list)
       if (res && res.list) {
         this.tenantManageTable.data = res.list;
+        
         this.tenantManageTable.uiConfig.pagination.total = res.total;
       }
     },
@@ -223,19 +225,19 @@ export default {
       this.showDeleteTip();
     },
     batchDels(obj) {
-      console.log(
-        "44444",
-        this.$refs["tenantManageTable"]
-          .getSelectedData()
-          .map(item => item.tenantId)
-      );
-      // this.tenantIds =
-      //   this.$refs["tenantManageTable"].getSelectedData().length &&
+      // console.log(
+      //   "44444",
       //   this.$refs["tenantManageTable"]
       //     .getSelectedData()
       //     .map(item => item.tenantId)
-      //     .join(",");
-      // this.showDeleteTip();
+      // );
+      this.tenantIds =
+        this.$refs["tenantManageTable"].getSelectedData().length &&
+        this.$refs["tenantManageTable"]
+          .getSelectedData()
+          .map(item => item.tenantId)
+          .join(",");
+      this.showDeleteTip();
     },
     editRow(obj) {
       this.$router.push({

@@ -48,11 +48,11 @@ export const LeaseManageDic = {
   HouseStatus: [
     {
       label: '已租',
-      value: 1
+      value: 2
     },
     {
       label: '待租',
-      value: 2
+      value: 1
     }
   ]
 }

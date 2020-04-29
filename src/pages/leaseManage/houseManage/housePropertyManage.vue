@@ -197,13 +197,7 @@ export default {
         commonFun.deleteTip(this, false, "请选择数据");
         return;
       }
-      let ids = _.reduce(
-        selectedData,
-        (result, cur, curindex) => {
-          return result + "," + cur.id;
-        },
-        ""
-      );
+      let ids = selectedData.map(item=>item.id).join(",")
       commonFun.deleteTip(
         this,
         true,
