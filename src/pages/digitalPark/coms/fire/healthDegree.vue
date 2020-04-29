@@ -22,7 +22,7 @@ export default {
       //
       let res = await CommonApi.getHomeAssetHealth({
         spaceId: 1,
-        kind: 2002
+        kind: 2001
       });
       let resData = [
         { name: "健康", value: res.health },

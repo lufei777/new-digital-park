@@ -41,6 +41,7 @@ import realTimeStatus from '../buildMonitor/realTimeStatus'
 import elecSum from '../energy/elecSum'
 import waterSum from '../energy/waterSum'
 import environmentLine from '../buildMonitor/environmentLine'
+import alarmListTable from '../alarm/alarmListTable'
 class exportComs {
   exportComsList = {
     energyProportionAnalysis,
@@ -85,7 +86,8 @@ class exportComs {
     realTimeStatus,
     elecSum,
     waterSum,
-    environmentLine
+    environmentLine,
+    alarmListTable
   }
 }
 export default new exportComs()

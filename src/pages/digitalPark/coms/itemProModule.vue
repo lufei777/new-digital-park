@@ -31,7 +31,7 @@
           v-for="(item,index) in moduleData.moduleList"
           :key="index"
           :class="['flex-colum-center','drag-component',
-                   moduleData.moduleList.length>1?'two-component radius-shadow':'item-component']"
+                   moduleData.moduleList.length>1?'two-component radius-shadow':'item-component padding-box']"
           style="height: 100%;"
           :is="item.componentName"
           :moduleItem="item"
@@ -260,6 +260,10 @@
       width:100%;
       text-align: left;
       padding-left:5%;
+      box-sizing: border-box;
+    }
+    .padding-box{
+      padding:20px;
       box-sizing: border-box;
     }
   }
