@@ -113,6 +113,7 @@ export default {
             type: "success",
             message: res
           });
+          this.$store.dispatch('user/getUserInfo');
         }).finally(e => {
           hide()
         })

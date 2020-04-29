@@ -255,7 +255,7 @@ export default {
         end: '',
         pageCount: 10,
       })
-      this.alarmListCount = res.total>99?'99+':99
+      this.alarmListCount = res.total>99?'99+':res.total
     }
   },
   created() {
