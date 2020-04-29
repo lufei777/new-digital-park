@@ -266,6 +266,52 @@ export const RevenueExpendManageDic = {
   }
 }
 
+// 停车管理
+export const parkingManageDic = {
+  isNull: [
+    {
+      label: '有停车',
+      value: 1
+    },
+    {
+      label: '车空位',
+      value: 2
+    }
+  ],
+  carNumColor: [
+    {
+      label: '蓝',
+      value: 0
+    },
+    {
+      label: '黄',
+      value: 1
+    },
+    {
+      label: '白',
+      value: 2
+    },
+    {
+      label: '黑',
+      value: 3
+    },
+    {
+      label: '未识别',
+      value: 99
+    }
+  ],
+  carType: [
+    {
+      label: '小型车',
+      value: 1
+    },
+    {
+      label: '大型车',
+      value: 2
+    }
+  ]
+}
+
 export const BooleanDic = {
   isOrNot: [
     { label: "是", value: "1" },

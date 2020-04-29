@@ -2,9 +2,9 @@ export default [{
     path: '/parkinglotmanage',
     name: 'parkinglotmanage',
     meta: { title: '停车场管理' },
-    // component: () => import('@/pages/parkingLotManage'),
-    component: () => import('@/pages/commonProject/coms/commonIndex'),
-    redirect: '/parkinglotmanage/accessrecord',
+    component: () => import('@/pages/parkingLotManage'),
+    // component: () => import('@/pages/commonProject/coms/commonIndex'),
+    redirect: '/parkinglotmanage/parkinglotrecord',
     children: [{
         path: 'accessrecord',
         name: 'accessrecord',
@@ -30,5 +30,10 @@ export default [{
         name: 'parkingdetail',
         meta: { title: '详情查看' },
         component: () => import('@/pages/parkingLotManage/parkingdetail'),
+    }, {
+        path: 'parkingplacerecord',
+        name: 'parkingplacerecord',
+        meta: { title: '车位停车记录' },
+        component: () => import('@/pages/parkingLotManage/parkingPlaceRecord'),
     }],
 }]

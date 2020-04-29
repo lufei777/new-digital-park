@@ -10,7 +10,7 @@
     :header-align="headerAlign"
     :render-header="col.renderHeader"
   >
-  <!-- 使用column组件会排序错乱，如果加 width 1px的column，则边框会变粗 -->
+    <!-- 使用column组件会排序错乱，如果加 width 1px的column，则边框会变粗 -->
     <template v-for="col in columnConfig">
       <multi-header-column
         v-if="col.children && col.children.length"
@@ -74,12 +74,21 @@
                 disabled
               />
             </span>
+            <span v-else-if="['img'].includes(col.type)">
+              <z-img v-model="scopeRow.row[col.prop]">
+                <!-- <template slot="placeholder" slot-scope="scope">
+                  <slot :name="`${col.prop}Placeholder`" :scope="scope"></slot>
+                </template>
+                <template slot="error" slot-scope="scope">
+                  <slot :name="`${col.prop}Error`" :scope="scope"></slot>
+                </template>-->
+              </z-img>
+            </span>
             <span v-else v-html="_columnFormatter(scopeRow,col)"></span>
           </template>
         </template>
       </el-table-column>
     </template>
-    
   </el-table-column>
 </template>
 <script>
