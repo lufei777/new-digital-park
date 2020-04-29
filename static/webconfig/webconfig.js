@@ -4,4 +4,4 @@
  * zg  中钢
  */
 
-window.__CZ_SYSTEM = '';
+window.__CZ_SYSTEM = 'zg';

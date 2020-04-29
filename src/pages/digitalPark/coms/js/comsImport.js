@@ -37,6 +37,10 @@ import productList from '../largeScreen/productList'
 import largeScreen from '../largeScreen/largeScreen'
 import videoMonitoringStatus from '../buildMonitor/videoMonitoringStatus'
 import doorMagnetic from '../fire/doorMagnetic'
+import realTimeStatus from '../buildMonitor/realTimeStatus'
+import elecSum from '../energy/elecSum'
+import waterSum from '../energy/waterSum'
+import environmentLine from '../buildMonitor/environmentLine'
 class exportComs {
   exportComsList = {
     energyProportionAnalysis,
@@ -77,7 +81,11 @@ class exportComs {
     productList,
     largeScreen,
     videoMonitoringStatus,
-    doorMagnetic
+    doorMagnetic,
+    realTimeStatus,
+    elecSum,
+    waterSum,
+    environmentLine
   }
 }
 export default new exportComs()
