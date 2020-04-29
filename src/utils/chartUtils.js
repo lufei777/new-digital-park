@@ -65,6 +65,7 @@ class chartUtils {
     let { legendUi={},legendUi:{textStyle:legendTextStyle={}}={} } = data
     let { seriesUi={},seriesUi:{label:seriesLabel={}}={}} = data
     let {normal:seriesNormal={},emphasis:seriesEmphasis={}} = seriesLabel
+    let { titleUi={},titleUi:{textStyle:titleTextStyle={}}={}} = data
     // console.log("data",data)
     // console.log("1",legendTextStyle,legendUi)
     // console.log(seriesLabel,seriesNormal,seriesEmphasis)
@@ -72,12 +73,13 @@ class chartUtils {
     let option = {
       title: {
         text: data.titleText,
-        left: '4%',
+        left: titleUi.left || "4%",
         padding: [24, 0],
         textStyle: {
           color: '#666666FF',
-          fontWeight:'500',
-          align: 'top'
+          fontWeight:titleTextStyle.fontWeight || '500',
+          align: 'top',
+          fontSize:titleTextStyle.fontSize || ""
         }
       },
       tooltip: {

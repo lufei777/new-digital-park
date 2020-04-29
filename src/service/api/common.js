@@ -323,6 +323,10 @@ class CommonApi {
   @url("/vibe-web/energyCount/energy/getLastNumberExcel")
   @get
   exportLastNumber(){}
+
+  @url("/vibe-web/energy/energyProportion")
+  @get
+  energyProportion(){}
 }
 
 export default new CommonApi()
