@@ -69,7 +69,7 @@ export default {
     createPieEcharts(res) {
       this.myChart = this.$echarts.init(this.$refs.myChart);
       let titleText = "传感器状态统计";
-      let legendData = ["不可用", "正常", "警告", "错误"];
+      let legendData = res.legend;
       let seriesData = res.values;
       let seriesName = "监控器状态";
       let option = {
