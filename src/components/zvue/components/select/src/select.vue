@@ -159,7 +159,7 @@ export default {
       return tempArr;
     },
     noMore() {
-      return this.end >= this.netDic.length;
+      return this.inifitescroll ? this.end >= this.netDic.length : false;
     }
   },
   watch: {
