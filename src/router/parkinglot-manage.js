@@ -2,8 +2,8 @@ export default [{
     path: '/parkinglotmanage',
     name: 'parkinglotmanage',
     meta: { title: '停车场管理' },
-    component: () => import('@/pages/parkingLotManage'),
-    // component: () => import('@/pages/commonProject/coms/commonIndex'),
+    // component: () => import('@/pages/parkingLotManage'),
+    component: () => import('@/pages/commonProject/coms/commonIndex'),
     redirect: '/parkinglotmanage/parkinglotrecord',
     children: [{
         path: 'accessrecord',
