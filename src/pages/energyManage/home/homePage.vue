@@ -299,7 +299,9 @@ export default {
         lastTime: this.BeforeTime,
         floorId: 1
       });
-      this.createCharts(res);
+      if(!this.iszg) {
+        this.createCharts(res);
+      }
     },
     async rankingList() {
       let labelList = [
