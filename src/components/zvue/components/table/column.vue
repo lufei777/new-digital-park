@@ -64,6 +64,16 @@
                 disabled
               />
             </span>
+            <span v-else-if="['img'].includes(col.type)">
+              <z-img v-model="scopeRow.row[col.prop]">
+                <!-- <template slot="placeholder" slot-scope="scope">
+                  <slot :name="`${col.prop}Placeholder`" :scope="scope"></slot>
+                </template>
+                <template slot="error" slot-scope="scope">
+                  <slot :name="`${col.prop}Error`" :scope="scope"></slot>
+                </template> -->
+              </z-img>
+            </span>
             <span v-else v-html="_columnFormatter(scopeRow,col)"></span>
           </template>
         </template>
@@ -77,6 +87,7 @@ import { validatenull } from "../../utils/validate";
 import formTemp from "../formtemp";
 import { DIC_SPLIT } from "../../global/variable";
 import multiHeaderColumn from './multiHeaderColumn';
+import zImg from './z-img';
 
 export default {
   name: "column",
@@ -93,7 +104,7 @@ export default {
       default: []
     }
   },
-  components: { formTemp, multiHeaderColumn },
+  components: { formTemp, multiHeaderColumn, zImg },
   data() {
     return {
       DIC: this.crud.DIC,

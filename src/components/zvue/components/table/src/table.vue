@@ -28,6 +28,7 @@
         :data="tableShowData"
         :height="tableHeight"
         :size="controlSize"
+        :show-header="options.showHeader"
         @current-change="_currentChange"
         @row-click="rowClick"
         @row-dblclick="rowDblclick"
@@ -182,7 +183,7 @@ let dblclickTimer = null;
 let paginationTimer = null;
 
 //点击事件屏蔽列
-let preventClick = ["selection", "operation"];
+let preventClick = ["selection", "operation", "img"];
 
 export default {
   name: "zTable",
@@ -274,7 +275,7 @@ export default {
         this._loadServerMode(this.isServerMode.data);
       } else {
         //如果是刷新表格，如果data为空，说明是在外部使用ajax请求数据，则出现加载动画，3秒后加载动画关闭
-        //  || !this.options.data || this.options.data.length === 0  感觉没什么用，所以去掉了
+        //  || !this.options.data || this.options.data.length === 0
         if (reload) {
           this.loading = true;
           setTimeout(() => {
@@ -381,7 +382,7 @@ export default {
         return this.$axios({ mehtod, url, data });
       }
     },
-    // 放进方法队列
+    //放进方法队列
     _pushInMethodsQueue(fn, params) {
       this.methodsQueue.push({
         fn: fn,
@@ -438,12 +439,12 @@ export default {
       // 设置总页数为null，这样在数据更新后没有手动设置total，会自动读取数据长度
       // this.setPaginationTotal(null);
     },
-    // 分页模式，每页显示数量变化时触发
+    //分页模式，每页显示数量变化时触发
     _handleSizeChange(pageSize) {
       this.pageSize = pageSize;
       this._handlerPagination(pageSize, this.currentPage);
     },
-    // 分页模式，切换页时触发
+    //分页模式，切换页时触发
     _handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
       this._handlerPagination(this.pageSize, currentPage);
@@ -466,16 +467,16 @@ export default {
     _currentChange(currentRow, oldCurrentRow) {
       this.currentRowData = currentRow;
       this.lastCurrentRowData = oldCurrentRow;
+
+      this.$emit("current-change", currentRow, oldCurrentRow);
     },
 
     /**
      * 以下行编辑
      */
-    // 编辑按钮显示文字
     _editBtnText(row, index) {
       return row.$cellEdit === true ? "保 存" : "编 辑";
     },
-    // 行编辑配置rule收集
     formRulesInit() {
       this.propOption.forEach(ele => {
         if (ele.rules) this.formRules[ele.prop] = ele.rules;
@@ -505,7 +506,6 @@ export default {
         }
       });
     },
-    // 点击编辑按钮方法
     rowCell(row, index) {
       if (row.$cellEdit) {
         this.rowCellUpdate(row, index);
@@ -513,7 +513,7 @@ export default {
         this.rowCellEdit(row, index);
       }
     },
-    // 单元格新增
+    //单元格新增
     rowCellAdd(obj = {}) {
       const len = this.tableShowData.length;
       this.tableShowData.push(
@@ -530,7 +530,7 @@ export default {
       this.formIndexList.push(len);
       return len;
     },
-    // 行编辑取消
+    //行取消
     rowCanel(row, index) {
       if (this.validatenull(row[this.rowKey])) {
         this.tableShowData.splice(index, 1);
@@ -559,7 +559,7 @@ export default {
         this.formIndexList.push(index);
       }, 1000);
     },
-    // 单元格更新
+    //单元格更新
     rowCellUpdate(row, index) {
       this.btnDisabled = true;
       this.asyncValidator(this.formCellRules, row)
@@ -670,7 +670,6 @@ export default {
         this.tableData = this.allData;
         return;
       }
-      
       //如果有排序方法，则执行
       if (this.tableMethods.sortChange) {
         this.tableMethods.sortChange(sortObj, this);
@@ -966,7 +965,7 @@ export default {
     tableData(newVal, oldVal) {
       if (newVal instanceof Array) {
         this._getPatinationData();
-        //加载中结束  此处设置loading false，会导致一开始手动设置load无效
+        //加载中结束
         // this.loading = false;
       } else {
         this.$notify({

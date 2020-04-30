@@ -41,4 +41,13 @@ export default new class {
   @url('/oaApi/car/getCarEntryExit')
   @get
   getCarEntryExit() { }
+
+  /**
+   * 车位停车记录
+   * send     { pageNum:Number,pageSize:Number,carNum:Number}
+   * back     {pageNum,pageSize,total,pages,list:Array}
+   */
+  @url('/vibe-web/timeloit/carList')
+  @get
+  getCarPlaceList() { }
 }
