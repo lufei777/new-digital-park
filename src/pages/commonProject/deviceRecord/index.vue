@@ -34,10 +34,11 @@
           <z-upload
             onlyButton
             v-model="fileList"
+            buttonText="导入"
             :showFileList="false"
             :action="uploadAction"
             :accept="['xls', 'xlsx', 'csv']"
-            buttonText="导入"
+            :uploadAfter="uploadSuccess"
           ></z-upload>
           <!-- <el-button type="primary" class="" @click="onClickImportBtn">导入</el-button> -->
           <el-button type="primary" icon="el-icon-delete" @click="onClickMultipleDelBtn">删除记录</el-button>
@@ -123,14 +124,14 @@ export default {
             {
               type: "basic",
               label: "编辑",
-              handler: function(data) {
+              handler: function (data) {
                 _this.editRow(data.row);
               }
             },
             {
               type: "basic",
               label: "删除",
-              handler: function(data) {
+              handler: function (data) {
                 _this.deleteRow(data.row);
               }
             }
@@ -179,7 +180,7 @@ export default {
         {
           label: "表类型",
           prop: "meterType",
-          formatter: function(row, value) {
+          formatter: function (row, value) {
             return value ? "虚表" : "实表";
           }
         },
@@ -284,6 +285,12 @@ export default {
       $(".common-tree-box").css({
         height: $(document).height() - 110 + "px"
       });
+    },
+    // 导入成功
+    uploadSuccess(res, show, hide) {
+      show();
+      hide();
+      this.getMeterTable();
     }
   },
   mounted() {
@@ -340,7 +347,7 @@ export default {
   .item-row-detail-table {
     margin-top: 20px;
     tr:nth-child(5) td {
-      border-bottom: 1px solid #EBEEF5;
+      border-bottom: 1px solid #ebeef5;
     }
   }
   .item-row-detail-tip {
