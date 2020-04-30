@@ -17,7 +17,7 @@ export default [{
     path:'/addCollect',
     name:'AddCollect',
     component:AddCollect,
-    meta:{title:'编辑采集'}
+    meta:{title:'人工采集'}
   },{
     path:'/autoCollect',
     name:'AutoCollectList',

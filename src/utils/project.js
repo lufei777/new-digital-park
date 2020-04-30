@@ -1,5 +1,5 @@
 import { ProjectName, Title } from './dictionary';
-const { ZG } = ProjectName;
+const { ZG, YDCity } = ProjectName;
 
 export const getProjectName = () => {
   return window.__CZ_SYSTEM;
@@ -12,3 +12,12 @@ export const getProjectTitle = () => {
 export const isZG = () => {
   return getProjectName() === ZG;
 }
+
+export const getLargeScreenName = () => {
+  return window.__CZ_LargeScreen;
+}
+
+export const isYD = () => {  //伊甸城
+  return getLargeScreenName() === YDCity;
+}
+
