@@ -1,52 +1,48 @@
 <template>
-  <div class="tenant-manage panel-container">
-    <div class="condition-box panel">
-      <z-form
-        :ref="tenantManageForm.ref"
-        :options="tenantManageForm"
-        v-model="model"
-        @submit="submit"
-        @reset-change="resetChange"
-      >
+  <div class="panel-container">
+    <div id="houseproperty-form" class="panel">
+      <z-form :ref="formOptions.ref" :options="formOptions" v-model="model" @submit="submit">
         <template slot="btn" slot-scope="obj">
           <div>
-            <el-button :disabled="obj.disabled" type="primary" @click="onClickSearchBtn(obj)">搜索</el-button>
+            <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">搜索</el-button>
             <el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>
           </div>
         </template>
       </z-form>
     </div>
 
-    <div class="tenant-manage-table panel">
-      <z-table :ref="tenantManageTable.ref" :options="tenantManageTable">
+    <div class="table panel">
+      <z-table :ref="tableOptions.ref" :options="tableOptions">
         <template slot="custom-top" slot-scope="obj">
-          <div class="operator-box flex-row-reverse">
-            <el-button :size="obj.size" type="primary" @click="batchDels(obj)">批量删除</el-button>
-            <el-button :size="obj.size" type="primary" @click="addTenant(obj)">新增</el-button>
-          </div>
+          <el-button :size="obj.size" type="primary" @click="add(obj)">新增</el-button>
+          <el-button :size="obj.size" type="primary" @click="bulkDel(obj)">批量删除</el-button>
         </template>
-
         <template slot="operation" slot-scope="obj">
-          <el-button type="text" @click="detailTenant(obj)">详情</el-button>
-          <el-button type="text" @click="editRow(obj)">编辑</el-button>
+          <el-button type="text" @click="detail(obj)">详情</el-button>
+          <el-button type="text" @click="edit(obj)">编辑</el-button>
           <el-button type="text" @click="delRow(obj)">删除</el-button>
         </template>
       </z-table>
     </div>
   </div>
 </template>
-
 <script>
-import LeaseManageApi from "../../../service/api/leaseManage";
-import CommonFun from "../../../utils/commonFun";
+import { LeaseManageDic } from "@/utils/dictionary";
+import leaseManageApi from "api/leaseManage";
+import commonFun from "@/utils/commonFun.js";
+
+const dateValueFormat = "yyyy-MM-dd HH:mm:ss";
+let tableSendData = {
+  pageNum: 1,
+  pageSize: 10
+};
+
 export default {
-  name: "TenantManage",
   data() {
-    let _this = this;
     return {
       model: {},
-      tenantManageForm: {
-        ref: "tenantManageForm",
+      formOptions: {
+        ref: "Form",
         labelWidth: "100",
         size: "medium",
         menuPosition: "right",
@@ -86,7 +82,7 @@ export default {
           {
             type: "date",
             label: "签约时间",
-            prop: "startTime",
+            prop: "contractTime",
             placeholder: "选择日期时间",
             // clearable: true,
             span: 4,
@@ -111,8 +107,8 @@ export default {
           }
         ]
       },
-      tenantManageTable: {
-        ref: "tenantManageTable",
+      tableOptions: {
+        ref: "Table",
         customTop: true,
         customTopPosition: "right",
         operation: {
@@ -121,133 +117,69 @@ export default {
         props: {
           rowKey: "tenantId"
         },
-        data: [],
-        columnConfig: [],
+        serverMode: {
+          url: leaseManageApi.tenantList,
+          data: tableSendData
+        },
+        columnConfig: [
+          { label: "合同编号", prop: "tenantNumber" },
+          { label: "合同名称", prop: "contractName" },
+          { label: "所租房产", prop: "houseName" },
+          { label: "租户名称", prop: "tenantName" },
+          { label: "联系方式", prop: "telephone" },
+          { label: "签约时间", prop: "contractTime" },
+          { label: "到期时间", prop: "expireTime" }
+        ],
         uiConfig: {
           height: "auto", //"", //高度
           selection: true, //是否多选
-          showIndex: {
-            width: 50
-          },
-          pagination: {
-            //是否分页，分页是否自定义
-            layout: "total,->, prev, pager, next, jumper",
-            pageSizes: [10, 20, 50],
-            handler(pageSize, currentPage, table) {
-              _this.handleCurrentChange(currentPage);
-            }
-          }
         }
-      },
-      currentPage: 1,
-      tenantIds: ""
+      }
     };
   },
   methods: {
-    submit() {},
-    resetChange() {},
-    addTenant() {
+    search(...args) {
+      this.Form.submit();
+    },
+    submit(model, hide) {
+      hide();
+      this.tableOptions.serverMode.data = Object.assign(
+        _.cloneDeep(tableSendData),
+        model
+      );
+      this.refreshTable();
+    },
+    clearForm() {
+      this.Form.resetForm();
+    },
+    add(obj) {
       this.$router.push("/addTenantManage");
     },
-    onClickSearchBtn2() {
-      this.curPage = 1;
-      this.$refs[this.assetsTableConfig.ref].setCurrentPage(1);
-      this.getAssetList();
-    },
-    clearForm(...args) {
-      console.log("清空", ...args);
-      this.$refs[this.tenantManageForm.ref].resetForm();
-    },
-    async tenantList() {
-      let labelList = [
-        { label: "合同编号", prop: "tenantNumber" },
-        { label: "合同名称", prop: "contractName" },
-        { label: "所租房产", prop: "houseName" },
-        { label: "租户名称", prop: "tenantName" },
-        { label: "联系方式", prop: "telephone" },
-        { label: "签约时间", prop: "contractTime" },
-        { label: "到期时间", prop: "expireTime" }
-      ];
-      this.tenantManageTable.columnConfig = labelList;
-      let res = await LeaseManageApi.tenantList({
-        pageNum: this.currentPage,
-        pageSize: 10,
-        tenantNumber: this.model.tenantNumber,
-        tenantName: this.model.tenantName,
-        telephone: this.model.telephone,
-        houseNumber: this.model.houseNumber
+    deleteRow(ids) {
+      leaseManageApi.delTenant({ tenantIds: ids }).then(res => {
+        this.refreshTable();
       });
-      console.log(999,res.list)
-      if (res && res.list) {
-        this.tenantManageTable.data = res.list;
-        
-        this.tenantManageTable.uiConfig.pagination.total = res.total;
+    },
+    bulkDel({ selectedData }) {
+      if (!selectedData.length) {
+        commonFun.deleteTip(this, false, "请选择数据");
+        return;
       }
-    },
-    onClickSearchBtn(...args) {
-      this.$refs[this.tenantManageForm.ref].getFormModel(res => {
-        console.log("model", res);
-      });
-      console.log("搜索", ...args);
-      this.curPcurrentPageage = 1;
-      // this.$refs[this.tenantManageTableConfig.ref].setCurrentPage(1)
-      this.tenantList();
-    },
-    handleCurrentChange(val) {
-      this.currentPage = val;
-      this.tenantList();
-    },
-    showDeleteTip() {
-      CommonFun.deleteTip(
+      let ids = selectedData.map(item => item.tenantId).join(",")
+      commonFun.deleteTip(
         this,
-        this.tenantIds,
-        "请至少选择一条信息！",
-        this.sureDelete,
-        this.cancelDelete
+        true,
+        "确定要删除吗?",
+        () => {
+          this.deleteRow(ids);
+        },
+        () => { }
       );
     },
-    async sureDelete() {
-      await LeaseManageApi.delTenant({
-        tenantIds: this.tenantIds
-      });
-      this.$message({
-        type: "success",
-        message: "删除成功!"
-      });
-      this.tenantIds = "";
-      this.tenantList();
+    bulkEdit(obj) {
+      console.log(obj);
     },
-    cancelDelete() {
-      this.tenantIds = "";
-    },
-    delRow(obj) {
-      this.tenantIds = obj.scopeRow.row.tenantId;
-      this.showDeleteTip();
-    },
-    batchDels(obj) {
-      // console.log(
-      //   "44444",
-      //   this.$refs["tenantManageTable"]
-      //     .getSelectedData()
-      //     .map(item => item.tenantId)
-      // );
-      this.tenantIds =
-        this.$refs["tenantManageTable"].getSelectedData().length &&
-        this.$refs["tenantManageTable"]
-          .getSelectedData()
-          .map(item => item.tenantId)
-          .join(",");
-      this.showDeleteTip();
-    },
-    editRow(obj) {
-      this.$router.push({
-        name: "addTenantManage",
-        query: {
-          tenantId: obj.scopeRow.row.tenantId
-        }
-      });
-    },
-    detailTenant(obj) {
+    detail({ scopeRow: { $index, row, _self } }) {
       this.$router.push({
         name: "addTenantManage",
         query: {
@@ -255,40 +187,40 @@ export default {
             disabled: true,
             submitBtn: false
           }),
-          tenantId: obj.scopeRow.row.tenantId
+          tenantId: row.tenantId
         }
       });
+    },
+    edit({ scopeRow: { $index, row, _self } }) {
+      this.$router.push({
+        name: "addTenantManage",
+        query: {
+          tenantId: row.tenantId
+        }
+      });
+    },
+    delRow({ scopeRow: { $index, row, _self } }) {
+      commonFun.deleteTip(
+        this,
+        true,
+        "确定要删除吗?",
+        () => {
+          this.deleteRow(row.tenantId);
+        },
+        () => { }
+      );
+    },
+    refreshTable() {
+      this.Table.refreshTable();
     }
   },
-  mounted() {
-    this.tenantList();
+  computed: {
+    Form() {
+      return this.$refs[this.formOptions.ref];
+    },
+    Table() {
+      return this.$refs[this.tableOptions.ref];
+    }
   }
 };
 </script>
-
-<style lang="less">
-.tenant-manage {
-  .condition-box {
-    margin-bottom: 20px;
-    background: @white;
-    padding: 20px;
-    // background: pink;
-  }
-  .tenant-manage-table {
-    background: @white;
-    padding: 20px;
-    .operator-box {
-      background: @white;
-      .el-button {
-        margin-left: 20px;
-      }
-    }
-  }
-  .el-form-item {
-    margin-bottom: 0;
-  }
-  // .el-input {
-  //   width: 180px!important;
-  // }
-}
-</style>
