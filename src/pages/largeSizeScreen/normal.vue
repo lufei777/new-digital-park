@@ -1,6 +1,7 @@
 <template>
-  <div class="large-size-screen-normal">
-    <Header fromFlag="2" :headName="headName"/>
+  <div class="large-size-screen-normal" :class="getBasicBg">
+    <Header fromFlag="2" :headName="headName" v-if="!isyd"/>
+    <YDHeader v-if="isyd"/>
     <div class="content flex">
       <draggable
         class="drag-panel"
@@ -38,13 +39,16 @@
   import DigitalParkApi from '@/service/api/digitalPark'
   import ItemProModule from '@/pages/digitalPark/coms/itemProModule'
   import CommonFun from '@/utils/commonFun'
+  import { isYD } from "@/utils/project";
+  import YDHeader from '../digitalPark/coms/largeScreen/ydHeader'
 
   export default {
     name: 'LargeSizeScreenNormal',
     components: {
       Header,
       draggable,
-      ItemProModule
+      ItemProModule,
+       YDHeader
     },
     props: ['fullStatus'],  //配置页时是否是全屏状态:full noFull
     data() {
@@ -69,7 +73,16 @@
         innerObj:{}
       }
     },
-    computed: {},
+    computed: {
+      getBasicBg(){
+        return {
+          'haveBg':!isYD,
+        }
+      },
+      isyd(){ //是否是伊甸城
+        return isYD
+      }
+    },
     watch: {
       fullStatus(){
         this.getLargeScreenModuleList()
@@ -84,8 +97,9 @@
         return{
          'center-show':centerFlag,
           'out-drag-product':!centerFlag,
-          'out-drag-product-normal':!centerFlag && item.bgStatus=='normal',
-          'out-drag-product-hover':!centerFlag && item.bgStatus=='hover',
+          'out-drag-product-normal':!centerFlag && item.bgStatus=='normal' && !isYD,
+          'out-drag-product-hover':!centerFlag && item.bgStatus=='hover' && !isYD,
+          'yd-out-drag-product':!centerFlag && isYD,
         }
       },
       getOptions() {
@@ -149,6 +163,7 @@
           "grid-column-end": xLen < this.moduleMaxWidth ? this.centerIndex + 4 : this.centerIndex + 3,
           "grid-row-start": 1,
           "grid-row-end": xLen < this.moduleMaxWidth ? 4 : 3,
+          visibility:isYD?"collapse":'unset'
         }
 
         this.styleObj.dragStyle = {
@@ -156,6 +171,7 @@
           height: res.yModule.length + 'px',
           "grid-column": 'unset',
           "grid-row": 'unset',
+          "visibility":'unset'
         }
       },
       setConfigParams() {
@@ -244,6 +260,9 @@
       },
       changeBg(item,flag){
         console.log(item)
+        if(isYD){
+          return;
+        }
         // debugger
         this.moduleList.map((item)=>{
           item.bgStatus='normal'
@@ -277,11 +296,14 @@
 </script>
 
 <style lang="less">
-  .large-size-screen-normal {
-    height: 100%;
+  .haveBg{
     background-image: url('../../../static/image/digitalPark/home.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
+  }
+  .large-size-screen-normal {
+    height: 100%;
+
     font-size: @largeScreenFontSize;
     color: @white;
 
@@ -354,6 +376,11 @@
     }
     .out-drag-product-hover{
       background-image: url('../../../static/image/digitalPark/content_bg4.png');
+    }
+
+    .yd-out-drag-product{
+      background:rgba(0,0,0,.7);
+      border-radius: 16px;
     }
 
     .drag-panel {

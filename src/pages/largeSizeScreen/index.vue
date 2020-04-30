@@ -33,8 +33,6 @@
         this.height = document.body.offsetHeight
         if(this.width<2610 && this.height<1468){
           this.curCom = 'Dashboard'
-        }else if(window.__CZ_LargeScreen=='ydCity'){
-          this.curCom = 'YiDianCity'
         }else{
           this.curCom = 'Normal'
         }

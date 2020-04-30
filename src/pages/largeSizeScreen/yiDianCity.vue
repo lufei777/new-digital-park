@@ -1,40 +1,44 @@
 <template>
   <div class="large-size-screen-yidian-city">
    <div class="yd-header flex">
-     <div>{{date}}</div>
+     <div class="cur-date">{{date}}</div>
      <div class="header-name">
        <i class="iconfont iconshuziyuanqu park-logo"></i>
        <span>{{headName}}</span>
      </div>
+     <div class="logout-box">
+       <span style="color:#ED6C01">{{$t('homeHeader.news')}}({{alarmListCount}})</span>
+       <i class="iconfont iconguanbi logout-logo"></i>
+     </div>
    </div>
-    <!--<div class="content flex">-->
-      <!--<draggable-->
-        <!--class="drag-panel"-->
-        <!--:list="moduleList"-->
-        <!--v-bind="getOptions()"-->
-        <!--@change="onOutChange"-->
-        <!--@start="onOutStart"-->
-      <!--&gt;-->
-        <!--&lt;!&ndash;<transition name="el-zoom-in-center" v-for="(item,index) in moduleList" :key="index">&ndash;&gt;-->
-          <!--<draggable v-for="(item,index) in moduleList" :key="index"-->
-            <!--:class="getClass(item)"-->
-            <!--:list="[item]"-->
-            <!--:id="item.id"-->
-            <!--v-bind="getInnerOptions()"-->
-            <!--@change="onInnerChange"-->
-          <!--&gt;-->
-            <!--<ItemProModule-->
-              <!--class="inner-drag-content"-->
-              <!--type="1"-->
-              <!--:moduleData="item?{...item,...{largeScreen:true,$index:index}}:{}"-->
-              <!--@mouseenter="changeBg(item,1)"-->
-              <!--@mouseleave="changeBg(item,-1)"-->
-              <!--@click.native="changeBg(item,1)"-->
-            <!--/>-->
-          <!--</draggable>-->
-        <!--&lt;!&ndash;</transition>&ndash;&gt;-->
-      <!--</draggable>-->
-    <!--</div>-->
+    <div class="content flex">
+      <draggable
+        class="drag-panel"
+        :list="moduleList"
+        v-bind="getOptions()"
+        @change="onOutChange"
+        @start="onOutStart"
+      >
+        <!--<transition name="el-zoom-in-center" v-for="(item,index) in moduleList" :key="index">-->
+          <draggable v-for="(item,index) in moduleList" :key="index"
+            :class="getClass(item)"
+            :list="[item]"
+            :id="item.id"
+            v-bind="getInnerOptions()"
+            @change="onInnerChange"
+          >
+            <ItemProModule
+              class="inner-drag-content"
+              type="1"
+              :moduleData="item?{...item,...{largeScreen:true,$index:index}}:{}"
+              @mouseenter="changeBg(item,1)"
+              @mouseleave="changeBg(item,-1)"
+              @click.native="changeBg(item,1)"
+            />
+          </draggable>
+        <!--</transition>-->
+      </draggable>
+    </div>
   </div>
 </template>
 
@@ -44,6 +48,7 @@
   import DigitalParkApi from '@/service/api/digitalPark'
   import ItemProModule from '@/pages/digitalPark/coms/itemProModule'
   import CommonFun from '@/utils/commonFun'
+  import { isYD } from "../../utils/project";
 
   export default {
     name: 'LargeSizeScreenNormal',
@@ -73,7 +78,8 @@
         moduleMargin: 20,  //模块间距
         headerHeight: 160,   //顶部高度
         innerObj:{},
-        date:moment().format('YYYY年MM月DD日')
+        date:moment().format('YYYY年MM月DD日'),
+        alarmListCount:0
       }
     },
     computed: {},
@@ -91,8 +97,9 @@
         return{
          'center-show':centerFlag,
           'out-drag-product':!centerFlag,
-          'out-drag-product-normal':!centerFlag && item.bgStatus=='normal',
-          'out-drag-product-hover':!centerFlag && item.bgStatus=='hover',
+          'out-drag-product-normal':!centerFlag && item.bgStatus=='normal' && !isYD,
+          'out-drag-product-hover':!centerFlag && item.bgStatus=='hover' && !isYD,
+          'yd-out-drag-product':isYD
         }
       },
       getOptions() {
@@ -139,7 +146,7 @@
         let xLen = res.xModule.length + this.moduleMargin
         let yLen = res.yModule.length + this.moduleMargin
         let paddingLeft = parseInt(($(".content").width() - xLen * res.xModule.num) / 2)
-        let heightOther = ($(".large-size-screen-normal").height() - this.headerHeight - yLen * res.yModule.num)
+        let heightOther = ($(".large-size-screen-yidian-city").height() - this.headerHeight - yLen * res.yModule.num)
         let margin = parseInt(heightOther / 2 / (res.xModule.num))
         yLen = yLen + margin
         let marginTop = parseInt(heightOther / 2 / 2)
@@ -156,6 +163,7 @@
           "grid-column-end": xLen < this.moduleMaxWidth ? this.centerIndex + 4 : this.centerIndex + 3,
           "grid-row-start": 1,
           "grid-row-end": xLen < this.moduleMaxWidth ? 4 : 3,
+           "visibility": "collapse"
         }
 
         this.styleObj.dragStyle = {
@@ -250,6 +258,9 @@
         }
       },
       changeBg(item,flag){
+        if(isYD){
+          return;
+        }
         console.log(item)
         // debugger
         this.moduleList.map((item)=>{
@@ -263,7 +274,7 @@
       }
     },
     mounted() {
-      this.getMenuTree()
+      // this.getMenuTree()
       this.getLargeScreenModuleList()
       let _this = this
       $(window).resize(async function () {
@@ -286,73 +297,48 @@
 <style lang="less">
   .large-size-screen-yidian-city {
     height: 100%;
-    font-size: @largeScreenFontSize;
+  /*  font-size: @largeScreenFontSize;*/
     color: @white;
-
+    font-size: 36px;
     .yd-header{
       width:70%;
       height:160px;
       margin:0 auto;
+      line-height: 160px;
+      text-align: center;
+      background: rgba(0,0,0,0.58);
     }
     .header-name{
       font-size: 64px;
+      font-weight:bold;
+      color:rgba(255,255,255,1);
+      background:linear-gradient(0deg,rgba(184,237,249,1) 0%, rgba(255,255,255,1) 100%);
+       -webkit-background-clip:text;
+       -webkit-text-fill-color:transparent;
+      width:70%;
     }
 
-    .large-size-screen-header {
-      .digital-title-text {
-        font-size: 76px;
-      }
-
-      .park-logo {
-        font-size: 76px;
-        margin-right: 5px;
-      }
+    .park-logo{
+      font-size: 64px;
     }
 
-    .digital-nav-operator {
-      font-size: @largeScreenFontSize;
-
-      .nav-right-item{
-        /*width:230px;*/
-        text-align: right;
-        span{
-          width:200px;
-        }
-      }
-      .nav-right-item .el-input__inner {
-        // width:150px;
-        font-size: @largeScreenFontSize;
-        color: @white;
-      }
-
-      .avatar-img {
-        width: 50px;
-        height: 50px;
-      }
-      .nav-right-item .el-select{
-        width:180px;
-      }
-
-      .nav-right-item .el-input__suffix {
-        width:30px;
-        right: 10px;
-        .el-input__suffix-inner{
-          width:100%;
-        }
-      }
-
-      .el-select .el-input .el-select__caret {
-        font-size: 20px;
-      }
+    .logout-logo{
+      font-size: 36px;
+      margin-left: 40px;
+    }
+    .cur-date,.logout-box{
+      width:15%;
+      text-align: center;
     }
 
     .out-drag-product,.out-drag-product-hover {
-      background-repeat: no-repeat;
+      /*background-repeat: no-repeat;*/
       background-size: 100% 100%;
       margin: auto;
-      width:940px;
-      height:528px;
+      width:636px;
+      height:366px;
       overflow: hidden;
+      border-radius:16px;
       .item-content{
         height:100%;
       }
@@ -361,6 +347,9 @@
       /*color:red;*/
       /*margin:0 20px 20px 20px;*/
       /*margin:auto;*/
+    }
+    .yd-out-drag-product{
+      background: rgba(0,0,0,.7);
     }
     .out-drag-product-normal{
       background-image: url('../../../static/image/digitalPark/content_bg3.png');
