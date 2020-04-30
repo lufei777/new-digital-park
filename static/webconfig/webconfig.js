@@ -4,7 +4,7 @@
  * zg  中钢
  */
 
-window.__CZ_SYSTEM = 'zg';
+window.__CZ_SYSTEM = '';
 
 /**
  * __CZ_LargeScreen

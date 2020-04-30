@@ -96,8 +96,8 @@
       </div>
     </div>
     <!-- 能耗逐日对比分析图 -->
-    <div>
-      <div class="tip flex-align" v-if="iszg">
+    <div v-if="iszg"> 
+      <div class="tip flex-align" >
         <span class="icon"></span>
         <span>能耗逐日对比分析图</span>
       </div>
@@ -120,8 +120,8 @@
       </div>
     </div>
     <!-- 建筑能耗占比图 -->
-    <div>
-      <div class="tip flex-align" v-if="iszg">
+    <div v-if="iszg">
+      <div class="tip flex-align">
         <span class="icon"></span>
         <span>建筑能耗占比图</span>
       </div>
