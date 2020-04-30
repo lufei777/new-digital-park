@@ -4,7 +4,7 @@
  * zg  中钢
  */
 
-window.__CZ_SYSTEM = '';
+window.__CZ_SYSTEM = 'zg';
 
 /**
  * __CZ_LargeScreen
@@ -12,4 +12,4 @@ window.__CZ_SYSTEM = '';
  * ydCity  伊甸城
  */
 
-window.__CZ_LargeScreen = 'ydCity'
+window.__CZ_LargeScreen = ''

@@ -10,6 +10,7 @@
        </div>
       </div>
     </div>
+    <div class="my-chart" ref="myChart"></div>
   </div>
 </template>
 
@@ -22,7 +23,7 @@
     value:1
   },{
     name:'温度',
-    value:2
+    value:62
   },{
     name:'湿度',
     value:3
@@ -30,6 +31,7 @@
     name:'PM2.5',
     value:4
   }]
+  import ChartUtils from '@/utils/chartUtils'
   import CommonApi from '@/service/api/common'
   export default {
     name: "environmentLine",
@@ -42,17 +44,24 @@
       };
     },
     methods: {
-      initChart(){
+      initChart(res){
+        let myChart = this.$echarts.init(this.$refs.myChart)
+        let data = {
+           legendData:[],
+           series:res.map((item)=>item.value),
+           xAxis:res.map((item)=>item.time)
+        }
+        ChartUtils.handleBarChart(myChart,data)
       },
-      async getEnvironmentData(){
-        let res = await CommonApi.getEnvironmentData({
-          homeId:1
+      async getEnvironmentLine(){
+        let res = await CommonApi.getEnvironmentLine({
+          code:62
         })
-        this.envirData=res.data
+        this.initChart(res)
       },
     },
     mounted() {
-      this.getEnvironmentData()
+      this.getEnvironmentLine()
     }
   };
 </script>

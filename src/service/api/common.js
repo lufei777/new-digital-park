@@ -327,6 +327,10 @@ class CommonApi {
   @url("/vibe-web/energy/energyProportion")
   @get
   energyProportion(){}
+
+  @url("/vibe-web/monitor/code/avg")
+  @get
+  getEnvironmentLine(){}
 }
 
 export default new CommonApi()
