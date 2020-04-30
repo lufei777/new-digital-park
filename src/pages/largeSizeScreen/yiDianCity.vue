@@ -1,34 +1,40 @@
 <template>
-  <div class="large-size-screen-normal">
-    <Header fromFlag="2" :headName="headName"/>
-    <div class="content flex">
-      <draggable
-        class="drag-panel"
-        :list="moduleList"
-        v-bind="getOptions()"
-        @change="onOutChange"
-        @start="onOutStart"
-      >
-        <!--<transition name="el-zoom-in-center" v-for="(item,index) in moduleList" :key="index">-->
-          <draggable v-for="(item,index) in moduleList" :key="index"
-            :class="getClass(item)"
-            :list="[item]"
-            :id="item.id"
-            v-bind="getInnerOptions()"
-            @change="onInnerChange"
-          >
-            <ItemProModule
-              class="inner-drag-content"
-              type="1"
-              :moduleData="item?{...item,...{largeScreen:true,$index:index}}:{}"
-              @mouseenter="changeBg(item,1)"
-              @mouseleave="changeBg(item,-1)"
-              @click.native="changeBg(item,1)"
-            />
-          </draggable>
-        <!--</transition>-->
-      </draggable>
-    </div>
+  <div class="large-size-screen-yidian-city">
+   <div class="yd-header flex">
+     <div>{{date}}</div>
+     <div class="header-name">
+       <i class="iconfont iconshuziyuanqu park-logo"></i>
+       <span>{{headName}}</span>
+     </div>
+   </div>
+    <!--<div class="content flex">-->
+      <!--<draggable-->
+        <!--class="drag-panel"-->
+        <!--:list="moduleList"-->
+        <!--v-bind="getOptions()"-->
+        <!--@change="onOutChange"-->
+        <!--@start="onOutStart"-->
+      <!--&gt;-->
+        <!--&lt;!&ndash;<transition name="el-zoom-in-center" v-for="(item,index) in moduleList" :key="index">&ndash;&gt;-->
+          <!--<draggable v-for="(item,index) in moduleList" :key="index"-->
+            <!--:class="getClass(item)"-->
+            <!--:list="[item]"-->
+            <!--:id="item.id"-->
+            <!--v-bind="getInnerOptions()"-->
+            <!--@change="onInnerChange"-->
+          <!--&gt;-->
+            <!--<ItemProModule-->
+              <!--class="inner-drag-content"-->
+              <!--type="1"-->
+              <!--:moduleData="item?{...item,...{largeScreen:true,$index:index}}:{}"-->
+              <!--@mouseenter="changeBg(item,1)"-->
+              <!--@mouseleave="changeBg(item,-1)"-->
+              <!--@click.native="changeBg(item,1)"-->
+            <!--/>-->
+          <!--</draggable>-->
+        <!--&lt;!&ndash;</transition>&ndash;&gt;-->
+      <!--</draggable>-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -49,7 +55,7 @@
     props: ['fullStatus'],  //配置页时是否是全屏状态:full noFull
     data() {
       return {
-        headName: '',
+        headName: '伊甸城BIM运管系统',
         moduleList:[],// CommonFun.largeScreenDefaultData.modules,
         animationFlag: false,
         outDisable: false,
@@ -66,7 +72,8 @@
         heightPercent: 1, //配置页时是原来大屏的百分之多少
         moduleMargin: 20,  //模块间距
         headerHeight: 160,   //顶部高度
-        innerObj:{}
+        innerObj:{},
+        date:moment().format('YYYY年MM月DD日')
       }
     },
     computed: {},
@@ -277,13 +284,19 @@
 </script>
 
 <style lang="less">
-  .large-size-screen-normal {
+  .large-size-screen-yidian-city {
     height: 100%;
-    background-image: url('../../../static/image/digitalPark/home.png');
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
     font-size: @largeScreenFontSize;
     color: @white;
+
+    .yd-header{
+      width:70%;
+      height:160px;
+      margin:0 auto;
+    }
+    .header-name{
+      font-size: 64px;
+    }
 
     .large-size-screen-header {
       .digital-title-text {

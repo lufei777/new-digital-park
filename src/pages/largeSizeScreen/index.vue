@@ -6,12 +6,14 @@
 
 <script>
   import Normal from './normal'
+  import YiDianCity from './yiDianCity'
   import Dashboard from '@/pages/digitalPark/home/dashboardNew'
   export default {
     name: 'LargeSizeScreenNormal',
     components: {
       Normal,
-      Dashboard
+      Dashboard,
+      YiDianCity
     },
     props:['fullStatus'],  //配置页时是否是全屏状态
     data () {
@@ -31,6 +33,8 @@
         this.height = document.body.offsetHeight
         if(this.width<2610 && this.height<1468){
           this.curCom = 'Dashboard'
+        }else if(window.__CZ_LargeScreen=='ydCity'){
+          this.curCom = 'YiDianCity'
         }else{
           this.curCom = 'Normal'
         }
@@ -69,8 +73,5 @@
 <style lang="less">
   .large-size-screen{
     height:100%;
-    background-image: url('../../../static/image/digitalPark/home.png');
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
   }
 </style>
