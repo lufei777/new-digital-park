@@ -33,7 +33,7 @@
     },
     data () {
       return {
-        monitorTree:[],
+        monitorTree:{},
         treeProps:{
           label:'text',
           children: 'children',

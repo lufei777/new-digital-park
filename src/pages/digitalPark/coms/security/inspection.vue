@@ -3,16 +3,16 @@
     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div class="my-chart">
       <div class="ganged-log-header">
-        <span style="width:25%">值班日期</span>
-        <span style="width:15%">值班人员</span>
+        <span>值班日期</span>
+        <span>值班人员</span>
         <span>值班地点</span>
         <span>值班内容</span>
         <span>交接人员</span>
       </div>
       <ul>
         <li v-for="(item,index) in tableData" :key="index" class="ganged-log-li">
-          <span style="width:25%">{{item.zbrq}}</span>
-          <span style="width:15%">{{item.zbry}}</span>
+          <span>{{item.zbrq}}</span>
+          <span>{{item.zbry}}</span>
           <span>{{item.zbdd}}</span>
           <span>{{item.zbnr}}</span>
           <span>{{item.jjry}}</span>
