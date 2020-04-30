@@ -1,5 +1,5 @@
 <template>
-  <el-image :fit="fit" :src="imgSrc" :preview-src-list="previewSrcList" @load="load" @error="error">
+  <el-image :fit="fit" :src="imgSrc" :preview-src-list="previewSrcList" @load="loaded" @error="errored">
     <template slot="placeholder">
       <!-- <slot name="placeholder" :scope="scope"></slot> -->
       <span class="dot">加载中...</span>
@@ -24,7 +24,13 @@ export default {
       default: false
     },
     'scroll-container': {},
-    'z-index': { default: 2000 }
+    'z-index': { default: 2000 },
+    load: {
+      default: () => { }
+    },
+    error: {
+      default: () => { }
+    },
   },
   data() {
     return {}
@@ -41,11 +47,15 @@ export default {
     }
   },
   methods: {
-    load(...args) {
-      this.$emit('load', ...args);
+    loaded(...args) {
+      if (typeof this.load === 'function') {
+        this.load(...args);
+      }
     },
-    error(...args) {
-      this.$emit('error', ...args);
+    errored(...args) {
+      if (typeof this.error === 'function') {
+        this.load(...args);
+      }
     }
   }
 }
