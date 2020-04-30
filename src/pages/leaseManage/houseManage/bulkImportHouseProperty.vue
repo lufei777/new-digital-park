@@ -10,13 +10,15 @@
                   <el-input placeholder="请选择模板" readonly size="small"></el-input>
                 </el-col>
                 <el-col :span="10">
-                  <el-link type="primary" :href="templateUrl">下载模板</el-link>
+                  <el-link type="primary" :underline="false" :href="templateUrl">下载模板</el-link>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="24">
-                  <p>1、请选择模板，下载模板。</p>
-                  <p>2、模板填写完毕后，请从右边上传。</p>
+                  <div style="color:#ccc;">
+                    <p>1、请选择模板，下载模板。</p>
+                    <p>2、模板填写完毕后，请从右边上传。</p>
+                  </div>
                 </el-col>
               </el-row>
 
@@ -93,13 +95,14 @@ export default {
             dicData: []
           },
           {
-            type: "upload",
             label: "",
+            type: "upload",
             prop: "excelUpload",
             loadText: "附件上传中，请稍等",
             showFileList: false,
-            span: 12,
-            pull: 2,
+            span: 8,
+            push: 2,
+            width: 0,
             drag: true,
             tip: "只能上传xls,xlsx文件。",
             action: "https://jsonplaceholder.typicode.com/posts/",
@@ -136,7 +139,7 @@ export default {
           {
             prop: "houseStatus1",
             label: "房产状态",
-            formatter: function(row, value) {
+            formatter: function (row, value) {
               let HouseStatus = LeaseManageDic.HouseStatus;
               let rowValue = value;
               let res = _.find(HouseStatus, (cur, key, obj) => {
