@@ -1,11 +1,6 @@
 <template>
   <div class="monitor-modal">
-    <el-dialog
-      title="选择监控器"
-      :visible.sync="showModal"
-      :show-close="false"
-      width="30%"
-    >
+    <el-dialog title="选择监控器" :visible.sync="showModal" :show-close="false" width="30%">
       <el-tree
         :data="monitorTree"
         :props="treeProps"
@@ -14,89 +9,95 @@
         ref="navTree"
         highlight-current
         @node-click="onClickTree"
-      >
-      </el-tree>
+      ></el-tree>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="onClickCancelBtn">取 消</el-button>
-    <el-button type="primary" @click="onClickSureBtn">确 定</el-button>
-  </span>
+        <el-button @click="onClickCancelBtn">取 消</el-button>
+        <el-button type="primary" @click="onClickSureBtn">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-  import {mapState} from 'vuex'
-   import CommonApi from '../../service/api/common'
+  import { mapState } from "vuex";
+  import CommonApi from "../../service/api/common";
   export default {
-    name: 'Monitor',
-    components: {
-    },
-    data () {
+    name: "Monitor",
+    components: {},
+    data() {
       return {
-        monitorTree:[],
-        treeProps:{
-          label:'text',
-          children: 'children',
+        monitorTree: {},
+        treeProps: {
+          label: "text",
+          children: "children"
         },
-        curNode:{},
-        curRoute:this.$route.path
-      }
+        curNode: {},
+        curRoute: this.$route.path
+      };
     },
-    computed:{
+    computed: {
       ...mapState({
-        showDialog:state=>state.analysis.showDialog,
-        curSelect:state=>state.analysis.curSelect
+        showDialog: state => state.analysis.showDialog,
+        curSelect: state => state.analysis.curSelect
       }),
-      showModal:{
-        get(){
-          return this.showDialog
+      showModal: {
+        get() {
+          return this.showDialog;
         },
-        set(){
-          this.$store.commit('analysis/showDialog',false)
+        set() {
+          this.$store.commit("analysis/showDialog", false);
         }
       }
-     },
+    },
     methods: {
-      async getMonitorTree(){
-        let res =  await CommonApi.getMonitorTree({
-          flag:'total'
-        })
-        this.monitorTree=res
+      async getMonitorTree() {
+        let res = await CommonApi.getMonitorTree({
+          flag: "total"
+        });
+        this.monitorTree = res;
       },
-      onClickSureBtn(){
-        let val = this.curNode
-        if(this.curNode.id){
+      onClickSureBtn() {
+        let val = this.curNode;
+        if (this.curNode.id) {
           if(this.curSelect==1){
             this.$store.commit('analysis/monitor1',{id:val.id,text:val.text})
           }else{
             this.$store.commit('analysis/monitor2',{id:val.id,text:val.text})
           }
+          this.$store.commit("analysis/showDialog", false);
+        } else {
+          this.$message({
+            type:'warning',
+            message:'请选择下级监测器'
+          })
         }
-        this.$store.commit('analysis/showDialog',false)
       },
-      onClickCancelBtn(){
-        this.$store.commit('analysis/showDialog',false)
+      onClickCancelBtn() {
+        this.$store.commit("analysis/showDialog", false);
       },
-      onClickTree(val){
-        this.curNode=val
+      onClickTree(val) {
+        console.log(val.children);
+        if (val.children == null) {
+          this.curNode = val;
+        } else {
+          this.curNode = {};
+        }
       }
     },
-    mounted(){
-      this.getMonitorTree()
+    mounted() {
+      this.getMonitorTree();
     }
-  }
+  };
 </script>
 
 <style lang="less">
-  .monitor-modal{
-    .el-dialog__body{
-      height:400px;
+  .monitor-modal {
+    .el-dialog__body {
+      height: 400px;
       overflow: auto;
     }
-    .el-tree-node__content:hover{
+    .el-tree-node__content:hover {
       background: #e6e6e6;
     }
-
   }
-
 </style>
