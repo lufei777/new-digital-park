@@ -45,7 +45,7 @@ axios.interceptors.response.use(
       // 如果没有则返回空对象
       return (res || {}).data;
     } else if (res.code) {
-      // 如果是登陆页面，则不进行message提示
+      // 如果是登录页面，则不进行message提示
       if (router.currentRoute.path == '/login') return;
       msgInfo({
         message: message,

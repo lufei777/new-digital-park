@@ -31,7 +31,7 @@
         :style="{ height:'60px','fontSize':'22px' }"
         type="primary"
         @click="onClickLoginBtn"
-      >登陆</el-button>
+      >登录</el-button>
 
       <!-- <div class="flex-item login-btn" @click="onClickLoginBtn">登录</div> -->
       <div v-show="showErrTip" class="flex-item error-box">

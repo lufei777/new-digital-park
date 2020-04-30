@@ -1,13 +1,7 @@
 <template>
   <div class="panel-container">
     <div id="houseproperty-form" class="panel">
-      <z-form
-        :ref="leaseManageForm.ref"
-        :options="leaseManageForm"
-        v-model="model"
-        @submit="submit"
-        @reset-change="resetChange"
-      >
+      <z-form :ref="formOptions.ref" :options="formOptions" v-model="model" @submit="submit">
         <template slot="btn" slot-scope="obj">
           <div>
             <el-button :disabled="obj.disabled" type="primary" @click="search(obj)">搜索</el-button>
@@ -18,7 +12,7 @@
     </div>
 
     <div class="table panel">
-      <z-table :ref="leaseManageTable.ref" :options="leaseManageTable">
+      <z-table :ref="tableOptions.ref" :options="tableOptions">
         <template slot="custom-top" slot-scope="obj">
           <el-button :size="obj.size" type="primary" @click="addedProperty(obj)">新增</el-button>
           <el-button :size="obj.size" type="primary" @click="bulkImport(obj)">批量导入</el-button>
@@ -40,12 +34,18 @@ import { LeaseManageDic } from "@/utils/dictionary";
 import leaseManageApi from "@/service/api/leaseManage";
 import commonFun from "@/utils/commonFun.js";
 
+const dateValueFormat = "yyyy-MM-dd HH:mm:ss";
+let tableSendData = {
+  pageNum: 1,
+  pageSize: 10
+};
+
 export default {
   data() {
     return {
       model: {},
-      leaseManageForm: {
-        ref: "leaseManageForm",
+      formOptions: {
+        ref: "Form",
         size: "small",
         menuPosition: "right",
         menuBtn: false,
@@ -101,25 +101,19 @@ export default {
           }
         ]
       },
-      leaseManageTable: {
-        ref: "leaseManageTable",
+      tableOptions: {
+        ref: "Table",
         customTop: true,
         customTopPosition: "right",
+        operation: {
+          width: 200
+        },
         serverMode: {
           url: leaseManageApi.getHouseList,
           data: {
             pageNum: 1,
             pageSize: 10
           }
-        },
-        propsHttp: {
-          listKey: "list",
-          total: "total",
-          pageSize: "pageSize",
-          pageNum: "pageNum"
-        },
-        operation: {
-          width: 200
         },
         columnConfig: [
           {
@@ -177,8 +171,20 @@ export default {
     };
   },
   methods: {
-    submit() {},
-    resetChange() {},
+    search(...args) {
+      this.Form.submit();
+    },
+    submit(model, hide) {
+      hide();
+      this.tableOptions.serverMode.data = Object.assign(
+        _.cloneDeep(tableSendData),
+        model
+      );
+      this.refreshTable();
+    },
+    clearForm() {
+      this.Form.resetForm();
+    },
     deleteRow(ids) {
       leaseManageApi.removeHouse({ houseIds: ids }).then(res => {
         this.refreshTable();
@@ -197,7 +203,7 @@ export default {
         commonFun.deleteTip(this, false, "请选择数据");
         return;
       }
-      let ids = selectedData.map(item=>item.id).join(",")
+      let ids = selectedData.map(item => item.id).join(",")
       commonFun.deleteTip(
         this,
         true,
@@ -205,14 +211,11 @@ export default {
         () => {
           this.deleteRow(ids);
         },
-        () => {}
+        () => { }
       );
     },
     bulkEdit(obj) {
       console.log(obj);
-    },
-    getPropertyDetail(row) {
-      return leaseManageApi.houseDetails(row);
     },
     propertyDetail({ scopeRow: { $index, row, _self } }) {
       this.$router.push({
@@ -235,29 +238,23 @@ export default {
         () => {
           this.deleteRow(row.id);
         },
-        () => {}
+        () => { }
       );
     },
     propertyLocation(obj) {
       // console.log(obj);
     },
-    search(...args) {
-      this.$refs[this.leaseManageForm.ref].getFormModel(res => {
-        console.log("model", res);
-      });
-      // console.log("搜索", ...args);
-    },
-    clearForm() {
-      this.$refs[this.leaseManageForm.ref].resetForm();
-    },
     refreshTable() {
-      this.$refs[this.leaseManageTable.ref].refreshTable();
+      this.Table.refreshTable();
+    }
+  },
+  computed: {
+    Form() {
+      return this.$refs[this.formOptions.ref];
+    },
+    Table() {
+      return this.$refs[this.tableOptions.ref];
     }
   }
 };
 </script>
-<style lang='less'>
-#houseproperty-form .el-form-item {
-  margin-bottom: 0;
-}
-</style>

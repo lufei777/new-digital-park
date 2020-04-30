@@ -1819,7 +1819,7 @@ class commonFun {
     }).then(() => {
       sureCallBack && sureCallBack();
     }).catch((err) => {
-      if (err === 'cancel') {
+      if (err === 'cancel' || err === 'close') {
         that.$message({
           type: 'info',
           message: '已取消删除',
