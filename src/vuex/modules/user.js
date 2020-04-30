@@ -16,7 +16,7 @@ const mutations = {
 }
 
 const actions = {
-  // 登陆
+  // 登录
   login({ commit, dispatch }, payload) {
     return new Promise((resolve, reject) => {
       SystemManageApi.login(payload).then(token => {
@@ -44,7 +44,7 @@ const actions = {
       resolve(userInfo);
     })
   },
-  // 退出登陆
+  // 退出登录
   logout({ commit }) {
     return new Promise(async (resolve, reject) => {
       await SystemManageApi.logOut().catch(err => reject(reject));

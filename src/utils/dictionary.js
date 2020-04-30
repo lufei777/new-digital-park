@@ -51,7 +51,7 @@ export const LeaseManageDic = {
       value: 2
     },
     {
-      label: '待租',
+      label: '未租',
       value: 1
     }
   ]

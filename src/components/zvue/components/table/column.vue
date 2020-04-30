@@ -65,7 +65,7 @@
               />
             </span>
             <span v-else-if="['img'].includes(col.type)">
-              <z-img v-model="scopeRow.row[col.prop]">
+              <z-img v-model="scopeRow.row[col.prop]" @load="col.load" @error="col.error">
                 <!-- <template slot="placeholder" slot-scope="scope">
                   <slot :name="`${col.prop}Placeholder`" :scope="scope"></slot>
                 </template>

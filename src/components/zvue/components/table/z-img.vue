@@ -1,10 +1,12 @@
 <template>
   <el-image :fit="fit" :src="imgSrc" :preview-src-list="previewSrcList" @load="load" @error="error">
-    <template slot="placeholder" slot-scope="scope">
-      <slot name="placeholder" :scope="scope"></slot>
+    <template slot="placeholder">
+      <!-- <slot name="placeholder" :scope="scope"></slot> -->
+      <span class="dot">加载中...</span>
     </template>
-    <template slot="error" slot-scope="scope">
-      <slot name="error" :scope="scope"></slot>
+    <template slot="error">
+      <i class="el-icon-picture-outline"></i>
+      <!-- <slot name="error" :scope="scope"></slot> -->
     </template>
   </el-image>
 </template>
@@ -48,3 +50,9 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+.dot {
+  font-size: 12px;
+  color: #ccc;
+}
+</style>

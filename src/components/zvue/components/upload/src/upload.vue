@@ -41,9 +41,19 @@
       <div v-if="!onlyButton" slot="tip" class="el-upload__tip">{{tip}}</div>
     </el-upload>
     <el-dialog append-to-body :modal-append-to-body="false" :visible.sync="dialogVisible">
-      <div class="avue-dialog">
+      <!-- <div class="avue-dialog">
         <img v-if="dialogImgType" width="100%" :src="dialogImageUrl" alt />
-      </div>
+      </div>-->
+      <el-carousel
+        :autoplay="false"
+        trigger="click"
+        indicator-position="outside"
+        :initial-index="initialIndex"
+      >
+        <el-carousel-item v-for="item in fileList" :key="item.url">
+          <img v-if="dialogImgType" width="100%" :src="item.url" alt="item.url" />
+        </el-carousel-item>
+      </el-carousel>
     </el-dialog>
   </div>
 </template>
@@ -63,7 +73,8 @@ export default {
       dialogImgType: true,
       dialogVisible: false,
       text: [],
-      file: {}
+      file: {},
+      initialIndex: 0
     };
   },
   props: {
@@ -183,9 +194,9 @@ export default {
       return {};
     }
   },
-  created() {},
+  created() { },
   watch: {},
-  mounted() {},
+  mounted() { },
   methods: {
     validatenull,
     handleClick() {
@@ -378,8 +389,8 @@ export default {
     handleExceed(files, fileList) {
       this.$message.warning(
         `当前限制选择 ${this.limit} 个文件，本次选择了 ${
-          files.length
-        } 个文件，共上传了 ${files.length + fileList.length} 个文件`
+        files.length
+        } 个文件，共上传了 ${fileList.length} 个文件`
       );
     },
     handlePictureCardPreview(file) {
@@ -391,6 +402,7 @@ export default {
         window.open(this.dialogImageUrl);
         return;
       } else {
+        this.initialIndex = this.fileList.map(item => item.url).indexOf(file.url);
         this.dialogImgType = true;
         this.dialogVisible = true;
       }
