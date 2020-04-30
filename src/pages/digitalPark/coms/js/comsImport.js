@@ -42,6 +42,7 @@ import elecSum from '../energy/elecSum'
 import waterSum from '../energy/waterSum'
 import environmentLine from '../buildMonitor/environmentLine'
 import alarmListTable from '../alarm/alarmListTable'
+import deviceStatusMonitor from '../statis/deviceStatusMonitor'
 class exportComs {
   exportComsList = {
     energyProportionAnalysis,
@@ -87,7 +88,8 @@ class exportComs {
     elecSum,
     waterSum,
     environmentLine,
-    alarmListTable
+    alarmListTable,
+    deviceStatusMonitor
   }
 }
 export default new exportComs()
