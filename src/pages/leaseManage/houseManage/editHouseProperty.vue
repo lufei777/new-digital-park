@@ -103,7 +103,6 @@ export default {
             },
             rules: {
               required: true,
-              message: "请选择空间位置",
               trigger: "change"
             }
           },
@@ -134,7 +133,6 @@ export default {
             span: 12,
             rules: {
               required: true,
-              message: "必填",
               trigger: "change"
             }
           },
@@ -147,7 +145,6 @@ export default {
             appendslot: "housepriceappend",
             rules: {
               required: true,
-              message: "必填，请填写总价",
               trigger: "blur"
             }
           },
@@ -160,7 +157,6 @@ export default {
             row: true,
             rules: {
               required: true,
-              message: "必填",
               trigger: "change"
             }
           },
@@ -265,7 +261,6 @@ export default {
         this.$refs[this.leaseManageForm.ref].setColumnByProp("housePrice", {
           rules: {
             required: true,
-            message: "必填，请填写总价",
             trigger: "blur"
           }
         });
