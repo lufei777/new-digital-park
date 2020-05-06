@@ -2,7 +2,7 @@
   <div class="item-product-coms" >
     <div v-if="type==2" class="flex-align-between module-title">
       <h3>{{moduleData.menuName}}</h3>
-      <span class="more-btn hover-pointer" @click="onClickMoreBtn">{{$t('more')}}</span>
+      <span  v-if="moreBtnShow" class="more-btn hover-pointer" @click="onClickMoreBtn">{{$t('more')}}</span>
     </div>
     <span v-if="type==1" class="single-module-name">{{moduleData.menuName}}</span>
     <div v-if='type==1' class="component-box">
@@ -45,6 +45,7 @@
   import comsImport from './js/comsImport'
   import DigitalParkApi from '../../../service/api/digitalPark'
   import CommonFun from '@/utils/commonFun'
+  import { IsCZClient } from '@/utils/auth';
   export default {
     name: 'ItemProModule',
     props:['moduleData','type','userProModuleList','hideHeader'],
@@ -54,7 +55,8 @@
     },
     data () {
       return {
-        menuTree:JSON.parse(localStorage.getItem('menuTree'))
+        menuTree:JSON.parse(localStorage.getItem('menuTree')),
+        moreBtnShow:true
       }
     },
     computed:{
@@ -198,6 +200,11 @@
       document.body.ondrop = function (event) {
         event.preventDefault();
         event.stopPropagation();
+      }
+      if(IsCZClient()){
+        this.moreBtnShow = false
+      } else {
+        this.moreBtnShow = true
       }
       // $(".item-component,.two-component").css({
       //   height:$(".component-box").height()
