@@ -142,13 +142,12 @@ export default {
     async onClickUserConfigure(val) { //点击用户
       Cookies.set('moduleType', this.cookieModuleType)
       if (val == 3) {
+        //如果是客户端
+        if (IsCZClient()) {
+          goBackClientLogin();
+        } 
         this.$store.dispatch('user/logout').then(() => {
-          //如果是客户端
-          if (IsCZClient()) {
-            goBackClientLogin();
-          } else {
-            this.$router.push("/login");
-          }
+          this.$router.push("/login");
         })
         // 清空菜单列表
         this.$store.commit("digitalPark/activeMenuIndex", "");

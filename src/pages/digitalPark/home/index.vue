@@ -36,6 +36,7 @@
             <span
               class="hover-pointer more-btn"
               @click="onShowMoreProduct"
+              v-if="moreBtnShow"
             >{{showMoreProduct?$t('fold'):$t('more')}}</span>
           </div>
           <ul class="flex-align-start production-list" :style="showMoreProduct?'':{height:'160px'}">
@@ -130,7 +131,8 @@ export default {
         { url: require('../../../../static/image/digitalPark/lunbo4.png'), link: '/news' },
       ],
       copyrightShow: false,
-      titleIcon: ''
+      titleIcon: '',
+      moreBtnShow:true
     };
   },
   computed: {
@@ -312,6 +314,11 @@ export default {
       event.preventDefault();
       event.stopPropagation();
     };
+    if(IsCZClient()){
+      this.moreBtnShow = false
+    } else {
+      this.moreBtnShow = true
+    }
     this.getMenuTree();
     this.getProductList();
     this.getModulesByType();
