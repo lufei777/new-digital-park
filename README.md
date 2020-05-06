@@ -112,7 +112,7 @@
         onClickCancelBtnCallback:this.onClickModalCancelBtn //点击取消按钮的回调
     }
 
-五）基于ElementUI表格Table和表单Form组件封装（[文档](www.lxhblog.cn)）
+五）基于ElementUI表格Table和表单Form组件封装（[文档](http://www.lxhblog.cn)）
    
 六）通用导航菜单 commonMenu
 
