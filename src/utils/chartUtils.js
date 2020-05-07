@@ -42,7 +42,12 @@ class chartUtils {
         data: data.xAxis
       }],
       yAxis: yAxis,
-      series: data.series
+      series: [{
+        data:data.series,
+        type:'line',
+        areaStyle:{}
+      }],
+
     };
     // window.onresize = dom.resize;
     // window.addEventListener("resize", () => {
@@ -131,7 +136,7 @@ class chartUtils {
     dom.setOption(option, true)
   }
 
-  //实心饼图
+  //实心饼图  后面不用了，实心空心都用上面的方法
   handlePieChart(dom,data,resizeBox){
     let option = {
       title : {

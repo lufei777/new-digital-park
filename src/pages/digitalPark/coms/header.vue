@@ -25,6 +25,7 @@
 <script>
   import NavOperator from '@/pages/digitalPark/coms/navOperator'
   import {isZG} from '@/utils/project';
+  let headerHeight = 135
   export default {
     name: 'LargeSizeScreenHeader',
     components: {
@@ -42,7 +43,7 @@
     },
     computed:{
       top() {
-        return this.fromFlag==1? -this.curNewsIndex * 50 + 'px': -this.curNewsIndex * 160 + 'px'
+        return this.fromFlag==1? -this.curNewsIndex * 50 + 'px': -this.curNewsIndex * headerHeight + 'px'
       },
       iszg(){
         return isZG();
@@ -72,13 +73,13 @@
 
 <style lang="less">
   .large-size-screen-header{
-     height:160px;
+     height:@largeScreenHeaderHeight;
      overflow: hidden;
      padding:0 20px;
      box-sizing: border-box;
      background: rgba(255,255,255,.1);
     .news-box{
-      height:160px;
+      height:@largeScreenHeaderHeight;
       color:#FF7A00;
     }
     .news-list{
@@ -86,7 +87,7 @@
       transition: top 0.5s;
     }
     .news-item{
-      line-height: 160px;
+      line-height: @largeScreenHeaderHeight;
     }
     .park-logo{
       font-size: 30px;
@@ -96,8 +97,8 @@
       font-size: 30px;
       font-weight: bold;
       color:@white;
-      height: 160px;
-      line-height: 160px;
+      height: @largeScreenHeaderHeight;
+      line-height: @largeScreenHeaderHeight;
       text-align: center;
       background-repeat: no-repeat;
       background-size: 100% 100%;

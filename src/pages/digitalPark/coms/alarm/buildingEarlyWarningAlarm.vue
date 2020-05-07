@@ -6,122 +6,103 @@
 </template>
 
 <script>
-import CommonFun from "../../../../utils/commonFun";
-import ChartUtils from "../../../../utils/chartUtils";
-export default {
-  name: "BuildingEarlyWarningAlarm",
-  components: {},
-  props: ["moduleItem"],
-  data() {
-    return {};
-  },
-  methods: {
-    initChart(){
-      let myChart = this.$echarts.init(this.$refs.myChart);
-      let option = {
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross'
-          }
-        },
-        toolbox: {
-          show: true,
-        },
-        xAxis:{
+  import CommonFun from "../../../../utils/commonFun";
+  import ChartUtils from "../../../../utils/chartUtils";
+  import CommonApi from '@/service/api/common'
+
+  export default {
+    name: "BuildingEarlyWarningAlarm",
+    components: {},
+    props: ["moduleItem"],
+    data() {
+      return {};
+    },
+    methods: {
+      initChart() {
+        let myChart = this.$echarts.init(this.$refs.myChart);
+        let option = {
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            },
+          },
+          toolbox: {
+            show: true,
+          },
+          color: ['#486E97'],
+          xAxis: {
+            name:'时间',
+            nameTextStyle:{
+              color:'#fff'
+            },
             axisLabel: {
               textStyle: {
-                color: '#4F89B2'
+                color: '#fff'
               },
             },
-            axisLine:{
-              lineStyle:{
-                color: '#4F89B2'
-              }
+            "axisLine": {
+              "show": false
             },
-          type: 'category',
-          boundaryGap: false,
-          data: ['00:00', '01:15', '02:30', '03:45', '05:00', '06:15', '07:30', '08:45', '10:00', '11:15', '12:30', '13:45', '15:00', '16:15', '17:30', '18:45', '20:00', '21:15', '22:30', '23:45']
-        },
-        yAxis: {
-          type: 'value',
-          axisPointer: {
-            snap: true
+            "axisTick": {
+              "show": false
+            },
+            type: 'category',
+            boundaryGap: false,
+            data: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00',
+              '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00',
+              '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '24:00']
           },
-          axisLabel: {
-            textStyle: {
-              color: '#4F89B2'
+          yAxis: {
+            name:'条',
+            nameTextStyle:{
+              color:'#fff'
+            },
+            type: 'value',
+            splitLine: {
+              show: false
+            },
+            "axisLine": {       //y轴
+              "show": false
+            },
+            "axisTick": {       //y轴刻度线
+              "show": false
+            },
+            axisLabel: {
+              textStyle: {
+                color: '#fff'
+              },
+            },
+          },
+          series: [
+            {
+              name: '报警',
+              type: 'line',
+              smooth: true,
+              areaStyle: {},
+              data: [10, 28, 25, 26, 27, 30, 55, 50, 40, 39, 38, 39, 40, 50, 60, 75, 80, 70, 60, 40, 10, 10, 5, 20],
             }
-          },
-          axisLine:{
-            show:false
-          },
-          nameTextStyle:{
-            color: '#4F89B2'
-          }
-        },
-        visualMap: {
-          show: false,
-          dimension: 0,
-          pieces: [{
-            lte: 6,
-            color: 'green'
-          }, {
-            gt: 6,
-            lte: 8,
-            color: 'red'
-          }, {
-            gt: 8,
-            lte: 14,
-            color: 'green'
-          }, {
-            gt: 14,
-            lte: 17,
-            color: 'red'
-          }, {
-            gt: 17,
-            color: 'green'
-          }]
-        },
-        series: [
-          {
-            name:'报警',
-            type:'line',
-            smooth: true,
-            data: [300, 280, 250, 260, 270, 300, 550, 500, 400, 390, 380, 390, 400, 500, 600, 750, 800, 700, 600, 400],
-            markArea: {
-              data: [ [{
-                name: '早高峰',
-                xAxis: '07:30'
-              }, {
-                xAxis: '10:00'
-              }], [{
-                name: '晚高峰',
-                xAxis: '17:30'
-              }, {
-                xAxis: '21:15'
-              }] ]
-            }
-          }
-        ]
-      };
-      $(window).resize(function(){
-        myChart.resize()
-      })
-      myChart.setOption(option)
+          ]
+        };
+        $(window).resize(function () {
+          myChart.resize()
+        })
+        myChart.setOption(option, true)
+      },
+      async getData() {
+        await CommonApi.getAlarmTimeShow()
+      }
+    },
+    mounted() {
+      this.getData()
+      this.initChart()
     }
-  },
-  mounted() {
-    this.initChart()
-  }
-};
+  };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-.building-status-proportion {
-  .pie-charts {
-    height: 95%;
+  .building-early-warning-alarm {
+
   }
-}
 </style>

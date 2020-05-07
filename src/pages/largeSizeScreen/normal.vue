@@ -18,13 +18,18 @@
             v-bind="getInnerOptions()"
             @change="onInnerChange"
           >
+            <!--<ItemProModule-->
+              <!--class="inner-drag-content"-->
+              <!--type="1"-->
+              <!--:moduleData="item?{...item,...{largeScreen:true,$index:index}}:{}"-->
+              <!--@mouseenter="changeBg(item,1)"-->
+              <!--@mouseleave="changeBg(item,-1)"-->
+              <!--@click.native="changeBg(item,1)"-->
+            <!--/>-->
             <ItemProModule
               class="inner-drag-content"
               type="1"
               :moduleData="item?{...item,...{largeScreen:true,$index:index}}:{}"
-              @mouseenter="changeBg(item,1)"
-              @mouseleave="changeBg(item,-1)"
-              @click.native="changeBg(item,1)"
             />
           </draggable>
         <!--</transition>-->
@@ -69,18 +74,18 @@
         widthPercent: 1, //配置页时是原来大屏的百分之多少
         heightPercent: 1, //配置页时是原来大屏的百分之多少
         moduleMargin: 20,  //模块间距
-        headerHeight: 160,   //顶部高度
+        headerHeight: 135,   //顶部高度
         innerObj:{}
       }
     },
     computed: {
       getBasicBg(){
         return {
-          'haveBg':!isYD,
+          'haveBg':!isYD(),
         }
       },
       isyd(){ //是否是伊甸城
-        return isYD
+        return isYD()
       }
     },
     watch: {
@@ -97,9 +102,9 @@
         return{
          'center-show':centerFlag,
           'out-drag-product':!centerFlag,
-          'out-drag-product-normal':!centerFlag && item.bgStatus=='normal' && !isYD,
-          'out-drag-product-hover':!centerFlag && item.bgStatus=='hover' && !isYD,
-          'yd-out-drag-product':!centerFlag && isYD,
+          'out-drag-product-normal':!centerFlag && item.bgStatus=='normal' && !isYD(),
+          'out-drag-product-hover':!centerFlag && item.bgStatus=='hover' && !isYD(),
+          'yd-out-drag-product':!centerFlag && isYD(),
         }
       },
       getOptions() {
@@ -163,7 +168,7 @@
           "grid-column-end": xLen < this.moduleMaxWidth ? this.centerIndex + 4 : this.centerIndex + 3,
           "grid-row-start": 1,
           "grid-row-end": xLen < this.moduleMaxWidth ? 4 : 3,
-          visibility:isYD?"collapse":'unset'
+          // visibility:isYD()?"collapse":'unset'
         }
 
         this.styleObj.dragStyle = {
@@ -192,7 +197,7 @@
           })
           this.moduleMaxWidth = 960
           this.moduleMargin = 20
-          this.headerHeight = 160
+          this.headerHeight = 135
         }
         this.heightPercent = this.widthPercent
         this.moduleMaxWidth = parseInt((this.moduleMaxWidth * this.widthPercent))
@@ -260,7 +265,7 @@
       },
       changeBg(item,flag){
         console.log(item)
-        if(isYD){
+        if(isYD()){
           return;
         }
         // debugger
@@ -379,8 +384,24 @@
     }
 
     .yd-out-drag-product{
-      background:rgba(0,0,0,.7);
-      border-radius: 16px;
+      /*background:rgba(0,0,0,.7);*/
+      /*border-radius: 16px;*/
+      background-image: url('../../../static/image/digitalPark/content_bg5.png');
+      font-size: 14px;
+      .single-module-name{
+        width:100%;
+        padding-left:5.5%;
+        line-height: 40px;
+        font-size:18px;
+        box-sizing: border-box;
+        font-weight: bold;
+        background:linear-gradient(0deg,rgba(1,234,254,1) 0%, rgba(255,255,255,1) 100%);
+        -webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;
+      }
+      .module-item-top-name{
+        margin-top: 10px;
+      }
     }
 
     .drag-panel {
@@ -398,7 +419,7 @@
       width: 1920px;
       height: 1080px;
       box-sizing: border-box;
-      border: 1px solid pink;
+      /*border: 1px solid pink;*/
       /*margin:0 auto;*/
       margin: auto;
       /*grid-row-start: 1;*/
