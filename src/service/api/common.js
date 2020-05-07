@@ -335,6 +335,14 @@ class CommonApi {
   @url("/vibe-web/alarm/time")
   @get
   getAlarmTimeShow(){}
+
+  @url("/vibe-web/monitor/init_page")
+  @get
+  getCameraList(){}
+
+  @url("/vibe-web/app_page/asset")
+  @get
+  getVideoUrl(){}
 }
 
 export default new CommonApi()

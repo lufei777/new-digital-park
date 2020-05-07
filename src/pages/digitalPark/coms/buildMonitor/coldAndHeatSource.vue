@@ -88,7 +88,7 @@
       height:30px;
       padding:5px;
       border-radius: 50%;
-      border: 4px solid rgba(146,193,234,.5);
+      border: 4px solid rgba(146,193,234,0.5);
       background: rgba(48,71,91,.5);
     }
     .el-progress-bar{

@@ -10,6 +10,7 @@
                  :key="index"
                  :is="item.componentName"
                  :moduleItem="moduleItemData(item)"
+                 :class="'item-id-'+item.id"
                  class="item-component flex-colum-center"
                  @click.native="onClickItemComponent(item)"
       />
