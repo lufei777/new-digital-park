@@ -203,8 +203,8 @@ import formTemp from "../../formtemp";
 import { validatenull } from "../../../utils/validate";
 import { detail } from "../../../utils/detail";
 
-const setDefaultValue = function(defaultOptions, options, vm) {
-  _objKeysForeach(defaultOptions, function(key, value, index) {
+const setDefaultValue = function (defaultOptions, options, vm) {
+  _objKeysForeach(defaultOptions, function (key, value, index) {
     vm.$set(options, key, value);
   });
 };
@@ -276,24 +276,30 @@ export default {
       _.map(this.propOption, (item, key) => {
         if (item.rules && item.disabled !== false && item.display !== false) {
           let currentRules = item.rules;
-          // 必填时自动生成message
-          if (
-            validatenull(currentRules.validator) &&
-            (!currentRules.message || currentRules.message.trim().length === 0)
-          ) {
-            if (currentRules.required) {
-              currentRules.message = `必填，请填写${item.label}`;
-              currentRules.trigger ? "" : (currentRules.trigger = `change`);
-            }
-          }
           // 添加进rules
           if (_.isArray(currentRules)) {
+            currentRules.forEach(currentRule => {
+              this.fillRequiredRule(currentRule, item);
+            });
             this.$set(this.formRules, item.prop, currentRules);
           } else if (_.isObject(currentRules)) {
+            this.fillRequiredRule(currentRules, item);
             this.$set(this.formRules, item.prop, [currentRules]);
           }
         }
       });
+    },
+    // 必填时自动生成message
+    fillRequiredRule(currentRules, item) {
+      if (
+        validatenull(currentRules.validator) &&
+        (!currentRules.message || currentRules.message.trim().length === 0)
+      ) {
+        if (currentRules.required) {
+          currentRules.message = `必填，请填写${item.label}`;
+          currentRules.trigger ? "" : (currentRules.trigger = `change`);
+        }
+      }
     },
     formVal() {
       _.map(this.value, (value, key) => {

@@ -30,6 +30,7 @@ export default function () {
                     } else if (this.isNumber) {
                         result = parseFloat(result);
                         if (isNaN(result)) {
+                            this.text = undefined;
                             result = undefined;
                         }
                     }
