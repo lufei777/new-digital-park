@@ -118,7 +118,11 @@ export default {
     },
     handleCurrentChange(val) {
       this.curPage = val;
-      this.getAutoCollectList();
+      if(this.curSystem == 'zg') {
+         this.getLastMonthData()
+      }else {
+        this.getAutoCollectList();
+      }
     },
     handleExport() {
       let params = "catalog=" + this.curEnergy + "&startTime=" + this.startTime + "&endTime=" + this.endTime +
@@ -139,6 +143,7 @@ export default {
         page : this.curPage
       })
       this.tableConfig.data=res.list
+      this.tableConfig.uiConfig.pagination.total = res.total;
     }
   },
   mounted() {
