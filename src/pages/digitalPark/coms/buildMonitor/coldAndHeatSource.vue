@@ -3,7 +3,8 @@
     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div class="my-chart">
       <div class="flex-align-center item-progress-group">
-        <i class="iconfont iconlengreyuan item-icon"></i>
+        <!--<i class="iconfont iconlengreyuan item-icon"></i>-->
+        <img src="../../../../../static/image/digitalPark/hot.png" alt="" class="item-icon">
         <div class="progress-box">
           <div class="flex">
             <el-progress :percentage="35" :stroke-width="12" :format="format"></el-progress>
@@ -16,7 +17,8 @@
         </div>
       </div>
       <div class="flex-align-center item-progress-group">
-        <i class="iconfont iconlengreyuan item-icon"></i>
+        <!--<i class="iconfont iconlengreyuan item-icon"></i>-->
+        <img src="../../../../../static/image/digitalPark/cold.png" alt="" class="item-icon">
         <div class="progress-box">
           <div class="flex">
             <el-progress :percentage="35" :stroke-width="12" :format="format"></el-progress>
@@ -82,6 +84,12 @@
     }
     .item-icon{
       margin-bottom: 20px;
+      width:30px;
+      height:30px;
+      padding:5px;
+      border-radius: 50%;
+      border: 4px solid rgba(146,193,234,.5);
+      background: rgba(48,71,91,.5);
     }
     .el-progress-bar{
       padding-right:10px;

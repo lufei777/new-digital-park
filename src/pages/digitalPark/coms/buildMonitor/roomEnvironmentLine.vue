@@ -51,19 +51,13 @@
           type: 'line',
           areaStyle: {},
           yAxisIndex: 1,
-          data: res.map((item) => item.temperature),
-          formatter: function (val) {
-            return val+'℃';
-          }
+          data: res.map((item) => item.temperature)
         }
         let humidity = {
           name: '湿度',
           type: 'line',
           areaStyle: {},
-          data: res.map((item) => item.humidity),
-          formatter: function (val) {
-            return val+'%';
-          }
+          data: res.map((item) => item.humidity)
         }
         let series = [temperature, humidity]
         let option = {
@@ -77,7 +71,8 @@
           },
           tooltip: {
             trigger: 'axis',
-            showDelay: 300
+            showDelay: 300,
+            formatter: "{b}<br/>{a0}:{c0}°C<br/>{a1}:{c1}%"
           },
           calculable: true,
           color: ['#A994F2', '#4C94D2'],
@@ -110,7 +105,7 @@
                 color: '#fff'
               },
               formatter: function (val) {
-                return val+'℃';
+                return val+'°C';
               }
             },
             splitLine: {

@@ -267,7 +267,7 @@
     .module-item-top-name{
       width:100%;
       text-align: left;
-      padding-left:5%;
+      padding-left:1.5%;
       box-sizing: border-box;
     }
     .padding-box{
