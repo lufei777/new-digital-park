@@ -33,6 +33,7 @@
   </div>
 </template>
 <script>
+import { validateSpecialWord } from 'utils/validate.js';
 import { LeaseManageDic } from "@/utils/dictionary";
 import leaseManageApi from "@/service/api/leaseManage";
 import commonApi from "@/service/api/common";
@@ -131,22 +132,31 @@ export default {
             prop: "houseName",
             clearable: true,
             span: 12,
-            rules: {
-              required: true,
-              trigger: "change"
-            }
+            rules: [
+              {
+                required: true,
+                trigger: "change"
+              },
+              {
+                validator: validateSpecialWord,
+                trigger: "change"
+              }
+            ]
           },
           {
             type: "input",
             label: "总价",
             prop: "housePrice",
+            dataType: "number",
             clearable: true,
             span: 12,
             appendslot: "housepriceappend",
-            rules: {
-              required: true,
-              trigger: "blur"
-            }
+            rules: [
+              {
+                required: true,
+                trigger: "change"
+              }
+            ]
           },
           {
             type: "input",
@@ -155,10 +165,16 @@ export default {
             clearable: true,
             span: 12,
             row: true,
-            rules: {
-              required: true,
-              trigger: "change"
-            }
+            rules: [
+              {
+                required: true,
+                trigger: "change"
+              },
+              {
+                validator: validateSpecialWord,
+                trigger: "change"
+              }
+            ]
           },
           {
             type: "textarea",
@@ -259,10 +275,12 @@ export default {
         });
       } else {
         this.$refs[this.leaseManageForm.ref].setColumnByProp("housePrice", {
-          rules: {
-            required: true,
-            trigger: "blur"
-          }
+          rules: [
+            {
+              required: true,
+              trigger: "change"
+            }
+          ]
         });
       }
     }
