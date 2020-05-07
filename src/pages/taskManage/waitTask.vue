@@ -135,9 +135,9 @@ export default {
         { label: "工单名称", prop: "taskName" },
         { label: "工单类型", prop: "typeText" },
         { label: "工单描述", prop: "description" },
-        { label: "创建时间", prop: "" },
-        { label: "预计结束时间", prop: "" },
-        { label: "优先级", prop: "" },
+        { label: "创建时间", prop: "beginTime" },
+        { label: "预计结束时间", prop: "endTime" },
+        { label: "优先级", prop: "priority" },
         { label: "状态", prop: "taskStatus" },
         { label: "创建人", prop: "founderName" },
         { label: "处理人", prop: "username" }
