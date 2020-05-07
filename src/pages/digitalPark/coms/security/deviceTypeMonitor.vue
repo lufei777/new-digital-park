@@ -17,7 +17,7 @@
                      :stroke-width="12" :width="150" :color="deviceData.bolt.progressColor">
         </el-progress>
         <div class="text-box">
-          <div>球机：{{deviceData.bolt.total}}个</div>
+          <div>枪机：{{deviceData.bolt.total}}个</div>
           <div>运行：{{deviceData.bolt.total}}个</div>
         </div>
 
@@ -83,6 +83,12 @@
     .progress-box{
       width:50%;
       text-align: center;
+    }
+    .progress-box1 .el-progress-circle__track{
+         stroke: #503753;
+    }
+    .progress-box2 .el-progress-circle__track{
+         stroke: #394C52;
     }
     .text-box{
       text-align: left;

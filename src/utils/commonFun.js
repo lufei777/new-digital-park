@@ -1837,7 +1837,6 @@ class commonFun {
 
   //重新整合跳转，包括跳旧项目、新项目、客户端
   loadPage(item,largeScreenFlag) {
-    if(largeScreenFlag) return ;
     store.commit("digitalPark/activeMenuIndex", this.setMenuIndex(item))
     if (item.routeAddress) {
       //客户端
