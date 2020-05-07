@@ -50,13 +50,13 @@
           name: '温度',
           type: 'line',
           areaStyle: {},
-          yAxisIndex: 1,
           data: res.map((item) => item.temperature)
         }
         let humidity = {
           name: '湿度',
           type: 'line',
           areaStyle: {},
+          yAxisIndex: 1,
           data: res.map((item) => item.humidity)
         }
         let series = [temperature, humidity]

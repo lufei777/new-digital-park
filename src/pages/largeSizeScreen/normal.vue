@@ -388,6 +388,8 @@
       /*border-radius: 16px;*/
       background-image: url('../../../static/image/digitalPark/content_bg5.png');
       font-size: 14px;
+      width:640px;
+      height:366px;
       .single-module-name{
         width:100%;
         padding-left:2.5%;
