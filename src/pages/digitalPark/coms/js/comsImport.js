@@ -44,6 +44,9 @@ import environmentLine from '../buildMonitor/environmentLine'
 import alarmListTable from '../alarm/alarmListTable'
 import deviceStatusMonitor from '../statis/deviceStatusMonitor'
 import videoMonitor from '../video/videoMonitor'
+import roomEnvironmentLine from '../buildMonitor/roomEnvironmentLine'
+import deviceTypeMonitor from '../security/deviceTypeMonitor'
+import coldAndHeatSource from '../buildMonitor/coldAndHeatSource'
 class exportComs {
   exportComsList = {
     energyProportionAnalysis,
@@ -91,7 +94,10 @@ class exportComs {
     environmentLine,
     alarmListTable,
     deviceStatusMonitor,
-    videoMonitor
+    videoMonitor,
+    roomEnvironmentLine,
+    deviceTypeMonitor,
+    coldAndHeatSource
   }
 }
 export default new exportComs()

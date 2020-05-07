@@ -3,9 +3,27 @@
     <!--<div ref="pieCharts" class="my-chart" id="task-ranking-chart"></div>-->
     <!--<div class="my-chart">-->
     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
-    <img
-      style="width:96%;height:auto;"
-      src="../../../../../static/image/digitalPark/renwu2_tmp.png" alt="">
+    <div class="my-chart">
+      <div class="task-header flex">
+        <span>排名</span>
+        <span>姓名</span>
+        <span>数量</span>
+        <span>错误率</span>
+        <span>效率</span>
+      </div>
+      <ul>
+        <li v-for="(item,index) in tableData" :key="index" class="ganged-log-li flex">
+          <span>{{index+1}}</span>
+          <span>{{item.name}}</span>
+          <span>错误{{item.num}}条</span>
+          <span>{{item.error}}</span>
+          <span>{{item.effect}}</span>
+        </li>
+      </ul>
+    </div>
+    <!--<img-->
+      <!--style="width:96%;height:auto;"-->
+      <!--src="../../../../../static/image/digitalPark/renwu2_tmp.png" alt="">-->
   <!--</div>-->
   </div>
 </template>
@@ -18,20 +36,85 @@ export default {
   components: {},
   props: ["moduleItem"],
   data() {
-    return {};
+    return {
+      tableData:[]
+    };
   },
   methods: {
+    getTableData(){
+      this.tableData = [{
+        name:'刘金',
+        num:100,
+        error:0,
+        effect:'高'
+      },{
+        name:'刘金',
+        num:100,
+        error:0,
+        effect:'高'
+      },{
+        name:'刘金',
+        num:100,
+        error:0,
+        effect:'高'
+      },{
+        name:'刘金',
+        num:100,
+        error:0,
+        effect:'高'
+      },{
+        name:'刘金',
+        num:100,
+        error:0,
+        effect:'高'
+      }]
+    }
   },
   mounted() {
+    this.getTableData()
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-.building-status-proportion {
-  .pie-charts {
-    height: 95%;
+.task-ranking {
+   .my-chart{
+      margin-top: 10px;
+      box-sizing: border-box;
+   }
+  .task-header {
+    width: 100%;
+    height: 50px;
+    font-size: 14px;
+    background: #111D21;
+    text-align: center;
+    span {
+      width:20%;
+      float: left;
+      height: 50px;
+      line-height: 50px;
+    }
+  }
+  .ganged-log-li{
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+    color: @white;
+    text-align: center;
+    span{
+      width:20%;
+      display: block;
+      float: left;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      height: 30px;
+      line-height: 30px;
+    }
+    span:last-child{
+      color:#8fd3fa;
+    }
   }
 }
 </style>

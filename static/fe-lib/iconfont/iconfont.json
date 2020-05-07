@@ -6,6 +6,83 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "12779108",
+      "name": "铃铛 (1)",
+      "font_class": "lingdang",
+      "unicode": "e6a7",
+      "unicode_decimal": 59047
+    },
+    {
+      "icon_id": "5132057",
+      "name": "括号（右）",
+      "font_class": "kuohaoyou",
+      "unicode": "e700",
+      "unicode_decimal": 59136
+    },
+    {
+      "icon_id": "5132058",
+      "name": "括号（左）",
+      "font_class": "kuohaozuo",
+      "unicode": "e701",
+      "unicode_decimal": 59137
+    },
+    {
+      "icon_id": "14226852",
+      "name": "提示",
+      "font_class": "huabanbeifen11",
+      "unicode": "e6a5",
+      "unicode_decimal": 59045
+    },
+    {
+      "icon_id": "9802595",
+      "name": "说明",
+      "font_class": "shuoming",
+      "unicode": "e6a6",
+      "unicode_decimal": 59046
+    },
+    {
+      "icon_id": "7540275",
+      "name": "历史数据",
+      "font_class": "lishishuju",
+      "unicode": "e6a4",
+      "unicode_decimal": 59044
+    },
+    {
+      "icon_id": "4057739",
+      "name": "同功能项目重复原则",
+      "font_class": "tonggongnengxiangmuzhongfuyuanze",
+      "unicode": "e6a1",
+      "unicode_decimal": 59041
+    },
+    {
+      "icon_id": "10970374",
+      "name": "窗口复原",
+      "font_class": "chuangkoufuyuan",
+      "unicode": "e6a2",
+      "unicode_decimal": 59042
+    },
+    {
+      "icon_id": "12498745",
+      "name": "一键收起",
+      "font_class": "yijianshouqi",
+      "unicode": "e6a3",
+      "unicode_decimal": 59043
+    },
+    {
+      "icon_id": "10418647",
+      "name": "井盖",
+      "font_class": "jinggai",
+      "unicode": "e6a0",
+      "unicode_decimal": 59040
+    },
+    {
+      "icon_id": "3644895",
+      "name": "烟感",
+      "font_class": "yangan",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
       "icon_id": "13104287",
       "name": "管理资产",
       "font_class": "guanlizichan1",
