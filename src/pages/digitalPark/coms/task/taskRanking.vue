@@ -15,8 +15,8 @@
         <li v-for="(item,index) in tableData" :key="index" class="ganged-log-li flex">
           <span>{{index+1}}</span>
           <span>{{item.name}}</span>
-          <span>错误{{item.num}}条</span>
-          <span>{{item.error}}</span>
+          <span>{{item.num}}</span>
+          <span>错误{{item.error}}条</span>
           <span>{{item.effect}}</span>
         </li>
       </ul>
@@ -87,7 +87,7 @@ export default {
     width: 100%;
     height: 50px;
     font-size: 14px;
-    background: #111D21;
+    background: rgba(17,29,33,.5);
     text-align: center;
     span {
       width:20%;
@@ -113,7 +113,7 @@ export default {
       line-height: 30px;
     }
     span:last-child{
-      color:#8fd3fa;
+      color:#01EAFE;
     }
   }
 }

@@ -390,7 +390,7 @@
       font-size: 14px;
       .single-module-name{
         width:100%;
-        padding-left:5.5%;
+        padding-left:2.5%;
         line-height: 40px;
         font-size:18px;
         box-sizing: border-box;
