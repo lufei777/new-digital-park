@@ -47,6 +47,7 @@ import videoMonitor from '../video/videoMonitor'
 import roomEnvironmentLine from '../buildMonitor/roomEnvironmentLine'
 import deviceTypeMonitor from '../security/deviceTypeMonitor'
 import coldAndHeatSource from '../buildMonitor/coldAndHeatSource'
+import alarmNewsStatus from '../alarm/alarmNewsStatus'
 class exportComs {
   exportComsList = {
     energyProportionAnalysis,
@@ -97,7 +98,8 @@ class exportComs {
     videoMonitor,
     roomEnvironmentLine,
     deviceTypeMonitor,
-    coldAndHeatSource
+    coldAndHeatSource,
+    alarmNewsStatus
   }
 }
 export default new exportComs()
