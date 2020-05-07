@@ -12,4 +12,4 @@ window.__CZ_SYSTEM = 'zg';
  * ydCity  伊甸城
  */
 
-window.__CZ_LargeScreen = ''
+window.__CZ_LargeScreen = 'ydCity'

@@ -1,10 +1,14 @@
 <template>
   <div class="product-list-coms">
     <div class="product-list">
-      <div class="fixed-pro-item hover-pointer"
+      <div class="hover-pointer flex-align-center"
+           :class="isyd?'yd-fixed-pro-item':'fixed-pro-item'"
            v-for="(item) in showFixedProList" :key="item.id"
            @click="onClickItemFixPro(item)"
-      >{{item.name}}</div>
+      >
+        <i class="iconfont item-icon" :class="item.icon"></i>
+        <span>{{item.name}}</span>
+      </div>
     </div>
     <div v-if="fixedProList.length>16" class="flex-align-center turn-page">
             <span class="left-btn hover-pointer iconfont iconzuo"
@@ -21,7 +25,7 @@
   import DigitalParkApi from '@/service/api/digitalPark'
   import CommonFun from '@/utils/commonFun'
   import { IsCZClient } from '@/utils/auth';
-
+  import { isYD } from "@/utils/project";
   export default {
     name: 'productList',
     components: {
@@ -35,6 +39,9 @@
       }
     },
     computed:{
+      isyd(){ //是否是伊甸城
+        return isYD
+      }
     },
     watch:{
     },
@@ -100,7 +107,7 @@
 
 <style lang="less">
 .product-list-coms{
-  .product-list{
+  .product-list,.yd-product-list{
     flex-grow: 1;
     box-sizing: border-box;
     overflow: hidden;
@@ -127,6 +134,19 @@
     background-image: url('../../../../../static/image/digitalPark/tag_large_bg.png') ;
     text-align: center;
   }
+  .yd-fixed-pro-item{
+    width:20%;
+    float:left;
+    margin:25px 2.5%;
+    font-size: 14px;
+    padding:15px 0;
+    text-align: center;
+    box-sizing: border-box;
+    border:1px solid #A5FCFF;
+    background:linear-gradient(0deg,rgba(0,180,255,0.15));
+    border-radius:30px;
+    color:#A5FCFF;
+  }
   .turn-page{
     margin-bottom:20px;
     span{
@@ -152,6 +172,18 @@
       width:50px;
       height:50px;
     }
+  }
+  .item-icon{
+    display: block;
+    border:1px solid #A5FCFF;
+    border-radius: 50%;
+    /*padding:5px;*/
+    width:25px;
+    height:25px;
+    text-align: center;
+    line-height:25px;
+    color:#A5FCFF;
+    margin-right: 10px;
   }
 }
 </style>

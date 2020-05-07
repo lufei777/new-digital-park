@@ -331,6 +331,10 @@ class CommonApi {
   @url("/vibe-web/monitor/code/avg")
   @get
   getEnvironmentLine(){}
+
+  @url("/vibe-web/alarm/time")
+  @get
+  getAlarmTimeShow(){}
 }
 
 export default new CommonApi()

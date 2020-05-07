@@ -46,6 +46,7 @@
   import DigitalParkApi from '../../../service/api/digitalPark'
   import CommonFun from '@/utils/commonFun'
   import { IsCZClient } from '@/utils/auth';
+  import { isYD } from "@/utils/project";
   export default {
     name: 'ItemProModule',
     props:['moduleData','type','userProModuleList','hideHeader'],
@@ -120,7 +121,7 @@
       onClickItemComponent(item) {
         // console.log("clickitem", item)
         //需要后台配合修改
-        if (this.hideHeader || item.moduleName=="功能模块入口") return;  //配置页点击不进行操作
+        if (this.hideHeader || item.moduleName=="功能模块入口" || item.moduleName=='功能模块') return;  //配置页点击不进行操作
 
         if (!item.routeAddress) {
           this.$message({
@@ -170,7 +171,7 @@
               right:'3%',
               textStyle:{
                 color:'#8FD3FA',
-                fontSize:this.moduleData.largeScreen?30:14
+                fontSize:this.moduleData.largeScreen && !isYD()?30:14
               },
             },
             fontSize:30

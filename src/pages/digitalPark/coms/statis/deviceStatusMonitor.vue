@@ -9,9 +9,9 @@
           :color="item.color"
           :stroke-width="10"
         ></el-progress>
-        <div :style="{'color':item.color,'font-size':'20px'}">
-          <span class="status-text">{{item.status}}</span>
-          ：{{item.value}}个
+        <div :style="{'color':item.color}" class="item-status">
+          <span class="status-text">{{item.status}} ：</span>
+         {{item.value}}个
         </div>
       </div>
     </div>
@@ -24,7 +24,6 @@ export default {
   props: ["moduleItem"],
   data() {
     return {
-      percentage: [45, 5, 15, 25],
       percentage: [
         {
           value: 45,
@@ -65,6 +64,9 @@ export default {
         color: #ffffff!important;
       }
     }
+  }
+  .item-status{
+    margin-top: 20px;
   }
 }
 </style>

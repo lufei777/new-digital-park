@@ -6,14 +6,12 @@
 
 <script>
   import Normal from './normal'
-  import YiDianCity from './yiDianCity'
   import Dashboard from '@/pages/digitalPark/home/dashboardNew'
   export default {
     name: 'LargeSizeScreenNormal',
     components: {
       Normal,
       Dashboard,
-      YiDianCity
     },
     props:['fullStatus'],  //配置页时是否是全屏状态
     data () {
