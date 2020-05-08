@@ -9,6 +9,7 @@
   import CommonFun from "../../../../utils/commonFun";
   import ChartUtils from "../../../../utils/chartUtils";
   import CommonApi from '@/service/api/common'
+  import { isYD } from "@/utils/project";
 
   export default {
     name: "BuildingEarlyWarningAlarm",
@@ -34,11 +35,11 @@
           xAxis: {
             name:'时间',
             nameTextStyle:{
-              color:'#fff'
+              color: isYD()?'#fff':''
             },
             axisLabel: {
               textStyle: {
-                color: '#fff'
+                color: isYD()?'#fff':''
               },
             },
             "axisLine": {
@@ -56,7 +57,7 @@
           yAxis: {
             name:'条',
             nameTextStyle:{
-              color:'#fff'
+              color: isYD()?'#fff':''
             },
             type: 'value',
             splitLine: {
@@ -70,7 +71,7 @@
             },
             axisLabel: {
               textStyle: {
-                color: '#fff'
+                color: isYD()?'#fff':''
               },
             },
           },

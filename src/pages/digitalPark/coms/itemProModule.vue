@@ -2,7 +2,8 @@
   <div class="item-product-coms" >
     <div v-if="type==2" class="flex-align-between module-title">
       <h3>{{moduleData.menuName}}</h3>
-      <span  v-if="moreBtnShow" class="more-btn hover-pointer" @click="onClickMoreBtn">{{$t('more')}}</span>
+      <!--<span  v-if="moreBtnShow" class="more-btn hover-pointer" @click="onClickMoreBtn">{{$t('more')}}</span>-->
+      <span  v-if="moreBtnShow" class="more-btn hover-pointer"></span>
     </div>
     <span v-if="type==1" class="single-module-name">{{moduleData.menuName}}</span>
     <div v-if='type==1' class="component-box">
@@ -12,7 +13,7 @@
                  :moduleItem="moduleItemData(item)"
                  :class="'item-id-'+item.id"
                  class="item-component flex-colum-center"
-                 @click.native="onClickItemComponent(item)"
+                 @click.native="onClickItemComponent($event,item)"
       />
     </div>
 
@@ -32,7 +33,7 @@
           v-for="(item,index) in moduleData.moduleList"
           :key="index"
           :class="['flex-colum-center','drag-component',
-                   moduleData.moduleList.length>1?'two-component radius-shadow':'item-component padding-box']"
+                   moduleData.moduleList.length>1?'two-component radius-shadow  padding-box':'item-component padding-box']"
           style="height: 100%;"
           :is="item.componentName"
           :moduleItem="item"
@@ -119,7 +120,7 @@
           }
         }
       },
-      onClickItemComponent(item) {
+      onClickItemComponent(e,item) {
         // console.log("clickitem", item)
         //需要后台配合修改
         if (this.hideHeader || item.moduleName=="功能模块入口" || item.moduleName=='功能模块') return;  //配置页点击不进行操作
@@ -208,6 +209,11 @@
       } else {
         this.moreBtnShow = true
       }
+      //
+      // $(".my-chart canvas").click(function (e) {
+      //   e.stopPropagation()
+      // })
+
       // $(".item-component,.two-component").css({
       //   height:$(".component-box").height()
       // })
@@ -270,6 +276,7 @@
       text-align: left;
       padding-left:1.5%;
       box-sizing: border-box;
+      margin-top: 10px;
     }
     .padding-box{
       padding:20px;

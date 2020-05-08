@@ -93,10 +93,13 @@
         item.clickFlag=true
         if(item.level==2 && item.clientType==1){
           let tmpObj = item
-          tmpObj.childNode.splice(0,1)
+          if(item.childNode[0].name=="概览"){
+            tmpObj.childNode.splice(0,1)
+          }
           let curNode = CommonFun.getLastItem(tmpObj)
-          console.log("curNode",curNode)
+          // console.log("curNode",curNode)
           if(IsCZClient()){
+            // console.log("loaditem",item)
             window.goToClientPage(JSON.stringify(item), curNode.id + "")
             this.$store.commit("digitalPark/largeScreenIframeSrc","")
             this.fixedProList.map((item)=>{
