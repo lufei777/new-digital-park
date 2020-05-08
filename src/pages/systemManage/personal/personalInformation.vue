@@ -11,28 +11,13 @@
 </template>
 
 <script>
+import { validatePhoneNumber, validMail } from 'utils/validate.js';
 import SystemManageApi from '@/service/api/systemManage'
 import { CommonDic } from '@/utils/dictionary'
 import { mapState } from 'vuex'
 export default {
   name: 'PersonalInformation',
   data() {
-    let validTelephone = (rule, value, callgoBack) => {
-      let reg = /^1[3|4|5|7|8]\d{9}$/;
-      if (reg.test(value) || value == "") {
-        callgoBack();
-      } else {
-        callback(new Error("请输入正确的手机号"));
-      }
-    };
-    let validMail = (rule, value, callback) => {
-      let reg = /[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-      if (reg.test(value)) {
-        callback();
-      } else {
-        callback(new Error("请输入正确的邮箱"));
-      }
-    };
     return {
       formModel: {
       },
@@ -94,7 +79,7 @@ export default {
             clearable: true,
             span: 24,
             rules: {
-              validator: validTelephone,
+              validator: validatePhoneNumber,
               trigger: "blur",
             }
           }]
