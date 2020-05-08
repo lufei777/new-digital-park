@@ -22,13 +22,14 @@
   import {mapState} from 'vuex'
   import {isZG} from '@/utils/project';
   import { IsCZClient } from '@/utils/auth';
+  import CommonFun from '@/utils/commonFun'
   export default {
     name: 'YDHeader',
     components: {},
     props: [], //fromFlag 1：仪表盘 2:大屏
     data() {
       return {
-        headName: '伊甸城IBM运管系统',
+        headName: '伊甸城BIM运管系统',
         curDate: moment().format('YYYY年MM月DD日'),
         alarmListCount: 0,
         curTip: '总体概览'
@@ -76,11 +77,35 @@
             ]
           })
         );
-          this.$store.commit("digitalPark/largeScreenIframeSrc",
+        this.$store.commit("digitalPark/largeScreenIframeSrc",
             window.top.location.origin + '/#/vibe-web?updateId=' + _.uniqueId())
+      },
+      goToWebPage(item, obj) {
+        // console.log("back",item,obj)
+        //如果只有第一个参数，渲染的menu就是此对象的childNode；
+        //如果有第二个参数,渲染的menu就是当前点击的子菜单所在的二级菜单，obj为当前点击的子菜单
+        item = JSON.parse(item)
+        let curMenu = item
+        if (obj) {
+          obj = JSON.parse(obj)
+          curMenu = obj
+        }
+        this.$store.commit("digitalPark/menuList", item)
+        this.$store.commit('digitalPark/activeMenuIndex',CommonFun.setMenuIndex(item))
+        if(curMenu.routeAddress.indexOf('@')!=-1){
+          this.$store.commit("digitalPark/largeScreenIframeSrc",
+            window.top.location.origin+'/#/vibe-web?updateId='+_.uniqueId())
+        }else{
+          this.$store.commit("digitalPark/largeScreenIframeSrc",window.top.location.origin+'/#'+item.routeAddress)
+        }
       },
     },
     mounted() {
+      window.CZClient = {
+        // goToPersonal: this.onClickUserConfigure,  //跳转个人中心
+        // goBack: this.onClickGoBack,    //返回首页
+        goToWebPage: this.goToWebPage,
+      }
     }
   }
 </script>

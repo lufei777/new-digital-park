@@ -19,31 +19,33 @@
 <script>
   let typeList = [{
     name: '温度',
-    id: 62
+    id: isZG() ? 95 : 63
   }, {
     name: '湿度',
-    id: 3
+    id: isZG() ? 168 : 62
   }, {
     name: '一氧化碳',
-    id: 0
+    id: 187
   }, {
     name: '二氧化碳',
-    id: 1
+    id: isZG() ? '165' : 94
   }, {
     name: 'PM2.5',
-    id: 4
+    id: 171
   }]
   import ChartUtils from '@/utils/chartUtils'
   import CommonApi from '@/service/api/common'
+  import {isZG} from "@/utils/project";
 
   export default {
     name: "environmentLine",
     components: {},
+
     props: ["moduleItem"],
     data() {
       return {
         typeList: typeList,
-        curType: 62
+        curType: isZG() ? 95 : 63
       };
     },
     methods: {
@@ -64,8 +66,9 @@
       },
       onClickItem(item) {
         this.curType = item.id
+        this.getEnvironmentLine()
       },
-      refreshChart(){
+      refreshChart() {
         // var day = new Date();
         // var time = day.format("mm") * 60 + day.format("ss");
       }
@@ -73,6 +76,7 @@
     mounted() {
       this.getEnvironmentLine()
       this.refreshChart()
+      console.log("menu", this.moduleItem)
     }
   };
 </script>

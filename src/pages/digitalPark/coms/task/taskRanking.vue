@@ -12,7 +12,8 @@
         <span>效率</span>
       </div>
       <ul>
-        <li v-for="(item,index) in tableData" :key="index" class="ganged-log-li flex">
+        <li v-for="(item,index) in tableData" :key="index" class="yd-ganged-log-li flex"
+            :class="isyd?'':'task-li'">
           <span>{{index+1}}</span>
           <span>{{item.name}}</span>
           <span>{{item.num}}</span>
@@ -31,6 +32,8 @@
 <script>
 import CommonFun from "../../../../utils/commonFun";
 import ChartUtils from "../../../../utils/chartUtils";
+import { isYD } from "@/utils/project";
+
 export default {
   name: "taskRanking",
   components: {},
@@ -39,6 +42,11 @@ export default {
     return {
       tableData:[]
     };
+  },
+  computed:{
+    isyd(){
+      return isYD()
+    }
   },
   methods: {
     getTableData(){
@@ -96,7 +104,7 @@ export default {
       line-height: 50px;
     }
   }
-  .ganged-log-li{
+  .yd-ganged-log-li{
     width: 100%;
     height: 40px;
     font-size: 14px;
@@ -114,6 +122,13 @@ export default {
     }
     span:last-child{
       color:#01EAFE;
+    }
+  }
+  .task-li{
+    color:#666;
+    span{
+      height: 50px;
+      line-height: 50px;
     }
   }
 }

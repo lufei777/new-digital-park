@@ -36,7 +36,7 @@
         </el-date-picker>
       </div>
       <el-button @click="onClickLookBtn" type="primary">查看报表</el-button>
-      <el-button @click="onClickExportBtn" type="primary">导出报表</el-button>
+      <el-button @click="onClickExportBtn" type="primary" v-if="tableData">导出报表</el-button>
     </div>
     <p v-html="tableData" v-if="tableData"></p>
     <p v-if="!tableData" class="no-data">暂无数据 ~</p>
@@ -81,7 +81,7 @@
     },
     data () {
       return {
-        curDateType:'monthly',
+        curDateType:isZG()?'daily':'monthly',
         dateTypeList:dateTypeList,
         pickerType:isZG()?'date':'month',
         // startTime:moment(new Date(new Date().getTime()-28*24*60*60*1000*11)).format('YYYY-MM'),
@@ -91,7 +91,7 @@
         energyList:energyList,
         curEnergy:'electricity',
         tableData:'',
-        valueFormat:isZG()?"YYYY-MM":'YYY-MM-DD'
+        valueFormat:isZG()?"YYYY-MM-DD":'YYY-MM'
       }
     },
     computed:{
@@ -99,6 +99,8 @@
         return {
           start:moment(this.startTime).format(this.valueFormat),
           end:moment(this.endTime).format(this.valueFormat),
+          // start:this.startTime,
+          // end:this.endTime,
           type:this.curDateType,
           catalog:this.curEnergy,
           parentSpace:1,

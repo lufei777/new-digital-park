@@ -46,6 +46,8 @@ import SystemManageApi from '@/service/api/systemManage'
 import { mapMutations } from 'vuex';
 import { setToken, setIsCZClient } from '@/utils/auth';
 import { getProjectTitle } from '@/utils/project';
+import { isYD } from "../../../utils/project";
+
 export default {
   name: 'DigitalParkLogin',
   components: {
@@ -116,7 +118,11 @@ export default {
         setToken(token);
         setIsCZClient(isCZClient);
         // window.location.reload();
-        this.$router.push('/digitalPark/homePage');
+        if(isYD()){
+          this.$router.push('/largeSizeScreen');
+        }else{
+          this.$router.push('/digitalPark/homePage');
+        }
       }
     }
   }

@@ -14,14 +14,14 @@
       <div class="data-info">
         <div class="data-info-module-name">{{moduleItem.moduleName}}</div>
         <div :class="fromFlag==1?'elec-data':'water-data'">{{energy}}KWh</div>
-        <div class="percent1">
-          <span>同比：{{Math.abs(tbzz)}}%</span>
-          <i v-if="tbzz!=0" :class="['iconfont',tbzz<0?'icon052caozuo_jiangxu desc-icon':'icon053caozuo_shengxu asc-icon']"></i>
-        </div>
-        <div class="percent2">
-          <span>环比：{{Math.abs(hbzz)}}%</span>
-          <i v-if="tbzz!=0" :class="['iconfont',hbzz<0?'icon052caozuo_jiangxu desc-icon':'icon053caozuo_shengxu asc-icon']"></i>
-        </div>
+        <!--<div class="percent1">-->
+          <!--<span>同比：{{Math.abs(tbzz)}}%</span>-->
+          <!--<i v-if="tbzz!=0" :class="['iconfont',tbzz<0?'icon052caozuo_jiangxu desc-icon':'icon053caozuo_shengxu asc-icon']"></i>-->
+        <!--</div>-->
+        <!--<div class="percent2">-->
+          <!--<span>环比：{{Math.abs(hbzz)}}%</span>-->
+          <!--<i v-if="tbzz!=0" :class="['iconfont',hbzz<0?'icon052caozuo_jiangxu desc-icon':'icon053caozuo_shengxu asc-icon']"></i>-->
+        <!--</div>-->
       </div>
     </div>
   </div>
