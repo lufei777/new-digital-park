@@ -2,11 +2,12 @@
   <div class="product-list-coms">
     <div class="product-list">
       <div class="hover-pointer flex-align-center"
-           :class="[isyd?'yd-fixed-pro-item':'fixed-pro-item',item.clickFlag?'active-yd-fixed-pro-item':'']"
+           :class="[isyd && !smallyd?'yd-fixed-pro-item':isyd && smallyd?'small-yd-fixed-pro-item':'fixed-pro-item',
+                   item.clickFlag?'active-yd-fixed-pro-item':'']"
            v-for="(item) in showFixedProList" :key="item.id"
            @click="onClickItemFixPro(item)"
       >
-        <i class="iconfont item-icon" :class="item.icon"></i>
+        <i class="iconfont item-icon" :class="[smallyd?'small-item-icon':'',item.icon]"></i>
         <span>{{item.name}}</span>
       </div>
     </div>
@@ -45,7 +46,10 @@
       },
       ...mapState({
         largeScreenIframeSrc:state=>state.digitalPark.largeScreenIframeSrc
-      })
+      }),
+      smallyd(){
+        return document.body.offsetWidth<2560?true:false
+      }
     },
     watch:{
       largeScreenIframeSrc(){
@@ -173,6 +177,19 @@
     border-radius:30px;
     color:#A5FCFF;
   }
+  .small-yd-fixed-pro-item{
+    width:31%;
+    float:left;
+    margin:10px 1%;
+    font-size: 12px;
+    padding:6px 0;
+    text-align: center;
+    box-sizing: border-box;
+    border:1px solid #A5FCFF;
+    background:linear-gradient(0deg,rgba(0,180,255,0.15));
+    border-radius:30px;
+    color:#A5FCFF;
+  }
   .turn-page{
     margin-bottom:20px;
     span{
@@ -210,6 +227,19 @@
     line-height:25px;
     color:#A5FCFF;
     margin-right: 10px;
+  }
+  .small-item-icon{
+    display: block;
+    border:1px solid #A5FCFF;
+    border-radius: 50%;
+    /*padding:5px;*/
+    width:15px;
+    height:15px;
+    text-align: center;
+    line-height:15px;
+    color:#A5FCFF;
+    margin-right: 5px;
+    font-size: 12px;
   }
   .active-yd-fixed-pro-item{
     color:#01EAFE;

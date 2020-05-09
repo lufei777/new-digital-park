@@ -376,10 +376,12 @@
         }
         let res = await CommonApi.getTbhbTable(tableParams)
         let unit ="("+res.unit.split("（")[1]
-        this.tableConfig.columnConfig = [{label:'排名',prop:'xulie'},
-          {label:`当期综合能耗${unit}`,prop:'date'},
-          {label:`同期综合能耗${unit}`,prop:'dqzh',sortable:'custom'},
-          {label:`上期综合能耗${unit}`,prop:'tqzh',sortable:'custom'},
+        this.tableConfig.columnConfig = [
+          {label:'排名',prop:'xulie'},
+          {label:`时间`,prop:'date'},
+          {label:`当期综合能耗${unit}`,prop:'dqzh'},
+          {label:`同期综合能耗${unit}`,prop:'tqzh',sortable:'custom'},
+          {label:`上期综合能耗${unit}`,prop:'sqzh',sortable:'custom'},
           {label:'综合能耗同比增长率(%)',prop:'tbzz',sortable:'custom',
             formatter: function(row, value) {
               return value+"%";

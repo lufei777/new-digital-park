@@ -37,13 +37,16 @@
 
       <div class="dashboard-center">
         <!--<div class="carousel-box"></div>-->
-        <img v-if="pageFlag==2" src="../../../../static/image/digitalPark/unity_priview.png"
+        <img v-if="pageFlag==2 && !isydSystem" src="../../../../static/image/digitalPark/unity_priview.png"
              class="unity_priview"
              alt="">
-        <!--<iframe v-if="pageFlag==1"-->
-                <!--src="../../../../static/HomePage/index.html"-->
-                <!--frameborder="0"-->
-                <!--class="unity-frame"></iframe>-->
+        <iframe v-if="pageFlag==1 && !isydSystem"
+                src="../../../../static/HomePage/index.html"
+                frameborder="0"
+                class="unity-frame"></iframe>
+        <img v-if="isydSystem" src="../../../../static/image/digitalPark/ydCityModule.png"
+             class="unity_priview"
+             alt="">
 
       </div>
       <div class="dashboard-right">
@@ -111,6 +114,8 @@
   import CommonFun from '../../../utils/commonFun'
   import Header from '../coms/header'
   import Vue from 'vue'
+  import {isYD} from "@/utils/project";
+
   export default {
     name: 'DashBoardHomePageNew',
     props:['curProModule','hideHeader'],
@@ -148,6 +153,9 @@
         showGoBack(){
           return this.$route.query.productId?true:false
         },
+        isydSystem(){
+          return window.__CZ_SYSTEM == 'ydCity';
+        }
      },
       watch:{
         async productId(){

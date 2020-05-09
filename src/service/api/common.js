@@ -343,6 +343,10 @@ class CommonApi {
   @url("/vibe-web/app_page/asset")
   @get
   getVideoUrl(){}
+
+  @url("/vibe-web/monitor/codeName")
+  @get
+  getMonitorTypeList(){}
 }
 
 export default new CommonApi()

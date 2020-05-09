@@ -13,7 +13,7 @@
       </div>
       <div class="data-info">
         <div class="data-info-module-name">{{moduleItem.moduleName}}</div>
-        <div :class="fromFlag==1?'elec-data':'water-data'">{{energy}}KWh</div>
+        <div :class="fromFlag==1?'elec-data':'water-data'">{{energy}}</div>
         <!--<div class="percent1">-->
           <!--<span>同比：{{Math.abs(tbzz)}}%</span>-->
           <!--<i v-if="tbzz!=0" :class="['iconfont',tbzz<0?'icon052caozuo_jiangxu desc-icon':'icon053caozuo_shengxu asc-icon']"></i>-->
@@ -52,7 +52,7 @@
       async getEnergyData(){
         let res = await EnergyApi.getEnergyModuleData({
           redioType: 0,
-          startTime: moment().format('YYYY-MM-DD'),
+          startTime:moment().subtract(1, 'days').format('YYYY-MM-DD'),
           selectType: 3,
           catalogs:'4000,1002',
         });
@@ -60,7 +60,7 @@
         this.prop = res.prop
         if(this.fromFlag==1){
           this.totalNum = res.num.elecNum
-          this.energy =res.energy.elecSum
+          this.energy =res.energy.elecSum+'KW'
           this.alarm=res.alarm.length?res.alarm[0]:[]
           if(res.num.elecNum && res.alarm.length){
             this.percent = parseFloat((res.alarm[0].number /res.num.elecNum).toFixed(2))
@@ -72,7 +72,7 @@
           $(".el-progress__text").html(`<div class="elec-alarm-num">${res.alarm.length?res.alarm.number:0}个</div><br />报警数量`)
         }else{
           this.totalNum = res.num.waterNum
-          this.energy =res.energy.waterSum
+          this.energy =res.energy.waterSum+'t'
           this.alarm=res.alarm.length &&res.alarm.length ==2?res.alarm[1]:[]
           if(res.num.waterNum && res.alarm.length){
             this.percent = parseFloat((res.alarm[0].number /res.num.waterNum).toFixed(2))

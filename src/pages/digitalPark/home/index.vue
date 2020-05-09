@@ -138,7 +138,10 @@ export default {
   computed: {
     ...mapState({
       dragFlag: state => state.digitalPark.dragFlag
-    })
+    }),
+    isydSystem() {
+      return window.__CZ_SYSTEM=='ydCity' ;
+    }
   },
   watch: {
     $route() {
@@ -305,6 +308,7 @@ export default {
     },
     linkTo(item) {
       // let activeIndex = this.$refs.carousel.activeIndex
+      if(this.isydSystem) return ;
       this.$router.push(item.link)
     }
   },

@@ -1885,6 +1885,7 @@ class commonFun {
         router.push(`${item.routeAddress}?productId=${item.pid}`)
         return true;
       } else {
+        window.closeVideoWin && window.closeVideoWin()
         let id = item.id
         if (item.childNode.length) {
           id = this.getLastItem(item).id
