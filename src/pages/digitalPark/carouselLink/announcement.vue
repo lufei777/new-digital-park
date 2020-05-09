@@ -61,7 +61,7 @@ export default {
 <style lang="less">
 .announcement {
   width: 100%;
-  height: 100%;
+  // height: 100%;
   background: #fff;
   .nav-style {
     padding: 0 20px;
@@ -98,6 +98,7 @@ export default {
   }
   .content {
     line-height: 30px;
+    margin-bottom: 20px;
   }
 }
 </style>
