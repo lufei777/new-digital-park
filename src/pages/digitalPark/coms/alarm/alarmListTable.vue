@@ -93,6 +93,7 @@
 <style lang="less">
   .alarm-list-table-coms {
     box-sizing: border-box;
+    /*padding:10px;*/
     .alarm-list-table-coms-inner{
       width: 100% ;
       height: 100%;

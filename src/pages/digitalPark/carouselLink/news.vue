@@ -1,5 +1,5 @@
 <template>
-  <div class="news">
+  <div class="banner-news">
     <div class="nav-style">
       <NavOperator :showGoBack="true" class="nav-operator" />
     </div>
@@ -33,7 +33,7 @@ export default {
 </script>
 
 <style lang="less">
-.news {
+.banner-news {
   width: 100%;
   height: 100%;
   background: #fff;

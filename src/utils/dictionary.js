@@ -380,5 +380,6 @@ export const ProjectName = {
 
 // 根据项目显示不同的title
 export const Title = {
-  [ProjectName.ZG]: '中钢大厦数字建筑运管平台'
+  [ProjectName.ZG]: '中钢大厦数字建筑运管平台',
+  [ProjectName.YDCity]: '伊甸城BIM运管系统'
 }

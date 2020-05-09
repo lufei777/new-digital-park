@@ -2,7 +2,7 @@
   <div class="product-list-coms">
     <div class="product-list">
       <div class="hover-pointer flex-align-center"
-           :class="isyd?'yd-fixed-pro-item':'fixed-pro-item'"
+           :class="[isyd?'yd-fixed-pro-item':'fixed-pro-item',item.clickFlag?'active-yd-fixed-pro-item':'']"
            v-for="(item) in showFixedProList" :key="item.id"
            @click="onClickItemFixPro(item)"
       >
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import DigitalParkApi from '@/service/api/digitalPark'
   import CommonFun from '@/utils/commonFun'
   import { IsCZClient } from '@/utils/auth';
@@ -41,9 +42,19 @@
     computed:{
       isyd(){ //是否是伊甸城
         return isYD
-      }
+      },
+      ...mapState({
+        largeScreenIframeSrc:state=>state.digitalPark.largeScreenIframeSrc
+      })
     },
     watch:{
+      largeScreenIframeSrc(){
+        if(!this.largeScreenIframeSrc){
+          this.fixedProList.map((item)=>{
+            item.clickFlag=false
+          })
+        }
+      }
     },
     methods: {
       async getProductList(){
@@ -53,13 +64,17 @@
         // $(".fixed-pro-item").css({
         //   height:$(".product-list").height()/3
         // })
-        if(this.productId){
-          this.clientMenu = res.find((item)=>item.id==this.productId)
-          this.fixedProList= this.clientMenu.childNode
-          this.headNames=this.clientMenu.name
-        }else{
-          this.fixedProList=res
-        }
+        // if(this.productId){
+        //   this.clientMenu = res.find((item)=>item.id==this.productId)
+        //   this.fixedProList= this.clientMenu.childNode
+        //   this.headNames=this.clientMenu.name
+        // }else{
+        //   this.fixedProList=res
+        // }
+        res.map((item)=>{
+          item.clickFlag=false
+        })
+        this.fixedProList=res
         this.showFixedProList=this.fixedProList.length>12?this.fixedProList.slice(0,12):this.fixedProList
       },
       onClickTurnPageBtn(flag){
@@ -72,13 +87,24 @@
         }
       },
       onClickItemFixPro(item){
+        this.fixedProList.map((item)=>{
+          item.clickFlag=false
+        })
+        item.clickFlag=true
         if(item.level==2 && item.clientType==1){
           let tmpObj = item
-          tmpObj.childNode.splice(0,1)
+          if(item.childNode[0].name=="概览"){
+            tmpObj.childNode.splice(0,1)
+          }
           let curNode = CommonFun.getLastItem(tmpObj)
-          console.log("curNode",curNode)
+          // console.log("curNode",curNode)
           if(IsCZClient()){
+            // console.log("loaditem",item)
             window.goToClientPage(JSON.stringify(item), curNode.id + "")
+            this.$store.commit("digitalPark/largeScreenIframeSrc","")
+            this.fixedProList.map((item)=>{
+              item.clickFlag=false
+            })
           }else{
             this.$message({
               type:'warning',
@@ -184,6 +210,11 @@
     line-height:25px;
     color:#A5FCFF;
     margin-right: 10px;
+  }
+  .active-yd-fixed-pro-item{
+    color:#01EAFE;
+    background: #012F46;
+    border:1px solid #012F46;
   }
 }
 </style>

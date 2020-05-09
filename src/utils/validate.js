@@ -28,3 +28,13 @@ export const validateSpecialWord = (rule, value, callback) => {
     callback();
   }
 };
+
+// 校验邮箱
+export const validMail = (rule, value, callback) => {
+  let reg = /[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+  if (reg.test(value)) {
+    callback();
+  } else {
+    callback(new Error("请输入正确的邮箱"));
+  }
+};

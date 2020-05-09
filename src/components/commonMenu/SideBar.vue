@@ -28,7 +28,7 @@
       >
         <sidebar-item :menuData="menuData" :specialRoute="menuConfig.specialRoute"/>
       </el-menu>
-      <div v-if="!menuConfig.specialRoute">
+      <div v-if="!menuConfig.specialRoute || !isyd">
         <div
           class="iconfont iconkuaijierukou hover-pointer shortcut-btn"
           @click="onClickShortcutBtn"
@@ -51,6 +51,8 @@
 import commonFun from "@/utils/commonFun";
 import SidebarItem from "./SidebarItem";
 import { mapState } from 'vuex'
+import {isYD} from "../../utils/project";
+
 export default {
   name: "Sidebar",
   components: { SidebarItem },
@@ -86,7 +88,10 @@ export default {
     },
     ...mapState({
       activeMenuIndexVuex:state=>state.digitalPark.activeMenuIndex
-    })
+    }),
+    isyd(){
+      return isYD()
+    }
   },
   watch: {
     isCollapse() {

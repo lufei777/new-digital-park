@@ -37,6 +37,9 @@
       },
       initChart(res){
         let myChart = this.$echarts.init(this.$refs.myChart);
+        // myChart.on('click',(e) => {
+        //   console.log(e);
+        // })
         let legendData = [];
         let total=0
         res.map(item => {

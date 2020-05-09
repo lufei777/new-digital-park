@@ -29,11 +29,12 @@
       getComponent(){
         this.width = document.body.offsetWidth
         this.height = document.body.offsetHeight
-        if(this.width<2610 && this.height<1468){
-          this.curCom = 'Dashboard'
-        }else{
-          this.curCom = 'Normal'
-        }
+        // if(this.width<2560 && this.height<1350){
+        //   this.curCom = 'Dashboard'
+        // }else{
+        //   this.curCom = 'Normal'
+        // }
+        this.curCom = 'Normal'
       },
       getLargeScreenModuleList(){
         this.$refs[this.curCom].getLargeScreenModuleList &&
