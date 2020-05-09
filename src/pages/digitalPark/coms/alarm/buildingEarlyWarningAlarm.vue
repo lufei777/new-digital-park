@@ -18,6 +18,8 @@
     data() {
       return {};
     },
+    computed:{
+    },
     methods: {
       initChart() {
         let myChart = this.$echarts.init(this.$refs.myChart);
@@ -35,11 +37,11 @@
           xAxis: {
             name:'时间',
             nameTextStyle:{
-              color: isYD()?'#fff':''
+              color: this.moduleItem.type!=2?'#fff':''
             },
             axisLabel: {
               textStyle: {
-                color: isYD()?'#fff':''
+                color: this.moduleItem.type!=2?'#fff':''
               },
             },
             "axisLine": {
@@ -57,7 +59,7 @@
           yAxis: {
             name:'条',
             nameTextStyle:{
-              color: isYD()?'#fff':''
+              color: this.moduleItem.type!=2?'#fff':''
             },
             type: 'value',
             splitLine: {
@@ -71,7 +73,7 @@
             },
             axisLabel: {
               textStyle: {
-                color: isYD()?'#fff':''
+                color: this.moduleItem.type!=2?'#fff':''
               },
             },
           },

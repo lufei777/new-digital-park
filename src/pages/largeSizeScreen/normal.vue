@@ -127,7 +127,8 @@
           width: document.body.offsetWidth,
           height: document.body.offsetHeight,
           widthPercent: this.widthPercent,
-          heightPercent: this.heightPercent
+          heightPercent: this.heightPercent,
+          preview:'ydCity'
         })
         res.modules.map((item)=>{
           item.bgStatus='normal'
@@ -194,6 +195,8 @@
           $(".center-show").css({
             width: '1920px',
             height: '1080px'
+            // width:'100%',
+            // height:'100%'
           })
           this.moduleMaxWidth = 960
           this.moduleMargin = 20
@@ -301,11 +304,6 @@
 </script>
 
 <style lang="less">
-  .haveBg{
-    background-image: url('../../../static/image/digitalPark/home.png');
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-  }
   .large-size-screen-normal {
     height: 100%;
 
@@ -420,6 +418,9 @@
       /*height: 1080px !important;*/
       width: 1920px;
       height: 1080px;
+      /*width:100%;*/
+      /*height:100%;*/
+      /*background: pink;*/
       box-sizing: border-box;
       /*border: 1px solid pink;*/
       /*margin:0 auto;*/
@@ -438,9 +439,37 @@
     .single-module-name {
     }
 
+    .haveBg{
+      background-image: url('../../../static/image/digitalPark/home.png');
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+    }
+
     .el-dropdown {
       font-size: @largeScreenFontSize;
       color: @white;
+    }
+  }
+
+  @media screen and (max-width: 1920px) {
+    .large-size-screen-normal {
+      .yd-out-drag-product {
+        background-image: url('../../../static/image/digitalPark/content_bg5.png');
+        font-size: 12px;
+        width: 320px;
+        height: 168px;
+
+        .single-module-name {
+          width: 100%;
+          padding-left: 2.5%;
+          line-height: 1.5;
+          font-size: 14px;
+        }
+
+        .module-item-top-name {
+          margin-top: 10px;
+        }
+      }
     }
   }
 

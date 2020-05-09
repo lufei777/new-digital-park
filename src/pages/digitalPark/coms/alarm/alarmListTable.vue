@@ -5,14 +5,23 @@
         <el-date-picker
           v-model="startTime"
           type="datetime"
-          placeholder="开始时间">
+          placeholder="选择日期时间"
+          @change="onTimeChange"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          format="yyyy-MM-dd HH:mm:ss"
+        >
         </el-date-picker>
         <span>至</span>
         <el-date-picker
           v-model="endTime"
           type="datetime"
-          placeholder="结束时间">
+          placeholder="选择日期时间"
+          @change="onTimeChange"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          format="yyyy-MM-dd HH:mm:ss"
+        >
         </el-date-picker>
+        <el-button type="primary" class="search-btn" @click="onClickSearchBtn">搜索</el-button>
       </div>
       <div class="table-box">
         <z-table :ref="tableConfig.ref" :options="tableConfig"></z-table>
@@ -23,20 +32,24 @@
 
 <script>
   import CommonApi from '@/service/api/common'
+
   let pageInfo = {
     pageNum: 1,
     pageCount: 5
   }
+  import moment from 'moment'
+
   export default {
     name: 'alarmListTable',
     components: {},
     props: ['moduleItem'],
     data() {
+      let _this = this
       return {
         tableConfig: {
           ref: "tableRef",
           serverMode: {
-            url:  CommonApi.getAlarmMessageList,
+            url: CommonApi.getAlarmMessageList,
             data: {}
           },
           propsHttp: {
@@ -58,30 +71,39 @@
           ],
           uiConfig: {
             height: "auto",
-            showIndex: true,
+            showIndex: _this.setIndex
           },
         },
-        startTime:moment().add(-15,'days').format('YYYY-MM-DD HH:MM:SS'),
-        endTime:moment().format('YYYY-MM-DD HH:MM:SS')
+        // startTime:moment().add(-15,'days').format('YYYY-MM-DD HH:MM:SS'),
+        // endTime:moment().format('YYYY-MM-DD HH:MM:SS')
+        startTime: moment(new Date(new Date().getTime() - 3600 * 24 * 1000 * 15)).format('YYYY-MM-DD HH:MM:SS'),//new Date(2020, 4, 5, 10, 10),
+        endTime: moment(new Date()).format('YYYY-MM-DD HH:MM:SS'),
       }
     },
     computed: {},
     watch: {},
     methods: {
-      onTimeChange(){
+      onTimeChange() {
         this.setTableData()
+        // this.$refs[this.tableConfig.ref].refreshTable()
+      },
+      setTableData() {
+        let params = {
+          start: this.startTime,
+          end: this.endTime
+        }
+        this.tableConfig.serverMode.data = {...pageInfo, ...params}
+      },
+      onClickSearchBtn() {
         this.$refs[this.tableConfig.ref].refreshTable()
       },
-      setTableData(){
-        let params = {
-          start:this.startTime,
-          end:this.endTime
-        }
-        this.tableConfig.serverMode.data = {...pageInfo,...params}
+      setIndex(){
+         return true
+        // return pageInfo.pageCount*this.#refs[this.tableConfig.ref].getP
       }
     },
-    created(){
-       this.setTableData()
+    created() {
+      this.setTableData()
     },
     mounted() {
 
@@ -94,14 +116,24 @@
   .alarm-list-table-coms {
     box-sizing: border-box;
     /*padding:10px;*/
-    .alarm-list-table-coms-inner{
-      width: 100% ;
+
+    .alarm-list-table-coms-inner {
+      width: 100%;
       height: 100%;
     }
-    .table-box{
+
+    .table-box {
       flex-grow: 1;
       margin-top: 20px;
       box-sizing: border-box;
+    }
+
+    .search-btn {
+      margin-left: 20px;
+    }
+
+    .time-box{
+      width:100%;
     }
   }
 </style>

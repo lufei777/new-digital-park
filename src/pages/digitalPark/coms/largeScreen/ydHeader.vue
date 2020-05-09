@@ -99,10 +99,42 @@
           this.$store.commit("digitalPark/largeScreenIframeSrc",window.top.location.origin+'/#'+item.routeAddress)
         }
       },
+      async onClickUserConfigure(val) { //点击用户
+        if (val == 3) {
+          //如果是客户端
+          if (IsCZClient()) {
+            goBackClientLogin();
+          }
+          this.$store.dispatch('user/logout').then(() => {
+            this.$router.push("/login");
+          })
+          // 清空菜单列表
+          this.$store.commit("digitalPark/activeMenuIndex", "");
+        } else {
+          this.setSystemMenu()
+          if (val == 1) {
+            this.$store.commit("digitalPark/activeMenuIndex", "/personalInformation")
+            this.$store.commit("digitalPark/largeScreenIframeSrc",window.top.location.origin+'/#'+'/personalInformation')
+          } else if (val == 2) {
+            this.$store.commit("digitalPark/activeMenuIndex", "/modifyPassword")
+            this.$store.commit("digitalPark/largeScreenIframeSrc",window.top.location.origin+'/#'+'/modifyPassword')
+          }
+        }
+      },
+      setSystemMenu() {
+        let menuTree = JSON.parse(localStorage.getItem("menuTree"));
+        let firstLevelTree = menuTree[0].childNode.find(
+          item => item.name == "基础功能"
+        );
+        let secondLevelTree = firstLevelTree.childNode.find(
+          item => item.name == "系统管理"
+        );
+        this.$store.commit("digitalPark/menuList", secondLevelTree)
+      },
     },
     mounted() {
       window.CZClient = {
-        // goToPersonal: this.onClickUserConfigure,  //跳转个人中心
+        goToPersonal: this.onClickUserConfigure,  //跳转个人中心
         // goBack: this.onClickGoBack,    //返回首页
         goToWebPage: this.goToWebPage,
       }
@@ -180,5 +212,32 @@
       margin-right: 10px;
     }
   }
-
+  @media screen and (max-width: 1920px) {
+    .yd-header {
+      padding: 0 35px;
+      height: 60px;
+      line-height: 60px;
+      box-sizing: border-box;
+      .header-name {
+        font-size: 28px;
+      }
+      .cur-tip, .logout-box {
+        height:50px;
+        line-height: 50px;
+        box-sizing: border-box;
+        font-size: 18px;
+      }
+      .logout-box {
+        padding-right: 2%;
+        font-size:16px;
+        .news-icon, .logout-icon {
+          font-size: 16px;
+          margin-right: 10px;
+        }
+      }
+      .tip-icon {
+        font-size: 18px;
+      }
+    }
+  }
 </style>

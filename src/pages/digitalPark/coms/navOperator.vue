@@ -1,5 +1,5 @@
 <template>
-  <div class="digital-nav-operator flex-align">
+  <div class="digital-nav-operator flex-align" v-if="!isyd">
     <span class="nav-right-item long-text" v-if="showGoBack" @click="onClickGoBack">
       <span style="color:#008DEA">
         <i class="iconfont iconshouye"></i>&nbsp;返回首页
@@ -86,6 +86,7 @@ import CommonApi from "@/service/api/common";
 import { mapState } from "vuex";
 import CommonFun from '@/utils/commonFun'
 import { IsCZClient } from '@/utils/auth';
+import {isYD} from "@/utils/project";
 
 export default {
   name: "DigitalNavOperator",
@@ -117,6 +118,9 @@ export default {
     cookieModuleType() {
       return this.moduleType || Cookies.get('moduleType')
     },
+    isyd(){
+      return isYD()
+    }
   },
   watch: {
     /* updateUserInfo() {

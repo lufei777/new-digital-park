@@ -62,6 +62,7 @@ router.beforeEach((to, from, next) => {
   // if (to.path != '/vibe-web') {
   //   store.commit('digitalPark/activeMenuIndex', to.path);
   // }
+  window.closeVideoWin && window.closeVideoWin()
   if (window.name === 'largeScreen') {
     console.log("routerto",JSON.parse(localStorage.menuList))
     store.commit("digitalPark/menuList", JSON.parse(localStorage.menuList));

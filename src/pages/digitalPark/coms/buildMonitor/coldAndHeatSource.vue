@@ -11,7 +11,7 @@
         <div class="progress-box">
           <div class="flex">
             <el-progress :percentage="35" :stroke-width="12" :format="format"></el-progress>
-            <span>回水温度：35℃</span>
+            <span class="msg-tip">回水温度：35℃</span>
           </div>
           <div class="flex">
             <el-progress :percentage="60" :stroke-width="12" :format="format"></el-progress>
@@ -74,7 +74,7 @@ export default {
 <style lang="less">
 .cold-and-heat-source-coms {
   .item-progress-group {
-    padding: 0 30px;
+    /*padding: 0 5%;*/
     box-sizing: border-box;
     .item-progress-group-left {
       margin-top: -25px;
@@ -92,7 +92,7 @@ export default {
   }
   .el-progress {
     flex-grow: 1;
-    margin-bottom: 20px;
+    /*margin-bottom: 20px;*/
   }
   .item-icon {
     margin-bottom: 5px;
@@ -105,6 +105,7 @@ export default {
   }
   .el-progress-bar {
     padding-right: 10px;
+    margin-right: 0;
   }
   .el-progress-bar__inner {
     background: linear-gradient(
@@ -121,6 +122,9 @@ export default {
         rgba(1, 234, 254, 1)
       );
     }
+  }
+  .msg-tip{
+    flex-shrink: 0;
   }
 }
 </style>
