@@ -1,39 +1,143 @@
 <template>
   <div class="task-overview panel-container">
     <div class="common-tree-box radius-shadow">
-      <Tree :tree-list="taskData" :tree-config="taskTreeConfig"></Tree>
+      <Tree :tree-list="taskTypeData" :tree-config="taskTreeConfig"></Tree>
     </div>
     <div class="right-content panel-container">
+      <div class="tip frist-tip flex-align">
+        <span class="icon"></span>
+        <span>工单数量统计</span>
+      </div>
       <div class="task-sum-box radius-shadow flex-align-between">
         <div class="task-sum flex-align-center">
-          <p>今日任务</p>
-          <span>50</span>
+          <p>全部工单</p>
+          <span>{{allTask}}</span>
         </div>
         <div class="task-sum flex-align-center">
-          <p>待派工单</p>
-          <span>10</span>
+          <p>已完成工单</p>
+          <span>{{completeTask}}</span>
         </div>
         <div class="task-sum flex-align-center">
-          <p>待接工单</p>
-          <span>50</span>
+          <p>未完成工单</p>
+          <span>{{unfinishTask}}</span>
         </div>
         <div class="task-sum flex-align-center">
-          <p>处理中工单</p>
-          <span>50</span>
+          <p>超时工单</p>
+          <span>{{overtimeTask}}</span>
         </div>
         <div class="task-sum flex-align-center">
-          <p>今日完成工单</p>
-          <span>{{todayFinish}}</span>
+          <p>现场工单</p>
+          <span>{{sceneTask}}</span>
+        </div>
+        <div class="task-sum flex-align-center">
+          <p>补录工单</p>
+          <span>{{supplementTask}}</span>
         </div>
       </div>
-      <CommonSelect />
-      <div class="task-overview-table panel">
-        <z-table :ref="tableData.ref" :options="tableData">
-          <template slot="operation" slot-scope="obj">
-            <el-button type="text" @click="editRow(obj)">详情</el-button>
-          </template>
-        </z-table>
+      <!-- 工单数量同比环比分析 -->
+      <div>
+        <div class="tip frist-tip flex-align">
+          <span class="icon"></span>
+          <span>工单数量同比环比分析</span>
+        </div>
+        <div class="task-group task-MoM-analysis flex-align-between radius-shadow">
+          <div class="analysis-pie-charts-box">
+            <div class="dept-task-header flex-align-between">
+              <div>2019年与2020年工单数量环比柱状图分析</div>
+              <div class="dept-class">
+                <el-select v-model="analysisValue" placeholder="请选择" size="small">
+                  <el-option
+                    v-for="item in analysisList"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+              </div>
+            </div>
+            <div class="pie-charts analysis-pie-charts" ref="MoManalysisCharts"></div>
+          </div>
+          <div class="charts-box">
+            <div class="pie-charts statistics-pie-charts" ref="typeStatisticsCharts"></div>
+          </div>
+        </div>
       </div>
+      <!-- 部门工单统计 -->
+      <div>
+        <div class="tip frist-tip flex-align">
+          <span class="icon"></span>
+          <span>部门工单统计</span>
+        </div>
+        <div class="task-group radius-shadow flex-align-between">
+          <div class="department-task-box">
+            <div class="dept-task-header flex-align-between">
+              <div>2020年部门工单统计</div>
+              <div class="dept-class">
+                <span>部门</span>
+                <el-select
+                  v-model="deptValue"
+                  placeholder="请选择"
+                  size="small"
+                  @change="deptTypeChange"
+                >
+                  <el-option
+                    v-for="item in deptList"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+              </div>
+            </div>
+            <div class="analysis-pie-charts" ref="taskStatisticsCharts"></div>
+          </div>
+          <div class="task-rank">
+            <div class v-for="(item,index) in taskNumRankData" :key="index">
+              <div class="progress-div">
+                <el-progress :percentage="parseFloat(item.taskNum)" :show-text="false"></el-progress>
+                <span style="margin-left:5px">{{item.taskNum}}个</span>
+              </div>
+
+              <div class="percentage-text">
+                <span>{{item.deptName}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 工单状态统计 -->
+      <div>
+        <div class="tip frist-tip flex-align">
+          <span class="icon"></span>
+          <span>工单状态统计</span>
+        </div>
+        <div class="task-status-statistic radius-shadow">
+          <div ref="myChart1" class="my-chart"></div>
+          <div ref="myChart2" class="my-chart"></div>
+          <div ref="myChart3" class="my-chart"></div>
+          <div ref="myChart4" class="my-chart"></div>
+        </div>
+      </div>
+      <!-- 工单排名 -->
+      <div>
+        <div class="tip frist-tip flex-align">
+          <span class="icon"></span>
+          <span>工单排名</span>
+        </div>
+        <div class="task-overview-table panel">
+          <div class="flex-align-between table-tip-box">
+            <div class="table-tip">工单排名</div>
+            <el-button type="primary" @click="onClickExportBtn">导出表格</el-button>
+          </div>
+          <z-table :ref="tableData.ref" :options="tableData">
+            <!-- <template slot="operation" slot-scope="obj">
+              <el-button type="text" @click="editRow(obj)">详情</el-button>
+            </template>-->
+          </z-table>
+        </div>
+      </div>
+      <!-- <CommonSelect /> -->
+      <!-- <div class="task-overview-table panel"></div> -->
     </div>
   </div>
 </template>
@@ -43,7 +147,9 @@ import { mapState } from "vuex";
 import Tree from "../../components/tree/index";
 import CommonSelect from "../taskManage/coms/commonSelect";
 import TaskManageApi from "../../service/api/taskManage";
-
+import SystemManage from "../../service/api/systemManage";
+import ChartUtils from "@/utils/chartUtils";
+import { taskType } from "@/utils/dictionary";
 export default {
   name: "TaskOverview",
   components: {
@@ -66,94 +172,74 @@ export default {
       },
       tableData: {
         ref: "tableData",
-        operation: {
-          width: 150
-        },
+        // operation: {
+        //   width: 150
+        // },
         data: [],
         columnConfig: [],
         uiConfig: {
           height: "auto", //"", //高度
-          selection: true, //是否多选
-          searchable: ["taskName", "officeLocation"],
+          selection: false, //是否多选
+          searchable: false,
           showIndex: true,
-          pagination: {
-            //是否分页，分页是否自定义
-            layout: "total,->, prev, pager, next, jumper",
-            pageSizes: [10, 20, 50],
-            handler(pageSize, currentPage, table) {
-              _this.handleCurrentChange(currentPage);
-            }
-          }
-        },
-        btnConfig: {}
+          pagination: false
+        }
+        // btnConfig: {}
       },
-      todayFinish: ""
+      todayFinish: "",
+      allTask: "0",
+      completeTask: "0",
+      overtimeTask: "0",
+      sceneTask: "0",
+      supplementTask: "0",
+      unfinishTask: "0",
+      deptValue: "",
+      deptList: [],
+      deptSelectName: "",
+      taskTypeData: [],
+      taskNumRankData: [],
+      analysisValue: 1,
+      analysisList: [
+        {
+          name: "年",
+          id: 1
+        },
+        {
+          name: "月",
+          id: 2
+        }
+      ]
     };
   },
   computed: {
     ...mapState({
       menuIsCollapse: state => state.digitalPark.menuIsCollapse
-    }),
-    taskData() {
-      return [
-        {
-          value: 1,
-          label: "巡检任务",
-          nodes: []
-        },
-        {
-          value: 2,
-          label: "维修任务",
-          nodes: []
-        },
-        {
-          value: 3,
-          label: "保养任务",
-          nodes: []
-        },
-        {
-          value: 4,
-          label: "流程任务",
-          nodes: []
-        },
-        {
-          value: 5,
-          label: "审批任务",
-          nodes: []
-        },
-        {
-          value: 6,
-          label: "其他任务",
-          nodes: []
-        }
-      ];
-    }
+    })
+  },
+  created() {
+    this.taskTypeData = taskType.taskData;
   },
   methods: {
     onClickTreeNodeCallBack() {},
     async taskList() {
       let labelList = [
-        { label: "工单编号", prop: "taskNumber" },
-        { label: "工单名称", prop: "taskName" },
-        { label: "工单类型", prop: "typeText" },
-        { label: "工单描述", prop: "description" },
+        { label: "姓名", prop: "founderName" },
+        // { label: "部门", prop: "taskName" },
+        // { label: "完成率", prop: "typeText" },
+        { label: "总计", prop: "completeNum" },
         { label: "开始时间", prop: "beginTime" },
         { label: "预计结束时间", prop: "endTime" },
         { label: "优先级", prop: "priority" },
-        { label: "状态", prop: "taskStatus" },
-        { label: "创建人", prop: "founderName" },
+        { label: "状态", prop: "reason" },
+        // { label: "创建人", prop: "founderName" },
         { label: "处理人", prop: "username" },
         { label: "地点", prop: "officeLocation" },
         { label: "补录", prop: "isSupplementText" }
       ];
       this.tableData.columnConfig = labelList;
-      let res = await TaskManageApi.taskList({
-        pageNum: this.currentPage,
-        pageSize: 10,
-        type: 3
-      });
-      if (res.list) {
-        res.list.map((item, ind) => {
+      let res = await TaskManageApi.getTaskNumberTable();
+      if (res) {
+        res.map((item, ind) => {
           item.taskStatus =
             item.status == "1"
               ? "待派"
@@ -198,8 +284,8 @@ export default {
         });
       }
       if (res) {
-        this.tableData.data = res.list;
-        this.tableData.uiConfig.pagination.total = res.total;
+        this.tableData.data = res;
+        // this.tableData.uiConfig.pagination.total = res.total;
       }
     },
     handleCurrentChange(val) {
@@ -207,37 +293,351 @@ export default {
       this.taskList();
     },
     editRow(val) {
-       this.$router.push({
-          name: "NewTask",
-          query: {
-            extraOptions: {
-              disabled: true
-            },
-            id: val.scopeRow.row.id,
-            allTaskStatus: '000'
-          }
-        });
+      this.$router.push({
+        name: "NewTask",
+        query: {
+          extraOptions: {
+            disabled: true
+          },
+          id: val.scopeRow.row.id,
+          allTaskStatus: "000"
+        }
+      });
     },
     async homeTaskCount() {
-      let res = await TaskManageApi.homeTaskCount();
+      let res = await TaskManageApi.getTaskNumber();
       if (res) {
-        this.todayFinish = res.todayFinish;
+        this.completeTask = res.completeTask;
+        this.sceneTask = res.sceneTask;
+        this.supplementTask = res.supplementTask;
+        this.allTask = res.allTask;
+        this.overtimeTask = res.overtimeTask;
+        this.unfinishTask = res.unfinishTask;
       }
     },
+    async getTaskTypeStatistics() {
+      let myPieChart = this.$echarts.init(this.$refs.typeStatisticsCharts);
+      let res = await TaskManageApi.getTaskTypeStatistics();
+      console.log(res);
+      let legendData = res.legend;
+      let color = ["#4DA1FF", "#83D587", "#FFCE33", "#FF7B8C"];
+      let titleText = "工单类型统计";
+      let seriesData = [
+        {
+          value: 6,
+          name: "巡检"
+        },
+        {
+          value: 5,
+          name: "审批"
+        },
+        {
+          value: 10,
+          name: "调试"
+        },
+        {
+          value: 100,
+          name: "其他"
+        }
+      ];
+      let data = {
+        legendData,
+        seriesData,
+        titleText,
+        color,
+        legendUi: {
+          bottom: "30",
+          right: "30"
+        },
+        seriesUi: {
+          center: ["50%", "50%"],
+          radius: "50%",
+          label: {
+            emphasis: {
+              show: false
+            }
+          }
+        },
+        titleUi: {
+          left: "4%",
+          textStyle: {
+            fontSize: 18,
+            fontWeight: 600
+          }
+        }
+      };
+      ChartUtils.hollowPieChart(myPieChart, data);
+    },
+    async getDepartmentTree() {
+      let res = await SystemManage.getDepartmentTree();
+      this.deptList = res[0].childNode;
+      this.deptValue = res[0].childNode[0].id;
+      this.deptSelectName = res[0].childNode[0].name;
+    },
+    deptTypeChange(val) {
+      this.deptValue = val;
+      let obj = this.deptList.find(item => {
+        return item.id === val;
+      });
+      this.deptSelectName = obj.name;
+      this.getdeptTaskStatistics();
+    },
+    async getdeptTaskStatistics() {
+      let res = await TaskManageApi.getdeptTaskStatistics({
+        deptId: this.deptValue
+      });
+      let myChart = this.$echarts.init(this.$refs.taskStatisticsCharts);
+      let titleText = "";
+      let legendData = [];
+      let xAxis = res.map(item => item.months + "月");
+      let yAxis = "条";
+      let series = [];
+      series.push({
+        name: this.deptSelectName,
+        type: "bar",
+        barMaxWidth: 80,
+        data: res.map(item => item.taskNum)
+      });
+      let data = {
+        titleText,
+        legendData,
+        series,
+        xAxis,
+        yAxis
+      };
+      ChartUtils.handleBarChart(myChart, data);
+    },
+    async getTaskStatus() {
+      let res = await TaskManageApi.getTaskStatus();
+      let seriesList = [
+        [{ data: res.finish }],
+        [{ data: res.time }],
+        [{ data: res.supplement }],
+        [{ data: res.scene }]
+      ];
+      let color = ["#4DA1FF", "#83D587", "#FFCE33", "#FF7B8C"];
+      let titleText = [
+        "完成情况统计",
+        "超时情况统计",
+        "补录情况统计",
+        "办公地点统计"
+      ];
+      for (let i = 1; i <= 4; i++) {
+        this["myChart" + i] = this.$echarts.init(this.$refs["myChart" + i]);
+        let xAxis = "条";
+        let data = {
+          titleText: titleText[i - 1],
+          seriesData: seriesList[i - 1][0].data,
+          color,
+          legendUi: {
+            bottom: "30",
+            right: "30"
+          },
+          seriesUi: {
+            // center: ["50%", "50%"],
+            // radius: ['50%', '60%'],
+            label: {
+              emphasis: {
+                show: false
+              }
+            }
+          },
+          titleUi: {
+            left: "4%",
+            textStyle: {
+              fontSize: 18,
+              fontWeight: 600
+            }
+          }
+        };
+        ChartUtils.hollowPieChart(this["myChart" + i], data);
+      }
+      console.log("res", res);
+    },
+    async getTaskNumRanking() {
+      let res = await TaskManageApi.getTaskNumRanking();
+      this.taskNumRankData = res;
+      // console.log("res", res);
+    },
+    createCharts() {
+      let res = {
+        unit: "条",
+        value: [
+          {
+            xulie: 0,
+            date: "2020-02-01",
+            dqzh: 59,
+            tqzh: 26,
+            sqzh: 3.5,
+            tbzz: 1.5,
+            hbzz: 1.6
+          },
+          {
+            xulie: 0,
+            date: "2020-03-01",
+            dqzh: 55,
+            tqzh: 30,
+            sqzh: 0.0,
+            tbzz: 3.5,
+            hbzz: 0.0
+          },
+          {
+            xulie: 0,
+            date: "2020-04-01",
+            dqzh: 60,
+            tqzh: 50,
+            sqzh: 2.5,
+            tbzz: 0.0,
+            hbzz: 1.6
+          },
+          {
+            xulie: 0,
+            date: "2020-05-01",
+            dqzh: 70,
+            tqzh: 60,
+            sqzh: 0.0,
+            tbzz: 3.5,
+            hbzz: 0.0
+          }
+        ]
+      };
+      let resData = res.value;
+      let myChart = this.$echarts.init(this.$refs.MoManalysisCharts);
+      let xAxis = resData.map(item => (item.date ? item.date : ""));
+      let legendData = [
+        moment()
+          .add(-1, "y")
+          .format("YYYY"),
+        moment().format("YYYY"),
+        "工单数量同比增长率",
+        "工单数量环比增长率"
+      ];
+
+      let series = [
+        {
+          name: moment()
+            .add(-1, "y")
+            .format("YYYY"),
+          type: "bar",
+          data: resData.map(item => item.tqzh),
+          barMaxWidth: 80,
+          itemStyle: {
+            normal: {
+              color: "rgb(136,108,255)", //圈圈的颜色
+              label: {
+                show: true,
+                position: "top"
+              }
+            }
+          }
+        },
+        {
+          name: moment().format("YYYY"),
+          type: "bar",
+          data: resData.map(item => item.dqzh),
+          barMaxWidth: 80,
+          itemStyle: {
+            normal: {
+              color: "rgb(77,124,254)", //圈圈的颜色
+              label: {
+                show: true,
+                position: "top"
+              }
+            }
+          }
+        },
+        {
+          name: "工单数量同比增长率",
+          type: "line",
+          data: resData.map(item => item.tbzz),
+          yAxisIndex: 1,
+          itemStyle: {
+            normal: {
+              color: "#FF9900", //圈圈的颜色
+              label: {
+                show: false,
+                position: "top"
+              }
+            }
+          }
+        },
+        {
+          name: "工单数量环比增长率",
+          type: "line",
+          yAxisIndex: 1,
+          data: resData.map(item => item.hbzz),
+          itemStyle: {
+            normal: {
+              color: "#5AD15B", //圈圈的颜色
+              // lineStyle:{
+              //     color:'#FF9900'  //线的颜色
+              // }
+              label: {
+                show: true,
+                position: "top",
+                formatter: "{c} %"
+              }
+            }
+          }
+        }
+      ];
+      let data = {
+        legendData,
+        xAxis,
+        series,
+        showSecondY: true
+      };
+      let option = {
+        yAxis: [
+          {
+            type: "value",
+            name: res.unit,
+            axisLabel: {
+              formatter: "{value}"
+            }
+          },
+          {
+            show: true,
+            type: "value",
+            name: "增长率",
+            min: -100,
+            max: 100,
+            axisLabel: {
+              formatter: "{value} %"
+            }
+          }
+        ]
+      };
+
+      ChartUtils.handleBarChart(myChart, data);
+      myChart.setOption(option);
+    },
+    async getTaskNumberTable() {
+      let res = await TaskManageApi.getTaskNumberTable();
+      console.log(res);
+    },
+    onClickExportBtn() {},
     fixTree() {
       $(".common-tree-box").css({
         height: $(document).height() - 110 + "px"
       });
     }
   },
-  mounted() {
-    this.taskList();
-    this.homeTaskCount();
-    this.taskTreeConfig.defaultExpandedkeys = [this.taskData[0].value];
+  async mounted() {
     this.fixTree();
     $(window).resize(() => {
       this.fixTree();
     });
+    this.taskList();
+    this.homeTaskCount();
+    await this.getTaskTypeStatistics();
+    await this.getDepartmentTree();
+    await this.getdeptTaskStatistics();
+    this.getTaskStatus();
+    this.getTaskNumRanking();
+    this.createCharts();
+    // this.getTaskNumberTable()
+    this.taskTreeConfig.defaultExpandedkeys = [taskType.taskData[0].value];
   }
 };
 </script>
@@ -255,57 +655,190 @@ export default {
       margin: 0 0 20px 65px;
     }
   }
-  .task-sum-box {
-    padding: 20px 20px;
-    margin-bottom: 20px;
-    .task-sum {
-      width: 18%;
-      height: 70px;
-      // background: @white;
-      border-radius: 6px;
-      color: @white;
-      font-size: 20px;
-      p {
-        margin-right: 5px;
+  .right-content {
+    .tip {
+      margin: 20px 0;
+      .icon {
+        width: 4px;
+        height: 16px;
+        background: @mainBgColor;
+        border-radius: 2px;
+        margin-right: 10px;
       }
-      background: linear-gradient(
-        120deg,
-        rgba(234, 111, 233, 1),
-        rgba(141, 100, 248, 1)
-      );
-      box-shadow: 0px 4px 12px 0px rgba(141, 100, 248, 0.5) !important;
+      span {
+        font-size: 16px;
+        color: @mainBgColor;
+      }
     }
-    .task-sum:nth-child(2) {
-      background: linear-gradient(
-        120deg,
-        rgba(95, 176, 255, 1),
-        rgba(106, 136, 254, 1)
-      );
-      box-shadow: 0px 4px 12px 0px rgba(106, 138, 254, 0.5) !important;
+    .frist-tip {
+      margin-top: 0px !important;
     }
-    .task-sum:nth-child(3) {
-      background: linear-gradient(
-        120deg,
-        rgba(255, 133, 96, 1),
-        rgba(255, 113, 152, 1)
-      );
-      box-shadow: 0px 4px 12px 0px rgba(255, 113, 152, 0.5) !important;
+    .task-sum-box {
+      padding: 20px 20px;
+      margin-bottom: 20px;
+      .task-sum {
+        width: 15%;
+        height: 70px;
+        // background: @white;
+        border-radius: 6px;
+        color: @white;
+        font-size: 20px;
+        p {
+          margin-right: 5px;
+        }
+        background: linear-gradient(
+          120deg,
+          rgba(234, 111, 233, 1),
+          rgba(141, 100, 248, 1)
+        );
+        box-shadow: 0px 4px 12px 0px rgba(141, 100, 248, 0.5) !important;
+      }
+      .task-sum:nth-child(2) {
+        background: linear-gradient(
+          120deg,
+          rgba(95, 176, 255, 1),
+          rgba(106, 136, 254, 1)
+        );
+        box-shadow: 0px 4px 12px 0px rgba(106, 138, 254, 0.5) !important;
+      }
+      .task-sum:nth-child(3) {
+        background: linear-gradient(
+          120deg,
+          rgba(255, 133, 96, 1),
+          rgba(255, 113, 152, 1)
+        );
+        box-shadow: 0px 4px 12px 0px rgba(255, 113, 152, 0.5) !important;
+      }
+      .task-sum:nth-child(4) {
+        background: linear-gradient(
+          120deg,
+          rgba(57, 206, 192, 1),
+          rgba(19, 159, 209, 1)
+        );
+        box-shadow: 0px 4px 12px 0px rgba(19, 159, 209, 0.5) !important;
+      }
+      .task-sum:nth-child(5) {
+        background-image: linear-gradient(120deg, #21d4fd, #b721ff);
+      }
     }
-    .task-sum:nth-child(4) {
-      background: linear-gradient(
-        120deg,
-        rgba(57, 206, 192, 1),
-        rgba(19, 159, 209, 1)
-      );
-      box-shadow: 0px 4px 12px 0px rgba(19, 159, 209, 0.5) !important;
+    .task-group {
+      width: 100%;
+      margin-bottom: 20px;
+      .charts-box {
+        width: 35%;
+        // float: left;
+        .pie-charts {
+          height: 460px;
+          width: 100%;
+        }
+      }
+      .dept-task-header {
+        height: 60px;
+        padding: 0 40px;
+        font-size: 18px;
+        font-weight: 600;
+        span{
+          font-weight: 500;
+        }
+        .dept-class {
+          .el-select--small {
+            margin-left: 10px;
+            width: 180px;
+          }
+        }
+      }
+      .department-task-box {
+        width: 65% !important;
+        padding-left: 20px;
+        .analysis-pie-charts {
+          width: 100%;
+          height: 400px;
+        }
+      }
+      .analysis-pie-charts-box {
+        width: 65% !important;
+        // padding: 20px 0 0 20px;
+        .pie-charts {
+          height: 480px;
+          width: 100%;
+          margin-top: 20px;
+        }
+      }
+      .task-rank {
+        height: 460px !important;
+        width: 32%;
+        display: flex;
+        flex-direction: column;
+        padding-left: 6%;
+        // align-items: center;
+        justify-content: center;
+        .progress-div {
+          width: 90%;
+          position: relative;
+          span {
+            position: absolute;
+            left: 70%;
+            top: 0;
+          }
+        }
+        .el-progress-bar__outer {
+          height: 26px !important;
+          border-radius: 0px !important;
+        }
+        .el-progress-bar__inner {
+          border-radius: 0px !important;
+          background-color: #0088ff !important;
+        }
+        .el-progress-bar__outer {
+          background-color: #ccc !important;
+        }
+        .el-progress-bar {
+          width: 70%;
+          // float: left;
+        }
+        .progress-content {
+          width: 80%;
+          margin: 0 auto;
+          .percentage-text {
+            width: 100%;
+            height: 40px;
+            color: #8dd1f8;
+            line-height: 40px;
+            text-align: left;
+            font-size: 14px;
+            padding: 10px 0;
+            margin: 2px 0 6px 0;
+          }
+        }
+        .percentage-name {
+          width: 100%;
+          height: 35px;
+          line-height: 25px;
+          text-align: left;
+        }
+      }
     }
-    .task-sum:nth-child(5) {
-      background-image: linear-gradient(120deg, #21d4fd, #b721ff);
+    .task-status-statistic {
+      height: 400px;
+      margin-bottom: 20px;
+      .my-chart {
+        height: 400px;
+        width: 25%;
+        float: left;
+      }
     }
   }
+
   .task-overview-table {
     margin: 20px 0;
     padding: 20px;
+    .table-tip {
+      color: @mainBgColor;
+      font-weight: bold;
+    }
+    .table-tip-box {
+      margin-bottom: 20px;
+    }
   }
 }
 </style>

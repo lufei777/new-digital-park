@@ -375,11 +375,47 @@ export const AssetState = {
 export const ProjectName = {
   // 中钢
   ZG: 'zg',
-  YDCity:'ydCity'
+  YDCity: 'ydCity'
 }
 
 // 根据项目显示不同的title
 export const Title = {
   [ProjectName.ZG]: '中钢大厦数字建筑运管平台',
   [ProjectName.YDCity]: '伊甸城BIM运管系统'
+}
+
+//任务概览任务类型
+export const taskType = {
+  taskData: [
+    {
+      value: 1,
+      label: "巡检任务",
+      nodes: []
+    },
+    {
+      value: 2,
+      label: "维修任务",
+      nodes: []
+    },
+    {
+      value: 3,
+      label: "保养任务",
+      nodes: []
+    },
+    {
+      value: 4,
+      label: "流程任务",
+      nodes: []
+    },
+    {
+      value: 5,
+      label: "审批任务",
+      nodes: []
+    },
+    {
+      value: 6,
+      label: "其他任务",
+      nodes: []
+    }
+  ]
 }

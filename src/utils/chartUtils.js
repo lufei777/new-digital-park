@@ -42,12 +42,7 @@ class chartUtils {
         data: data.xAxis
       }],
       yAxis: yAxis,
-      series: [{
-        data:data.series,
-        type:'line',
-        areaStyle:{}
-      }],
-
+      series: data.series,
     };
     // window.onresize = dom.resize;
     // window.addEventListener("resize", () => {

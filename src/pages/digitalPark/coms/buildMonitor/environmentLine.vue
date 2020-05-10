@@ -51,9 +51,15 @@
     methods: {
       initChart(res) {
         let myChart = this.$echarts.init(this.$refs.myChart)
+        let series = [];
+        series.push({
+          type: "line",
+          data: res.map(item => item.value),
+          areaStyle: {}
+        });
         let data = {
           legendData: [],
-          series: res.map((item) => item.value),
+          series,
           xAxis: res.map((item) => item.time)
         }
         ChartUtils.handleBarChart(myChart, data)
