@@ -77,12 +77,17 @@
       refreshChart() {
         // var day = new Date();
         // var time = day.format("mm") * 60 + day.format("ss");
+      },
+      async getMonitorTypeList(){
+        let res = await CommonApi.getMonitorTypeList()
+        this.typeList = res
+        this.curType = res[0].id
       }
     },
-    mounted() {
+    async mounted() {
+      await this.getMonitorTypeList()
       this.getEnvironmentLine()
       this.refreshChart()
-      console.log("menu", this.moduleItem)
     }
   };
 </script>

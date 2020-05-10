@@ -36,7 +36,7 @@
                    moduleData.moduleList.length>1?'two-component radius-shadow  padding-box':'item-component padding-box']"
           style="height: 100%;"
           :is="item.componentName"
-          :moduleItem="item"
+          :moduleItem="{...item,...{type:2}}"
         />
       </draggable>
   </div>

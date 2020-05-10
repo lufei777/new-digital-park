@@ -65,7 +65,7 @@
             data: ['温度', '湿度'],
             textStyle: {
               fontSize: 14,
-              color: '#fff'
+              color: this.moduleItem.type!=2?'#fff':'#666'
             },
             right: '20'
           },
@@ -88,7 +88,7 @@
             },
             axisLabel: {
               textStyle: {
-                color: '#fff'
+                color: this.moduleItem.type!=2?'#fff':''
               },
             }
           }],
@@ -102,7 +102,7 @@
             },
             axisLabel: {
               textStyle: {
-                color: '#fff'
+                color: this.moduleItem.type!=2?'#fff':''
               },
               formatter: function (val) {
                 return val+'°C';
@@ -125,7 +125,7 @@
             },
             axisLabel: {
               textStyle: {
-                color: '#fff'
+                color: this.moduleItem.type!=2?'#fff':''
               },
               formatter: function (val) {
                 return val+'%';

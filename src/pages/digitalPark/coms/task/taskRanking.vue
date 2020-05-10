@@ -13,7 +13,7 @@
       </div>
       <ul>
         <li v-for="(item,index) in tableData" :key="index" class="yd-ganged-log-li flex"
-            :class="isyd?'':'task-li'">
+            :class="moduleItem.type!=2?'':'task-li'">
           <span>{{index+1}}</span>
           <span>{{item.name}}</span>
           <span>{{item.num}}</span>

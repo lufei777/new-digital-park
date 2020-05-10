@@ -35,7 +35,9 @@
           :specialRoute="menuConfig.specialRoute"
         />
       </el-menu>
-      <div class="iconfont iconkuaijierukou hover-pointer shortcut-btn" @click="onClickShortcutBtn" v-if="!isyd"></div>
+      <div class="iconfont iconkuaijierukou hover-pointer shortcut-btn"
+           @click="onClickShortcutBtn" v-if="!isyd">
+      </div>
       <ul class="shortcut-list" v-show="showShortcutList">
         <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
             <li v-for="(item,index) in shortcutList"

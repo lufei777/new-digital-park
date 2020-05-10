@@ -28,7 +28,7 @@
       >
         <sidebar-item :menuData="menuData" :specialRoute="menuConfig.specialRoute"/>
       </el-menu>
-      <div v-if="!menuConfig.specialRoute || !isyd">
+      <div v-if="!(menuConfig.specialRoute || isyd)">
         <div
           class="iconfont iconkuaijierukou hover-pointer shortcut-btn"
           @click="onClickShortcutBtn"
