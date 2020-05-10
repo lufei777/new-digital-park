@@ -61,6 +61,30 @@ class taskManageApi {
      @get
      findTempTask() { }
 
+     @url("/oaApi/taskStatistics/taskNumber")
+     @get
+     getTaskNumber() { } 
+
+     @url("/oaApi/taskStatistics/taskTypeStatistics")
+     @get
+     getTaskTypeStatistics() { }
+
+     @url("/oaApi/taskStatistics/deptTask")
+     @get
+     getdeptTaskStatistics() { }
+
+     @url("/oaApi/taskStatistics/taskStatus")
+     @get
+     getTaskStatus() { }
+    
+     @url("/oaApi/taskStatistics/taskNumRanking")
+     @get
+     getTaskNumRanking() { }
+
+     @url("/oaApi/taskStatistics/taskNumbers")
+     @get
+     getTaskNumberTable() { }
+
 }
 
 export default new taskManageApi()
