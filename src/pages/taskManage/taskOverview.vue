@@ -94,10 +94,9 @@
           <div class="task-rank">
             <div class v-for="(item,index) in taskNumRankData" :key="index">
               <div class="progress-div">
-                <el-progress :percentage="parseFloat(item.taskNum)" :show-text="false"></el-progress>
+                <el-progress v-if="item.taskNum" :percentage="item.taskNum>100?100:item.taskNum" :show-text="false"></el-progress>
                 <span style="margin-left:5px">{{item.taskNum}}个</span>
               </div>
-
               <div class="percentage-text">
                 <span>{{item.deptName}}</span>
               </div>
