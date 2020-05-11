@@ -10,6 +10,11 @@ export default [{
           meta:{title:'发布管理'},
           component: () => import('@/pages/messageManage/publish/index')
         },{
+          path: '/addMessage',
+          name: 'AddMessage',
+          meta:{title:'发布管理'},
+          component: () => import('@/pages/messageManage/publish/addMessage')
+        },{
           path: '/message/device',
           name: 'MessageDevice',
           meta:{title:'设备管理'},
