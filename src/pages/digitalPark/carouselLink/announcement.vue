@@ -98,7 +98,7 @@ export default {
   }
   .content {
     line-height: 30px;
-    margin-bottom: 20px;
+    padding-bottom: 20px;
   }
 }
 </style>
