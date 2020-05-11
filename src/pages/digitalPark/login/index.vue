@@ -118,7 +118,7 @@ export default {
         setToken(token);
         setIsCZClient(isCZClient);
         // window.location.reload();
-        if(isYD()){
+        if(window.__CZ_LargeScreen!=''){
           this.$router.push('/largeSizeScreen');
         }else{
           this.$router.push('/digitalPark/homePage');
