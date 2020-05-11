@@ -309,6 +309,64 @@ export const parkingManageDic = {
       label: '大型车',
       value: 2
     }
+  ],
+  carColor: [
+    {
+      label: '白色',
+      value: 0
+    },
+    {
+      label: '黑色',
+      value: 1
+    },
+    {
+      label: '红色',
+      value: 2
+    },
+    {
+      label: '黄色',
+      value: 3
+    },
+    {
+      label: '银灰色',
+      value: 4
+    },
+    {
+      label: '蓝色',
+      value: 5
+    },
+    {
+      label: '绿色',
+      value: 6
+    },
+    {
+      label: '橙色',
+      value: 7
+    },
+    {
+      label: '紫色',
+      value: 8
+    },
+    {
+      label: '青色',
+      value: 9
+    },
+    {
+      label: '粉色',
+      value: 10
+    },
+    {
+      label: '棕色',
+      value: 11
+    },
+    {
+      label: '未识别',
+      value: 99
+    },
+    {
+      label: '其他',
+      value: 100
+    }
   ]
 }
 
@@ -375,7 +433,7 @@ export const AssetState = {
 export const ProjectName = {
   // 中钢
   ZG: 'zg',
-  YDCity:'ydCity'
+  YDCity: 'ydCity'
 }
 
 // 根据项目显示不同的title
