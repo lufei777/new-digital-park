@@ -2,6 +2,7 @@ import elementResizeDetectorMaker from 'element-resize-detector'
 class chartUtils {
   //柱状图处理
   handleBarChart(dom,data,resizeBox){
+      let { legendUi={},legendUi:{axisPointer:tooltipAxisPointer={}}={} } = data
       let yAxis
       if(!data.showSecondY){  //是否隐藏第二个y轴，默认不传及隐藏
         yAxis=[{
@@ -33,7 +34,11 @@ class chartUtils {
       },
       tooltip:{
         trigger: 'axis',
-        showDelay:300
+        showDelay:300,
+        axisPointer:{
+          type: tooltipAxisPointer.type || 'line'
+        },
+        formatter:legendUi && legendUi.formatter || ''
       },
       calculable: true,
       color:['#4094ff','#013b4e','#FAAD14','#F5222D'],
@@ -154,7 +159,7 @@ class chartUtils {
         top:50,
         data: data.legendData,
         textStyle:{
-          color:data.textStyleColor?data.textStyleColor:''
+          color:data.textStyleColor?data.textStyleColor:'#333'
         }
       },
       color: data.color?data.color:['#4DA1FF', '#83D587', '#FFCE33', '#FF7B8C'],
