@@ -73,16 +73,10 @@ export default {
       let seriesData = res.values;
       let seriesName = "监控器状态";
       let option = {
-        title: {
-          x: "center"
-        },
-        legend: {
-          left: "left",
-          top: 50
-        },
         color: ["dimGrey", "green", "orange", "red"],
         toolbox: {
           show: true,
+          showTitle:false,        
           feature: Object.assign({}, commonFun.chartsToolBox('assetStateTip').feature),
           tooltip: commonFun.chartsToolBox('assetStateTip').tooltip
         }
@@ -92,7 +86,31 @@ export default {
         titleText,
         legendData,
         seriesData,
-        seriesName
+        seriesName,
+        legendUi: {
+          bottom: "30",
+          right: "30",
+          formatter: function(name) {
+              let obj = seriesData.find(item => item.name == name);
+              return name + "：" + obj.value;
+            }
+        },
+        seriesUi: {
+          center: ["47%", "50%"],
+          // radius: "50%",
+          label: {
+            emphasis: {
+              show: false
+            }
+          }
+        },
+        titleUi: {
+            left: "4%",
+            textStyle: {
+              fontSize: 18,
+              fontWeight: 600
+            }
+          }
       };
       ChartUtils.hollowPieChart(this.myChart, data);
       this.myChart.setOption(option);
@@ -109,6 +127,13 @@ export default {
           trigger: "axis",
           axisPointer: {
             type: "shadow"
+          },
+          formatter: function (params) {
+              var relVal = params[0].name
+              for (var i = 0, l = params.length; i < l; i++) {
+                  relVal += '<br/>' + params[i].marker + params[i].seriesName + ' : ' + params[i].value +  '&nbsp;' + "个"
+              }
+              return relVal
           }
         },
         xAxis: [

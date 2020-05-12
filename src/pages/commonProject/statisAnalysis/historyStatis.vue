@@ -88,7 +88,19 @@
             legendData,
             xAxis,
             series,
-            yAxis:res.unit1
+            yAxis:res.unit1,
+            legendUi:{
+                axisPointer:{
+                  type:'shadow'
+                },
+                formatter: function (params) {
+                    var relVal = params[0].name
+                    for (var i = 0, l = params.length; i < l; i++) {
+                        relVal += '<br/>' + params[i].marker + params[i].seriesName + ' : ' + params[i].value +  '&nbsp;' + res.unit1
+                    }
+                    return relVal
+                }
+              }
           }
           ChartUtils.handleBarChart(this.myChart,data)
       },

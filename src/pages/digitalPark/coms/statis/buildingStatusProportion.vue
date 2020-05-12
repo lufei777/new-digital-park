@@ -21,18 +21,30 @@ export default {
       this.createPieCharts(res);
     },
     createPieCharts(res) {
-      let myPieChart = this.$echarts.init(this.$refs.myChart || document.getElementById('building-status-proportion-chart'));
+      let myPieChart = this.$echarts.init(
+        this.$refs.myChart ||
+          document.getElementById("building-status-proportion-chart")
+      );
+      console.log(res)
       let legendData = res.legend;
       let color = ["#30475B", "#66FBF9", "#0088FF", "#D77443"];
-      let textStyleColor = '#8FD3FA'
+      let textStyleColor = "#8FD3FA";
       let seriesData = res.values;
       let data = {
         legendData,
         seriesData,
         color,
         textStyleColor,
-        legendUi: this.moduleItem.legendUi,
-        seriesUi:{
+        legendUi: {
+          ...this.moduleItem.legendUi,
+          ...{
+            formatter: function(name) {
+              let obj = seriesData.find(item => item.name == name);
+              return name + "：" + obj.value;
+            }
+          }
+        },
+        seriesUi: {
           // center:['50%','50%']
         }
       };
@@ -40,7 +52,7 @@ export default {
     }
   },
   mounted() {
-      this.getDeviceStatusList()
+    this.getDeviceStatusList();
   }
 };
 </script>
@@ -48,6 +60,5 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
 .building-status-proportion {
-
 }
 </style>
