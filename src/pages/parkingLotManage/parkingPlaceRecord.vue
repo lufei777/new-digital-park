@@ -171,7 +171,9 @@ export default {
           },
           {
             prop: "carColor",
-            label: "车辆颜色"
+            label: "车辆颜色",
+            type: "select",
+            dicData: parkingManageDic.carColor
           },
           {
             prop: "carImgUrl",
