@@ -1,7 +1,10 @@
 <template>
   <div class="attendance-detail">
     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
-    <z-table :ref="leaseManageTable.ref" :options="leaseManageTable"></z-table>
+    <div class="my-chart">
+      <z-table :ref="leaseManageTable.ref" :options="leaseManageTable"></z-table>
+    </div>
+
   </div>
 </template>
 
@@ -56,7 +59,7 @@ export default {
           }
         ],
         uiConfig: {
-          height: "260px"
+          // height: "260px"
         }
       }
     };
@@ -70,9 +73,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-.building-status-proportion {
-  .pie-charts {
-    height: 95%;
+.attendance-detail {
+  .module-item-top-name{
+    margin-bottom: 10px;
   }
 }
 </style>

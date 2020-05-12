@@ -76,8 +76,8 @@
         },
         // startTime:moment().add(-15,'days').format('YYYY-MM-DD HH:MM:SS'),
         // endTime:moment().format('YYYY-MM-DD HH:MM:SS')
-        startTime: moment(new Date(new Date().getTime() - 3600 * 24 * 1000 * 15)).format('YYYY-MM-DD HH:MM:SS'),//new Date(2020, 4, 5, 10, 10),
-        endTime: moment(new Date()).format('YYYY-MM-DD HH:MM:SS'),
+        startTime: moment(new Date(new Date().getTime() - 3600 * 24 * 1000 * 15)).format('YYYY-MM-DD HH:mm:SS'),//new Date(2020, 4, 5, 10, 10),
+        endTime: moment(new Date()).format('YYYY-MM-DD HH:mm:SS'),
       }
     },
     computed: {},
