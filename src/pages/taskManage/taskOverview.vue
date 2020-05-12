@@ -317,28 +317,17 @@ export default {
     async getTaskTypeStatistics() {
       let myPieChart = this.$echarts.init(this.$refs.typeStatisticsCharts);
       let res = await TaskManageApi.getTaskTypeStatistics();
-      console.log(res);
       let legendData = res.legend;
       let color = ["#4DA1FF", "#83D587", "#FFCE33", "#FF7B8C"];
       let titleText = "工单类型统计";
-      let seriesData = [
-        {
-          value: 6,
-          name: "巡检"
-        },
-        {
-          value: 5,
-          name: "审批"
-        },
-        {
-          value: 10,
-          name: "调试"
-        },
-        {
-          value: 100,
-          name: "其他"
-        }
-      ];
+      let seriesData = [];
+      res.values.map(item=>{
+        var itemObj = {
+          value: item.taskNum,
+          name: item.name
+        };
+        seriesData.push(itemObj);
+      })
       let data = {
         legendData,
         seriesData,
@@ -346,7 +335,11 @@ export default {
         color,
         legendUi: {
           bottom: "30",
-          right: "30"
+          right: "30",
+          formatter: function(name) {
+            let obj = seriesData.find(item => item.name == name);
+            return name + "：" + obj.value;
+          }
         },
         seriesUi: {
           center: ["50%", "50%"],
@@ -430,7 +423,11 @@ export default {
           color,
           legendUi: {
             bottom: "30",
-            right: "30"
+            right: "30",
+            formatter: function(name) {
+              let obj = seriesList[i - 1][0].data.find(item => item.name == name);
+              return name + "：" + obj.value;
+            }
           },
           seriesUi: {
             // center: ["50%", "50%"],
@@ -451,12 +448,10 @@ export default {
         };
         ChartUtils.hollowPieChart(this["myChart" + i], data);
       }
-      console.log("res", res);
     },
     async getTaskNumRanking() {
       let res = await TaskManageApi.getTaskNumRanking();
       this.taskNumRankData = res;
-      // console.log("res", res);
     },
     createCharts() {
       let res = {
@@ -611,10 +606,6 @@ export default {
       ChartUtils.handleBarChart(myChart, data);
       myChart.setOption(option);
     },
-    async getTaskNumberTable() {
-      let res = await TaskManageApi.getTaskNumberTable();
-      console.log(res);
-    },
     onClickExportBtn() {},
     fixTree() {
       $(".common-tree-box").css({
@@ -633,7 +624,6 @@ export default {
     await this.getDepartmentTree();
     await this.getdeptTaskStatistics();
     this.getTaskStatus();
-    this.getTaskNumRanking();
     this.createCharts();
     // this.getTaskNumberTable()
     this.taskTreeConfig.defaultExpandedkeys = [taskType.taskData[0].value];

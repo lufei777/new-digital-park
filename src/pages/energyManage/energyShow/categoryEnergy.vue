@@ -1,3 +1,4 @@
+
 <template>
   <div class="category-energy">
     <EnergyCommon :from-flag="5"/>

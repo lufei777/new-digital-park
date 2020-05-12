@@ -140,7 +140,8 @@ export default {
     async getLastMonthData(){
       let res = await CommonApi.getLastNumber({
         catalog : this.curEnergy,
-        page : this.curPage
+        page : this.curPage,
+        size: 10
       })
       this.tableConfig.data=res.list
       this.tableConfig.uiConfig.pagination.total = res.total;

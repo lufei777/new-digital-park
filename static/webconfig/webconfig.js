@@ -5,7 +5,7 @@
  * ydCity 伊甸城
  */
 
-window.__CZ_SYSTEM = '';
+window.__CZ_SYSTEM = 'zg';
 
 
 
@@ -14,4 +14,4 @@ window.__CZ_SYSTEM = '';
  * ''     通用大屏
  * ydCity  伊甸城
  */
-window.__CZ_LargeScreen = 'ydCity'
+window.__CZ_LargeScreen = ''

@@ -99,6 +99,13 @@
             },
             textStyle:{
               fontSize:12
+            },
+            formatter: function (params) {
+                var relVal = params[0].name
+                for (var i = 0, l = params.length; i < l; i++) {
+                    relVal += '<br/>' + params[i].marker + params[i].seriesName + ' : ' + params[i].value +  '&nbsp;' + result.unit1
+                }
+                return relVal
             }
           },
           xAxis: {
