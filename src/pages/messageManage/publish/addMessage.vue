@@ -18,6 +18,12 @@
       </z-form>
     </div>
     </el-scrollbar>
+    <el-date-picker
+      v-model="value3"
+      type="datetime"
+      placeholder="选择日期时间"
+      default-time="12:00:00">
+    </el-date-picker>
   </div>
 </template>
 
@@ -29,15 +35,6 @@
     name: "AddMessage",
     data() {
       let _this = this
-      let rePasswordVaild = (rule, value, callback) => {
-        if (value.trim() == "") {
-          callback(new Error("请再次输入新密码"));
-        } else if (value != this.formModel.newPassword1) {
-          callback(new Error("两次新密码不一致"));
-        } else {
-          callback();
-        }
-      };
       return {
         formModel: {},
         formConfig: {
@@ -51,7 +48,6 @@
               type: "input",
               label: "发布编号",
               prop: "releaseNumber",
-              valueDefault:'FB-111',
               disabled:true,
               span: 12,
               rules: {
@@ -64,8 +60,9 @@
               type: "datetime",
               label: "创建时间",
               prop: "releaseTime",
+              valueDefault:moment(new Date()).format('YYYY-MM-DD HH:mm:SS'),
+              valueFormat:'yyyy-MM-dd hh:mm:ss',
               span: 12,
-              valueDefault:new Date(moment(new Date).format('YYYY-MM-DD HH:MM:SS')),
               rules: {
                 required: true,
                 trigger: "blur"
@@ -144,7 +141,6 @@
               span: 12,
               rules: {
                 required: true,
-                // validator: rePasswordVaild,
                 trigger: "blur"
               }
             },
@@ -152,26 +148,21 @@
               type: "textarea",
               label: "备注",
               prop: "remark" ,
-              // placeholder: "备注",
               span: 24,
+              maxlength:10,
+              showWordLimit:true,
               rules: {
-                // required: true,
-                // validator: rePasswordVaild,
                 trigger: "blur"
               }
             },
             {
               type: "upload",
-              listType: "picture",
+              listType: "picture-img",
               label: "选择封面",
               prop: "coverUrl" ,
               action: "/oaApi/image/upload",
               accept: ["jpg", "jpeg", "png"],
-              limit:1,
-              props: {
-                label: "tenantPictureName",
-                value: "tenantPictureUrl"
-              },
+              tip: "推荐大小：1920*360",
               propsHttp: {
                 name: "fileName",
                 url: "fileUrl",
@@ -216,29 +207,47 @@
             },
           ]
         },
-        editorOption:{
-
-        }
+        editorOption:{},
+        value3:new Date()
       };
     },
     computed:{
       isyd(){
         return isYD()
+      },
+      curId(){
+        return this.$route.query.id
       }
     },
     methods: {
       async submit(model, hide) {
         console.log(this.formModel)
-        await MessageManageApi.addMessage(this.formModel)
-          .then(res => {
-            this.$message({
-              type: "success",
-              message: res
+        if(this.formModel.showLink==0){
+          this.formModel.textContent=''
+        }
+        if(this.curId){
+          await MessageManageApi.editMessage(this.formModel)
+            .then(res => {
+              this.$message({
+                type: "success",
+                message: "修改成功！"
+              });
+            })
+            .finally(msg => {
+              hide();
             });
-          })
-          .finally(msg => {
-            hide();
-          });
+        }else{
+          await MessageManageApi.addMessage(this.formModel)
+            .then(res => {
+              this.$message({
+                type: "success",
+                message: "发布成功！"
+              });
+            })
+            .finally(msg => {
+              hide();
+            });
+        }
       },
       goBack() {
         history.go(-1)
@@ -258,15 +267,29 @@
       async getReleaseCode(){
         let res = await MessageManageApi.getReleaseCode()
         this.formModel.releaseNumber = res
+      },
+      async getMessageDetail(){
+        let res = await MessageManageApi.getMessageDetail({
+          id:this.curId
+        })
+        this.formModel = res
+        this.formModel.showLink = res.textContent?'1':'0'
+        this.$refs[this.formConfig.ref].setColumnByProp("textContent", {
+          display: this.formModel.showLink==1,
+        });
       }
     },
     created(){
     },
     mounted() {
-      this.getReleaseCode()
-      this.$refs[this.formConfig.ref].setColumnByProp("textContent", {
-        display: this.formModel.showLink==1,
-      });
+      if(this.curId){
+         this.getMessageDetail()
+      }else{
+        this.getReleaseCode()
+        this.$refs[this.formConfig.ref].setColumnByProp("textContent", {
+          display: this.formModel.showLink==1,
+        });
+      }
     },
   };
 </script>
@@ -282,6 +305,13 @@
     .content-editor{
       height:500px;
       margin-bottom: 100px;
+    }
+    .zvue-form-wrapper .zvue-form-upload .picture-list .el-upload{
+      border:none;
+    }
+    .zvue-form-wrapper .zvue-form-upload .avatar{
+      width:100%;
+      /*height:100%;*/
     }
   }
 </style>

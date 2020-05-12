@@ -3,8 +3,8 @@
     <!--<div ref="pieCharts" class="my-chart" id="task-person-task-chart"></div>-->
     <!--<div class="my-chart">-->
     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
-    <img
-      style="width:96%;height:auto;"
+    <img class="my-chart"
+
       src="../../../../../static/image/digitalPark/renwu1_tmp.png" alt="">
   <!--</div>-->
   </div>
@@ -29,9 +29,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-.building-status-proportion {
-  .pie-charts {
-    height: 95%;
+.task-person-task {
+  .module-item-top-name{
+    margin-bottom: 10px;
   }
 }
 </style>

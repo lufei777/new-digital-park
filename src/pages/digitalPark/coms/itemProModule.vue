@@ -32,7 +32,7 @@
         <component
           v-for="(item,index) in moduleData.moduleList"
           :key="index"
-          :class="['flex-colum-center','drag-component',
+          :class="['flex-column','drag-component',
                    moduleData.moduleList.length>1?'two-component radius-shadow  padding-box':'item-component padding-box']"
           style="height: 100%;"
           :is="item.componentName"
@@ -229,7 +229,7 @@
 <style lang="less">
   .item-product-coms{
      display: flex;
-     align-items: center;
+     /*align-items: center;*/
      flex-direction: column;
      overflow: hidden;
      padding:0 10px;
