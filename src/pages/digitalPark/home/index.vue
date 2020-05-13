@@ -23,8 +23,8 @@
     </div>
 
     <el-carousel height="360px" :interval="6000" v-if="!hideHeader">
-      <el-carousel-item v-for="item in imgs" :key="item.url" @click.native="linkTo(item)">
-        <img style="backgroundColor:#dcdfe6" class="carousel-img" :src="item.url" />
+      <el-carousel-item v-for="item in carouselImgList" :key="item.coverUrl" @click.native="linkTo(item)">
+        <img style="backgroundColor:#dcdfe6" class="carousel-img" :src="item.coverUrl" />
       </el-carousel-item>
     </el-carousel>
 
@@ -36,7 +36,7 @@
             <span
               class="hover-pointer more-btn"
               @click="onShowMoreProduct"
-              v-if="moreBtnShow"
+              v-if="productList.length>6"
             >{{showMoreProduct?$t('fold'):$t('more')}}</span>
           </div>
           <ul class="flex-align-start production-list" :style="showMoreProduct?'':{height:'160px'}">
@@ -94,7 +94,8 @@
 <script>
 import Sidebar from "../../../components/commonMenu/SideBar";
 import CommonFun from "../../../utils/commonFun";
-import DigitalParkApi from "../../../service/api/digitalPark";
+import DigitalParkApi from "@/service/api/digitalPark";
+import MessageManageApi from "@/service/api/messageManage";
 import NavOperator from "../coms/navOperator";
 import draggable from "vuedraggable";
 import ItemProModule from "../coms/itemProModule";
@@ -126,13 +127,13 @@ export default {
         textColor: "#606266",
         specialRoute: true
       },
-      imgs: [
-        { url: require('../../../../static/image/digitalPark/lunbo3.png'), link: '/announcement' },
-        { url: require('../../../../static/image/digitalPark/lunbo4.png'), link: '/news' },
+      carouselImgList: [
+        { coverUrl: require('../../../../static/image/digitalPark/lunbo3.png'), link: '/announcement' },
+        { coverUrl: require('../../../../static/image/digitalPark/lunbo4.png'), link: '/news' },
       ],
       copyrightShow: false,
       titleIcon: '',
-      moreBtnShow:true
+      messageList:[]
     };
   },
   computed: {
@@ -162,9 +163,6 @@ export default {
     }
   },
   methods: {
-    fun() {
-      this.$router.push('/test')
-    },
     onClickItemProduct(item) {
       Cookies.set("moduleType", 2);
       this.$store.commit("digitalPark/menuList", item);
@@ -309,7 +307,24 @@ export default {
     linkTo(item) {
       // let activeIndex = this.$refs.carousel.activeIndex
       if(this.isydSystem) return ;
-      this.$router.push(item.link)
+      if(this.messageList.length){
+        if(!item.textContent) return ;
+        this.$router.push(`/messageInfoDetail?id=${item.id}`)
+      }else{
+        this.$router.push(item.link)
+      }
+    },
+    async getCarouselImgList(){
+      let res = await MessageManageApi.getReleaseList()
+      if(res.list){
+        if(res.list.length==1){
+          this.messageList = res.list
+          this.carouselImgList = res.list
+        }else{
+          this.messageList = res.list
+          this.carouselImgList = res.list.slice(0,2)
+        }
+      }
     }
   },
   mounted() {
@@ -318,17 +333,13 @@ export default {
       event.preventDefault();
       event.stopPropagation();
     };
-    if(IsCZClient()){
-      this.moreBtnShow = false
-    } else {
-      this.moreBtnShow = true
-    }
     this.getMenuTree();
     this.getProductList();
     this.getModulesByType();
     setTimeout(() => {
       this.copyrightShow = true
     }, 2000);
+    this.getCarouselImgList()
     localStorage.setItem("home", true)
   }
 };

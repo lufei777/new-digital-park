@@ -44,7 +44,7 @@
     props: ["moduleItem"],
     data() {
       return {
-        typeList: typeList,
+        typeList: [],
         curType: isZG() ? 95 : 63
       };
     },

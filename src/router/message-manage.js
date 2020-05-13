@@ -29,6 +29,11 @@ export default [{
           name: 'MessageMaterial',
           meta:{title:'素材管理'},
           component: () => import('@/pages/messageManage/materialManage')
-        }]
+        }],
+    },{
+      path: '/messageInfoDetail',
+      name: 'MessageInfoDetail',
+      meta:{title:'信息详情'},
+      component: () => import('@/pages/messageManage/publish/messageInfoDetail')
     }
 ]

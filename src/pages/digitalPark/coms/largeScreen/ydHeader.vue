@@ -29,7 +29,7 @@
     props: [], //fromFlag 1：仪表盘 2:大屏
     data() {
       return {
-        headName: '伊甸城BIM运管系统',
+        headName: '伊甸城BIM运管平台',
         curDate: moment().format('YYYY年MM月DD日'),
         alarmListCount: 0,
         curTip: '总体概览'

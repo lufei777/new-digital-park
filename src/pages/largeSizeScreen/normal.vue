@@ -128,7 +128,6 @@
           height: document.body.offsetHeight,
           widthPercent: this.widthPercent,
           heightPercent: this.heightPercent,
-          preview:'ydCity'
         })
         res.modules.map((item)=>{
           item.bgStatus='normal'

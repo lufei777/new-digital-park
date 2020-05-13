@@ -2,8 +2,7 @@
   <div class="item-product-coms" >
     <div v-if="type==2" class="flex-align-between module-title">
       <h3>{{moduleData.menuName}}</h3>
-      <!--<span  v-if="moreBtnShow" class="more-btn hover-pointer" @click="onClickMoreBtn">{{$t('more')}}</span>-->
-      <span  v-if="moreBtnShow" class="more-btn hover-pointer"></span>
+      <span  v-if="!iszg" class="more-btn hover-pointer" @click="onClickMoreBtn">{{$t('more')}}</span>
     </div>
     <span v-if="type==1" class="single-module-name">{{moduleData.menuName}}</span>
     <div v-if='type==1' class="component-box">
@@ -48,7 +47,7 @@
   import DigitalParkApi from '../../../service/api/digitalPark'
   import CommonFun from '@/utils/commonFun'
   import { IsCZClient } from '@/utils/auth';
-  import { isYD } from "@/utils/project";
+  import { isYD,isZG } from "@/utils/project";
   export default {
     name: 'ItemProModule',
     props:['moduleData','type','userProModuleList','hideHeader'],
@@ -59,10 +58,12 @@
     data () {
       return {
         menuTree:JSON.parse(localStorage.getItem('menuTree')),
-        moreBtnShow:true
       }
     },
     computed:{
+      iszg(){
+         return isZG()
+      }
     },
     methods: {
       getOptions(){

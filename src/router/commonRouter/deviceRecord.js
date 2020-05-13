@@ -17,16 +17,16 @@ export default [{
     path:'/addDevice',
     name:'AddDevice',
     component:AddDevice,
-    meta:{title:'表记编辑'},
+    meta:{title:'表计编辑'},
   },{
     path:'/editDevice',
     name:'EditDevice',
     component:EditDevice,
-    meta:{title:'表记编辑'},
+    meta:{title:'表计编辑'},
   },{
     path:'/importDevice',
     name:'ImportDevice',
     component:ImportDevice,
-    meta:{title:'表记导入'},
+    meta:{title:'表计导入'},
   }]
 }]
