@@ -13,9 +13,9 @@
         <label for="">发布日期：</label>
         <el-date-picker
           v-model="searchParams.releaseTime"
-          type="datetime"
+          type="date"
           placeholder="选择日期时间"
-          value-format="yyyy-MM-dd hh:mm:ss"
+          value-format="yyyy-MM-dd"
         >
         </el-date-picker>
       </div>
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-  import MessageManageApi from "@/service/api/MessageManage";
+  import MessageManageApi from "@/service/api/messageManage";
   import CommonFun from '@/utils/commonFun'
   let pageInfo = {
     pageNum: 1,
@@ -57,7 +57,7 @@
           ref: "tableConfig",
           serverMode: {
             url: MessageManageApi.getReleaseList,
-            data: {}
+            data: pageInfo
           },
           propsHttp: {
             list: "list",
@@ -92,6 +92,16 @@
         curId:''
       };
     },
+    computed:{
+      params(){
+        return {...pageInfo, ...this.searchParams}
+      }
+    },
+    watch:{
+      params(){
+        this.tableConfig.serverMode.data = this.params
+      }
+    },
     methods: {
       onClickAddBtn() {
         this.$router.push('/addMessage')
@@ -100,7 +110,7 @@
         this.tableConfig.serverMode.data = {...pageInfo, ...this.searchParams}
       },
       onClickSearchBtn() {
-        console.log(this.searchParams,this.tableConfig.serverMode.data )
+        this.searchParams.releaseTime=  this.searchParams.releaseTime +' 00:00:00'
         this.setTableData()
         this.$refs[this.tableConfig.ref].refreshTable()
       },
@@ -110,9 +120,10 @@
           releaseName: '',
           releaseTime: ''
         }
+        this.setTableData()
+        this.$refs[this.tableConfig.ref].refreshTable()
       },
       onClickDelBtn(row){
-
         this.curId = row.id;
         this.showDeleteTip();
       },
@@ -140,7 +151,7 @@
       }
     },
     created() {
-      this.setTableData()
+      // this.setTableData()
     },
     mounted() {
     }

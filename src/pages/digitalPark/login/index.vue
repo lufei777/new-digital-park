@@ -117,6 +117,7 @@ export default {
       setToken: (token, isCZClient = true) => {
         setToken(token);
         setIsCZClient(isCZClient);
+        this.$store.dispatch('user/getUserInfo')
         // window.location.reload();
         if(window.__CZ_LargeScreen!=''){
           this.$router.push('/largeSizeScreen');
