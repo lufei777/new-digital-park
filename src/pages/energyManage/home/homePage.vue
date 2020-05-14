@@ -265,7 +265,7 @@ export default {
         .format("YYYY")}与${moment().format("YYYY")}年度同比环比柱状折线图分析`;
     },
     analysisChartText() {
-      return `${moment().format("YYYY-MM")}总用电日对比分析`;
+      return `${moment().format("YYYY-MM")}总用${this.eneryTypeName}日对比分析`;
     },
     curSystem() {
       return window.__CZ_SYSTEM;
@@ -394,6 +394,7 @@ export default {
         return item.id === val;
       });
       this.eneryTypeName = obj.name;
+      console.log(obj)
       this.getTimeEnergyChart();
     },
     DateTypeChange(value) {
