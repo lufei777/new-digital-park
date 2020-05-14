@@ -210,7 +210,7 @@
         let titleText = `${this.tmpCommonTip}趋势对比`
         let legendData = this.floorNameList.split("、")
         let xAxis
-        if(this.selectParams.selectType==3 && this.selectParams.radioType==0){
+        if(this.selectParams.selectType==3 && this.selectParams.redioType==0){
           xAxis = res[0].map((item)=>item.time.slice(0,16))
         }else{
           xAxis = res[0].map((item)=>item.time.slice(0,10))
@@ -291,9 +291,9 @@
       initTbhbChart(res) {
         this.myChart = this.$echarts.init(this.$refs.myChart);
         let xAxis
-        if(this.selectParams.selectType==3 && this.selectParams.radioType==0){
+        if(this.selectParams.selectType==3 && this.selectParams.redioType==0){
           xAxis = res.value.map((item)=>item.date && item.date.slice(0,16) ||'')
-        }else if(this.selectParams.selectType==2 && this.selectParams.radioType==1){
+        }else if(this.selectParams.selectType==2 && this.selectParams.redioType==1){
           xAxis = res.value.map((item)=>item.date && item.date.slice(0,7) || '')
         }else{
           xAxis = res.value.map((item)=>item.date && item.date.slice(0,10) || '')
@@ -407,7 +407,7 @@
         this.myChart = this.$echarts.init(this.$refs.myChart);
         let titleText =`${this.tmpCommonTip}趋势对比`
         let xAxis = []
-        if(this.selectType==3 && this.radioType==0){
+        if(this.selectType==3 && this.redioType==0){
           xAxis= res[0].map(item=>item.time?item.time.slice(0,16):'')
         }else{
           xAxis= res[0].map(item=>item.time?item.time.slice(0,10):'')
@@ -495,8 +495,8 @@
         let titleText =`${this.tmpCommonTip}柱状图`
         let legendData = []
         let xAxis
-        if(this.selectType==3 && this.radioType==0){
-          xAxis = res.map((item)=>item.time.slice(0,16))
+        if(this.selectParams.selectType==3 && this.selectParams.redioType==0){
+          xAxis = res.map((item)=>item.time.slice(10,16))
         }else{
           xAxis = res.map((item)=>item.time.slice(0,10))
         }
