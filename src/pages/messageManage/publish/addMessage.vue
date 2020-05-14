@@ -245,6 +245,7 @@
               hide();
             });
         }
+        this.$router.push("/publishManage")
       },
       goBack() {
         history.go(-1)

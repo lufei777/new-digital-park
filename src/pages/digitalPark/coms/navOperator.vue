@@ -40,6 +40,7 @@
           :label="$t('homeHeader.moduleConfig')"
           value="1"
           :class="{'large-item':fromFlag==2}"
+          v-if="!(iszg || isydSystem)"
         ></el-option>
         <el-option
           :label="$t('homeHeader.personalCenter')"
@@ -86,7 +87,7 @@ import CommonApi from "@/service/api/common";
 import { mapState } from "vuex";
 import CommonFun from '@/utils/commonFun'
 import { IsCZClient } from '@/utils/auth';
-import {isYD} from "@/utils/project";
+import {isYD,isZG} from "@/utils/project";
 
 export default {
   name: "DigitalNavOperator",
@@ -120,6 +121,12 @@ export default {
     },
     isyd(){
       return isYD()
+    },
+    iszg(){
+      return isZG()
+    },
+    isydSystem(){
+       return window.__CZ_SYSTEM == 'ydCity'
     }
   },
   watch: {

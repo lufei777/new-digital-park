@@ -77,6 +77,7 @@
             ]
           })
         );
+        this.$store.commit("digitalPark/activeMenuIndex","@/html/alarm/alarm_index.html")
         this.$store.commit("digitalPark/largeScreenIframeSrc",
             window.top.location.origin + '/#/vibe-web?updateId=' + _.uniqueId())
       },

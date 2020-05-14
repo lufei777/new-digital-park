@@ -40,13 +40,13 @@
         <img v-if="pageFlag==2 && !isydSystem" src="../../../../static/image/digitalPark/unity_priview.png"
              class="unity_priview"
              alt="">
-        <iframe v-if="pageFlag==1 && !isydSystem"
-                src="../../../../static/clientModel/zgHomePage/index.html"
-                frameborder="0"
-                class="unity-frame"></iframe>
-        <iframe v-if="isydSystem" src="../../../../static/clientModel/ydCityHomePage/index.html"
-                frameborder="0"
-                class="unity-frame"></iframe>
+        <!--<iframe v-if="pageFlag==1 && !isydSystem"-->
+                <!--src="../../../../static/clientModel/zgHomePage/index.html"-->
+                <!--frameborder="0"-->
+                <!--class="unity-frame"></iframe>-->
+        <!--<iframe v-if="isydSystem" src="../../../../static/clientModel/ydCityHomePage/index.html"-->
+                <!--frameborder="0"-->
+                <!--class="unity-frame"></iframe>-->
       </div>
       <div class="dashboard-right">
         <draggable :list="proModuleList2"

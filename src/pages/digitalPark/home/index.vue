@@ -127,10 +127,7 @@ export default {
         textColor: "#606266",
         specialRoute: true
       },
-      carouselImgList: [
-        { coverUrl: require('../../../../static/image/digitalPark/lunbo3.png'), link: '/announcement' },
-        { coverUrl: require('../../../../static/image/digitalPark/lunbo4.png'), link: '/news' },
-      ],
+      carouselImgList: [],
       copyrightShow: false,
       titleIcon: '',
       messageList:[]
@@ -324,6 +321,11 @@ export default {
           this.messageList = res.list
           this.carouselImgList = res.list.slice(0,2)
         }
+      }else{
+        this.carouselImgList = [
+          { coverUrl: require('../../../../static/image/digitalPark/lunbo3.png'), link: '/announcement' },
+          { coverUrl: require('../../../../static/image/digitalPark/lunbo4.png'), link: '/news' },
+        ]
       }
     }
   },
