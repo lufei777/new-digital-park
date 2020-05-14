@@ -46,7 +46,10 @@
             let width = dom.width()
             let height = dom.height()
             console.log(offset,top,width,height,this.curUrl)
-            window.openVideoWin && window.openVideoWin(offset,top,width,height,this.curUrl)
+            setTimeout(()=>{
+              window.openVideoWin && window.openVideoWin(offset,top,width,height,this.curUrl)
+            },2000)
+
           }
 
         // }

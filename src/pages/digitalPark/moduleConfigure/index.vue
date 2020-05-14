@@ -229,6 +229,7 @@
           })
           this.$refs.largeSizeScreen.getLargeScreenModuleList()
         }else{
+          this.$refs[this.curCom].getModulesByType()
         }
       },
       onClickEscBtn() {

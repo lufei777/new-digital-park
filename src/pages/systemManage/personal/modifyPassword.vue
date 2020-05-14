@@ -25,6 +25,16 @@ export default {
         callback();
       }
     };
+
+    let newPasswordVaild = (rule, value, callback) => {
+      if (value.trim() == "") {
+        callback(new Error("请输入新密码"));
+      } else if (value == this.formModel.oldPassword) {
+        callback(new Error("新密码与原密码一致"));
+      } else {
+        callback();
+      }
+    };
     return {
       formModel: {},
       formData: {
@@ -52,7 +62,7 @@ export default {
             span: 24,
             rules: {
               required: true,
-              message: "请输入新密码",
+              validator: newPasswordVaild,
               trigger: "blur"
             }
           },
