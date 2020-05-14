@@ -3,6 +3,7 @@
     ref="main"
     v-model="text"
     :size="size"
+    :loading="loading"
     :multiple="multiple"
     :filterable="remote?true:filterable"
     :clearable="disabled?false:clearable"
@@ -50,7 +51,7 @@
         <slot :name="`${prop}Type`" :labelkey="labelKey" :valuekey="valueKey" :item="oitem"></slot>
       </el-option>
       <p
-        v-if="noMore"
+        v-if="infinitescroll && noMore"
         :style="{
         textAlign:'center',
         fontSize:'12px',
@@ -73,6 +74,7 @@ export default {
   mixins: [props(), events()],
   props: {
     infinitescroll: {
+      // 无限下拉加载，但是如果value项没有加载出来，则反显会出错
       type: Boolean,
       default: false
     },
@@ -126,12 +128,14 @@ export default {
       start: 0,
       end: 10,
       pageSize: 10,
-      netDic: []
+      netDic: [],
+      loading: false
     };
   },
   methods: {
     validatenull,
     handleRemoteMethod(query) {
+      this.loading = true;
       miAjax({
         axios: this.$axios,
         url: this.dicUrl,
@@ -139,7 +143,7 @@ export default {
         query: this.dicQuery
       }).then(res => {
         _.isArray(res) && this.validatenull(res) ? "" : (this.netDic = res);
-      });
+      }).finally(() => this.loading = false)
     },
     load() {
       if (this.noMore) {
@@ -151,7 +155,7 @@ export default {
   computed: {
     visibleDic() {
       let tempArr = [];
-      if (this.inifitescroll) {
+      if (this.infinitescroll) {
         tempArr = this.netDic.slice(this.start, this.end);
       } else {
         tempArr = this.netDic;
@@ -159,7 +163,7 @@ export default {
       return tempArr;
     },
     noMore() {
-      return this.inifitescroll ? this.end >= this.netDic.length : false;
+      return this.end >= this.netDic.length;
     }
   },
   watch: {
