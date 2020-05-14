@@ -78,6 +78,9 @@ if (!Cookies.get("moduleType")) {
 import echarts from "echarts";
 Vue.prototype.$echarts = echarts;
 
+let a = {};
+console.log(a?.b);
+
 //编辑器
 import VueQuillEditor from "vue-quill-editor";
 import "quill/dist/quill.core.css";
