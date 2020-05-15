@@ -67,8 +67,7 @@
           </template>
           <template
             v-for="col in columnConfig"
-            :slot="col.prop"
-            slot-scope="{scopeRow,label,row,size,column,disabled,isEdit,dic}"
+            #[col.prop]="{scopeRow,label,row,size,column,disabled,isEdit,dic}"
           >
             <slot :name="col.prop" v-bind="{scopeRow,label,row,size,column,disabled,isEdit,dic}"></slot>
           </template>

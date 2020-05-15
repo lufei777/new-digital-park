@@ -24,7 +24,7 @@
       :expand-on-click-node="false"
       :default-expand-all="defaultExpandAll"
     >
-      <div slot-scope="{ node,data }">
+      <template #default="{ node,data }">
         <div
           @click.self="nodeClick(data)"
           @mouseenter="data.is_show=true"
@@ -52,7 +52,7 @@
             </el-dropdown>
           </div>
         </div>
-      </div>
+      </template>
     </el-tree>
     <el-dialog
       :title="obj[labelKey]"
@@ -290,7 +290,7 @@ export default {
         .then(() => {
           this.$emit("del", this.obj, this.node, callback);
         })
-        .catch(() => {});
+        .catch(() => { });
     }
   }
 };

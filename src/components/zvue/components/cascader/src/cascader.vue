@@ -21,7 +21,7 @@
       @focus="handleFocus"
       @click.native="handleClick"
     >
-      <template slot-scope="{ node, data }">
+      <template #default="{ node, data }">
         <slot
           v-if="typeslot"
           :name="`${prop}Type`"

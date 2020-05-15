@@ -26,7 +26,7 @@
         <template v-if="col.headerSlot" slot="header">
           <slot :name="`${col.prop}Header`" :column="col"></slot>
         </template>
-        <template slot-scope="scopeRow">
+        <template #default="scopeRow">
           <slot
             v-if="col.slot"
             :name="col.prop"
@@ -64,14 +64,14 @@
                 disabled
               />
             </span>
-            <span v-else-if="['img'].includes(col.type)">
-              <z-img v-model="scopeRow.row[col.prop]" @load="col.load" @error="col.error">
-                <!-- <template slot="placeholder" slot-scope="scope">
+            <span :style="{display:'flex'}" v-else-if="['img'].includes(col.type)">
+              <z-img v-model="scopeRow.row[col.prop]" :load="col.load" :error="col.error">
+                <!-- <template #placeholder="scope">
                   <slot :name="`${col.prop}Placeholder`" :scope="scope"></slot>
                 </template>
-                <template slot="error" slot-scope="scope">
+                <template #error="scope">
                   <slot :name="`${col.prop}Error`" :scope="scope"></slot>
-                </template> -->
+                </template>-->
               </z-img>
             </span>
             <span v-else v-html="_columnFormatter(scopeRow,col)"></span>
