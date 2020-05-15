@@ -4,7 +4,7 @@
       <i class="iconfont icongailan tip-icon"></i>{{curTip}}
     </div>
     <div class="header-name">
-      <!--<i class="iconfont iconshuziyuanqu park-logo"></i>-->
+      <!--<i class="iconfont iconyidianchengLOGO park-logo"></i>-->
       <span>{{headName}}</span>
     </div>
     <div class="logout-box">
@@ -77,6 +77,7 @@
             ]
           })
         );
+        this.$store.commit("digitalPark/activeMenuIndex","@/html/alarm/alarm_index.html")
         this.$store.commit("digitalPark/largeScreenIframeSrc",
             window.top.location.origin + '/#/vibe-web?updateId=' + _.uniqueId())
       },
@@ -167,7 +168,7 @@
     }
 
     .park-logo {
-      font-size: 64px;
+      font-size: 30px;
     }
 
     .cur-tip, .logout-box {

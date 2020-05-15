@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "14726887",
+      "name": "伊甸城LOGO",
+      "font_class": "yidianchengLOGO",
+      "unicode": "e6a8",
+      "unicode_decimal": 59048
+    },
+    {
       "icon_id": "12779108",
       "name": "铃铛 (1)",
       "font_class": "lingdang",

@@ -78,14 +78,15 @@ class chartUtils {
     let option = {
       title: {
         text: data.titleText,
-        left: titleUi.left || "4%",
-        padding: [24, 0],
+        padding: [0, 0],
         textStyle: {
-          color: '#666666FF',
-          fontWeight:titleTextStyle.fontWeight || '500',
-          align: 'top',
-          fontSize:titleTextStyle.fontSize || ""
-        }
+          color: titleTextStyle.color|| '#666',
+          fontWeight:titleTextStyle.fontWeight || 'bold',
+          // align: 'top',
+          fontSize:titleTextStyle.fontSize || "14",
+        },
+        top:titleTextStyle.top | '',
+        left:titleTextStyle.left || ''
       },
       tooltip: {
         trigger: 'item',
@@ -136,49 +137,7 @@ class chartUtils {
     dom.setOption(option, true)
   }
 
-  //实心饼图  后面不用了，实心空心都用上面的方法
-  handlePieChart(dom,data,resizeBox){
-    let option = {
-      title : {
-        text: data.titleText,
-        x:'left',
-        textStyle:{
-          fontSize: 14,
-          color:'#008DEA',
-          fontFamily:'MicrosoftYaHei'
-        }
-      },
-      tooltip : {
-        trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)",
-        showDelay:300
-      },
-      legend: {
-        orient: 'vertical',
-        left: data.legend,
-        top:50,
-        data: data.legendData,
-        textStyle:{
-          color:data.textStyleColor?data.textStyleColor:'#333'
-        }
-      },
-      color: data.color?data.color:['#4DA1FF', '#83D587', '#FFCE33', '#FF7B8C'],
-      series : [
-        {
-          name: data.seriesName?data.seriesName:'',
-          type: 'pie',
-          radius : '50%',
-          center: ['50%', '60%'],
-          data:data.series,
-        }
-      ]
-    };
-    $(window).resize(function(){
-      dom.resize()
-    })
 
-    dom.setOption(option, true)
-
-  }
+  //['#4DA1FF', '#83D587', '#FFCE33', '#FF7B8C','#66fbf9',"#dab54c"]
 }
 export default new chartUtils()

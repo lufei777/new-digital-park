@@ -202,7 +202,6 @@
       },
       async getZoomCompareChart(){
         let res =  await CommonApi.getZoomCompareChart(this.commonParams)
-        console.log("res",res)
         this.initZoomChart(res)
       },
       initZoomChart(res){
@@ -269,7 +268,6 @@
             })
             tmp.push(obj)
           })
-          console.log("tmp",tmp)
           let columnConfig=[]
           for(let key in tmp[0]){
             columnConfig.push({
@@ -277,6 +275,7 @@
               prop:key
             })
           }
+          console.log(columnConfig)
           this.tableConfig.columnConfig=columnConfig
           this.tableConfig.data=tmp
           this.tableConfig.uiConfig.pagination.total = res.total;
@@ -377,7 +376,7 @@
         let res = await CommonApi.getTbhbTable(tableParams)
         let unit ="("+res.unit.split("（")[1]
         this.tableConfig.columnConfig = [
-          {label:'排名',prop:'xulie'},
+          {label:'排名',prop:'xulie',width:"100px"},
           {label:`时间`,prop:'date'},
           {label:`当期综合能耗${unit}`,prop:'dqzh'},
           {label:`同期综合能耗${unit}`,prop:'tqzh',sortable:'custom'},
@@ -452,6 +451,7 @@
           }
         }
         let res = await CommonApi.getTypeTable(tableParams)
+
         if(res && res.value){
           let tmp=[]
           res.value.map((item)=>{
@@ -467,7 +467,6 @@
             })
             tmp.push(obj)
           })
-          console.log("tmp",tmp)
           let columnConfig=[]
           // res[0].title.map((item)=>{
           //    columnConfig.push({
@@ -585,10 +584,22 @@
         })
         let data={
           titleText,
+          titleUi:{
+            textStyle:{
+              color:'#008DEA',
+              fontSize:'14',
+              top:0,
+              left:0
+            }
+          },
           legendData,
-          series
+          seriesData:series,
+          seriesUi:{
+            radius:'50%'
+          },
+          color:['#4DA1FF', '#83D587', '#FFCE33', '#FF7B8C','#66fbf9',"#dab54c"],
         }
-        ChartUtils.handlePieChart(myChart2,data)
+        ChartUtils.hollowPieChart(myChart2,data)
       },
       async getCategoryEnergyTable(){
         let tableParams = {...this.commonParams,...{
@@ -621,7 +632,6 @@
         }
       },
       sortTable(column){
-        console.log(column)
         this.seq = column.prop == 'shijian' ? 0 : 1
         this.rank=column.order=='ascending'?'asc':'desc'
         this.rankType=column.prop
@@ -678,7 +688,6 @@
               })
             })
           })
-          console.log(this.floorList)
           return;
         }
       },

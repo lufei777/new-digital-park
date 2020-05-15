@@ -27,7 +27,7 @@
   import DigitalParkApi from '@/service/api/digitalPark'
   import CommonFun from '@/utils/commonFun'
   import { IsCZClient } from '@/utils/auth';
-  import { isYD } from "@/utils/project";
+  import { isYDScreen } from "@/utils/project";
   export default {
     name: 'productList',
     components: {
@@ -42,7 +42,7 @@
     },
     computed:{
       isyd(){ //是否是伊甸城
-        return isYD
+        return isYDScreen
       },
       ...mapState({
         largeScreenIframeSrc:state=>state.digitalPark.largeScreenIframeSrc

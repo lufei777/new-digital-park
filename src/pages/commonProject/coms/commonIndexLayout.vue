@@ -83,7 +83,7 @@ export default {
     width: @menuWidth;
     overflow-y: auto;
     overflow-x: unset;
-    z-index: 999999999;
+    z-index: 9999;
   }
   .collapse-my-el-menu {
     width: 80px;

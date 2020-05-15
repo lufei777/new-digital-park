@@ -1,7 +1,7 @@
 <template>
   <div class="elec-and-water-coms">
     <div class="elec-sum-coms-inner flex-align-center">
-      <div class="progress-box flex-colum-center">
+      <div class="progress-box flex-colum-center" :class="fromFlag==1?'elec-progress-box':'water-progress-box'">
         <el-progress type="circle" :percentage="percent"
                      :stroke-width="12" :width="200" :color="progressColor">
         </el-progress>
@@ -13,7 +13,7 @@
       </div>
       <div class="data-info">
         <div class="data-info-module-name">{{moduleItem.moduleName}}</div>
-        <div :class="fromFlag==1?'elec-data':'water-data'">{{energy}}</div>
+        <div :class="fromFlag==1?'elec-data':'water-data'">{{energy}}<span class="unit">{{unit}}</span></div>
         <!--<div class="percent1">-->
           <!--<span>同比：{{Math.abs(tbzz)}}%</span>-->
           <!--<i v-if="tbzz!=0" :class="['iconfont',tbzz<0?'icon052caozuo_jiangxu desc-icon':'icon053caozuo_shengxu asc-icon']"></i>-->
@@ -40,7 +40,8 @@
         alarm:[],
         tbzz:0,
         hbzz:0,
-        totalNum:0
+        totalNum:0,
+        unit:''
       };
     },
     computed:{
@@ -60,7 +61,8 @@
         this.prop = res.prop
         if(this.fromFlag==1){
           this.totalNum = res.num.elecNum
-          this.energy =res.energy.elecSum+'KWh'
+          this.energy =res.energy.elecSum
+          this.unit = 'KWh'
           this.alarm=res.alarm.length?res.alarm[0]:[]
           if(res.num.elecNum && res.alarm.length){
             this.percent = parseFloat((res.alarm[0].number /res.num.elecNum).toFixed(2))
@@ -69,10 +71,11 @@
           }
           this.tbzz=res.elecProp.value[0].tbzz
           this.hbzz=res.elecProp.value[0].hbzz
-          $(".el-progress__text").html(`<div class="elec-alarm-num">${res.alarm.length?res.alarm.number:0}个</div><br />报警数量`)
+          $(".elec-progress-box .el-progress__text").html(`<div class="elec-alarm-num">${res.alarm.length?res.alarm.number:0}个</div><br />报警数量`)
         }else{
           this.totalNum = res.num.waterNum
-          this.energy =res.energy.waterSum+'m³'
+          this.energy =res.energy.waterSum
+          this.unit = 'm³'
           this.alarm=res.alarm.length &&res.alarm.length ==2?res.alarm[1]:[]
           if(res.num.waterNum && res.alarm.length){
             this.percent = parseFloat((res.alarm[0].number /res.num.waterNum).toFixed(2))
@@ -81,7 +84,7 @@
           }
           this.tbzz=res.waterProp.value[0].tbzz
           this.hbzz=res.waterProp.value[0].hbzz
-          $(".el-progress__text").html(`<div class="water-alarm-num">${res.alarm.length?res.alarm.number:0}个</div><br />报警数量`)
+          $(".water-progress-box .el-progress__text").html(`<div class="water-alarm-num">${res.alarm.length?res.alarm.number:0}个</div><br />报警数量`)
         }
       }
 
@@ -143,6 +146,9 @@
     }
     .asc-icon{
       color:#FF0600;
+    }
+    .unit{
+      font-size: 22px;
     }
   }
 </style>

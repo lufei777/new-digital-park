@@ -1,7 +1,7 @@
 <template>
   <div class="large-size-screen-normal" :class="getBasicBg">
-    <Header fromFlag="2" :headName="headName" v-if="!isyd"/>
-    <YDHeader v-if="isyd"/>
+    <Header fromFlag="2" :headName="headName" v-if="!isydScreen"/>
+    <YDHeader v-if="isydScreen"/>
     <div class="content flex">
       <draggable
         class="drag-panel"
@@ -44,7 +44,7 @@
   import DigitalParkApi from '@/service/api/digitalPark'
   import ItemProModule from '@/pages/digitalPark/coms/itemProModule'
   import CommonFun from '@/utils/commonFun'
-  import { isYD } from "@/utils/project";
+  import { isYDScreen } from "@/utils/project";
   import YDHeader from '../digitalPark/coms/largeScreen/ydHeader'
 
   export default {
@@ -81,11 +81,11 @@
     computed: {
       getBasicBg(){
         return {
-          'haveBg':!isYD(),
+          'haveBg':!isYDScreen(),
         }
       },
-      isyd(){ //是否是伊甸城
-        return isYD()
+      isydScreen(){ //是否是伊甸城
+        return isYDScreen()
       }
     },
     watch: {
@@ -102,9 +102,9 @@
         return{
          'center-show':centerFlag,
           'out-drag-product':!centerFlag,
-          'out-drag-product-normal':!centerFlag && item.bgStatus=='normal' && !isYD(),
-          'out-drag-product-hover':!centerFlag && item.bgStatus=='hover' && !isYD(),
-          'yd-out-drag-product':!centerFlag && isYD(),
+          'out-drag-product-normal':!centerFlag && item.bgStatus=='normal' && !isYDScreen(),
+          'out-drag-product-hover':!centerFlag && item.bgStatus=='hover' && !isYDScreen(),
+          'yd-out-drag-product':!centerFlag && isYDScreen(),
         }
       },
       getOptions() {
@@ -128,6 +128,7 @@
           height: document.body.offsetHeight,
           widthPercent: this.widthPercent,
           heightPercent: this.heightPercent,
+          preview:'ydCity'
         })
         res.modules.map((item)=>{
           item.bgStatus='normal'
@@ -136,11 +137,11 @@
         this.centerIndex = res.modules.findIndex(item => item.id == 0 && item.moduleList)
         this.drawPageStyle(res)
         this.$nextTick(()=> {
-          this.styleObj.centerSize = {
-            "width": parseInt(($(".center-show").width() * this.widthPercent)) + 'px',
-            "height": parseInt(($(".center-show").height() * this.heightPercent)) + 'px'
-          }
-          $(".center-show").css(this.styleObj.centerSize)
+          // this.styleObj.centerSize = {
+          //   "width": parseInt(($(".center-show").width() * this.widthPercent)) + 'px',
+          //   "height": parseInt(($(".center-show").height() * this.heightPercent)) + 'px'
+          // }
+          // $(".center-show").css(this.styleObj.centerSize)
           $(".drag-panel").css(this.styleObj.panelStyle)
           $(".center-show").css(this.styleObj.centerStyle)
           $(".large-size-screen-normal .out-drag-product").css(this.styleObj.dragStyle)
@@ -168,7 +169,7 @@
           "grid-column-end": xLen < this.moduleMaxWidth ? this.centerIndex + 4 : this.centerIndex + 3,
           "grid-row-start": 1,
           "grid-row-end": xLen < this.moduleMaxWidth ? 4 : 3,
-          // visibility:isYD()?"collapse":'unset'
+          // visibility:isYDScreen()?"collapse":'unset'
         }
 
         this.styleObj.dragStyle = {
@@ -192,10 +193,10 @@
             "fontSize": "76px"
           })
           $(".center-show").css({
-            width: '1920px',
-            height: '1080px'
-            // width:'100%',
-            // height:'100%'
+            // width: '1920px',
+            // height: '1080px'
+            width:'100%',
+            height:'100%'
           })
           this.moduleMaxWidth = 960
           this.moduleMargin = 20
@@ -267,7 +268,7 @@
       },
       changeBg(item,flag){
         console.log(item)
-        if(isYD()){
+        if(isYDScreen()){
           return;
         }
         // debugger
@@ -287,11 +288,11 @@
       let _this = this
       $(window).resize(async function () {
         await _this.getLargeScreenModuleList()
-        let obj = {
-          width: "1920px",
-          height: '1080px'
-        }
-        $(".center-show").css(obj)
+        // let obj = {
+        //   width: "1920px",
+        //   height: '1080px'
+        // }
+        // $(".center-show").css(obj)
         console.log("sizechange", $(".center-show").length, obj)
       })
     },
@@ -415,10 +416,10 @@
     .center-show {
       /*width: 1920px !important;*/
       /*height: 1080px !important;*/
-      width: 1920px;
-      height: 1080px;
-      /*width:100%;*/
-      /*height:100%;*/
+      /*width: 1920px;*/
+      /*height: 1080px;*/
+      width:100%;
+      height:100%;
       /*background: pink;*/
       box-sizing: border-box;
       /*border: 1px solid pink;*/

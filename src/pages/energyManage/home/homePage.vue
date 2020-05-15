@@ -701,8 +701,10 @@ export default {
     this.getEnergyEcharts();
     this.rankingList();
     await this.getEnergyTypeList();
-    await this.getTimeEnergyChart();
-    await this.energyProportion();
+    if(isZG()){
+      await this.getTimeEnergyChart();
+      await this.energyProportion();
+    }
   }
 };
 </script>
@@ -815,6 +817,7 @@ export default {
     box-sizing: border-box;
     margin-bottom: 15px;
     .pieChart {
+      padding:20px 0 0 20px;
       position: relative;
       width: 49%;
       height: 100%;
@@ -828,7 +831,6 @@ export default {
     .childTitle {
       position: absolute;
       font-size: 14px;
-      font-size: #666;
       top: 50px;
       left: 30px;
     }

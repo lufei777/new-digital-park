@@ -32,7 +32,7 @@
 <script>
 import CommonFun from "../../../../utils/commonFun";
 import ChartUtils from "../../../../utils/chartUtils";
-import { isYD } from "@/utils/project";
+import { isYDScreen } from "@/utils/project";
 
 export default {
   name: "taskRanking",
@@ -45,7 +45,7 @@ export default {
   },
   computed:{
     isyd(){
-      return isYD()
+      return isYDScreen()
     }
   },
   methods: {

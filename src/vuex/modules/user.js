@@ -11,6 +11,7 @@ const mutations = {
     state.token = payload
   },
   setUserInfo: (state, payload) => {
+    console.log("set userInfo",payload)
     state.userInfo = payload
   }
 }
@@ -39,6 +40,7 @@ const actions = {
     return new Promise(async (resolve, reject) => {
       let userInfo = await SystemManageApi.getUserInfo().catch(err => reject(reject));
       commit('setUserInfo', userInfo);
+      console.log("commit userInfo")
       setUserInfo(userInfo);
       // 将信息返回
       resolve(userInfo);
