@@ -23,7 +23,7 @@
 
 <script>
   import MessageManageApi from "@/service/api/messageManage";
-  import {isYD} from "@/utils/project";
+  import {isYDScreen} from "@/utils/project";
   import moment from 'moment'
 
   export default {
@@ -204,12 +204,11 @@
           ]
         },
         editorOption: {},
-        value3: new Date()
       };
     },
     computed: {
       isyd() {
-        return isYD()
+        return isYDScreen()
       },
       curId() {
         return this.$route.query.id
@@ -221,7 +220,7 @@
         if (this.formModel.showLink == 0) {
           this.formModel.textContent = ''
         }
-        this.formModel.releaseTime = moment(this.formModel.releaseTime).format('YYYY-MM-DD HH:mm:SS')
+        this.formModel.releaseTime = moment(this.formModel.releaseTime).format('YYYY-MM-DD hh:mm:ss')
         if (this.curId) {
           await MessageManageApi.editMessage(this.formModel)
             .then(res => {
@@ -303,8 +302,9 @@
     }
 
     .content-editor {
-      height: 500px;
+      height: 550px;
       margin-bottom: 100px;
+      overflow: hidden;
     }
 
     .zvue-form-wrapper .zvue-form-upload .picture-list .el-upload {

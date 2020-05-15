@@ -51,7 +51,7 @@
 import commonFun from "@/utils/commonFun";
 import SidebarItem from "./SidebarItem";
 import { mapState } from 'vuex'
-import {isYD} from "../../utils/project";
+import {isYDScreen} from "../../utils/project";
 
 export default {
   name: "Sidebar",
@@ -90,7 +90,7 @@ export default {
       activeMenuIndexVuex:state=>state.digitalPark.activeMenuIndex
     }),
     isyd(){
-      return isYD()
+      return isYDScreen()
     }
   },
   watch: {

@@ -101,44 +101,75 @@
         })
         let data={
           titleText,
+          titleUi:{
+            textStyle:{
+              color:'#008DEA'
+            },
+          },
           legendData,
-          series
+          seriesData:series,
+          seriesUi:{
+            radius:['15%',"60%"],
+            roseType:'radius',
+            label:{
+              emphasis: {
+                show:false
+              }
+            }
+          },
+          color:['#4DA1FF', '#83D587', '#FFCE33', '#FF7B8C','#66fbf9',"#dab54c"]
         }
-        ChartUtils.handlePieChart(myChart1,data)
+        ChartUtils.hollowPieChart(myChart1,data)
       },
       initWaterChart(res){
         let myChart2 = this.$echarts.init(this.$refs.myChart2);
         let titleText =`${this.commonTip}分项耗水占比分析`
-        let legendData=['生活用水','生活污水','空调用水','消防用水','其他用水']
-        // let legendData = res.waterList && res.waterList.map((item)=>item.name)
-        let series=[{
-          name:'生活用水',
-          value:0
-        },{
-          name:'生活污水',
-          value:0
-        },{
-          name:'空调用水',
-          value:0
-        },{
-          name:'消防用水',
-          value:0
-        },{
-          name:'其他用水',
-          value:0
-        }]
-        // res.waterList && res.waterList.map((item)=>{
-        //   series.push({
-        //     name:item.name,
-        //     value:item.value
-        //   })
-        // })
+        // let legendData=['生活用水','生活污水','空调用水','消防用水','其他用水']
+        let legendData = res.waterList && res.waterList.map((item)=>item.name)
+        let series=[]
+        // series=[{
+        //   name:'生活用水',
+        //   value:0
+        // },{
+        //   name:'生活污水',
+        //   value:0
+        // },{
+        //   name:'空调用水',
+        //   value:0
+        // },{
+        //   name:'消防用水',
+        //   value:0
+        // },{
+        //   name:'其他用水',
+        //   value:0
+        // }]
+        res.waterList && res.waterList.map((item)=>{
+          series.push({
+            name:item.name,
+            value:item.value
+          })
+        })
         let data={
           titleText,
+          titleUi:{
+            textStyle:{
+              color:'#008DEA'
+            },
+          },
           legendData,
-          series
+          seriesData:series,
+          seriesUi:{
+            radius:['15%',"60%"],
+            roseType:'radius',
+            label:{
+              emphasis: {
+                show:false
+              }
+            }
+          },
+          color:['#4DA1FF', '#83D587', '#FFCE33', '#FF7B8C','#66fbf9',"#dab54c"]
         }
-        ChartUtils.handlePieChart(myChart2,data)
+        ChartUtils.hollowPieChart(myChart2,data)
       },
       async getEnergyRanking(){
         let params = {...this.selectParams,...{

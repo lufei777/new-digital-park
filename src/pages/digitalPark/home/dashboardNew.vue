@@ -37,23 +37,23 @@
 
       <div class="dashboard-center">
         <!--<div class="carousel-box"></div>-->
-        <img v-if="pageFlag==2 && !isydSystem" src="../../../../static/image/digitalPark/unity_priview.png"
+        <img v-if="pageFlag==2 && !isyd" src="../../../../static/image/digitalPark/unity_priview.png"
              class="unity_priview"
              alt="">
-        <!--<iframe v-if="pageFlag==1 && !isydSystem"-->
-                <!--src="../../../../static/clientModel/zgHomePage/index.html"-->
-                <!--frameborder="0"-->
-                <!--class="unity-frame"></iframe>-->
-        <!--<iframe v-if="isydSystem" src="../../../../static/clientModel/ydCityHomePage/index.html"-->
-                <!--frameborder="0"-->
-                <!--class="unity-frame"></iframe>-->
+        <iframe v-if="pageFlag==1 && !isyd"
+                src="../../../../static/clientModel/zgHomePage/index.html"
+                frameborder="0"
+                class="unity-frame"></iframe>
+        <iframe v-if="isyd" src="../../../../static/clientModel/ydCityHomePage/index.html"
+                frameborder="0"
+                class="unity-frame"></iframe>
       </div>
       <div class="dashboard-right">
         <draggable :list="proModuleList2"
                    v-bind="getOptions()"
                    class="draggable-box2"
                    @change="onRightChange"
-                   :move="onRightMove"
+                c   :move="onRightMove"
                    @start="onRightStart"
                    @end="onRightEnd"
         >
@@ -152,8 +152,8 @@
         showGoBack(){
           return this.$route.query.productId?true:false
         },
-        isydSystem(){
-          return window.__CZ_SYSTEM == 'ydCity';
+        isyd(){
+          return isYD()
         }
      },
       watch:{

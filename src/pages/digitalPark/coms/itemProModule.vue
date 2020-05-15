@@ -47,7 +47,7 @@
   import DigitalParkApi from '../../../service/api/digitalPark'
   import CommonFun from '@/utils/commonFun'
   import { IsCZClient } from '@/utils/auth';
-  import { isYD,isZG } from "@/utils/project";
+  import { isYDScreen,isZG } from "@/utils/project";
   export default {
     name: 'ItemProModule',
     props:['moduleData','type','userProModuleList','hideHeader'],
@@ -162,6 +162,8 @@
           })
         })
         this.moduleData.childNode = []
+        this.moduleData.firstMenuId = this.moduleData.moduleList[0].firstMenuId
+        this.moduleData.secondMenuId = this.moduleData.moduleList[0].secondMenuId
         CommonFun.loadPage(this.moduleData)
       },
       moduleItemData(item){
@@ -174,7 +176,7 @@
               right:'3%',
               textStyle:{
                 color:'#8FD3FA',
-                fontSize:this.moduleData.largeScreen && !isYD()?30:14
+                fontSize:this.moduleData.largeScreen && !isYDScreen()?30:14
               },
             },
             fontSize:30

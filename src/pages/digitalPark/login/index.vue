@@ -46,7 +46,7 @@ import SystemManageApi from '@/service/api/systemManage'
 import { mapMutations } from 'vuex';
 import { setToken, setIsCZClient } from '@/utils/auth';
 import { getProjectTitle } from '@/utils/project';
-import { isYD } from "../../../utils/project";
+import { isYDScreen } from "../../../utils/project";
 
 export default {
   name: 'DigitalParkLogin',

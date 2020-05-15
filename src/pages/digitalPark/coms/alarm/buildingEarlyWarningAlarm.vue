@@ -9,7 +9,7 @@
   import CommonFun from "../../../../utils/commonFun";
   import ChartUtils from "../../../../utils/chartUtils";
   import CommonApi from '@/service/api/common'
-  import { isYD } from "@/utils/project";
+  import { isYDScreen } from "@/utils/project";
 
   export default {
     name: "BuildingEarlyWarningAlarm",

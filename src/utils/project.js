@@ -13,11 +13,16 @@ export const isZG = () => {
   return getProjectName() === ZG;
 }
 
+
+export const isYD = () => {
+  return getProjectName() === YDCity;
+}
+
 export const getLargeScreenName = () => {
   return window.__CZ_LargeScreen;
 }
 
-export const isYD = () => {  //伊甸城
+export const isYDScreen = () => {  //伊甸城
   return getLargeScreenName() === YDCity;
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="digital-nav-operator flex-align" v-if="!isyd">
+  <div class="digital-nav-operator flex-align" v-if="!isydScreen">
     <span class="nav-right-item long-text" v-if="showGoBack" @click="onClickGoBack">
       <span style="color:#008DEA">
         <i class="iconfont iconshouye"></i>&nbsp;返回首页
@@ -40,7 +40,7 @@
           :label="$t('homeHeader.moduleConfig')"
           value="1"
           :class="{'large-item':fromFlag==2}"
-          v-if="!(iszg || isydSystem)"
+          v-if="!(iszg || isyd)"
         ></el-option>
         <el-option
           :label="$t('homeHeader.personalCenter')"
@@ -87,7 +87,7 @@ import CommonApi from "@/service/api/common";
 import { mapState } from "vuex";
 import CommonFun from '@/utils/commonFun'
 import { IsCZClient } from '@/utils/auth';
-import {isYD,isZG} from "@/utils/project";
+import {isYDScreen,isZG,isYD} from "@/utils/project";
 
 export default {
   name: "DigitalNavOperator",
@@ -125,8 +125,8 @@ export default {
     iszg(){
       return isZG()
     },
-    isydSystem(){
-       return window.__CZ_SYSTEM == 'ydCity'
+    isydScreen(){
+       return isYDScreen()
     }
   },
   watch: {

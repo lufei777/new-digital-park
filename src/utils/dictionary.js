@@ -433,7 +433,7 @@ export const AssetState = {
 export const ProjectName = {
   // 中钢
   ZG: 'zg',
-  YDCity: 'ydCity'
+  YDCity: 'ydCity'  //项目名称，大屏名称
 }
 
 // 根据项目显示不同的title

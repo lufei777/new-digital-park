@@ -12,7 +12,7 @@
 
 <script>
 import SystemManageApi from "@/service/api/systemManage";
-import {isYD} from "@/utils/project";
+import {isYDScreen} from "@/utils/project";
 export default {
   name: "ModifyPassword",
   data() {
@@ -84,7 +84,7 @@ export default {
   },
   computed:{
     isyd(){
-      return isYD()
+      return isYDScreen()
     }
   },
   methods: {

@@ -14,7 +14,7 @@
 import { validatePhoneNumber, validMail } from 'utils/validate.js';
 import SystemManageApi from '@/service/api/systemManage'
 import { CommonDic } from '@/utils/dictionary'
-import {isYD} from "@/utils/project";
+import {isYDScreen} from "@/utils/project";
 import { mapState } from 'vuex'
 export default {
   name: 'PersonalInformation',
@@ -89,7 +89,7 @@ export default {
   },
   computed: {
     isyd(){
-      return isYD()
+      return isYDScreen()
     }
   },
   watch: {

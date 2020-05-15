@@ -195,11 +195,11 @@ export default {
         ]
       };
       // 点击事件
-      myChart.on("click", params => {
-        if (vm.moduleItem.routeAddress) {
-          window.open(vm.moduleItem.routeAddress);
-        }
-      });
+      // myChart.on("click", params => {
+      //   if (vm.moduleItem.routeAddress) {
+      //     window.open(vm.moduleItem.routeAddress);
+      //   }
+      // });
       // $(window).resize(function(){
       //   myChart.resize()
       // })

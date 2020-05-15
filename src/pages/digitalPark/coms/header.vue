@@ -12,7 +12,7 @@
       </div>
       <div class="digital-title">
         <div class="digital-title-text">
-          <i class="iconfont iconshuziyuanqu park-logo"></i>
+          <i class="iconfont park-logo" :class="isyd?'iconyidianchengLOGO':'iconshuziyuanqu'"></i>
           <span>{{headName}}</span>
         </div>
       </div>
@@ -24,7 +24,7 @@
 
 <script>
   import NavOperator from '@/pages/digitalPark/coms/navOperator'
-  import {isZG} from '@/utils/project';
+  import {isZG,isYD} from '@/utils/project';
   let headerHeight = 135
   export default {
     name: 'LargeSizeScreenHeader',
@@ -47,6 +47,9 @@
       },
       iszg(){
         return isZG();
+      },
+      isyd(){
+        return isYD();
       }
     },
     watch:{
@@ -111,6 +114,9 @@
       .digital-nav-operator{
         float: right;
       }
+    }
+    .iconyidianchengLOGO{
+      /*font-size: 30px;*/
     }
   }
 

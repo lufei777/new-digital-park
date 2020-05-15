@@ -4,7 +4,7 @@
       <i class="iconfont icongailan tip-icon"></i>{{curTip}}
     </div>
     <div class="header-name">
-      <!--<i class="iconfont iconshuziyuanqu park-logo"></i>-->
+      <!--<i class="iconfont iconyidianchengLOGO park-logo"></i>-->
       <span>{{headName}}</span>
     </div>
     <div class="logout-box">
@@ -168,7 +168,7 @@
     }
 
     .park-logo {
-      font-size: 64px;
+      font-size: 30px;
     }
 
     .cur-tip, .logout-box {

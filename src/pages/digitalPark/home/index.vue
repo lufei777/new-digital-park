@@ -3,7 +3,7 @@
     <div class="home-header" v-show="!hideHeader">
       <div class="home-header-inner flex-align-between">
         <div class="header-nav-left">
-          <h3 class="title">
+          <h3 :class="isydSystem?'yd-title':'title'">
             <i class="iconfont park-logo" :class="titleIcon"></i>
             <span>{{title}}</span>
           </h3>
@@ -101,6 +101,8 @@ import draggable from "vuedraggable";
 import ItemProModule from "../coms/itemProModule";
 import { mapState } from "vuex";
 import { IsCZClient } from '@/utils/auth';
+
+let showImgList = 2
 export default {
   name: "DigitalHomePage",
   props: ["hideHeader", "curProModule", "forceFallback"],
@@ -313,13 +315,13 @@ export default {
     },
     async getCarouselImgList(){
       let res = await MessageManageApi.getReleaseList()
-      if(res.list){
+      if(res.list && res.list.length){
         if(res.list.length==1){
           this.messageList = res.list
           this.carouselImgList = res.list
         }else{
           this.messageList = res.list
-          this.carouselImgList = res.list.slice(0,2)
+          this.carouselImgList = res.list.slice(0,showImgList)
         }
       }else{
         this.carouselImgList = [
@@ -380,6 +382,10 @@ export default {
     .title {
       font-size: 30px;
       color: @parkMainTextColor;
+    }
+    .yd-title{
+      font-size: 30px;
+      color:#187fc3;
     }
     li {
       margin-right: 20px;
@@ -535,7 +541,11 @@ export default {
       border: 1px solid #ccc;
     }
   }
+  .iconyidianchengLOGO{
+    color:#187fc3;
+  }
 }
+
 
 .el-menu--horizontal {
   .el-menu-item,
