@@ -685,6 +685,9 @@
       onClickTreeNode(val){
         if(this.fromFlag==1){
           this.handleFloorCanCheck(val)
+          if(val.length>4){
+             return;
+          }
           this.checkedFloorList=val
         }else{
           this.checkedFloorList=[val]
