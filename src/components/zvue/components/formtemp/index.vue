@@ -30,10 +30,10 @@
       ></slot>
     </template>
     <!-- input的slot处睆 -->
-    <template v-if="column.prependslot" :slot="column.prependslot" slot-scope="{prependClick}">
+    <template v-if="column.prependslot" #[column.prependslot]="{prependClick}">
       <slot :name="column.prependslot" :prependClick="prependClick"></slot>
     </template>
-    <template v-if="column.appendslot" :slot="column.appendslot" slot-scope="{appendClick}">
+    <template v-if="column.appendslot" #[column.appendslot]="{appendClick}">
       <slot :name="column.appendslot" :appendClick="appendClick"></slot>
     </template>
   </component>

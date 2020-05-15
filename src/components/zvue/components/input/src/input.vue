@@ -48,16 +48,18 @@
               @check="checkChange"
               @node-click.self="handleNodeClick"
             >
-              <div style="width:100%;padding-right:10px;" slot-scope="{ data }">
-                <slot
-                  :name="prop+'Type'"
-                  :labelkey="labelKey"
-                  :valuekey="valueKey"
-                  :item="data"
-                  v-if="typeslot"
-                ></slot>
-                <span v-else>{{getLabelText(data)}}</span>
-              </div>
+              <template #default="{ data }">
+                <div style="width:100%;padding-right:10px;">
+                  <slot
+                    :name="prop+'Type'"
+                    :labelkey="labelKey"
+                    :valuekey="valueKey"
+                    :item="data"
+                    v-if="typeslot"
+                  ></slot>
+                  <span v-else>{{getLabelText(data)}}</span>
+                </div>
+              </template>
             </el-tree>
           </el-scrollbar>
         </div>
@@ -143,7 +145,8 @@ export default {
       default: false
     },
     autocomplete: {
-      type: String
+      type: String,
+      default: 'off'
     },
     showPassword: Boolean,
     minRows: {
@@ -156,14 +159,14 @@ export default {
     },
     prependClick: {
       type: Function,
-      default: () => {}
+      default: () => { }
     },
     prepend: {
       type: String
     },
     appendClick: {
       type: Function,
-      default: () => {}
+      default: () => { }
     },
     append: {
       type: String
@@ -356,7 +359,7 @@ export default {
         isLeaf: this.leafKey
       });
     },
-    typeParam: function() {
+    typeParam: function () {
       if (this.rawtype) return this.rawtype;
       switch (this.type) {
         case "textarea":
@@ -418,6 +421,7 @@ export default {
       handler(value) {
         if (!this.isFirst) {
           this.isFirst = false;
+
           this.handleChange(value);
         } else {
           this.isFirst = false;

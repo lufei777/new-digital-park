@@ -51,7 +51,7 @@
                   :label-width="setPx(column.width,parentOption.labelWidth || 90)"
                 >
                   <!-- 自定义label -->
-                  <template slot="label" v-if="column.labelslot">
+                  <template #label v-if="column.labelslot">
                     <slot
                       :name="column.prop+'Label'"
                       :column="column"
@@ -62,7 +62,7 @@
                     ></slot>
                   </template>
                   <!-- 自定义error -->
-                  <template slot="error" slot-scope="{error}" v-if="column.errorslot">
+                  <template #error="{error}" v-if="column.errorslot">
                     <slot
                       :name="column.prop+'Error'"
                       :column="column"
@@ -117,22 +117,14 @@
                         ></slot>
                       </template>
                       <!-- input的slot处理 -->
-                      <template
-                        v-if="column.prependslot"
-                        :slot="column.prependslot"
-                        slot-scope="{prependClick}"
-                      >
+                      <template v-if="column.prependslot" #[column.prependslot]="{prependClick}">
                         <slot
                           :name="column.prependslot"
                           :disabled="vaildDiabled(column,group)"
                           :clickevent="prependClick"
                         ></slot>
                       </template>
-                      <template
-                        v-if="column.appendslot"
-                        :slot="column.appendslot"
-                        slot-scope="{appendClick}"
-                      >
+                      <template v-if="column.appendslot" #[column.appendslot]="{appendClick}">
                         <slot
                           :name="column.appendslot"
                           :disabled="vaildDiabled(column,group)"

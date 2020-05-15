@@ -1,14 +1,17 @@
 #### 项目说明
-数字园区项目，现阶段主要开发任务，使用VUE + ElementUI。
->*项目路由后台管理，后台做权限返回特定路由，前台保存所有路由做跳转页面使用*
->*现项目会在浏览器与客户端中使用，会涉及到与客户端(C#)的交互*
->*接口调试需要在config/index.js中做代理，可以在群里询问*
-***
+
+数字园区项目，现阶段主要开发任务，使用 VUE + ElementUI。
+
+> _项目路由后台管理，后台做权限返回特定路由，前台保存所有路由做跳转页面使用_ >_现项目会在浏览器与客户端中使用，会涉及到与客户端(C#)的交互_ >_接口调试需要在 config/index.js 中做代理，可以在群里询问_
+
+---
 
 #### 软件架构
+
     VUE + less
 
 #### 文件目录
+
 ```bash
 ├── build                                       // webpack配置文件
 ├── config                                      // 项目打包路径，主要为index.js，配置资源路径等
@@ -26,7 +29,7 @@
 │   ├── service                                 // 数据交互统一调配
 │   │   ├── api                                 // 接口封装
 │   │   └── axios                               // axios封装
-│   ├── utils                                   
+│   ├── utils
 │   ├── vuex                                    // vuex的状态管理
 │   │   ├── modules                             // vuex的分组模块
 │   │   └── store.js                            // 配置mutations
@@ -40,20 +43,50 @@
 └── README.md                                   // 项目的说明文档，markdown 格式
 ```
 
+#### ElementUI 组件修改
+
+> 由于 ElementUI 官方的一些组件不满足项目需求，因此修改打包使用，所以每次更新插件时，可能需要修改相对应的文件再打包，否则可能会影响相应的功能，修改情况如下：
+
+1. 级联(cascader)
+
+   > 原因：官方级联的`lazyload`只支持从当`resolve([])传进来的数组中`读取相应的选项，修改后可从`上一级和当前传进来的数组`中获取选项
+
+   - 修改 cascader-panel.vue 文件，306 行
+
+   ```javascript
+   // 306行
+   const valueKey = this.config.value;
+   //改为
+   const valueKey = node.hasChildren ? 'value' : this.config.value;
+
+   // 309行 判断条件修改
+   if (Array.isArray(dataList) && dataList.filter(item => item[valueKey] === nodeValue).length > 0) {}
+   //改为
+   if (Array.isArray(dataList) && (node.children || dataList).filter(item => item[valueKey] === nodeValue).length > 0){}
+
+   // 也可直接修改lib包node_modules\element-ui\lib\cascader-panel.js
+   // dispose default value on lazy load mode
+   ...
+   //1417 改为 `var valueKey = node.hasChildren ? 'value' : _this5.config.value;`
+   //1420 改为 `if (Array.isArray(dataList) && (node.children || dataList).filter(function (item) {`
+   ```
+
 #### 组件封装
->*注*： 每个人封装了比较通用的组件时，可依次在此说明，供大家使用。
+
+> _注_： 每个人封装了比较通用的组件时，可依次在此说明，供大家使用。
+
     下面封装的组件、方法都是有局限性的，只适用于项目中很通用的部分，自知很多是需要完善的。
     但会涉及到之前使用的地方，可在原组件上扩充新功能，不要轻易改动别人组件已有的功能。
     若觉得实在不好用，可以重新封装，以后就用新的，旧的有时间再迁移。
-   
+
 一、公共组件封装
 
-~~一）CommonTable组件---通用表格+分页。支持修改，删除，多选，排序，导出。~~
+~~一）CommonTable 组件---通用表格+分页。支持修改，删除，多选，排序，导出。~~
 
     需要对数据进行封装。
     1.传递参数curPage,tableObj。tableObj包括：
     1）labelList对象---prop:属性，name:名称，sort：是否排序，'不传/false'不排序，'custom'排序。
-    2）dataList对象 
+    2）dataList对象
     3）tableTip 表格提示性文字 不传则不显示()
     4）showExportBtn 是否显示导出按钮 默认不传即不显示
     5）showOperator 是否显示基本的操作（修改/删除）默认不传即不显示
@@ -66,24 +99,24 @@
     3）点击某一行事件名称必须叫rowClick
     4）多选事件名称必须叫handleSelectionChange
     5）导出事件名称必须叫handleExport
-  
-二）customTree组件---可增删改的树形控件
+
+二）customTree 组件---可增删改的树形控件
 
     参数说明：
     1）treeList  数据
     2）addNodeCallback/delNodeCallback/editCallback/clickNodeCallback------添加/删除/编辑/点击 节点回调
     3）defaultExpandedKey 默认展开的节点
-  
-三）tree组件---支持搜索、多选、单选
+
+三）tree 组件---支持搜索、多选、单选
 
     参数说明
     1）treeList---渲染的tree列表
     2）treeConfig:{  //tree配置
         ref:'treeRef' //默认不传为treeRef
-        treeProps:{                         
+        treeProps:{
             label:'floor',
             children: 'nodes',
-        },                   
+        },
         nodeKey:'floorId', //默认不传为id
         defaultExpandedkeys:[], //默认展开的节点
         defaultCheckedKeys:[],   //默认选中的复选框
@@ -92,7 +125,7 @@
         showSearch:false,//是否显示搜索框，默认不传则不显示
         onClickTreeNodeCallBack:this.onClickTreeNode, //点击节点的回调
         onCheckTreeNodeCallBack:this.onClickTreeNode,  //点击复选框的回调
-    } 
+    }
     //treeConfig的treeProps默认不传为：
     {
         label:'text',
@@ -112,8 +145,8 @@
         onClickCancelBtnCallback:this.onClickModalCancelBtn //点击取消按钮的回调
     }
 
-五）基于ElementUI表格Table和表单Form组件封装（[文档](http://www.lxhblog.cn)）
-   
+五）基于 ElementUI 表格 Table 和表单 Form 组件封装（[文档](http://www.lxhblog.cn)）
+
 六）通用导航菜单 commonMenu
 
     1.传递参数
@@ -127,17 +160,17 @@
                 activeIndex:'1' //当前激活菜单，不传默认第一个
                 }
 
-二、commonFun公共方法/数据封装  （有些为测试数据，不再此说明，用完可删）
+二、commonFun 公共方法/数据封装 （有些为测试数据，不再此说明，用完可删）
 
-    一）deleteTip 删除提示函数 
+    一）deleteTip 删除提示函数
         参数说明
     1）that   -->this
     2）deleteId -->要删除的id
     3）msgTip 没有传id时的提示信息
     4）callBack 确定删除的回调
-  
-三、chartUtils封装 
-(基础charts封装，当无法满足需求时，可自己再在自己的页面重新定义特殊化option，与封装组件相同处不必重复写)
+
+三、chartUtils 封装
+(基础 charts 封装，当无法满足需求时，可自己再在自己的页面重新定义特殊化 option，与封装组件相同处不必重复写)
 
     一）handleBarchart柱状图/柱状折线图：
     1.传递参数dom，data。data包括
@@ -147,15 +180,16 @@
     4）yAxis y轴对应的name属性
     5）series 数据
     6）showSecondY：是否显示第二个y轴，默认不传即不显示
-    
+
     二）hollowPieChart空心饼图：
     ...大致同上
     1）seriesName
-    2）seriesData 
-  
+    2）seriesData
+
 #### 项目异同
 
 ###### 中钢
+
     修改的文件：
     1. energyManage/energyShow/rankEnergy  去掉两个饼状图和表格的分项用水/电
     2. energyManage/home/homePage   去掉两个饼状图和表格的分项用水/电

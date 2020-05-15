@@ -60,7 +60,8 @@ export const findByValue = (dic, value, props, isTree, isGroup, dataType) => {
     return result;
 };
 export const findLabelNode = (dic, value, props, dataType, isTree) => {
-    let result;
+    // 不可在此处赋值，会造成死循环
+    let result = deepClone(value);
     let floors = 0;
 
     let rev = (dic1, value1, props1) => {
@@ -87,10 +88,8 @@ export const findLabelNode = (dic, value, props, dataType, isTree) => {
 
     if (value instanceof Array) {
         // 如果value是数组，则一层层查找，返回数组
-        result = [];
         rev(dic, value[floors], props);
     } else {
-        result = '';
         rev(dic, value, props);
     }
     return result;
