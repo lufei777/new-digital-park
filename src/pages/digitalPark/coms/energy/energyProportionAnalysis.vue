@@ -96,6 +96,12 @@ export default {
         barGap: "-100%",
         data: res.value.map(item => item.tqzh)
       };
+      let sqzh={
+        name:'上期综合能耗',
+        type:'bar',
+        barMaxWidth:80,
+        data:res.value.map((item)=>item.sqzh)
+      }
       let tbzz = {
         name: "综合能耗同比增长率",
         type: "line",
@@ -111,10 +117,11 @@ export default {
         data,
         formatter: "{c} %"
       };
-      let series = [dqzh, tqzh, tbzz, hbzz];
+      let series = [dqzh, tqzh, sqzh, tbzz, hbzz];
       let legendData = [
         "当期综合能耗",
         "同期综合能耗",
+        "上期综合能耗",
         "综合能耗同比增长率",
         "综合能耗环比增长率"
       ];

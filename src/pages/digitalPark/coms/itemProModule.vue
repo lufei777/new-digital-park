@@ -157,6 +157,7 @@
         this.menuTree[0].childNode.map((item)=>{
           item.childNode.map((child)=>{
             if(child.id==this.moduleData.menuId){
+              // console.log("child",child)
               this.$store.commit("digitalPark/menuList",child);
             }
           })

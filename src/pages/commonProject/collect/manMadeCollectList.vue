@@ -112,12 +112,7 @@ export default {
       }
     },
     tableEdit(data) {
-      this.$router.push({
-        path: "addCollect",
-        query: {
-          rowData: data
-        }
-      });
+      this.$router.push(`/addCollect?id=${data.id}`)
     },
     showDeleteTip() {
       CommonFun.deleteTip(this, this.deviceId, "请至少选择一条设备！", this.sureDelete,this.cancelDelete);

@@ -1,50 +1,73 @@
 import elementResizeDetectorMaker from 'element-resize-detector'
+
 class chartUtils {
   //柱状图处理
-  handleBarChart(dom,data,resizeBox){
-      let { legendUi={},legendUi:{axisPointer:tooltipAxisPointer={}}={} } = data
-      let yAxis
-      if(!data.showSecondY){  //是否隐藏第二个y轴，默认不传及隐藏
-        yAxis=[{
-          type: 'value',
-          name: data.yAxis,
-        }]
-      }else{
-        yAxis=[{
-          type: 'value',
-          name: data.yAxis,
-        },{
-          type:'value',
-          name:'zzz',
-          min:-100,
-          max:100,
-        }]
-      }
+  handleBarChart(dom, data, resizeBox) {
+    let {legendUi = {}, legendUi: {axisPointer: tooltipAxisPointer = {}} = {}} = data
+    let {xAxisUi = {}, xAxisUi:{axisLabel:xAxisLabel = {}}= {}} = data
+    let {xLabelTextStyle = {}} = xAxisLabel
+    let yAxis
+    if (!data.showSecondY) {  //是否隐藏第二个y轴，默认不传及隐藏
+      yAxis = [{
+        type: 'value',
+        name: data.yAxis,
+        axisTick: {
+          show: false,  //是否显示网状线 默认为true
+        },
+        axisLine: {
+          show: false,  //这里的show用于设置是否显示x轴那一条线 默认为true
+          lineStyle: { //lineStyle里面写x轴那一条线的样式
+            color: '#6FC6F3',
+            width: 2,    //轴线的粗细值为0的时候线隐藏
+          }
+        }
+      }]
+    } else {
+      yAxis = [{
+        type: 'value',
+        name: data.yAxis,
+      }, {
+        type: 'value',
+        name: 'zzz',
+        min: -100,
+        max: 100,
+      }]
+    }
+
     let option = {
       title: {
         text: data.titleText,
-        textStyle:{
+        textStyle: {
           fontSize: 14,
-          color:'#008DEA',
-          fontFamily:'MicrosoftYaHei'
+          color: '#008DEA',
+          fontFamily: 'MicrosoftYaHei'
         }
       },
       legend: {
         data: data.legendData
       },
-      tooltip:{
+      tooltip: {
         trigger: 'axis',
-        showDelay:300,
-        axisPointer:{
+        showDelay: 300,
+        axisPointer: {
           type: tooltipAxisPointer.type || 'line'
         },
-        formatter:legendUi && legendUi.formatter || ''
+        formatter: legendUi && legendUi.formatter || ''
       },
       calculable: true,
-      color:['#4094ff','#013b4e','#FAAD14','#F5222D'],
+      color: data.color || ['#4094ff', '#013b4e', '#FAAD14', '#F5222D'],
       xAxis: [{
         type: 'category',
-        data: data.xAxis
+        data: data.xAxis,
+        axisLabel: {
+          show: true,
+          textStyle: {
+            color: xLabelTextStyle.color || '',
+          }
+        },
+        axisTick: {
+          show: false,  //是否显示网状线 默认为true
+        },
       }],
       yAxis: yAxis,
       series: data.series,
@@ -59,7 +82,7 @@ class chartUtils {
     //     dom.resize();
     //   })
     // }
-    $(window).resize(function(){
+    $(window).resize(function () {
       dom.resize()
     })
     dom.setOption(option, true)
@@ -67,10 +90,10 @@ class chartUtils {
 
   //空心饼图
   hollowPieChart(dom, data) {
-    let { legendUi={},legendUi:{textStyle:legendTextStyle={}}={} } = data
-    let { seriesUi={},seriesUi:{label:seriesLabel={}}={}} = data
-    let {normal:seriesNormal={},emphasis:seriesEmphasis={}} = seriesLabel
-    let { titleUi={},titleUi:{textStyle:titleTextStyle={}}={}} = data
+    let {legendUi = {}, legendUi: {textStyle: legendTextStyle = {}} = {}} = data
+    let {seriesUi = {}, seriesUi: {label: seriesLabel = {}} = {}} = data
+    let {normal: seriesNormal = {}, emphasis: seriesEmphasis = {}} = seriesLabel
+    let {titleUi = {}, titleUi: {textStyle: titleTextStyle = {}} = {}} = data
     // console.log("data",data)
     // console.log("1",legendTextStyle,legendUi)
     // console.log(seriesLabel,seriesNormal,seriesEmphasis)
@@ -80,38 +103,38 @@ class chartUtils {
         text: data.titleText,
         padding: [0, 0],
         textStyle: {
-          color: titleTextStyle.color|| '#666',
-          fontWeight:titleTextStyle.fontWeight || 'bold',
+          color: titleTextStyle.color || '#666',
+          fontWeight: titleTextStyle.fontWeight || 'bold',
           // align: 'top',
-          fontSize:titleTextStyle.fontSize || "14",
+          fontSize: titleTextStyle.fontSize || "14",
         },
-        top:titleTextStyle.top | '',
-        left:titleTextStyle.left || ''
+        top: titleTextStyle.top | '',
+        left: titleTextStyle.left || ''
       },
       tooltip: {
         trigger: 'item',
         formatter: "{a} <br/>{b}: {c} ({d}%)",
-        showDelay:100
+        showDelay: 100
       },
       legend: {
         orient: legendUi.orient || 'vertical',
         right: legendUi.right || '3%',
         //只要top字段存在（不管设置与否），则bottom属性不起作用，所以若想设置top，请单独再组件里设置
         // top:legendUi.top || '',
-        bottom:legendUi.bottom || '3%',
+        bottom: legendUi.bottom || '3%',
         data: data.legendData,
-        textStyle:{
-          fontSize:legendTextStyle.fontSize || 14,
-          color:legendTextStyle.color || 'gray'
+        textStyle: {
+          fontSize: legendTextStyle.fontSize || 14,
+          color: legendTextStyle.color || 'gray'
         },
-        formatter:legendUi && legendUi.formatter || ''
+        formatter: legendUi && legendUi.formatter || ''
       },
-      color: data.color || ['#563ad2', '#25e4a3', '#ed5e50', '#66fbf9',"#de8536", "#dab54c","#325df9"],
+      color: data.color || ['#563ad2', '#25e4a3', '#ed5e50', '#66fbf9', "#de8536", "#dab54c", "#325df9"],
       series: [{
-        name:data.seriesName?data.seriesName:'',
+        name: data.seriesName ? data.seriesName : '',
         type: 'pie',
-        radius:seriesUi.radius || ['40%', '60%'],
-        center:seriesUi.center || ['40%','50%'],
+        radius: seriesUi.radius || ['40%', '60%'],
+        center: seriesUi.center || ['40%', '50%'],
         roseType: seriesUi.roseType,
         avoidLabelOverlap: true,
         label: {
@@ -120,7 +143,7 @@ class chartUtils {
             position: 'center'
           },
           emphasis: {
-            show:seriesEmphasis.show==false?false:true,
+            show: seriesEmphasis.show == false ? false : true,
             textStyle: {
               fontSize: '20',
               fontWeight: 'bold'
@@ -131,7 +154,7 @@ class chartUtils {
       }]
     };
 
-    $(window).resize(function(){
+    $(window).resize(function () {
       dom.resize()
     })
     dom.setOption(option, true)
@@ -140,4 +163,5 @@ class chartUtils {
 
   //['#4DA1FF', '#83D587', '#FFCE33', '#FF7B8C','#66fbf9',"#dab54c"]
 }
+
 export default new chartUtils()
