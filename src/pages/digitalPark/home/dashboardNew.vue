@@ -36,7 +36,6 @@
       </div>
 
       <div class="dashboard-center">
-        <!--<div class="carousel-box"></div>-->
         <img v-if="pageFlag==2 && !isyd" src="../../../../static/image/digitalPark/unity_priview.png"
              class="unity_priview"
              alt="">
@@ -53,7 +52,7 @@
                    v-bind="getOptions()"
                    class="draggable-box2"
                    @change="onRightChange"
-                c   :move="onRightMove"
+                   :move="onRightMove"
                    @start="onRightStart"
                    @end="onRightEnd"
         >

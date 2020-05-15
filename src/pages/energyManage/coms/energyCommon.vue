@@ -279,6 +279,7 @@
           this.tableConfig.columnConfig=columnConfig
           this.tableConfig.data=tmp
           this.tableConfig.uiConfig.pagination.total = res.total;
+          this.$refs[this.tableConfig.ref].doLayout()
         }else{
           this.tableConfig.data=[]
         }
@@ -309,6 +310,12 @@
           barMaxWidth:80,
           data:res.value.map((item)=>item.tqzh)
         }
+        let sqzh={
+          name:'上期综合能耗',
+          type:'bar',
+          barMaxWidth:80,
+          data:res.value.map((item)=>item.sqzh)
+        }
         let tbzz={
           name:'综合能耗同比增长率',
           type:'line',
@@ -323,9 +330,9 @@
           data,
           formatter: '{c} %'
         }
-        let series=[dqzh,tqzh,tbzz,hbzz]
+        let series=[dqzh,tqzh,sqzh,tbzz,hbzz]
         let titleText=`${this.tmpCommonTip}同比环比柱状折线图`
-        let legendData=['当期综合能耗','同期综合能耗','综合能耗同比增长率','综合能耗环比增长率']
+        let legendData=['当期综合能耗','同期综合能耗','上期综合能耗','综合能耗同比增长率','综合能耗环比增长率']
         let yAxis =res.unit
         let data2={
           titleText,

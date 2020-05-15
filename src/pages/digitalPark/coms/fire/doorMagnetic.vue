@@ -31,29 +31,27 @@
       initChart(res){
         let myChart = this.$echarts.init(this.$refs.myChart);
         let legendData = [];
-        let dataList = res;
         res.map(item => {
           legendData.push(`${item.name}`);
         });
-        let seriesData =dataList
         let data = {
           legendData,
-          seriesData,
-          legendUi:{
-            ...this.moduleItem.legendUi,
-            ...{
-              formatter:function(name){
-                let obj=res.find((item)=>item.name==name)
-                return name+'：'+obj.value
+          series:[{
+            name: "门磁状态",
+            type: "bar",
+            data: res,
+            itemStyle: {
+              normal: {
+                color: function (params) {
+                  let colorList = ["green", "dimGrey", "orange"];
+                  return colorList[params.dataIndex];
+                }
               }
             }
-          },
-          seriesUi:{
-            center:['40%','50%']
-          },
-          color:['#83D587','red','yellow']
+          }],
+          xAxis:legendData,
         };
-        ChartUtils.hollowPieChart(myChart,data);
+        ChartUtils.handleBarChart(myChart,data)
       }
     },
     mounted(){

@@ -91,7 +91,7 @@
         energyList:energyList,
         curEnergy:'electricity',
         tableData:'',
-        valueFormat:isZG()?"YYYY-MM-DD":'YYY-MM'
+        valueFormat:isZG()?"YYYY-MM-DD":'YYYY-MM'
       }
     },
     computed:{

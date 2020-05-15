@@ -81,7 +81,7 @@ export default {
       unit: "kwh",
       collectForm: {
         catalogId: "",
-        childId: "",
+        childId: 0,
         deviceTableId: "",
         time: "",
         positiveNumber: "",
@@ -115,15 +115,15 @@ export default {
       energyList: [],
       childEnergyList: [],
       deviceTableList: [],
-      deviceFalg: true
+      deviceFlag: true
     };
   },
   computed: {
     tipText() {
-      return this.rowData ? "编辑采集" : "添加采集";
+      return this.curId ? "编辑采集" : "添加采集";
     },
-    rowData() {
-      return this.$route.query.rowData;
+    curId() {
+      return this.$route.query.id;
     }
   },
   methods: {
@@ -132,10 +132,14 @@ export default {
         catalogId: 2200
       });
       this.energyList = res;
-      this.childEnergyList = res[0].nodes;
       this.unit = res[0].unit
-      this.collectForm.catalogId = res[0].id;
-      this.collectForm.childId = res[0].nodes[0].id;
+      if(!this.curId){
+        this.childEnergyList = res[0].nodes;
+        this.collectForm.catalogId = res[0].id;
+        this.collectForm.childId = res[0].nodes[0].id;
+      }else{
+        this.childEnergyList = this.collectForm.catalogId==34?res[0].nodes:res[1].nodes;
+      }
     },
     async getProbe() {
       let res = await CommonApi.getProbe({
@@ -148,9 +152,7 @@ export default {
       // }
       if (res && res.length > 0) {
         this.deviceTableList = res;
-        if (!this.rowData) {
-          this.collectForm.deviceTableId = res[0].id;
-        } else if (this.rowData && this.deviceFalg == false) {
+        if (!this.curId || (this.curId && !this.deviceFlag)) {
           this.collectForm.deviceTableId = res[0].id;
         }
       } else {
@@ -160,22 +162,21 @@ export default {
     },
     async findHandInputById() {
       let res = await CommonApi.findHandInputById({
-        id: this.rowData.id
+        id: this.curId
       });
-      if (res && this.deviceFalg == true) {
         console.log("positiveNumber",typeof res.value)
         this.collectForm.catalogId = res.parentId;
         this.collectForm.childId = res.childId;
         this.collectForm.deviceTableId = res.monitor;
         this.collectForm.time = res.lookTime;
         this.collectForm.positiveNumber = res.value + '';
-      }
       this.getEnergyList();
     },
     agreeChange: function() {
       this.getProbe();
     },
     onEnergyChange(val) {
+      this.deviceFlag = false;
       let tmp = this.energyList.find(item => {
         return item.id == val;
       });
@@ -185,7 +186,7 @@ export default {
       this.getProbe();
     },
     onChildChange(val) {
-      this.deviceFalg = false;
+      this.deviceFlag = false;
       this.getProbe();
     },
     async insertHandInput() {
@@ -197,9 +198,9 @@ export default {
         }
       ];
       let res;
-      if (this.rowData) {
+      if (this.curId) {
         res = await CommonApi.updateHandInput({
-          id: this.rowData.id,
+          id: this.curId,
           lookTime: this.collectForm.time,
           value: this.collectForm.positiveNumber,
           monitor: this.collectForm.deviceTableId
@@ -210,7 +211,7 @@ export default {
       if (res.result == true) {
         this.$message({
           type: "success",
-          message: this.rowData ? "修改成功！" : "添加成功！"
+          message: this.curId ? "修改成功！" : "添加成功！"
         });
         this.$router.go(-1);
       }
@@ -230,7 +231,7 @@ export default {
     }
   },
   async mounted() {
-    if (this.rowData) {
+    if (this.curId) {
       await this.findHandInputById();
     } else {
       await this.getEnergyList();

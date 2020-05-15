@@ -342,7 +342,7 @@ export default {
       })
       this.$message({
         type: 'success',
-        message: res
+        message: "提交成功"
       })
       if (this.stockDealId) {
         this.$router.push('/todoList')

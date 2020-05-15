@@ -280,7 +280,7 @@ export default {
       async onClickSubmitBtn(flag) {
         let res;
         let userIdList = ""; //方便回显采购人、验收人
-        userIdList = [...this.model.buyId, ...this.model.acceptId].join(",");
+        userIdList = [].concat(this.model.buyId,this.model.acceptId).join(",");
         let buyId = this.model.buyId,
             acceptId = this.model.acceptId
         if(buyId instanceof Array){

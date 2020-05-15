@@ -25,8 +25,8 @@
       </el-select>
     </div>
     <div class="item-group">
-      <el-radio-group v-model="radio" @change="handleRadioChange">
-        <el-radio label="0">单个</el-radio>
+      <el-radio-group v-model="fromFlag==2?tbhbRadio:radio" @change="handleRadioChange">
+        <el-radio label="0" v-if="fromFlag!=2">单个</el-radio>
         <el-radio label="1">范围</el-radio>
       </el-radio-group>
     </div>
@@ -37,9 +37,15 @@
                         @change="handleStartTimeChange" :clearable="false">
         </el-date-picker>
       </div>
-      <div v-show="showLastTime">
+      <div v-show="fromFlag!=2 && showLastTime">
         <span class="tag-style">至</span>
-        <el-date-picker v-model='lastTime' :type="dateType"
+        <el-date-picker v-model='fromFlag==2?tbhbLastTime:lastTime' :type="dateType"
+                        @change="handleLastTimeChange" :clearable="false">
+        </el-date-picker>
+      </div>
+      <div v-show="fromFlag==2">
+        <span class="tag-style">至</span>
+        <el-date-picker v-model='tbhbLastTime' :type="dateType"
                         @change="handleLastTimeChange" :clearable="false">
         </el-date-picker>
       </div>
@@ -50,16 +56,6 @@
 </template>
 
 <script>
-  let dateTypeList = [{
-    name:'年',
-    id:1
-  },{
-    name:'月',
-    id:2
-  },{
-    name:'日',
-    id:3
-  }]
 
   import {mapState} from 'vuex'
   import moment from 'moment'
@@ -84,11 +80,20 @@
         startTime:isZG()?moment().format('YYYY-MM'):"2019-02",
         lastTime:'',
         showLastTime:false,
-        curEnergy:[]
+        curEnergy:[],
+        tbhbRadio:'1',
+        tbhbShowLastTime:true,
+        tbhbLastTime:isZG()?moment().add(3,'month').format('YYYY-MM'):"2019-05"
       }
     },
     computed: {
       dateTypeList(){
+        if(this.fromFlag==2){
+          return [{
+            name:'月',
+            id:2
+          }]
+        }else{
           return [{
             name:'年',
             id:1
@@ -99,7 +104,8 @@
             name:'日',
             id:3
           }]
-      }
+        }
+      },
     },
     watch:{
       async getDataFlag(){
@@ -107,7 +113,7 @@
             await this.getEnergyList()
             this.handleClickSureBtn()
         }
-      }
+      },
     },
     methods: {
       async getEnergyList(){
@@ -204,19 +210,29 @@
          this.timeFormat('startTime',value)
       },
       handleLastTimeChange(value){
-        this.timeFormat('lastTime',value)
+        let str = this.fromFlag==2?'tbhbLastTime':'lastTime'
+        this.timeFormat(str,value)
       },
       timeFormat(time,value){
         let formatType = this.dateType =='year'?'YYYY':this.dateType=='month'?'YYYY-MM':'YYYY-MM-DD'
         this[time]=this[time]?moment(value).format(formatType):''
       },
       handleClickSureBtn(){
-        let params ={
+        let params={
           energy:this.curEnergy,
           selectType:this.curDateType,
           redioType:this.radio,
           startTime:this.startTime,
           lastTime:this.lastTime
+        }
+        if(this.fromFlag==2){
+          params ={
+            energy:this.curEnergy,
+            selectType:2,
+            redioType:1,
+            startTime:this.startTime,
+            lastTime:this.tbhbLastTime
+          }
         }
         console.log(params)
         this.$parent.getData && this.$parent.getData(params)

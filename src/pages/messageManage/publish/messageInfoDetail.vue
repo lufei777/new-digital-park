@@ -52,13 +52,11 @@
 
 <style lang="less">
   .message-info-detail {
-    /*text-align: center;*/
-    /*width:80%;*/
-    /*margin:0 auto;*/
     padding:0 20px;
     box-sizing: border-box;
     height:100%;
     overflow: hidden;
+    background: @white;
     .nav-box{
       display: flex;
       flex-direction: row-reverse;

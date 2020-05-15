@@ -43,6 +43,9 @@ axios.interceptors.response.use(
 
     if (res.successful && res.code === '0') {
       // 如果没有则返回空对象
+      if(res.data===null){
+        res.data = res.message
+      }
       return (res || {}).data;
     } else if (res.code) {
       // 如果是登录页面，则不进行message提示
