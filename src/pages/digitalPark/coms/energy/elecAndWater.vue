@@ -3,7 +3,7 @@
     <div class="elec-sum-coms-inner flex-align-center">
       <div class="progress-box flex-colum-center" :class="fromFlag==1?'elec-progress-box':'water-progress-box'">
         <el-progress type="circle" :percentage="percent"
-                     :stroke-width="12" :width="200" :color="progressColor">
+                     :stroke-width="12" :width="getProgressWidth" :color="progressColor">
         </el-progress>
         <div class="text-box">
           <div>表计数量：{{totalNum}}个</div>
@@ -47,6 +47,9 @@
     computed:{
       progressColor(){
         return this.fromFlag==1?'#00dfff':'#03C281'
+      },
+      getProgressWidth(){
+        return 200
       }
     },
     methods: {

@@ -180,7 +180,28 @@
                 fontSize:this.moduleData.largeScreen && !isYDScreen()?30:14
               },
             },
-            fontSize:30
+            fontSize:30,
+            ...{
+              xAxisUi:{
+                axisLabel:{
+                  textStyle:{
+                    color:this.type!=2?'#8FD3FA':''
+                  }
+                },
+                axisLine: {
+                  lineStyle: {
+                    color: this.type!=2?'#8FD3FA':'',
+                  }
+                },
+              },
+              yAxisUi:{
+                axisLine: {
+                  lineStyle: {
+                    color: this.type!=2?'#8FD3FA':'',
+                  }
+                },
+              }
+            }
           }
         }
       },

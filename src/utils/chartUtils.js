@@ -4,21 +4,28 @@ class chartUtils {
   //柱状图处理
   handleBarChart(dom, data, resizeBox) {
     let {legendUi = {}, legendUi: {axisPointer: tooltipAxisPointer = {}} = {}} = data
-    let {xAxisUi = {}, xAxisUi:{axisLabel:xAxisLabel = {}}= {}} = data
-    let {xLabelTextStyle = {}} = xAxisLabel
+    let {xAxisUi = {}, xAxisUi:{axisLabel:xAxisLabel = {},axisLine:xAxisLine = {}} = {}} = data
+    let {textStyle:xLabelTextStyle = {}} = xAxisLabel
+    let {lineStyle:xLineStyle = {}} = xAxisLine
+
+    let {yAxisUi = {}, yAxisUi:{axisLabel:yAxisLabel = {},axisLine:yAxisLine = {}} = {}} = data
+    let {textStyle:yLabelTextStyle = {}} = yAxisLabel
+    let {lineStyle:yLineStyle = {}} = yAxisLine
+    // console.log("1132",xAxisUi,xAxisLabel,xLabelTextStyle)
     let yAxis
     if (!data.showSecondY) {  //是否隐藏第二个y轴，默认不传及隐藏
       yAxis = [{
-        type: 'value',
+        type: yAxisUi.type || 'value',
         name: data.yAxis,
+        data:data.yAxisData,
         axisTick: {
-          show: false,  //是否显示网状线 默认为true
+          show: false,
         },
         axisLine: {
-          show: false,  //这里的show用于设置是否显示x轴那一条线 默认为true
-          lineStyle: { //lineStyle里面写x轴那一条线的样式
-            color: '#6FC6F3',
-            width: 2,    //轴线的粗细值为0的时候线隐藏
+          show: true,
+          lineStyle: {
+            color: yLineStyle.color || '',
+            width: 1,
           }
         }
       }]
@@ -57,7 +64,7 @@ class chartUtils {
       calculable: true,
       color: data.color || ['#4094ff', '#013b4e', '#FAAD14', '#F5222D'],
       xAxis: [{
-        type: 'category',
+        type: xAxisUi.type ||'category',
         data: data.xAxis,
         axisLabel: {
           show: true,
@@ -65,9 +72,19 @@ class chartUtils {
             color: xLabelTextStyle.color || '',
           }
         },
+        axisLine: {
+          show: true,  //这里的show用于设置是否显示x轴那一条线 默认为true
+          lineStyle: {  //lineStyle里面写x轴那一条线的样式
+            color: xLineStyle.color || '',
+            width: 1,    //轴线的粗细值为0的时候线隐藏
+          }
+        },
         axisTick: {
           show: false,  //是否显示网状线 默认为true
         },
+        splitLine:{
+          show:false
+        }
       }],
       yAxis: yAxis,
       series: data.series,

@@ -62,9 +62,11 @@ router.beforeEach((to, from, next) => {
   // if (to.path != '/vibe-web') {
   //   store.commit('digitalPark/activeMenuIndex', to.path);
   // }
+  //客户端关闭视频
   window.closeVideoWin && window.closeVideoWin()
+
+  //大屏
   if (window.name === 'largeScreen') {
-    console.log("routerto",JSON.parse(localStorage.menuList))
     store.commit("digitalPark/menuList", JSON.parse(localStorage.menuList));
     store.commit("digitalPark/activeMenuIndex", Cookies.get("activeMenuIndex"));
   }

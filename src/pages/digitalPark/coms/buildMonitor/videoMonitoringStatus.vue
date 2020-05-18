@@ -1,7 +1,7 @@
 <template>
   <div class="video-monitoring-status-coms">
     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
-    <div class="my-chart" ref="myChart1"></div>
+    <div class="my-chart" ref="myChart"></div>
   </div>
 </template>
 
@@ -37,23 +37,45 @@
           value:res['摄像头'].warning,
           name:'警告'
         }]
-        let myChart = this.$echarts.init(this.$refs.myChart1);
+        // let myChart = this.$echarts.init(this.$refs.myChart1);
+        // let legendData = ['正常','错误','未知','警告'];
+        // let seriesData =dataList
+        // let legendUi={
+        //   bottom:20,
+        //   right:20,
+        //   textStyle:{
+        //     color:'#8FD3FA',
+        //     fontSize:this.moduleItem.largeScreen?this.moduleItem.fontSize:14
+        //   }
+        // }
+        // let data = {
+        //   legendData,
+        //   seriesData,
+        //   legendUi
+        // };
+        // ChartUtils.hollowPieChart(myChart,data);
+        let myChart = this.$echarts.init(this.$refs.myChart);
         let legendData = ['正常','错误','未知','警告'];
-        let seriesData =dataList
-        let legendUi={
-          bottom:20,
-          right:20,
-          textStyle:{
-            color:'#8FD3FA',
-            fontSize:this.moduleItem.largeScreen?this.moduleItem.fontSize:14
-          }
-        }
         let data = {
           legendData,
-          seriesData,
-          legendUi
+          series:[{
+            name: "摄像头状态",
+            type: "bar",
+            data: dataList,
+            itemStyle: {
+              normal: {
+                color: function (params) {
+                  let colorList = ["green", "dimGrey", "orange","red"];
+                  return colorList[params.dataIndex];
+                }
+              }
+            }
+          }],
+          yAxisData:legendData,
+          xAxisUi:{...this.moduleItem.xAxisUi,...{type:'value'}},
+          yAxisUi:{...this.moduleItem.yAxisUi,...{type:'category'}}
         };
-        ChartUtils.hollowPieChart(myChart,data);
+        ChartUtils.handleBarChart(myChart,data)
       },
     },
     mounted() {
