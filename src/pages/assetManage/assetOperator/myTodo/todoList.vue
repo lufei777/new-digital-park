@@ -13,7 +13,7 @@
 
 <script>
   import {mapState} from 'vuex'
-  import TodoComs from '../coms/todo'
+  import TodoComs from '../../coms/todo'
   export default {
     name: 'TodoList',
     components: {

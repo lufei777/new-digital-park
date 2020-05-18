@@ -60,7 +60,8 @@
         let data = {
           legendData: [],
           series,
-          xAxis: res.map((item) => item.time)
+          xAxis: res.map((item) => item.time),
+          xAxisUi:this.moduleItem.xAxisUi || {}
         }
         ChartUtils.handleBarChart(myChart, data)
       },
@@ -75,8 +76,17 @@
         this.getEnvironmentLine()
       },
       refreshChart() {
-        // var day = new Date();
-        // var time = day.format("mm") * 60 + day.format("ss");
+        let time = new Date();
+        let mins = time.getMinutes();
+        let secs = time.getSeconds();
+        //下一次刷新间隔
+        let next = ((60 - mins) * 60 - secs) * 1000;
+        //设置下次启动时间
+        setTimeout(this.refreshChart, next);
+        //整点刷新
+        if (mins == 0) {
+           this.getEnvironmentLine()
+        }
       },
       async getMonitorTypeList(){
         let res = await CommonApi.getMonitorTypeList()

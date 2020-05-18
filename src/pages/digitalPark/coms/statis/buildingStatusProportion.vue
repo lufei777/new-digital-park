@@ -25,7 +25,6 @@ export default {
         this.$refs.myChart ||
           document.getElementById("building-status-proportion-chart")
       );
-      console.log(res)
       let legendData = res.legend;
       let color = ["#30475B", "#66FBF9", "#0088FF", "#D77443"];
       let textStyleColor = "#8FD3FA";

@@ -24,7 +24,9 @@
         <el-button type="primary" class="search-btn" @click="onClickSearchBtn">搜索</el-button>
       </div>
       <div class="table-box">
-        <z-table :ref="tableConfig.ref" :options="tableConfig"></z-table>
+        <z-table :ref="tableConfig.ref" :options="tableConfig"
+                 @handle-pagination="handleCurrentChange"
+        ></z-table>
       </div>
     </div>
   </div>
@@ -71,7 +73,11 @@
           ],
           uiConfig: {
             height: "auto",
-            showIndex: _this.setIndex
+            showIndex:{
+              handler: function (index) {
+                return  _this.setIndex(index);
+              }
+            }
           },
         },
         // startTime:moment().add(-15,'days').format('YYYY-MM-DD HH:MM:SS'),
@@ -79,7 +85,8 @@
         //moment(new Date(new Date().getTime() - 3600 * 24 * 1000 * 15)).format('YYYY-MM-DD HH:mm:SS'),
         //moment(new Date()).format('YYYY-MM-DD HH:mm:SS')
         startTime:new Date(new Date().getTime()- 3600 * 24 * 1000 * 15),
-        endTime:new Date ,
+        endTime:new Date(),
+        curPage:1
       }
     },
     computed: {},
@@ -99,16 +106,17 @@
       onClickSearchBtn() {
         this.$refs[this.tableConfig.ref].refreshTable()
       },
-      setIndex(){
-         return true
-        // return pageInfo.pageCount*this.#refs[this.tableConfig.ref].getP
+      setIndex(index){
+        return pageInfo.pageCount*(this.curPage-1)+index+1
+      },
+      handleCurrentChange(size,page){
+         this.curPage = page
       }
     },
     created() {
       this.setTableData()
     },
     mounted() {
-
       // this.getAlarmMessageList()
     }
   }

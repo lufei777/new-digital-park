@@ -1,8 +1,6 @@
 // import AssetManage from '../../pages/assetManage/index'
-import AssetMaintenance from '../pages/assetManage/assetMaintenance'
 import AssetGroup from '../pages/assetManage/assetGroup'
 import AssetType from '../pages/assetManage/assetType'
-import AssetAdd from '../pages/assetManage/addAsset'
 import DefaultPage from '../pages/commonProject/defaultPage'
 import AssetLedger from '../pages/assetManage/assetLedger'
 import MyAsset from '../pages/assetManage/myAsset'
@@ -27,7 +25,7 @@ export default [{
       path: '/assetMaintenance',
       name: 'AssetMaintenance',
       meta: { title: "资产信息维护" },
-      component: AssetMaintenance,
+      component: () => import('@/pages/assetManage/assetMaintenance/assetMaintenance'),
     },{
       path: '/assetType',
       name: 'AssetType',
@@ -43,7 +41,7 @@ export default [{
     path: '/addAsset',
     name: 'AssetAdd',
     meta: { title: "资产编辑" },
-    component: AssetAdd,
+    component: () => import('@/pages/assetManage/assetMaintenance/addAsset'),
   }, {
     path: '/assetLedger',
     name: 'AssetLedger',
@@ -62,7 +60,7 @@ export default [{
     children:[{
       path: '/todoList',
       name: 'TodoList',
-      component:  () => import('@/pages/assetManage/assetOperator/todoList'),
+      component:  () => import('@/pages/assetManage/assetOperator/myTodo/todoList'),
       meta: { title: "我的待办" },
     },{
       path: '/assetUse',

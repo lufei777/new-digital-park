@@ -50,6 +50,8 @@
             }
           }],
           xAxis:legendData,
+          xAxisUi:this.moduleItem.xAxisUi || {},
+          yAxisUi:this.moduleItem.yAxisUi || {}
         };
         ChartUtils.handleBarChart(myChart,data)
       }
