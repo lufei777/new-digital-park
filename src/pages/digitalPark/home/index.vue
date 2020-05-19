@@ -353,7 +353,7 @@ export default {
 .park-home-page {
   height: 100%;
   font-size: 14px;
-  background: @white;
+  background: #f4f5f7;
   /*overflow: auto;*/
   .carousel-img {
     width: 100%;
@@ -424,7 +424,8 @@ export default {
   }
   .home-header-wrapper {
     width: 100%;
-    background: @white;
+  /*  background: @white;*/
+    background: #f4f5f7;
   }
   .home-center {
     /*width: 1500px;*/

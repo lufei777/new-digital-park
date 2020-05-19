@@ -128,6 +128,10 @@ class CommonApi {
   @url("/oaApi/userAsset/list")
   @get
   getMyAssetList(){}
+
+  @url("/oaApi/stockDeal/collectionRecord")
+  @get
+  getOperatorRecord(){}
 }
 
 export default new CommonApi()

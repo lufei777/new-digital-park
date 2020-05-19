@@ -2,7 +2,7 @@
   <div class="device-type-monitor-coms">
     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div class="device-box flex-align-around my-chart">
-      <div class="progress-box flex-colum-center progress-box1">
+      <div class="progress-box flex-column-center progress-box1">
         <el-progress type="circle" :percentage="deviceData.ball.percent"
                      :stroke-width="12" :width="150" :color="deviceData.ball.progressColor">
         </el-progress>
@@ -12,7 +12,7 @@
         </div>
 
       </div>
-      <div class="progress-box flex-colum-center  progress-box2">
+      <div class="progress-box flex-column-center  progress-box2">
         <el-progress type="circle" :percentage="deviceData.bolt.percent"
                      :stroke-width="12" :width="150" :color="deviceData.bolt.progressColor">
         </el-progress>
