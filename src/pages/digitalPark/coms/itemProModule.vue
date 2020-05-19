@@ -11,7 +11,7 @@
                  :is="item.componentName"
                  :moduleItem="moduleItemData(item)"
                  :class="'item-id-'+item.id"
-                 class="item-component flex-colum-center"
+                 class="item-component flex-column-center"
                  @click.native="onClickItemComponent($event,item)"
       />
     </div>
@@ -46,7 +46,6 @@
   import comsImport from './js/comsImport'
   import DigitalParkApi from '../../../service/api/digitalPark'
   import CommonFun from '@/utils/commonFun'
-  import { IsCZClient } from '@/utils/auth';
   import { isYDScreen,isZG } from "@/utils/project";
   export default {
     name: 'ItemProModule',
@@ -228,11 +227,6 @@
       document.body.ondrop = function (event) {
         event.preventDefault();
         event.stopPropagation();
-      }
-      if(IsCZClient()){
-        this.moreBtnShow = false
-      } else {
-        this.moreBtnShow = true
       }
       //
       // $(".my-chart canvas").click(function (e) {

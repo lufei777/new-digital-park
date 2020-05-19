@@ -1,7 +1,7 @@
 <template>
   <div class="elec-and-water-coms">
     <div class="elec-sum-coms-inner flex-align-center">
-      <div class="progress-box flex-colum-center" :class="fromFlag==1?'elec-progress-box':'water-progress-box'">
+      <div class="progress-box flex-column-center" :class="fromFlag==1?'elec-progress-box':'water-progress-box'">
         <el-progress type="circle" :percentage="percent"
                      :stroke-width="12" :width="getProgressWidth" :color="progressColor">
         </el-progress>

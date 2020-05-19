@@ -4,26 +4,30 @@
     <div class=" flex search-box">
       <div class="item-group">
         <label for="">领用人：</label>
-        <el-input type="text" v-model="searchParams.name"/>
+        <el-input type="text" v-model="searchParams.collarUser"/>
       </div>
       <div class="item-group">
         <label for="">领用时间：</label>
         <el-date-picker
-          v-model="searchParams.time"
-          type="date"
-          placeholder="选择时间">
+          v-model="date"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd"
+        >
         </el-date-picker>
       </div>
       <div class="item-group">
         <label for="">领用资产：</label>
-        <el-input type="text" v-model="searchParams.asset"/>
+        <el-input type="text" v-model="searchParams.name"/>
       </div>
       <div class="item-group operator-btn-box">
-        <el-button type="primary" class="">搜索</el-button>
-        <el-button class="">重置</el-button>
+        <el-button type="primary" class="" @click="onClickSearchBtn">搜索</el-button>
+        <el-button class="" click="onClickResetBtn">重置</el-button>
       </div>
     </div>
-    <el-button type="primary" class="export-btn">导出</el-button>
+    <el-button type="primary" class="export-btn" @click="onClickExportBtn">导出</el-button>
     <zTable
       :ref="tableConfig.ref"
       :options="tableConfig"
@@ -34,6 +38,13 @@
 
 <script>
   import { mapState } from 'vuex'
+  import AssetManageApi from '@/service/api/assetManage'
+  import CommonFun from '@/utils/commonFun'
+
+  let pageInfo = {
+    pageNum: 1,
+    pageCount: 10
+  }
   export default {
     name: "AssetOperatorRecord",
     components: {
@@ -43,29 +54,39 @@
       return {
         tableConfig:{
           ref:'tableRef',
+          serverMode:{
+            url:AssetManageApi.getOperatorRecord,
+            data: pageInfo
+          },
+          propsHttp: {
+            list: "list",
+            total: "total",
+            pageSize: "pageSize",
+            pageNum: "pageNum"
+          },
           columnConfig: [{
             label: '领用人',
             prop: 'collarUser',
           }, {
             label: '领用时间',
-            prop: 'applyUser'
+            prop: 'applyTime'
           }, {
             label: '领用资产',
             prop: 'name'
           },{
             label: '领用数量',
-            prop: 'num'
-          }]
-        },
-        uiConfig: {
-          height: "auto",
-          selection: true,
+            prop: 'collarNum'
+          }],
+          uiConfig: {
+            height: "auto",
+            selection: true,
+          },
         },
         searchParams:{
+          collarUser:'',
           name:'',
-          time:'',
-          asset:''
-        }
+        },
+        date:['','']
       };
     },
     computed:{
@@ -77,8 +98,48 @@
 
     },
     methods: {
+      async getOperatorRecord(){
+        await AssetManageApi.getOperatorRecord()
+      },
+      setData(){
+        this.$refs[this.tableConfig.ref].setCurrentPage(1)
+        this.tableConfig.serverMode.data = {
+          ...this.searchParams,
+          ...{
+            applyStartTime:this.date[0],
+            applyEndTime:this.date[1],
+          },
+          ...pageInfo
+        }
+        this.$refs[this.tableConfig.ref].refreshTable()
+      },
+      onClickSearchBtn(){
+        this.setData()
+     },
+      onClickResetBtn(){
+        this.searchParams={
+          collarUser:'',
+          name:''
+        }
+        this.date=['','']
+        this.setData()
+      },
+      onClickExportBtn(){
+        let url = '/oaApi/stockDeal/exportRecord'
+        let params=''
+        let arr = this.$refs[this.tableConfig.ref].getSelectedData()
+        let stockRecordIds = arr.length?arr.map((item)=>item.id):''
+        for(let key in this.tableConfig.serverMode.data){
+          if(key!=pageInfo){
+            params+=key+'='+this.tableConfig.serverMode.data[key]+'&'
+          }
+        }
+        params+='stockRecordIds='+stockRecordIds
+        CommonFun.exportMethod({url,params},this)
+      }
     },
     mounted() {
+      // this.getOperatorRecord()
     }
   };
 </script>

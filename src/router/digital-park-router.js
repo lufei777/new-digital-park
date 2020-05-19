@@ -44,4 +44,8 @@ export default [{
   path:'/largeSizeScreen',
   name:'LargeSizeScreen',
   component:()=>import("@/pages/largeSizeScreen/index")
+},{
+  path:'/clientOverView',
+  name:'ClientOverView',
+  component:()=>import("@/pages/digitalPark/clientOverView/index")
 }]

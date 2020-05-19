@@ -32,7 +32,7 @@
                      :key="index"
                      :is="item.componentName"
                      :moduleItem="item"
-                     :class="['item-content','flex-colum-center',item.dragFlag?'item-drag-product':'']"
+                     :class="['item-content','flex-column-center',item.dragFlag?'item-drag-product':'']"
                      :style="contentBg(item)"
                      :id="item.id"
           />

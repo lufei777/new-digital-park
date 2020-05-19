@@ -4,7 +4,7 @@
     <div class="my-chart flex-colum-justify">
       <div class="flex-align-center item-progress-group">
         <!--<i class="iconfont iconlengreyuan item-icon"></i>-->
-        <div class="item-progress-group-left flex-colum-center">
+        <div class="item-progress-group-left flex-column-center">
           <img src="../../../../../static/image/digitalPark/hot.png" alt class="item-icon" />
           <div style="color:#FF5900">热源</div>
         </div>
@@ -21,7 +21,7 @@
       </div>
       <div class="flex-align-center item-progress-group">
         <!--<i class="iconfont iconlengreyuan item-icon"></i>-->
-        <div class="item-progress-group-left flex-colum-center">
+        <div class="item-progress-group-left flex-column-center">
           <img src="../../../../../static/image/digitalPark/cold.png" alt class="item-icon" />
           <div>冷源</div>
         </div>

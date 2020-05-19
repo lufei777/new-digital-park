@@ -12,6 +12,7 @@ class chartUtils {
     let {textStyle:yLabelTextStyle = {}} = yAxisLabel
     let {lineStyle:yLineStyle = {}} = yAxisLine
     // console.log("1132",xAxisUi,xAxisLabel,xLabelTextStyle)
+
     let yAxis
     if (!data.showSecondY) {  //是否隐藏第二个y轴，默认不传及隐藏
       yAxis = [{
@@ -47,7 +48,6 @@ class chartUtils {
         textStyle: {
           fontSize: 14,
           color: '#008DEA',
-          fontFamily: 'MicrosoftYaHei'
         }
       },
       legend: {
@@ -67,13 +67,13 @@ class chartUtils {
         type: xAxisUi.type ||'category',
         data: data.xAxis,
         axisLabel: {
-          show: true,
+          show: xLabelTextStyle.show || true,
           textStyle: {
             color: xLabelTextStyle.color || '',
           }
         },
         axisLine: {
-          show: true,  //这里的show用于设置是否显示x轴那一条线 默认为true
+          show: xLineStyle.show || true,  //这里的show用于设置是否显示x轴那一条线 默认为true
           lineStyle: {  //lineStyle里面写x轴那一条线的样式
             color: xLineStyle.color || '',
             width: 1,    //轴线的粗细值为0的时候线隐藏

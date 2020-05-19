@@ -47,7 +47,7 @@
   import CommonFun from '@/utils/commonFun'
   let pageInfo = {
     pageNum: 1,
-    pageCount: 10
+    pageSize: 10
   }
   export default {
     name: "publishManage",
@@ -57,7 +57,7 @@
           ref: "tableConfig",
           serverMode: {
             url: MessageManageApi.getReleaseList,
-            data: pageInfo
+            data:{}
           },
           propsHttp: {
             list: "list",
@@ -82,6 +82,7 @@
           uiConfig: {
             height: "auto", //"", //高度
             selection: true, //是否多选
+
           },
         },
         searchParams: {
@@ -108,11 +109,13 @@
       },
       setTableData() {
         this.tableConfig.serverMode.data = {...pageInfo, ...this.searchParams}
+        this.$refs[this.tableConfig.ref].setCurrentPage(1)
+        this.$refs[this.tableConfig.ref].refreshTable()
       },
       onClickSearchBtn() {
-        this.searchParams.releaseTime=  this.searchParams.releaseTime +' 00:00:00'
+        this.searchParams.releaseTime= this.searchParams.releaseTime?
+                                       this.searchParams.releaseTime +' 00:00:00':''
         this.setTableData()
-        this.$refs[this.tableConfig.ref].refreshTable()
       },
       onClickResetBtn() {
         this.searchParams = {
@@ -121,7 +124,6 @@
           releaseTime: ''
         }
         this.setTableData()
-        this.$refs[this.tableConfig.ref].refreshTable()
       },
       onClickDelBtn(row){
         this.curId = row.id;
