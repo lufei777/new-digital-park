@@ -1879,12 +1879,12 @@ class commonFun {
     // 如果clientType是 1 ，表明是客户端
     if (item.clientType == 1) {
       if (item.level == 2) {
-        // router.push(`${item.routeAddress}?productId=${item.id}`)
-        if(IsCZClient()){
-          router.push(`/clientOverView?productId=${item.id}`)
-        }else{
-          router.push(`${item.routeAddress}?productId=${item.id}`)
-        }
+        router.push(`${item.routeAddress}?productId=${item.id}`)
+        // if(IsCZClient()){
+        //   router.push(`/clientOverView?productId=${item.id}`)
+        // }else{
+        //   router.push(`${item.routeAddress}?productId=${item.id}`)
+        // }
         return true;
       } else if (item.level == 3 && item.name == "概览") {
         router.push(`${item.routeAddress}?productId=${item.pid}`)

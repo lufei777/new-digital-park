@@ -24,7 +24,7 @@
       </div>
       <div class="item-group operator-btn-box">
         <el-button type="primary" class="" @click="onClickSearchBtn">搜索</el-button>
-        <el-button class="" click="onClickResetBtn">重置</el-button>
+        <el-button class="" @click="onClickResetBtn">重置</el-button>
       </div>
     </div>
     <el-button type="primary" class="export-btn" @click="onClickExportBtn">导出</el-button>
@@ -135,7 +135,7 @@
           }
         }
         params+='stockRecordIds='+stockRecordIds
-        CommonFun.exportMethod({url,params},this)
+        CommonFun.exportMethod({url, params,},this)
       }
     },
     mounted() {

@@ -255,7 +255,7 @@
      box-sizing: border-box;
     .component-box{
       /*height:100%;*/
-      width:99%;
+      width:100%;
       flex-grow: 1;
       box-sizing: border-box;
     }
@@ -300,6 +300,9 @@
     .padding-box{
       padding:20px;
       box-sizing: border-box;
+    }
+    .module-title{
+      /*width:99%;*/
     }
   }
 </style>

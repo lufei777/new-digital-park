@@ -3,10 +3,24 @@
     <div class="tip">{{detailTip}}</div>
     <BasicInformation :detail="detailData"/>
     <div class="module-tip">入库明细：</div>
-    <z-table :ref="tableConfig.ref" :options="tableConfig" @handle-pagination="handleCurrentChange">
-      <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
-        <el-button type="text" @click="editRow($index,row)">编辑</el-button>
-      </template>
+    <z-table :ref="tableConfig.ref" :options="tableConfig"
+             @handle-pagination="handleCurrentChange"
+             @row-edit="rowEdit"
+             @row-update="rowUpdate"
+    >
+      <!--<template slot="actualQuantity" slot-scope="{isEdit,row,column,size}">-->
+        <!--<el-input-->
+          <!--:size="size"-->
+          <!--readonly-->
+          <!--v-model="row[column.prop]"-->
+          <!--@focus="onQuantityInputFocus(row,column,$event)"-->
+          <!--v-if="isEdit"-->
+        <!--&gt;</el-input>-->
+        <!--<span v-if="!isEdit">{{row.actualQuantity}}</span>-->
+      <!--</template>-->
+      <!--<template slot="operation" slot-scope="{scopeRow:{$index,row}}">-->
+        <!--<el-button type="text" @click="editRow($index,row)">编辑</el-button>-->
+      <!--</template>-->
     </z-table>
     <div class="operator-box">
       <el-button type="primary" @click="onClickCheckBtn" v-if="fromFlag==3">确认验收</el-button>
@@ -53,22 +67,13 @@
     props:["detailId","fromFlag","onClickBackCallback","onClickCheckCallback"],
     data() {
       let _this = this
-      let checkQuantity = (rule, value, callback) => {
-        if ((!Number(value) || value<0) && value!="" && value!=0) {
-          console.log(!Number(value),value<0,value)
-          callback(new Error("请输入正数"));
-        } else if(value>_this.curRow.quantity){
-          callback(new Error("实收数量应小于等于入库数量"));
-        }else{
-          callback();
-        }
-      };
       return {
        detailData:{},
        tableConfig:{
          ref:'tableRef',
          data:[],
-         operation:_this.fromFlag==3?true:false,
+         editBtn: true,
+         operation:_this.fromFlag==3?{width:150}:false,
          columnConfig:[
            {label:'资产名称',prop:'name'},
            {label:'规格型号',prop:'specification'},
@@ -89,11 +94,9 @@
           description:''
         },
         rules: {
-          actualQuantity: [{ required: true, message: "请输入实收数量", trigger: "blur" },
-            { validator: checkQuantity, trigger: "blur" }]
         },
         pageSize:5,
-        curPage:1
+        curPage:1,
       };
     },
     computed:{
@@ -114,7 +117,7 @@
       },
       async getDetail(){
         let res
-        console.log(this.fromFlag)
+        // console.log(this.fromFlag)
         if(this.fromFlag==1 || this.fromFlag==2){
            res = await StockManageApi.getRecordDetail({
             recordId:this.detailId
@@ -123,27 +126,57 @@
            res = await StockManageApi.getApplyDraft({
             id:this.detailId
           })
-          console.log("beforeRes",res)
+          // console.log("beforeRes",res)
         }
 
         if(this.fromFlag==2 || this.fromFlag==3){
           this.tableConfig.columnConfig=[...this.tableConfig.columnConfig, ...
-            [{label:'实收数量',prop:'actualQuantity'},
-              {label:'备注',prop:'description'}]]
+            [{label:'实收数量',
+              prop:'actualQuantity',
+              cell: true,
+              // slot: true,
+              type:'input',
+              rules: {
+                required: true,
+                validator: this.checkQuantity,
+              },
+              // focus:this.onQuantityInputFocus()
+            },{
+              label:'备注',
+              prop:'description',
+              cell: true,
+              type:'textarea'
+             }
+            ]]
           if(this.fromFlag==3){
             res.stockDetailsList.map((item)=>{
               item.actualQuantity=''
               item.description=''
             })
           }
-          console.log("centerres",res)
+          // console.log("centerres",res)
         }
-        console.log("res",res.stockDetailsList)
+        // console.log("res",res.stockDetailsList)
         this.detailData=res
         this.tableConfig.data=res.stockDetailsList
       },
+      checkQuantity(rule, value, callback) {
+        if((value+"").trim()==''){
+          return callback({ message: "请输入领用数量" })
+        }else if ((!Number(value) || value<0) && value!==0 && value!=='0') {
+          return callback({ message: "请输入正数" });
+        } else if(value>this.curRow.quantity){
+          return callback({message:"实收数量应小于等于入库数量"});
+        }else{
+          return callback();
+        }
+      },
+      onQuantityInputFocus(row,column,data){
+        console.log("focus",row,column,data)
+        this.curRow = this.tableConfig.data[row.$index]
+      },
       async onClickCheckBtn(){
-        console.log(this.tableConfig.data)
+        // console.log(this.tableConfig.data)
         let tmp =[]
         this.tableConfig.data.map((item,index)=>{
           if(item.actualQuantity==''){
@@ -197,7 +230,13 @@
       },
       handleCurrentChange(size,page){
         this.curPage=page
-      }
+      },
+      rowEdit(obj,index){
+        this.curRow = obj
+      },
+      async rowUpdate(data, index, callback) {
+        callback()
+      },
     },
     mounted() {
       this.getDetail()
