@@ -29,4 +29,5 @@ export const DIC_HTTP_PROPS = {
 };
 export const DIC_GROUP_SPLIT = ' -> ';
 export const DIC_SPLIT = ' | ';
+export const EMPTY_VALUE = '--';
 export const DATE_RANGE_SPLIT = '-';

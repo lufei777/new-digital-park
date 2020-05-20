@@ -72,7 +72,7 @@ const apiConfig = {
     flag: "detail",
     title: "详情",
     extraConfig: {
-      disabled: true,
+      textMode: true,
       submitBtn: false
     }
   },
@@ -80,7 +80,7 @@ const apiConfig = {
     flag: "check",
     title: "审核",
     extraConfig: {
-      disabled: true,
+      textMode: true,
       submitBtn: false
     }
   },

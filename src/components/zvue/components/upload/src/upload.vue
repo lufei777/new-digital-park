@@ -1,7 +1,7 @@
 <template>
   <div class="zvue-form-upload" v-loading.lock="loading" :style="[uploadStyle]">
     <el-upload
-      :class="{'picture-list':listType=='picture-img','el-upload_disabled':disabled}"
+      :class="{'picture-list':listType=='picture-img','el-upload_disabled':allDisabled}"
       :action="action"
       :accept="elAccept"
       :auto-upload="autoUpload"
@@ -12,7 +12,7 @@
       :multiple="multiple"
       :limit="limit"
       :http-request="autoUpload ? httpRequest : undefined"
-      :disabled="disabled"
+      :disabled="allDisabled"
       :file-list="fileList"
       :drag="drag"
       :readonly="readonly"
@@ -192,6 +192,9 @@ export default {
         };
       }
       return {};
+    },
+    allDisabled() {
+      return this.textMode ? true : this.disabled
     }
   },
   created() { },

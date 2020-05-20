@@ -200,14 +200,9 @@ export const formInitVal = (list = []) => {
     let searchForm = {};
     list.forEach(ele => {
         if (
-            ele.type === 'checkbox' ||
-            ele.type === 'cascader' ||
-            ele.type === 'dynamic' ||
-            ele.type === 'dates' ||
+            ['checkbox', 'cascader', 'dynamic', 'dates'].includes(ele.type) ||
             (ele.type === 'upload' && ele.listType !== 'picture-img') ||
-            ele.multiple ||
-            ele.range ||
-            ele.dataType === 'array'
+            ele.multiple || ele.range || ele.dataType === 'array'
         ) {
             tableForm[ele.prop] = [];
             if (ele.search) searchForm[ele.prop] = [];
@@ -218,6 +213,11 @@ export const formInitVal = (list = []) => {
             tableForm[ele.prop] = undefined;
             if (ele.search) {
                 searchForm[ele.prop] = undefined;
+            }
+        } else if (['switch'].includes(ele.type) || ele.dataType === 'boolean') {
+            tableForm[ele.prop] = false;
+            if (ele.search) {
+                searchForm[ele.prop] = false;
             }
         } else {
             tableForm[ele.prop] = '';
@@ -243,3 +243,13 @@ export const formInitVal = (list = []) => {
         searchForm
     };
 };
+
+// 将数据设置到Form的modelTranslate
+export const setModelTranslate = (vm, prop, value) => {
+    let Form = vm;
+    while (Form && !Form.modelTranslate) {
+        Form = Form.$parent;
+    }
+    // displayValue
+    Form.$set(Form.modelTranslate, `$${prop}`, value);
+}
