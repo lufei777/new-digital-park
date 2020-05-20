@@ -336,7 +336,7 @@ export default {
   mounted() {
     if (this.isEdit) {
       this.Form.setColumnByProp("choice", {
-        disabled: true
+        textMode: true
       });
     }
   },
@@ -472,7 +472,7 @@ export default {
         prop: "recordPersonList",
         type: "dynamic",
         span: 12,
-        disabled: this.isEdit ? true : undefined,
+        textMode: this.isEdit ? true : undefined,
         children: {
           size: "small",
           align: "center",
@@ -509,7 +509,7 @@ export default {
           {
             ...checkPeople,
             span: this.isCheck ? 12 : 24,
-            disabled: false
+            textMode: false
           },
           // 设置外层属性
           (() => {
@@ -524,7 +524,7 @@ export default {
               children.columnConfig = [
                 {
                   ...checkPeople.children.columnConfig[0],
-                  disabled: true
+                  textMode: true
                 }
               ];
             } else {
@@ -532,7 +532,7 @@ export default {
               children.columnConfig = [
                 {
                   ...checkPeople.children.columnConfig[0],
-                  disabled: true,
+                  textMode: true,
                   width: 200
                 },
                 {
@@ -564,7 +564,7 @@ export default {
         checkPeople = mergeCheckPeople(checkPeople);
       }
       if (this.isDetail) {
-        delete checkPeople.disabled;
+        delete checkPeople.textMode;
       }
 
       return checkPeople;

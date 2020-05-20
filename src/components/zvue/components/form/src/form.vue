@@ -102,7 +102,7 @@
                       :upload-before="uploadBefore"
                       :upload-after="uploadAfter"
                       :disabled="vaildDiabled(column,group)"
-                      :textMode="textMode"
+                      :textMode="vaildTextMode(column,group)"
                     >
                       <!-- 自定义表单里内容 -->
                       <template
@@ -363,6 +363,14 @@ export default {
         column.disabled,
         group.disabled,
         this.allDisabled
+      );
+    },
+    // 判断该项是否为不可编辑
+    vaildTextMode(column, group) {
+      return this.vaildBoolean(
+        column.textMode,
+        group.textMode,
+        this.textMode
       );
     },
     // 验证表单是否显隐

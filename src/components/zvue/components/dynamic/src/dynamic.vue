@@ -73,7 +73,7 @@ export default {
       return this.textMode || this.children.delBtn === false;
     },
     addBtn() {
-      return this.children.addBtn === false;
+      return this.textMode || this.children.addBtn === false;
     },
     columnOption() {
       return this.children.columnConfig || [];
