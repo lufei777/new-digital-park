@@ -25,7 +25,7 @@ class chartUtils {
         axisLine: {
           show: true,
           lineStyle: {
-            color: yLineStyle.color || '',
+            color: yLineStyle.color || '#333',
             width: 1,
           }
         }
@@ -75,7 +75,7 @@ class chartUtils {
         axisLine: {
           show: xLineStyle.show || true,  //这里的show用于设置是否显示x轴那一条线 默认为true
           lineStyle: {  //lineStyle里面写x轴那一条线的样式
-            color: xLineStyle.color || '',
+            color: xLineStyle.color || '#333',
             width: 1,    //轴线的粗细值为0的时候线隐藏
           }
         },
