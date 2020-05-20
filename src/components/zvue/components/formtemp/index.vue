@@ -1,17 +1,27 @@
 <template>
+  <span
+    v-if="showDisplayValue && !isLazyCascader"
+    class="text-overflow-eliipsis"
+    :style="{display:'block'}"
+    :title="displayValue"
+  >{{comDisplayValue}}</span>
   <component
+    v-else
+    :class="{'zvue-text-mode':(this.showDisplayValue && this.isLazyCascader)}"
     :is="getComponent(column.type,column.component)"
-    :placeholder="getPlaceholder(column,column.type,disabled)"
+    :placeholder="getPlaceholder(column,column.type,comDisabled)"
     v-model="text"
     :isCrud="isCrud"
     :dic="dic"
-    :disabled="disabled"
+    :disabled="comDisabled"
     :column="column"
     :props="column.props || props"
     :propsHttp="column.propsHttp || propsHttp"
     :size="column.size || size"
     :upload-before="uploadBefore"
     :upload-after="uploadAfter"
+    :textMode="textMode"
+    :settempDisplayValue="setDisplayValue"
     @change="handleChange"
     v-bind="column"
   >
@@ -40,8 +50,10 @@
 </template>
 
 <script>
-import { getComponent, getPlaceholder } from "../../utils/dataformat";
+import { getComponent, getPlaceholder, setModelTranslate, dateTypeList } from "../../utils/dataformat";
 import { validatenull } from "../../utils/validate";
+import { detail } from "../../utils/detail";
+import { DIC_PROPS, DIC_SPLIT, EMPTY_VALUE } from '../../global/variable';
 
 export default {
   name: "formTemp",
@@ -83,12 +95,17 @@ export default {
     isCrud: {
       type: Boolean,
       default: false
+    },
+    textMode: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       first: true,
-      text: null
+      text: null,
+      displayValue: ''
     };
   },
   watch: {
@@ -105,8 +122,46 @@ export default {
     value: {
       handler(val) {
         this.text = val;
+        // 设置displayValue值，用来显示详情
+        this.$nextTick(() => {
+          this.setDisplayValue();
+        })
       },
       immediate: true
+    },
+    dic(newDic, oldDic) {
+      this.$nextTick(() => {
+        this.setDisplayValue();
+      })
+    }
+  },
+  computed: {
+    isLazyCascader() {
+      let res = false;
+      if (this.column.type === 'cascader' && this.column.props && this.column.props.lazy) {
+        res = true
+      }
+      return res;
+    },
+    showDisplayValue() {
+      return this.textMode && !['upload', 'dynamic'].includes(this.column.type)
+    },
+    valueKey() {
+      return this.column.props ? this.column.props.value : DIC_PROPS.value;
+    },
+    labelKey() {
+      return this.column.props ? this.column.props.label : DIC_PROPS.label;
+    },
+    comDisabled() {
+      // 这个disabled是相对于lazy模式的cascader和showDisplayValue相对而言
+      return (this.showDisplayValue && this.isLazyCascader) ? true : this.disabled;
+    },
+    comDisplayValue() {
+      let displayValue = this.displayValue;
+      if (typeof displayValue === 'string' && displayValue.length === 0) {
+        displayValue = EMPTY_VALUE;
+      }
+      return displayValue
     }
   },
   methods: {
@@ -115,6 +170,33 @@ export default {
     validatenull,
     handleChange(val) {
       this.$emit("change", val);
+    },
+    getDisplayValue() {
+      let displayValue = '';
+      // 变化后，将显示的值赋值在modelTranslate 和 displayValue 上
+      if (!['upload', 'dynamic'].includes(this.column.type) && ![this.column.props || this.props].lazy) {
+        displayValue = detail({ [this.column.prop]: this.text }, this.column, this.column.props, this.dic);
+
+        displayValue instanceof Array ? displayValue = displayValue.join(DIC_SPLIT) : '';
+      }
+      return displayValue;
+    },
+    setDisplayValue(displayValue) {
+      displayValue = displayValue ? displayValue : this.getDisplayValue();
+
+      // switch属性特殊处理
+      if (['switch'].includes(this.column.type) && typeof displayValue === 'boolean') {
+        displayValue = displayValue
+          ? this.dic ? this.dic[1][this.labelKey] : '是'
+          : this.dic ? this.dic[0][this.labelKey] : '否';
+      }
+
+      // 给当前组件设置
+      this.displayValue = displayValue;
+      // 设置到顶层Form的modelTranslate
+      if (dateTypeList.concat('switch', 'time', 'timerange').includes(this.type)) {
+        setModelTranslate(this, this.prop, displayValue)
+      }
     }
   }
 };
@@ -223,3 +305,22 @@ export default {
     buttonText
  */
 </script>
+
+<style lang="less">
+.zvue-text-mode {
+  .el-input__inner {
+    color: #606266 !important;
+    padding: 0 !important;
+    background-color: inherit !important;
+    border: none !important;
+  }
+  .el-input__suffix {
+    visibility: hidden !important;
+  }
+}
+.text-overflow-eliipsis {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+</style>

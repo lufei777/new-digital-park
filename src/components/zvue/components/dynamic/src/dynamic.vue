@@ -23,6 +23,7 @@
           :disabled="disabled"
           icon="el-icon-delete"
           circle
+          :style="{height:'unset',padding:'7px !important'}"
         ></el-button>
         <span
           v-else-if="delBtn || !hoverList[scope.row.$index]"
@@ -69,7 +70,7 @@ export default {
       return this.children.viewBtn === false;
     },
     delBtn() {
-      return this.children.delBtn === false;
+      return this.textMode || this.children.delBtn === false;
     },
     addBtn() {
       return this.children.addBtn === false;
@@ -116,8 +117,9 @@ export default {
                     size: "mini",
                     type: "primary",
                     icon: "el-icon-plus",
-                    disabled: this.disabled,
-                    circle: true
+                    disabled: this.textMode ? true : this.disabled,
+                    circle: true,
+                    style: "height: unset;padding:7px !important;"
                   },
                   on: {
                     click: this.addRow
@@ -138,6 +140,7 @@ export default {
 
             list.push(
               Object.assign(this.deepClone(ele), {
+                textMode: this.textMode,
                 cell: true,
                 disabled: ele.disabled || this.disabled || this.viewBtn
               })

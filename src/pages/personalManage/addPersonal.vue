@@ -45,7 +45,7 @@ const apiConfig = {
     flag: "detail",
     title: "查看人员",
     extraOptions: {
-      disabled: true,
+      textMode: true,
       submitBtn: false,
       emptyBtn: false
     }

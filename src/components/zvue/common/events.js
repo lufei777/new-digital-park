@@ -36,10 +36,12 @@ export default function () {
                     }
                 }
 
+                // change方法触发
                 if (typeof this.change === 'function') {
                     this.change({ value: result, column: this.column, _self: this });
                 }
 
+                // 数据流触发
                 this.$emit('input', result);
                 this.$emit('change', result);
             }

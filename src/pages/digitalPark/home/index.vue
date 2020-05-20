@@ -101,7 +101,7 @@ import draggable from "vuedraggable";
 import ItemProModule from "../coms/itemProModule";
 import { mapState } from "vuex";
 import { IsCZClient } from '@/utils/auth';
-
+import { isYD } from "@/utils/project";
 let showImgList = 2
 export default {
   name: "DigitalHomePage",
@@ -141,6 +141,9 @@ export default {
     }),
     isydSystem() {
       return window.__CZ_SYSTEM=='ydCity' ;
+    },
+    isyd(){
+      return isYD()
     }
   },
   watch: {
@@ -324,10 +327,17 @@ export default {
           this.carouselImgList = res.list.slice(0,showImgList)
         }
       }else{
-        this.carouselImgList = [
-          { coverUrl: require('../../../../static/image/digitalPark/lunbo3.png'), link: '/announcement' },
-          { coverUrl: require('../../../../static/image/digitalPark/lunbo4.png'), link: '/news' },
-        ]
+        if(isYD()) {
+          this.carouselImgList = [
+            { coverUrl: require('../../../../static/image/digitalPark/ydCityBanner1.png'), link: '/announcement' },
+            { coverUrl: require('../../../../static/image/digitalPark/ydCityBanner2.png'), link: '/news' },
+          ]
+        } else {
+           this.carouselImgList = [
+            { coverUrl: require('../../../../static/image/digitalPark/lunbo3.png'), link: '/announcement' },
+            { coverUrl: require('../../../../static/image/digitalPark/lunbo4.png'), link: '/news' },
+          ]
+        }
       }
     }
   },

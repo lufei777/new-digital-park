@@ -184,7 +184,7 @@ export default {
         name: "addTenantManage",
         query: {
           extraOptions: JSON.stringify({
-            disabled: true,
+            textMode: true,
             submitBtn: false
           }),
           tenantId: row.tenantId

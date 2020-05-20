@@ -50,7 +50,7 @@ const apiConfig = {
   detail: {
     title: "查看房产",
     extraOptions: {
-      disabled: true,
+      textMode: true,
       submitBtn: false
     }
   }

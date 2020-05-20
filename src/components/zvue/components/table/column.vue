@@ -49,6 +49,7 @@
             :upload-before="col.uploadBefore"
             :upload-after="col.uploadAfter"
             :disabled="col.disabled"
+            :textMode="col.textMode"
             @click.native.stop
           ></form-temp>
           <template v-else>
@@ -85,7 +86,7 @@
 import { detail } from "../../utils/detail";
 import { validatenull } from "../../utils/validate";
 import formTemp from "../formtemp";
-import { DIC_SPLIT } from "../../global/variable";
+import { DIC_SPLIT, EMPTY_VALUE } from "../../global/variable";
 import multiHeaderColumn from './multiHeaderColumn';
 import zImg from './z-img';
 
@@ -142,7 +143,7 @@ export default {
     _globalColumnFormatter(row, column, currentColumn) {
       let value = row[column.property];
       if (this.validatenull(value)) {
-        return "--";
+        return EMPTY_VALUE;
       }
       return this.handleDetail(
         row,

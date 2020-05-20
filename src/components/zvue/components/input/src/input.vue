@@ -421,7 +421,7 @@ export default {
       handler(value) {
         if (!this.isFirst) {
           this.isFirst = false;
-
+          // 不能加timeout，会造成校验延时
           this.handleChange(value);
         } else {
           this.isFirst = false;
