@@ -283,6 +283,7 @@ export default {
         }
 
         this._setTableData(this.options.data);
+        this.setPaginationTotal(this.options.data.length);
       }
     },
     // 检索

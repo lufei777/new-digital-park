@@ -24,7 +24,7 @@
           :label="group.label"
           :card="parentOption.card"
         >
-          <template slot="header" v-if="$slots[group.prop+'Header']">
+          <template #header v-if="$slots[group.prop+'Header']">
             <slot :name="`${group.prop}Header`"></slot>
           </template>
           <div class="zvue-form-group">
@@ -80,7 +80,9 @@
                     :content="vaildData(column.tip,getPlaceholder(column))"
                     :placement="column.tipPlacement"
                   >
-                    <span v-if="textMode">{{displayText(column)}}</span>
+                    <!-- <span
+                      v-if="textMode && !['dynamic','upload'].includes(column.type)"
+                    >{{displayText(column)}}</span>-->
                     <slot
                       v-if="column.formslot"
                       :name="column.prop"
@@ -90,6 +92,7 @@
                       :size="column.size || controlSize"
                       :disabled="vaildDiabled(column,group)"
                       :dic="DIC[column.prop]"
+                      :textMode="textMode"
                     ></slot>
                     <form-temp
                       v-else
@@ -99,6 +102,7 @@
                       :upload-before="uploadBefore"
                       :upload-after="uploadAfter"
                       :disabled="vaildDiabled(column,group)"
+                      :textMode="textMode"
                     >
                       <!-- 自定义表单里内容 -->
                       <template
@@ -214,10 +218,6 @@ export default {
       default: () => ({})
     },
     disabled: {
-      type: Boolean,
-      default: false
-    },
-    textMode: {
       type: Boolean,
       default: false
     }
@@ -388,6 +388,8 @@ export default {
      */
     resetForm(params = {}) {
       const part = params.part;
+
+      // 重置model
       if (part) {
         this.columnOption.forEach(ele => {
           ele.forms.forEach(form => {
@@ -398,8 +400,16 @@ export default {
       } else {
         this.model = this.deepClone(this.modelDefault.tableForm);
       }
+
+      // 重置modelTranslate
+      this.modelTranslate = {};
+      this.forEachLabel();
+
+      // 触发input方法，修改外部model
       this.$emit("input", this.model);
       this.$emit("reset-change");
+
+      // 清除表单验证
       this.$nextTick(() => {
         this.clearValidate();
       });
@@ -482,9 +492,20 @@ export default {
         });
       }
     },
+    getGroupByProp(prop) {
+      let groups = this.options.group;
+      for (let index = 0; index < groups.length; index++) {
+        let group = groups[index];
+        if (group.prop === prop) {
+          return group;
+        }
+      }
+      return -1;
+    },
     displayText(column) {
       let prop = column.prop;
-      return this.modelTranslate[`$${prop}`] || this.model[prop];
+      let valueText = this.modelTranslate[`$${prop}`] || this.model[prop];
+      return this.validatenull(valueText) ? '' : valueText;
     }
   },
   computed: {
@@ -541,6 +562,9 @@ export default {
     },
     Form() {
       return this.$refs[this.formRef];
+    },
+    textMode() {
+      return this.options.textMode;
     }
   },
   watch: {

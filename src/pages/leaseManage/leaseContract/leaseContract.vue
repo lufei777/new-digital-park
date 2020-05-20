@@ -248,7 +248,7 @@ export default {
         name: "AddContract",
         query: {
           extraOptions: JSON.stringify({
-            disabled: true,
+            textMode: true,
             submitBtn: false
           }),
           detailContractId: obj.scopeRow.row.contractId
