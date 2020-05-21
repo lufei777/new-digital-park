@@ -5,9 +5,9 @@
     :title="displayValue"
   >
     <!-- <slot v-else :name="column.prependslot" :textMode="textMode"></slot> -->
-    <span :style="{float:'left'}" v-if="column.prepend">{{column.prepend}}</span>
-    <span :style="{float:'left'}">{{comDisplayValue}}</span>
-    <span :style="{float:'left'}" v-if="column.append">{{column.append}}</span>
+    <span v-if="column.prepend">{{column.prepend}}</span><!--
+    --><span>{{comDisplayValue}}</span><!--
+    --><span v-if="column.append">{{column.append}}</span>
     <!-- <slot v-else :name="column.appendslot" :textMode="textMode"></slot> -->
   </div>
   <component
@@ -194,6 +194,11 @@ export default {
         displayValue = displayValue
           ? this.dic ? this.dic[1][this.labelKey] : '是'
           : this.dic ? this.dic[0][this.labelKey] : '否';
+      }
+
+      // 如果是级联，取最后一个
+      if(this.column.type === 'cascader'){
+        displayValue = _.last(displayValue.split(DIC_SPLIT));
       }
 
       // 给当前组件设置

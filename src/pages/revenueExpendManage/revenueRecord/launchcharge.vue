@@ -533,7 +533,7 @@ export default {
                 {
                   ...checkPeople.children.columnConfig[0],
                   textMode: true,
-                  width: 200
+                  width: 100
                 },
                 {
                   label: "审核状态",
