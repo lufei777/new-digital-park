@@ -54,14 +54,14 @@ export default {
               res: "data"
             }
           },
-          {
-            type: "radio",
-            label: "性别",
-            prop: "sex",
-            valueDefault: '1',
-            span: 24,
-            dicData: CommonDic.sexDic
-          },
+          // {
+          //   type: "radio",
+          //   label: "性别",
+          //   prop: "sex",
+          //   valueDefault: '1',
+          //   span: 24,
+          //   dicData: CommonDic.sexDic
+          // },
           {
             type: "input",
             label: "邮箱",

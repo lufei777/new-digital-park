@@ -1,11 +1,15 @@
 <template>
   <div class="client-over-view">
-    <div class="client-module-list">
-      <div v-for="item in moduleList" :key="item.id" class="item-client-module">
-        <ItemProModule
-          :moduleData="item"
-          :type="1"
-        />
+    <NavOperator v-show="false" />
+    <div class="over-view-panel flex-column">
+      <div class="client-over-view-header"></div>
+      <div class="client-module-list">
+        <div v-for="item in moduleList" :key="item.id" class="item-client-module">
+          <ItemProModule
+            :moduleData="item"
+            :type="1"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -16,12 +20,14 @@
   import draggable from 'vuedraggable'
   import ItemProModule from '../coms/itemProModule'
   import DigitalParkApi from '@/service/api/digitalPark'
+  import NavOperator from '../coms/navOperator'
   export default {
     name: "ClientOverView",
     components: {
       ...comsImport.exportComsList,
       draggable,
-      ItemProModule
+      ItemProModule,
+      NavOperator
     },
     props: [],
     data() {
@@ -53,18 +59,25 @@
 <style lang="less">
   .client-over-view {
     height:100%;
-    .client-module-list{
-      width:25%;
-      height:95%;
-      margin-top: 2.5%;
-      margin-right: 10px;
+    overflow: hidden;
+    .over-view-panel{
+      width:29%;
+      height:100%;
       float: right;
+      margin-right: 10px;
+    }
+    .client-over-view-header{
+      height:67px;
+    }
+    .client-module-list{
+       flex-grow: 1;
       /*background: pink;*/
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
       justify-content: space-around;
       color:@white;
+      overflow: hidden;
     }
     .item-client-module{
       height:32%;
