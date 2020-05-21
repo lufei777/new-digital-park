@@ -466,13 +466,13 @@ export default {
     },
     checkPeopleReason() {
       const { pageConfig } = this;
-
+      // 编辑和山茶不能修改审核人
       let checkPeople = {
         label: "审核人",
         prop: "recordPersonList",
         type: "dynamic",
         span: 12,
-        textMode: this.isEdit ? true : undefined,
+        textMode: (this.isEdit || this.isCheck) ? true : undefined,
         children: {
           size: "small",
           align: "center",
