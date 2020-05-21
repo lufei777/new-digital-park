@@ -33,12 +33,10 @@ class chartUtils {
     } else {
       yAxis = [{
         type: 'value',
-        name: data.yAxis,
+        name: data.yAxis[0].name || '',
       }, {
         type: 'value',
-        name: 'zzz',
-        min: -100,
-        max: 100,
+        name: data.yAxis[1].name || '',
       }]
     }
 
