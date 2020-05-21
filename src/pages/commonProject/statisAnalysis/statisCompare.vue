@@ -137,9 +137,11 @@
                 type: 'shadow'
               },
               formatter: function (params) {
-                var relVal = params[0].name
-                for (var i = 0, l = params.length; i < l; i++) {
-                  relVal += '<br/>' + params[i].marker + params[i].seriesName + ' : ' + params[i].value + '&nbsp;' + res.unit1
+                let relVal = params[0].name
+                for (let i = 0, l = params.length; i < l; i++) {
+                  let unit = i==0?res.unit1:res.unit2
+                  relVal += '<br/>' + params[i].marker + params[i].seriesName + ' : ' +
+                    params[i].value + '&nbsp;' + unit
                 }
                 return relVal
               }
