@@ -65,7 +65,7 @@ const apiConfig = {
     api: revenueExpendApi.updateRecord,
     extraConfig: {
       submitDisabled: false,
-      disabled: true
+      textMode: true
     }
   },
   detail: {
@@ -319,7 +319,7 @@ export default {
         this.getGroupByProp("entry").display = true;
         if (this.isUpdate) {
           this.disabledAllGroup();
-          this.getGroupByProp("entry").disabled = false;
+          this.getGroupByProp("entry").textMode = false;
         }
       }
       // 添加审核人表单
@@ -357,7 +357,7 @@ export default {
     disabledAllGroup() {
       for (let index = 0; index < this.formOptions.group.length; index++) {
         let group = this.formOptions.group[index];
-        group.disabled = true;
+        group.textMode = true;
       }
     },
     getGroupByProp(prop) {
