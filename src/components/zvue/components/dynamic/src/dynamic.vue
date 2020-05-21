@@ -84,12 +84,12 @@ export default {
           let options = this.deepClone(this.children);
           // 分页配置
           if (options.uiConfig) {
-            options.uiConfig.size = this.children.size;
+            options.uiConfig.size = this.size;
             options.uiConfig.pagination = false;
             options.uiConfig.height = "auto";
           } else {
             options.uiConfig = {
-              size: this.children.size || 'small',
+              size: this.size || 'small',
               pagination: false,
               height: "auto"
             };
@@ -140,6 +140,7 @@ export default {
 
             list.push(
               Object.assign(this.deepClone(ele), {
+                size: ele.size || this.size,
                 textMode: vaildBoolean(this.textMode, ele.textMode),
                 cell: true,
                 disabled: ele.disabled || this.disabled || this.viewBtn

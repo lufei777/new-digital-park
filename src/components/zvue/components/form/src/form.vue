@@ -101,6 +101,7 @@
                       :dic="DIC[column.prop]"
                       :upload-before="uploadBefore"
                       :upload-after="uploadAfter"
+                      :size="controlSize"
                       :disabled="vaildDiabled(column,group)"
                       :textMode="vaildTextMode(column,group)"
                     >
@@ -294,8 +295,8 @@ export default {
       }
     },
     formVal() {
-      _.map(this.value, (value, key) => {
-        this.$set(this.model, key, value);
+      Object.keys(this.value).forEach(ele => {
+        this.$set(this.model, ele, this.value[ele]);
       });
       this.forEachLabel();
       this.$emit("input", this.model);
