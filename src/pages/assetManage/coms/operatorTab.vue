@@ -1,12 +1,14 @@
 <template>
-  <el-tabs type="border-card" @tab-click="onClickTab" v-model="activeTab">
-    <el-tab-pane :label="labelList[0]">
-      <AssetOperator />
-    </el-tab-pane>
-    <el-tab-pane :label="labelList[1]">
-      <AssetOperatorRecord :from-flag="fromFlag"/>
-    </el-tab-pane>
-  </el-tabs>
+  <div class="operator-tab">
+    <el-tabs type="border-card" @tab-click="onClickTab" v-model="activeTab">
+      <el-tab-pane :label="labelList[0]">
+        <AssetOperator />
+      </el-tab-pane>
+      <el-tab-pane :label="labelList[1]">
+        <AssetOperatorRecord :from-flag="fromFlag"/>
+      </el-tab-pane>
+    </el-tabs>
+  </div>
 </template>
 
 <script>
@@ -40,7 +42,10 @@
 </script>
 
 <style lang="less">
-  .el-tabs{
-    height:100%;
+  .operator-tab{
+    height: 100%;
+    .el-tabs{
+      height:100%;
+    }
   }
 </style>

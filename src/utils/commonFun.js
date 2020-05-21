@@ -1860,7 +1860,7 @@ class commonFun {
       if(largeScreenFlag) {
         store.commit("digitalPark/largeScreenIframeSrc", window.top.location.origin + '/#' + item.routeAddress)
       }else{
-        router.push(item.routeAddress);
+        router.push(this.getLastItem(item).routeAddress);
       }
       }
     } else {
@@ -1878,10 +1878,12 @@ class commonFun {
     }
     // 如果clientType是 1 ，表明是客户端
     if (item.clientType == 1) {
+
       if (item.level == 2) {
-        router.push(`${item.routeAddress}?productId=${item.id}`)
+        // router.push(`${item.routeAddress}?productId=${item.id}`)
         // if(IsCZClient()){
-        //   router.push(`/clientOverView?productId=${item.id}`)
+          router.push(`/clientOverView?productId=${item.id}`)
+          this.invokeClientMethod('showClientOverView',JSON.stringify(item));
         // }else{
         //   router.push(`${item.routeAddress}?productId=${item.id}`)
         // }
@@ -1890,7 +1892,7 @@ class commonFun {
         router.push(`${item.routeAddress}?productId=${item.pid}`)
         return true;
       } else {
-        window.closeVideoWin && window.closeVideoWin()
+        this.invokeClientMethod('closeVideoWin');
         let id = item.id
         if (item.childNode.length) {
           id = this.getLastItem(item).id
@@ -1902,7 +1904,8 @@ class commonFun {
         let secondMenu = firstMenu.childNode.find(second => {
           return second.id == item.secondMenuId;
         });
-        console.log(secondMenu, id)
+
+        // console.log(secondMenu, id)
         this.invokeClientMethod('goToClientPage', JSON.stringify(secondMenu), id + "");
         return true;
       }

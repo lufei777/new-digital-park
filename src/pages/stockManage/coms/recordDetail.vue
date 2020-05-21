@@ -8,16 +8,15 @@
              @row-edit="rowEdit"
              @row-update="rowUpdate"
     >
-      <!--<template slot="actualQuantity" slot-scope="{isEdit,row,column,size}">-->
-        <!--<el-input-->
-          <!--:size="size"-->
-          <!--readonly-->
-          <!--v-model="row[column.prop]"-->
-          <!--@focus="onQuantityInputFocus(row,column,$event)"-->
-          <!--v-if="isEdit"-->
-        <!--&gt;</el-input>-->
-        <!--<span v-if="!isEdit">{{row.actualQuantity}}</span>-->
-      <!--</template>-->
+      <template slot="actualQuantity" slot-scope="{isEdit,row,column,size}">
+        <el-input
+          :size="size"
+          v-model="row[column.prop]"
+          @focus="onQuantityInputFocus(row,column,$event)"
+          v-if="isEdit"
+        ></el-input>
+        <span v-if="!isEdit">{{row.actualQuantity}}</span>
+      </template>
       <!--<template slot="operation" slot-scope="{scopeRow:{$index,row}}">-->
         <!--<el-button type="text" @click="editRow($index,row)">编辑</el-button>-->
       <!--</template>-->
@@ -134,8 +133,8 @@
             [{label:'实收数量',
               prop:'actualQuantity',
               cell: true,
-              // slot: true,
-              type:'input',
+              slot: true,
+              // type:'input',
               rules: {
                 required: true,
                 validator: this.checkQuantity,
@@ -172,21 +171,31 @@
         }
       },
       onQuantityInputFocus(row,column,data){
-        console.log("focus",row,column,data)
+        // console.log("focus",row,column,data)
         this.curRow = this.tableConfig.data[row.$index]
       },
       async onClickCheckBtn(){
         // console.log(this.tableConfig.data)
-        let tmp =[]
+        let tmp =[],tmp2=[]
         this.tableConfig.data.map((item,index)=>{
           if(item.actualQuantity==''){
             tmp.push(index+1)
+          }
+          if(item.$cellEdit){
+            tmp2.push(index+1)
           }
         })
         if(tmp.length){
           this.$message({
             type: 'warning',
             message:`请填写第${tmp.join("、")}行实收数量！`,
+          });
+          return ;
+        }
+        if(tmp2.length){
+          this.$message({
+            type: 'warning',
+            message:`请先保存第${tmp2.join("、")}行数据！`,
           });
           return ;
         }
@@ -235,6 +244,14 @@
         this.curRow = obj
       },
       async rowUpdate(data, index, callback) {
+        console.log(data,data.actualQuantity>data.quantity)
+        if(data.actualQuantity>data.quantity){
+          this.$message({
+            type: 'warning',
+            message: "实收数量应小于等于入库数量",
+          });
+          return;
+        }
         callback()
       },
     },

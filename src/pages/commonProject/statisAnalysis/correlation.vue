@@ -1,8 +1,9 @@
 <template>
   <div class="correlation">
-    <MonitorChoose :showDateType="false" :showTwoMonitor="true" />
-    <MonitorModal />
-    <el-button type="primary" class='handle-btn' @click="onClickBtn">处理</el-button>
+    <MonitorChoose :showDateType="false"
+                   :showTwoMonitor="true"
+                   :onClickHandleBtnCallback="onClickBtn"
+    />
     <div ref="myChart" class="my-chart"></div>
     <el-table :data="tableData" height="350" stripe style="width:40%;" border>
       <el-table-column prop="point1" :label="tableText[0]" align="right"></el-table-column>
@@ -13,30 +14,31 @@
 
 <script>
   import {mapState} from 'vuex'
-  import echarts from 'echarts'
   import MonitorChoose from '../coms/monitorChoose'
-  import MonitorModal from '../../../components/monitorModal/index'
   import CommonApi from '../../../service/api/common'
   export default {
     name: 'DeviceAnalysis',
     components: {
       MonitorChoose,
-      MonitorModal
     },
     data () {
       return {
         tableData:[],
         tableText:['B-ALE-1-a 照明 (KWH)','B-AL-1-aFM 电热风幕和热风幕电机 (KWH)'],
-        myChart:''
+        myChart:'',
+        searchParams:{
+          monitor1:{},
+          monitor2:{}
+        }
       }
     },
     computed:{
-      ...mapState({
-        startTime:state=>state.analysis.startTime,
-        endTime:state=>state.analysis.endTime,
-        monitor1:state=>state.analysis.monitor1,
-        monitor2:state=>state.analysis.monitor2,
-      }),
+      monitor1(){
+        return this.searchParams.monitor1
+      },
+      monitor2() {
+        return this.searchParams.monitor2
+      }
     },
     watch:{
       monitor1(){
@@ -48,14 +50,7 @@
     },
     methods: {
       async getCorrelationData(){
-        let params={
-            startTime:this.startTime,
-            lastTime:this.endTime,
-            monitorId1:this.monitor1.id,
-            monitorId2:this.monitor2.id,
-            filterType:2
-        }
-        let res =  await CommonApi.getCorrelationData(params)
+        let res =  await CommonApi.getCorrelationData(this.searchParams)
         let tmpArr=[]
          res.points.map((item)=>{
           tmpArr.push({
@@ -64,9 +59,12 @@
           })
         })
         this.tableData = tmpArr
+        this.tableText[0]=this.monitor1.text+"("+(res.unit1?res.unit1:'')+")"
+        this.tableText[1]=this.monitor2.text+"("+(res.unit2?res.unit2:'')+")"
         this.initChart(res)
       },
-      onClickBtn(){
+      onClickBtn(params){
+         this.searchParams = params
          this.getCorrelationData()
       },
       initChart(result){
@@ -200,13 +198,10 @@
       }
     },
     created(){
-      this.$store.dispatch("analysis/setDefaultNode");
     },
     beforeDestroy(){
-      this.$store.dispatch("analysis/resetStates"); //重置vuex
     },
     mounted(){
-      setTimeout(()=>this.getCorrelationData(),500)
     }
   }
 </script>
@@ -236,10 +231,6 @@
       margin-left: 100px;
       width:80px;
       text-align: right;
-    }
-    .handle-btn{
-      margin:10px;
-      float: right;
     }
     .el-table{
       /*clear: both;*/
