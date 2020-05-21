@@ -1,10 +1,15 @@
 <template>
-  <span
+  <div
     v-if="showDisplayValue && !isLazyCascader"
     class="text-overflow-eliipsis"
-    :style="{display:'block'}"
     :title="displayValue"
-  >{{comDisplayValue}}</span>
+  >
+    <!-- <slot v-else :name="column.prependslot" :textMode="textMode"></slot> -->
+    <span :style="{float:'left'}" v-if="column.prepend">{{column.prepend}}</span>
+    <span :style="{float:'left'}">{{comDisplayValue}}</span>
+    <span :style="{float:'left'}" v-if="column.append">{{column.append}}</span>
+    <!-- <slot v-else :name="column.appendslot" :textMode="textMode"></slot> -->
+  </div>
   <component
     v-else
     :class="{'zvue-text-mode':(this.showDisplayValue && this.isLazyCascader)}"
@@ -309,7 +314,7 @@ export default {
 <style lang="less">
 .zvue-text-mode {
   .el-input__inner {
-    color: #606266 !important;
+    color: #000 !important;
     padding: 0 !important;
     background-color: inherit !important;
     border: none !important;
