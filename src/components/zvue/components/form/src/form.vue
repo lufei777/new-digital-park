@@ -150,7 +150,7 @@
             </template>
           </div>
         </z-group>
-        <el-col :span="24" v-if="vaildData(parentOption.menuBtn,true)">
+        <el-col :span="24" v-if="vaildData(parentOption.menuBtn,!textMode,true)">
           <el-form-item>
             <!-- 菜单按钮组 -->
             <div :class="`zvue-form-menu-${menuPosition}`">
