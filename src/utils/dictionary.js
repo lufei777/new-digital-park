@@ -91,7 +91,6 @@ export const AssetDic = {
     0: '领用'
   }
 }
-
 // 人事管理
 export const PersonalManageDic = {
   // 员工状态
@@ -477,3 +476,156 @@ export const taskType = {
     }
   ]
 }
+
+// 预警报警
+export const WarningAlerm ={
+  // 报警级别
+  // Alarm level
+  alarmLevel :[
+    {label:'全部',value:1},
+    {label:'普通',value:2},
+    {label:'严重',value:3},
+    {label:'紧急',value:4},
+  ],
+  // 报警状态
+  // Alarm status
+  alarmStatus :[
+    {label:'全部', value: 1 },
+    {label:'已创建', value: 2 },
+    {label:'未处理', value: 3 },
+    {label:'处理中', value: 4 },
+    {label:'已关闭', value: 5 },
+  ],
+  // 子系统
+  // subsystem
+  subSystem : [
+    {label:'门禁管理',value: 1},
+    {label:'环境监测',value:2},
+    {label:'视频控制',value:3},
+    {label:'变配电',value:4}
+  ],
+  // 设备类型
+  // device type
+  deviceType:[
+    {label:'门禁', value: 1 },
+    {label:'温湿度传感器',value:2}
+  ],
+  // 报警类型
+  // Alarm type
+  alarmType:[
+    {label:'全部',value:1},
+    {label:'设备离线报警',value:2},
+    {label:'设备故障报警',value:3},
+    {label:'设备运行报警',value:4},
+
+  ],
+  // 录入类型
+  // Input type
+  inputType : [
+    {label:'点表导入',value:1},
+    {label:'手动录入',value:2}
+  ],
+  // 处理人员
+  // handling person 
+  handingPerson:[
+    {label:'张三' ,value:1},
+    {label:'李四' ,value: 2 },
+    {label:'王五', value: 3 }
+
+  ],
+  // 设备名称
+  // devicename
+  deviceName:[
+    {label:'1#会议室温温度传感器' ,value:1},
+    {label:'2#会议室温温度传感器' ,value: 2 },
+    {label:'3#会议室温温度传感器', value: 3 }
+
+  ],
+  // 设备点位
+  // equipmentsite
+  equipmentSite:[
+    {label:'1#会议室温监测' ,value: 1 },
+    {label:'2#会议室温监测' ,value: 2 },
+    {label:'3#会议室温监测', value: 3 }
+  ],
+  // 处理组名称
+  grounpName:[
+    {label:'安保部处理组A',value: 1 },
+    {label:'安保部处理组B',value: 2 },
+    {label:'安保部处理组C',value: 3 }
+  ],
+  // 点位类型
+  // Point type
+  pointType:[
+
+    {label:'温度监测',value: 1 },
+    {label:'湿度监测',value: 2 }
+  ],
+  // 抑制
+  // restrain 
+  restrain:[
+    {label:'抑制',value: 1 },
+    {label:'不抑制',value: 2 }
+  ],
+  // 通知方式
+  // way of notification 
+  notificationWay:[
+    {label:'短信',value: 1 },
+    {label:'语音',value: 2 },
+    {label:'弹框',value: 3 }
+  ],
+  // 通知组
+  notificationGrounp:[
+    {label:'环境/严重/处理组A',value: 1 },
+    {label:'环境/严重/处理组B',value: 2 },
+    {label:'环境/严重/处理组C',value: 3 }
+  ],
+  // 弹框类型
+  dialogType:[
+    {label:'自动关闭',value: 1 },
+    {label:'手动关闭',value: 2 }
+  ],
+  // 通知人员=== 》处理人员
+  // 时间设置
+  timeSetting:[
+
+    {label:'1',value: 1 },
+    {label:'2',value: 2 },
+    {label:'3',value: 3 },
+    {label:'4',value: 4 },
+    {label:'5',value: 5 },
+
+  ],
+  // 重复交验中的复选框
+  reCheckbox:[
+    {label:'1#温湿度传感器',value: 1 },
+    {label:'2#温湿度传感器',value: 2 },
+    {label:'3#温湿度传感器',value: 3 },
+    {label:'4#温湿度传感器',value: 4 },
+    {label:'5#温湿度传感器',value: 5 },
+    {label:'全选',value: 6 },
+
+  ],
+  // 弹窗的启用禁用
+  // Enable disable
+  enableDisAble:[
+    {label:'启用',value:1},
+    {label:'禁用',value:2}
+  ],
+  // 报警应答弹框复选框
+  alarmResponse:[
+    {label:'设备调试',value: 1 },
+    {label:'真实故障',value: 2 },
+    {label:'误报',value: 3 },
+    {label:'其他',value: 4 },
+  ],
+  // 优先级
+  priority:[
+    {label:'正常',value: 1 },
+    {label:'重要',value: 2 },
+    {label:'紧急',value: 3 }
+  ]
+
+
+}
+

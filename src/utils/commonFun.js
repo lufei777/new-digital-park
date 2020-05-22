@@ -1042,7 +1042,8 @@ class commonFun {
     purchasePeople: "程琳",
     recorder: "程琳",
     remark: "公司需要"
-  }, {
+  }, 
+  {
     id: 5,
     applicationName: "绿植采购",
     purchaseType: "公司内部采购",
@@ -1551,6 +1552,159 @@ class commonFun {
     name3: '团建活动图片',
     type2: '图片'
   }]
+  // 预警报警的数据源
+  warningAlram = [
+    {
+      subSystem:'非法入侵',
+      deviceType:"入侵探测器",
+      deviceName:'点位类型',
+      pointType:'入侵报警',
+      alarmRules:'1#会议室入侵报警规则',
+      alarmLevel:"严重",
+      notificationWay:'短信',
+      inputType:'点表导入'
+    },
+    {
+      subSystem:'非法入侵',
+      deviceType:"入侵探测器",
+      deviceName:'点位类型',
+      pointType:'入侵报警',
+      alarmRules:'1#会议室入侵报警规则',
+      alarmLevel:"严重",
+      notificationWay:'短信',
+      inputType:'点表导入'
+    },
+    {
+      subSystem:'非法入侵',
+      deviceType:"入侵探测器",
+      deviceName:'点位类型',
+      pointType:'入侵报警',
+      alarmRules:'1#会议室入侵报警规则',
+      alarmLevel:"严重",
+      notificationWay:'短信',
+      inputType:'点表导入'
+    },
+    {
+      subSystem:'非法入侵',
+      deviceType:"入侵探测器",
+      deviceName:'点位类型',
+      pointType:'入侵报警',
+      alarmRules:'1#会议室入侵报警规则',
+      alarmLevel:"严重",
+      notificationWay:'短信',
+      inputType:'点表导入'
+    },
+    {
+      subSystem:'非法入侵',
+      deviceType:"入侵探测器",
+      deviceName:'点位类型',
+      pointType:'入侵报警',
+      alarmRules:'1#会议室入侵报警规则',
+      alarmLevel:"严重",
+      notificationWay:'短信',
+      inputType:'点表导入'
+    }
+
+  ]
+  // 监控报警信息
+  monitorAlarm =[
+    {
+      alarmName:'',
+      startTime:'',
+      alarmDescried:"",
+      alarmLevel:'严重',
+      alarmStatus:'已创建',
+      alarmType:"",
+      subSystem:'门禁管理',
+      deviceType:"门禁",
+      deviceName:"门禁002",
+      devicePoint:'非法刷卡报警',
+    },
+    {
+      alarmName:'中钢大厦xxxxxx',
+      startTime:'',
+      alarmDescried:"入侵报警",
+      alarmLevel:'严重',
+      alarmStatus:'已创建',
+      alarmType:"",
+      subSystem:'门禁管理',
+      deviceType:"门禁",
+      deviceName:"门禁002",
+      devicePoint:'非法刷卡报警',
+    },
+    {
+      alarmName:'中钢大厦xxxxxx',
+      startTime:'',
+      alarmDescried:"入侵报警",
+      alarmLevel:'严重',
+      alarmStatus:'已创建',
+      alarmType:"",
+      subSystem:'门禁管理',
+      deviceType:"门禁",
+      deviceName:"门禁002",
+      devicePoint:'非法刷卡报警',
+    },
+    {
+      alarmName:'中钢大厦xxxxxx',
+      startTime:'',
+      alarmDescried:"入侵报警",
+      alarmLevel:'严重',
+      alarmStatus:'已创建',
+      alarmType:"",
+      subSystem:'门禁管理',
+      deviceType:"门禁",
+      deviceName:"门禁002",
+      devicePoint:'非法刷卡报警',
+    },
+  ]
+  // 报警处理组模拟数据
+  alarmGrounp = [
+    {
+      subSystem:'门禁',
+      alarmLevel:'严重',
+      dealGroup:'门禁/高/处理组A',
+      handingPerson:'张三'
+    },
+    {
+      subSystem:'',
+      alarmLevel:'',
+      dealGroup:'',
+      handingPerson:'李四'
+    },
+    {
+      subSystem:'门禁',
+      alarmLevel:'',
+      dealGroup:'',
+      handingPerson:'张三'
+    },
+  ]
+  // 通知方式管理
+  notificationWay = [
+    {
+      alarmLevel:'普通',
+      dialogType:'5秒自动关闭',
+      voice:'禁用',
+      msg:'警用'
+    },
+    {
+      alarmLevel:'普通',
+      dialogType:'5秒自动关闭',
+      voice:'禁用',
+      msg:'警用'
+    },
+    {
+      alarmLevel:'严重',
+      dialogType:'手动关闭',
+      voice:'禁用',
+      msg:'警用'
+    },
+    {
+      alarmLevel:'严重',
+      dialogType:'手动关闭',
+      voice:'禁用',
+      msg:'警用'
+    },
+  ]
 
   largeScreenDefaultData = {
     "num": 8,
@@ -2036,5 +2190,6 @@ class commonFun {
       tooltip: tooltip[type]
     }
   }
+  
 }
 export default new commonFun()

@@ -14,7 +14,8 @@ export default [{
       name: 'stockInApplyTmpRouter',
       component:() => import('@/pages/commonProject/coms/tmpRouterBox'),
       meta: { title: '入库管理' },
-      children:[{
+      children:[
+        {
         path: '/stockInApply',
         name: 'StockInApply',
         component: StockInApply,
