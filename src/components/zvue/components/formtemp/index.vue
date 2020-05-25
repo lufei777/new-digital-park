@@ -5,9 +5,9 @@
     :title="displayValue"
   >
     <!-- <slot v-else :name="column.prependslot" :textMode="textMode"></slot> -->
-    <span v-if="column.prepend">{{column.prepend}}</span><!--
+    <span v-if="column.prepend && comDisplayValue !== EMPTY_VALUE">{{column.prepend}}</span><!--
     --><span>{{comDisplayValue}}</span><!--
-    --><span v-if="column.append">{{column.append}}</span>
+    --><span v-if="column.append && comDisplayValue !== EMPTY_VALUE">{{column.append}}</span>
     <!-- <slot v-else :name="column.appendslot" :textMode="textMode"></slot> -->
   </div>
   <component
@@ -110,7 +110,8 @@ export default {
     return {
       first: true,
       text: null,
-      displayValue: ''
+      displayValue: '',
+      EMPTY_VALUE
     };
   },
   watch: {
@@ -178,7 +179,7 @@ export default {
     },
     getDisplayValue() {
       let displayValue = '';
-      // 变化后，将显示的值赋值在modelTranslate 和 displayValue 上
+      // 变化后，将显示的值赋值在modelTranslate 和 displayValue 上，除lazy模式的cascader
       if (!['upload', 'dynamic'].includes(this.column.type) && ![this.column.props || this.props].lazy) {
         displayValue = detail({ [this.column.prop]: this.text }, this.column, this.column.props, this.dic);
 
@@ -197,7 +198,7 @@ export default {
       }
 
       // 如果是级联，取最后一个
-      if(this.column.type === 'cascader'){
+      if (this.column.type === 'cascader') {
         displayValue = _.last(displayValue.split(DIC_SPLIT));
       }
 
