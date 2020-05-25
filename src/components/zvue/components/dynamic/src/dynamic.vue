@@ -15,7 +15,7 @@
       </template>-->
       <template #index="{scopeRow:scope}">
         <el-button
-          v-if="!delBtn && hoverList[scope.row.$index] && !disabled"
+          v-if="delBtn && hoverList[scope.row.$index] && !disabled"
           @mouseout.native="mouseoutRow(scope.row.$index)"
           @click="delRow(scope.row.$index)"
           type="danger"
@@ -26,7 +26,7 @@
           :style="{height:'unset',padding:'7px !important'}"
         ></el-button>
         <span
-          v-else-if="delBtn || !hoverList[scope.row.$index]"
+          v-else-if="!delBtn || !hoverList[scope.row.$index]"
           @mouseover="mouseoverRow(scope.row.$index)"
         >{{scope.row.$index+1}}</span>
       </template>
@@ -38,7 +38,7 @@
 
 import props from "../../../common/props";
 import events from "../../../common/events";
-import { deepClone } from "../../../utils/util";
+import { deepClone, vaildBoolean } from "../../../utils/util";
 
 export default {
   name: "zDynamic",
@@ -70,10 +70,10 @@ export default {
       return this.children.viewBtn === false;
     },
     delBtn() {
-      return this.textMode || this.children.delBtn === false;
+      return !this.textMode || this.children.delBtn === true;
     },
     addBtn() {
-      return this.children.addBtn === false;
+      return !this.textMode || this.children.addBtn === true;
     },
     columnOption() {
       return this.children.columnConfig || [];
@@ -84,12 +84,12 @@ export default {
           let options = this.deepClone(this.children);
           // 分页配置
           if (options.uiConfig) {
-            options.uiConfig.size = this.children.size;
+            options.uiConfig.size = this.size;
             options.uiConfig.pagination = false;
             options.uiConfig.height = "auto";
           } else {
             options.uiConfig = {
-              size: this.children.size || 'small',
+              size: this.size || 'small',
               pagination: false,
               height: "auto"
             };
@@ -109,7 +109,7 @@ export default {
               // 如果使用headerSlot，会有省略号
               // 使用headerSlot，disabled不能更新
               renderHeader: (h, { column, $index }) => {
-                if (this.addBtn) {
+                if (!this.addBtn) {
                   return "序号";
                 }
                 return h("el-button", {
@@ -140,7 +140,8 @@ export default {
 
             list.push(
               Object.assign(this.deepClone(ele), {
-                textMode: this.textMode,
+                size: ele.size || this.size,
+                textMode: vaildBoolean(this.textMode, ele.textMode),
                 cell: true,
                 disabled: ele.disabled || this.disabled || this.viewBtn
               })
@@ -173,12 +174,12 @@ export default {
       this.handleChange(this.text);
     },
     mouseoverRow(index) {
-      if (this.delBtn) return;
+      if (!this.delBtn) return;
       this.flagList();
       this.$set(this.hoverList, index, true);
     },
     mouseoutRow(index) {
-      if (this.delBtn) return;
+      if (!this.delBtn) return;
       this.flagList();
       this.$set(this.hoverList, index, false);
     },
