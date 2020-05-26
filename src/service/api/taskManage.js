@@ -83,7 +83,7 @@ class taskManageApi {
 
      @url("/oaApi/taskStatistics/taskNumbers")
      @get
-     getTaskNumberTable() { }
+     getPersonalTaskRanking() { }
 
 }
 

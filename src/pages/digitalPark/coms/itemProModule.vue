@@ -15,7 +15,8 @@
                  :is="item.componentName"
                  :moduleItem="moduleItemData(item)"
                  :class="'item-id-'+item.id"
-                 class="item-component flex-column-center"
+                class="item-component flex-column-center"
+                type="type"
       />
     </div>
 
@@ -177,6 +178,7 @@
       moduleItemData(item){
         return {
           ...item,
+          ...{type:2},
           ...{
              largeScreen:this.moduleData.largeScreen,
              legendUi:{

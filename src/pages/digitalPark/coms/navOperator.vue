@@ -284,6 +284,7 @@ export default {
 };
 </script>
 
+
 <style lang="less">
 .digital-nav-operator {
   font-size: 14px;

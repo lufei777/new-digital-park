@@ -31,7 +31,7 @@
           <component v-for="(item,index) in contentList"
                      :key="index"
                      :is="item.componentName"
-                     :moduleItem="item"
+                     :moduleItem="{...item,...{type:type}}"
                      :class="['item-content','flex-column-center',item.dragFlag?'item-drag-product':'']"
                      :style="contentBg(item)"
                      :id="item.id"
@@ -167,7 +167,10 @@
           language: Cookies.get('lang')
         })
         this.userProModuleList = res
-        console.log("length",$(".item-drag-product").length)
+        // console.log("length",$(".item-drag-product").length)
+        // $(".park-home-page .item-module").css({
+        //   height:383+'px'
+        // })
       },
       async getLargeScreenModuleList() {
         let res = await DigitalParkApi.getLargeScreenModule({
@@ -209,8 +212,7 @@
         }
       },
       onClickFullScreenBtn() {
-        this.isFull = !this.isFull
-        // if(this.type!=3){
+          this.isFull = !this.isFull
           let erd = elementResizeDetectorMaker()
           let that = this
           erd.listenTo($(".item-product-coms").eq(0), function () {
@@ -218,7 +220,9 @@
               $(window).resize()
             })
           })
-        // }
+        // $(".park-home-page .item-module").css({
+        //   height:548+'px'
+        // })
       },
       onClickResetBtn(){
         if(this.type==3){

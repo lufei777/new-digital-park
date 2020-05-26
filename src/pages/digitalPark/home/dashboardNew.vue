@@ -38,16 +38,16 @@
       </div>
 
       <div class="dashboard-center">
-        <img v-if="pageFlag==2 && !isyd" src="../../../../static/image/digitalPark/unity_priview.png"
-             class="unity_priview"
-             alt="">
-        <iframe v-if="pageFlag==1 && !isyd"
-                src="../../../../static/clientModel/zgHomePage/index.html"
-                frameborder="0"
-                class="unity-frame"></iframe>
-        <iframe v-if="isyd" src="../../../../static/clientModel/ydCityHomePage/index.html"
-                frameborder="0"
-                class="unity-frame"></iframe>
+        <!--<img v-if="pageFlag==2 && !isyd" src="../../../../static/image/digitalPark/unity_priview.png"-->
+             <!--class="unity_priview"-->
+             <!--alt="">-->
+        <!--<iframe v-if="pageFlag==1 && !isyd"-->
+                <!--src="../../../../static/clientModel/zgHomePage/index.html"-->
+                <!--frameborder="0"-->
+                <!--class="unity-frame"></iframe>-->
+        <!--<iframe v-if="isyd" src="../../../../static/clientModel/ydCityHomePage/index.html"-->
+                <!--frameborder="0"-->
+                <!--class="unity-frame"></iframe>-->
       </div>
       <div class="dashboard-right">
         <draggable :list="proModuleList2"
@@ -239,7 +239,7 @@
           })
           this.fixedProList = tmp
           this.showFixedProList=this.fixedProList.length>16?this.fixedProList.slice(0,16):this.fixedProList
-          let height = $(".product-list").length()/4
+          // let height = $(".product-list").length()/4
 
         },
         getOptions(){
