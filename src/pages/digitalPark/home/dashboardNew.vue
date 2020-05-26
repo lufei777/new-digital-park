@@ -29,6 +29,8 @@
                  class="inner-drag-content"
                  :moduleData="item"
                  :type="1"
+                 :hide-header="hideHeader"
+                 :fullStatus='fullStatus'
             />
           </draggable>
 
@@ -70,9 +72,12 @@
               class="inner-drag-content"
               :moduleData="item"
               :type="1"
+              :hide-header="hideHeader"
+              :fullStatus='fullStatus'
             />
           </draggable>
         </draggable>
+
         <div class="fixed-prod-module">
           <span>{{$t('proEntry')}}</span>
           <div class="product-list">
@@ -116,7 +121,7 @@
 
   export default {
     name: 'DashBoardHomePageNew',
-    props:['curProModule','hideHeader'],
+    props:['curProModule','hideHeader','fullStatus'],
     components: {
       draggable,
       NavOperator,
@@ -168,7 +173,7 @@
       methods: {
         async onLeftChange (evt) {
           // console.log('change1', evt)
-          if(evt.moved && !this.curProModule){ //只要有curProModule就代表是配置页，因为此处是仪表盘首页拖动而非配置页
+          if(evt.moved && !this.curProModule){ //只要有curProModule就代表是配置页的拖动
             this.sureUpdateUserProModules()
           }else if (evt.removed) {
             //removed情况为仪表盘内部两组互相拖拽时才会发生，而且顺序是组2先added，组1才removed（反之亦然）
@@ -211,7 +216,7 @@
             menuId:this.productId
           })
           this.proModuleList1 =res.slice(0,3)
-          this.proModuleList2 =res.slice(3,5)
+          this.proModuleList2 =res.slice(3)
           this.loading=false
         },
         async getProductList(){
@@ -234,6 +239,8 @@
           })
           this.fixedProList = tmp
           this.showFixedProList=this.fixedProList.length>16?this.fixedProList.slice(0,16):this.fixedProList
+          let height = $(".product-list").length()/4
+
         },
         getOptions(){
           return {draggable:'.item-drag-product',group:"out-product",disabled:this.outDragFlag}
@@ -245,7 +252,7 @@
           // this.innerDisable=false
         },
         onLeftMove(evt){
-          console.log('move',evt)
+          // console.log('move',evt)
         },
         onLeftEnd(){
           this.$parent.setContentListDragFlag &&

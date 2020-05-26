@@ -1,6 +1,3 @@
-// import AssetManage from '../../pages/assetManage/index'
-import AssetGroup from '../pages/assetManage/assetGroup'
-import AssetType from '../pages/assetManage/assetType'
 import DefaultPage from '../pages/commonProject/defaultPage'
 import AssetLedger from '../pages/assetManage/assetLedger'
 import MyAsset from '../pages/assetManage/myAsset'
@@ -25,23 +22,23 @@ export default [{
       path: '/assetMaintenance',
       name: 'AssetMaintenance',
       meta: { title: "资产信息维护" },
-      component: () => import('@/pages/assetManage/assetMaintenance/assetMaintenance'),
+      component: () => import('@/pages/assetManage/assetInfo/assetMaintenance/assetMaintenance'),
     },{
       path: '/assetType',
       name: 'AssetType',
       meta: { title: "资产类型设置" },
-      component: AssetType,
+      component: () => import('@/pages/assetManage/assetInfo/assetType'),
     },{
       path: '/assetGroup',
       name: 'AssetGroup',
       meta: { title: "资产组设置" },
-      component: AssetGroup,
+      component:  () => import('@/pages/assetManage/assetInfo/assetGroup'),
     }],
   },{
     path: '/addAsset',
     name: 'AssetAdd',
     meta: { title: "资产编辑" },
-    component: () => import('@/pages/assetManage/assetMaintenance/addAsset'),
+    component: () => import('@/pages/assetManage/assetInfo/assetMaintenance/addAsset'),
   }, {
     path: '/assetLedger',
     name: 'AssetLedger',

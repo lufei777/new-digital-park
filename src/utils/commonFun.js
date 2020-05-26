@@ -1869,6 +1869,9 @@ class commonFun {
   }
 
   loadClientPage(item) {
+    //客户端关闭视频
+    window.closeVideoWin && window.closeVideoWin()
+
     if (item.name == "物业系统") {
       this.invokeClientMethod('goToZGManage');
       return true;
@@ -1881,18 +1884,18 @@ class commonFun {
 
       if (item.level == 2) {
         // router.push(`${item.routeAddress}?productId=${item.id}`)
-        // if(IsCZClient()){
+        if(IsCZClient()){
           router.push(`/clientOverView?productId=${item.id}`)
+          console.log("load showClientOverView")
           this.invokeClientMethod('showClientOverView',JSON.stringify(item));
-        // }else{
-        //   router.push(`${item.routeAddress}?productId=${item.id}`)
-        // }
+        }else{
+          router.push(`${item.routeAddress}?productId=${item.id}`)
+        }
         return true;
       } else if (item.level == 3 && item.name == "概览") {
         router.push(`${item.routeAddress}?productId=${item.pid}`)
         return true;
       } else {
-        this.invokeClientMethod('closeVideoWin');
         let id = item.id
         if (item.childNode.length) {
           id = this.getLastItem(item).id

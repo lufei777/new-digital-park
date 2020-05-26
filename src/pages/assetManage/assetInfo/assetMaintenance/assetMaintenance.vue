@@ -69,12 +69,12 @@
 </template>
 
 <script>
-import CommonDialog from "../../commonProject/coms/commonDialog";
-import CommonUpload from "../../commonProject/coms/commonUpload";
-import AssetManageApi from "../../../service/api/assetManage";
-import CommonTable from "../../../components/commonTable";
-import TreeModal from "../../../components/treeModal";
-import CommonFun from "../../../utils/commonFun";
+import CommonDialog from "../../../commonProject/coms/commonDialog";
+import CommonUpload from "../../../commonProject/coms/commonUpload";
+import AssetManageApi from "../../../../service/api/assetManage";
+import CommonTable from "../../../../components/commonTable";
+import TreeModal from "../../../../components/treeModal";
+import CommonFun from "../../../../utils/commonFun";
 export default {
   name: "AssetMaintenance",
   components: {

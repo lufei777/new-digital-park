@@ -29,10 +29,10 @@
 </template>
 
 <script>
-  import AddAssetTypeAttr from '../commonProject/coms/addAssetTypeAttr'
+  import AddAssetTypeAttr from '../../commonProject/coms/addAssetTypeAttr'
   import AssetManageApi from '@/service/api/assetManage'
-  import CommonFun from '../../utils/commonFun'
-  import CustomTree from '../../components/customTree/slotTree'
+  import CommonFun from '../../../utils/commonFun'
+  import CustomTree from '../../../components/customTree/slotTree'
   export default {
     name: 'AssetType',
     components: {

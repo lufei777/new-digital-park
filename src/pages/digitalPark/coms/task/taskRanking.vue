@@ -4,7 +4,7 @@
     <!--<div class="my-chart">-->
     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
     <div class="my-chart">
-      <div class="task-header flex">
+      <div class="task-header flex" :class="moduleItem.type!=2?'':'task-header-white'">
         <span>排名</span>
         <span>姓名</span>
         <span>数量</span>
@@ -12,7 +12,7 @@
         <span>效率</span>
       </div>
       <ul>
-        <li v-for="(item,index) in tableData" :key="index" class="yd-ganged-log-li flex"
+        <li v-for="(item,index) in tableData" :key="index" class="item-task flex"
             :class="moduleItem.type!=2?'':'task-li'">
           <span>{{index+1}}</span>
           <span>{{item.name}}</span>
@@ -40,7 +40,32 @@ export default {
   props: ["moduleItem"],
   data() {
     return {
-      tableData:[]
+      tableData:this.tableData = [{
+        name:'刘金',
+        num:100,
+        error:0,
+        effect:'高'
+      },{
+        name:'刘金',
+        num:100,
+        error:0,
+        effect:'高'
+      },{
+        name:'刘金',
+        num:100,
+        error:0,
+        effect:'高'
+      },{
+        name:'刘金',
+        num:100,
+        error:0,
+        effect:'高'
+      },{
+        name:'刘金',
+        num:100,
+        error:0,
+        effect:'高'
+      }]
     };
   },
   computed:{
@@ -76,6 +101,15 @@ export default {
         error:0,
         effect:'高'
       }]
+      this.$nextTick(()=>{
+        let height = $(".my-chart").height()/6
+        // console.log("height",height,$(".item-task").length,$(".task-header").length)
+        $(".task-header span, .item-task").css({
+          'height':height+'px',
+          'line-height':height+'px'
+        })
+      })
+
     }
   },
   mounted() {
@@ -93,18 +127,18 @@ export default {
    }
   .task-header {
     width: 100%;
-    height: 50px;
     font-size: 14px;
     background: rgba(17,29,33,.5);
     text-align: center;
     span {
       width:20%;
       float: left;
-      height: 50px;
-      line-height: 50px;
     }
   }
-  .yd-ganged-log-li{
+  .task-header-white{
+    color:@white;
+  }
+  .item-task{
     width: 100%;
     height: 40px;
     font-size: 14px;
