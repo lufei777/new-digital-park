@@ -42,6 +42,7 @@
         <div :class="isFull?'full-preview-panel':'preview-panel'">
           <DashboardNew v-if="type==1" :curProModule="curProModule"
                         :hideHeader="true" ref="dashboard"
+                        :fullStatus='fullStatus'
           />
           <HomePage v-if="type==2" :curProModule="curProModule"
                     :hideHeader="true"
@@ -77,7 +78,6 @@
   import elementResizeDetectorMaker from 'element-resize-detector'
   import draggable from 'vuedraggable'
   import HomePage from '../home/index'
-  import Dashboard from '../home/dashboard'
   import comsImport from '../coms/js/comsImport'
   import {mapState} from 'vuex'
   import DashboardNew from '../home/dashboardNew'
@@ -87,7 +87,6 @@
     name: 'ModuleConfigure',
     components: {
       ...comsImport.exportComsList,
-      Dashboard,
       draggable,
       HomePage,
       DashboardNew,

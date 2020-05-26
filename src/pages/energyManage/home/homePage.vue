@@ -589,8 +589,25 @@ export default {
         legendData,
         xAxis,
         series,
-        showSecondY: true
-      };
+        showSecondY: true,
+        yAxis: [
+          {
+            type: "value",
+            name: res.unit,
+            axisLabel: {
+              formatter: "{value}"
+            }
+          },
+          {
+            show: true,
+            type: "value",
+            name: "增长率",
+            axisLabel: {
+              formatter: "{value} %"
+            }
+          }
+        ]
+      }
       let option = {
         yAxis: [
           {
@@ -605,7 +622,7 @@ export default {
             type: "value",
             name: "增长率",
             min: -100,
-            max: 100,
+            max: 150,
             axisLabel: {
               formatter: "{value} %"
             }

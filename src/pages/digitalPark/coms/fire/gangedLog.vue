@@ -37,19 +37,19 @@ export default {
     async getGangedLog() {
       let res = await CommonApi.getGangedLog({
         pageNum: 1,
-        pageCount: 6,
+        pageCount:5,
         start: "",
         end: ""
       });
       if (res) {
-        this.tableData = res;
+        this.tableData = res.rows;
         this.tableData.map((item, index) => {
           item.numberIndex = index+1
           item.time = item.time.slice(0,10)
         });
       }
 
-      console.log("res", res);
+      // console.log("res", res);
     }
   },
   mounted() {

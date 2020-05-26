@@ -169,9 +169,9 @@
 </template>
 
 <script>
-import AssetManageApi from "../../../service/api/assetManage";
-import TreeModal from "../../../components/treeModal";
-import SearchAssetModal from '../../stockManage/coms/searchAsset'
+import AssetManageApi from "../../../../service/api/assetManage";
+import TreeModal from "../../../../components/treeModal";
+import SearchAssetModal from '../../../stockManage/coms/searchAsset'
 export default {
   name: "AddAsset",
   components: {

@@ -13,7 +13,7 @@
 
 <script>
   import AssetManageApi from '@/service/api/assetManage'
-  import CustomTree from '../../components/customTree/slotTree'
+  import CustomTree from '../../../components/customTree/slotTree'
   export default {
     name: 'AssetGroup',
     components: {
@@ -92,7 +92,7 @@
   .asset-group{
     height: 100%;
     /*padding:20px;*/
-    background: url("../../../static/image/digitalPark/asset_type_bg.png");
+    background: url("../../../../static/image/digitalPark/asset_type_bg.png");
     .left-group-tree{
       /*margin: 0 auto;*/
       padding:20px 0;

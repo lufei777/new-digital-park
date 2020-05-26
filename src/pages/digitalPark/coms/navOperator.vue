@@ -252,8 +252,11 @@ export default {
       let curMenu = item
       if (obj) {
         obj = JSON.parse(obj)
-        curMenu = obj
+        if(!(obj.name=="概览" && obj.clientType==1)){
+          curMenu = obj
+        }
       }
+      // console.log("item",item,obj,curMenu)
       // console.log("itemfanfeifei", item)
       this.$store.commit("digitalPark/menuList", item)
       CommonFun.loadPage(curMenu)
@@ -269,9 +272,9 @@ export default {
     }
   },
   created() {
-    this.getAlarmList();
   },
   mounted() {
+    this.getAlarmList();
     window.CZClient = {
       goToPersonal: this.onClickUserConfigure,  //跳转个人中心
       goBack: this.onClickGoBack,    //返回首页
