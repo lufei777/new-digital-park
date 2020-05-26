@@ -67,12 +67,12 @@
             {
               label: "状态", prop: "handled",
               formatter: function (row, column) {
-                return row.handled == 1 ? '已处理' : '未处理'
+                return row.handled == 1 ? '已处        理' : '未处理'
               }
             }
           ],
           uiConfig: {
-            height: "auto",
+            height:'auto',
             showIndex:{
               handler: function (index) {
                 return  _this.setIndex(index);

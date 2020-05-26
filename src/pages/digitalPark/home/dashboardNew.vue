@@ -239,7 +239,7 @@
           })
           this.fixedProList = tmp
           this.showFixedProList=this.fixedProList.length>16?this.fixedProList.slice(0,16):this.fixedProList
-          let height = $(".product-list").length()/4
+          // let height = $(".product-list").length()/4
 
         },
         getOptions(){
