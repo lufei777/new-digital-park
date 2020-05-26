@@ -101,8 +101,9 @@
                       :dic="DIC[column.prop]"
                       :upload-before="uploadBefore"
                       :upload-after="uploadAfter"
+                      :size="controlSize"
                       :disabled="vaildDiabled(column,group)"
-                      :textMode="textMode"
+                      :textMode="vaildTextMode(column,group)"
                     >
                       <!-- 自定义表单里内容 -->
                       <template
@@ -294,8 +295,8 @@ export default {
       }
     },
     formVal() {
-      _.map(this.value, (value, key) => {
-        this.$set(this.model, key, value);
+      Object.keys(this.value).forEach(ele => {
+        this.$set(this.model, ele, this.value[ele]);
       });
       this.forEachLabel();
       this.$emit("input", this.model);
@@ -363,6 +364,14 @@ export default {
         column.disabled,
         group.disabled,
         this.allDisabled
+      );
+    },
+    // 判断该项是否为不可编辑
+    vaildTextMode(column, group) {
+      return this.vaildBoolean(
+        column.textMode,
+        group.textMode,
+        this.textMode
       );
     },
     // 验证表单是否显隐

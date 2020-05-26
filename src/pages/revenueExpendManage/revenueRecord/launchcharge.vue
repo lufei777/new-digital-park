@@ -65,7 +65,7 @@ const apiConfig = {
     api: revenueExpendApi.updateRecord,
     extraConfig: {
       submitDisabled: false,
-      disabled: true
+      textMode: true
     }
   },
   detail: {
@@ -319,7 +319,7 @@ export default {
         this.getGroupByProp("entry").display = true;
         if (this.isUpdate) {
           this.disabledAllGroup();
-          this.getGroupByProp("entry").disabled = false;
+          this.getGroupByProp("entry").textMode = false;
         }
       }
       // 添加审核人表单
@@ -336,7 +336,7 @@ export default {
   mounted() {
     if (this.isEdit) {
       this.Form.setColumnByProp("choice", {
-        disabled: true
+        textMode: true
       });
     }
   },
@@ -357,7 +357,7 @@ export default {
     disabledAllGroup() {
       for (let index = 0; index < this.formOptions.group.length; index++) {
         let group = this.formOptions.group[index];
-        group.disabled = true;
+        group.textMode = true;
       }
     },
     getGroupByProp(prop) {
@@ -466,13 +466,13 @@ export default {
     },
     checkPeopleReason() {
       const { pageConfig } = this;
-
+      // 编辑和山茶不能修改审核人
       let checkPeople = {
         label: "审核人",
         prop: "recordPersonList",
         type: "dynamic",
         span: 12,
-        disabled: this.isEdit ? true : undefined,
+        textMode: (this.isEdit || this.isCheck) ? true : undefined,
         children: {
           size: "small",
           align: "center",
@@ -509,7 +509,7 @@ export default {
           {
             ...checkPeople,
             span: this.isCheck ? 12 : 24,
-            disabled: false
+            textMode: false
           },
           // 设置外层属性
           (() => {
@@ -524,7 +524,7 @@ export default {
               children.columnConfig = [
                 {
                   ...checkPeople.children.columnConfig[0],
-                  disabled: true
+                  textMode: true
                 }
               ];
             } else {
@@ -532,8 +532,8 @@ export default {
               children.columnConfig = [
                 {
                   ...checkPeople.children.columnConfig[0],
-                  disabled: true,
-                  width: 200
+                  textMode: true,
+                  width: 100
                 },
                 {
                   label: "审核状态",
@@ -564,7 +564,7 @@ export default {
         checkPeople = mergeCheckPeople(checkPeople);
       }
       if (this.isDetail) {
-        delete checkPeople.disabled;
+        delete checkPeople.textMode;
       }
 
       return checkPeople;
