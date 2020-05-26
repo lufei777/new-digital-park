@@ -32,6 +32,7 @@
 <script>
 import CommonFun from "../../../../utils/commonFun";
 import ChartUtils from "../../../../utils/chartUtils";
+import TaskManageApi from '@/service/api/taskManage'
 import { isYDScreen } from "@/utils/project";
 
 export default {
@@ -110,10 +111,14 @@ export default {
         })
       })
 
+    },
+    async getTaskRanking(){
+      await TaskManageApi.getTaskNumRanking()
     }
   },
   mounted() {
     this.getTableData()
+    this.getTaskRanking()
   }
 };
 </script>
