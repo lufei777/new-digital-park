@@ -154,7 +154,7 @@ export default {
     handleDetail(row, column, DIC) {
       let result = row[column.prop];
 
-      if (typeof column.type === "undefined") return result || "-";
+      if (typeof column.type === "undefined") return result;
       // 如果是级联，切值为字符串，则需要对值进行处理
       if (column.type === "cascader" && typeof result === "string") {
         let list = result.split(",");
