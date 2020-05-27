@@ -419,7 +419,7 @@ export const AssetState = {
     text: "INITIALIZE",
     value: 4,
     desc: '正在获取数据',
-    valueStr: "初始化"
+    valueStr: "正在初始化"
   },
   FAILURE: {
     text: "FAILURE",

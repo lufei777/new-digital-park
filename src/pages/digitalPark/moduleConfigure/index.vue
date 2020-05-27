@@ -167,6 +167,7 @@
           language: Cookies.get('lang')
         })
         this.userProModuleList = res
+        this.changeFontSize()
         // console.log("length",$(".item-drag-product").length)
         // $(".park-home-page .item-module").css({
         //   height:383+'px'
@@ -305,7 +306,6 @@
         await this.getModulesByType()
       }
       this.getProModules()
-      this.changeFontSize()
     }
   }
 </script>
@@ -527,9 +527,9 @@
       /*.item-drag-product,.fixed-prod-module{*/
         /*font-size: 12px;*/
       /*}*/
-      .smallFontSize{
-        font-size: 12px;
-      }
+      /*.smallFontSize{*/
+        /*font-size: 12px;*/
+      /*}*/
     }
 
     .left-module-list, .module-content-list, .preview-panel {

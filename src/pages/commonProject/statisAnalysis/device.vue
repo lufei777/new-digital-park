@@ -73,10 +73,10 @@ export default {
       let seriesData = res.values;
       let seriesName = "监控器状态";
       let option = {
-        color: ["dimGrey", "green", "orange", "red"],
+        color:["#25e4a3", "dimGrey", "#dab54c", "#de8536",'#ed5450'],
         toolbox: {
           show: true,
-          showTitle:false,        
+          showTitle:false,
           feature: Object.assign({}, commonFun.chartsToolBox('assetStateTip').feature),
           tooltip: commonFun.chartsToolBox('assetStateTip').tooltip
         }
@@ -158,7 +158,7 @@ export default {
             itemStyle: {
               normal: {
                 color: function (params) {
-                  var colorList = ["dimGrey", "green", "orange", "red"];
+                  var colorList = ["#25e4a3", "dimGrey", "#dab54c", "#de8536",'#ed5450'];
                   return colorList[params.dataIndex];
                 }
               }

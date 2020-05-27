@@ -11,7 +11,7 @@
         <span>完成量</span>
         <span>完成率</span>
       </div>
-      <ul>
+      <ul class="task-list-ul">
         <li v-for="(item,index) in tableData" :key="index" class="item-task flex"
             :class="moduleItem.type!=2?'':'task-li'">
           <span>{{index+1}}</span>
@@ -101,8 +101,9 @@ export default {
 <style lang="less">
 .task-ranking {
    .my-chart{
-      margin-top: 10px;
-      box-sizing: border-box;
+     margin-top: 10px;
+     box-sizing: border-box;
+     overflow: hidden;
    }
   .task-header {
     width: 100%;
@@ -143,6 +144,9 @@ export default {
       height: 50px;
       line-height: 50px;
     }
+  }
+  .task-list-ul{
+    overflow: auto;
   }
 }
 </style>

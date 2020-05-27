@@ -41,16 +41,18 @@
         tbzz:0,
         hbzz:0,
         totalNum:0,
-        unit:''
+        unit:'',
+        getProgressWidth:200
       };
     },
     computed:{
       progressColor(){
         return this.fromFlag==1?'#00dfff':'#03C281'
       },
-      getProgressWidth(){
-        return 200
-      }
+      // getProgressWidth(){
+      //   let width = $(".elec-sum-coms-inner").width()*0.4
+      //   return width
+      // }
     },
     methods: {
       async getEnergyData(){
@@ -60,6 +62,10 @@
           selectType: 3,
           catalogs:'4000,1002',
         });
+        this.$nextTick(()=>{
+         this.getProgressWidth = $(".elec-sum-coms-inner").width()*0.4
+        })
+
         this.alarm=res.alarm
         this.prop = res.prop
         if(this.fromFlag==1){
