@@ -1,9 +1,9 @@
 <template>
   <div class="operate-income">
     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
-    <div class="select-box flex">
-      <div  class="change-date hover-pointer" :style="Bg" @click.stop="onClick1">年报</div>
-      <div class="change-date hover-pointer">月报</div>
+    <!--<div class="select-box flex">-->
+      <!--<div  class="change-date hover-pointer" :style="Bg" @click.stop="onClick1">年报</div>-->
+      <!--<div class="change-date hover-pointer">月报</div>-->
       <!--<el-select v-model="income" placeholder="请选择" size="mini">-->
         <!--<el-option-->
           <!--v-for="item in incomeLabel"-->
@@ -12,7 +12,7 @@
           <!--:value="item.value"-->
         <!--&gt;</el-option>-->
       <!--</el-select>-->
-    </div>
+    <!--</div>-->
 
     <div ref="myChart" class="my-chart" id="operate-income-chart"></div>
   </div>
