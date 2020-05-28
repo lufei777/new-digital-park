@@ -91,14 +91,21 @@
             </div>
             <div class="analysis-pie-charts" ref="taskStatisticsCharts"></div>
           </div>
-          <div class="task-rank">
-            <div class v-for="(item,index) in taskNumRankData" :key="index">
-              <div class="progress-div">
-                <el-progress v-if="item.taskNum" :percentage="item.taskNum>100?100:item.taskNum" :show-text="false"></el-progress>
-                <span style="margin-left:5px">{{item.taskNum}}个</span>
-              </div>
-              <div class="percentage-text">
-                <span>{{item.deptName}}</span>
+          <div class="task-rank-content">
+            <div class="task-rank-title">2020年部门工单数量排名</div>
+            <div class="task-rank">
+              <div class v-for="(item,index) in taskNumRankData" :key="index">
+                <div class="progress-div">
+                  <el-progress
+                    v-if="item.taskNum"
+                    :percentage="item.taskNum>100?100:item.taskNum"
+                    :show-text="false"
+                  ></el-progress>
+                  <span style="margin-left:5px">{{item.taskNum}}个</span>
+                </div>
+                <div class="percentage-text">
+                  <span>{{item.deptName}}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -236,7 +243,7 @@ export default {
         { label: "补录", prop: "isSupplementText" }
       ];
       this.tableData.columnConfig = labelList;
-      let res = await TaskManageApi.getTaskNumberTable();
+      let res = await TaskManageApi.getPersonalTaskRanking();
       if (res) {
         res.map((item, ind) => {
           item.taskStatus =
@@ -321,13 +328,13 @@ export default {
       let color = ["#4DA1FF", "#83D587", "#FFCE33", "#FF7B8C"];
       let titleText = "工单类型统计";
       let seriesData = [];
-      res.values.map(item=>{
+      res.values.map(item => {
         var itemObj = {
           value: item.taskNum,
           name: item.name
         };
         seriesData.push(itemObj);
-      })
+      });
       let data = {
         legendData,
         seriesData,
@@ -425,7 +432,9 @@ export default {
             bottom: "30",
             right: "30",
             formatter: function(name) {
-              let obj = seriesList[i - 1][0].data.find(item => item.name == name);
+              let obj = seriesList[i - 1][0].data.find(
+                item => item.name == name
+              );
               return name + "：" + obj.value;
             }
           },
@@ -442,7 +451,9 @@ export default {
             left: "4%",
             textStyle: {
               fontSize: 18,
-              fontWeight: 600
+              fontWeight: 600,
+              top: 40,
+              left: 20
             }
           }
         };
@@ -579,7 +590,26 @@ export default {
         legendData,
         xAxis,
         series,
-        showSecondY: true
+        showSecondY: true,
+        yAxis: [
+          {
+            type: "value",
+            name: res.unit,
+            axisLabel: {
+              formatter: "{value}"
+            }
+          },
+          {
+            show: true,
+            type: "value",
+            name: "增长率",
+            min: -100,
+            max: 100,
+            axisLabel: {
+              formatter: "{value} %"
+            }
+          }
+        ]
       };
       let option = {
         yAxis: [
@@ -602,9 +632,7 @@ export default {
           }
         ]
       };
-
       ChartUtils.handleBarChart(myChart, data);
-      myChart.setOption(option);
     },
     onClickExportBtn() {},
     fixTree() {
@@ -625,7 +653,7 @@ export default {
     await this.getdeptTaskStatistics();
     this.getTaskStatus();
     this.createCharts();
-    // this.getTaskNumberTable()
+    this.getTaskNumRanking();
     this.taskTreeConfig.defaultExpandedkeys = [taskType.taskData[0].value];
   }
 };
@@ -726,7 +754,7 @@ export default {
         padding: 0 40px;
         font-size: 18px;
         font-weight: 600;
-        span{
+        span {
           font-weight: 500;
         }
         .dept-class {
@@ -752,13 +780,23 @@ export default {
           width: 100%;
           margin-top: 20px;
         }
-      }
+	  }
+	  .task-rank-content {
+		  width: 32%;
+		  height: 460px !important;
+		  padding-left: 6%;
+		  .task-rank-title {
+			  height: 60px;
+			  line-height: 60px;
+			  font-weight: bold;
+			  font-size: 18px;
+		  }
+	  }
       .task-rank {
-        height: 460px !important;
-        width: 32%;
+		height: 80%;
+        width: 100%;
         display: flex;
         flex-direction: column;
-        padding-left: 6%;
         // align-items: center;
         justify-content: center;
         .progress-div {
