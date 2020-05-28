@@ -44,8 +44,6 @@
         <!--<iframe v-if="pageFlag==1 && !isyd"-->
                 <!--src="../../../../static/clientModel/zgHomePage/index.html"-->
                 <!--frameborder="0"-->
-
-
                 <!--class="unity-frame"></iframe>-->
         <!--<iframe v-if="isyd" src="../../../../static/clientModel/ydCityHomePage/index.html"-->
                 <!--frameborder="0"-->

@@ -29,7 +29,7 @@
             <ItemProModule
               class="inner-drag-content"
               type="1"
-              :moduleData="item?{...item,...{largeScreen:true,$index:index}}:{}"
+              :moduleData="item?{...item,...{largeScreen:true,$index:index,type:1}}:{}"
             />
           </draggable>
         <!--</transition>-->
