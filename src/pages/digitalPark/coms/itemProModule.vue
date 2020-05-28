@@ -178,7 +178,7 @@
       moduleItemData(item){
         return {
           ...item,
-          ...{type:2},
+          ...{type:this.type},
           ...{
              largeScreen:this.moduleData.largeScreen,
              legendUi:{

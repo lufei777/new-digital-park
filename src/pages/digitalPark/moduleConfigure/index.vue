@@ -221,6 +221,7 @@
               $(window).resize()
             })
           })
+
         // $(".park-home-page .item-module").css({
         //   height:548+'px'
         // })
