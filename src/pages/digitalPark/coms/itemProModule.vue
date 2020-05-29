@@ -149,12 +149,13 @@
           return second.id == item.secondMenuId;
         });
         let menuTmp = {}
-        if (secondMenu.clientType == 1) {
-          menuTmp = this.findNode(secondMenu, item, secondMenu)
-        } else {
-          menuTmp = secondMenu
-        }
-        // console.log("menuTmp", menuTmp)
+        // if (secondMenu.clientType == 1) {
+        //   menuTmp = this.findNode(secondMenu, item, secondMenu)
+        // } else {
+        //   menuTmp = secondMenu
+        // }
+        menuTmp = secondMenu
+        console.log("menuTmp", menuTmp)
         this.$store.commit("digitalPark/menuList", menuTmp||{});
         item.childNode = []
         item.id = item.forwardId || item.pid
