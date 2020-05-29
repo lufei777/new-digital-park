@@ -8,7 +8,11 @@
         <span>状态</span>
       </div>
       <ul v-if="alarmNewsData.length!=0" class="alarm-news-list-ul">
-        <li v-for="(item,index) in alarmNewsData" :key="index" class="ganged-log-li flex">
+        <li v-for="(item,index) in alarmNewsData"
+            class="ganged-log-li flex hover-pointer"
+            :key="index"
+            @click="onClickItemData(item)"
+        >
           <span style="width:10%">{{index+1}}</span>
           <span style="width:40%">{{item.alertType}}</span>
           <span>{{item.timeText}}</span>
@@ -54,12 +58,16 @@ export default {
         });
         this.alarmNewsData = res.rows
         let height = parseInt($(".my-chart").height()/7)
-        console.log("jeight",height)
+        // console.log("jeight",height)
         $(".alarm-news-header").css({
           "height":height+'px',
           'line-height':height+'px'
         })
       }
+    },
+    onClickItemData(item){
+      window.FindAssetLocation && window.FindAssetLocation(item.id)
+      window.parent.FindAssetLocation &&  window.parent.FindAssetLocation(item.id)
     }
   },
   mounted() {

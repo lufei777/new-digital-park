@@ -182,7 +182,7 @@
         })
         this.userProModuleList = res.modules || []
       },
-      setItemDragFlag(userList, res = this.proModuleList) {
+      setItemDragFlag(userList =this.userProModuleList , res = this.proModuleList) {
         res.map((item) => {
           item.moduleList.map((module) => {
             module.dragFlag = true
@@ -226,7 +226,7 @@
         //   height:548+'px'
         // })
       },
-      onClickResetBtn(){
+      async onClickResetBtn(){
         if(this.type==3){
           $(".center-show").css({
             width:'1920px',
@@ -235,6 +235,8 @@
           this.$refs.largeSizeScreen.getLargeScreenModuleList()
         }else{
           this.$refs[this.curCom].getModulesByType()
+          await this.getModulesByType()
+          this.setItemDragFlag()
         }
       },
       onClickEscBtn() {
