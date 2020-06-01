@@ -19,7 +19,7 @@ class DigitalParkApi {
   @get
   getMenuTree(){}
 
-  @url("/oaApi/menu/productModules")
+  @url("/oaApi/modules/option")
   @get
   getProModules(){}
 
