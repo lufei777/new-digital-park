@@ -477,3 +477,33 @@ export const taskType = {
     }
   ]
 }
+
+export const TaskofficeLocationType = {
+  officeLocationType:[
+    {
+      value: 0,
+      label: "公司"
+    },
+    {
+      value: 1,
+      label: "现场"
+    }
+  ]
+}
+
+export const TaskpriorityType = {
+  priorityType:[
+    {
+      value: "1",
+      label: "正常"
+    },
+    {
+      value: "2",
+      label: "重要"
+    },
+    {
+      value: "3",
+      label: "紧急"
+    }
+  ]
+}

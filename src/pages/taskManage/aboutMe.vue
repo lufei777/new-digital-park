@@ -23,6 +23,8 @@
               <template slot="operation" slot-scope="obj">
                 <el-button type="text" @click="editRow(obj)">详情</el-button>
                 <el-button type="text" @click="deleteRow(obj)" v-if="deleteRowShow">删除</el-button>
+                 <el-button type="text" @click="taskPosition(obj)">定位</el-button>
+                <!-- window.parent.FindAssetLocation -->
               </template>
             </z-table>
           </div>
@@ -289,6 +291,10 @@ export default {
     deleteRow(val) {
       this.taskId = val.scopeRow.row.id;
       this.showDeleteTip();
+    },
+    taskPosition(val){
+      console.log("val",val)
+      // window.parent.FindAssetLocation()
     },
     editRow(val) {
       if (this.taskActiveName == "second") {

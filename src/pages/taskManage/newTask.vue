@@ -102,52 +102,12 @@
 
 <script>
 import TaskManageApi from "../../service/api/taskManage";
-import { mapState } from 'vuex';
-let workOrderType = [
-  {
-    value: "1",
-    label: "巡检"
-  },
-  {
-    value: "2",
-    label: "审批"
-  },
-  {
-    value: "3",
-    label: "调试"
-  },
-  {
-    value: "4",
-    label: "其他"
-  }
-];
-let priorityType = [
-  {
-    value: "1",
-    label: "正常"
-  },
-  {
-    value: "2",
-    label: "重要"
-  },
-  {
-    value: "3",
-    label: "紧急"
-  }
-];
-let officeLocationType = [
-  {
-    value: 0,
-    label: "公司"
-  },
-  {
-    value: 1,
-    label: "现场"
-  }
-];
+import { mapState } from "vuex";
+import { TaskpriorityType, TaskofficeLocationType } from "@/utils/dictionary";
 export default {
   name: "NewTask",
   data() {
+    let _this = this;
     return {
       model: {
         taskType: "1",
@@ -180,26 +140,37 @@ export default {
             prop: "taskType",
             placeholder: "请输入",
             clearable: true,
+            props: {
+              label: "typeName",
+              value: "id"
+            },
             offset: 2,
             span: 10,
             rules: {
               required: true,
-              message: "请选择工单类型",
               trigger: "change"
             },
-            dicData: workOrderType
+            change: function(value) {
+              if (value.value == 6) {
+                _this.$refs["newTaskForm"].setColumnByProp("devicePoint", {
+                  display: true
+                });
+              } else {
+                _this.$refs["newTaskForm"].setColumnByProp("devicePoint", {
+                  display: false
+                });
+              }
+            }
           },
           {
             type: "datetime",
             label: "开始时间",
             prop: "beginTime",
             valueFormat: "yyyy-MM-dd HH:mm:ss",
-            placeholder: "选择日期时间",
             clearable: true,
             span: 10,
             rules: {
               required: true,
-              message: "请选择开始时间",
               trigger: "change"
             }
           },
@@ -208,13 +179,11 @@ export default {
             label: "预计结束时间",
             prop: "endTime",
             valueFormat: "yyyy-MM-dd HH:mm:ss",
-            placeholder: "选择日期时间",
             clearable: true,
             span: 10,
             offset: 2,
             rules: {
               required: true,
-              message: "请选择结束时间",
               trigger: "change"
             }
           },
@@ -232,7 +201,7 @@ export default {
             clearable: true,
             offset: 2,
             span: 10,
-            dicData: priorityType,
+            dicData: TaskpriorityType.priorityType,
             rules: {
               required: true,
               message: "请选择优先级",
@@ -260,7 +229,7 @@ export default {
             placeholder: "请选择办公地点",
             clearable: true,
             span: 10,
-            dicData: officeLocationType,
+            dicData: TaskofficeLocationType.officeLocationType,
             rules: {
               required: true,
               message: "请选择办公地点",
@@ -268,10 +237,23 @@ export default {
             }
           },
           {
-            label: "接单人",
-            prop: "ordererName",
+            type: "tree",
+            label: "设备点位",
+            prop: "devicePoint",
+            placeholder: "请选择设备点位",
+            clearable: true,
             span: 10,
-            formslot: true,
+            props: {
+              label: "caption",
+              value: "id",
+              children: "deviceTreeList"
+            },
+            offset: 2,
+            rules: {
+              required: true,
+              message: "请选择设备点位",
+              trigger: "change"
+            },
             display: false
           },
           {
@@ -347,7 +329,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('user', ['userInfo']),
+    ...mapState("user", ["userInfo"]),
     paramsData() {
       return {
         taskName: this.model.taskName,
@@ -361,7 +343,8 @@ export default {
         urgent: this.model.urgent,
         taskPicList: this.model.taskPicList,
         delFlag: 1,
-        officeLocation: this.model.officeLocation
+        officeLocation: this.model.officeLocation,
+        deviceId:this.model.devicePoint
       };
     },
     taskId() {
@@ -663,7 +646,7 @@ export default {
         this.$router.push("/aboutMe");
       }
     },
-    resetChange() { },
+    resetChange() {},
     // 递归判断列表，把最后的children设为undefined
     getTreeData(data) {
       for (var i = 0; i < data.length; i++) {
@@ -812,6 +795,21 @@ export default {
       let res = await TaskManageApi.taskAdd(addTaskParams);
       this.toastMessage(res);
     },
+    async getTaskTypeList() {
+      let res = await TaskManageApi.getTaskTypeList();
+      if (res) {
+        this.$refs["newTaskForm"].setColumnByProp("taskType", {
+          dicData: res
+        });
+        this.model.taskType = res[0].id;
+      }
+    },
+    async getDevicePoint() {
+      let res = await TaskManageApi.getFindDevice();
+      this.$refs["newTaskForm"].setColumnByProp("devicePoint", {
+        dicData: res
+      });
+    },
     async operateLogList() {
       let res = await TaskManageApi.operateLogList({
         taskId: this.taskId.id
@@ -839,7 +837,8 @@ export default {
       this.detailTask();
       this.operateLogList();
     }
-    // console.log("judgeOperation", localStorage.getItem("judgeOperation"));
+    this.getTaskTypeList();
+    this.getDevicePoint();
     if (localStorage.getItem("judgeOperation") == 1) {
       this.findTempTask();
     }
