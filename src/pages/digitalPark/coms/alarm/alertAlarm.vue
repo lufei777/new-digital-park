@@ -86,7 +86,7 @@
         $(".alert-alarm1").animate({bottom:"50px"},600)
         this.hideTimer = setTimeout(()=>{
           $(".alert-alarm-box").empty()
-        },2000)
+        },5000)
 
 
         // console.log("a",this.a1)
