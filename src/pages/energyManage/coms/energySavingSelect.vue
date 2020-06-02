@@ -47,273 +47,282 @@
         <span>注:红色字体为超标</span>
         <em>{{tabTitle}}</em>
       </div>
-      <z-table :ref="tableConfig.ref" :options="tableConfig" ></z-table>
+      <z-table :ref="tableConfig.ref" :options="tableConfig"></z-table>
       <TreeModal :tree-modal-config="treeModalConfig"/>
     </div>
   </div>
 </template>
 
 <script>
-import CommonApi from "../../../service/api/common";
-import EnergyApi from "../../../service/api/energy";
-import TreeModal from '../../../components/treeModal/index'
-import moment from "moment";
-import CommonFun from '../../../utils/commonFun'
-import {isZG} from '@/utils/project';
-export default {
-  name: "EnergySavingSelect",
-  components: {
-    TreeModal
-  },
-  props: ["energySaveFlag"],
-  data() {
-    let _this = this;
-    return {
-      curEnergy: "", //楼层检索
-      curEnergyId:"0",
-      energyA3Text:'',
-      energyA3: "1", //建筑群
-      energySubentry: "", //能源分项
-      indexEnergy: "1", //指标选择
-      energySubentryData: [],
-      floorSelectData: "",
-      // startTime: moment(new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000*10)).format("YYYY-MM"),
-      startTime: isZG()?moment().format('YYYY-MM'):"2019-02",
-      page: 1,
-      tableData: {
-        total: 0
-      },
-      currentPage: 1,
-      tableConfig: {
-        ref: "tableRef",
-        data: [],
-        columnConfig: [
-          {
-            label:'建筑楼层',
-            prop:'tempProp1'
-          },
-          {
-            label:'参考指标',
-            prop:'tempProp2'
-          },
-          {
-            label:'各时间指标',
-            prop:'tempProp3'
-          }
-        ],
-        uiConfig: {
-          height: "auto", //"", //高度
-          pagination: {
-            //是否分页，分页是否自定义
-            layout: "total,->, prev, pager, next, jumper",
-            pageSizes: [10, 20, 50],
-            handler(pageSize, currentPage, table) {
-               _this.handleCurrentChange(currentPage)
+  import CommonApi from "../../../service/api/common";
+  import EnergyApi from "../../../service/api/energy";
+  import TreeModal from '../../../components/treeModal/index'
+  import moment from "moment";
+  import CommonFun from '../../../utils/commonFun'
+  import {isZG} from '@/utils/project';
+
+  export default {
+    name: "EnergySavingSelect",
+    components: {
+      TreeModal
+    },
+    props: ["energySaveFlag"],
+    data() {
+      let _this = this;
+      return {
+        curEnergy: "", //楼层检索
+        curEnergyId: "0",
+        energyA3Text: '',
+        energyA3: "1", //建筑群
+        energySubentry: "", //能源分项
+        indexEnergy: "1", //指标选择
+        energySubentryData: [],
+        floorSelectData: "",
+        // startTime: moment(new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000*10)).format("YYYY-MM"),
+        startTime: isZG() ? moment().format('YYYY-MM') : "2019-02",
+        page: 1,
+        tableData: {
+          total: 0
+        },
+        currentPage: 1,
+        tableConfig: {
+          ref: "tableRef",
+          data: [],
+          columnConfig: [
+            {
+              label: '建筑楼层',
+              prop: 'tempProp1'
+            },
+            {
+              label: '参考指标',
+              prop: 'tempProp2'
+            },
+            {
+              label: '各时间指标',
+              prop: 'tempProp3'
             }
+          ],
+          uiConfig: {
+            height: "auto", //"", //高度
+            pagination: {
+              //是否分页，分页是否自定义
+              layout: "total,->, prev, pager, next, jumper",
+              pageSizes: [10, 20, 50],
+              handler(pageSize, currentPage, table) {
+                _this.handleCurrentChange(currentPage)
+              }
+            }
+          },
+          tableMethods: {
+            sortChange: _this.sortTable
           }
         },
-        tableMethods: {
-          sortChange: _this.sortTable
+        treeModalConfig: {
+          treeList: [],
+          treeConfig: {
+            treeProps: {
+              label: "floor",
+              children: 'nodes'
+            },
+            defaultExpandedkeys: [],
+          },
+          showModal: false,
+          onClickSureBtnCallback: this.onClickModalSureBtn,
+          onClickCancelBtnCallback: this.onClickModalCancelBtn
+        }
+      };
+    },
+    computed: {
+      tabTitle() {
+        let tmp = this.energySubentryData.find(item => {
+          return item.id == this.energySubentry;
+        });
+        if (this.energySaveFlag == 1) {
+          return `${this.startTime || moment(new Date(), 'YYYY-MM')}逐日全天${tmp ? tmp.name : '设备用量'}统计`;
+        } else {
+          return `${this.startTime || moment(new Date(), 'YYYY-MM')}逐日夜间${tmp ? tmp.name : '设备用量'}统计`;
         }
       },
-      treeModalConfig:{
-          treeList:[],
-          treeConfig:{
-             treeProps:{
-              label:"floor",
-              children:'nodes'
-            },
-            defaultExpandedkeys:[],
-          },
-          showModal:false,
-          onClickSureBtnCallback:this.onClickModalSureBtn,
-          onClickCancelBtnCallback:this.onClickModalCancelBtn
+      commonParams() {
+        return {
+          moment: this.startTime,
+          lou: this.energyA3,
+          standard: this.indexEnergy,
+          type: this.energySubentry,
+          parent: this.curEnergyId,
+          page: this.page,
+          size: 10
+        };
+      },
+    },
+    methods: {
+      onTimeChange() {
+      },
+      async getEnergyList() {
+        let res = await CommonApi.getEnergyListByGroup();
+        if (isZG()) {
+          if (this.energySaveFlag == 3 || this.energySaveFlag == 4) {
+            this.energySubentryData = [res[1]]
+            this.energySubentry = res[1].id;
+          } else if (this.energySaveFlag == 1 || this.energySaveFlag == 2) {
+            this.energySubentryData = [res[0]]
+            this.energySubentry = res[0].id;
+          }
+        } else {
+          if (this.energySaveFlag == 3 || this.energySaveFlag == 4) {
+            this.energySubentryData = res[1].energyType;
+            this.energySubentryData.unshift({
+              energyType: null,
+              id: 37,
+              name: "水",
+              parent: 37
+            })
+            console.log("this.energySubentryData", this.energySubentryData)
+            this.energySubentry = res[1].energyType[0].id;
+          } else if (this.energySaveFlag == 1 || this.energySaveFlag == 2) {
+            this.energySubentryData = res[0].energyType;
+            this.energySubentry = res[0].energyType[0].id;
+          }
         }
-    };
-  },
-  computed: {
-    tabTitle() {
-      let tmp = this.energySubentryData.find(item => {
-        return item.id == this.energySubentry;
-      });
-      if (this.energySaveFlag == 1) {
-        return `${this.startTime || moment(new Date(),'YYYY-MM')}逐日全天${tmp ? tmp.name : '设备用量'}统计`;
-      } else {
-        return `${this.startTime || moment(new Date(),'YYYY-MM')}逐日夜间${tmp ? tmp.name : '设备用量'}统计`;
-      }
-    },
-    commonParams() {
-      return {
-        moment: this.startTime,
-        lou: this.energyA3,
-        standard: this.indexEnergy,
-        type: this.energySubentry,
-        parent: this.curEnergyId,
-        page: this.page,
-        size: 10
-      };
-    }
-  },
-  methods: {
-    onTimeChange() {},
-    async getEnergyList() {
-      let res = await CommonApi.getEnergyListByGroup();
-      if (this.energySaveFlag == 3 || this.energySaveFlag == 4) {
-        this.energySubentryData = res[1].energyType;
-        this.energySubentryData.unshift({
-            energyType: null,
-            id: 37,
-            name: "水",
-            parent: 37
-        })
-        console.log("this.energySubentryData",this.energySubentryData)
-        this.energySubentry = res[1].energyType[0].id;
-      } else if (this.energySaveFlag == 1 || this.energySaveFlag == 2) {
-        this.energySubentryData = res[0].energyType;
-        this.energySubentry = res[0].energyType[0].id;
-      }
-
-      //中钢
-      // if (this.energySaveFlag == 3 || this.energySaveFlag == 4) {
-      //   this.energySubentryData = [res[1]]
-      //   this.energySubentry = res[1].id;
-      // } else if (this.energySaveFlag == 1 || this.energySaveFlag == 2) {
-      //   this.energySubentryData = [res[0]]
-      //   this.energySubentry = res[0].id;
-      // }
-
-    },
-    async getAllFloorOfA3() {
-      this.treeModalConfig.treeList = await CommonApi.getAllFloorOfA3()
-      this.curEnergyId = this.treeModalConfig.treeList[0].floorId
-      this.energyA3Text = this.treeModalConfig.treeList[0].floor
-      this.curEnergy = this.treeModalConfig.treeList[0].floor
-      this.treeModalConfig.treeConfig.defaultExpandedkeys=[this.treeModalConfig.treeList[0].floorId]
-    },
-    async getList() {
-      let res;
-      if (this.energySaveFlag == 1 || this.energySaveFlag == 3) {
-        res = await EnergyApi.getEnergySavingElec(this.commonParams);
-      } else if (this.energySaveFlag == 2 || this.energySaveFlag == 4) {
-        res = await EnergyApi.getEnergySavingNight(this.commonParams);
-      }
-      if (res && res.value) {
-        var title = res.white
-        let tmp = [];
-        res.value.map(item => {
-          let obj = {};
-          title.map((tit, index) => {
+      },
+      async getAllFloorOfA3() {
+        this.treeModalConfig.treeList = await CommonApi.getAllFloorOfA3()
+        this.curEnergyId = this.treeModalConfig.treeList[0].floorId
+        this.energyA3Text = this.treeModalConfig.treeList[0].floor
+        this.curEnergy = this.treeModalConfig.treeList[0].floor
+        this.treeModalConfig.treeConfig.defaultExpandedkeys = [this.treeModalConfig.treeList[0].floorId]
+      },
+      async getList() {
+        let res;
+        if (this.energySaveFlag == 1 || this.energySaveFlag == 3) {
+          res = await EnergyApi.getEnergySavingElec(this.commonParams);
+        } else if (this.energySaveFlag == 2 || this.energySaveFlag == 4) {
+          res = await EnergyApi.getEnergySavingNight(this.commonParams);
+        }
+        if (res && res.value) {
+          var title = res.white
+          let tmp = [];
+          res.value.map(item => {
+            let obj = {};
+            title.map((tit, index) => {
               obj[tit] = item[index];
+            });
+            tmp.push(obj);
           });
-          tmp.push(obj);
-        });
-        let columnConfig=[]
-          for(let key in tmp[0]){
+          let columnConfig = []
+          for (let key in tmp[0]) {
             let widthSet
-            if(Object.keys(tmp[0]).length>14) {
+            if (Object.keys(tmp[0]).length > 14) {
               widthSet = 110
             }
-               columnConfig.push({
-                 label:key,
-                 prop:key,
-                 width:widthSet,
-                 formatter:function(row,value){
-                   if (value > parseFloat(row.参考指标)) {
-                     return `<span class="styleRed">${value}</span>`;
-                   } else {
-                     return `<span>${ value ? value : "--"}</span>`;
-                   }
-                  },
-               })
+            columnConfig.push({
+              label: key,
+              prop: key,
+              width: widthSet,
+              formatter: function (row, value) {
+                if (value > parseFloat(row.参考指标)) {
+                  return `<span class="styleRed">${value}</span>`;
+                } else {
+                  return `<span>${value ? value : "--"}</span>`;
+                }
+              },
+            })
           }
           this.tableConfig.columnConfig = columnConfig;
           this.tableConfig.data = tmp;
           this.tableConfig.uiConfig.pagination.total = res.total;
           this.tableData.total = res.total
-      } else {
+        } else {
           this.tableConfig.columnConfig = [];
           this.tableConfig.data = [];
           this.tableConfig.uiConfig.pagination.total = 0;
           this.tableData.total = 0
-      }
-    },
-    async exportList() {
-      let url;
-      let params = "";
-      for (let key in this.commonParams) {
-        params += key + "=" + this.commonParams[key] + "&";
-      }
-      if (this.energySaveFlag == 1 || this.energySaveFlag == 3) {
-        url = `/vibe-web/energyCount/energy/elec/export`;
-      } else if (this.energySaveFlag == 2 || this.energySaveFlag == 4) {
-        url = `/vibe-web/energyCount/energy/night/export`;
-      }
-      CommonFun.exportMethod({
-        url,
-        params
-      },this)
-    },
-    onShowModal(){
-        this.treeModalConfig.showModal=true
+        }
       },
-       onClickModalSureBtn(val){
+      async exportList() {
+        let url;
+        let params = "";
+        for (let key in this.commonParams) {
+          params += key + "=" + this.commonParams[key] + "&";
+        }
+        if (this.energySaveFlag == 1 || this.energySaveFlag == 3) {
+          url = `/vibe-web/energyCount/energy/elec/export`;
+        } else if (this.energySaveFlag == 2 || this.energySaveFlag == 4) {
+          url = `/vibe-web/energyCount/energy/night/export`;
+        }
+        CommonFun.exportMethod({
+          url,
+          params
+        }, this)
+      },
+      onShowModal() {
+        this.treeModalConfig.showModal = true
+      },
+      onClickModalSureBtn(val) {
         this.curEnergyId = val.floorId
         this.curEnergy = val.floor
-        this.treeModalConfig.showModal=false
+        this.treeModalConfig.showModal = false
       },
-      onClickModalCancelBtn(){
-        this.treeModalConfig.showModal=false
+      onClickModalCancelBtn() {
+        this.treeModalConfig.showModal = false
       },
-    handleCurrentChange(value) {
-      this.page = value;
+      handleCurrentChange(value) {
+        this.page = value;
+        this.getList();
+      },
+    },
+    async created() {
+      await this.getEnergyList();
+      await this.getAllFloorOfA3();
       this.getList();
     }
-  },
-  async created() {
-    await this.getEnergyList();
-    await this.getAllFloorOfA3();
-    this.getList();
-  }
-};
+  };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-.energy-saving-select {
-  .styleRed {
-    color: red;
-  }
-  .condition-box {
-    margin-bottom: 20px;
-    background: @white;
-    padding: 20px;
-  }
-  .tabulation {
-    background: @white;
-    padding: 20px;
-  }
-  .block {
+  .energy-saving-select {
+    .styleRed {
+      color: red;
+    }
+
+    .condition-box {
+      margin-bottom: 20px;
+      background: @white;
+      padding: 20px;
+    }
+
+    .tabulation {
+      background: @white;
+      padding: 20px;
+    }
+
+    .block {
       .el-select {
         width: 120px !important;
       }
     }
+
     .demonstrationFloor {
       .el-input {
         width: 70%;
       }
     }
-  .tab-title {
-    width: 57%;
-    height: 50px;
-    line-height: 50px;
-    span {
-      color: red;
-      font-size: 14px;
-    }
-    em {
-      font-style: normal;
-      font-size: 20px;
+
+    .tab-title {
+      width: 57%;
+      height: 50px;
+      line-height: 50px;
+
+      span {
+        color: red;
+        font-size: 14px;
+      }
+
+      em {
+        font-style: normal;
+        font-size: 20px;
+      }
     }
   }
-}
 </style>

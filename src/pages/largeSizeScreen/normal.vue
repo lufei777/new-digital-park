@@ -35,6 +35,7 @@
         <!--</transition>-->
       </draggable>
     </div>
+    <AlertAlarm />
   </div>
 </template>
 
@@ -46,6 +47,7 @@
   import CommonFun from '@/utils/commonFun'
   import { isYDScreen } from "@/utils/project";
   import YDHeader from '../digitalPark/coms/largeScreen/ydHeader'
+  import AlertAlarm from '../digitalPark/coms/alarm/alertAlarm'
 
   export default {
     name: 'LargeSizeScreenNormal',
@@ -53,7 +55,8 @@
       Header,
       draggable,
       ItemProModule,
-       YDHeader
+      YDHeader,
+      AlertAlarm
     },
     props: ['fullStatus'],  //配置页时是否是全屏状态:full noFull
     data() {
