@@ -87,6 +87,7 @@
               label: "floor",
               children: 'nodes'
             },
+            nodeKey:'floorId',
             defaultExpandedkeys: [],
           },
           showModal: false,
@@ -168,6 +169,7 @@
           this.energyList = tmp
         }
         this.searchParams.energyType = res[0].id
+        this.setColumnUnit(res[0])
       },
       async getAllFloorOfA3() {
         let res = await CommonApi.getAllFloorOfA3()
@@ -241,11 +243,20 @@
         this.curPage = page
       },
       onClickSearchBtn() {
+        let tmp = this.energyList.find((item)=>{
+          return item.id==this.searchParams.energyType
+        })
+        this.setColumnUnit(tmp)
         this.getSpaceStandardTree()
       },
       async setStandardValue() {
         await EnergyApi.setStandardValue()
-      }
+      },
+      setColumnUnit(obj){
+        let tmp = this.tableConfig.columnConfig
+        tmp[tmp.length-1].label ='自定义标杆值 '+ obj.unit
+      },
+
     },
     async mounted() {
       await this.getEnergyList()

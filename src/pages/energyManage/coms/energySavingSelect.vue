@@ -124,6 +124,7 @@
               label: "floor",
               children: 'nodes'
             },
+            nodeKey:'floorId',
             defaultExpandedkeys: [],
           },
           showModal: false,
