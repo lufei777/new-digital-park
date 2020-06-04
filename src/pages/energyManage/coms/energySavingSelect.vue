@@ -49,6 +49,7 @@
       </div>
       <z-table :ref="tableConfig.ref" :options="tableConfig"></z-table>
       <TreeModal :tree-modal-config="treeModalConfig"/>
+      <DiagnoseTrend :show-modal="showTrendModal"/>
     </div>
   </div>
 </template>
@@ -60,11 +61,13 @@
   import moment from "moment";
   import CommonFun from '../../../utils/commonFun'
   import {isZG} from '@/utils/project';
+  import DiagnoseTrend from './diagnoseTrend'
 
   export default {
     name: "EnergySavingSelect",
     components: {
-      TreeModal
+      TreeModal,
+      DiagnoseTrend
     },
     props: ["energySaveFlag"],
     data() {
@@ -124,12 +127,14 @@
               label: "floor",
               children: 'nodes'
             },
+            nodeKey:'floorId',
             defaultExpandedkeys: [],
           },
           showModal: false,
           onClickSureBtnCallback: this.onClickModalSureBtn,
           onClickCancelBtnCallback: this.onClickModalCancelBtn
-        }
+        },
+        showTrendModal:true
       };
     },
     computed: {

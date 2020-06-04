@@ -1867,6 +1867,8 @@ class commonFun {
   loadPage(item,largeScreenFlag) {
     //客户端关闭视频
     window.closeVideoWin && window.closeVideoWin()
+    window.closeClientPage && window.closeClientPage()
+
 
     //激活菜单
     store.commit("digitalPark/activeMenuIndex", this.setMenuIndex(item))
