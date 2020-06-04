@@ -88,7 +88,8 @@ export default {
           }
         }
       },
-      deleteRowShow: true
+      deleteRowShow: true,
+      deviceId:""
     };
   },
   computed: {
@@ -161,7 +162,8 @@ export default {
         { label: "创建人", prop: "founderName" },
         { label: "处理人", prop: "username" },
         { label: "地点", prop: "officeLocation" },
-        { label: "补录", prop: "isSupplementText" }
+        { label: "补录", prop: "isSupplementText" },
+        { label: "设备点位", prop: "caption" }
       ];
       this.tableData.columnConfig = labelList;
       let res = await TaskManageApi.taskList({
@@ -171,6 +173,7 @@ export default {
       });
       if (res && res.list) {
         res.list.map((item, ind) => {
+          this.deviceId = item.deviceId
           if (this.taskActiveName == "third") {
             switch (item.status) {
               case "2":
@@ -295,6 +298,15 @@ export default {
     taskPosition(val){
       console.log("val",val)
       // window.parent.FindAssetLocation()
+      if(val.row.deviceId && type=="type") {
+        //  window.FindAssetLocation && window.FindAssetLocation(val.row.deviceId +'')
+         window.parent.FindAssetLocation &&  window.parent.FindAssetLocation(val.row.deviceId+'')
+      } else {
+         this.$message({
+          type: "warning",
+          message: "没有可定位的设备!"
+        });
+      }
     },
     editRow(val) {
       if (this.taskActiveName == "second") {
