@@ -1,14 +1,15 @@
 <template>
   <div>
     <el-pagination
+      :current-page.sync="curPage"
+      v-bind="paginationConfig"
+      :page-size="size || pageSizes[0]"
+      :total="total"
       @size-change="sizeChange"
       @current-change="currentChange"
-      :current-page.sync="curPage"
-      :page-sizes="paginationConfig.pageSizes"
-      :page-size="size || pageSizes[0]"
-      :layout="paginationConfig.layout"
-      :total="total"
-    ></el-pagination>
+    >
+      <slot></slot>
+    </el-pagination>
   </div>
 </template>
 <script>
