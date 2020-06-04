@@ -16,7 +16,7 @@
         <div v-for="item in proModuleList"
              :key="item.id"
              :class="[type==3?'large-item-left-pro':'item-left-pro','hover-pointer',item.activeFlag?'active-pro':'']"
-             @click="onClickItemProModule(item)">{{item.name}}
+             @click="onClickItemProModule(item)">{{item.menuName}}
         </div>
       </div>
       <div class="module-content-list" v-show="!isFull">

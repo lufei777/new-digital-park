@@ -48,7 +48,7 @@
         <!--<iframe v-if="isyd" src="../../../../static/clientModel/ydCityHomePage/index.html"-->
                 <!--frameborder="0"-->
                 <!--class="unity-frame"></iframe>-->
-        <!--<AlertAlarm />-->
+        <AlertAlarm v-if="pageFlag==1"/>
       </div>
       <div class="dashboard-right">
         <draggable :list="proModuleList2"
