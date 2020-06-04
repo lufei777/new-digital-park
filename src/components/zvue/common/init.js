@@ -40,9 +40,9 @@ export default function (type) {
       },
       controlSize() {
         if (isCrud) {
-          return this.tableOption.uiConfig ? this.tableOption.uiConfig.size || 'small' : 'small';
+          return this.tableOption.uiConfig ? this.tableOption.uiConfig.size || 'medium' : 'medium';
         } else {
-          return this.tableOption.size || 'small';
+          return this.tableOption.size || 'medium';
         }
       }
     },

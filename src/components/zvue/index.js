@@ -71,9 +71,6 @@ if (typeof window !== 'undefined' && window.Vue) {
     install(window.Vue);
 }
 
-let a = {};
-console.log(a?.a);
-
 export default {
     author: 'lxh',
     version: '1.5',
