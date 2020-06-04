@@ -64,9 +64,8 @@
       let _this = this
       let checkQuantity = (rule, value, callback) => {
         if ((!Number(value) || value < 0) &&
-          (value + '').trim() != '' && value !== null &&
-          value!=0
-        ) {
+          (value + '').trim() != '' &&
+          value !== null && value != 0) {
           return callback({message: "请输入正数"});
         }
         return callback();
@@ -87,7 +86,7 @@
               label: "floor",
               children: 'nodes'
             },
-            nodeKey:'floorId',
+            nodeKey: 'floorId',
             defaultExpandedkeys: [],
           },
           showModal: false,
@@ -203,11 +202,21 @@
         return pageInfo.pageCount * (this.curPage - 1) + index + 1
       },
       async rowUpdate(data, index, callback) {
-        console.log("baocun", data)
+        // console.log("baocun", data)
+        if (!data.reckonValue || data.reckonValue.trim() == '') {
+          data.reckonValue = null
+        }
+        let tmp = [{
+          "spaceId": data.spaceId,
+          "energyType": data.energyType,
+          "reckonValue": data.reckonValue,
+          "dateTypeCode": data.dateTypeCode
+        }]
+        await EnergyApi.setStandardValue(tmp)
         callback()
       },
       async rowEdit(obj, index) {
-        console.log("edit", obj)
+        // console.log("edit", obj)
         // this.curRowIndex = index
         // this.curDetail = obj
         // await this.editAssetUseDetail({ ...obj, ...{ isEdit: 1 } })
@@ -216,8 +225,8 @@
         // await this.editAssetUseDetail({ ...obj.preDetail, ...{ isEdit: 0 } })
       },
       selectionChange(data) {
-        console.log(data)
-        console.log(this.tableConfig.data)
+        // console.log(data)
+        // console.log(this.tableConfig.data)
         this.tableConfig.data.map((item) => {
           item.$cellEdit = false
         })
@@ -243,8 +252,8 @@
         this.curPage = page
       },
       onClickSearchBtn() {
-        let tmp = this.energyList.find((item)=>{
-          return item.id==this.searchParams.energyType
+        let tmp = this.energyList.find((item) => {
+          return item.id == this.searchParams.energyType
         })
         this.setColumnUnit(tmp)
         this.getSpaceStandardTree()
@@ -252,9 +261,9 @@
       async setStandardValue() {
         await EnergyApi.setStandardValue()
       },
-      setColumnUnit(obj){
+      setColumnUnit(obj) {
         let tmp = this.tableConfig.columnConfig
-        tmp[tmp.length-1].label ='自定义标杆值 '+ obj.unit
+        tmp[tmp.length - 1].label = '自定义标杆值 ' + obj.unit
       },
 
     },
