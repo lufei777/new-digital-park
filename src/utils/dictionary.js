@@ -395,6 +395,36 @@ export const ExportData = {
   ]
 }
 
+// 资产类型
+export const AssetType = {
+  //空间，表示一个房间
+  SPACE: {
+    kind: 0,
+    text: 'SPACE'
+  },
+  //设备
+  DEVICE: {
+    kind: 1,
+    text: 'DEVICE',
+    catalogId: 2002
+  },
+  //服务器
+  SERVICE: {
+    kind: 2,
+    text: 'SERVICE'
+  },
+  //监测器
+  PROBE: {
+    kind: 3,
+    text: 'PROBE'
+  },
+  //控制器
+  CONTROL: {
+    kind: 4,
+    text: 'CONTROL'
+  }
+}
+
 // 错误提示
 export const AssetState = {
   NORMAL: {

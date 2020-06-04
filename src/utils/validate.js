@@ -38,3 +38,12 @@ export const validMail = (rule, value, callback) => {
     callback(new Error("请输入正确的邮箱"));
   }
 };
+
+// 验证非中文
+export const validNotChinese = (rule, value, callback) => {
+  if (/.*[\u4e00-\u9fa5]+.*$/.test(value)) {
+    callback(new Error("不能含有中文"))
+  } else {
+    callback();
+  }
+}

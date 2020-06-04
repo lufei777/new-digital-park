@@ -45,16 +45,17 @@
 
 #### ElementUI 组件修改
 
-> 由于 ElementUI 官方的一些组件不满足项目需求，因此修改打包使用，所以每次更新插件时，可能需要修改相对应的文件再打包，否则可能会影响相应的功能，修改情况如下：
+> 由于 `ElementUI` 官方的一些组件不满足项目需求，因此修改打包使用，所以每次更新插件时，可能需要修改相对应的文件再打包，否则可能会影响相应的功能，修改情况如下：
+> 注：此处`element`为从`element`官方`GitHub fork`下来的分支。
 
 1. 级联(cascader)
 
-   > 原因：官方级联的`lazyload`只支持从当`resolve([])传进来的数组中`读取相应的选项，修改后可从`上一级和当前传进来的数组`中获取选项
+   > 官方级联的`lazyload`只支持从当`resolve([])传进来的数组中`读取相应的选项，修改后可从`上一级和当前传进来的数组`中获取选项
 
-   - 修改 cascader-panel.vue 文件，306 行
+   - 修改 `element/cascader-panel/src/cascader-panel.vue` 文件，306 行
 
    ```javascript
-   // 306行
+   //306行
    const valueKey = this.config.value;
    //改为
    const valueKey = node.hasChildren ? 'value' : this.config.value;
@@ -70,6 +71,22 @@
    //1417 改为 `var valueKey = node.hasChildren ? 'value' : _this5.config.value;`
    //1420 改为 `if (Array.isArray(dataList) && (node.children || dataList).filter(function (item) {`
    ```
+2. 树(Tree)
+    > 官方`tree`的`lazy`模式，只可一层一层获取，即使上一层有`children`，在使用`lazy`时也会不渲染`children`。修改过后如果有`children`，则将其拼接在请求数据之前。
+    - 修改 `element/packages/tree/src/model/node.js` 文件
+    ```javascript
+    // loadData函数中的resolve函数
+    // 在this.childNodes = [];下方添加即可
+    const props = this.store.props;
+    let childrenKey = 'children';
+    if (props) {
+        childrenKey = props.children || 'children';
+    }
+    let hasChildren = this.data[childrenKey] ? !!this.data[childrenKey].length : false;
+    if (hasChildren) {
+        children = this.data[childrenKey].concat(children);
+    }
+    ```
 
 #### 组件封装
 
