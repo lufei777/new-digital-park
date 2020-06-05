@@ -49,7 +49,7 @@
       </div>
       <z-table :ref="tableConfig.ref" :options="tableConfig"></z-table>
       <TreeModal :tree-modal-config="treeModalConfig"/>
-      <DiagnoseTrend :show-modal="showTrendModal"/>
+      <!--<DiagnoseTrend :show-modal="showTrendModal"/>-->
     </div>
   </div>
 </template>
