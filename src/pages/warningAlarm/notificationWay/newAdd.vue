@@ -117,8 +117,8 @@ export default {
           //自定义按钮
           {
             prop: "btn",
-            span: 6,
-            offset:9,
+            span: 8,
+            offset:8,
             formslot: true
           }
         ]

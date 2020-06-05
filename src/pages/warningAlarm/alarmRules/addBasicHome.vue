@@ -315,7 +315,6 @@ export default {
             ref: "formData",
             labelWidth: "100",
             size: "medium",
-            size: "medium",
             menuPosition: "right",
             menuBtn: false,
             forms: [
@@ -359,7 +358,7 @@ export default {
     },
     //单击弹出框的确认按钮
     goAlarmRules(){
-        this.$router.push('/alarmRules');
+        this.$router.push('/warningalarm/alarmRules');
         this.dialogFormVisible = false;
     }
   },

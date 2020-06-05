@@ -15,16 +15,16 @@
         >
           <template
             slot="btn"
-            slot-scope="{disabled,size}"
+            slot-scope="obj"
           >
             <div>
               <template v-if="!dis">
                 <el-button
-                  :size="size"
+                  :size="obj.size"
                   type="primary"
                   @click="open()"
                 >应答</el-button>
-                <el-button @click="clearForm(obj)">返回</el-button>
+                <el-button @click="goBack(obj)">返回</el-button>
               </template>
 
               <el-button
@@ -63,13 +63,13 @@
               @submit="submit"
               @reset-change="resetChange"
             >
-              <template slot='btn'>
+              <template slot='btn' slot-scope="obj">
                 <div>
                   <el-button
                     type="primary"
                     @click="makeSuer"
                   >确认</el-button>
-                  <el-button>重置</el-button>
+                  <el-button @click="resetForm">重置</el-button>
                 </div>
               </template>
             </z-form>
@@ -89,7 +89,7 @@
                     @click="sure"
                     type="primary"
                   >确认</el-button>
-                  <el-button>重置</el-button>
+                  <el-button @click="sendRest" >重置</el-button>
                 </div>
               </template>
             </z-form>
@@ -121,10 +121,13 @@ const alarmResponse = WarningAlerm.alarmResponse;
 const priority = WarningAlerm.priority;
 // 派单==》指派
 const handingPerson = WarningAlerm.handingPerson;
+
 export default {
   name: "seeDetails",
   data() {
     return {
+      // 传过来的信息
+      msg:{},
       //控制派单和应答
       dis: false,
       // 表单的配置项,
@@ -139,7 +142,7 @@ export default {
             labelWidth: "100",
             menuPosition: "right",
             menuBtn: false,
-            disabled: true,
+            textMode: false,
             // labelPosition: "left",
             forms: [
               //报警名称
@@ -147,6 +150,7 @@ export default {
                 type: "input",
                 label: "报警名称:",
                 placeholder: " ",
+                prop:'caption',
                 span: 6,
                 offset: 1
               },
@@ -155,6 +159,7 @@ export default {
                 type: "input",
                 label: "开始时间:",
                 placeholder: " ",
+                prop: "startTime",
                 span: 6,
                 offset: 1
               },
@@ -163,6 +168,7 @@ export default {
                 type: "input",
                 label: "报警描述:",
                 placeholder: " ",
+                prop: "errorMessage",
                 span: 6,
                 offset: 1
               },
@@ -171,6 +177,7 @@ export default {
                 type: "input",
                 label: "报警级别:",
                 placeholder: " ",
+                prop: "eventRank",
                 span: 6,
                 offset: 1
               },
@@ -179,6 +186,7 @@ export default {
                 type: "input",
                 label: "状态:",
                 placeholder: " ",
+                prop: "handled",
                 span: 6,
                 offset: 1
               },
@@ -187,6 +195,7 @@ export default {
                 type: "input",
                 label: "子系统:",
                 placeholder: " ",
+                prop: "system" ,
                 span: 6,
                 offset: 1
               },
@@ -195,6 +204,7 @@ export default {
                 type: "input",
                 label: "设备类型:",
                 placeholder: " ",
+                prop: "catalogId",
                 span: 6,
                 offset: 1
               },
@@ -203,6 +213,7 @@ export default {
                 type: "input",
                 label: "设备:",
                 placeholder: " ",
+                prop: "deviceName",
                 span: 6,
                 offset: 1
               },
@@ -211,6 +222,7 @@ export default {
                 type: "input",
                 label: "设备点位:",
                 placeholder: " ",
+                prop: "devicePoint",
                 span: 6,
                 offset: 1
               },
@@ -218,7 +230,7 @@ export default {
               {
                 type: "input",
                 label: "报警类型:",
-                placeholder: " ",
+                prop: "state",
                 span: 6,
                 offset: 1
               },
@@ -277,8 +289,8 @@ export default {
               },
               {
                 prop: "btn",
-                span: 10,
-                offset: 6,
+                span: 14,
+                offset: 5,
                 formslot: true
               }
             ]
@@ -289,7 +301,7 @@ export default {
         {
           formData: {
             ref: "formData3",
-            labelWidth: "100",
+            labelWidth: "120",
             menuPosition: "center",
             menuBtn: false,
             // disabled: true,
@@ -316,20 +328,25 @@ export default {
               },
               // 开始时间 input 自动回西安当前时间
               {
-                type: "input",
-                label: "工单标题",
+                type: "time",
+                label: "开始时间",
                 prop: "startTiem",
-                placeholder: "自动回显当前时间",
+                valueDefault: new Date(),
+                valueFormat: 'yyyy-MM-dd hh:mm:ss',
+                format:"yyyy-MM-dd hh:mm:ss",
                 span: 12,
                 row: true,
                 offset: 5
               },
               // 预计结束时间 时间选择器 input
               {
-                type: "input",
-                label: "工单标题",
+                type: "time",
+                label: "预计结束时间",
                 prop: "startTime",
-                placeholder: "自动回显当前时间",
+                placeholder: "用户可以自己选择",
+                valueDefault:new Date(),
+                valueFormat:'yyyy-MM-dd hh:mm:ss',
+                format:"yyyy-MM-dd hh:mm:ss",
                 span: 12,
                 row: true,
                 offset: 5
@@ -375,7 +392,7 @@ export default {
               // 按钮
               {
                 prop: "btn",
-                span: 10,
+                span: 12,
                 offset: 6,
                 formslot: true
               }
@@ -385,13 +402,42 @@ export default {
       ]
     };
   },
-
+  created(){
+    var query = this.$route.query
+    if(query.flag){
+      this.model = {...query}
+      this.setForms[0].formData.textMode = true
+      if(query.mark){
+        this.open()
+      }
+    }else{
+      this.model = {...query}
+    }
+  },
   methods: {
+    
+    // 返回
+    goBack(){
+      this.$router.go(-1)
+    },
+    // 派单中的重置按钮
+    sendRest(){
+        // 获取表单中实例
+        var sendForm = this.$refs[this.setForms[2].formData.ref];
+        // console.log(sendForm)
+        // 清空表单
+        sendForm.resetForm()
+    },
+    // 应答的确认
+    resetForm(...args){
+      var zForm = this.$refs[this.setForms[1].formData.ref]
+      zForm.resetForm();
+    },
     // 报警派单弹窗中的 "确认"按钮
     sure() {
       this.dialogFormVisible = true;
       // 调转到报警信息管理页面
-      this.$router.push("/monitorAlarm");
+      this.$router.push("/warningalarm/monitorAlarm");
     },
     // 单击'派单'的按钮
     opensendOrder() {
@@ -454,11 +500,13 @@ export default {
       //
       .el-dialog {
         .content {
+          margin-top:0;
           .title {
             padding: 0 20px;
             display: flex;
             justify-content: space-between;
-            margin: 15px 0;
+            
+            // margin: 15px 0;
             /deep/.el-input__inner {
               border: 1px solid #ccc;
             }

@@ -2,7 +2,7 @@
   <!-- 报警信息处理 -->
   <div class="message-device-manage panel-container">
     <!-- 上半部分 -->
-    <div class=" p_top">
+    <div class=" p_top panel">
       <z-form
         :ref="formData.ref"
         :options="formData"
@@ -49,38 +49,43 @@ export default {
   name: "areaManage",
   data() {
     return {
+      off:false,
       model: {},
       formData: {
         ref: "formData",
         labelWidth: "100",
         size: "medium",
         menuPosition: "right",
+        textMode:false,
         menuBtn: false,
-        // labelPosition: "left",
         forms: [
           //   子系统
           {
             type: "select",
             label: "子系统",
-            span: 6,
-            offset: 8,
+            disabled:false,
+            // span: 6,
+            offset: 6,
             prop: "subSystem",
+            multiple:true,
             multiple: true,
-            tip: "可多选",
-            tipPlacement: "right",
+            // tip: "可多选",
+            // tipPlacement: "right",
             dicData: subSystem
           },
           // 报警级别
           {
             type: "select",
             label: "报警级别",
+            disabled:false,
             prop: "alarmLevel",
-            span: 6,
-            offset: 8,
+            // span: 6,
+            offset: 6,
             dicData: alarmLevel,
             multiple: true,
-            tip: "可多选",
-            tipPlacement: "right"
+            multiple:true,
+            // tip: "可多选",
+            // tipPlacement: "right"
           },
           //处理组名称
           {
@@ -88,24 +93,26 @@ export default {
             label: "处理组名称",
             placeholder: "安保部处理组A",
             prop: "grounpName",
-            offset: 8,
-            span: 6
+            disabled:false,
+            offset: 6,
+            // span: 6
           },
           //   选择人员
           {
             type: "select",
             label: "选择人员",
             prop: "handingPerson",
-            span: 6,
-            offset: 8,
+            disabled:false,
+            // span: 6,
+            offset: 6,
             dicData: handingPerson,
             multiple: true,
-            tip: "从人员信息中选择人员，可多选",
-            tipPlacement: "right"
+            // tip: "从人员信息中选择人员，可多选",
+            // tipPlacement: "right"
           },
           {
             prop: "btn",
-            span: 6,
+            span: 10,
             pull: 2,
             offset: 9,
             formslot: true
@@ -122,7 +129,17 @@ export default {
     batchDels() {},
     addTenant() {}
   },
-  mounted() {}
+  mounted() {},
+  created(){
+    // 获取路由的参数
+    var statue = this.$route.query
+    if(statue.flag){
+      this.model = {...statue}
+      this.formData.textMode = statue.flag
+    }else{
+      this.model = {...statue}
+    }
+  }
 };
 </script>
 

@@ -41,12 +41,12 @@
         </div>
         <!-- 弹出框中的表单 -->
         <z-form
-        :ref="setForms[1].formData.ref"
-        :options="setForms[1].formData"
-        v-model="model"
-        @submit="submit"
-        @reset-change="resetChange"
-      >
+          :ref="setForms[1].formData.ref"
+          :options="setForms[1].formData"
+          v-model="model"
+          @submit="submit"
+          @reset-change="resetChange"
+        >
         <template
           slot="btn"
           slot-scope="obj"
@@ -70,18 +70,26 @@
     <!-- 下半部分 -->
     <div class="warehouse-manage-table panel">
       <div class="operator-btn-box flex-row-reverse">
-
-        <el-button>导出</el-button>
-        <el-button @click="goAddBasic" type="primary">新建</el-button>
-        <el-button @click="orderEdit">批量编辑</el-button>
-        <el-button>批量删除</el-button>
-        <el-button>导入</el-button>
       </div>
       <!-- 表格部分 -->
       <z-table
         :ref="tableData.ref"
         :options="tableData"
       >
+      <template slot="operation" slot-scope="obj">
+            <el-button type="text" @click="propertyDetail(obj)">查看</el-button>
+            <el-button type="text" @click="propertyEdit(obj)">编辑</el-button>
+            <el-button type="text" @click="propertyDel(obj)">删除</el-button>
+      </template>
+
+
+      <template slot="custom-top" slot-scope="{size,disabled,selectedData}">
+          <el-button :disabled='!selectedData.length' >导出</el-button>
+          <el-button @click="goAddBasic" type="primary">新建</el-button>
+          <el-button @click="orderEdit">批量编辑</el-button>
+          <el-button>批量删除</el-button>
+          <el-button>导入</el-button>
+      </template>
       </z-table>
     </div>
   </div>
@@ -225,53 +233,39 @@ export default {
           }
         }
       ],
-
       tableData: {
-        ref: "tableData",
+        ref: "Table",
         customTop: true,
-        data: [],
-        columnConfig: [],
-        uiConfig: {
-          height: "auto", //"", //高度
-          selection: true, //是否多选
-          showIndex: false,
-          pagination: {
-            //是否分页，分页是否自定义
-            layout: "total,->, prev, pager, next, jumper",
-            pageSizes: [10, 20, 50],
-            handler(pageSize, currentPage, table) {
-              _this.handleCurrentChange(currentPage);
-            }
-          }
+        data:[],
+        customTopPosition: "right",
+        operation: {
+          width: 200
         },
-        btnConfig: {
-          prop: "operation",
-          label: "操作",
-          fixed: "right",
-          width: 200,
-          btns: [
-            {
-              label: "查看",
-              handler: function(row) {}
-            },
-            {
-              label: "编辑",
-              handler: function(row) {}
-            },
-            {
-              label: "删除",
-              handler: function(row) {}
-            }
-          ]
+        columnConfig: [ ],
+        uiConfig: {
+          height: "auto",
+          selection: true
         }
       }
     };
   },
 
   methods: {
+    // 查看
+    propertyDetail(obj){
+        // console.log(obj)
+        let seeEdit = {path:'/warningalarm/seeedit',query:{flag:true,...obj.row}}
+        this.$router.push(seeEdit)
+    },
+    // 编辑
+    propertyEdit(obj){
+      // console.log(obj)
+      let seeEdit = {path:'/warningalarm/seeedit',query:{flag:false,...obj.row}}
+      this.$router.push(seeEdit)
+    },
     // '新建'操作
    goAddBasic(){
-      this.$router.push('/addBasicSettings')
+      this.$router.push('/warningalarm/addBasicSettings')
     },
     // 批量编辑
     orderEdit() {
@@ -281,9 +275,19 @@ export default {
     closeDiolog(){
       this.dialogFormVisible = false;
     },
+    // 批量编辑的确认按钮
+    onClickSearchBtn(obj){
+      this.dialogFormVisible = false;
+    },
     submit() {},
     resetChange() {},
-    clearForm(obj) {},
+    clearForm(obj) {
+      // 获取顶部form表单
+      var zForm = this.$refs[this.setForms[0].formData.ref]
+      // 单击重置按钮时候，重置表单 方法在已经封装好的文档中  名称：resetForm
+      zForm.resetForm()
+      // console.log(zForm)
+    },
     getCleaningList() {
       // 来自CommonFun的模拟数据源 let res = CommonFun.messageDevice;
       let res = CommonFun.warningAlram;

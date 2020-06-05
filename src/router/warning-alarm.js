@@ -8,6 +8,8 @@ const SeeDetails = () => import('../pages/warningAlarm/alarminfoManagement/seeDe
 const AlarmRules = () => import('../pages/warningAlarm/alarmRules');
 // addBasicHome// 新增--基本设置
 const AddBasicHome = () => import('../pages/warningAlarm/alarmRules/addBasicHome.vue');
+// 查看和编辑
+const SeeEdit = () =>import('../pages/warningAlarm/alarmRules/seeEdit.vue')
 // 报警处理组管理=======================================
 const AlarmGrounp = () => import('../pages/warningAlarm/alarmProcess');
 // 新增处理组
@@ -16,6 +18,8 @@ const NewGrounp = () => import('../pages/warningAlarm/alarmProcess/newGrounp.vue
 const NotificationManger = () => import('../pages/warningAlarm/notificationWay');
 // 新增
 const NewAdd = () => import('../pages/warningAlarm/notificationWay/newAdd.vue');
+// 编辑
+const Edit = ()=> import('../pages/warningAlarm/notificationWay/edit.vue')
 
 // 预警报警的路由
 export default [
@@ -61,6 +65,12 @@ export default [
 				meta: { title: '基本设置' },
 				component: AddBasicHome
 			},
+			// 查看和编辑
+			{
+				path: 'seeedit',
+				name: 'seeedit',
+				component: SeeEdit
+			},
 
 			// 报警处理组管理=============================================================
 			{
@@ -89,7 +99,14 @@ export default [
 				name: 'NewAdd',
 				meta: { title: '新增' },
 				component: NewAdd
+			},
+			// 编辑
+			{
+				path:'edit',
+				name:'Edit',
+				component:Edit
 			}
+
 		]
 	}
 ];

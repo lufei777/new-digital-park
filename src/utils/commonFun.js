@@ -1557,7 +1557,7 @@ class commonFun {
     {
       subSystem:'非法入侵',
       deviceType:"入侵探测器",
-      deviceName:'点位类型',
+      deviceName:'1#入侵检测',
       pointType:'入侵报警',
       alarmRules:'1#会议室入侵报警规则',
       alarmLevel:"严重",
@@ -1704,6 +1704,28 @@ class commonFun {
       voice:'禁用',
       msg:'警用'
     },
+  ]
+  // 罗布林卡信息
+  // 保护工程
+  protectItem = [
+    {
+      projectName:"测试",
+      constructDept:"中铁一局",
+      supervisionDept:"方建集团",
+      startTime:"2020-5-31",
+    },
+    {
+      projectName:"测试",
+      constructDept:"中铁一局",
+      supervisionDept:"方建集团",
+      startTime:"2020-5-31",
+    },
+    {
+      projectName:"测试",
+      constructDept:"中铁一局",
+      supervisionDept:"方建集团",
+      startTime:"2020-5-31",
+    }
   ]
 
   largeScreenDefaultData = {

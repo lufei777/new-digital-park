@@ -32,12 +32,6 @@
     <!-- 下半部分 -->
     <div class="warehouse-manage-table panel">
       <div class="operator-btn-box flex-row-reverse">
-
-        <el-button>导出</el-button>
-        <el-button @click="gonewGrounp" type="primary">新建</el-button>
-        <el-button>批量编辑</el-button>
-        <el-button>批量删除</el-button>
-        <el-button>导入</el-button>
       </div>
       <!-- 表格部分 -->
       <z-table
@@ -45,6 +39,19 @@
         :ref="tableData.ref"
         :options="tableData"
       >
+      <template slot="operation" slot-scope="obj">
+            <el-button type="text" @click="propertyDetail(obj)">查看</el-button>
+            <el-button type="text" @click="propertyEdit(obj)">编辑</el-button>
+            <el-button type="text" @click="propertyDel(obj)">删除</el-button>
+      </template>
+
+      <template slot="custom-top" slot-scope = "{size,disabled,selectedData}">
+           <el-button :disabled='!selectedData.length' >导出</el-button>
+          <el-button @click="gonewGrounp" type="primary">新建</el-button>
+          <el-button>批量编辑</el-button>
+          <el-button>批量删除</el-button>
+          <el-button>导入</el-button>
+      </template>
       </z-table>
     </div>
   </div>
@@ -121,52 +128,51 @@ export default {
           }
         ]
       },
-      tableData: {
-        ref: "tableData",
+     tableData: {
+        ref: "Table",
         customTop: true,
-        data: [],
-        columnConfig: [],
-        uiConfig: {
-          height: "auto", //"", //高度
-          selection: true, //是否多选
-          showIndex: false,
-          pagination: {
-            //是否分页，分页是否自定义
-            layout: "total,->, prev, pager, next, jumper",
-            pageSizes: [10, 20, 50],
-            handler(pageSize, currentPage, table) {
-              _this.handleCurrentChange(currentPage);
-            }
-          }
+        data:[],
+        customTopPosition: "right",
+        operation: {
+          width: 200
         },
-        btnConfig: {
-          prop: "operation",
-          label: "操作",
-          fixed: "right",
-          width: 200,
-          btns: [
-            {
-              label: "查看",
-              handler: function(row) {}
-            },
-            {
-              label: "编辑",
-              handler: function(row) {}
-            },
-            {
-              label: "删除",
-              handler: function(row) {}
-            }
-          ]
+        columnConfig: [ ],
+        uiConfig: {
+          height: "auto",
+          selection: true
         }
       }
     };
   },
+  computed:{
+    zForm(){
+      return this.$refs[this.formData.ref]
+    },
+    zTabel(){
+      return this.$refs[this.tableData.ref]
+    }
+  },
 
   methods: {
+    // 查看
+    propertyDetail(obj){
+      // console.log(obj)
+      // 单击好看按钮去往只能增处理组 /warningalarm/newGrounp
+       // 给点一个状态设置所有表单为禁用状态
+      let newAdd = {path:'/warningalarm/newGrounp',query:{flag:true,...obj.row}}
+      this.$router.push(newAdd)
+     
+
+    },
+    // '编辑' 按钮
+    propertyEdit(obj){
+      // 需要携带当前行的信息
+      let newAdd = {path:'/warningalarm/newGrounp',query:{flag:false,...obj.row}}
+      this.$router.push(newAdd)
+    },
     // 新建按钮
     gonewGrounp(){
-      this.$router.push('/newGrounp');
+      this.$router.push('/warningalarm/newGrounp');
       console.log(111)
     },
     submit() {},
@@ -184,7 +190,18 @@ export default {
       this.tableData.data = res;
     },
     batchDels() {},
-    addTenant() {}
+    addTenant() {},
+    // '重置'按钮
+    clearForm(...args){
+      // console.log('重置',...args)
+      // console.log(this.zForm)
+      this.zForm.resetForm();
+    },
+    // '查询按钮'
+    onClickSearchBtn(obg){
+      
+      this.zForm.submit();
+    }
   },
   mounted() {
     this.getCleaningList();

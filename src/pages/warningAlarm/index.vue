@@ -47,14 +47,14 @@ export default {
   },
   data() {
     let localStorageMenuData = {
-      id: 169,
-      pid: 134,
+      // id: 169,
+      // pid: 134,
       name: "预警报警",
-      sequence: 4,
-      level: 2,
-      status: 2,
-      productBgUrl: "zulinguanli",
-      routeAddress: "/warningalarm",
+      // sequence: 4,
+      // level: 2,
+      // status: 2,
+      // productBgUrl: "zulinguanli",
+      // routeAddress: "/warningalarm",
       childNode: [
         {
           id: 171,
@@ -62,15 +62,14 @@ export default {
           name: "报警管理",
           level: 3,
           status: 1,
-          routeAddress: "/housepropertymanage",
           childNode: [
             {
-              id: 172,
-              pid: 169,
+              // id: 172,
+              // pid: 169,
               name: "报警信息管理",
-              level: 3,
-              status: 1,
-              routeAddress: "/tenantManage",
+              // level: 3,
+              // status: 1,
+              // routeAddress: "/tenantManage",
               childNode: [
                 {
                   id: 1721,
@@ -84,8 +83,22 @@ export default {
                   secondMenuId: 169,
                   icon: "iconzuhuguanli",
                   clientType: "0"
+                },
+                {
+                  id: 1721,
+                  pid: 169,
+                  name: "查看详情",
+                  level: 3,
+                  status: 1,
+                  routeAddress: "/warningalarm/seeDetails",
+                  childNode: [],
+                  firstMenuId: 134,
+                  secondMenuId: 169,
+                  icon: "iconzuhuguanli",
+                  clientType: "0"
                 }
               ]
+              // ================================================
             },
             {
               id: 173,
@@ -107,9 +120,37 @@ export default {
                   secondMenuId: 169,
                   icon: "iconzhangdanguanli",
                   clientType: "0"
+                },
+                // 查看和编辑
+                {
+                  id: 1741,
+                  pid: 169,
+                  name: "查看和编辑",
+                  level: 3,
+                  status: 1,
+                  routeAddress: "/warningalarm/seeedit",
+                  childNode: [],
+                  firstMenuId: 134,
+                  secondMenuId: 169,
+                  icon: "iconzhangdanguanli",
+                  clientType: "0"
+                },
+                {
+                  id: 1741,
+                  pid: 169,
+                  name: "新增报警规则",
+                  level: 3,
+                  status: 1,
+                  routeAddress: "/warningalarm/addBasicSettings",
+                  childNode: [],
+                  firstMenuId: 134,
+                  secondMenuId: 169,
+                  icon: "iconzhangdanguanli",
+                  clientType: "0"
                 }
               ]
             },
+            // ==================================================
             {
               id: 175,
               pid: 169,
@@ -117,11 +158,40 @@ export default {
               level: 3,
               status: 1,
               routeAddress: "/warningalarm/alarmGrounp",
-              childNode: [],
               firstMenuId: 134,
               secondMenuId: 169,
               icon: "iconzhangdanguanli",
-              clientType: "0"
+              clientType: "0",
+              childNode: [
+                {
+                  id: 1741,
+                  pid: 169,
+                  name: "报警处理组管理",
+                  level: 3,
+                  status: 1,
+                  routeAddress: "/warningalarm/alarmGrounp",
+                  childNode: [],
+                  firstMenuId: 134,
+                  secondMenuId: 169,
+                  icon: "iconzhangdanguanli",
+                  clientType: "0"
+                  // /warningalarm/newAdd
+                },
+                {
+                  id: 1741,
+                  pid: 169,
+                  name: "新增处理组",
+                  level: 3,
+                  status: 1,
+                  routeAddress: "/warningalarm/newGrounp",
+                  childNode: [],
+                  firstMenuId: 134,
+                  secondMenuId: 169,
+                  icon: "iconzhangdanguanli",
+                  clientType: "0"
+                  // /warningalarm/newAdd
+                }
+              ]
             },
             {
               id: 176,
@@ -129,16 +199,58 @@ export default {
               name: "通知方式管理",
               level: 3,
               status: 1,
-              routeAddress: "/warningalarm/notificationManger",
+              // routeAddress: "/warningalarm/notificationManger",
               childNode: [],
               firstMenuId: 134,
               secondMenuId: 169,
               icon: "iconzhangdanguanli",
-              clientType: "0"
+              clientType: "0",
+              childNode: [
+                {
+                  id: 1741,
+                  pid: 169,
+                  name: "通知方式管理",
+                  level: 3,
+                  status: 1,
+                  routeAddress: "/warningalarm/notificationManger",
+                  childNode: [],
+                  firstMenuId: 134,
+                  secondMenuId: 169,
+                  icon: "iconzhangdanguanli",
+                  clientType: "0"
+                },
+                {
+                  id: 1741,
+                  pid: 169,
+                  name: "编辑",
+                  level: 3,
+                  status: 1,
+                  routeAddress: "/warningalarm/edit",
+                  childNode: [],
+                  firstMenuId: 134,
+                  secondMenuId: 169,
+                  icon: "iconzhangdanguanli",
+                  clientType: "0"
+                },
+                {
+                  id: 1741,
+                  pid: 169,
+                  name: "新增",
+                  level: 3,
+                  status: 1,
+                  routeAddress: "/warningalarm/newAdd",
+                  childNode: [],
+                  firstMenuId: 134,
+                  secondMenuId: 169,
+                  icon: "iconzhangdanguanli",
+                  clientType: "0"
+                }
+              ]
             }
           ]
         }
       ],
+      // ===========================================
       firstMenuId: 0,
       secondMenuId: 0,
       icon: "iconzulinguanli",
@@ -163,7 +275,7 @@ export default {
     }
   },
   mounted() {
-    console.log(1)
+    console.log(1);
     document.title = this.menuData.name;
   }
 };

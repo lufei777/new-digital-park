@@ -43,7 +43,6 @@ export default {
             ref: "formData",
             labelWidth: "100",
             size: "medium",
-            size: "medium",
             menuPosition: "right",
             menuBtn: false,
             // display:false,
@@ -155,56 +154,6 @@ export default {
         },
         // 通知方式
       ]
-      // model: {},
-      // formData: {
-      //   ref: "formData",
-      //   labelWidth: "100",
-      //   size: "medium",
-      //   size: "medium",
-      //   menuPosition: "right",
-      //   menuBtn: false,
-      //   // display:false,
-      //   forms: [
-      //     // 子系统
-      //     {
-      //       type: "select",
-      //       label: "子系统",
-      //       prop: "subSystem",
-      //       span: 6,
-      //       offset: 8,
-      //       dicData: subSystem
-      //     },
-      //     // 设备类别
-      //     {
-      //       type: "select",
-      //       label: "设备类别",
-      //       prop: "deviceType",
-      //       span: 6,
-      //       offset: 8,
-      //       dicData: deviceType
-      //     },
-
-      //     // 设备名称
-      //     {
-      //       type: "select",
-      //       label: "设备名称",
-      //       prop: "deviceName",
-      //       span: 6,
-      //       offset: 8,
-      //       dicData: deviceName
-      //     },
-      //     // 点位类型
-      //     {
-      //       type: "select",
-      //       label: "点位类型",
-      //       prop: "pointType",
-      //       span: 6,
-      //       offset: 8,
-      //       // display:false,
-      //       dicData: pointType
-      //     }
-      //   ]
-      // }
     };
   },
   methods: {
