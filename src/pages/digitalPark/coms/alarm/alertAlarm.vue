@@ -50,30 +50,7 @@
       webSocketOnMessage(e){
 
         let res = JSON.parse(e.data);
-
-        // this.$message({
-        //   type:'warning',
-        //   message:res.path
-        // })
-        // console.log(e.data)
-        // this.alarmList.push(res.path)
-        // this.showAlarmList=this.alarmList.slice(this.alarmList.length-2)
-        // this.num++
-        // if(this.num<10){
-        //   clearTimeout(this.hideTimer)
-        //   this.hideTimer=''
-        //   $(".alert-alarm-box").animate({bottom:"0px"},0)
-        //   this.$nextTick(()=>{
-        //     this.alarmMessage = res.path
-        //     $(".alert-alarm-box").animate({bottom:"30px"},300)
-        //   })
-        //   this.hideTimer = setTimeout(()=>{
-        //     console.log("lalala")
-        //     this.alarmMessage=''
-        //   },5000)
-        // $(".alert-alarm-box").animate({bottom:"30px"},600)
-        // b=a
-        // a=res.path
+        // console.log(res)
         clearTimeout(this.hideTimer)
         this.hideTimer=''
         this.b1=this.a1
