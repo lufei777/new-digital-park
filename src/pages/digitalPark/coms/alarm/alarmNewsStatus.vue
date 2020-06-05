@@ -7,8 +7,12 @@
         <span>时间</span>
         <span>状态</span>
       </div>
-      <ul v-if="alarmNewsData.length!=0">
-        <li v-for="(item,index) in alarmNewsData" :key="index" class="ganged-log-li flex">
+      <ul v-if="alarmNewsData.length!=0" class="alarm-news-list-ul">
+        <li v-for="(item,index) in alarmNewsData"
+            class="ganged-log-li flex hover-pointer"
+            :key="index"
+            @click="onClickItemData(item)"
+        >
           <span style="width:10%">{{index+1}}</span>
           <span style="width:40%">{{item.alertType}}</span>
           <span>{{item.timeText}}</span>
@@ -39,8 +43,7 @@ export default {
         end: ""
       });
       if (res.rows.length != 0) {
-        this.alarmNewsData = res.rows.slice(0,5);
-        this.alarmNewsData.map((item, index) => {
+        res.rows.map((item, index) => {
           let alertStr = item.caption.split("->");
           let alertDevice = alertStr.pop();
           let alertType = alertStr.pop();
@@ -53,7 +56,18 @@ export default {
               ? "已处理"
               : "未处理";
         });
+        this.alarmNewsData = res.rows
+        let height = parseInt($(".my-chart").height()/7)
+        // console.log("jeight",height)
+        $(".alarm-news-header").css({
+          "height":height+'px',
+          'line-height':height+'px'
+        })
       }
+    },
+    onClickItemData(item){
+      window.FindAssetLocation && window.FindAssetLocation(item.id)
+      window.parent.FindAssetLocation &&  window.parent.FindAssetLocation(item.id)
     }
   },
   mounted() {
@@ -67,17 +81,19 @@ export default {
   .my-chart {
     margin-top: 10px;
     box-sizing: border-box;
+    overflow: hidden;
     .alarm-news-header {
       width: 100%;
-      height: 50px;
+      /*height: 50px;*/
       font-size: 14px;
       background: rgba(17, 29, 33, 0.5);
       text-align: center;
       span {
         width: 25%;
         float: left;
-        height: 50px;
-        line-height: 50px;
+        display: block;
+        /*height: 50px;*/
+        /*line-height: 50px;*/
       }
     }
     .no-data {
@@ -105,6 +121,9 @@ export default {
     span:last-child {
       color: #01eafe;
     }
+  }
+  .alarm-news-list-ul{
+    overflow: auto;
   }
 }
 </style>

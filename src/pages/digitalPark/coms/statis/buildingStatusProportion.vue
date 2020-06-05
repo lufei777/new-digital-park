@@ -26,7 +26,7 @@ export default {
           document.getElementById("building-status-proportion-chart")
       );
       let legendData = res.legend;
-      let color = ["#30475B", "#66FBF9", "#0088FF", "#D77443"];
+      let color = ["#25e4a3", "dimGrey", "#dab54c", "#de8536",'#ed5450'];
       let textStyleColor = "#8FD3FA";
       let seriesData = res.values;
       let data = {
@@ -36,12 +36,12 @@ export default {
         textStyleColor,
         legendUi: {
           ...this.moduleItem.legendUi,
-          ...{
-            formatter: function(name) {
-              let obj = seriesData.find(item => item.name == name);
-              return name + "：" + obj.value;
-            }
-          }
+          // ...{
+          //   formatter: function(name) {
+          //     let obj = seriesData.find(item => item.name == name);
+          //     return name + "：" + obj.value;
+          //   }
+          // }
         },
         seriesUi: {
           // center:['50%','50%']

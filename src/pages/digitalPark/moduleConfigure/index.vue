@@ -16,7 +16,7 @@
         <div v-for="item in proModuleList"
              :key="item.id"
              :class="[type==3?'large-item-left-pro':'item-left-pro','hover-pointer',item.activeFlag?'active-pro':'']"
-             @click="onClickItemProModule(item)">{{item.name}}
+             @click="onClickItemProModule(item)">{{item.menuName}}
         </div>
       </div>
       <div class="module-content-list" v-show="!isFull">
@@ -31,7 +31,7 @@
           <component v-for="(item,index) in contentList"
                      :key="index"
                      :is="item.componentName"
-                     :moduleItem="item"
+                     :moduleItem="{...item,...{type:type}}"
                      :class="['item-content','flex-column-center',item.dragFlag?'item-drag-product':'']"
                      :style="contentBg(item)"
                      :id="item.id"
@@ -42,6 +42,7 @@
         <div :class="isFull?'full-preview-panel':'preview-panel'">
           <DashboardNew v-if="type==1" :curProModule="curProModule"
                         :hideHeader="true" ref="dashboard"
+                        :fullStatus='fullStatus'
           />
           <HomePage v-if="type==2" :curProModule="curProModule"
                     :hideHeader="true"
@@ -77,7 +78,6 @@
   import elementResizeDetectorMaker from 'element-resize-detector'
   import draggable from 'vuedraggable'
   import HomePage from '../home/index'
-  import Dashboard from '../home/dashboard'
   import comsImport from '../coms/js/comsImport'
   import {mapState} from 'vuex'
   import DashboardNew from '../home/dashboardNew'
@@ -87,7 +87,6 @@
     name: 'ModuleConfigure',
     components: {
       ...comsImport.exportComsList,
-      Dashboard,
       draggable,
       HomePage,
       DashboardNew,
@@ -168,7 +167,11 @@
           language: Cookies.get('lang')
         })
         this.userProModuleList = res
-        console.log("length",$(".item-drag-product").length)
+        this.changeFontSize()
+        // console.log("length",$(".item-drag-product").length)
+        // $(".park-home-page .item-module").css({
+        //   height:383+'px'
+        // })
       },
       async getLargeScreenModuleList() {
         let res = await DigitalParkApi.getLargeScreenModule({
@@ -179,7 +182,7 @@
         })
         this.userProModuleList = res.modules || []
       },
-      setItemDragFlag(userList, res = this.proModuleList) {
+      setItemDragFlag(userList =this.userProModuleList , res = this.proModuleList) {
         res.map((item) => {
           item.moduleList.map((module) => {
             module.dragFlag = true
@@ -210,8 +213,7 @@
         }
       },
       onClickFullScreenBtn() {
-        this.isFull = !this.isFull
-        // if(this.type!=3){
+          this.isFull = !this.isFull
           let erd = elementResizeDetectorMaker()
           let that = this
           erd.listenTo($(".item-product-coms").eq(0), function () {
@@ -219,9 +221,12 @@
               $(window).resize()
             })
           })
-        // }
+
+        // $(".park-home-page .item-module").css({
+        //   height:548+'px'
+        // })
       },
-      onClickResetBtn(){
+      async onClickResetBtn(){
         if(this.type==3){
           $(".center-show").css({
             width:'1920px',
@@ -230,6 +235,8 @@
           this.$refs.largeSizeScreen.getLargeScreenModuleList()
         }else{
           this.$refs[this.curCom].getModulesByType()
+          await this.getModulesByType()
+          this.setItemDragFlag()
         }
       },
       onClickEscBtn() {
@@ -302,7 +309,6 @@
         await this.getModulesByType()
       }
       this.getProModules()
-      this.changeFontSize()
     }
   }
 </script>
@@ -524,9 +530,9 @@
       /*.item-drag-product,.fixed-prod-module{*/
         /*font-size: 12px;*/
       /*}*/
-      .smallFontSize{
-        font-size: 12px;
-      }
+      /*.smallFontSize{*/
+        /*font-size: 12px;*/
+      /*}*/
     }
 
     .left-module-list, .module-content-list, .preview-panel {

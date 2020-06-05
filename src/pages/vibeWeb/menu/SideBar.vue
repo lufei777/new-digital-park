@@ -35,7 +35,7 @@
           :specialRoute="menuConfig.specialRoute"
         />
       </el-menu>
-      <div class="iconfont iconkuaijierukou hover-pointer shortcut-btn"
+      <div class="iconfont iconjia hover-pointer shortcut-btn"
            @click="onClickShortcutBtn" v-if="!isyd">
       </div>
       <ul class="shortcut-list" v-show="showShortcutList">
@@ -188,13 +188,21 @@ export default {
     width: inherit;
   }
   .shortcut-btn {
-    font-size: 37px;
+    width:80px;
+    height:80px;
+    font-size: 16px;
     color: #fff;
     border-radius: 50%;
     position: fixed;
-    bottom: 20px;
-    left: 20px;
+    bottom: -40px;
+    left: -40px;
     z-index: 99;
+    /*padding:20px;*/
+    border:2px solid #2B5681;
+    text-align: right;
+    padding:15px 16px 0 0 ;
+    box-sizing: border-box;
+    background: #000;
   }
   .shortcut-list {
     width: 190px;

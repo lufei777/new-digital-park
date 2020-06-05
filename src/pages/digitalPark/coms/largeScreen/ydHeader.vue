@@ -4,7 +4,7 @@
       <i class="iconfont icongailan tip-icon"></i>{{curTip}}
     </div>
     <div class="header-name">
-      <!--<i class="iconfont iconyidianchengLOGO park-logo"></i>-->
+      <i class="iconfont iconyidianchengLOGO park-logo"></i>
       <span>{{headName}}</span>
     </div>
     <div class="logout-box">
@@ -23,6 +23,7 @@
   import {isZG} from '@/utils/project';
   import { IsCZClient } from '@/utils/auth';
   import CommonFun from '@/utils/commonFun'
+  import CommonApi from '@/service/api/common'
   export default {
     name: 'YDHeader',
     components: {},
@@ -132,8 +133,18 @@
         );
         this.$store.commit("digitalPark/menuList", secondLevelTree)
       },
+      async getAlarmList() {
+        let res = await CommonApi.getAlarmMessageList({
+          pageNum: 1,
+          start: '',
+          end: '',
+          pageCount: 10,
+        })
+        this.alarmListCount = res.total>99?'99+':res.total
+      }
     },
     mounted() {
+      this.getAlarmList()
       window.CZClient = {
         goToPersonal: this.onClickUserConfigure,  //跳转个人中心
         // goBack: this.onClickGoBack,    //返回首页
@@ -161,14 +172,14 @@
 
       span {
         color: rgba(255, 255, 255, 1);
-        background: linear-gradient(0deg, rgba(1, 234, 254, 1) 0%, rgba(255, 255, 255, 1) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        /*background: linear-gradient(0deg, rgba(1, 234, 254, 1) 0%, rgba(255, 255, 255, 1) 100%);*/
+        /*-webkit-background-clip: text;*/
+        /*-webkit-text-fill-color: transparent;*/
       }
     }
 
     .park-logo {
-      font-size: 30px;
+      font-size: 60px;
     }
 
     .cur-tip, .logout-box {

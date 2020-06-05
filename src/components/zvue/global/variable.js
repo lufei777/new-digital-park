@@ -8,6 +8,7 @@ export const DIC_PROPS = {
     children: 'children',
     labelText: '名称',
     leaf: 'leaf',
+    isLeaf: 'leaf',
     disabled: 'disabled',
     // table
     rowKey: 'id'

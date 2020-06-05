@@ -87,6 +87,8 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
         if (listType === 'picture-img' && type === 'upload') {
             if (typeof value === 'string' && value.trim().length > 0) {
                 value = [value];
+            } else if (value instanceof File && curentForm.autoUpload === false) {
+                value = [URL.createObjectURL(value)];
             } else {
                 value = [];
             }
@@ -199,6 +201,8 @@ export const formInitVal = (list = []) => {
     let tableForm = {};
     let searchForm = {};
     list.forEach(ele => {
+        // 某一项不初始化进model中
+        if (ele.notModel) return;
         if (
             ['checkbox', 'cascader', 'dynamic', 'dates'].includes(ele.type) ||
             (ele.type === 'upload' && ele.listType !== 'picture-img') ||

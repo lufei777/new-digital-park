@@ -2011,106 +2011,6 @@ class commonFun {
     });
   }
 
-  //重新整合跳转，包括跳旧项目、新项目、客户端
-  loadPage(item,largeScreenFlag) {
-    store.commit("digitalPark/activeMenuIndex", this.setMenuIndex(item))
-    if (item.routeAddress) {
-      //客户端
-      if (this.loadClientPage(item)) {
-        return;
-      }else if (item.routeAddress.indexOf("@") != -1) {
-        //旧项目
-        if (item.routeAddress == '@/html/docms/index.html?openid=emergency') {
-          localStorage.setItem('backupType', 4)
-        } else if (item.routeAddress == '@/html/docms/index.html?openid=assess') {
-          localStorage.setItem('backupType', 5)
-        }
-        if(largeScreenFlag){
-            store.commit("digitalPark/largeScreenIframeSrc",
-            window.top.location.origin+'/#/vibe-web?updateId='+_.uniqueId())
-        }else{
-             router.push('/vibe-web')
-        }
-      }else {
-      //新项目
-      if(largeScreenFlag) {
-        store.commit("digitalPark/largeScreenIframeSrc", window.top.location.origin + '/#' + item.routeAddress)
-      }else{
-        router.push(this.getLastItem(item).routeAddress);
-      }
-      }
-    } else {
-      router.push("/digitalPark/defaultPage");
-    }
-  }
-
-  loadClientPage(item) {
-    if (item.name == "物业系统") {
-      this.invokeClientMethod('goToZGManage');
-      return true;
-    }
-    if (typeof item === 'undefined') {
-      return false;
-    }
-    // 如果clientType是 1 ，表明是客户端
-    if (item.clientType == 1) {
-
-      if (item.level == 2) {
-        // router.push(`${item.routeAddress}?productId=${item.id}`)
-        // if(IsCZClient()){
-          router.push(`/clientOverView?productId=${item.id}`)
-          this.invokeClientMethod('showClientOverView',JSON.stringify(item));
-        // }else{
-        //   router.push(`${item.routeAddress}?productId=${item.id}`)
-        // }
-        return true;
-      } else if (item.level == 3 && item.name == "概览") {
-        router.push(`${item.routeAddress}?productId=${item.pid}`)
-        return true;
-      } else {
-        this.invokeClientMethod('closeVideoWin');
-        let id = item.id
-        if (item.childNode.length) {
-          id = this.getLastItem(item).id
-        }
-        let menuTree = JSON.parse(localStorage.getItem("menuTree"))
-        let firstMenu = menuTree[0].childNode.find(first => {
-          return first.id == item.firstMenuId;
-        });
-        let secondMenu = firstMenu.childNode.find(second => {
-          return second.id == item.secondMenuId;
-        });
-
-        // console.log(secondMenu, id)
-        this.invokeClientMethod('goToClientPage', JSON.stringify(secondMenu), id + "");
-        return true;
-      }
-    }
-    /* if (item.level == 2 && item.clientType == 1) {
-    } else if (item.level == 3 && item.clientType == 1 && item.name == "概览") {
-    } else if (item.level != 2 && item.clientType == 1) { } */
-    return false;
-  }
-
-  // 访问客户端方法
-  invokeClientMethod(name, ...args) {
-    if (window[name]) {
-      window[name].apply(null, args);
-    } else {
-      Message({
-        message: '请在客户端中访问',
-        type: 'warning'
-      })
-    }
-  }
-
-  getLastItem(item) {
-    if (item.childNode.length) {
-      return this.getLastItem(item.childNode[0])
-    } else {
-      return item
-    }
-  }
 
   //导出
   exportMethod(data, that) {
@@ -2136,6 +2036,105 @@ class commonFun {
         message: error,
       });
     })
+  }
+
+
+  //重新整合跳转，包括跳旧项目、新项目、客户端
+  loadPage(item,largeScreenFlag) {
+    //客户端关闭视频
+    window.closeVideoWin && window.closeVideoWin()
+    window.closeClientPage && window.closeClientPage()
+
+
+    //激活菜单
+    store.commit("digitalPark/activeMenuIndex", this.setMenuIndex(item))
+    if (item.routeAddress) {
+      //客户端
+      if (this.loadClientPage(item)) {
+        return;
+      }else if (item.routeAddress.indexOf("@") != -1) {
+        //旧项目
+        if (item.routeAddress == '@/html/docms/index.html?openid=emergency') {
+          localStorage.setItem('backupType', 4)
+        } else if (item.routeAddress == '@/html/docms/index.html?openid=assess') {
+          localStorage.setItem('backupType', 5)
+        }
+        if(largeScreenFlag){
+          store.commit("digitalPark/largeScreenIframeSrc",
+            window.top.location.origin+'/#/vibe-web?updateId='+_.uniqueId())
+        }else{
+          router.push('/vibe-web')
+        }
+      }else {
+      //新项目
+      if(largeScreenFlag) {
+        store.commit("digitalPark/largeScreenIframeSrc", window.top.location.origin + '/#' + item.routeAddress)
+      }else{
+        router.push(this.getLastItem(item).routeAddress);
+      }
+      }
+    } else {
+      router.push("/digitalPark/defaultPage");
+    }
+  }
+
+  loadClientPage(item) {
+    if (typeof item === 'undefined') {
+      return false;
+    }
+
+    if (item.name == "物业系统") {
+      this.invokeClientMethod('goToZGManage');
+      return true;
+    }
+
+    if (IsCZClient() && item.clientType == 1) {
+      if (item.level == 2) {
+        router.push(`/clientOverView?productId=${item.id}`)
+        this.invokeClientMethod('showClientOverView', JSON.stringify(item));
+        return true;
+      }else{
+        let menuTree = JSON.parse(localStorage.getItem("menuTree"))
+        let firstMenu = menuTree[0].childNode.find(first => {
+          return first.id == item.firstMenuId;
+        });
+        let secondMenu = firstMenu.childNode.find(second => {
+          return second.id == item.secondMenuId;
+        });
+        if(item.level==3 && item.name=='概览'){
+          router.push(`/clientOverView?productId=${item.pid}`)
+          this.invokeClientMethod('showClientOverView', JSON.stringify(secondMenu));
+        }else{
+          let id = item.id
+          if (item.childNode.length) {
+            id = this.getLastItem(item).id
+          }
+          this.invokeClientMethod('goToClientPage', JSON.stringify(secondMenu), id + "");
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // 访问客户端方法
+  invokeClientMethod(name, ...args) {
+    if (window[name]) {
+      window[name].apply(null, args);
+    } else {
+      Message({
+        message: '请在客户端中访问',
+        type: 'warning'
+      })
+    }
+  }
+
+  getLastItem(item) {
+    if (item.childNode.length) {
+      return this.getLastItem(item.childNode[0])
+    } else {
+      return item
+    }
   }
 
   //设置菜单index

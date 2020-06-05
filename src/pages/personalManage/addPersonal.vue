@@ -20,7 +20,7 @@
               v-if="isEdit && typeof options.submitBtn !== 'undefined'"
               type="primary"
               @click="editCurrent(scope)"
-            >{{options.disabled ? '编辑' :'取消'}}</el-button>
+            >{{options.textMode ? '编辑' :'取消'}}</el-button>
             <el-button @click="backList(scope)">返回</el-button>
           </template>
         </z-form>
@@ -572,7 +572,7 @@ export default {
       }
       return false;
     },
-    nextStep({ model = {}, hide = () => {}, step = ++this.step }) {
+    nextStep({ model = {}, hide = () => { }, step = ++this.step }) {
       this.resetForm(); // 重置form
       hide(); // 隐藏提交状态
 
@@ -673,7 +673,7 @@ export default {
     },
     editCurrent() {
       Object.assign(this.options, {
-        disabled: !this.options.disabled,
+        textMode: !this.options.textMode,
         submitBtn: !this.options.submitBtn,
         emptyBtn: !this.options.emptyBtn
       });

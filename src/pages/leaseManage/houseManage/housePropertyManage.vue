@@ -46,7 +46,6 @@ export default {
       model: {},
       formOptions: {
         ref: "Form",
-        size: "small",
         menuPosition: "right",
         menuBtn: false,
         forms: [

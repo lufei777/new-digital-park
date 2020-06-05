@@ -27,20 +27,6 @@ export default {
   data() {
     return {
       energy: 34,
-      // energyList: [
-      //   {
-      //     value: 34,
-      //     label: "电"
-      //   },
-      //   {
-      //     value: 37,
-      //     label: "水"
-      //   },
-      //   {
-      //     value: 38,
-      //     label: "热"
-      //   }
-      // ],
       energyList:isZG()?[
         {
           value: 34,

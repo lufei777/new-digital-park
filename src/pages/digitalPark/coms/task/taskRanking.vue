@@ -3,35 +3,35 @@
     <!--<div ref="pieCharts" class="my-chart" id="task-ranking-chart"></div>-->
     <!--<div class="my-chart">-->
     <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
-    <div class="my-chart">
-      <div class="task-header flex">
+    <div class="my-chart" v-if="curType!=2">
+      <div class="task-header flex" :class="moduleItem.type!=2?'':'task-header-white'">
         <span>排名</span>
         <span>姓名</span>
-        <span>数量</span>
-        <span>错误率</span>
-        <span>效率</span>
+        <span>任务总量</span>
+        <span>完成量</span>
+        <span>完成率</span>
       </div>
-      <ul>
-        <li v-for="(item,index) in tableData" :key="index" class="yd-ganged-log-li flex"
+      <ul class="task-list-ul">
+        <li v-for="(item,index) in tableData" :key="index" class="item-task flex"
             :class="moduleItem.type!=2?'':'task-li'">
           <span>{{index+1}}</span>
-          <span>{{item.name}}</span>
-          <span>{{item.num}}</span>
-          <span>错误{{item.error}}条</span>
-          <span>{{item.effect}}</span>
+          <span>{{item.username}}</span>
+          <span>{{item.allTaskNum}}条</span>
+          <span>{{item.completeNum}}条</span>
+          <span>{{item.percent}}%</span>
         </li>
       </ul>
     </div>
-    <!--<img-->
-      <!--style="width:96%;height:auto;"-->
-      <!--src="../../../../../static/image/digitalPark/renwu2_tmp.png" alt="">-->
-  <!--</div>-->
+    <div class="my-chart" v-if="curType==2">
+      <z-table :ref="tableConfig.ref" :options="tableConfig"></z-table>
+    </div>
   </div>
 </template>
 
 <script>
 import CommonFun from "../../../../utils/commonFun";
 import ChartUtils from "../../../../utils/chartUtils";
+import TaskManageApi from '@/service/api/taskManage'
 import { isYDScreen } from "@/utils/project";
 
 export default {
@@ -40,46 +40,59 @@ export default {
   props: ["moduleItem"],
   data() {
     return {
-      tableData:[]
+      tableData:[],
+      tableConfig: {
+        ref: "tableRef",
+        data:[],
+        columnConfig: [
+          {label: "姓名", prop: "username"},
+          {label: "任务总量", prop: "allTaskNum"},
+          {label: "完成量", prop: "completeNum"},
+          {label: "效率", prop: "percent",
+            formatter:function(row){
+              return row.percent+"%"
+            }
+          },
+        ],
+        uiConfig: {
+          // height: "auto",
+          pagination:false
+        },
+      },
     };
   },
   computed:{
     isyd(){
       return isYDScreen()
+    },
+    curType(){
+      return this.moduleItem.type
     }
   },
   methods: {
-    getTableData(){
-      this.tableData = [{
-        name:'刘金',
-        num:100,
-        error:0,
-        effect:'高'
-      },{
-        name:'刘金',
-        num:100,
-        error:0,
-        effect:'高'
-      },{
-        name:'刘金',
-        num:100,
-        error:0,
-        effect:'高'
-      },{
-        name:'刘金',
-        num:100,
-        error:0,
-        effect:'高'
-      },{
-        name:'刘金',
-        num:100,
-        error:0,
-        effect:'高'
-      }]
+    async getPersonalTaskRanking(){
+      let res = await TaskManageApi.getPersonalTaskRanking()
+      res.map((item)=>{
+        item.allTaskNum = item.allTaskNum?item.allTaskNum:0
+        item.percent = item.allTaskNum?(item.completeNum/item.allTaskNum).toFixed(2):0
+      })
+      if(this.curType!=2){
+        this.tableData = res
+        this.$nextTick(()=>{
+          let height = $(".my-chart").height()/7
+          // console.log("height",height,$(".item-task").length,$(".task-header").length)
+          $(".task-header span, .item-task").css({
+            'height':height+'px',
+            'line-height':height+'px'
+          })
+        })
+      }else{
+        this.tableConfig.data = res
+      }
     }
   },
   mounted() {
-    this.getTableData()
+    this.getPersonalTaskRanking()
   }
 };
 </script>
@@ -88,23 +101,24 @@ export default {
 <style lang="less">
 .task-ranking {
    .my-chart{
-      margin-top: 10px;
-      box-sizing: border-box;
+     margin-top: 10px;
+     box-sizing: border-box;
+     overflow: hidden;
    }
   .task-header {
     width: 100%;
-    height: 50px;
     font-size: 14px;
     background: rgba(17,29,33,.5);
     text-align: center;
     span {
       width:20%;
       float: left;
-      height: 50px;
-      line-height: 50px;
     }
   }
-  .yd-ganged-log-li{
+  .task-header-white{
+    color:@white;
+  }
+  .item-task{
     width: 100%;
     height: 40px;
     font-size: 14px;
@@ -130,6 +144,9 @@ export default {
       height: 50px;
       line-height: 50px;
     }
+  }
+  .task-list-ul{
+    overflow: auto;
   }
 }
 </style>

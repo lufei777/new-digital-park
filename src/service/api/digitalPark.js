@@ -10,7 +10,8 @@ class DigitalParkApi {
   @get
   getMenu(){}
 
-  @url('/oaApi/userModuleRel/modulesByType')
+  // @url('/oaApi/userModuleRel/modulesByType')
+  @url("/oaApi/modules")
   @get
   getModulesByType(){}
 
@@ -18,7 +19,7 @@ class DigitalParkApi {
   @get
   getMenuTree(){}
 
-  @url("/oaApi/menu/productModules")
+  @url("/oaApi/modules/option")
   @get
   getProModules(){}
 
@@ -33,6 +34,7 @@ class DigitalParkApi {
   @url("/oaApi/userModuleRel/modules/resolution")
   @put
   updateLargeScreenModule(){}
+
 }
 
 export default new DigitalParkApi()

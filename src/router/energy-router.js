@@ -81,6 +81,22 @@ export default [{
       name: 'ElecAnalysis',
       component: ElecAnalysis,
       meta: { title: '电流向及线损分析' },
+    },{
+      path: '/basicSetting',
+      name: 'StandardSetting',
+      component: ()=>import('@/pages/commonProject/coms/tmpRouterBox'),
+      meta: { title: '基础设置' },
+      children:[{
+        path: '/energy/standardSetting',
+        name: 'StandardSetting',
+        component: ()=>import('@/pages/energyManage/basicSetting/customStandard/index'),
+        meta: { title: '自定义标准' },
+      },{
+        path: '/energy/buildInfoSetting',
+        name: 'BuildInfoSetting',
+        component: ()=>import('@/pages/energyManage/basicSetting/buildInfoSetting/index'),
+        meta: { title: '建筑信息设置' },
+      }]
     }]
   }].concat(StatisAnalysis, DataReport, SystemManage, DeviceRecord, Collect)
 }]

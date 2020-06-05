@@ -4,15 +4,19 @@
       <h3>{{moduleData.menuName}}</h3>
       <span  v-if="!iszg" class="more-btn hover-pointer" @click="onClickMoreBtn">{{$t('more')}}</span>
     </div>
-    <span v-if="type==1" class="single-module-name">{{moduleData.menuName}}</span>
+    <span v-if="type==1" class="single-module-name hover-pointer"
+          @click="onClickItemComponent"
+    >
+      {{moduleData.menuName}}
+    </span>
     <div v-if='type==1' class="component-box">
       <component v-for="(item,index) in moduleData.moduleList"
                  :key="index"
                  :is="item.componentName"
                  :moduleItem="moduleItemData(item)"
                  :class="'item-id-'+item.id"
-                 class="item-component flex-column-center"
-                 @click.native="onClickItemComponent($event,item)"
+                class="item-component flex-column-center"
+                type="type"
       />
     </div>
 
@@ -32,7 +36,8 @@
           v-for="(item,index) in moduleData.moduleList"
           :key="index"
           :class="['flex-column','drag-component',
-                   moduleData.moduleList.length>1?'two-component radius-shadow  padding-box':'item-component padding-box']"
+                   moduleData.moduleList.length>1?'two-component radius-shadow  padding-box':
+                   'item-component padding-box']"
           style="height: 100%;"
           :is="item.componentName"
           :moduleItem="{...item,...{type:2}}"
@@ -49,7 +54,7 @@
   import { isYDScreen,isZG } from "@/utils/project";
   export default {
     name: 'ItemProModule',
-    props:['moduleData','type','userProModuleList','hideHeader'],
+    props:['moduleData','type','userProModuleList','hideHeader','fullStatus'],
     components: {
       ...comsImport.exportComsList,
       draggable,
@@ -62,6 +67,9 @@
     computed:{
       iszg(){
          return isZG()
+      },
+      legendFontSize(){
+        return this.fullStatus=='noFull'?12:14
       }
     },
     methods: {
@@ -120,7 +128,8 @@
           }
         }
       },
-      onClickItemComponent(e,item) {
+      onClickItemComponent() {
+        let item = this.moduleData.moduleList[0]
         // console.log("clickitem", item)
         //需要后台配合修改
         if (this.hideHeader || item.moduleName=="功能模块入口" || item.moduleName=='功能模块') return;  //配置页点击不进行操作
@@ -140,12 +149,13 @@
           return second.id == item.secondMenuId;
         });
         let menuTmp = {}
-        if (secondMenu.clientType == 1) {
-          menuTmp = this.findNode(secondMenu, item, secondMenu)
-        } else {
-          menuTmp = secondMenu
-        }
-        // console.log("menuTmp", menuTmp)
+        // if (secondMenu.clientType == 1) {
+        //   menuTmp = this.findNode(secondMenu, item, secondMenu)
+        // } else {
+        //   menuTmp = secondMenu
+        // }
+        menuTmp = secondMenu
+        console.log("menuTmp", menuTmp)
         this.$store.commit("digitalPark/menuList", menuTmp||{});
         item.childNode = []
         item.id = item.forwardId || item.pid
@@ -169,6 +179,7 @@
       moduleItemData(item){
         return {
           ...item,
+          ...{type:this.type},
           ...{
              largeScreen:this.moduleData.largeScreen,
              legendUi:{
@@ -176,7 +187,7 @@
               right:'3%',
               textStyle:{
                 color:'#8FD3FA',
-                fontSize:this.moduleData.largeScreen && !isYDScreen()?30:14
+                fontSize:this.moduleData.largeScreen && !isYDScreen()?30:this.legendFontSize
               },
             },
             fontSize:30,

@@ -37,6 +37,30 @@ class EnergyApi {
   @url("/vibe-web/getEnergyModule")
   @get
   getEnergyModuleData(){}
+
+  @url("/vibe-web/reckon/getSpaceTree")
+  @get
+  getSpaceStandardTree(){}
+
+  @url("/vibe-web/reckon/insertOrUpdateValue")
+  @post
+  setStandardValue(){}
+
+  @url("/vibe-web/reckon/getBuildInfoList")
+  @get
+  getBuildInfoList(){}
+
+  @url("/vibe-web/reckon/updateBuildInfo")
+  @get
+  updateBuildInfo(){}
+
+  @url("/vibe-web/reckon/deleteBuildInfo")
+  @post
+  deleteBuildInfo(){}
+
+  @url("/vibe-web/reckon/addBuildInfo")
+  @get
+  addBuildInfo(){}
 }
 
 export default new EnergyApi()

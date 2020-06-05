@@ -394,6 +394,36 @@ export const ExportData = {
   ]
 }
 
+// 资产类型
+export const AssetType = {
+  //空间，表示一个房间
+  SPACE: {
+    kind: 0,
+    text: 'SPACE'
+  },
+  //设备
+  DEVICE: {
+    kind: 1,
+    text: 'DEVICE',
+    catalogId: 2002
+  },
+  //服务器
+  SERVICE: {
+    kind: 2,
+    text: 'SERVICE'
+  },
+  //监测器
+  PROBE: {
+    kind: 3,
+    text: 'PROBE'
+  },
+  //控制器
+  CONTROL: {
+    kind: 4,
+    text: 'CONTROL'
+  }
+}
+
 // 错误提示
 export const AssetState = {
   NORMAL: {
@@ -418,7 +448,7 @@ export const AssetState = {
     text: "INITIALIZE",
     value: 4,
     desc: '正在获取数据',
-    valueStr: "初始化"
+    valueStr: "正在初始化"
   },
   FAILURE: {
     text: "FAILURE",
@@ -828,3 +858,33 @@ export const Norbulingka = {
 		}
 	]
 };
+
+export const TaskofficeLocationType = {
+  officeLocationType:[
+    {
+      value: 0,
+      label: "公司"
+    },
+    {
+      value: 1,
+      label: "现场"
+    }
+  ]
+}
+
+export const TaskpriorityType = {
+  priorityType:[
+    {
+      value: "1",
+      label: "正常"
+    },
+    {
+      value: "2",
+      label: "重要"
+    },
+    {
+      value: "3",
+      label: "紧急"
+    }
+  ]
+}

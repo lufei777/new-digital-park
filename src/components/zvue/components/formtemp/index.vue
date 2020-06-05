@@ -1,10 +1,15 @@
 <template>
-  <span
+  <div
     v-if="showDisplayValue && !isLazyCascader"
     class="text-overflow-eliipsis"
-    :style="{display:'block'}"
     :title="displayValue"
-  >{{comDisplayValue}}</span>
+  >
+    <!-- <slot v-else :name="column.prependslot" :textMode="textMode"></slot> -->
+    <span v-if="column.prepend && comDisplayValue !== EMPTY_VALUE">{{column.prepend}}</span><!--
+    --><span>{{comDisplayValue}}</span><!--
+    --><span v-if="column.append && comDisplayValue !== EMPTY_VALUE">{{column.append}}</span>
+    <!-- <slot v-else :name="column.appendslot" :textMode="textMode"></slot> -->
+  </div>
   <component
     v-else
     :class="{'zvue-text-mode':(this.showDisplayValue && this.isLazyCascader)}"
@@ -58,7 +63,7 @@ import { DIC_PROPS, DIC_SPLIT, EMPTY_VALUE } from '../../global/variable';
 export default {
   name: "formTemp",
   props: {
-    value: [Array, String, Number, Object, Boolean, Date],
+    value: {},
     t: Function,
     uploadBefore: Function,
     uploadAfter: Function,
@@ -105,7 +110,8 @@ export default {
     return {
       first: true,
       text: null,
-      displayValue: ''
+      displayValue: '',
+      EMPTY_VALUE
     };
   },
   watch: {
@@ -158,7 +164,7 @@ export default {
     },
     comDisplayValue() {
       let displayValue = this.displayValue;
-      if (typeof displayValue === 'string' && displayValue.length === 0) {
+      if (validatenull(displayValue)) {
         displayValue = EMPTY_VALUE;
       }
       return displayValue
@@ -173,7 +179,7 @@ export default {
     },
     getDisplayValue() {
       let displayValue = '';
-      // 变化后，将显示的值赋值在modelTranslate 和 displayValue 上
+      // 变化后，将显示的值赋值在modelTranslate 和 displayValue 上，除lazy模式的cascader
       if (!['upload', 'dynamic'].includes(this.column.type) && ![this.column.props || this.props].lazy) {
         displayValue = detail({ [this.column.prop]: this.text }, this.column, this.column.props, this.dic);
 
@@ -189,6 +195,11 @@ export default {
         displayValue = displayValue
           ? this.dic ? this.dic[1][this.labelKey] : '是'
           : this.dic ? this.dic[0][this.labelKey] : '否';
+      }
+
+      // 如果是级联，取最后一个
+      if (this.column.type === 'cascader') {
+        displayValue = _.last(displayValue.split(DIC_SPLIT));
       }
 
       // 给当前组件设置
@@ -309,7 +320,7 @@ export default {
 <style lang="less">
 .zvue-text-mode {
   .el-input__inner {
-    color: #606266 !important;
+    color: #000 !important;
     padding: 0 !important;
     background-color: inherit !important;
     border: none !important;

@@ -46,15 +46,21 @@ export default {
     onClickCollapseBtn() {
       this.$emit("onclickcollapsebtn");
     },
+    getContentHeight() {
+      const deviceWidth = document.body.clientWidth;
+      const deviceHeight = document.body.clientHeight;
+      const routerViewHeight = Number(deviceHeight);
+      const contentHeight = routerViewHeight - 110;
+      this.$store.commit('digitalPark/setContentHeight', contentHeight);
+      return contentHeight;
+    },
     computedHeight() {
       this.content = document.querySelector(".content");
       this.routerView = document.querySelector(".router-view");
+      let contentHeight = this.getContentHeight();
       if (this.content && this.routerView) {
-        const deviceWidth = document.body.clientWidth;
-        const deviceHeight = document.body.clientHeight;
-        this.routerViewHeight = Number(deviceHeight);
-        this.routerView.style.height = this.routerViewHeight - 110 + "px";
-        this.content.style.height = this.routerViewHeight - 110 + "px";
+        this.routerView.style.height = contentHeight + "px";
+        this.content.style.height = contentHeight + "px";
       }
     }
   },

@@ -33,7 +33,7 @@ import { mapState } from "vuex";
 import { StockDic } from "@/utils/dictionary";
 import AssetManageApi from "@/service/api/assetManage";
 import SystemManageApi from "@/service/api/systemManage";
-import AddAsset from "../../assetManage/assetMaintenance/addAsset";
+import AddAsset from "../../assetManage/assetInfo/assetMaintenance/addAsset";
 import StockManageApi from "@/service/api/stockManage";
 
 export default {

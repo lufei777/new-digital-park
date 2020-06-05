@@ -48,42 +48,54 @@ class taskManageApi {
     @get
     completeTask() { }
 
-     //工单流转情况记录查询
-     @url("/oaApi/task/operateLogList")
-     @get
-     operateLogList() { }
+    //工单流转情况记录查询
+    @url("/oaApi/task/operateLogList")
+    @get
+    operateLogList() { }
 
-     @url("/oaApi/task/addTempTask")
-     @post
-     addTempTask() { }
+    @url("/oaApi/task/addTempTask")
+    @post
+    addTempTask() { }
 
-     @url("/oaApi/task/findTempTask")
-     @get
-     findTempTask() { }
+    @url("/oaApi/task/findTempTask")
+    @get
+    findTempTask() { }
 
-     @url("/oaApi/taskStatistics/taskNumber")
-     @get
-     getTaskNumber() { } 
+    @url("/oaApi/taskStatistics/taskNumber")
+    @get
+    getTaskNumber() { }
 
-     @url("/oaApi/taskStatistics/taskTypeStatistics")
-     @get
-     getTaskTypeStatistics() { }
+    @url("/oaApi/taskStatistics/taskTypeStatistics")
+    @get
+    getTaskTypeStatistics() { }
 
-     @url("/oaApi/taskStatistics/deptTask")
-     @get
-     getdeptTaskStatistics() { }
+    @url("/oaApi/taskStatistics/deptTask")
+    @get
+    getdeptTaskStatistics() { }
 
-     @url("/oaApi/taskStatistics/taskStatus")
-     @get
-     getTaskStatus() { }
-    
-     @url("/oaApi/taskStatistics/taskNumRanking")
-     @get
-     getTaskNumRanking() { }
+    @url("/oaApi/taskStatistics/taskStatus")
+    @get
+    getTaskStatus() { }
 
-     @url("/oaApi/taskStatistics/taskNumbers")
-     @get
-     getTaskNumberTable() { }
+    @url("/oaApi/taskStatistics/taskNumRanking")
+    @get
+    getTaskNumRanking() { }
+
+    @url("/oaApi/taskStatistics/taskNumbers")
+    @get
+    getPersonalTaskRanking() { }
+
+    @url("/vibe-web/spacemodel/findDevice")
+    @get
+    getFindDevice() { }
+
+    @url('/oaApi/task/taskTypeList')
+    @get
+    getTaskTypeList() { }
+
+    @url('/oaApi/taskStatistics/taskLinkRatio')
+    @get
+    getTaskLinkRatio() { }
 
 }
 

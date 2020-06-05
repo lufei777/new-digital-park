@@ -347,6 +347,10 @@ class CommonApi {
   @url("/vibe-web/monitor/codeName")
   @get
   getMonitorTypeList(){}
+
+  @url("/vibe-web/auty/findAuty")
+  @get
+  getDutyList(){}
 }
 
 export default new CommonApi()
