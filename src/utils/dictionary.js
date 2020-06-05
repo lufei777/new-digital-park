@@ -91,7 +91,6 @@ export const AssetDic = {
     0: '领用'
   }
 }
-
 // 人事管理
 export const PersonalManageDic = {
   // 员工状态
@@ -536,6 +535,358 @@ export const taskType = {
     }
   ]
 }
+
+// 预警报警
+export const WarningAlerm = {
+	// 报警级别
+	// Alarm level
+	alarmLevel: [
+		{ label: '全部', value: 1 },
+		{ label: '普通', value: 2 },
+		{ label: '严重', value: 3 },
+		{ label: '紧急', value: 4 }
+	],
+	// 报警状态
+	// Alarm status
+	alarmStatus: [
+		{ label: '全部', value: 1 },
+		{ label: '已创建', value: 2 },
+		{ label: '未处理', value: 3 },
+		{ label: '处理中', value: 4 },
+		{ label: '已关闭', value: 5 }
+	],
+	// 子系统
+	// subsystem
+	subSystem: [
+		{ label: '门禁管理', value: 1 },
+		{ label: '环境监测', value: 2 },
+		{ label: '视频控制', value: 3 },
+		{ label: '变配电', value: 4 }
+	],
+	// 设备类型
+	// device type
+	deviceType: [ { label: '门禁', value: 1 }, { label: '温湿度传感器', value: 2 } ],
+	// 报警类型
+	// Alarm type
+	alarmType: [
+		{ label: '全部', value: 1 },
+		{ label: '设备离线报警', value: 2 },
+		{ label: '设备故障报警', value: 3 },
+		{ label: '设备运行报警', value: 4 }
+	],
+	// 录入类型
+	// Input type
+	inputType: [ { label: '点表导入', value: 1 }, { label: '手动录入', value: 2 } ],
+	// 处理人员
+	// handling person
+	handingPerson: [ { label: '张三', value: 1 }, { label: '李四', value: 2 }, { label: '王五', value: 3 } ],
+	// 设备名称
+	// devicename
+	deviceName: [
+		{ label: '1#会议室温温度传感器', value: 1 },
+		{ label: '2#会议室温温度传感器', value: 2 },
+		{ label: '3#会议室温温度传感器', value: 3 }
+	],
+	// 设备点位
+	// equipmentsite
+	equipmentSite: [
+		{ label: '1#会议室温监测', value: 1 },
+		{ label: '2#会议室温监测', value: 2 },
+		{ label: '3#会议室温监测', value: 3 }
+	],
+	// 处理组名称
+	grounpName: [ { label: '安保部处理组A', value: 1 }, { label: '安保部处理组B', value: 2 }, { label: '安保部处理组C', value: 3 } ],
+	// 点位类型
+	// Point type
+	pointType: [ { label: '温度监测', value: 1 }, { label: '湿度监测', value: 2 } ],
+	// 抑制
+	// restrain
+	restrain: [ { label: '抑制', value: 1 }, { label: '不抑制', value: 2 } ],
+	// 通知方式
+	// way of notification
+	notificationWay: [ { label: '短信', value: 1 }, { label: '语音', value: 2 }, { label: '弹框', value: 3 } ],
+	// 通知组
+	notificationGrounp: [
+		{ label: '环境/严重/处理组A', value: 1 },
+		{ label: '环境/严重/处理组B', value: 2 },
+		{ label: '环境/严重/处理组C', value: 3 }
+	],
+	// 弹框类型
+	dialogType: [ { label: '自动关闭', value: 1 }, { label: '手动关闭', value: 2 } ],
+	// 通知人员=== 》处理人员
+	// 时间设置
+	timeSetting: [
+		{ label: '1', value: 1 },
+		{ label: '2', value: 2 },
+		{ label: '3', value: 3 },
+		{ label: '4', value: 4 },
+		{ label: '5', value: 5 }
+	],
+	// 重复交验中的复选框
+	reCheckbox: [
+		{ label: '1#温湿度传感器', value: 1 },
+		{ label: '2#温湿度传感器', value: 2 },
+		{ label: '3#温湿度传感器', value: 3 },
+		{ label: '4#温湿度传感器', value: 4 },
+		{ label: '5#温湿度传感器', value: 5 },
+		{ label: '全选', value: 6 }
+	],
+	// 弹窗的启用禁用
+	// Enable disable
+	enableDisAble: [ { label: '启用', value: 1 }, { label: '禁用', value: 2 } ],
+	// 报警应答弹框复选框
+	alarmResponse: [
+		{ label: '设备调试', value: 1 },
+		{ label: '真实故障', value: 2 },
+		{ label: '误报', value: 3 },
+		{ label: '其他', value: 4 }
+	],
+	// 优先级
+	priority: [ { label: '正常', value: 1 }, { label: '重要', value: 2 }, { label: '紧急', value: 3 } ]
+};
+
+// 罗布林卡
+export const Norbulingka = {
+	//  工程分类
+	projectType: [
+		{ label: '未选择', value: 1 },
+		{ label: '文物维修', value: 2 },
+		{ label: '保护性设施', value: 3 },
+		{ label: '现场展示', value: 4 },
+		{ label: '环境整治', value: 5 }
+	],
+	// 类型选择
+	typeSelect: [
+		{ label: '本体情况', value: 1 },
+		{ label: '病害分析', value: 2 },
+		{ label: '施工情况', value: 3 },
+		{ label: '游客记录', value: 4 },
+		{ label: '考古发掘', value: 5 },
+		{ label: '其他', value: 6 }
+	],
+	// 文物级别
+	levelCultural: [
+		{ label: '未选择', value: 1 },
+		{ label: '一级', value: 2 },
+		{ label: '二级', value: 3 },
+		{ label: '三级', value: 4 },
+		{ label: '一般', value: 5 },
+		{ label: '未定级', value: 6 }
+	],
+	// 维护类型 Maintenance types
+	maintenanceTypes: [
+		{ label: '未选择', value: 1 },
+		{ label: '异常记录', value: 2 },
+		{ label: '保养与维护工程记录', value: 3 },
+		{ label: '安全事故记录', value: 4 },
+		{ label: '群体事件记录', value: 5 },
+		{ label: '未定级', value: 6 }
+	],
+	// 巡检人员 Inspection personnel
+	inspectionPersonnel: [
+		{ label: '未选择', value: 1 },
+		{ label: 'admin', value: 2 },
+		{ label: '审计员', value: 3 },
+		{ label: '访客', value: 4 }
+	],
+	// 文物本体
+	ontology: [
+		{ label: '未选择', value: 1 },
+		{ label: '乌尧颇章', value: 2 },
+		{ label: '格桑颇章', value: 3 },
+		{ label: '缺扎', value: 4 },
+		{ label: '曲然', value: 5 },
+		{ label: '康松思轮', value: 6 },
+		{ label: '措吉颇章(湖心亭)', value: 7 },
+		{ label: '鲁康(龙王亭)', value: 8 },
+		{ label: '鲁康厦(东龙王亭)', value: 9 },
+		{ label: '春增颇章', value: 10 },
+		{ label: '内马厩', value: 11 },
+		{ label: '金色颇章', value: 12 },
+		{ label: '格桑德吉', value: 13 },
+		{ label: '曲敏确杰', value: 14 },
+		{ label: '夏典拉康', value: 15 },
+		{ label: '噶厦官员办公室', value: 16 },
+		{ label: '"译仓"办公室', value: 17 },
+		{ label: '达旦明久颇章', value: 18 },
+		{ label: '其他建筑', value: 19 }
+	],
+	// 评估状态
+	assessment: [
+		{ label: '未选择', value: 1 },
+		{ label: '好', value: 2 },
+		{ label: '较好', value: 3 },
+		{ label: '一般', value: 4 }
+	],
+	// 保存状态
+	saveStatues: [
+		{ label: '未选择', value: 1 },
+		{ label: '保持原状', value: 2 },
+		{ label: '基本保持原状', value: 3 },
+		{ label: '部分改变原状', value: 4 },
+		{ label: '原状改变较大', value: 5 },
+		{ label: '完全改变原状', value: 6 }
+	],
+	// 病害分类 diseasesSort
+	diseasesSort: [
+		{ label: '未选择', value: 1 },
+		{ label: '建，构筑物', value: 2 },
+		{ label: '遗址', value: 3 },
+		{ label: '洞窟，龛', value: 4 },
+		{ label: '造像，碑刻，壁画', value: 5 },
+		{ label: '山体', value: 6 },
+		{ label: '水体', value: 7 },
+		{ label: '植被', value: 8 },
+		{ label: '街区', value: 9 }
+	],
+	// 病害类型 diseaseType
+	diseaseType: [
+		{ label: '未选择', value: 1 },
+		{ label: '危岩体', value: 2 },
+		{ label: '滑移', value: 3 },
+		{ label: '倾倒', value: 4 },
+		{ label: '渗漏', value: 5 },
+		{ label: '根劈', value: 6 },
+		{ label: '表层风化', value: 7 }
+	],
+	// 添加藏品档案 =============
+	// 编号类型
+
+	// 文物类别
+	culturalType: [
+		{ label: '请选择', value: 0 },
+		{ label: '玉石器、宝石', value: 1 },
+		{ label: '陶器', value: 2 },
+		{ label: '瓷器', value: 3 },
+		{ label: '铜器.', value: 4 },
+		{ label: '金银器', value: 5 },
+		{ label: '铁器、其他金属器', value: 6 }
+		// {label:'漆器',value:7},
+		// {label:'雕塑、造像',value:8},
+		// {label:'石器、石刻、砖瓦',value:9},
+		// {label:'书法、绘画',value:10},
+		// {label:'文具',value:11},
+		// {label:'甲骨',value:12},
+		// {label:'玺印符牌',value:13},
+		// {label:'钱币',value:14},
+		// {label:'牙骨角器',value:15},
+		// {label:'竹木雕',value:16},
+		// {label:'家具',value:17},
+		// {label:'珐琅器',value:18},
+		// {label:'织绣',value:19},
+		// {label:'古籍图书',value:20},
+		// {label:'碑帖拓本',value:21},
+		// {label:'武器',value:22},
+		// {label:'邮品',value:23},
+		// {label:'文件、宣传品',value:24},
+		// {label:'档案文书',value:25},
+		// {label:'名人遇物',value:26},
+		// {label:'玻璃器',value:27},
+		// {label:'乐器、法器',value:28},
+		// {label:'皮革',value:29},
+		// {label:'音像制品',value:30},
+		// {label:'票据',value:31},
+		// {label:'交通、运输工具',value:32},
+		// {label:'度量衡器',value:33},
+		// {label:'标本.化石',value:34},
+		// {label:'其他',value:35},
+	],
+	// 藏品年代
+	collectionYear: [
+		{
+			label: '地址年代',
+			value: 0,
+			children: [
+				{
+					value: 'alert',
+					label: 'Alert 警告',
+					children: [
+						{
+							value: '123',
+							label: 'Loading 加载'
+						},
+						{
+							value: '345',
+							label: '159'
+						}
+					]
+				},
+				{
+					value: 'loading',
+					label: 'Loading 加载'
+				},
+				{
+					value: 'message',
+					label: 'Message 消息提示'
+				},
+				{
+					value: 'message-box',
+					label: 'MessageBox 弹框',
+					children: [
+						{
+							value: '123',
+							label: 'Loading 加载'
+						},
+						{
+							value: '345',
+							label: '159'
+						}
+					]
+				},
+				{
+					value: 'notification',
+					label: 'Notification 通知'
+				}
+			]
+		},
+		{
+			label: '地址年代',
+			value: 0,
+			children: [
+				{
+					value: 'alert',
+					label: 'Alert 警告',
+					children: [
+						{
+							value: '123',
+							label: 'Loading 加载'
+						},
+						{
+							value: '345',
+							label: '159'
+						}
+					]
+				},
+				{
+					value: 'loading',
+					label: 'Loading 加载'
+				},
+				{
+					value: 'message',
+					label: 'Message 消息提示'
+				},
+				{
+					value: 'message-box',
+					label: 'MessageBox 弹框',
+					children: [
+						{
+							value: '123',
+							label: 'Loading 加载'
+						},
+						{
+							value: '345',
+							label: '159'
+						}
+					]
+				},
+				{
+					value: 'notification',
+					label: 'Notification 通知'
+				}
+			]
+		}
+	]
+};
 
 export const TaskofficeLocationType = {
   officeLocationType: [

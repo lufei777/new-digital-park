@@ -3,23 +3,11 @@
     <div class="radius-shadow operator-box flex panel">
       <div class="flex item-group">
         <label for="">建筑物分类：</label>
-        <el-select v-model="searchParams.dateTypeCode">
-          <el-option v-for="item in dateTypeList"
-                     :key="item.value"
-                     :label="item.label"
-                     :value="item.value"
-          ></el-option>
-        </el-select>
+        <el-input  v-model="searchParams.buildType"/>
       </div>
       <div class="flex item-group">
         <label for="">城市名：</label>
-        <el-select v-model="searchParams.energyType">
-          <el-option v-for="item in energyList"
-                     :key="item.id"
-                     :label="item.name"
-                     :value="item.id"
-          ></el-option>
-        </el-select>
+        <el-input  v-model="searchParams.city"/>
       </div>
       <div class="flex item-group">
         <label for="">建筑名称：</label>
@@ -33,8 +21,8 @@
     <TreeModal :tree-modal-config="treeModalConfig"/>
     <div class="panel">
       <div class="operator-btn-box flex-row-reverse">
-        <el-button type="primary" @click="onClickMultiDealBtn">批量删除</el-button>
-        <el-button type="primary" @click="onClickMultiDealBtn">新增</el-button>
+        <el-button type="primary" @click="onClickMultiDelBtn">批量删除</el-button>
+        <el-button type="primary" @click="onClickAddBtn">新增</el-button>
       </div>
       <z-table class="custom-table"
                :ref="tableConfig.ref" :options="tableConfig"
@@ -44,7 +32,7 @@
       >
         <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
           <!--<el-button type="text" @click="rowClick(row)">编辑</el-button>-->
-          <el-button type="text" @click="deleteRow(row)">删除</el-button>
+          <el-button type="text" @click="deleteRow(row,$index)">删除</el-button>
         </template>
       </z-table>
     </div>
@@ -57,32 +45,33 @@
   import EnergyApi from '@/service/api/energy'
   import {isZG} from '@/utils/project';
   import TreeModal from '@/components/treeModal/index'
-
+  import CommonFun from '@/utils/commonFun'
   let pageInfo = {
     pageCount: 10
   }
   export default {
-    name: "standardSetting",
+    name: "buildInfoSetting",
     components: {
       TreeModal
     },
     data() {
       let _this = this
       let checkArea = (rule, value, callback) => {
-        console.log('value',value)
-        if ((!Number(value) || value < 0) &&
-          (value + '').trim() != '' && value !== null &&
-          value!=0) {
+        // console.log('value',value)
+        if((value+'').trim()=='' || value===null){
+          return callback({message: `请输入建筑面积`});
+        }else if ((!Number(value) || value < 0) && value!=0) {
           return callback({message: "建筑面积：请输入正数"});
         }
         return callback();
       };
-      let checkPeople = (rule, value, callback) => {
-        console.log("floor",Math.floor(value))
-        if ((!Number(value) || value < 0) &&
-          (value + '').trim() != '' && value !== null &&
-          value!=0 && Math.floor(value) == value) {
-          return callback({message: "用能人数：请输入正整数"});
+      let checkInput = (rule, value, callback) => {
+        // console.log('value1',value,value!==null)
+        let str = rule.field=='person'?'用能人数':rule.field=='floor'?'建筑层数':'房间数量'
+        if((value+'').trim()=='' || value===null){
+          return callback({message: `请输入${str}`});
+        }else if ((!Number(value) || value < 0) && value!=0 || Math.floor(value) != value) {
+          return callback({message: `${str}：请输入正整数`});
         }
         return callback();
       };
@@ -104,6 +93,7 @@
               children: 'nodes'
             },
             defaultExpandedkeys: [],
+            nodeKey:'floorId',
           },
           showModal: false,
           onClickSureBtnCallback: this.onClickModalSureBtn,
@@ -118,19 +108,34 @@
           customTop: true,
           data: [],
           props: {
-            rowKey: 'spaceId'
+            rowKey: 'id'
           },
           columnConfig: [{
             label: '建筑物分类',
-            prop: 'reckonName',
+            prop: 'buildType',
             cell:true,
           }, {
             label: '城市名',
-            prop: 'codeName',
+            prop: 'city',
             cell:true,
-          }, {
+            // focus:_this.onClickSpaceNode()
+          },
+          //   {
+          //     label: '上级建筑',
+          //     prop: 'parentId',
+          //     cell:true,
+          //     type: "tree",
+          //     props: {
+          //       label: "floor",
+          //       value: "floorId",
+          //       children: "nodes",
+          //     },
+          //     dicData: [],
+          //     disabled:true,
+          // },
+            {
             label: '建筑名称',
-            prop: 'spaceName',
+            prop: 'spaceId',
             cell:true,
             type: "tree",
             props: {
@@ -139,6 +144,8 @@
               children: "nodes",
             },
             dicData: [],
+            nodeClick:_this.onClickSpaceNode,
+            disabled:false,
           }, {
             label: '建筑面积（㎡）' ,
             prop: 'area',
@@ -148,19 +155,25 @@
             },
           }, {
             label: '用能人数（人）',
-            prop: 'people',
+            prop: 'person',
             cell:true,
             rules: {
-              validator: checkPeople,
+              validator: checkInput,
             },
           },{
             label: '建筑层数（层）',
-            prop: 'level',
+            prop: 'floor',
             cell:true,
+            rules: {
+              validator: checkInput,
+            },
           },{
             label: '房间数量（间）',
-            prop: 'num',
+            prop: 'room',
             cell:true,
+            rules: {
+              validator: checkInput,
+            },
           }],
           uiConfig: {
             height: "auto",
@@ -182,41 +195,41 @@
         },
         curPage: 1,
         searchParams: {
-          dateTypeCode: 1,
-          energyType: '',
+          buildType: '',
+          city:'',
           spaceId: '',
           spaceName: ''
-        }
+        },
+        deleteArr:[],
       };
     },
     computed: {},
     methods: {
-      async getEnergyList() {
-        let res = await CommonApi.getEnergyListByGroup();
-        if (isZG()) {
-          this.energyList = res
-        } else {
-          let tmp = []
-          res.map((item) => {
-            tmp.push(item)
-            item.energyType && item.energyType.map((child) => {
-              tmp.push(child)
-            })
-          })
-          this.energyList = tmp
-        }
-        this.searchParams.energyType = res[0].id
-      },
       async getAllFloorOfA3() {
         let res = await CommonApi.getAllFloorOfA3()
         this.treeModalConfig.treeList = res
         this.treeModalConfig.treeConfig.defaultExpandedkeys = [res[0].floorId]
         this.searchParams.spaceName = res[0].floor
         this.searchParams.spaceId = res[0].floorId
-        this.$refs[this.tableConfig.ref].setColumnByProp("spaceName", {
+        this.$refs[this.tableConfig.ref].setColumnByProp("spaceId", {
           dicData: res
         });
-        // this.
+        // this.$refs[this.tableConfig.ref].setColumnByProp("parentId", {
+        //   dicData: res
+        // });
+      },
+      async getBuildInfoList(){
+        let params = {
+          ...{
+            pageNum: this.curPage
+          }, ...this.searchParams
+        }
+        let res = await EnergyApi.getBuildInfoList(params)
+        res.list.map((item)=>{
+          item.$cellEdit=item.isEdit==0?false:true
+        })
+        this.tableConfig.data = res.list
+        this.tableConfig.uiConfig.pagination.total = res.total
       },
       onShowModal() {
         this.treeModalConfig.showModal = true
@@ -229,43 +242,41 @@
       onClickModalCancelBtn() {
         this.treeModalConfig.showModal = false
       },
-      async getSpaceStandardTree() {
-        let params = {
-          ...{
-            pageNum: this.curPage
-          }, ...this.searchParams
-        }
-        let res = await EnergyApi.getSpaceStandardTree(params)
-        this.tableConfig.data = res.list
-        this.tableConfig.uiConfig.pagination.total = res.total
-      },
-      setIndex(index) {
-        return pageInfo.pageCount * (this.curPage - 1) + index + 1
-      },
       async rowUpdate(data, index, callback) {
-        console.log("baocun", data)
+        if(!data.spaceId){
+          this.$message({
+            type: 'warning',
+            message: '请选择建筑名称'
+          })
+          return;
+        }
+        let obj={...data,...{isEdit:0}}
+        if(data.flag){
+          await EnergyApi.addBuildInfo(obj)
+        }else{
+          await EnergyApi.updateBuildInfo(obj)
+        }
+        this.getBuildInfoList()
+        this.$refs[this.tableConfig.ref].setColumnByProp("spaceId", {
+          disabled:false
+        });
         callback()
       },
-      async rowEdit(obj, index) {
-        console.log("edit", obj)
-        // this.curRowIndex = index
-        // this.curDetail = obj
-        // await this.editAssetUseDetail({ ...obj, ...{ isEdit: 1 } })
+      async rowEdit(obj) {
+        this.$refs[this.tableConfig.ref].setColumnByProp("spaceId", {
+          disabled:true
+        });
+        await EnergyApi.updateBuildInfo({...obj,...{isEdit:1}})
       },
-      async rowEditCancel(obj, index) {
-        // await this.editAssetUseDetail({ ...obj.preDetail, ...{ isEdit: 0 } })
+      async rowEditCancel(obj) {
+        obj.$cellEdit=false
+        if(obj.flag){
+           this.getBuildInfoList()
+        }else{
+          await EnergyApi.updateBuildInfo({...obj,...{isEdit:0}})
+        }
       },
-      selectionChange(data) {
-        console.log(data)
-        console.log(this.tableConfig.data)
-        this.tableConfig.data.map((item) => {
-          item.$cellEdit = false
-        })
-        data.map((item) => {
-          item.$cellEdit = true
-        })
-      },
-      onClickMultiDealBtn() {
+      onClickMultiDelBtn() {
         let tmp = this.$refs[this.tableConfig.ref].getSelectedData()
         if (!tmp.length) {
           this.$message({
@@ -274,27 +285,74 @@
           })
           return;
         }
-        console.log("tmp", tmp)
-        tmp.map((item) => {
-          item.$cellEdit = false
+        // console.log("tmp", tmp)
+        CommonFun.deleteTip(this,true,'确定要删除吗？',()=>this.sureMulDelete(tmp))
+      },
+      onClickAddBtn(){
+        let tmp = this.tableConfig.data.find((item)=>{
+         return item.$cellEdit
         })
+        if(tmp){
+          this.$message({
+            type:'warning',
+            message:'请先将数据补充完整'
+          })
+          return;
+        }
+        let obj = {
+          id:-1,
+          spaceId: '',
+          spaceName: '',
+          city: '',
+          buildType: '',
+          area: null,
+          person:null,
+          floor: null,
+          room: null,
+          flag:true,  //代表是新增的
+          $cellEdit:true,
+        }
+        // this.$refs['tableRef'].rowCellAdd(obj)
+        this.tableConfig.data.unshift(obj)
+        this.tableConfig.uiConfig.pagination.total = this.tableConfig.uiConfig.pagination.total+1
+      },
+      setIndex(index) {
+        return pageInfo.pageCount * (this.curPage - 1) + index + 1
       },
       handleCurrentChange(page) {
         this.curPage = page
       },
       onClickSearchBtn() {
-        this.getSpaceStandardTree()
+        this.getBuildInfoList()
       },
-      async setStandardValue() {
-        await EnergyApi.setStandardValue()
+      deleteRow(row,index){
+        this.deleteArr=[row.spaceId]
+        CommonFun.deleteTip(this,true,'确定要删除吗？',()=>this.sureDelete(row,index))
       },
-      rowClick(row){},
-      deleteRow(row){}
+      async sureDelete(row,index){
+        if(!row.flag){
+          await EnergyApi.deleteBuildInfo(this.deleteArr)
+        }
+        this.getBuildInfoList()
+      },
+      async sureMulDelete(arr){
+        let arr2=[]
+        arr.map((item)=>{
+          if(!item.flag){
+            arr2.push(item)
+          }
+        })
+        let delArr = arr2.map((item)=>item.spaceId)
+        await EnergyApi.deleteBuildInfo(delArr)
+        this.getBuildInfoList()
+      },
+      onClickSpaceNode(val){
+        console.log("node",val)
+      }
     },
     async mounted() {
-      await this.getEnergyList()
       await this.getAllFloorOfA3()
-      this.getSpaceStandardTree()
+      this.getBuildInfoList()
     }
   };
 </script>
