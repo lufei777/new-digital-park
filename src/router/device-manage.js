@@ -8,7 +8,7 @@ export default [{
   children: [{
     path: 'deviceinfo',
     name: 'deviceinfo',
-    meta: { title: '设备管理' },
+    meta: { title: '设备信息' },
     component: () => import('@/pages/deviceManage/deviceInfo')
   }, {
     path: 'monitorcollection',
