@@ -93,6 +93,10 @@ class taskManageApi {
     @get
     getTaskTypeList() { }
 
+    @url('/oaApi/taskStatistics/taskLinkRatio')
+    @get
+    getTaskLinkRatio() { }
+
 }
 
 export default new taskManageApi()
