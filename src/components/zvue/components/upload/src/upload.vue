@@ -74,7 +74,8 @@ export default {
       dialogVisible: false,
       text: [],
       file: {},
-      initialIndex: 0
+      initialIndex: 0,
+      insideFileList: [] // 当不自动上传时，file保存进这个对象
     };
   },
   props: {
@@ -195,6 +196,9 @@ export default {
     },
     allDisabled() {
       return this.textMode ? true : this.disabled
+    },
+    resultList() {
+      return this.autoUpload ? this.text : this.insideFileList
     }
   },
   created() { },
@@ -204,7 +208,7 @@ export default {
     validatenull,
     handleClick() {
       if (typeof this.click === "function")
-        this.click({ value: this.text, column: this.column });
+        this.click({ value: this.resultList, column: this.column });
     },
     handleChange(file, fileList) {
       if (this.autoUpload) {
@@ -213,18 +217,26 @@ export default {
         this.show(file);
       }
       if (typeof this.change === "function")
-        this.change({ value: this.text, column: this.column });
+        this.change({ value: this.resultList, column: this.column, file, fileList });
     },
     handleSuccess(file) {
+      // 如果不自动上传，则将计算url
+      if (!this.autoUpload) {
+        file[this.urlKey] = URL.createObjectURL(file.raw);
+      }
+
       if (this.isArray || this.isString) {
         this.text.push(file[this.urlKey]);
+        this.insideFileList.push(file.raw)
       } else if (this.isPictureImg) {
         this.text.unshift(file[this.urlKey]);
+        this.insideFileList.unshift(file.raw)
       } else {
         let obj = {};
         obj[this.labelKey] = file[this.nameKey];
         obj[this.valueKey] = file[this.urlKey];
         this.text.push(obj);
+        this.insideFileList.push(file.raw)
       }
       this.$message.success("上传成功");
       this.setVal();
@@ -377,17 +389,19 @@ export default {
       }
     },
     setVal() {
-      let result = "";
+      let res = '';
+      let result = this.resultList;
 
       if (this.isString) {
-        result = this.text.join(",");
+        res = result.join(",");
       } else if (this.isPictureImg) {
-        result = this.text[0];
+        res = result[0];
       } else {
-        result = this.text;
+        res = result;
       }
-      this.$emit("input", result);
-      this.$emit("change", result);
+
+      this.$emit("input", res);
+      this.$emit("change", res);
     },
     handleExceed(files, fileList) {
       this.$message.warning(

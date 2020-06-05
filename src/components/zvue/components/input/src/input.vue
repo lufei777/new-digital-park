@@ -3,7 +3,7 @@
     <div class="zvue-input-tree" v-if="type==='tree'" v-clickout="closeBox">
       <el-input
         :size="size"
-        v-model="labelShow"
+        :value="labelShow"
         :type="typeParam"
         :clearable="disabled?false:clearable"
         :autosize="{ minRows: minRows, maxRows: maxRows}"
@@ -11,11 +11,11 @@
         :suffix-icon="suffixIcon"
         :placeholder="placeholder"
         :show-word-limit="showWordLimit"
-        @change="handleChange"
+        @change="labelChange"
         @focus="handleFocus"
         @blur="handleBlur"
         :disabled="disabled"
-        :readonly="true"
+        :readonly="false"
         @click.native="disabled?'':open()"
       />
       <transition name="el-zoom-in-top">
@@ -46,7 +46,7 @@
               :default-checked-keys="defaultCheckedKeys?defaultCheckedKeys:keysList"
               :default-expand-all="defaultExpandAll"
               @check="checkChange"
-              @node-click.self="handleNodeClick"
+              @node-click="handleNodeClick"
             >
               <template #default="{ data }">
                 <div style="width:100%;padding-right:10px;">
@@ -118,13 +118,6 @@ export default {
   name: "zInput",
   mixins: [props(), events()],
   props: {
-    nodeClick: Function,
-    treeLoad: Function,
-    checked: Function,
-    lazy: {
-      type: Boolean,
-      default: false
-    },
     rawtype: {
       type: String
     },
@@ -177,6 +170,13 @@ export default {
     prefix: {},
     autofocus: Boolean,
     // 以下为树
+    nodeClick: Function,
+    treeLoad: Function,
+    checked: Function,
+    lazy: {
+      type: Boolean,
+      default: false
+    },
     filter: {
       type: Boolean,
       default: true
@@ -223,6 +223,23 @@ export default {
   },
   methods: {
     validatenull,
+    labelChange(label) {
+      let box = this.box;
+      if (this.validatenull(label)) {
+        if (this.multiple) {
+          this.text = [];
+        } else {
+          this.text = '';
+        }
+        if (box) {
+          this.$refs.tree.setCheckedKeys([]);
+        }
+
+        setTimeout(() => {
+          this.box = box;
+        }, 0);
+      }
+    },
     closeBox() {
       this.box = false;
     },
@@ -324,12 +341,12 @@ export default {
         }
       });
     },
-    handleNodeClick(data) {
+    handleNodeClick(data, node, $tree) {
       const callback = () => {
         this.box = false;
         this.node = data;
       };
-      if (typeof this.nodeClick === "function") this.nodeClick(data);
+      if (typeof this.nodeClick === "function") this.nodeClick(data, node, $tree);
       if (this.multiple) return;
       if (
         (validatenull(data[this.childrenKey]) && !this.multiple) ||
@@ -416,6 +433,7 @@ export default {
     }
   },
   watch: {
+    // 由于elementUI的input的change只有在失去焦点时会触发，所以监听text
     text: {
       immediate: true,
       handler(value) {
@@ -434,7 +452,7 @@ export default {
         this.init();
       }, 0);
     },
-    value() {
+    value(value) {
       this.init();
     },
     filterText(val) {

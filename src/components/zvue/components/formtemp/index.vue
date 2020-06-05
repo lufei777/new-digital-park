@@ -63,7 +63,7 @@ import { DIC_PROPS, DIC_SPLIT, EMPTY_VALUE } from '../../global/variable';
 export default {
   name: "formTemp",
   props: {
-    value: [Array, String, Number, Object, Boolean, Date],
+    value: {},
     t: Function,
     uploadBefore: Function,
     uploadAfter: Function,
@@ -164,7 +164,7 @@ export default {
     },
     comDisplayValue() {
       let displayValue = this.displayValue;
-      if (typeof displayValue === 'string' && displayValue.length === 0) {
+      if (validatenull(displayValue)) {
         displayValue = EMPTY_VALUE;
       }
       return displayValue

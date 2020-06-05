@@ -7,7 +7,8 @@ const state = {
   stockInReApplyId:'',
   activeMenuIndex:Cookies.get("activeMenuIndex"),
   menuList:JSON.parse(localStorage.getItem("menuList")),
-  largeScreenIframeSrc:''
+  largeScreenIframeSrc:'',
+  contentHeight:''
 }
 
 const mutations={
@@ -37,6 +38,9 @@ const mutations={
   largeScreenIframeSrc(state,data){
     state.largeScreenIframeSrc = data
   },
+  setContentHeight(state,payload){
+    state.contentHeight = payload;
+  }
 }
 
 const getters = {

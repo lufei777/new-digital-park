@@ -43,16 +43,23 @@
         <div class="task-group task-MoM-analysis flex-align-between radius-shadow">
           <div class="analysis-pie-charts-box">
             <div class="dept-task-header flex-align-between">
-              <div>2019年与2020年工单数量环比柱状图分析</div>
+              <div>{{taskStartTime}}年与{{taskEndTime}}年工单数量环比柱状图分析</div>
               <div class="dept-class">
-                <el-select v-model="analysisValue" placeholder="请选择" size="small">
-                  <el-option
-                    v-for="item in analysisList"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id"
-                  ></el-option>
-                </el-select>
+                 <el-date-picker
+                  v-model="taskStartTime"
+                  type="date"
+                  placeholder="选择日期"
+                  size="small"
+                  @change="handleStartTimeChange">
+                </el-date-picker>
+                <span class="tag-style">至</span>
+                 <el-date-picker
+                  v-model="taskEndTime"
+                  type="date"
+                  placeholder="选择日期"
+                  size="small"
+                  @change="handleEndTimeChange">
+                </el-date-picker>
               </div>
             </div>
             <div class="pie-charts analysis-pie-charts" ref="MoManalysisCharts"></div>
@@ -204,17 +211,8 @@ export default {
       deptSelectName: "",
       taskTypeData: [],
       taskNumRankData: [],
-      analysisValue: 1,
-      analysisList: [
-        {
-          name: "年",
-          id: 1
-        },
-        {
-          name: "月",
-          id: 2
-        }
-      ]
+      taskStartTime:moment().startOf('year').format('YYYY-MM-DD'),
+      taskEndTime:moment().format('YYYY-MM-DD')
     };
   },
   computed: {
@@ -229,69 +227,20 @@ export default {
     onClickTreeNodeCallBack() {},
     async taskList() {
       let labelList = [
-        { label: "姓名", prop: "founderName" },
-        // { label: "部门", prop: "taskName" },
-        // { label: "完成率", prop: "typeText" },
-        { label: "总计", prop: "completeNum" },
-        { label: "开始时间", prop: "beginTime" },
-        { label: "预计结束时间", prop: "endTime" },
-        { label: "优先级", prop: "priority" },
-        { label: "状态", prop: "reason" },
-        // { label: "创建人", prop: "founderName" },
-        { label: "处理人", prop: "username" },
-        { label: "地点", prop: "officeLocation" },
-        { label: "补录", prop: "isSupplementText" }
+        { label: "姓名", prop: "username" },
+        { label: "部门", prop: "departmentName" },
+        { label: "完成率", prop: "completeRate" },
+        { label: "总计", prop: "allTaskNum" },
+        { label: "已完成", prop: "completeNum" },
+        { label: "未完成", prop: "unFinishedTaskNum" },
+        { label: "超时", prop: "overtimeTaskNum" },
+        { label: "补录", prop: "supplementTaskNum" },
+        { label: "现场", prop: "locationTaskNum" },
       ];
       this.tableData.columnConfig = labelList;
       let res = await TaskManageApi.getPersonalTaskRanking();
       if (res) {
-        res.map((item, ind) => {
-          item.taskStatus =
-            item.status == "1"
-              ? "待派"
-              : item.status == "2"
-              ? "已派"
-              : item.status == "3"
-              ? "处理中"
-              : item.status == "4"
-              ? "已完成"
-              : "";
-          item.typeText =
-            item.type == "1"
-              ? "巡检"
-              : item.type == "2"
-              ? "审批"
-              : item.type == "3"
-              ? "调试"
-              : "其他";
-
-          item.priority =
-            item.urgent == "1"
-              ? "重要"
-              : item.urgent == "2"
-              ? "紧急"
-              : item.urgent == "3"
-              ? "正常"
-              : "";
-
-          item.officeLocation =
-            item.officeLocation == 0
-              ? "公司"
-              : item.officeLocation == 1
-              ? "现场"
-              : "";
-
-          item.isSupplementText =
-            item.isSupplement == "1"
-              ? "正常"
-              : item.isSupplement == "0"
-              ? "补录"
-              : "正常";
-        });
-      }
-      if (res) {
         this.tableData.data = res;
-        // this.tableData.uiConfig.pagination.total = res.total;
       }
     },
     handleCurrentChange(val) {
@@ -464,49 +413,20 @@ export default {
       let res = await TaskManageApi.getTaskNumRanking();
       this.taskNumRankData = res;
     },
-    createCharts() {
-      let res = {
-        unit: "条",
-        value: [
-          {
-            xulie: 0,
-            date: "2020-02-01",
-            dqzh: 59,
-            tqzh: 26,
-            sqzh: 3.5,
-            tbzz: 1.5,
-            hbzz: 1.6
-          },
-          {
-            xulie: 0,
-            date: "2020-03-01",
-            dqzh: 55,
-            tqzh: 30,
-            sqzh: 0.0,
-            tbzz: 3.5,
-            hbzz: 0.0
-          },
-          {
-            xulie: 0,
-            date: "2020-04-01",
-            dqzh: 60,
-            tqzh: 50,
-            sqzh: 2.5,
-            tbzz: 0.0,
-            hbzz: 1.6
-          },
-          {
-            xulie: 0,
-            date: "2020-05-01",
-            dqzh: 70,
-            tqzh: 60,
-            sqzh: 0.0,
-            tbzz: 3.5,
-            hbzz: 0.0
-          }
-        ]
-      };
-      let resData = res.value;
+    handleStartTimeChange(value){
+      this.taskStartTime = moment(value).format('YYYY-MM-DD')
+       this.createCharts()
+    },
+    handleEndTimeChange(value){
+      this.taskEndTime = moment(value).format('YYYY-MM-DD')
+      this.createCharts()
+    },
+    async createCharts() {
+       let res = await TaskManageApi.getTaskLinkRatio({
+         startTime:this.taskStartTime,
+         endTime:this.taskEndTime
+       });
+      let resData = res.values;
       let myChart = this.$echarts.init(this.$refs.MoManalysisCharts);
       let xAxis = resData.map(item => (item.date ? item.date : ""));
       let legendData = [
@@ -524,7 +444,7 @@ export default {
             .add(-1, "y")
             .format("YYYY"),
           type: "bar",
-          data: resData.map(item => item.tqzh),
+          data: resData.map(item => item.lastTaskCount),
           barMaxWidth: 80,
           itemStyle: {
             normal: {
@@ -539,7 +459,7 @@ export default {
         {
           name: moment().format("YYYY"),
           type: "bar",
-          data: resData.map(item => item.dqzh),
+          data: resData.map(item => item.currentTaskCount),
           barMaxWidth: 80,
           itemStyle: {
             normal: {
@@ -554,7 +474,7 @@ export default {
         {
           name: "工单数量同比增长率",
           type: "line",
-          data: resData.map(item => item.tbzz),
+          data: resData.map(item => item.yearOnYearGrowth),
           yAxisIndex: 1,
           itemStyle: {
             normal: {
@@ -570,7 +490,7 @@ export default {
           name: "工单数量环比增长率",
           type: "line",
           yAxisIndex: 1,
-          data: resData.map(item => item.hbzz),
+          data: resData.map(item => item.monthOnMonthGrowth),
           itemStyle: {
             normal: {
               color: "#5AD15B", //圈圈的颜色
@@ -758,9 +678,16 @@ export default {
           font-weight: 500;
         }
         .dept-class {
-          .el-select--small {
-            margin-left: 10px;
-            width: 180px;
+          // .el-select--small {
+          //   margin-left: 10px;
+          //   width: 180px;
+          // }
+           .tag-style{
+              font-size:14px;
+              margin:0 5px;
+            }
+          .el-date-editor{
+            width:150px;
           }
         }
       }

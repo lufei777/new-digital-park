@@ -1,9 +1,10 @@
 <template>
   <div class="zvue-form-wrapper" :style="{width:setPx(parentOption.width,'100%')}">
     <el-form
+      v-loading="load"
       :ref="formRef"
       :status-icon="vaildData(parentOption.statusIcon,false)"
-      :label-suffix="parentOption.labelSuffix || '：'"
+      :label-suffix="parentOption.labelSuffix || ':'"
       :rules="formRules"
       :model="model"
       :size="controlSize"
@@ -40,7 +41,7 @@
                 v-if="vaildDisplay(column)"
               >
                 <el-form-item
-                  :class="[_.isEmpty(column.label)?'zvue-form-item_emptylabel' : '']"
+                  :class="[validatenull(column.label)?'zvue-form-item_emptylabel' : '']"
                   :label="column.label"
                   :prop="column.prop"
                   :required="column.required"
@@ -48,13 +49,15 @@
                   :show-message="column.showMessage"
                   :inline-message="column.inlineMessage"
                   :size="column.size || controlSize"
-                  :label-width="setPx(column.width,parentOption.labelWidth || 90)"
+                  :label-width="setPx(column.width,validatenull(parentOption.labelWidth) ? 90 : parentOption.labelWidth)"
                 >
                   <!-- 自定义label -->
                   <template #label v-if="column.labelslot">
                     <slot
+                      v-bind="slotProps"
                       :name="column.prop+'Label'"
                       :column="column"
+                      :label="column.label"
                       :value="model[column.prop]"
                       :disabled="vaildDiabled(column,group)"
                       :size="column.size || controlSize"
@@ -64,6 +67,7 @@
                   <!-- 自定义error -->
                   <template #error="{error}" v-if="column.errorslot">
                     <slot
+                      v-bind="slotProps"
                       :name="column.prop+'Error'"
                       :column="column"
                       :error="error"
@@ -85,14 +89,15 @@
                     >{{displayText(column)}}</span>-->
                     <slot
                       v-if="column.formslot"
+                      v-bind="slotProps"
                       :name="column.prop"
                       :value="model[column.prop]"
                       :column="column"
                       :label="model['$'+column.prop]"
                       :size="column.size || controlSize"
-                      :disabled="vaildDiabled(column,group)"
                       :dic="DIC[column.prop]"
-                      :textMode="textMode"
+                      :disabled="vaildDiabled(column,group)"
+                      :textMode="vaildTextMode(column,group)"
                     ></slot>
                     <form-temp
                       v-else
@@ -113,26 +118,33 @@
                       >
                         <slot
                           :name="`${column.prop}Type`"
+                          v-bind="slotProps"
                           :size="column.size || controlSize"
                           :item="item"
                           :labelkey="labelkey"
                           :valuekey="valuekey"
                           :childrenkey="childrenkey"
                           :node="node"
+                          :disabled="vaildDiabled(column,group)"
+                          :textMode="vaildTextMode(column,group)"
                         ></slot>
                       </template>
                       <!-- input的slot处理 -->
                       <template v-if="column.prependslot" #[column.prependslot]="{prependClick}">
                         <slot
                           :name="column.prependslot"
+                          v-bind="slotProps"
                           :disabled="vaildDiabled(column,group)"
+                          :textMode="vaildTextMode(column,group)"
                           :clickevent="prependClick"
                         ></slot>
                       </template>
                       <template v-if="column.appendslot" #[column.appendslot]="{appendClick}">
                         <slot
                           :name="column.appendslot"
+                          v-bind="slotProps"
                           :disabled="vaildDiabled(column,group)"
+                          :textMode="vaildTextMode(column,group)"
                           :clickevent="appendClick"
                         ></slot>
                       </template>
@@ -170,7 +182,7 @@
                 v-if="vaildData(parentOption.emptyBtn,true)"
                 @click="resetForm"
               >{{vaildData(parentOption.emptyText,'清 空')}}</el-button>
-              <slot name="menuBtn" :disabled="allDisabled" :size="controlSize"></slot>
+              <slot name="menuBtn" v-bind="slotProps"></slot>
             </div>
           </el-form-item>
         </el-col>
@@ -179,7 +191,6 @@
   </div>
 </template>
 <script>
-
 import {
   deepClone,
   vaildData,
@@ -221,6 +232,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    load: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -259,10 +274,8 @@ export default {
     findArray,
     dataFormat() {
       // 页面初始化
-      let modelDefault = formInitVal(this.propOption);
-      this.modelDefault = modelDefault;
-
-      this.model = deepClone(modelDefault.tableForm);
+      this.modelDefault = formInitVal(this.propOption);
+      this.model = deepClone(this.modelDefault.tableForm);
       this.formVal();
     },
     formRulesInit() {
@@ -295,10 +308,14 @@ export default {
       }
     },
     formVal() {
-      Object.keys(this.value).forEach(ele => {
-        this.$set(this.model, ele, this.value[ele]);
-      });
-      this.forEachLabel();
+      if (!this.formCreate && this.validatenull(this.value)) {
+        this.resetForm();
+      } else {
+        Object.keys(this.value).forEach(ele => {
+          this.$set(this.model, ele, this.value[ele]);
+        });
+        this.forEachLabel();
+      }
       this.$emit("input", this.model);
     },
     forEachLabel() {
@@ -368,11 +385,7 @@ export default {
     },
     // 判断该项是否为不可编辑
     vaildTextMode(column, group) {
-      return this.vaildBoolean(
-        column.textMode,
-        group.textMode,
-        this.textMode
-      );
+      return this.vaildBoolean(column.textMode, group.textMode, this.textMode);
     },
     // 验证表单是否显隐
     vaildDisplay(column) {
@@ -510,11 +523,6 @@ export default {
         }
       }
       return -1;
-    },
-    displayText(column) {
-      let prop = column.prop;
-      let valueText = this.modelTranslate[`$${prop}`] || this.model[prop];
-      return this.validatenull(valueText) ? '' : valueText;
     }
   },
   computed: {
@@ -543,6 +551,10 @@ export default {
         (ele.forms || []).forEach((form, cindex) => {
           //动态计算列的位置，如果为隐藏状态则或则手机状态不计算
           if (form.hide !== true && form.display !== false && !this.isMobile) {
+            // 如果该项没有设置span，且设置了itemSpan，则赋值itemSpan
+            if (typeof form.span === 'undefined' && typeof this.options.itemSpan !== 'undefined') {
+              form.span = this.options.itemSpan;
+            }
             form = calcCount(form, this.itemSpanDefault, cindex === 0);
           }
         });
@@ -574,6 +586,13 @@ export default {
     },
     textMode() {
       return this.options.textMode;
+    },
+    slotProps() {
+      return {
+        size: this.controlSize,
+        disabled: this.allDisabled,
+        textMode: this.textMode
+      };
     }
   },
   watch: {
@@ -581,8 +600,8 @@ export default {
       deep: true,
       handler(newVal, oldVal) {
         if (!this.formCreate) {
-          this.$emit("input", this.model);
-          this.$emit("change", this.model);
+          this.$emit("input", newVal);
+          this.$emit("change", newVal);
         }
       }
     },
@@ -614,6 +633,11 @@ export default {
         ) {
           this.allDisabled = this.disabled;
         }
+      }
+    },
+    textMode(newVal) {
+      if (newVal === true) {
+        this.clearValidate();
       }
     }
   }
