@@ -5,7 +5,7 @@
  * ydCity 伊甸城
  */
 
-window.__CZ_SYSTEM = 'zg';
+window.__CZ_SYSTEM = '';
 
 
 
@@ -15,8 +15,9 @@ window.__CZ_SYSTEM = 'zg';
  * ''  不是大屏状态
  * 'normal'     通用大屏
  * ydCity  伊甸城
+ * norbulingka  伊甸城
  */
-window.__CZ_LargeScreen = ''
+window.__CZ_LargeScreen = 'ydCity'
 
 
 //__CZ_SYSTEM 当前是哪个项目。

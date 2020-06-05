@@ -92,12 +92,14 @@
     .news-item{
       line-height: @largeScreenHeaderHeight;
     }
-    .park-logo{
-      font-size: 30px;
+
+    .park-logo {
+      font-size: 76px;
       margin-right: 5px;
     }
+
     .digital-title{
-      font-size: 30px;
+      font-size: 76px;
       font-weight: bold;
       color:@white;
       height: @largeScreenHeaderHeight;
@@ -118,6 +120,42 @@
     .iconyidianchengLOGO{
       /*font-size: 30px;*/
     }
-  }
 
+    .digital-nav-operator {
+      font-size: @largeScreenFontSize;
+
+      .nav-right-item{
+        /*width:230px;*/
+        text-align: right;
+        span{
+          width:200px;
+        }
+      }
+      .nav-right-item .el-input__inner {
+        // width:150px;
+        font-size: @largeScreenFontSize;
+        color: @white;
+      }
+
+      .avatar-img {
+        width: 50px;
+        height: 50px;
+      }
+      .nav-right-item .el-select{
+        width:180px;
+      }
+
+      .nav-right-item .el-input__suffix {
+        width:30px;
+        right: 10px;
+        .el-input__suffix-inner{
+          width:100%;
+        }
+      }
+
+      .el-select .el-input .el-select__caret {
+        font-size: 20px;
+      }
+    }
+  }
 </style>

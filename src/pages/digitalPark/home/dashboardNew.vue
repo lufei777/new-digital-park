@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-park-home-page-new" v-loading="loading">
+  <div class="dashboard-park-home-page-new" >
     <Header v-if="!hideHeader"
             from-flag="1"
             :moduleType.sync="moduleType"
@@ -38,17 +38,17 @@
       </div>
 
       <div class="dashboard-center">
-        <img v-if="pageFlag==2 && !isyd" src="../../../../static/image/digitalPark/unity_priview.png"
-             class="unity_priview"
-             alt="">
-        <iframe v-if="pageFlag==1 && !isyd"
-                src="../../../../static/clientModel/zgHomePage/index.html"
-                frameborder="0"
-                class="unity-frame"></iframe>
-        <iframe v-if="isyd" src="../../../../static/clientModel/ydCityHomePage/index.html"
-                frameborder="0"
-                class="unity-frame"></iframe>
-        <!--<AlertAlarm v-if="pageFlag==1"/>-->
+        <!--<img v-if="pageFlag==2 && !isyd" src="../../../../static/image/digitalPark/unity_priview.png"-->
+             <!--class="unity_priview"-->
+             <!--alt="">-->
+        <!--<iframe v-if="pageFlag==1 && !isyd"-->
+                <!--src="../../../../static/clientModel/zgHomePage/index.html"-->
+                <!--frameborder="0"-->
+                <!--class="unity-frame"></iframe>-->
+        <!--<iframe v-if="isyd" src="../../../../static/clientModel/ydCityHomePage/index.html"-->
+                <!--frameborder="0"-->
+                <!--class="unity-frame"></iframe>-->
+        <AlertAlarm v-if="pageFlag==1"/>
       </div>
       <div class="dashboard-right">
         <draggable :list="proModuleList2"
@@ -513,6 +513,11 @@
         line-height: 50px;
       }
 
+      .park-logo {
+        font-size: 30px;
+        margin-right: 5px;
+      }
+
       .digital-title {
         font-size: 30px;
         font-weight: bold;
@@ -527,6 +532,42 @@
 
       .news-box, .digital-title, .dashboard-nav-operator {
         flex: 1;
+      }
+      .digital-nav-operator {
+        font-size: 14px;
+
+        .nav-right-item{
+          /*width:230px;*/
+          text-align: right;
+          span{
+            width:120px;
+          }
+        }
+        .nav-right-item .el-input__inner {
+          // width:150px;
+          font-size: 14px;
+          color: @white;
+        }
+
+        .avatar-img {
+          width: 30px;
+          height: 30px;
+        }
+        .nav-right-item .el-select{
+          width:120px;
+        }
+
+        .nav-right-item .el-input__suffix {
+          width:30px;
+          right: 10px;
+          .el-input__suffix-inner{
+            width:100%;
+          }
+        }
+
+        .el-select .el-input .el-select__caret {
+          font-size: 14px;
+        }
       }
     }
 
