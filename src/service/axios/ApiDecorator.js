@@ -3,8 +3,8 @@ import DoApi from './DoApi'
 
 // api装饰器
 function send(target, name, descriptor, callback) {
-  descriptor.value =  function () {
-    return callback(arguments[0]);
+  descriptor.value = (...args) => {
+    return callback(...args);
   };
   return descriptor;
 }
@@ -17,20 +17,27 @@ function url(url) {
 }
 
 function get(target, name, descriptor) {
-  return send(target, name, descriptor, function (args, url) {
-    return axios.get(descriptor.url + '?' + DoApi.jsonUrlFormat(args));
+  return send(target, name, descriptor, function (args, urlArgs = {}) {
+    let url = descriptor.url;
+
+    urlArgs = Object.values(urlArgs);
+    if (urlArgs.length) {
+      url += '/' + urlArgs.join('/');
+    }
+    
+    return axios.get(url + '?' + DoApi.jsonUrlFormat(args));
   });
 }
 
 function post(target, name, descriptor) {
-  return send(target, name, descriptor, function (args) {
-    return axios.post(descriptor.url + '?' + DoApi.jsonUrlFormat({}), DoApi.doJson(args));
+  return send(target, name, descriptor, function (args, urlArgs = {}) {
+    return axios.post(descriptor.url + '?' + DoApi.jsonUrlFormat(urlArgs), DoApi.doJson(args));
   });
 }
 
 function del(target, name, descriptor) {
   return send(target, name, descriptor, function (args) {
-    return axios.delete(descriptor.url + '?' +  DoApi.jsonUrlFormat(args));
+    return axios.delete(descriptor.url + '?' + DoApi.jsonUrlFormat(args));
   });
 }
 
