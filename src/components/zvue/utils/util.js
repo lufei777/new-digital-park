@@ -19,13 +19,13 @@ export const miAjax = ({ axios = this.$axios || AXIOS, url, method = 'get', quer
                 axios.get(url, {
                     params: query
                 }).then(res => {
-                    resolve(_.get(res.data, resKey))
+                    resolve(_.get(res.data, resKey) || res.data)
                 }).catch(err => {
                     resolve([]);
                 })
             } else if (method.toLowerCase() === 'post') {
                 axios.post(url, query).then(res => {
-                    resolve(_.get(res.data, resKey))
+                    resolve(_.get(res.data, resKey) || res.data)
                 }).catch(err => {
                     resolve([]);
                 })

@@ -12,6 +12,8 @@
     :clearable="disabled?false:clearable"
     :value-format="valueFormat"
     :placeholder="placeholder"
+    :picker-options="pickerOptions"
+    :arrow-control="arrowControl"
     @change="handleChange"
     @click.native="handleClick"
     :disabled="disabled"
@@ -54,10 +56,18 @@ export default {
     },
     format: {
       default: ""
+    },
+    pickerOptions: {
+      type: Object,
+      default: () => ({})
+    },
+    arrowControl: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
-    isRange () {
+    isRange() {
       return this.type === "timerange";
     }
   }
