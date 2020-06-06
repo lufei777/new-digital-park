@@ -148,7 +148,7 @@ export default {
               //报警名称
               {
                 type: "input",
-                label: "报警名称:",
+                label: "报警名称",
                 placeholder: " ",
                 prop:'caption',
                 span: 6,
@@ -157,7 +157,7 @@ export default {
               // 开始时间
               {
                 type: "input",
-                label: "开始时间:",
+                label: "开始时间",
                 placeholder: " ",
                 prop: "startTime",
                 span: 6,
@@ -166,7 +166,7 @@ export default {
               // 报警描述
               {
                 type: "input",
-                label: "报警描述:",
+                label: "报警描述",
                 placeholder: " ",
                 prop: "errorMessage",
                 span: 6,
@@ -175,7 +175,7 @@ export default {
               // 报警级别
               {
                 type: "input",
-                label: "报警级别:",
+                label: "报警级别",
                 placeholder: " ",
                 prop: "eventRank",
                 span: 6,
@@ -184,7 +184,7 @@ export default {
               // 状态
               {
                 type: "input",
-                label: "状态:",
+                label: "状态",
                 placeholder: " ",
                 prop: "handled",
                 span: 6,
@@ -193,7 +193,7 @@ export default {
               // 子系统
               {
                 type: "input",
-                label: "子系统:",
+                label: "子系统",
                 placeholder: " ",
                 prop: "system" ,
                 span: 6,
@@ -202,7 +202,7 @@ export default {
               // 设备类型
               {
                 type: "input",
-                label: "设备类型:",
+                label: "设备类型",
                 placeholder: " ",
                 prop: "catalogId",
                 span: 6,
@@ -211,7 +211,7 @@ export default {
               // 设备
               {
                 type: "input",
-                label: "设备:",
+                label: "设备",
                 placeholder: " ",
                 prop: "deviceName",
                 span: 6,
@@ -220,7 +220,7 @@ export default {
               // 设备点位
               {
                 type: "input",
-                label: "设备点位:",
+                label: "设备点位",
                 placeholder: " ",
                 prop: "devicePoint",
                 span: 6,
@@ -229,7 +229,7 @@ export default {
               // 报警类型
               {
                 type: "input",
-                label: "报警类型:",
+                label: "报警类型",
                 prop: "state",
                 span: 6,
                 offset: 1
@@ -237,7 +237,7 @@ export default {
               // 位置
               {
                 type: "input",
-                label: "位置:",
+                label: "位置",
                 placeholder: " ",
                 span: 6,
                 offset: 1
@@ -245,7 +245,7 @@ export default {
               // 响应时间
               {
                 type: "input",
-                label: "响应时间:",
+                label: "响应时间",
                 placeholder: "0天0小时2分47秒",
                 span: 6,
                 offset: 1

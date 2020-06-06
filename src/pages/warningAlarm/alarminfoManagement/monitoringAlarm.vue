@@ -17,6 +17,7 @@
           <div>
             <el-button
               type="primary"
+              :disabled='obj.disabled'
               @click="onClickSearchBtn(obj)"
             >查询</el-button>
             <el-button @click="clearForm(obj)">重置</el-button>
@@ -30,6 +31,7 @@
       <div class="operator-btn-box flex-row-reverse">
       </div>
       <z-table
+        :load="tableLoad"
         :ref="tableData.ref"
         :options="tableData"
       >
@@ -95,7 +97,9 @@ export default {
   name: "warningAlarm",
   data() {
     return {
+      tableLoad: false,
       model: {},
+      queryArry:{},
       formData: {
         ref: "formData",
         labelWidth: "100",
@@ -116,14 +120,14 @@ export default {
             dicMethod: "get",
             props: {
               label: "rankName",
-              value: "rankId",
+              value: "rankId"
             }
           },
           //   报警状态
           {
             type: "select",
             label: "报警状态",
-            valueDefault: "已创建",
+            // valueDefault: "已创建",
             offset: 1,
             prop: "handled",
             span: 5,
@@ -133,12 +137,12 @@ export default {
           {
             type: "select",
             label: "子系统",
-            valueDefault: "门禁管理",
+            hide:true,
             span: 5,
             // readonly:true,
             disabled: true,
             offset: 1,
-            prop: "subSystem",
+            prop: "system",
             dicData: subSystem
           },
           //   设备类型
@@ -174,19 +178,18 @@ export default {
             prop: "caption",
             placeholder: "请输入关键字",
             clearable: true,
-
             span: 5,
-            offset: 1,
             minRows: 0
           },
           //  开始时间
           {
-            type: "time",
+            type: "datetime",
             label: "开始时间",
             prop: "startTime",
             span: 5,
             offset: 1,
-            minRows: 0
+            minRows: 0,
+            valueFormat: "yyyy-MM-dd HH:mm:ss"
           },
           {
             prop: "btn",
@@ -201,27 +204,7 @@ export default {
       tableData: {
         ref: "Table",
         customTop: true,
-        data: [
-          {
-            caption: "asdu",
-            startTime: "2015-09-03",
-            errorMessage: "sahdif",
-            eventRank: "普通",
-            handled: "已创建",
-            state: "设备离线报警",
-            system: "",
-            catalogId: "门禁",
-            deviceName: "交换机",
-            devicePoint: "xxxx"
-          }
-        ],
-        // serverMode: {
-        //   // url: warningAlarm.getAlarmMessageList,
-        //   data: {
-        //     pageNum: 1,
-        //     pageSize: 10
-        //     },
-        // },
+        data: [],
         customTopPosition: "right",
 
         operation: {
@@ -236,8 +219,9 @@ export default {
             pageSizes: [5, 10, 20],
             pageSize: 10,
             currentPage: 1,
-            handler(pageSize, currentPage, table) {
-              console.log({ pageSize, currentPage }, table);
+            handler: (pageSize, currentPage, table) => {
+              // console.log({ pageSize, currentPage }, table);
+              this.fetchTableList({}, { rows: pageSize, page: currentPage });
             }
           }
         }
@@ -252,10 +236,18 @@ export default {
   },
 
   methods: {
+
     // 查询
     onClickSearchBtn(obj) {
-      console.log(obj);
-      this.Form.submit();
+      // console.log(obj);
+      // this.Form.submit();
+      let that = this
+      // console.log()
+      this.Form.getFormModel((res)=>{
+        console.log(res)
+        that.prop = {...res}
+        that.fetchTableList({...res}, { rows: 10, page: 1 });
+      })
     },
 
     // '查看' 按钮
@@ -280,7 +272,9 @@ export default {
         query: { flag: true, mark: "response" }
       });
     },
-    submit() {},
+    submit(hide,model) {
+      hide()
+    },
     resetChange() {},
     getCleaningList() {
       // 来自CommonFun的模拟数据源 let res = CommonFun.monitorAlarm;
@@ -305,20 +299,29 @@ export default {
     addTenant() {},
     //单击新建按钮的的点击事件
     toNewInceased() {
-      console.log(222);
+      // console.log(222);
       this.$router.push("/warningAlarm/newIncreased");
+    },
+    fetchTableList(searchParams = {}, pageParams = { page: 1, rows: 10 }) {
+      this.tableLoad = true;
+      warningAlarm
+        .queryAlarmMessages(searchParams, pageParams)
+        .then(res => {
+          // console.log("dte",res)
+          
+          this.$refs[this.tableData.ref].setData(res.rows);
+          this.$refs[this.tableData.ref].setTotal(res.total);
+        })
+        .finally(() => {
+          this.tableLoad = false;
+        });
     }
   },
   mounted() {
     this.getCleaningList();
   },
   created() {
-    // commonApi
-    //   .getAlarmMessageList({ pageNum: 1, pageCount: 10, start: "", end: "" })
-    //   .then(res => {
-    //     // console.log(res)
-    //     this.tableData.data = res.rows;
-    //   });
+    this.fetchTableList();
   }
 };
 </script>

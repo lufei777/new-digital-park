@@ -520,11 +520,8 @@ export const WarningAlerm = {
 	// 报警状态
 	// Alarm status
 	alarmStatus: [
-		{ label: '全部', value: 1 },
-		{ label: '已创建', value: 2 },
-		{ label: '未处理', value: 3 },
-		{ label: '处理中', value: 4 },
-		{ label: '已关闭', value: 5 }
+		{ label: '未处理', value: 1 },
+		{ label: '已处理', value: 2 }
 	],
 	// 子系统
 	// subsystem
