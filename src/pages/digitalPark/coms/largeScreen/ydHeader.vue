@@ -22,12 +22,11 @@
   import {mapState} from 'vuex'
   import {isZG} from '@/utils/project';
   import { IsCZClient } from '@/utils/auth';
-  import CommonFun from '@/utils/commonFun'
-  import CommonApi from '@/service/api/common'
+  import CommonLargeHeader from './js/header'
   export default {
     name: 'YDHeader',
     components: {},
-    props: [], //fromFlag 1：仪表盘 2:大屏
+    props: [],
     data() {
       return {
         headName: '伊甸城BIM运管平台',
@@ -57,90 +56,20 @@
         }
       },
       onClickLogoutBtn(){
-        if (IsCZClient()) {
-          goBackClientLogin();
-        }
-        this.$store.dispatch('user/logout').then(() => {
-          this.$router.push("/login");
-        })
+        CommonLargeHeader.onClickLogoutBtn()
       },
       loadNews() {  //点击消息
-        localStorage.setItem(
-          "menuList",
-          JSON.stringify({
-            name: "消息管理",
-            childNode: [
-              {
-                id: '1',
-                name: "预警报警列表",
-                routeAddress: "@/html/alarm/alarm_index.html"
-              }
-            ]
-          })
-        );
-        this.$store.commit("digitalPark/activeMenuIndex","@/html/alarm/alarm_index.html")
-        this.$store.commit("digitalPark/largeScreenIframeSrc",
-            window.top.location.origin + '/#/vibe-web?updateId=' + _.uniqueId())
+        CommonLargeHeader.loadNews('ydHeader')
       },
       goToWebPage(item, obj) {
-        // console.log("back",item,obj)
-        //如果只有第一个参数，渲染的menu就是此对象的childNode；
-        //如果有第二个参数,渲染的menu就是当前点击的子菜单所在的二级菜单，obj为当前点击的子菜单
-        item = JSON.parse(item)
-        let curMenu = item
-        if (obj) {
-          obj = JSON.parse(obj)
-          curMenu = obj
-        }
-        this.$store.commit("digitalPark/menuList", item)
-        this.$store.commit('digitalPark/activeMenuIndex',CommonFun.setMenuIndex(item))
-        if(curMenu.routeAddress.indexOf('@')!=-1){
-          this.$store.commit("digitalPark/largeScreenIframeSrc",
-            window.top.location.origin+'/#/vibe-web?updateId='+_.uniqueId())
-        }else{
-          this.$store.commit("digitalPark/largeScreenIframeSrc",window.top.location.origin+'/#'+item.routeAddress)
-        }
+        CommonLargeHeader.goToWebPage(item, obj)
       },
       async onClickUserConfigure(val) { //点击用户
-        if (val == 3) {
-          //如果是客户端
-          if (IsCZClient()) {
-            goBackClientLogin();
-          }
-          this.$store.dispatch('user/logout').then(() => {
-            this.$router.push("/login");
-          })
-          // 清空菜单列表
-          this.$store.commit("digitalPark/activeMenuIndex", "");
-        } else {
-          this.setSystemMenu()
-          if (val == 1) {
-            this.$store.commit("digitalPark/activeMenuIndex", "/personalInformation")
-            this.$store.commit("digitalPark/largeScreenIframeSrc",window.top.location.origin+'/#'+'/personalInformation')
-          } else if (val == 2) {
-            this.$store.commit("digitalPark/activeMenuIndex", "/modifyPassword")
-            this.$store.commit("digitalPark/largeScreenIframeSrc",window.top.location.origin+'/#'+'/modifyPassword')
-          }
-        }
+        CommonLargeHeader.onClickUserConfigure(val)
       },
-      setSystemMenu() {
-        let menuTree = JSON.parse(localStorage.getItem("menuTree"));
-        let firstLevelTree = menuTree[0].childNode.find(
-          item => item.name == "基础功能"
-        );
-        let secondLevelTree = firstLevelTree.childNode.find(
-          item => item.name == "系统管理"
-        );
-        this.$store.commit("digitalPark/menuList", secondLevelTree)
-      },
-      async getAlarmList() {
-        let res = await CommonApi.getAlarmMessageList({
-          pageNum: 1,
-          start: '',
-          end: '',
-          pageCount: 10,
-        })
-        this.alarmListCount = res.total>99?'99+':res.total
+       async getAlarmList() {
+        let res = await CommonLargeHeader.getAlarmList()
+        this.alarmListCount = res
       }
     },
     mounted() {

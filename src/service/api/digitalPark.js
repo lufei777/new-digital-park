@@ -27,7 +27,7 @@ class DigitalParkApi {
   @put
   updateUserProModules(){}
 
-  @url("/oaApi/userModuleRel/modules/resolution")
+  @url("/oaApi/modules/resolution")
   @get
   getLargeScreenModule(){}
 
