@@ -1,7 +1,8 @@
 <template>
   <div class="large-size-screen-normal" :class="getBasicBg">
     <Header fromFlag="2" :headName="headName" v-if="isNormal"/>
-    <YDHeader v-if="!isNormal"/>
+    <YDHeader v-if="isydScreen"/>
+    <NorHeader v-if="isNorbulingka"/>
     <div class="content flex">
       <draggable
         class="drag-panel"
@@ -48,6 +49,7 @@
   import { isYDScreen,getLargeScreenName,isNormalScreen,isNorbulingkaScreen} from "@/utils/project";
   import YDHeader from '../digitalPark/coms/largeScreen/ydHeader'
   import AlertAlarm from '../digitalPark/coms/alarm/alertAlarm'
+  import NorHeader from '../digitalPark/coms/largeScreen/norbulingkaHeader'
 
   export default {
     name: 'LargeSizeScreenNormal',
@@ -56,7 +58,8 @@
       draggable,
       ItemProModule,
       YDHeader,
-      AlertAlarm
+      AlertAlarm,
+      NorHeader
     },
     props: ['fullStatus'],  //配置页时是否是全屏状态:full noFull
     data() {
@@ -84,7 +87,8 @@
     computed: {
       getBasicBg(){
         return {
-          'large-size-bg':!isYDScreen(),
+          'large-size-screen-bg':isNormalScreen(),
+          'nor-large-size-screen':isNorbulingkaScreen()
         }
       },
       isydScreen(){ //是否是伊甸城
@@ -139,8 +143,24 @@
           height: document.body.offsetHeight,
           widthPercent: this.widthPercent,
           heightPercent: this.heightPercent,
-          preview:isYDScreen()?'ydCity':''
+          // preview:isYDScreen()?'ydCity':''
         })
+        // let res = await DigitalParkApi.getModulesByType({
+        //   type:0,
+        //   menuId:1
+        // })
+        // res={
+        //   modules:res,
+        //   xModule:{
+        //     num:3,
+        //     length:422
+        //   },
+        //   yModule:{
+        //     num:3,
+        //     length:422
+        //   }
+        // }
+        console.log(res)
         res.modules.map((item)=>{
           item.bgStatus='normal'
         })
@@ -292,11 +312,21 @@
         }
 
         // flag==1?item.bgStatus='hover':'normal'
+      },
+      getModuleStyle(){
+        if(isYDScreen()){
+          import('./less/ydCity.css')
+        }else if(isNormalScreen()){
+          import('./less/normal.css')
+        }else if(isNorbulingkaScreen()){
+          import('./less/norbulingka.css')
+        }
       }
     },
     mounted() {
       this.getMenuTree()
       this.getLargeScreenModuleList()
+      this.getModuleStyle()
       let _this = this
       $(window).resize(async function () {
         await _this.getLargeScreenModuleList()
@@ -307,11 +337,7 @@
         // $(".center-show").css(obj)
         // console.log("sizechange", $(".center-show").length, obj)
       })
-      if(this.largeScreenName == 'ydCity'){
-        import('./less/ydCity.css')
-      }else if(this.largeScreenName == 'normal'){
-        import('./less/normal.css')
-      }
+
     },
     created() {
       // let res = CommonFun.largeScreenDefaultData
@@ -324,9 +350,10 @@
 <style lang="less">
   .large-size-screen-normal {
     height: 100%;
-
     font-size: @largeScreenFontSize;
     color: @white;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
 
     .drag-panel {
       display: grid;
@@ -369,9 +396,10 @@
       color: @white;
     }
   }
-  .large-size-bg{
+  .large-size-screen-bg{
     background-image: url('../../../static/image/digitalPark/home.png');
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
+  }
+  .nor-large-size-screen{
+    background-image: url('../../../static/image/digitalPark/nor_bg.png');
   }
 </style>
