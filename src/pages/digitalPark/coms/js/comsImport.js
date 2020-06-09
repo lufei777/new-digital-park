@@ -52,6 +52,7 @@ import norbulingkaCenter from '../norbulingka/norbulingkaCenter'
 import passengerFlowVolume from '../norbulingka/passengerFlowVolume'
 import realTimeOfMeteorologicalStation from '../norbulingka/realTimeOfMeteorologicalStation'
 import CO2Monitoring from '../norbulingka/CO2Monitoring'
+import dailyInspectionRecord from '../norbulingka/dailyInspectionRecord'
 class exportComs {
   exportComsList = {
     energyProportionAnalysis,
@@ -107,7 +108,8 @@ class exportComs {
     norbulingkaCenter,
     passengerFlowVolume,
     realTimeOfMeteorologicalStation,
-    CO2Monitoring
+    CO2Monitoring,
+    dailyInspectionRecord
   }
 }
 export default new exportComs()

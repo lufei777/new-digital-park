@@ -5,12 +5,21 @@
   font-size: 14px;
   width:420px;
   height:290px;
+  margin:auto;
 }
 .large-size-screen-normal .single-module-name{
-  line-height: 10px;
-  visibility: hidden;
+  display: none;
 }
 .large-size-screen-normal .module-item-top-name{
-  margin-top: 10px;
+  /*margin-top: 10px;*/
+  padding:10px 0;
+  font-size: 16px;
+}
+.module-item-top-icon{
+  display: block;
+  height:14px;
+  width:6px;
+  background: #FFF81D;
+  margin-right: 10px;
 }
 

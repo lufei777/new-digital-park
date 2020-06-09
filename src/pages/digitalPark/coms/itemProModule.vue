@@ -51,9 +51,10 @@
   import comsImport from './js/comsImport'
   import DigitalParkApi from '../../../service/api/digitalPark'
   import CommonFun from '@/utils/commonFun'
-  import { isYDScreen,isZG } from "@/utils/project";
+  import { isYDScreen,getLargeScreenName,isNormalScreen,isNorbulingkaScreen} from "@/utils/project";
   export default {
     name: 'ItemProModule',
+    //type：1仪表盘/大屏 2.瀑布流
     props:['moduleData','type','userProModuleList','hideHeader','fullStatus'],
     components: {
       ...comsImport.exportComsList,
@@ -177,6 +178,7 @@
         CommonFun.loadPage(this.moduleData)
       },
       moduleItemData(item){
+        let color = isYDScreen()?'#8FD3FA':isNorbulingkaScreen()?'#fff':this.type!=2?'8FD3FA':''
         return {
           ...item,
           ...{type:this.type},
@@ -195,19 +197,23 @@
               xAxisUi:{
                 axisLabel:{
                   textStyle:{
-                    color:this.type!=2?'#8FD3FA':''
+                    color:color
                   }
                 },
                 axisLine: {
                   lineStyle: {
-                    color: this.type!=2?'#8FD3FA':'',
+                    color: color,
                   }
                 },
+                lineStyle: {
+                  color: color,
+                  width: 1,
+                }
               },
               yAxisUi:{
                 axisLine: {
                   lineStyle: {
-                    color: this.type!=2?'#8FD3FA':'',
+                    color: color,
                   }
                 },
               }

@@ -351,6 +351,14 @@ class CommonApi {
   @url("/vibe-web/auty/findAuty")
   @get
   getDutyList(){}
+
+  @url("/vibe-web/monitor/code/space")
+  @get
+  getMeteorologicalData(){}
+
+  @url("/vibe-web/monitor/code/quarter/avg")
+  @get
+  getCO2Monitoring(){}
 }
 
 export default new CommonApi()

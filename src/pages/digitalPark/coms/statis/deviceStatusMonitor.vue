@@ -1,13 +1,20 @@
 <template>
   <div class="device-status-monitor">
-    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
+    <div class="module-item-top-name flex-align">
+      <i class="module-item-top-icon" v-if="isNorbulingkaScreen"></i>
+      <span>{{moduleItem.moduleName}}</span>
+    </div>
     <div class="my-chart flex-align-between">
       <div
         :class="'progress-content percentage'+index"
         v-for="(item,index) in percentage"
         :key="index"
       >
-        <el-progress type="circle" :percentage="item.value" :color="item.color" :stroke-width="10"></el-progress>
+        <el-progress type="circle"
+                     :percentage="item.value" :color="item.color"
+                     :stroke-width="10"
+                     :width="getProgressWidth"
+        ></el-progress>
         <div :style="{'color':item.color}" class="item-status">
           <span class="status-text">{{item.status}} ：</span>
           {{item.value}}个
@@ -18,6 +25,7 @@
 </template>
 
 <script>
+import {isNorbulingkaScreen } from "@/utils/project";
 export default {
   name: "deviceStatusMonitor",
   props: ["moduleItem"],
@@ -43,13 +51,20 @@ export default {
           value: 25,
           color: "#C75E56",
           status: "警告"
-        }
-      ]
+        }],
+      getProgressWidth:50
     };
+  },
+  computed:{
+    isNorbulingkaScreen(){
+      return isNorbulingkaScreen()
+    },
+  },
+  mounted(){
+    this.getProgressWidth=80
   }
 };
 </script>
-
 <style lang="less">
 .device-status-monitor {
   .el-progress__text {
