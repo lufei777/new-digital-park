@@ -20,6 +20,9 @@ export default [{
   path: '/digitalPark/homePage',
   name: 'DigitalHomePage',
   component: DigitalHomePage,
+  meta:{
+    keepAlive:true
+  }
 }, {
   path: '/digitalPark/dashboardHomePage',
   name: 'DashBoardHomePage',

@@ -1,7 +1,12 @@
 <template>
   <div id="app">
-    <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
-      <router-view />
+    <el-scrollbar wrap-class="scrollbar-wrapper">
+      <!-- 缓存meta带有keepAlive的组件 -->
+      <keep-alive>
+        <router-view v-if="$route.meta.keepAlive" />
+      </keep-alive>
+      
+      <router-view v-if="!$route.meta.keepAlive" />
     </el-scrollbar>
   </div>
 </template>
@@ -12,7 +17,7 @@ export default {
   data() {
     return {};
   },
-  created() {}
+  created() { }
 };
 </script>
 <style lang="less">
@@ -22,8 +27,8 @@ export default {
   color: #666;
   height: 100%;
   font-size: 14px;
-  .el-scrollbar__view{
-    height:100%;
+  .el-scrollbar__view {
+    height: 100%;
   }
 }
 </style>
