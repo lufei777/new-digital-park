@@ -1,15 +1,15 @@
 <template>
   <div id="app">
     <el-scrollbar wrap-class="scrollbar-wrapper">
-      <transition name="fade-transform" mode="out-in" appear>
-        <keep-alive>
-          <router-view v-if="$route.meta.keepAlive" />
-        </keep-alive>
-      </transition>
+      <!-- <transition name="fade-transform" mode="out-in" appear> -->
+      <keep-alive>
+        <router-view v-if="$route.meta.keepAlive" />
+      </keep-alive>
+      <!-- </transition> -->
 
-      <transition v-if="!$route.meta.keepAlive" name="fade-transform" mode="out-in" appear>
-        <router-view />
-      </transition>
+      <!-- <transition v-if="!$route.meta.keepAlive" name="fade-transform" mode="out-in" appear> -->
+      <router-view v-if="!$route.meta.keepAlive" />
+      <!-- </transition> -->
     </el-scrollbar>
   </div>
 </template>
