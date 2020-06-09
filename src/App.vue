@@ -1,12 +1,15 @@
 <template>
   <div id="app">
     <el-scrollbar wrap-class="scrollbar-wrapper">
-      <!-- 缓存meta带有keepAlive的组件 -->
-      <keep-alive>
-        <router-view v-if="$route.meta.keepAlive" />
-      </keep-alive>
-      
-      <router-view v-if="!$route.meta.keepAlive" />
+      <transition name="fade-transform" mode="out-in" appear>
+        <keep-alive>
+          <router-view v-if="$route.meta.keepAlive" />
+        </keep-alive>
+      </transition>
+
+      <transition v-if="!$route.meta.keepAlive" name="fade-transform" mode="out-in" appear>
+        <router-view />
+      </transition>
     </el-scrollbar>
   </div>
 </template>
