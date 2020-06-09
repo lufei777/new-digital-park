@@ -7,6 +7,7 @@
 </template>
 
 <script>
+  import CommonFun from '@/utils/commonFun'
   export default {
     name: 'CO2Monitoring',
     components: {},
@@ -26,6 +27,11 @@
                     {name:'第三季度',value:1200},
                     {name:'第四季度',value:900}]
         let legendData = res.map((item)=>{item.legendData})
+        let data={
+          legendData,
+          series:res
+        }
+
       },
     },
     mounted() {
