@@ -140,7 +140,9 @@ export default {
       default: "点击上传"
     },
     uploadBefore: Function,
-    uploadAfter: Function
+    uploadAfter: Function,
+    uploadSuccess: Function,
+    uploadError: Function
   },
   computed: {
     fileName() {
@@ -240,6 +242,10 @@ export default {
       }
       this.$message.success("上传成功");
       this.setVal();
+      
+      if (typeof this.uploadSuccess === 'function') {
+        this.uploadSuccess(file, this.column);
+      }
     },
     handleRemove(file, fileList) {
       this.onRemove && this.onRemove(file, fileList);
@@ -250,6 +256,9 @@ export default {
     handleError(msg) {
       console.error(new Error(msg));
       this.$message.error(typeof msg === "string" ? msg : "上传失败");
+      if (typeof this.uploadError === 'function') {
+        this.uploadError(error, this.column);
+      }
     },
     delete(file) {
       if (this.isArray || this.isString) {

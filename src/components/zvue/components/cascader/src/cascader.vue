@@ -137,11 +137,6 @@ export default {
     setFromModelTranslate(presentText) {
       presentText = presentText.split(this.separator || "\\").join(DIC_SPLIT);
 
-      if (this.showAllLevels === false) {
-        let list = presentText.split(DIC_SPLIT);
-        presentText = list[list.length - 1];
-      }
-
       if (this.isCrud) {
         this.$set(this.column, "presentText", presentText);
       } else {
@@ -204,8 +199,13 @@ export default {
         newVal = "";
       }
       newVal = newVal.trim();
-      // 赋值到modelTranslate
-      newVal.length ? this.setFromModelTranslate(newVal) : '';
+      if (newVal.length) {
+        if (this.showAllLevels === false) {
+          newVal = _.last(newVal.split(DIC_SPLIT));
+        }
+        // 赋值到modelTranslate
+        this.setFromModelTranslate(newVal);
+      }
     });
   }
 };

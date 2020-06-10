@@ -21,7 +21,6 @@
 </template>
 
 <script>
-
 import props from "../../../common/props";
 import events from "../../../common/events";
 // import locale from "../../../../../../core/common/locale";
@@ -30,7 +29,7 @@ export default {
   mixins: [props(), events()],
   data() {
     return {
-      text: "",
+      text: ""
     };
   },
   props: {
