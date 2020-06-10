@@ -109,7 +109,7 @@
 
       <p style="width:100%;font-weight:bold; margin:20px 60px;">报警动态:</p>
       <div style="margin:0 60px">
-        信息展示，仰天大笑出门去.......
+        信息展示............
       </div>
     </div>
 

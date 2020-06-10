@@ -355,7 +355,7 @@ export default {
     onClickSearchBtn(obj) {
       this.Form.getFormModel(res => {
         // parentCatalogId 返回的是有个数组，查询条件是取级联的最后一个值
-        console.log(res);
+        // console.log(res);
         if (res.parentCatalogId && res.parentCatalogId.length >= 2) {
           res.parentCatalogId =
             res.parentCatalogId[res.parentCatalogId.length - 1];
