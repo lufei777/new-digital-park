@@ -537,10 +537,9 @@ export const WarningAlerm = {
 	// 报警类型
 	// Alarm type
 	alarmType: [
-		{ label: '全部', value: 1 },
-		{ label: '设备离线报警', value: 2 },
-		{ label: '设备故障报警', value: 3 },
-		{ label: '设备运行报警', value: 4 }
+		{ label: '通讯故障', value: 2 },
+		{ label: '设备运行报警', value: 3 },
+		{ label: '其他类型报警', value: 4 }
 	],
 	// 录入类型
 	// Input type

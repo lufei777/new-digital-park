@@ -71,8 +71,9 @@ export default {
             type: "select",
             label: "子系统",
             placeholder: " ",
-            prop: "subSystem",
+            prop: "system",
             span: 10,
+            disabled:true,
             // row:true,
             offset: 1,
             dicData:subSystem
@@ -82,7 +83,7 @@ export default {
             type: "select",
             label: "设备类型:",
             placeholder: " ",
-            prop: "deviceType",
+            prop: "deviceCatalogName",
             span: 10,
             offset: 1,
             dicData:deviceType
@@ -92,7 +93,7 @@ export default {
             type: "select",
             label: "设备名称",
             placeholder: " ",
-            prop: "deviceName",
+            prop: "parentCaption",
             span: 10,
             offset: 1,
             dicData:deviceName
@@ -102,7 +103,7 @@ export default {
             type: "input",
             label: "点位类型",
             placeholder: " ",
-            prop: "pointType",
+            prop: "monitorCatalogName",
             span: 10,
             offset: 1
           },
@@ -111,7 +112,7 @@ export default {
             type: "input",
             label: "报警规则",
             placeholder: " ",
-            prop: "alarmRules",
+            prop: "singlewarn",
             span: 10,
             offset: 1
             // dicData:
@@ -121,7 +122,7 @@ export default {
             type: "select",
             label: "报警级别",
             placeholder: " ",
-            prop: "alarmLevel",
+            prop: "eventRank",
             span: 10,
             offset: 1,
             dicData:alarmLevel
@@ -131,18 +132,18 @@ export default {
             type: "select",
             label: "通知方式",
             placeholder: " ",
-            prop: "notificationWay",
+            prop: "notify",
             span: 10,
             offset: 1,
             dicData:notificationWay
 
           },
-          // 录入类型
+          // 录入类型 暂时未提供
           {
             type: "select",
             label: "录入类型",
             placeholder: " ",
-            prop: "inputType",
+            prop: "removed",
             span: 10,
             offset: 1,
             dicData:inputType
@@ -167,7 +168,7 @@ export default {
     }else{
       this.model = {...arrQuery}
     }
-    console.log(arrQuery)
+    // console.log(arrQuery)
   },
   methods: {
     // 返回

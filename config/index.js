@@ -13,6 +13,7 @@ module.exports = {
 				context: [ '/oaApi', '/user-service', '/vibe-web' ],
 				// target: 'http://39.98.130.147:8080'
 				target:'http://192.168.1.50:8080'
+				// target:'http://39.98.130.147:8080'
 				// target:'http://192.168.1.206:8080'
 				/* changeOrigin: true,//是否允许跨越*/
 				/* pathRewrite: {
