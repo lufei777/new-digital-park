@@ -201,11 +201,6 @@ export default {
           : this.dic ? this.dic[0][this.labelKey] : '否';
       }
 
-      // 如果是级联，取最后一个
-      /* if (this.column.type === 'cascader') {
-        displayValue = _.last(displayValue.split(DIC_SPLIT));
-      } */
-
       // 给当前组件设置
       this.displayValue = displayValue;
       // 设置到顶层Form的modelTranslate
