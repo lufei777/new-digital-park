@@ -1,4 +1,5 @@
 <template>
+  <!-- :class="!radiusShadowShow?'radius-shadow':''"-->
   <div class="condition-select flex-align radius-shadow">
     <div class="item-group">
       <label>优先级：</label>
@@ -32,40 +33,41 @@
     <div style="flex-shrink: 0" class="flex item-group">
       <div>
         <label>创建时间：</label>
-        <el-date-picker v-model="startTime" :type="dateType" :clearable="false"></el-date-picker>
+        <el-date-picker
+          v-model="startTime"
+          :type="dateType"
+          @change="handleStartTimeChange"
+          :clearable="false"
+        ></el-date-picker>
       </div>
       <div v-show="showLastTime">
         <span class="tag-style">至</span>
-        <el-date-picker v-model="lastTime" :type="dateType" :clearable="false"></el-date-picker>
+        <el-date-picker
+          v-model="lastTime"
+          :type="dateType"
+          @change="handleLastTimeChange"
+          :clearable="false"
+        ></el-date-picker>
       </div>
     </div>
 
-    <el-button type="primary" class="sure-btn">确定</el-button>
+    <div class="operating-btn">
+      <el-button type="primary" class="sure-btn" @click="handleClickSureBtn">确定</el-button>
+      <el-button @click="onClickResetBtn">重置</el-button>
+    </div>
+    
+    <!-- <el-button type="primary" @click="refresh">刷新</el-button>
+    <el-button type="primary" @click="addTask">新增</el-button>-->
   </div>
 </template>
 
 <script>
-let dateTypeList = [
-  {
-    name: "年",
-    id: 1
-  },
-  {
-    name: "月",
-    id: 2
-  },
-  {
-    name: "日",
-    id: 3
-  }
-];
-
 import { mapState } from "vuex";
 import moment from "moment";
 export default {
   name: "ConditionSelect",
   components: {},
-  props: [],
+  props: ["radiusShadowShow"],
   data() {
     return {
       levelId: 1,
@@ -86,15 +88,15 @@ export default {
       return [
         {
           name: "年",
-          id: 1
+          id: 0
         },
         {
           name: "月",
-          id: 2
+          id: 1
         },
         {
           name: "日",
-          id: 3
+          id: 2
         }
       ];
     },
@@ -144,15 +146,46 @@ export default {
         this.lastTime = moment(new Date()).format("YYYY-MM");
       }
     },
-     timeFormat(time,value){
-        let formatType = this.dateType =='year'?'YYYY':this.dateType=='month'?'YYYY-MM':'YYYY-MM-DD'
-        this[time]=this[time]?moment(value).format(formatType):''
-      },
-     handleDateTypeChange(value){
-        this.dateType=value==1?'year':value==2?"month":'date'
-        this.timeFormat('startTime',this.startTime)
-        this.timeFormat('lastTime',this.lastTime)
-      },
+    timeFormat(time, value) {
+      let formatType =
+        this.dateType == "year"
+          ? "YYYY"
+          : this.dateType == "month"
+          ? "YYYY-MM"
+          : "YYYY-MM-DD";
+      this[time] = this[time] ? moment(value).format(formatType) : "";
+      console.log("this[time]", this[time]);
+    },
+    handleStartTimeChange(value) {
+      this.timeFormat("startTime", value);
+    },
+    handleLastTimeChange(value) {
+      this.timeFormat("lastTime", value);
+    },
+    handleDateTypeChange(value) {
+      this.dateType = value == 0 ? "year" : value == 1 ? "month" : "date";
+      this.timeFormat("startTime", this.startTime);
+      this.timeFormat("lastTime", this.lastTime);
+    },
+    handleClickSureBtn() {
+      let params = {
+        ugrent: this.levelId,
+        status: this.statusId,
+        beginTime: this.startTime,
+        endTime: this.lastTime
+        // taskType: this.curDateType
+      };
+      this.$emit("showSelectParams", params);
+    },
+    onClickResetBtn() {
+      let params = {};
+      //  ugrent: this.levelId,
+      //   status: this.statusId,
+      this.startTime = "";
+      this.lastTime = "";
+      // this.curDateType = ""
+      this.$emit("showSelectParams", params);
+    }
   },
   mounted() {}
 };
@@ -167,16 +200,22 @@ export default {
     margin: 0 5px;
   }
   .sure-btn {
-    margin-left: 10px;
+    // margin-left: 10px;
   }
+  .operating-btn {
+     .el-button, .el-button--primary, .el-button--default{
+      width: 72px!important;
+    }
+  }
+ 
   .el-select {
-    width: 100px;
+    width: 95px;
   }
   .frist-radio {
     margin-right: 20px;
   }
   .el-date-editor.el-input {
-    width: 135px;
+    width: 133px;
   }
 }
 </style>

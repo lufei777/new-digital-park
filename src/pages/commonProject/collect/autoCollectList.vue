@@ -50,21 +50,6 @@ export default {
   data() {
     let _this = this;
     let curSystem = window.__CZ_SYSTEM
-    let column1 =  [
-        { label: "序号", prop: "xulie" },
-        { label: "时间", prop: "time" },
-        { label: "表名称", prop: "name" },
-        { label: "数值", prop: "value" },
-        { label: "所属空间", prop: "caption" }
-      ]
-    let column2 = [
-      { label: "年度", prop: "year" },
-      { label: "月份", prop: "month" },
-      { label: "电表号", prop: "nameId" },
-      { label: "电表名称", prop: "name" },
-      { label: "本次表示数", prop: "value" }
-    ]
-    console.log(this.curSystem,curSystem)
     return {
       startTime: "",
       endTime: "",
@@ -74,7 +59,7 @@ export default {
       tableConfig: {
         ref: "tableRef",
         data: [],
-        columnConfig:curSystem=='zg'?column2:column1,
+        columnConfig:[],
         uiConfig: {
           height: "auto",
           pagination: {
@@ -103,6 +88,13 @@ export default {
         page: this.curPage,
         size: 10
       };
+      this.tableConfig.columnConfig = [
+        { label: "序号", prop: "xulie" },
+        { label: "时间", prop: "time" },
+        { label: "表名称", prop: "name" },
+        { label: "数值", prop: "value" },
+        { label: "所属空间", prop: "caption" }
+      ];
       let res = await CommonApi.getAutoCollectList(params);
       this.tableConfig.data = res.value;
       this.tableConfig.uiConfig.pagination.total = res.total;
@@ -138,6 +130,15 @@ export default {
       CommonFun.exportMethod({url, params}, this);
     },
     async getLastMonthData(){
+      let tableTitleText = this.curEnergy=="34"?"电":"水"
+      let column2 = [
+        { label: "年度", prop: "year" },
+        { label: "月份", prop: "month" },
+        { label: tableTitleText+"表号", prop: "nameId" },
+        { label: "电表名称", prop: "name" },
+        { label: "本次表示数", prop: "value" }
+      ]
+      this.tableConfig.columnConfig = column2;
       let res = await CommonApi.getLastNumber({
         catalog : this.curEnergy,
         page : this.curPage,
