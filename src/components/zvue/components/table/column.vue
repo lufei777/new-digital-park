@@ -55,18 +55,22 @@
           <template v-else>
             <span
               v-if="['array'].includes(col.type)"
-            >{{_detailData(scopeRow.row[col.prop],col.dataType).join(' | ')}}</span>
+            >{{_detailData(getValueByPath(scopeRow.row, col.prop),col.dataType).join(' | ')}}</span>
             <span v-else-if="col.displayAs=='switch' && ['switch'].includes(col.type)">
               <z-switch
                 :size="controlSize"
-                v-model="scopeRow.row[col.prop]"
+                :value="getValueByPath(scopeRow.row, col.prop)"
                 :activeColor="col.activeColor"
                 :inactiveColor="col.inactiveColor"
                 disabled
               />
             </span>
             <span :style="{display:'flex'}" v-else-if="['img'].includes(col.type)">
-              <z-img v-model="scopeRow.row[col.prop]" :load="col.load" :error="col.error">
+              <z-img
+                :value="getValueByPath(scopeRow.row, col.prop)"
+                :load="col.load"
+                :error="col.error"
+              >
                 <!-- <template #placeholder="scope">
                   <slot :name="`${col.prop}Placeholder`" :scope="scope"></slot>
                 </template>
@@ -85,6 +89,7 @@
 <script>
 import { detail } from "../../utils/detail";
 import { validatenull } from "../../utils/validate";
+import { deepClone } from "../../utils/util";
 import formTemp from "../formtemp";
 import { DIC_SPLIT, EMPTY_VALUE } from "../../global/variable";
 import multiHeaderColumn from './multiHeaderColumn';
@@ -134,14 +139,15 @@ export default {
       let column = scopeRow.column;
 
       if (typeof currentColumn.formatter === "function") {
-        return currentColumn.formatter(row, row[currentColumn.prop], currentColumn.label, currentColumn);
+        return currentColumn.formatter(row, this.getValueByPath(row, currentColumn.prop), currentColumn.label, currentColumn);
       } else {
         return this._globalColumnFormatter(row, column, currentColumn);
       }
     },
     // 全局初始化
     _globalColumnFormatter(row, column, currentColumn) {
-      let value = row[column.property];
+      let value = this.getValueByPath(row, column.property);
+
       if (this.validatenull(value)) {
         return EMPTY_VALUE;
       }
@@ -152,14 +158,14 @@ export default {
       );
     },
     handleDetail(row, column, DIC) {
-      let result = row[column.prop];
+      let result = this.getValueByPath(row, column.prop);
 
       if (typeof column.type === "undefined") return result;
       // 如果是级联，切值为字符串，则需要对值进行处理
       if (column.type === "cascader" && typeof result === "string") {
         let list = result.split(",");
         if (list.length > 1) {
-          row = _.cloneDeep(row);
+          row = deepClone(row);
           row[column.prop] = list;
         }
       }

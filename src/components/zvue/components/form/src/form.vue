@@ -283,21 +283,25 @@ export default {
       this.formVal();
     },
     formRulesInit() {
-      _.map(this.propOption, (item, key) => {
-        if (item.rules && item.disabled !== false && item.display !== false) {
-          let currentRules = item.rules;
-          // 添加进rules
-          if (_.isArray(currentRules)) {
-            currentRules.forEach(currentRule => {
-              this.fillRequiredRule(currentRule, item);
-            });
-            this.$set(this.formRules, item.prop, currentRules);
-          } else if (_.isObject(currentRules)) {
-            this.fillRequiredRule(currentRules, item);
-            this.$set(this.formRules, item.prop, [currentRules]);
+      for (const key in this.propOption) {
+        if (this.propOption.hasOwnProperty(key)) {
+          const item = this.propOption[key];
+
+          if (item.rules && item.disabled !== false && item.display !== false) {
+            let currentRules = item.rules;
+            // 添加进rules
+            if (Array.isArray(currentRules)) {
+              currentRules.forEach(currentRule => {
+                this.fillRequiredRule(currentRule, item);
+              });
+              this.$set(this.formRules, item.prop, currentRules);
+            } else if (this._typeOf(currentRules) === 'Object') {
+              this.fillRequiredRule(currentRules, item);
+              this.$set(this.formRules, item.prop, [currentRules]);
+            }
           }
         }
-      });
+      }
     },
     // 必填时自动生成message
     fillRequiredRule(currentRules, item) {

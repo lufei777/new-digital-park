@@ -142,7 +142,7 @@ export default {
         method: this.dicMethod,
         query: this.dicQuery
       }).then(res => {
-        _.isArray(res) && this.validatenull(res) ? "" : (this.netDic = res);
+        Array.isArray(res) && this.validatenull(res) ? "" : (this.netDic = res);
       }).finally(() => this.loading = false)
     },
     load() {

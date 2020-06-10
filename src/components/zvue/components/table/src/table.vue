@@ -521,28 +521,31 @@ export default {
         if (ele.rules && ele.cell) this.formCellRules[ele.prop] = ele.rules;
       });
 
-      _.map(this.propOption, (item, key) => {
-        if (item.rules && item.disabled !== false && item.display !== false) {
-          let currentRules = item.rules;
-          // 必填时自动生成message
-          if (
-            validatenull(currentRules.validator) &&
-            (!currentRules.message || currentRules.message.trim().length === 0)
-          ) {
-            if (currentRules.required) {
-              currentRules.message = `必填，请填写${item.label}`;
+      for (const key in this.propOption) {
+        if (this.propOption.hasOwnProperty(key)) {
+          const item = this.propOption[key];
+          if (item.rules && item.disabled !== false && item.display !== false) {
+            let currentRules = item.rules;
+            // 必填时自动生成message
+            if (
+              validatenull(currentRules.validator) &&
+              (!currentRules.message || currentRules.message.trim().length === 0)
+            ) {
+              if (currentRules.required) {
+                currentRules.message = `必填，请填写${item.label}`;
+              }
+            }
+            // 添加进rules
+            if (Array.isArray(currentRules)) {
+              this.$set(this.formRules, item.prop, currentRules);
+              this.$set(this.formCellRules, item.prop, currentRules);
+            } else if (this._typeOf(currentRules) === 'Object') {
+              this.$set(this.formRules, item.prop, [currentRules]);
+              this.$set(this.formCellRules, item.prop, [currentRules]);
             }
           }
-          // 添加进rules
-          if (_.isArray(currentRules)) {
-            this.$set(this.formRules, item.prop, currentRules);
-            this.$set(this.formCellRules, item.prop, currentRules);
-          } else if (_.isObject(currentRules)) {
-            this.$set(this.formRules, item.prop, [currentRules]);
-            this.$set(this.formCellRules, item.prop, [currentRules]);
-          }
         }
-      });
+      }
     },
     rowCell(row, index) {
       if (row.$cellEdit) {
@@ -1008,7 +1011,9 @@ export default {
           this.methodsQueue.forEach(element => {
             element.fn.apply(this, element.params);
           });
-          this.methodsQueue = []; // 如果在这里清除，调用刷新方法后无法再次执行
+          // 如果在这里清除，调用刷新方法后无法再次执行
+          // 2020-6-10 如果不清除，会导致重复调用方法
+          this.methodsQueue = [];
         });
       }
     },
