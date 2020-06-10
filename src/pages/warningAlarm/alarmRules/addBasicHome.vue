@@ -46,8 +46,11 @@
             </z-form>
           </div>
           <div class="cancel_check">
-            <el-button @click="goAlarmRules" type='primary' >确认</el-button>
-            <el-button>取消</el-button>  
+            <el-button
+              @click="goAlarmRules"
+              type='primary'
+            >确认</el-button>
+            <el-button>取消</el-button>
           </div>
 
         </el-dialog>
@@ -92,6 +95,8 @@
 </template>
 
 <script>
+// 导入接口
+import warningAlarm from "@/service/api/warningAlarm";
 // import CommonFun from "@/utils/commonFun";
 import { WarningAlerm } from "utils/dictionary";
 // 子系统
@@ -145,6 +150,7 @@ export default {
                 label: "子系统",
                 prop: "subSystem",
                 span: 6,
+                disabled:true,
                 offset: 8,
                 dicData: subSystem
               },
@@ -220,10 +226,16 @@ export default {
               {
                 type: "select",
                 label: "报警级别",
-                prop: "alarmLevel",
+                prop: "eventRank",
                 span: 6,
                 offset: 8,
-                dicData: alarmLevel
+                // dicData: alarmLevel
+                dicUrl: warningAlarm.geteventRanks,
+                dicMethod: "get",
+                props: {
+                  label: "rankName",
+                  value: "rankId"
+                }
               },
               // 抑制select
               {
@@ -262,9 +274,9 @@ export default {
                 prop: "notificationWay",
                 multiple: true,
                 tip: "可以多选",
-                row:true,
+                row: true,
                 span: 6,
-                offset:6,
+                offset: 6,
                 dicData: notificationWay
               },
               // 通知组select
@@ -303,8 +315,8 @@ export default {
                 span: 6,
                 offset: 2,
                 dicData: timeSetting,
-                tip:'秒/每次',
-                tipPlacement:'right'
+                tip: "秒/每次",
+                tipPlacement: "right"
               }
             ]
           }
@@ -324,14 +336,14 @@ export default {
                 label: "",
                 placeholder: "请输入关键字",
                 prop: "search",
-                span: 18,
+                span: 18
               },
               //  复选框
               {
                 type: "checkbox",
                 prop: "reCheckbox",
                 span: 6,
-                offset:2,
+                offset: 2,
                 dicData: reCheckbox
               }
             ]
@@ -357,9 +369,9 @@ export default {
       this.dialogFormVisible = true;
     },
     //单击弹出框的确认按钮
-    goAlarmRules(){
-        this.$router.push('/warningalarm/alarmRules');
-        this.dialogFormVisible = false;
+    goAlarmRules() {
+      this.$router.push("/warningalarm/alarmRules");
+      this.dialogFormVisible = false;
     }
   },
   mounted() {}
@@ -395,10 +407,10 @@ export default {
   margin: 0 auto;
   border: 1px solid #ccc;
 }
-.cancel_check{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding:20px;
+.cancel_check {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 </style>

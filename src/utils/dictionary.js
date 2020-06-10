@@ -551,11 +551,8 @@ export const WarningAlerm = {
 	// 报警状态
 	// Alarm status
 	alarmStatus: [
-		{ label: '全部', value: 1 },
-		{ label: '已创建', value: 2 },
-		{ label: '未处理', value: 3 },
-		{ label: '处理中', value: 4 },
-		{ label: '已关闭', value: 5 }
+		{ label: '未处理', value: 1 },
+		{ label: '已处理', value: 2 }
 	],
 	// 子系统
 	// subsystem
@@ -571,10 +568,9 @@ export const WarningAlerm = {
 	// 报警类型
 	// Alarm type
 	alarmType: [
-		{ label: '全部', value: 1 },
-		{ label: '设备离线报警', value: 2 },
-		{ label: '设备故障报警', value: 3 },
-		{ label: '设备运行报警', value: 4 }
+		{ label: '通讯故障', value: 2 },
+		{ label: '设备运行报警', value: 3 },
+		{ label: '其他类型报警', value: 4 }
 	],
 	// 录入类型
 	// Input type

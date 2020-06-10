@@ -33,9 +33,12 @@
 
 <script>
 // 导入配置的字典====根据需要导入自己的配置
+// 导入接口
+import warningAlarm from "@/service/api/warningAlarm";
 
 import CommonFun from "@/utils/commonFun";
 import { WarningAlerm } from "utils/dictionary";
+import { get } from 'http';
 //导入字典中的定义的字段
 // 报警级别
 const alarmLevel = WarningAlerm.alarmLevel;
@@ -69,7 +72,8 @@ export default {
           {
             type: "select",
             label: "子系统",
-            prop: "subSystem",
+            prop: "system",
+            disabled:true,
             offset: 10,
             dicData: subSystem
           },
@@ -86,7 +90,8 @@ export default {
             type: "select",
             label: "设备点位",
             offset: 10,
-            prop: "equipmentSite",
+            // hide:true,
+            prop: "monitorName",
             dicData: equipmentSite
           },
           //   报警名称
@@ -94,17 +99,19 @@ export default {
             type: "input",
             label: "报警名称",
             offset: 10,
-            prop: "name",
+            prop: "caption",
             placeholder: "请输入关键字",
             clearable: true,
             minRows: 0
           },
           //  开始时间
           {
-            type: "time",
+            type: "datetime",
             label: "开始时间",
             clearable: true,
             offset: 10,
+            valueFormat: "yyyy-MM-dd HH:mm:ss",
+            format: "yyyy-MM-dd HH:mm:ss",
             prop: "startTime",
             minRows: 0
           },
@@ -114,23 +121,29 @@ export default {
             offset: 10,
             label: "报警描述",
             clearable: true,
-            prop: "alarmDescribe",
+            prop: "errorMessage",
             minRows: 0
           },
           // 报警级别
           {
             type: "select",
             label: "报警级别",
-            prop: "alarmLevel",
             offset: 10,
-            dicData: alarmLevel
+            dicData: alarmLevel,
+            prop: "eventRank",
+            dicUrl: warningAlarm.geteventRanks,
+            dicMethod: "get",
+            props: {
+              label: "rankName",
+              value: "rankId"
+            }
           },
           //报警类型
           {
             type: "select",
             label: "报警类型",
             //   offset:1,
-            prop: "alarmType",
+            prop: "state",
             offset: 10,
             dicData: alarmType
           },
@@ -146,7 +159,7 @@ export default {
   computed: {
     Form() {
       return this.$refs[this.formData.ref]
-    }
+    },
   },
   methods: {
     // 确认
@@ -154,8 +167,8 @@ export default {
       // this.$router.push('/warningalarm/monitorAlarm')
       // console.log(obj);
       this.Form.getFormModel(res => {
-        // console.log(res)
-         this.$router.back();
+        console.log(res)
+       this.$router.back();
       })
      
     },
@@ -167,9 +180,17 @@ export default {
     submit() {},
     resetChange() {},
     batchDels() {},
-    addTenant() {}
+    addTenant() {},
   },
-  mounted() {}
+  mounted() {},
+  created(){
+    // 报警级别
+    warningAlarm.geteventRanks().then(res => {
+      this.Form.setColumnByProp("eventRank", {
+        dicData: res
+      });
+    });
+  }
 };
 </script>
 

@@ -72,7 +72,7 @@ export default {
               // routeAddress: "/tenantManage",
               childNode: [
                 {
-                  id: 1721,
+                  // id: 1721,
                   pid: 169,
                   name: "监控报警信息",
                   level: 3,
@@ -85,7 +85,7 @@ export default {
                   clientType: "0"
                 },
                 {
-                  id: 1721,
+                  // id: 1721,
                   pid: 169,
                   name: "查看详情",
                   level: 3,
@@ -109,7 +109,7 @@ export default {
               routeAddress: "/leaseContract",
               childNode: [
                 {
-                  id: 1741,
+                  // id: 1741,
                   pid: 169,
                   name: "监控报警规则",
                   level: 3,
@@ -123,7 +123,7 @@ export default {
                 },
                 // 查看和编辑
                 {
-                  id: 1741,
+                  // id: 1741,
                   pid: 169,
                   name: "查看和编辑",
                   level: 3,
@@ -136,7 +136,7 @@ export default {
                   clientType: "0"
                 },
                 {
-                  id: 1741,
+                  // id: 1741,
                   pid: 169,
                   name: "新增报警规则",
                   level: 3,
@@ -164,7 +164,7 @@ export default {
               clientType: "0",
               childNode: [
                 {
-                  id: 1741,
+                  // id: 1741,
                   pid: 169,
                   name: "报警处理组管理",
                   level: 3,
@@ -178,7 +178,7 @@ export default {
                   // /warningalarm/newAdd
                 },
                 {
-                  id: 1741,
+                  // id: 1741,
                   pid: 169,
                   name: "新增处理组",
                   level: 3,
@@ -207,7 +207,7 @@ export default {
               clientType: "0",
               childNode: [
                 {
-                  id: 1741,
+                  // id: 1741,
                   pid: 169,
                   name: "通知方式管理",
                   level: 3,
@@ -220,7 +220,7 @@ export default {
                   clientType: "0"
                 },
                 {
-                  id: 1741,
+                  // id: 1741,
                   pid: 169,
                   name: "编辑",
                   level: 3,
@@ -233,7 +233,7 @@ export default {
                   clientType: "0"
                 },
                 {
-                  id: 1741,
+                  // id: 1741,
                   pid: 169,
                   name: "新增",
                   level: 3,

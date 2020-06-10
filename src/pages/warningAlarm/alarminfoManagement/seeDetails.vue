@@ -63,7 +63,10 @@
               @submit="submit"
               @reset-change="resetChange"
             >
-              <template slot='btn' slot-scope="obj">
+              <template
+                slot='btn'
+                slot-scope="obj"
+              >
                 <div>
                   <el-button
                     type="primary"
@@ -89,7 +92,7 @@
                     @click="sure"
                     type="primary"
                   >确认</el-button>
-                  <el-button @click="sendRest" >重置</el-button>
+                  <el-button @click="sendRest">重置</el-button>
                 </div>
               </template>
             </z-form>
@@ -106,7 +109,7 @@
 
       <p style="width:100%;font-weight:bold; margin:20px 60px;">报警动态:</p>
       <div style="margin:0 60px">
-        信息展示，仰天大笑出门去.......
+        信息展示............
       </div>
     </div>
 
@@ -114,6 +117,8 @@
 </template>
 
 <script>
+// 导入接口
+import warningAlarm from "@/service/api/warningAlarm";
 import { WarningAlerm } from "utils/dictionary";
 // 应答
 const alarmResponse = WarningAlerm.alarmResponse;
@@ -121,13 +126,16 @@ const alarmResponse = WarningAlerm.alarmResponse;
 const priority = WarningAlerm.priority;
 // 派单==》指派
 const handingPerson = WarningAlerm.handingPerson;
-
+// 报警状态
+const alarmStatus = WarningAlerm.alarmStatus;
+// 报警类型
+const alarmType = WarningAlerm.alarmType;
 export default {
   name: "seeDetails",
   data() {
     return {
       // 传过来的信息
-      msg:{},
+      msg: {},
       //控制派单和应答
       dis: false,
       // 表单的配置项,
@@ -148,16 +156,16 @@ export default {
               //报警名称
               {
                 type: "input",
-                label: "报警名称:",
+                label: "报警名称",
                 placeholder: " ",
-                prop:'caption',
+                prop: "caption",
                 span: 6,
                 offset: 1
               },
               // 开始时间
               {
                 type: "input",
-                label: "开始时间:",
+                label: "开始时间",
                 placeholder: " ",
                 prop: "startTime",
                 span: 6,
@@ -166,7 +174,7 @@ export default {
               // 报警描述
               {
                 type: "input",
-                label: "报警描述:",
+                label: "报警描述",
                 placeholder: " ",
                 prop: "errorMessage",
                 span: 6,
@@ -175,43 +183,57 @@ export default {
               // 报警级别
               {
                 type: "input",
-                label: "报警级别:",
+                label: "报警级别",
                 placeholder: " ",
-                prop: "eventRank",
                 span: 6,
-                offset: 1
+                offset: 1,
+                prop: "eventRank",
+                dicUrl: warningAlarm.geteventRanks,
+                dicMethod: "get",
+                props: {
+                  label: "rankName",
+                  value: "rankId"
+                }
               },
               // 状态
               {
                 type: "input",
-                label: "状态:",
+                label: "状态",
                 placeholder: " ",
                 prop: "handled",
                 span: 6,
-                offset: 1
+                offset: 1,
+                dicData:alarmStatus
               },
               // 子系统
               {
                 type: "input",
-                label: "子系统:",
+                label: "子系统",
                 placeholder: " ",
-                prop: "system" ,
+                prop: "system",
                 span: 6,
                 offset: 1
               },
               // 设备类型
               {
                 type: "input",
-                label: "设备类型:",
+                label: "设备类型",
                 placeholder: " ",
-                prop: "catalogId",
                 span: 6,
-                offset: 1
+                offset: 1,
+                prop: "catalogId",
+                dicUrl: warningAlarm.getItemsTree,
+                dicQuery: { catalogId: "2002" },
+                props: {
+                  label: "text",
+                  value: "id",
+                  children: "nodes"
+                }
               },
               // 设备
               {
                 type: "input",
-                label: "设备:",
+                label: "设备",
                 placeholder: " ",
                 prop: "deviceName",
                 span: 6,
@@ -220,32 +242,36 @@ export default {
               // 设备点位
               {
                 type: "input",
-                label: "设备点位:",
+                label: "设备点位",
                 placeholder: " ",
-                prop: "devicePoint",
+                prop: "monitorName",
                 span: 6,
                 offset: 1
               },
               // 报警类型
               {
                 type: "input",
-                label: "报警类型:",
+                label: "报警类型",
                 prop: "state",
                 span: 6,
-                offset: 1
+                offset: 1,
+                dicData: alarmType
+                
               },
               // 位置
               {
                 type: "input",
-                label: "位置:",
+                label: "位置",
                 placeholder: " ",
+                prop: "equipmentSite",
                 span: 6,
                 offset: 1
               },
               // 响应时间
               {
                 type: "input",
-                label: "响应时间:",
+                label: "响应时间",
+                prop:'duration',
                 placeholder: "0天0小时2分47秒",
                 span: 6,
                 offset: 1
@@ -330,10 +356,10 @@ export default {
               {
                 type: "time",
                 label: "开始时间",
-                prop: "startTiem",
+                prop: "startTime",
                 valueDefault: new Date(),
-                valueFormat: 'yyyy-MM-dd hh:mm:ss',
-                format:"yyyy-MM-dd hh:mm:ss",
+                valueFormat: "yyyy-MM-dd hh:mm:ss",
+                format: "yyyy-MM-dd hh:mm:ss",
                 span: 12,
                 row: true,
                 offset: 5
@@ -344,9 +370,9 @@ export default {
                 label: "预计结束时间",
                 prop: "startTime",
                 placeholder: "用户可以自己选择",
-                valueDefault:new Date(),
-                valueFormat:'yyyy-MM-dd hh:mm:ss',
-                format:"yyyy-MM-dd hh:mm:ss",
+                valueDefault: new Date(),
+                valueFormat: "yyyy-MM-dd hh:mm:ss",
+                format: "yyyy-MM-dd hh:mm:ss",
                 span: 12,
                 row: true,
                 offset: 5
@@ -399,38 +425,38 @@ export default {
             ]
           }
         }
+
       ]
     };
   },
-  created(){
-    var query = this.$route.query
-    if(query.flag){
-      this.model = {...query}
-      this.setForms[0].formData.textMode = true
-      if(query.mark){
-        this.open()
+  created() {
+    var query = this.$route.query;
+    if (query.flag) {
+      this.model = { ...query };
+      this.setForms[0].formData.textMode = true;
+      if (query.mark) {
+        this.open();
       }
-    }else{
-      this.model = {...query}
+    } else {
+      this.model = { ...query };
     }
   },
   methods: {
-    
     // 返回
-    goBack(){
-      this.$router.go(-1)
+    goBack() {
+      this.$router.go(-1);
     },
     // 派单中的重置按钮
-    sendRest(){
-        // 获取表单中实例
-        var sendForm = this.$refs[this.setForms[2].formData.ref];
-        // console.log(sendForm)
-        // 清空表单
-        sendForm.resetForm()
+    sendRest() {
+      // 获取表单中实例
+      var sendForm = this.$refs[this.setForms[2].formData.ref];
+      // console.log(sendForm)
+      // 清空表单
+      sendForm.resetForm();
     },
     // 应答的确认
-    resetForm(...args){
-      var zForm = this.$refs[this.setForms[1].formData.ref]
+    resetForm(...args) {
+      var zForm = this.$refs[this.setForms[1].formData.ref];
       zForm.resetForm();
     },
     // 报警派单弹窗中的 "确认"按钮
@@ -480,7 +506,6 @@ export default {
 </script>
 
 <style lang="less" scoped >
-
 .message-device-manage {
   .condition-box {
     padding-top: 20px;
@@ -500,12 +525,12 @@ export default {
       //
       .el-dialog {
         .content {
-          margin-top:0;
+          margin-top: 0;
           .title {
             padding: 0 20px;
             display: flex;
             justify-content: space-between;
-            
+
             // margin: 15px 0;
             /deep/.el-input__inner {
               border: 1px solid #ccc;

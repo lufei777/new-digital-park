@@ -58,6 +58,8 @@
 </template>
 
 <script>
+// 导入接口
+import warningAlarm from "@/service/api/warningAlarm";
 // 导入配置的字典====根据需要导入自定义配置
 import CommonFun from "@/utils/commonFun";
 //导入字典中的定义的字段
@@ -87,17 +89,23 @@ export default {
             type: "select",
             label: "子系统",
             span: 5,
-            prop: "subSystem",
+            prop: "system",
             dicData: subSystem
           },
           // 报警级别
           {
             type: "select",
             label: "报警级别",
-            prop: "alarmLevel",
+            prop: "eventRank",
             offset: 1,
             span: 5,
-            dicData: alarmLevel
+            dicUrl: warningAlarm.geteventRanks,
+            dicMethod: "get",
+            props: {
+              label: "rankName",
+              value: "rankId"
+            }
+            // dicData: alarmLevel
           },
           // 处理组名称
           {

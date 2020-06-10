@@ -16,10 +16,10 @@ export default new class {
     queryAlarmMessages(){  }
 
 
-    // 查询报警规则列表
-    @url('/vibe-web/alarm/QueryAlarmRules')
+    // 报警规则列表 
+    @url('/vibe-web/alarm/queryAlarmRules')
     @post
-    QueryAlarmRules(){ }
+    queryAlarmRules(){ }
 
     // 设备类型筛选的接口 参数{catalogId/init}
     @url('/vibe-web/getItemsTree')
@@ -31,6 +31,15 @@ export default new class {
     @get
     geteventRanks(){  }
 
+    //监控报警 删除和批量删除  /alarm/updataAssetEventRank
+    @url('/vibe-web/alarm/deleteEventRank')
+    @post
+    deleteEventRank() { }
+
+    // 监控报警规则 ==》 批量编辑
+    @url('/vibe-web/alarm/updateAssetEventRank')
+    @get
+    updateAssetEventRank() { }
 
 
 }

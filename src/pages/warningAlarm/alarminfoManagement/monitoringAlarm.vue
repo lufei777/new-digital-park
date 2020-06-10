@@ -17,6 +17,7 @@
           <div>
             <el-button
               type="primary"
+              :disabled='obj.disabled'
               @click="onClickSearchBtn(obj)"
             >查询</el-button>
             <el-button @click="clearForm(obj)">重置</el-button>
@@ -30,6 +31,7 @@
       <div class="operator-btn-box flex-row-reverse">
       </div>
       <z-table
+        :load="tableLoad"
         :ref="tableData.ref"
         :options="tableData"
       >
@@ -95,7 +97,10 @@ export default {
   name: "warningAlarm",
   data() {
     return {
+      tableLoad: false,
       model: {},
+      // 表单数组
+      queryArry: {},
       formData: {
         ref: "formData",
         labelWidth: "100",
@@ -108,22 +113,20 @@ export default {
           {
             type: "select",
             label: "报警级别",
-            prop: "eventRank",
             span: 5,
-            remote: true,
+            // remote: true,
             // dicData: alarmLevel,
-            dicUrl: warningAlarm.geteventRanks,
-            dicMethod: "get",
+            prop: "eventRank",
             props: {
               label: "rankName",
-              value: "rankId",
+              value: "rankId"
             }
           },
           //   报警状态
           {
             type: "select",
             label: "报警状态",
-            valueDefault: "已创建",
+            // valueDefault: "已创建",
             offset: 1,
             prop: "handled",
             span: 5,
@@ -133,23 +136,24 @@ export default {
           {
             type: "select",
             label: "子系统",
-            valueDefault: "门禁管理",
+            hide: true,
             span: 5,
             // readonly:true,
             disabled: true,
             offset: 1,
-            prop: "subSystem",
+            prop: "system",
             dicData: subSystem
           },
           //   设备类型
           {
             // placeholder: '请选择 设备分类',
             label: "设备类型",
-            type: "tree",
+            type: "cascader",
             span: 5,
-            prop: "catalogId",
+            offset:1,
             clearable: true,
             // commonApi.getEnergyListAll  '/vibe-web/getItemsTree',
+            prop: "catalogId",
             dicUrl: warningAlarm.getItemsTree,
             dicQuery: { catalogId: "2002" },
             props: {
@@ -163,7 +167,7 @@ export default {
             type: "select",
             label: "报警类型",
             span: 5,
-            valueDefault: "设备离线报警",
+            offset:1,
             prop: "state",
             dicData: alarmType
           },
@@ -174,19 +178,18 @@ export default {
             prop: "caption",
             placeholder: "请输入关键字",
             clearable: true,
-
             span: 5,
-            offset: 1,
             minRows: 0
           },
           //  开始时间
           {
-            type: "time",
+            type: "datetime",
             label: "开始时间",
             prop: "startTime",
             span: 5,
             offset: 1,
-            minRows: 0
+            minRows: 0,
+            valueFormat: "yyyy-MM-dd HH:mm:ss"
           },
           {
             prop: "btn",
@@ -201,27 +204,7 @@ export default {
       tableData: {
         ref: "Table",
         customTop: true,
-        data: [
-          {
-            caption: "asdu",
-            startTime: "2015-09-03",
-            errorMessage: "sahdif",
-            eventRank: "普通",
-            handled: "已创建",
-            state: "设备离线报警",
-            system: "",
-            catalogId: "门禁",
-            deviceName: "交换机",
-            devicePoint: "xxxx"
-          }
-        ],
-        // serverMode: {
-        //   // url: warningAlarm.getAlarmMessageList,
-        //   data: {
-        //     pageNum: 1,
-        //     pageSize: 10
-        //     },
-        // },
+        data: [],
         customTopPosition: "right",
 
         operation: {
@@ -236,8 +219,13 @@ export default {
             pageSizes: [5, 10, 20],
             pageSize: 10,
             currentPage: 1,
-            handler(pageSize, currentPage, table) {
-              console.log({ pageSize, currentPage }, table);
+            handler: (pageSize, currentPage, table) => {
+              // console.log({ pageSize, currentPage }, table);
+              let props = this.queryArry; //获取的是查询时的字段
+              this.fetchTableList(
+                { ...props },
+                { rows: pageSize, page: currentPage }
+              );
             }
           }
         }
@@ -248,14 +236,31 @@ export default {
   computed: {
     Form() {
       return this.$refs[this.formData.ref];
+    },
+    Table() {
+      return this.$refs[this.tableData.ref];
     }
   },
 
   methods: {
     // 查询
     onClickSearchBtn(obj) {
-      console.log(obj);
-      this.Form.submit();
+      // this.$nextTick(()=>{
+      //   this.props ={...res}
+      // })
+
+      var that = this;
+      this.Form.getFormModel(res => {
+        // 需要加一个处理。。。。。
+        console.log(res);
+        res.eventRank = { rankId: res.eventRank };
+        // res.catalogId = res.catalogId[1]
+        if(res.catalogId && res.catalogId.length>=2 ){
+          res.catalogId = res.catalogId[res.catalogId.length-1]
+        }       
+        that.queryArry = { ...res };
+        that.fetchTableList({ ...res }, { rows: 10, page: 1 });
+      });
     },
 
     // '查看' 按钮
@@ -273,14 +278,16 @@ export default {
       zform.resetForm();
     },
     // '应答',按钮
-    propertyEdit() {
+    propertyEdit(obj) {
       // 去往查看详情的页面
       this.$router.push({
         path: "/warningalarm/seeDetails",
-        query: { flag: true, mark: "response" }
+        query: { flag: true, mark: "response", ...obj.row }
       });
     },
-    submit() {},
+    submit(hide, model) {
+      hide();
+    },
     resetChange() {},
     getCleaningList() {
       // 来自CommonFun的模拟数据源 let res = CommonFun.monitorAlarm;
@@ -289,13 +296,39 @@ export default {
         { label: "报警名称", prop: "caption" },
         { label: "开始时间", prop: "startTime" },
         { label: "报警描述", prop: "errorMessage" },
-        { label: "报警级别", prop: "eventRank" },
-        { label: "报警状态", prop: "handled" },
-        { label: "报警类型", prop: "state" },
+        {
+          label: "报警级别",
+          prop: "eventRank",
+          props: {
+            label: "rankName",
+            value: "rankId"
+          }
+        },
+        {
+          label: "报警状态",
+          prop: "handled",
+          type: "select",
+          dicData: alarmStatus
+        },
+        {
+          label: "报警类型",
+          prop: "state",
+          type: "select",
+          dicData: alarmType
+        },
         { label: "子系统", prop: "system" }, //待定
-        { label: "设备类型", prop: "catalogId" },
+        {
+          label: "设备类型",
+          prop: "catalogId",
+          type:'select',
+          props: {
+            label: "text",
+            value: "id",
+            children: "nodes"
+          }
+        },
         { label: "设备名称", prop: "deviceName" },
-        { label: "设备点位", prop: "devicePoint" } //未改
+        { label: "设备点位", prop: "monitorName" } //未改
       ];
       this.tableData.columnConfig = labelList;
       // this.tableData.data = res;
@@ -305,20 +338,49 @@ export default {
     addTenant() {},
     //单击新建按钮的的点击事件
     toNewInceased() {
-      console.log(222);
+      // console.log(222);
       this.$router.push("/warningAlarm/newIncreased");
+    },
+    // 第一个参数是body 中的参数，第二个参数是拼在地址栏中的参数
+    fetchTableList(searchParams = {}, pageParams = { page: 1, rows: 10 }) {
+      this.tableLoad = true;
+      warningAlarm
+        .queryAlarmMessages(searchParams, pageParams)
+        .then(res => {
+          // console.log("dte",res)
+          this.$refs[this.tableData.ref].setData(res.rows);
+          this.$refs[this.tableData.ref].setTotal(res.total);
+        })
+        .finally(() => {
+          this.tableLoad = false;
+        });
     }
   },
   mounted() {
     this.getCleaningList();
   },
   created() {
-    // commonApi
-    //   .getAlarmMessageList({ pageNum: 1, pageCount: 10, start: "", end: "" })
-    //   .then(res => {
-    //     // console.log(res)
-    //     this.tableData.data = res.rows;
-    //   });
+    // 报警级别
+    warningAlarm.geteventRanks().then(res => {
+      this.Form.setColumnByProp("eventRank", {
+        dicData: res
+      });
+      this.Table.setColumnByProp("eventRank", {
+        dicData: res
+      });
+    });
+    // 设备类型
+    warningAlarm.getItemsTree({ catalogId: "2002"}).then(res => {
+      // console.table(res)
+      this.Form.setColumnByProp("catalogId",{
+        dicData: res
+      })
+      this.Table.setColumnByProp("catalogId", {
+        dicData: res
+      });
+
+    })
+    this.fetchTableList();
   }
 };
 </script>
