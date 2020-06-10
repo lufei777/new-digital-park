@@ -666,6 +666,7 @@ export default {
         this._pushInMethodsQueue(this.setCurrentRow, [index]);
         return;
       }
+
       let row = this.tableShowData[index];
       let column = this.columnConfig[index];
       this.Table.setCurrentRow(row);

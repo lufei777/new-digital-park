@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="zvue-input-tree" v-if="type==='tree'" v-clickout="closeBox">
+    <div class="zvue-input-tree" v-if="type==='tree'">
       <el-input
         :size="size"
         :value="labelShow"
@@ -18,52 +18,6 @@
         :readonly="false"
         @click.native="disabled?'':open()"
       />
-      <transition name="el-zoom-in-top">
-        <div class="zvue-input_tree-box" v-if="box" :style="treeStyle">
-          <div></div>
-          <el-input
-            size="mini"
-            style="margin-bottom:8px;"
-            placeholder="输入关键字进行过滤"
-            v-model="filterText"
-            v-if="filter"
-          ></el-input>
-          <el-scrollbar style="height:236px;overflow-x:hidden !important;">
-            <el-tree
-              ref="tree"
-              :highlight-current="!multiple"
-              :data="dicList"
-              :node-key="valueKey"
-              :accordion="accordion"
-              :show-checkbox="multiple"
-              :props="treeProps"
-              :lazy="lazy"
-              :load="treeLoad"
-              :check-strictly="checkStrictly"
-              :current-node-key="multiple?'':text"
-              :filter-node-method="filterNode"
-              :default-expanded-keys="defaultExpandedKeys?defaultExpandedKeys:(defaultExpandAll?[]:keysList)"
-              :default-checked-keys="defaultCheckedKeys?defaultCheckedKeys:keysList"
-              :default-expand-all="defaultExpandAll"
-              @check="checkChange"
-              @node-click="handleNodeClick"
-            >
-              <template #default="{ data }">
-                <div style="width:100%;padding-right:10px;">
-                  <slot
-                    :name="prop+'Type'"
-                    :labelkey="labelKey"
-                    :valuekey="valueKey"
-                    :item="data"
-                    v-if="typeslot"
-                  ></slot>
-                  <span v-else>{{getLabelText(data)}}</span>
-                </div>
-              </template>
-            </el-tree>
-          </el-scrollbar>
-        </div>
-      </transition>
     </div>
     <el-input
       v-else
@@ -105,6 +59,61 @@
         <div v-html="prefix"></div>
       </template>
     </el-input>
+    <!-- 弹窗，为了防止在表格中使用挡住，使用appendtobody -->
+    <transition name="el-zoom-in-top">
+      <div
+        v-append-to-body="true"
+        v-clickout="closeBox"
+        class="zvue-input_tree-box"
+        v-if="box"
+        :style="treeStyle"
+      >
+        <el-input
+          size="mini"
+          style="margin-bottom:8px;"
+          placeholder="输入关键字进行过滤"
+          v-model="filterText"
+          v-if="filter"
+        ></el-input>
+        <el-scrollbar
+          wrap-class="scrollbar-wrapper"
+          style="height:236px;overflow-x:hidden !important;"
+        >
+          <el-tree
+            ref="tree"
+            :highlight-current="!multiple"
+            :data="dicList"
+            :node-key="valueKey"
+            :accordion="accordion"
+            :show-checkbox="multiple"
+            :props="treeProps"
+            :lazy="lazy"
+            :load="treeLoad"
+            :check-strictly="checkStrictly"
+            :current-node-key="multiple?'':text"
+            :filter-node-method="filterNode"
+            :default-expanded-keys="defaultExpandedKeys?defaultExpandedKeys:(defaultExpandAll?[]:keysList)"
+            :default-checked-keys="defaultCheckedKeys?defaultCheckedKeys:keysList"
+            :default-expand-all="defaultExpandAll"
+            @check="checkChange"
+            @node-click="handleNodeClick"
+          >
+            <template #default="{ data }">
+              <div style="width:100%;padding-right:10px;">
+                <slot
+                  :name="prop+'Type'"
+                  :labelkey="labelKey"
+                  :valuekey="valueKey"
+                  :item="data"
+                  v-if="typeslot"
+                ></slot>
+                <span v-else>{{getLabelText(data)}}</span>
+              </div>
+            </template>
+          </el-tree>
+        </el-scrollbar>
+      </div>
+    </transition>
   </div>
 </template>
 <script>
@@ -139,7 +148,7 @@ export default {
     },
     autocomplete: {
       type: String,
-      default: 'off'
+      default: "off"
     },
     showPassword: Boolean,
     minRows: {
@@ -152,14 +161,14 @@ export default {
     },
     prependClick: {
       type: Function,
-      default: () => { }
+      default: () => {}
     },
     prepend: {
       type: String
     },
     appendClick: {
       type: Function,
-      default: () => { }
+      default: () => {}
     },
     append: {
       type: String
@@ -229,7 +238,7 @@ export default {
         if (this.multiple) {
           this.text = [];
         } else {
-          this.text = '';
+          this.text = "";
         }
         if (box) {
           this.$refs.tree.setCheckedKeys([]);
@@ -275,9 +284,10 @@ export default {
 
       this.treeStyle = {
         // top: `${top + height}px`,
-        top: `${height}px`,
-        left: `${0}px`,
-        width: `${width}px`
+        top: `${top + height}px`,
+        left: `${left}px`,
+        width: `${width}px`,
+        minWidth: "180px"
       };
       this.box = true;
       this.$nextTick(() => {
@@ -346,7 +356,8 @@ export default {
         this.box = false;
         this.node = data;
       };
-      if (typeof this.nodeClick === "function") this.nodeClick(data, node, $tree);
+      if (typeof this.nodeClick === "function")
+        this.nodeClick(data, node, $tree);
       if (this.multiple) return;
       if (
         (validatenull(data[this.childrenKey]) && !this.multiple) ||
@@ -376,7 +387,7 @@ export default {
         isLeaf: this.leafKey
       });
     },
-    typeParam: function () {
+    typeParam: function() {
       if (this.rawtype) return this.rawtype;
       switch (this.type) {
         case "textarea":
