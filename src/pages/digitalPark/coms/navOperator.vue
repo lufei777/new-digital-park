@@ -272,19 +272,6 @@ export default {
     }
   },
   created() {
-    var twoSum = function(nums, target) {
-      let arr = []
-      for(let i=0;i<nums.length;i++){
-        let tmp = nums.slice(i+1).findIndex((obj)=>{
-          return nums[i]+obj==target
-        })
-        if(tmp!=-1){
-          arr=[i,tmp+i+1]
-          return arr
-        }
-      }
-      return []
-    };
   },
   mounted() {
     this.getAlarmList();
@@ -370,8 +357,7 @@ export default {
     }
   }
 }
-.large-select,
-.large-dropdown {
+.large-select, .large-dropdown {
   width: 200px;
 }
 .large-item {

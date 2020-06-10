@@ -19,7 +19,12 @@ function url(url) {
 function get(target, name, descriptor) {
   return send(target, name, descriptor, function (args, urlArgs = {}) {
     let url = descriptor.url;
-    url += '/' + Object.values(urlArgs);
+
+    urlArgs = Object.values(urlArgs);
+    if (urlArgs.length) {
+      url += '/' + urlArgs.join('/');
+    }
+    
     return axios.get(url + '?' + DoApi.jsonUrlFormat(args));
   });
 }

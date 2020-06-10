@@ -31,8 +31,8 @@
       >
         <el-option
           v-for="oitem in group[groupsKey]"
-          :disabled="oitem.disabled"
-          :key="getLabelText(oitem)"
+          :disabled="oitem[disabledKey]"
+          :key="oitem[valueKey] || getLabelText(oitem)"
           :label="getLabelText(oitem)"
           :value="oitem[valueKey]"
         >
@@ -43,8 +43,8 @@
     <template v-else>
       <el-option
         v-for="oitem in visibleDic"
-        :disabled="oitem.disabled"
-        :key="getLabelText(oitem)"
+        :disabled="oitem[disabledKey]"
+        :key="oitem[valueKey] || getLabelText(oitem)"
         :label="getLabelText(oitem)"
         :value="oitem[valueKey]"
       >

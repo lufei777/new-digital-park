@@ -43,7 +43,7 @@
         <el-main style="padding:0px;">
           <div class="panel">
             <z-table
-              :load="load"
+              :load="load || monitorTableLoad"
               :ref="tableOptions.ref"
               :options="tableOptions"
               @row-click="monitorRowClick"
@@ -60,15 +60,19 @@
                 </div>
               </template>
               <template #operation="{row,column,index,isEdit,size}">
-                <el-button :size="size" type="text" @click="edit(row)">编辑</el-button>
-                <el-button :size="size" type="text" @click="monitorData(row)">编辑</el-button>
+                <el-button :size="size" type="text" @click="edit(row)">修改</el-button>
+                <!-- <el-button :size="size" type="text" @click="monitorData(row)">监测数据</el-button> -->
               </template>
             </z-table>
           </div>
 
           <div class="panel">
             <!-- 设备详情，设备维修记录 -->
-            <z-form :load="load" v-model="deviceDetailModel" :options="deviceDetailForm"></z-form>
+            <z-form
+              :load="load || monitorTableLoad"
+              v-model="deviceDetailModel"
+              :options="deviceDetailForm"
+            ></z-form>
           </div>
         </el-main>
       </el-container>
@@ -108,9 +112,10 @@
     <el-drawer
       title="监控采集新增"
       size="80%"
+      destroy-on-close
       :append-to-body="true"
       :visible.sync="innerDrawer"
-      @close="$refs[deviceInfoForm.ref].resetForm()"
+      :before-close="innerHandleClose"
     >
       <div style="display:flex;justify-content:center;">
         <z-form
@@ -126,25 +131,48 @@
 
 <script>
 import CommonFun from 'utils/commonFun'
-import { AssetType } from 'utils/dictionary';
+import { AssetType, AssetKind } from 'utils/dictionary';
 import commonApi from 'api/common';
 import deviceManageApi from 'api/deviceManage';
 import { validNotChinese } from 'utils/validate';
 import { getUserInfo } from 'utils/auth';
 
-const DEVICE = AssetType.DEVICE;
+const DEVICE = AssetType.PROBE;
 // 新增设备
 let assetAddUrl = '/vibe-web/asset/assetAdd';
 // 编辑设备
 let assetEditUrl = '/vibe-web/asset/assetEdit';
-// 获取设备列表
-let getDeviceListUrl = '/vibe-web/findAsset/searchDevices';
-// 获取设备列表
-let getMonitorListUrl = '/vibe-web//asset/queryAssetList';
-// 新增维护
-let addMaintenaceUrl = '/vibe-web/addMaintenace';
-// 编辑维护
-let updateMaintenaceUrl = '/vibe-web/updateMaintenace';
+
+const getValueUnit = (unit, value) => {
+  if (!unit) return value;
+  let unitType = unit.indexOf('[') != -1 ? 'enum' :
+    unit.indexOf('|') != -1 ? 'bool' : 'input';
+  let unitObj = null;
+  switch (unitType) {
+    case 'enum':
+      unitObj = {};
+      let unitArr = unit.replace(/\[/g, "").replace(/\]/g, "").split(',');
+
+      for (let i = 0, len = unitArr.length; i < len; i++) {
+        let item = unitArr[i];
+        let itemArr = item.split('|');
+        if (typeof itemArr[1] == 'undefined') {
+          unitObj[itemArr[0]] = itemArr[1];
+        } else {
+          unitObj[itemArr[1]] = itemArr[0];
+        }
+      }
+      return unitObj[value]
+    case 'bool':
+      unitObj = unit.split('|');
+      return unitObj[value];
+  }
+  return value;
+}
+
+// 监测器   服务
+// 控制器   刷新延迟
+// 公共     分类、名称、标题、监测间隔、结果转换表达式、警告条件表达式、描述
 
 let valueFormat = "yyyy-MM-dd HH:mm:ss";
 export default {
@@ -155,6 +183,11 @@ export default {
       // 设备树和设备List的loading
       asideLoad: false,
       load: false,
+      monitorTableLoad: false,
+      // 设备新增抽屉
+      deviceTypeDrawer: false,
+      // 设备详情信息抽屉
+      innerDrawer: false,
 
       // 根据设备树，空间树进行查询设备列表
       catalogs: [],
@@ -179,7 +212,7 @@ export default {
                 prop: "catalog",
                 clearable: true,
                 dicUrl: commonApi.getEnergyListAll,
-                dicQuery: { kind: 'DEVICE' },
+                dicQuery: { kind: DEVICE.text },
                 props: {
                   label: "text",
                   value: "id",
@@ -230,7 +263,7 @@ export default {
           }
         ]
       },
-      // 主页设备List
+      // 主页监控项List
       tableOptions: {
         ref: 'table',
         operation: {
@@ -238,6 +271,10 @@ export default {
         },
         data: [],
         columnConfig: [
+          {
+            label: '状态',
+            prop: 'state'
+          },
           {
             label: '编号',
             prop: 'id'
@@ -255,20 +292,8 @@ export default {
             prop: 'name'
           },
           {
-            label: '存放地点',
-            prop: 'spaceCaption'
-          },
-          {
-            label: '保管人',
-            prop: 'userName'
-          },
-          {
-            label: '启用时间',
-            prop: 'enabing_date'
-          },
-          {
-            label: '使用年限',
-            prop: 'use_year'
+            label: '监测值',
+            prop: 'valueStr'
           }
         ],
         uiConfig: {
@@ -309,11 +334,6 @@ export default {
         }
       },
 
-      // 设备新增抽屉
-      deviceTypeDrawer: false,
-      // 设备详情信息抽屉
-      innerDrawer: false,
-
       // 新增设备表单
       addModel: {},
       deviceTypeForm: {
@@ -323,12 +343,12 @@ export default {
         width: '80%',
         forms: [
           {
-            label: '资产类别',
+            label: '资产类型',
             prop: 'typeName',
             type: 'select',
             clearable: true,
             dicUrl: deviceManageApi.assetTypeList,
-            dicQuery: { id: 1 },
+            dicQuery: { id: DEVICE.kind },
             props: {
               label: 'text',
               value: 'name'
@@ -338,14 +358,14 @@ export default {
             }
           },
           {
-            label: "资产类型",
-            prop: "parentId",
-            type: "tree",
+            label: "类别",
+            prop: "kind",
+            type: 'select',
             clearable: true,
+            dicUrl: deviceManageApi.assetKindList,
             props: {
-              label: "floor",
-              value: "floorId",
-              children: "nodes"
+              label: 'text',
+              value: 'id'
             },
             rules: {
               required: true
@@ -360,7 +380,7 @@ export default {
           }
         ]
       },
-      // 设备信息表单
+      // 监测器信息表单
       deviceInfoModel: {},
       // 设备信息默认表单
       deviceInfoForms: [
@@ -368,6 +388,13 @@ export default {
           label: 'id',
           prop: 'id',
           hide: true
+        },
+        {
+          label: '监测器类别',
+          prop: 'kind',
+          type: 'select',
+          dicData: AssetKind,
+          disabled: true,
         },
         {
           "label": "标题",
@@ -385,156 +412,28 @@ export default {
           }
         },
         {
-          "label": "设备采购日期",
-          "prop": "purchase_date",
-          type: "datetime",
-          format: "yyyy-MM-dd HH:mm:ss",
-          valueFormat,
+          label: '服务',
+          prop: 'source',
+          type: 'select',
+          props: {
+            label: 'text',
+            value: 'id'
+          }
+        },
+        {
+          label: '监测间隔',
+          prop: 'time_interval',
           rules: {
             required: true
           }
         },
         {
-          "label": "设备保修日期",
-          "prop": "warranty_date",
-          type: "date",
-          format: "yyyy-MM-dd HH:mm:ss",
-          valueFormat
+          label: '结果转换表达式',
+          prop: 'transform'
         },
         {
-          "label": "型号规格",
-          "prop": "specification"
-        },
-        {
-          "label": "资产类型",
-          "prop": "models"
-        },
-        {
-          "label": "增加方式",
-          "prop": "increse_way"
-        },
-        {
-          "label": "国际编码",
-          "prop": "international_code"
-        },
-        {
-          "label": "详情配置",
-          "prop": "detail_config"
-        },
-        {
-          "label": "制造日期",
-          "prop": "production_date",
-          type: "date",
-          format: "yyyy-MM-dd",
-          valueFormat: "yyyy-MM-dd",
-          rules: {
-            required: true
-          },
-        },
-        // TODO
-        // NOTE 使用部门 保管人员 的prop会导致错误
-        {
-          "label": "使用部门",
-          "prop": "using_department",
-          type: "select",
-          defaultValue: "",
-          dicUrl: deviceManageApi.deptList,
-          props: {
-            value: 'id',
-            label: 'name'
-          }
-        },
-        {
-          "label": "使用状态",
-          "prop": "using_state"
-        },
-        {
-          "label": "生产厂家",
-          "prop": "vendor"
-        },
-        {
-          "label": "保管人员",
-          "prop": "keepers",
-          type: "select",
-          defaultValue: "",
-          dicUrl: deviceManageApi.userNameList,
-          props: {
-            value: 'id',
-            label: 'text'
-          },
-          defaultValue: userInfo.id
-        },
-        {
-          "label": "启用时间",
-          "prop": "enabing_date",
-          type: "date",
-          format: "yyyy-MM-dd HH:mm:ss",
-          valueFormat,
-        },
-        {
-          "label": "数量",
-          "prop": "quantity",
-          type: 'number',
-          minRows: 0
-        },
-        {
-          "label": "单价",
-          "prop": "price",
-          type: 'number',
-          minRows: 0,
-          precision: 2
-        },
-        {
-          "label": "单位",
-          "prop": "deviceUnit",
-          rules: {
-            validator: (rule, value, callback) => {
-              if (typeof value === 'number') {
-                callback(new Error('不能是数字'))
-              } else {
-                callback();
-              }
-            }
-          }
-        },
-        {
-          "label": "金额",
-          "prop": "amount",
-          minRows: 0,
-          precision: 2
-        },
-        {
-          "label": "维修间隔月",
-          "prop": "maintenance_interval"
-        },
-        {
-          "label": "使用年限",
-          "prop": "use_year",
-          type: 'number',
-          minRows: 0
-        },
-        {
-          "label": "原值",
-          "prop": "original_value",
-          type: 'number'
-        },
-        {
-          "label": "残值",
-          "prop": "salvage_value",
-          type: 'number'
-        },
-        {
-          "label": "残值率",
-          "prop": "salvage",
-          type: 'number'
-        },
-        {
-          "label": "折旧方法",
-          "prop": "depreciation_method"
-        },
-        {
-          "label": "描述",
-          "prop": "memo"
+          label: '警告条件表达式',
+          prop: 'warn_cond'
         }
       ],
       deviceInfoForm: {
@@ -550,7 +449,7 @@ export default {
       deviceDetailForm: {
         menuBtn: false,
         textMode: true,
-        labelWidth: 100,
+        labelWidth: 115,
         itemSpan: 6,
         forms: [
           {
@@ -570,16 +469,23 @@ export default {
             prop: 'name'
           },
           {
-            label: '型号规格',
-            prop: 'specification'
+            label: '分类',
+            prop: 'kind'
           },
           {
-            label: '生产厂家',
-            prop: 'vendor'
+            label: '服务',
+            prop: 'serviceCaption'
           },
           {
-            label: '设备采购日期',
-            prop: 'purchase_date'
+            label: '监测间隔',
+            prop: 'time_interval'
+          },
+          {
+            label: '监测值',
+            prop: 'value',
+            formatter: (row, value) => {
+              return getValueUnit(row.unit, value);
+            }
           },
           {
             label: '描述',
@@ -591,6 +497,10 @@ export default {
     }
   },
   computed: {
+    parentId() {
+      let parentId = this.deviceTable.currentRowData.id
+      return parentId;
+    },
     currentAssetId() {
       return this.Table.currentRowData.id;
     },
@@ -609,11 +519,14 @@ export default {
     Table() {
       return this.$refs[this.tableOptions.ref];
     },
+    deviceTable() {
+      return this.$refs[this.deviceInfoTable.ref];
+    },
     // 查询列表发送的数据
     deviceListParam() {
       let { catalog, spaceId, ...extraModel } = this.searchModel
 
-      let res = { assetVo: Object.assign({ kind: DEVICE.text }, extraModel) }
+      let res = { assetVo: Object.assign({ kind: 'DEVICE' }, extraModel) }
 
       if (this.catalogs.length) {
         res.catalogs = this.catalogs
@@ -631,21 +544,16 @@ export default {
     // 请求连接
     fetch() {
       this.fetchDeviceList();
-      this.fetchSpaceTree();
     },
     // 加载设备列表
     fetchDeviceList(page) {
       this.load = true;
-      let url = page ? `${getDeviceListUrl}?page=${page}` : getDeviceListUrl;
       return new Promise((resolve, reject) => {
-        this.$axios({
-          url,
-          method: "POST",
-          data: this.deviceListParam
-        }).then(res => {
+        deviceManageApi.searchDevices(this.deviceListParam, { page: page }).then(res => {
           this.load = false;
           this.$refs[this.deviceInfoTable.ref].setData(res.rows);
           this.$refs[this.deviceInfoTable.ref].setTotal(res.total);
+
           // 默认选中第一个
           this.$refs[this.deviceInfoTable.ref].setCurrentRow(0);
           resolve(res);
@@ -677,9 +585,27 @@ export default {
     // 设备列表行点击
     deviceRowClick(row) {
       if (row) {
-        this.$axios.get(getMonitorListUrl + row.id).then(res => {
+        this.monitorTableLoad = true;
+        deviceManageApi.queryAssetList({}, { id: row.id }).then(res => {
+          this.setMonitorTable(res.rows, res.total);
+          this.$nextTick(() => {
+            this.Table.setCurrentRow(0);
+          })
+        }).catch(err => {
+          console.error(err);
+        }).finally(() => {
+          this.monitorTableLoad = false;
+        })
+      } else {
+        this.setMonitorTable([], 0);
+        this.$nextTick(() => {
+          this.Table.setCurrentRow(0);
         })
       }
+    },
+    setMonitorTable(data, total) {
+      this.Table.setData(data);
+      this.Table.setTotal(total);
     },
     // 监控列表行点击
     monitorRowClick(row) {
@@ -691,7 +617,7 @@ export default {
     },
 
     /**
-     * 设备详情 设备维护记录
+     * 监测器详情
      */
     getDetailMaintain(id) {
       // 设备详情
@@ -714,23 +640,29 @@ export default {
     },
 
     /**
-     * 根据node获取ids
-     */
-    getIdsByNode(arr, node, childrenKey = 'childNodes', idKey = 'id') {
-      arr.push(node[idKey]);
-      if (node[childrenKey] && Object.prototype.toString.call(node[childrenKey]) === '[object Array]') {
-        node[childrenKey].forEach((item) => {
-          this.getIdsByNode(arr, item, idKey);
-        });
-      }
-    },
-
-    /**
      * 监控列表操作
      */
+    // 删除
+    bulkDel(selectedData) {
+      let ids = selectedData.map(item => item.id).join(',');
+      this.delInfo().then(_ => {
+        deviceManageApi.deleteAsset({ ids }).then(res => {
+          this.deviceRowClick({ id: this.parentId });
+        }).catch(err => {
+          console.error(err);
+          this.$message.error('删除失败');
+        })
+      })
+    },
     // 编辑 
     edit(row) {
-      console.log("edit -> row", row)
+      let parentIdObj = { parentId: this.parentId }
+
+      deviceManageApi.toAssetEdit({ kind: row.kind }, { id: row.id }).then(res => {
+        this.deviceInfoModel = Object.assign(res.assetVo, parentIdObj);
+      })
+
+      this.getPropsByTagName({ kind: row.kind, typeName: row.typeName })
     },
     // 监测数据
     monitorData(row) {
@@ -738,45 +670,49 @@ export default {
     },
 
     /**
-     * 设备信息抽屉操作
+     * 新增监测器抽屉操作
      */
     // 新增提交
     addDeviceNext(model, done) {
-      this.deviceInfoModel = {};
-      this.getPropsByTagName(this.addModel.typeName).finally(() => {
+      let parentIdObj = { parentId: this.parentId }
+      // 拿取新增默认反选参数
+      deviceManageApi.toAssetAdd(Object.assign({}, this.addModel, parentIdObj)).then(res => {
+        this.deviceInfoModel = Object.assign(res, parentIdObj);
+      })
+      // 拿取新增属性
+      this.getPropsByTagName({
+        typeName: this.addModel.typeName,
+        kind: AssetKind[this.addModel.kind].value
+      }).finally(() => {
         done();
       })
     },
-    // 编辑提交
-    // TODO 设备信息编辑传参修改
+    // 新增编辑提交
     deviceInfoSubmit(model, done) {
-      let data = Object.assign({}, this.addModel, this.deviceInfoModel);
-
-      // 保管人员 和 维修部门特殊修改
-      data['kind'] = DEVICE.text
-      data['using_department.id'] = data.using_department
-      data['keepers.id'] = data.keepers
-
-      delete data.keepers
-      delete data.using_department
-
-      this._axiosFormData(this.assetUrl, data).then(res => {
+      this._axiosFormData(this.assetUrl, model).then(res => {
         this.$message.success('操作成功');
         // 弹出编辑抽屉
         this.innerDrawer = false;
         this.deviceTypeDrawer = false;
+
+        // 刷新监测器列表
+        this.deviceRowClick({ id: this.parentId });
       }).finally(() => {
+        done();
+      })
+    },
+    // inner关闭回调
+    innerHandleClose(done) {
+      this.$refs[this.deviceInfoForm.ref].resetForm();
+      this.$nextTick(() => {
         done();
       })
     },
 
     // 根据设备类型获取特定props
-    getPropsByTagName(typeName, flag) {
+    getPropsByTagName(params) {
       return new Promise((resolve, reject) => {
-        deviceManageApi.getFormProperty({
-          kind: DEVICE.text,
-          typeName
-        }).then(res => {
+        deviceManageApi.getFormProperty(params).then(res => {
           // 拿到返回的数据进行处理
           let extraForms = res.map(item => {
             this.deviceInfoModel[item.name] = item.value;
@@ -789,6 +725,13 @@ export default {
           this.deviceInfoForm.forms = this.deviceInfoForms.concat(extraForms);
           // 弹出编辑抽屉
           this.innerDrawer = true;
+
+          this.$nextTick(() => {
+            deviceManageApi.addServiceList(params).then(res => {
+              console.log("服务 -> res", res)
+              this.$refs[this.deviceInfoForm.ref].setColumnByProp('source', res);
+            })
+          })
           resolve();
         }).catch(err => reject(err));
       })
@@ -826,6 +769,15 @@ export default {
         type: "warning"
       })
     },
+    //根据node获取ids
+    getIdsByNode(arr, node, childrenKey = 'childNodes', idKey = 'id') {
+      arr.push(node[idKey]);
+      if (node[childrenKey] && Object.prototype.toString.call(node[childrenKey]) === '[object Array]') {
+        node[childrenKey].forEach((item) => {
+          this.getIdsByNode(arr, item, idKey);
+        });
+      }
+    }
   },
   watch: {
   },

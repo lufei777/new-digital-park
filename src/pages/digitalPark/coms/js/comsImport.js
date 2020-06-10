@@ -48,6 +48,10 @@ import roomEnvironmentLine from '../buildMonitor/roomEnvironmentLine'
 import deviceTypeMonitor from '../security/deviceTypeMonitor'
 import coldAndHeatSource from '../buildMonitor/coldAndHeatSource'
 import alarmNewsStatus from '../alarm/alarmNewsStatus'
+import norbulingkaCenter from '../norbulingka/norbulingkaCenter'
+import passengerFlowVolume from '../norbulingka/passengerFlowVolume'
+import realTimeOfMeteorologicalStation from '../norbulingka/realTimeOfMeteorologicalStation'
+import CO2Monitoring from '../norbulingka/CO2Monitoring'
 class exportComs {
   exportComsList = {
     energyProportionAnalysis,
@@ -99,7 +103,11 @@ class exportComs {
     roomEnvironmentLine,
     deviceTypeMonitor,
     coldAndHeatSource,
-    alarmNewsStatus
+    alarmNewsStatus,
+    norbulingkaCenter,
+    passengerFlowVolume,
+    realTimeOfMeteorologicalStation,
+    CO2Monitoring
   }
 }
 export default new exportComs()

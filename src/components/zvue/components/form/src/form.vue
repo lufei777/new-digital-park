@@ -106,6 +106,8 @@
                       :dic="DIC[column.prop]"
                       :upload-before="uploadBefore"
                       :upload-after="uploadAfter"
+                      :upload-success="uploadSuccess"
+                      :upload-error="uploadError"
                       :size="controlSize"
                       :disabled="vaildDiabled(column,group)"
                       :textMode="vaildTextMode(column,group)"
@@ -224,6 +226,8 @@ export default {
   props: {
     uploadBefore: Function,
     uploadAfter: Function,
+    uploadSuccess: Function,
+    uploadError: Function,
     value: {
       type: Object,
       required: true,

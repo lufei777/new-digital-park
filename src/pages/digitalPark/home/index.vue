@@ -218,13 +218,15 @@ export default {
       let res = await DigitalParkApi.getModulesByType({
         type: 2,
         language: Cookies.get("lang")
-      });
+      }).finally(() => {
+        this.loading = false;
+      })
       res.map(item => {
         item.moduleDragFlag = true; //控制模块内容
         // item.parentModuleDragFlag=true //控制块，不可与块内容用同一变量
       });
       this.userProModuleList = res;
-      this.loading = false;
+      
       // 客户端loading消失
       if (IsCZClient()) {
         window.hideClientLoading && window.hideClientLoading()

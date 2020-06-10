@@ -2,6 +2,24 @@ import { get, post, url } from '../axios/ApiDecorator'
 
 class EnergyApi {
   /**
+   * 设备列表
+   * url arg  page
+   * post arg {
+            "assetVo":{
+                    "id": 808,//编号，可传可不传
+                      "name": "_SHEB_710",//名称，可传可不传
+                      "caption": "B1-304排风机房",//标题，可传可不传
+                      "kind":"DEVICE"//设备类型，必传字段
+                  },
+            "catalogs":[8000],//分类数组，可传可不传
+            "spaceIds":[39]//空间数组，可传可不传
+          }
+   */
+  @url('/vibe-web/findAsset/searchDevices')
+  @post
+  searchDevices() { }
+
+  /**
    * 设备详情
    * kind DEVICE
    * id:number
@@ -29,12 +47,24 @@ class EnergyApi {
 
   /**
    * 获取设备类型list
-   * 固定传参
    * id=1
+   *  0:SPACE,
+      1:DEVICE,
+      2:SERVICE,
+      3:PROBE,
+      4:CONTROL
    */
-  @url('/vibe-web//asset/assetTypeList')
+  @url('/vibe-web/asset/assetTypeList')
   @get
   assetTypeList() { }
+
+  /**
+   * 查询资产类别
+   * 固定传参
+   */
+  @url('/vibe-web/asset/assetKindList')
+  @get
+  assetKindList() { }
 
   /**
    * 设备保管人员
@@ -82,6 +112,57 @@ class EnergyApi {
   @url('/vibe-web/asset/toDeviceEdit')
   @get
   toDeviceEdit() { }
+
+  /**
+   * 资产服务列表
+   * 传参 id 资产ID
+   */
+  @url('/vibe-web/asset/serviceList')
+  @get
+  serviceList() { }
+
+  /**
+   * 资产新增时服务列表
+   * 传参 id 资产ID
+   */
+  @url('/vibe-web/asset/addServiceList')
+  @get
+  addServiceList() { }
+  
+  /**
+   * 新增资产获取资产默认值
+   * kind init  0:SPACE,
+                1:DEVICE,
+                2:SERVICE,
+                3:PROBE,
+                4:CONTROL
+      typeName String 类型名称
+      parentid Int 父级id
+   */
+  @url('/vibe-web/asset/toAssetAdd')
+  @get
+  toAssetAdd() { }
+
+  /**
+   * 编辑资产获取资产详情
+   * url/{id}
+   * kind string  SPACE,
+                  DEVICE,
+                  SERVICE,
+                  PROBE,
+                  CONTROL
+   */
+  @url('/vibe-web/asset/toAssetEdit')
+  @get
+  toAssetEdit() { }
+
+  /**
+   * 获取设备列表
+   * url/{id}
+   * */
+  @url('/vibe-web//asset/queryAssetList')
+  @get
+  queryAssetList() { }
 }
 
 export default new EnergyApi()

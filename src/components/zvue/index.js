@@ -28,6 +28,7 @@ import vcharts from './components/vcharts'
 
 // directive
 import Clickout from "./directive/clickout"
+import Appendtobody from "./directive/appendtobody"
 
 const components = [
     Dropdown,
@@ -58,6 +59,7 @@ const components = [
 
 const install = (Vue) => {
     Clickout(Vue);
+    Appendtobody(Vue);
     components.forEach(component => {
         if (component.install) {
             component.install(Vue);

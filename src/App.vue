@@ -1,7 +1,15 @@
 <template>
   <div id="app">
-    <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
-      <router-view />
+    <el-scrollbar wrap-class="scrollbar-wrapper">
+      <!-- <transition name="fade-transform" mode="out-in" appear> -->
+      <keep-alive>
+        <router-view v-if="$route.meta.keepAlive" />
+      </keep-alive>
+      <!-- </transition> -->
+
+      <!-- <transition v-if="!$route.meta.keepAlive" name="fade-transform" mode="out-in" appear> -->
+      <router-view v-if="!$route.meta.keepAlive" />
+      <!-- </transition> -->
     </el-scrollbar>
   </div>
 </template>
@@ -12,7 +20,7 @@ export default {
   data() {
     return {};
   },
-  created() {}
+  created() { }
 };
 </script>
 <style lang="less">
@@ -22,8 +30,8 @@ export default {
   color: #666;
   height: 100%;
   font-size: 14px;
-  .el-scrollbar__view{
-    height:100%;
+  .el-scrollbar__view {
+    height: 100%;
   }
 }
 </style>

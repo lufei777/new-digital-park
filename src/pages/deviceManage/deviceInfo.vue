@@ -50,7 +50,7 @@
                     :showFileList="false"
                     :action="uploadAction"
                     :accept="['xls', 'xlsx', 'csv']"
-                    :uploadAfter="uploadSuccess"
+                    :uploadAfter="uploadAfter"
                   ></z-upload>
                   <el-button
                     :size="size"
@@ -183,8 +183,6 @@ const DEVICE = AssetType.DEVICE;
 let assetAddUrl = '/vibe-web/asset/assetAdd';
 // 编辑设备
 let assetEditUrl = '/vibe-web/asset/assetEdit';
-// 获取设备列表
-let getDeviceListUrl = '/vibe-web/findAsset/searchDevices';
 // 新增维护
 let addMaintenaceUrl = '/vibe-web/addMaintenace';
 // 编辑维护
@@ -339,7 +337,7 @@ export default {
             type: 'select',
             clearable: true,
             dicUrl: deviceManageApi.assetTypeList,
-            dicQuery: { id: 1 },
+            dicQuery: { id: DEVICE.kind },
             props: {
               label: 'text',
               value: 'name'
@@ -448,8 +446,8 @@ export default {
           "label": "设备启用日期",
           "prop": "enabing_date",
           type: "date",
-          format: "yyyy-MM-dd HH:mm:ss",
-          valueFormat,
+          format: "yyyy-MM-dd",
+          valueFormat: "yyyy-MM-dd",
           tip: '选择采购日期后，再填写此项',
           pickerOptions: {
             disabledDate: (time) => {
@@ -815,12 +813,7 @@ export default {
     // 加载设备列表
     fetchDeviceList(page) {
       this.load = true;
-      let url = page ? `${getDeviceListUrl}?page=${page}` : getDeviceListUrl;
-      return this.$axios({
-        url,
-        method: "POST",
-        data: this.deviceListParam
-      }).then(res => {
+      deviceManageApi.searchDevices(this.deviceListParam, { page: page }).then(res => {
         this.load = false;
         this.Table.setData(res.rows);
         this.Table.setTotal(res.total);
@@ -904,18 +897,6 @@ export default {
     },
 
     /**
-     * 根据node获取ids
-     */
-    getIdsByNode(arr, node, childrenKey = 'childNodes', idKey = 'id') {
-      arr.push(node[idKey]);
-      if (node[childrenKey] && Object.prototype.toString.call(node[childrenKey]) === '[object Array]') {
-        node[childrenKey].forEach((item) => {
-          this.getIdsByNode(arr, item, idKey);
-        });
-      }
-    },
-
-    /**
      * 设备信息列表操作
      */
     // 新增
@@ -962,13 +943,17 @@ export default {
         if (res?.keepers) {
           res.keepers = res.keepers.id;
         }
+        delete res.parent;
+        delete res.valueList;
 
         this.deviceInfoModel = res;
         this.getPropsByTagName(typeName, 'edit');
       })
     },
     // 导入成功操作
-    uploadSuccess() { },
+    uploadAfter(data, hide, done) {
+      done()
+    },
 
     /**
      * 设备信息抽屉操作
@@ -998,6 +983,8 @@ export default {
         // 弹出编辑抽屉
         this.innerDrawer = false;
         this.deviceTypeDrawer = false;
+
+        this.fetchDeviceList();
       }).finally(() => {
         done();
       })
@@ -1059,7 +1046,7 @@ export default {
     },
 
     // 根据设备类型获取特定props
-    getPropsByTagName(typeName, flag) {
+    getPropsByTagName(typeName) {
       return new Promise((resolve, reject) => {
         deviceManageApi.getFormProperty({
           kind: DEVICE.text,
@@ -1087,25 +1074,26 @@ export default {
         url,
         method,
         data,
-        transformRequest: [function (data) {
-          let ret = ''
-          for (let key in data) {
-            let item = data[key];
-            if (typeof item === 'undefined' || item == null) {
-              item = '';
-            }
-            if (item instanceof File) {
-              ret += encodeURIComponent(key) + '=' + item + '&'
-            } else {
-              ret += encodeURIComponent(key) + '=' + encodeURIComponent(item) + '&'
-            }
-          }
-          return ret
-        }],
+        transformRequest: [this.getPostFormData],
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       })
+    },
+    getPostFormData(data) {
+      let ret = ''
+      for (let key in data) {
+        let item = data[key];
+        if (typeof item === 'undefined' || item == null) {
+          item = '';
+        }
+        if (item instanceof File) {
+          ret += encodeURIComponent(key) + '=' + item + '&'
+        } else {
+          ret += encodeURIComponent(key) + '=' + encodeURIComponent(item) + '&'
+        }
+      }
+      return ret
     },
     delInfo() {
       return this.$confirm("确认是否删除?", "提示", {
@@ -1114,6 +1102,17 @@ export default {
         type: "warning"
       })
     },
+    /**
+     * 根据node获取ids
+     */
+    getIdsByNode(arr, node, childrenKey = 'childNodes', idKey = 'id') {
+      arr.push(node[idKey]);
+      if (node[childrenKey] && Object.prototype.toString.call(node[childrenKey]) === '[object Array]') {
+        node[childrenKey].forEach((item) => {
+          this.getIdsByNode(arr, item, idKey);
+        });
+      }
+    }
   },
   watch: {
   },

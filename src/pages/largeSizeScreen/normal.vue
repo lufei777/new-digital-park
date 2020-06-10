@@ -1,7 +1,8 @@
 <template>
   <div class="large-size-screen-normal" :class="getBasicBg">
-    <Header fromFlag="2" :headName="headName" v-if="!isydScreen"/>
+    <Header fromFlag="2" :headName="headName" v-if="isNormal"/>
     <YDHeader v-if="isydScreen"/>
+    <NorHeader v-if="isNorbulingka"/>
     <div class="content flex">
       <draggable
         class="drag-panel"
@@ -35,7 +36,7 @@
         <!--</transition>-->
       </draggable>
     </div>
-    <AlertAlarm />
+    <!--<AlertAlarm />-->
   </div>
 </template>
 
@@ -45,9 +46,10 @@
   import DigitalParkApi from '@/service/api/digitalPark'
   import ItemProModule from '@/pages/digitalPark/coms/itemProModule'
   import CommonFun from '@/utils/commonFun'
-  import { isYDScreen } from "@/utils/project";
+  import { isYDScreen,getLargeScreenName,isNormalScreen,isNorbulingkaScreen} from "@/utils/project";
   import YDHeader from '../digitalPark/coms/largeScreen/ydHeader'
   import AlertAlarm from '../digitalPark/coms/alarm/alertAlarm'
+  import NorHeader from '../digitalPark/coms/largeScreen/norbulingkaHeader'
 
   export default {
     name: 'LargeSizeScreenNormal',
@@ -56,7 +58,8 @@
       draggable,
       ItemProModule,
       YDHeader,
-      AlertAlarm
+      AlertAlarm,
+      NorHeader
     },
     props: ['fullStatus'],  //配置页时是否是全屏状态:full noFull
     data() {
@@ -84,11 +87,21 @@
     computed: {
       getBasicBg(){
         return {
-          'haveBg':!isYDScreen(),
+          'large-size-screen-bg':isNormalScreen(),
+          'nor-large-size-screen':isNorbulingkaScreen()
         }
       },
       isydScreen(){ //是否是伊甸城
         return isYDScreen()
+      },
+      largeScreenName(){
+        return getLargeScreenName()
+      },
+      isNormal(){
+        return isNormalScreen()
+      },
+      isNorbulingka(){
+        return isNorbulingkaScreen()
       }
     },
     watch: {
@@ -103,7 +116,7 @@
         // console.log(item)
         let centerFlag= item.id==0 && item.moduleList
         return{
-         'center-show':centerFlag,
+          'center-show':centerFlag,
           'out-drag-product':!centerFlag,
           'out-drag-product-normal':!centerFlag && item.bgStatus=='normal' && !isYDScreen(),
           'out-drag-product-hover':!centerFlag && item.bgStatus=='hover' && !isYDScreen(),
@@ -125,14 +138,29 @@
       },
       async getLargeScreenModuleList(flag) {
         this.setConfigParams(flag)  //配置页时需要缩小或还原
-
         let res = await DigitalParkApi.getLargeScreenModule({
           width: document.body.offsetWidth,
           height: document.body.offsetHeight,
           widthPercent: this.widthPercent,
           heightPercent: this.heightPercent,
-          preview:'ydCity'
+          // preview:isYDScreen()?'ydCity':''
         })
+        // let res = await DigitalParkApi.getModulesByType({
+        //   type:0,
+        //   menuId:1
+        // })
+        // res={
+        //   modules:res,
+        //   xModule:{
+        //     num:3,
+        //     length:422
+        //   },
+        //   yModule:{
+        //     num:3,
+        //     length:422
+        //   }
+        // }
+        console.log(res)
         res.modules.map((item)=>{
           item.bgStatus='normal'
         })
@@ -182,6 +210,7 @@
           "grid-row": 'unset',
           "visibility":'unset'
         }
+
       },
       setConfigParams() {
         if (this.fullStatus == 'noFull') {
@@ -283,11 +312,21 @@
         }
 
         // flag==1?item.bgStatus='hover':'normal'
+      },
+      getModuleStyle(){
+        if(isYDScreen()){
+          import('./less/ydCity.css')
+        }else if(isNormalScreen()){
+          import('./less/normal.css')
+        }else if(isNorbulingkaScreen()){
+          import('./less/norbulingka.css')
+        }
       }
     },
     mounted() {
       this.getMenuTree()
       this.getLargeScreenModuleList()
+      this.getModuleStyle()
       let _this = this
       $(window).resize(async function () {
         await _this.getLargeScreenModuleList()
@@ -296,12 +335,14 @@
         //   height: '1080px'
         // }
         // $(".center-show").css(obj)
-        console.log("sizechange", $(".center-show").length, obj)
+        // console.log("sizechange", $(".center-show").length, obj)
       })
+
     },
     created() {
-      let res = CommonFun.largeScreenDefaultData
-      this.drawPageStyle(res)
+      // let res = CommonFun.largeScreenDefaultData
+      // this.moduleList = res.modules
+      // this.drawPageStyle(res)
     }
   }
 </script>
@@ -309,103 +350,10 @@
 <style lang="less">
   .large-size-screen-normal {
     height: 100%;
-
     font-size: @largeScreenFontSize;
     color: @white;
-
-    .large-size-screen-header {
-      .digital-title-text {
-        font-size: 76px;
-      }
-
-      .park-logo {
-        font-size: 76px;
-        margin-right: 5px;
-      }
-    }
-
-    .digital-nav-operator {
-      font-size: @largeScreenFontSize;
-
-      .nav-right-item{
-        /*width:230px;*/
-        text-align: right;
-        span{
-          width:200px;
-        }
-      }
-      .nav-right-item .el-input__inner {
-        // width:150px;
-        font-size: @largeScreenFontSize;
-        color: @white;
-      }
-
-      .avatar-img {
-        width: 50px;
-        height: 50px;
-      }
-      .nav-right-item .el-select{
-        width:180px;
-      }
-
-      .nav-right-item .el-input__suffix {
-        width:30px;
-        right: 10px;
-        .el-input__suffix-inner{
-          width:100%;
-        }
-      }
-
-      .el-select .el-input .el-select__caret {
-        font-size: 20px;
-      }
-    }
-
-    .out-drag-product,.out-drag-product-hover {
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
-      margin: auto;
-      width:940px;
-      height:528px;
-      overflow: hidden;
-      .item-content{
-        height:100%;
-      }
-      /*font-size: 188px;*/
-      /*text-align: center;*/
-      /*color:red;*/
-      /*margin:0 20px 20px 20px;*/
-      /*margin:auto;*/
-    }
-    .out-drag-product-normal{
-      background-image: url('../../../static/image/digitalPark/content_bg3.png');
-    }
-    .out-drag-product-hover{
-      background-image: url('../../../static/image/digitalPark/content_bg4.png');
-    }
-
-    .yd-out-drag-product{
-      /*background:rgba(0,0,0,.7);*/
-      /*border-radius: 16px;*/
-      background-image: url('../../../static/image/digitalPark/content_bg5.png');
-      font-size: 14px;
-      width:640px;
-      height:366px;
-      .single-module-name{
-        width:100%;
-        padding-left:2.5%;
-        line-height: 40px;
-        font-size:18px;
-        box-sizing: border-box;
-        font-weight: bold;
-        background:linear-gradient(0deg,rgba(1,234,254,1) 0%, rgba(255,255,255,1) 100%);
-        -webkit-background-clip:text;
-        -webkit-text-fill-color:transparent;
-      }
-      .module-item-top-name{
-        margin-top: 10px;
-      }
-    }
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
 
     .drag-panel {
       display: grid;
@@ -440,12 +388,7 @@
     }
 
     .single-module-name {
-    }
-
-    .haveBg{
-      background-image: url('../../../static/image/digitalPark/home.png');
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
+      text-align: center;
     }
 
     .el-dropdown {
@@ -453,27 +396,10 @@
       color: @white;
     }
   }
-
-  @media screen and (max-width: 1920px) {
-    .large-size-screen-normal {
-      .yd-out-drag-product {
-        background-image: url('../../../static/image/digitalPark/content_bg5.png');
-        font-size: 12px;
-        width: 320px;
-        height: 168px;
-
-        .single-module-name {
-          width: 100%;
-          padding-left: 2.5%;
-          line-height: 1.5;
-          font-size: 14px;
-        }
-
-        .module-item-top-name {
-          margin-top: 10px;
-        }
-      }
-    }
+  .large-size-screen-bg{
+    background-image: url('../../../static/image/digitalPark/home.png');
   }
-
+  .nor-large-size-screen{
+    background-image: url('../../../static/image/digitalPark/nor_bg.png');
+  }
 </style>

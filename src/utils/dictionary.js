@@ -394,6 +394,35 @@ export const ExportData = {
   ]
 }
 
+// 资产类别
+export const AssetKind = [
+  {
+    label: '空间',
+    value: 'SPACE',
+    kind: 0
+  },
+  {
+    label: '设备',
+    value: 'DEVICE',
+    kind: 1
+  },
+  {
+    label: '服务',
+    value: 'SERVICE',
+    kind: 2
+  },
+  {
+    label: '监测器',
+    value: 'PROBE',
+    kind: 3
+  },
+  {
+    label: '控制器',
+    value: 'CONTROL',
+    kind: 4
+  }
+]
+
 // 资产类型
 export const AssetType = {
   //空间，表示一个房间
@@ -424,7 +453,7 @@ export const AssetType = {
   }
 }
 
-// 错误提示
+// 资产状态错误提示
 export const AssetState = {
   NORMAL: {
     text: "NORMAL",
@@ -460,9 +489,11 @@ export const AssetState = {
 
 // 项目名称
 export const ProjectName = {
-  // 中钢
-  ZG: 'zg',
-  YDCity: 'ydCity'  //项目名称，大屏名称
+
+  ZG: 'zg', // 中钢
+  YDCity: 'ydCity',  //项目名称，大屏名称
+  NORMAL:'normal',  //通用大屏
+  NORBULINGKA:'norbulingka'
 }
 
 // 根据项目显示不同的title
@@ -856,7 +887,7 @@ export const Norbulingka = {
 };
 
 export const TaskofficeLocationType = {
-  officeLocationType:[
+  officeLocationType: [
     {
       value: 0,
       label: "公司"
@@ -869,7 +900,7 @@ export const TaskofficeLocationType = {
 }
 
 export const TaskpriorityType = {
-  priorityType:[
+  priorityType: [
     {
       value: "1",
       label: "正常"

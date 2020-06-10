@@ -46,13 +46,13 @@ export default {
       get() {
         return this.currentPage;
       },
-      set() {}
+      set() { }
     },
     size: {
       get() {
         return this.pageSize;
       },
-      set(...args) {}
+      set(...args) { }
     }
   }
 };
