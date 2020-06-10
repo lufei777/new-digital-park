@@ -31,8 +31,8 @@
       >
         <el-option
           v-for="oitem in group[groupsKey]"
-          :disabled="oitem.disabled"
-          :key="getLabelText(oitem)"
+          :disabled="oitem[disabledKey]"
+          :key="oitem[valueKey] || getLabelText(oitem)"
           :label="getLabelText(oitem)"
           :value="oitem[valueKey]"
         >
@@ -43,8 +43,8 @@
     <template v-else>
       <el-option
         v-for="oitem in visibleDic"
-        :disabled="oitem.disabled"
-        :key="getLabelText(oitem)"
+        :disabled="oitem[disabledKey]"
+        :key="oitem[valueKey] || getLabelText(oitem)"
         :label="getLabelText(oitem)"
         :value="oitem[valueKey]"
       >
@@ -142,7 +142,7 @@ export default {
         method: this.dicMethod,
         query: this.dicQuery
       }).then(res => {
-        _.isArray(res) && this.validatenull(res) ? "" : (this.netDic = res);
+        Array.isArray(res) && this.validatenull(res) ? "" : (this.netDic = res);
       }).finally(() => this.loading = false)
     },
     load() {

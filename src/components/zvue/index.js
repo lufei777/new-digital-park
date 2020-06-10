@@ -28,6 +28,11 @@ import vcharts from './components/vcharts'
 
 // directive
 import Clickout from "./directive/clickout"
+import Appendtobody from "./directive/appendtobody"
+
+// functions
+import { deepClone, vaildData, findArray, setPx, _typeOf, getValueByPath } from './utils/util';
+const prototypes = { deepClone, vaildData, findArray, setPx, _typeOf, getValueByPath }
 
 const components = [
     Dropdown,
@@ -58,12 +63,17 @@ const components = [
 
 const install = (Vue) => {
     Clickout(Vue);
+    Appendtobody(Vue);
     components.forEach(component => {
         if (component.install) {
             component.install(Vue);
         } else {
             Vue.component(component.name, component);
         }
+    });
+
+    Object.keys(prototypes).forEach((key) => {
+        Vue.prototype[key] = prototypes[key];
     });
 }
 

@@ -1,0 +1,16 @@
+.large-size-screen-normal .out-drag-product{
+  background-image: url('../../../../static/image/digitalPark/nor_module_bg.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  font-size: 14px;
+  width:420px;
+  height:290px;
+}
+.large-size-screen-normal .single-module-name{
+  line-height: 10px;
+  visibility: hidden;
+}
+.large-size-screen-normal .module-item-top-name{
+  margin-top: 10px;
+}
+

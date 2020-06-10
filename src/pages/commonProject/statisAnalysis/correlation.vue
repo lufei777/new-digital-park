@@ -101,10 +101,13 @@
             formatter: function (params) {
                 var relVal = params[0].name
                 for (var i = 0, l = params.length; i < l; i++) {
+                  // console.log(params[i].value)
                     relVal += '<br/>' + params[i].marker + params[i].seriesName + ' : '
                       + params[i].value +  '&nbsp;' + result.unit1
                 }
                 return relVal
+              // return '散点：'+arr[0].data+
+              //   '<br>线：'+arr[1].data[0]+','+arr[1].data[1].toFixed(2)
             }
           },
           xAxis: {

@@ -25,6 +25,8 @@
     :size="column.size || size"
     :upload-before="uploadBefore"
     :upload-after="uploadAfter"
+    :upload-success="uploadSuccess"
+    :upload-error="uploadError"
     :textMode="textMode"
     :settempDisplayValue="setDisplayValue"
     @change="handleChange"
@@ -67,6 +69,8 @@ export default {
     t: Function,
     uploadBefore: Function,
     uploadAfter: Function,
+    uploadSuccess: Function,
+    uploadError: Function,
     props: {
       type: Object
     },
@@ -195,11 +199,6 @@ export default {
         displayValue = displayValue
           ? this.dic ? this.dic[1][this.labelKey] : '是'
           : this.dic ? this.dic[0][this.labelKey] : '否';
-      }
-
-      // 如果是级联，取最后一个
-      if (this.column.type === 'cascader') {
-        displayValue = _.last(displayValue.split(DIC_SPLIT));
       }
 
       // 给当前组件设置
