@@ -3,11 +3,9 @@
 
 <!-- 搁置 逻辑出现错误 -->
 
-
-
       <div class='panel-container'>
     <!-- 实测录入清单的编辑详情模板 -->
-    <div class="panel">
+    <div>
       <z-Form
         :ref='formData.ref'
         :options='formData'

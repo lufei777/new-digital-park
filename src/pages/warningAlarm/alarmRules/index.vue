@@ -59,7 +59,7 @@
               >确认</el-button>
               <el-button
                 :disabled="obj.disabled"
-                @click="clearForm(obj)"
+                @click="clearForm1(obj)"
               >重置</el-button>
             </div>
           </template>
@@ -145,7 +145,7 @@ export default {
   data() {
     return {
       // 拼接的relationIds
-      relationIds: [],
+      relationIds: "",
       // 保存的查询条件
       condition: {},
       // 开启表单的懒加载
@@ -292,7 +292,7 @@ export default {
       tableData: {
         ref: "Table",
         customTop: true,
-        // data: [],
+        data: [],
         customTopPosition: "right",
         operation: {
           width: 200
@@ -309,8 +309,15 @@ export default {
             handler: (pageSize, currentPage, table) => {
               //翻页操作
               this.props = this.condition;
+              // console.log(this.props)
+              // if (Object.values(this.props)) {
+              //   this.getTableData(
+              //     { ...props },
+              //     { rows: pageSize, page: currentPage }
+              //   );
+              // }
               this.getTableData(
-                { ...props },
+                { ...this.condition },
                 { rows: pageSize, page: currentPage }
               );
             }
@@ -323,15 +330,15 @@ export default {
   methods: {
     // 表格中的删除按钮
     propertyDel(obj) {
-      // console.log(obj);
+      console.log(obj);
       // 删除接口
       let res = obj.row;
       let pararms = [
         {
-          id: res.relationId,
-          warnCond: res.warnCond,
-          eventRank: res.eventRank,
-          assetId: res.monitorId
+          id: res.warnId,
+          warnCond: res.singleWarnCond,
+          // rankId: res.eventRank.rankId,
+          assetId: res.id
         }
       ];
       warningAlarm.deleteEventRank(pararms).then(res => {
@@ -392,12 +399,12 @@ export default {
     },
     // 批量编辑
     orderEdit(obj) {
-      // console.log(obj)
+      console.log(obj);
       let str = "";
       // let relationIdArr = []
       // 对选中的数据中的relationId 进行拼接
       obj.forEach(item => {
-        str += item.relationId + ",";
+        str += item.warnId + ",";
         // relationIdArr.push(item.relationId)
       });
       this.relationIds = str;
@@ -442,6 +449,13 @@ export default {
     },
     submit() {},
     resetChange() {},
+    clearForm1() {
+      // 获取顶部form表单
+      var zForm = this.$refs[this.setForms[1].formData.ref];
+      // 单击重置按钮时候，重置表单 方法在已经封装好的文档中  名称：resetForm
+      zForm.resetForm();
+      // console.log(zForm)
+    },
     clearForm(obj) {
       // 获取顶部form表单
       var zForm = this.$refs[this.setForms[0].formData.ref];
@@ -451,7 +465,7 @@ export default {
     },
     getCleaningList() {
       // 来自CommonFun的模拟数据源 let res = CommonFun.messageDevice;
-      let res = CommonFun.warningAlram;
+      // let res = CommonFun.warningAlram;
       let labelList = [
         { label: "子系统", prop: "system" },
         { label: "设备类型", prop: "parentCatalogName" },
@@ -461,6 +475,7 @@ export default {
         {
           label: "报警级别",
           prop: "eventRank",
+          type: "select",
           props: {
             label: "rankName",
             value: "rankId"
@@ -481,10 +496,10 @@ export default {
       // 根据要求重新对数据进行编辑获取参数形式的数据
       arr.forEach(item => {
         params.push({
-          id: item.relationId,
-          warnCond: item.warnCond,
-          rankId: item.eventRank,
-          assetId: item.monitorId
+          id: item.warnId,
+          warnCond: item.singleWarnCond,
+          // rankId: res.eventRank.rankId,
+          assetId: item.id
         });
       });
       console.log(params),
@@ -517,14 +532,25 @@ export default {
     }
   },
   created() {
+    // 报警级别
+    // warningAlarm.geteventRanks().then(res => {
+    //   this.Form.setColumnByProp("eventRank", {
+    //     dicData: res
+    //   });
+    //   this.Table.setColumnByProp("eventRank", {
+    //     dicData: res
+    //   });
+    // });
+
     this.getTableData();
   },
   mounted() {
     this.getCleaningList();
   },
+
   computed: {
     Table() {
-      return this.$ref[this.tableData.ref];
+      return this.$refs[this.tableData.ref];
     },
     Form() {
       return this.$refs[this.setForms[0].formData.ref];

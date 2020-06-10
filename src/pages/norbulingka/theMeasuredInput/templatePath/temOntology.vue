@@ -1,6 +1,6 @@
 <template>
       <div class='panel-container'>
-    <div class="panel">
+    <div>
       <!-- 区分标题 -->
       <div class="toptitle">
         <span>{{title}}</span>
@@ -175,7 +175,7 @@ export default {
   span {
     padding: 0 15px;
     font-weight: bold;
-    font-weight: 18px;
+    font-size: 18px;
   }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
       <div class='panel-container'>
-    <div class="panel">
+    <div>
       <!-- 区分标题 -->
       <div class="toptitle">
         <span>{{title}}</span>
