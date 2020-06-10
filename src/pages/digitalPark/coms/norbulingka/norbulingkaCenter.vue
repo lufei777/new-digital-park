@@ -23,6 +23,7 @@
 
 <script>
 import DigitalParkApi from '@/service/api/digitalPark'
+import CommonFun from '@/utils/commonFun'
 export default {
     name: 'norbulingkaCenter',
     components: {},
@@ -47,6 +48,7 @@ export default {
       },
       onClickItemFixPro(item,index){
         this.activeIndex=index
+        // CommonFun.loadPage(item)
       }
     },
     mounted() {

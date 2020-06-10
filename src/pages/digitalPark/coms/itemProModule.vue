@@ -51,7 +51,7 @@
   import comsImport from './js/comsImport'
   import DigitalParkApi from '../../../service/api/digitalPark'
   import CommonFun from '@/utils/commonFun'
-  import { isYDScreen,getLargeScreenName,isNormalScreen,isNorbulingkaScreen} from "@/utils/project";
+  import {isZG,isYDScreen,getLargeScreenName,isNormalScreen,isNorbulingkaScreen} from "@/utils/project";
   export default {
     name: 'ItemProModule',
     //type：1仪表盘/大屏 2.瀑布流

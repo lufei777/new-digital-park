@@ -18,7 +18,7 @@
 </template>
 
 <script>
-  import {isZG} from '@/utils/project';
+  import { isZG } from '@/utils/project';
   import { IsCZClient } from '@/utils/auth';
   import CommonLargeHeader from './js/header'
   export default {

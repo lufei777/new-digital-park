@@ -28,7 +28,7 @@ import MessageManage from './message-manage'                  // 信息发布
 import personalManage from './personal-manage';               // 人事管理
 import thirdParty from './third-party';                       // 物业管理
 import RevenueExpendManage from './revenue-expend-manage';    // 收支管理
-import ExpoetData from './commonRouter/exportData';           // 导出数据
+import ExportData from './commonRouter/exportData';           // 导出数据
 import DeviceManage from './device-manage';                     // 设备管理
 
 
@@ -36,7 +36,7 @@ import DeviceManage from './device-manage';                     // 设备管理
 let DigitalRouters = flattenDeep([
   DigitalParkRouter, AssetManage, EnergyRouter, vibeWeb, LeaseManage, CleaningManage, CostManage,
   PurchaseManage, StockManage, visitorManage, ParkingLotManage, taskManage, contractManage, NewsManage,
-  MessageManage, personalManage, thirdParty, RevenueExpendManage, ExpoetData, DeviceManage
+  MessageManage, personalManage, thirdParty, RevenueExpendManage, ExportData, DeviceManage
 ]);
 
 Vue.use(Router)

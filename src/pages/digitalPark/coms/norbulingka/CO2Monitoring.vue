@@ -24,24 +24,21 @@
     watch: {},
     methods: {
       async initChart() {
-       await CommonApi.getCO2Monitoring({
+       let res = await CommonApi.getCO2Monitoring({
           code:42
         })
         let myChart = this.$echarts.init(this.$refs.myChart);
-        let res = [ {name:'第一季度',value:1000},
-                    {name:'第二季度',value:700},
-                    {name:'第三季度',value:1200},
-                    {name:'第四季度',value:900}]
-        let legendData = res.map((item)=>item.name)
+        let legendData = res.list.map((item)=>item.name)
         let data={
           legendData:[],
           series:{
             type:'bar',
-            data:res,
+            data:res.list,
             barWidth:30
           },
           xAxis:legendData,
           xAxisUi:this.moduleItem.xAxisUi,
+          yAxis:res.unit,
           yAxisUi:this.moduleItem.yAxisUi,
         }
         ChartUtils.handleBarChart(myChart,data)

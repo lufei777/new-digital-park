@@ -145,7 +145,6 @@
           heightPercent: this.heightPercent,
           // preview:isYDScreen()?'ydCity':''
         })
-        console.log(res)
         res.modules.map((item)=>{
           item.bgStatus='normal'
         })
@@ -241,9 +240,9 @@
         // console.log("evt", evt, this.moduleList)
         $(".center-show").css({...this.styleObj.centerStyle, ...this.styleObj.centerSize})
         $(".large-size-screen-normal .out-drag-product").css(this.styleObj.dragStyle)
-        if(!this.fullStatus){  //不是在配置页
-          this.updateLargeScreenModule()
-        }
+        // if(!this.fullStatus){  //不是在配置页
+        //   this.updateLargeScreenModule()
+        // }
         // this.getLargeScreenModuleList()
       },
       onOutStart() {

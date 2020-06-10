@@ -18,6 +18,7 @@ export const isYD = () => {
   return getProjectName() === YDCity;
 }
 
+//大屏
 export const getLargeScreenName = () => {
   return window.__CZ_LargeScreen;
 }
@@ -31,6 +32,7 @@ export const isYDScreen = () => {
 export const isNormalScreen = () => {
   return getLargeScreenName() === NORMAL;
 }
+
 //罗布林卡大屏
 export const isNorbulingkaScreen = () => {
   return getLargeScreenName() === NORBULINGKA;

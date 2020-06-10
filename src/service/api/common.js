@@ -359,6 +359,14 @@ class CommonApi {
   @url("/vibe-web/monitor/code/quarter/avg")
   @get
   getCO2Monitoring(){}
+
+  @url("/vibe-web/page_div_dailyCheck")
+  @get
+  getDailyCheckList(){}
+
+  @url("/vibe-web/monitor/val/codes")
+  @get
+  getZoomEnvironmentLine(){}
 }
 
 export default new CommonApi()

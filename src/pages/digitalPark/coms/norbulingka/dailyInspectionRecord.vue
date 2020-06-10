@@ -16,8 +16,8 @@
         <li v-for="(item,index) in list" :key="index" class="item-task flex"
             :class="moduleItem.type!=2?'':'task-li'">
           <span>{{index+1}}</span>
-          <span>{{item.type}}</span>
-          <span>{{item.name}}</span>
+          <span>{{item.typeStr}}</span>
+          <span>{{item.personName}}</span>
           <span>{{item.date}}</span>
           <span>{{item.result}}</span>
         </li>
@@ -27,58 +27,65 @@
 </template>
 
 <script>
+  // [{
+  //   id:1,
+  //   type:'异常记录',
+  //   name:'张晓峰',
+  //   date:'2020-6-1',
+  //   result:'已处理'
+  // },{
+  //   id:5,
+  //   type:'异常记录',
+  //   name:'张晓峰',
+  //   date:'2020-6-1',
+  //   result:'已处理'
+  // },{
+  //   id:2,
+  //   type:'异常记录',
+  //   name:'张晓峰',
+  //   date:'2020-6-1',
+  //   result:'已处理'
+  // },{
+  //   id:3,
+  //   type:'异常记录',
+  //   name:'张晓峰',
+  //   date:'2020-6-1',
+  //   result:'已处理'
+  // },{
+  //   id:4,
+  //   type:'异常记录',
+  //   name:'张晓峰',
+  //   date:'2020-6-1',
+  //   result:'已处理'
+  // }]
+  import CommonApi from '@/service/api/common'
   export default {
       name: 'dailyInspectionRecord',
       components: {},
       props: ['moduleItem'],
       data() {
           return {
-            list:[]
+            list : []
           }
       },
       computed: {},
       watch: {},
       methods: {
-        getList(){
-          this.list = [{
-            id:1,
-            type:'异常记录',
-            name:'张晓峰',
-            date:'2020-6-1',
-            result:'已处理'
-          },{
-            id:5,
-            type:'异常记录',
-            name:'张晓峰',
-            date:'2020-6-1',
-            result:'已处理'
-          },{
-            id:2,
-            type:'异常记录',
-            name:'张晓峰',
-            date:'2020-6-1',
-            result:'已处理'
-          },{
-            id:3,
-            type:'异常记录',
-            name:'张晓峰',
-            date:'2020-6-1',
-            result:'已处理'
-          },{
-            id:4,
-            type:'异常记录',
-            name:'张晓峰',
-            date:'2020-6-1',
-            result:'已处理'
-          }]
-          this.$nextTick(()=>{
-            let height = $(".my-chart").height()/6
-            // console.log("height",height,$(".item-task").length,$(".task-header").length)
-            $(".task-header span, .item-task").css({
-              'height':height+'px',
-              'line-height':height+'px'
-            })
+        async getList(){
+          let res = await CommonApi.getDailyCheckList({
+            pageNum:1,
+            pageSize:6
           })
+          if(res.extend.pageInfo.list.length){
+            this.list = res.extend.pageInfo.list
+            this.$nextTick(()=>{
+              let height = $(".my-chart").height()/6
+              $(".task-header span, .item-task").css({
+                'height':height+'px',
+                'line-height':height+'px'
+              })
+            })
+          }
         }
       },
       mounted() {
@@ -94,6 +101,7 @@
       font-size: 14px;
       background: rgba(22,47,88,1);
       text-align: center;
+      line-height: 30px;
       span {
         color:#01EAFE;
         width:20%;
