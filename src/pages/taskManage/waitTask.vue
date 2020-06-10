@@ -220,7 +220,7 @@ export default {
     padding: 20px;
     .operator-box {
       background: @white;
-      // margin-bottom: 20px;
+      margin-bottom: 20px;
       display: flex;
       flex-direction: row-reverse;
       .el-button {
