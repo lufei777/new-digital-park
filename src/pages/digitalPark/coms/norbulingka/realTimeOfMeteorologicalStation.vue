@@ -28,11 +28,53 @@
       watch: {},
       methods: {
         async getMeteorologicalData(){
-          let params={
-            code:1,
-            spaceId:67240049
-          }
-          this.realTimeData = await CommonApi.getMeteorologicalData(params)
+          // let params={
+          //   code:1,
+          //   spaceId:67240049
+          // }
+          // this.realTimeData = await CommonApi.getMeteorologicalData(params)
+          this.realTimeData=  [
+            {
+              "name":"温度",
+              "value":"20°C"
+            },
+            {
+              "name":"湿度",
+              "value":"66%"
+            },
+            {
+              "name":"PM2.5",
+              "value":"4.0ug/m³"
+            },
+            {
+              "name":"PM10",
+              "value":"26.0ug/m³"
+            },
+            {
+              "name":"SO2",
+              "value":"11.806ug/m³"
+            },
+            {
+              "name":"NO2",
+              "value":"36.6ug/m³"
+            },
+            {
+              "name":"O3",
+              "value":"37.7ug/m³"
+            },
+            {
+              "name":"CO",
+              "value":"2.18ug/m³"
+            },
+            {
+              "name":"风速",
+              "value":"0.6m/s"
+            },
+            {
+              "name":"主导风向",
+              "value":"166.0°"
+            }
+          ]
         }
       },
       mounted() {

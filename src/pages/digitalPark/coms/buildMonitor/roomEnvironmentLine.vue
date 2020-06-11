@@ -26,11 +26,37 @@
     },
     methods: {
       async initChart() {
-        let res = await CommonApi.getZoomEnvironmentLine({
-          codes:'60,61'
-        })
+        // let res = await CommonApi.getZoomEnvironmentLine({
+        //   codes:'60,61'
+        // })
+        let res =[]
         let myChart = this.$echarts.init(this.$refs.myChart)
         if(this.isNorbulingkaScreen){
+          res= [{
+            space: '格桑颇章',
+            value:{
+              temperature: 25,
+              humidity: 50
+            }
+          }, {
+            space: '金色颇章',
+            value:{
+              temperature: 30,
+              humidity: 30
+            }
+          }, {
+            space: '湖心宫',
+            value:{
+              temperature: 26,
+              humidity: 60
+            }
+          }, {
+            space: '新宫',
+            value:{
+              temperature: 25,
+              humidity: 60
+            }
+          }]
         }else{
           res= [{
             space: '会议室',

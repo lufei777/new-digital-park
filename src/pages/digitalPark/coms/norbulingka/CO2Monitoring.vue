@@ -24,9 +24,16 @@
     watch: {},
     methods: {
       async initChart() {
-       let res = await CommonApi.getCO2Monitoring({
-          code:42
-        })
+       // let res = await CommonApi.getCO2Monitoring({
+       //    code:42
+       //  })
+        let res ={
+          list:[ {name:'第一季度',value:1000},
+            {name:'第二季度',value:700},
+            {name:'第三季度',value:1200},
+            {name:'第四季度',value:900}],
+          unit:'浓度(Mg/M³)'
+        }
         let myChart = this.$echarts.init(this.$refs.myChart);
         let legendData = res.list.map((item)=>item.name)
         let data={
@@ -39,21 +46,10 @@
           xAxis:legendData,
           xAxisUi:this.moduleItem.xAxisUi,
           yAxis:res.unit,
+          yMin:100,
           yAxisUi:this.moduleItem.yAxisUi,
         }
         ChartUtils.handleBarChart(myChart,data)
-        let option ={
-          yAxis:{
-            splitLine: {
-              lineStyle: {
-                color: '#435E61',
-                opacity: 0.7,
-                width:0.5
-              }
-            },
-          }
-        }
-        myChart.setOption(option)
       },
     },
     mounted() {

@@ -32,59 +32,60 @@
   import ConditionSelect from '../../../components/conditionSelect'
   import ChartUtils from '../../../utils/chartUtils'
   import CommonFun from '../../../utils/commonFun'
+
   export default {
-    name:'EnergyCommon',
+    name: 'EnergyCommon',
     components: {
       Tree,
       ConditionSelect
     },
     //fromFlag 1:空间对比 2:同比环比分析 3:能耗对比 4:分时能耗 5:分项能耗
-    props:['isZoomMultiple','fromFlag','isEnergyByGroup'],
-    data () {
+    props: ['isZoomMultiple', 'fromFlag', 'isEnergyByGroup'],
+    data() {
       let _this = this
       return {
-        floorList:[],
-        treeConfig:{
-          treeProps:{
-            label:'floor',
+        floorList: [],
+        treeConfig: {
+          treeProps: {
+            label: 'floor',
             children: 'nodes',
           },
-          nodeKey:'floorId',
-          defaultExpandedkeys:[],
-          defaultCheckedKeys:[],
-          showCheckbox:this.fromFlag==1?true:false,
-          currentKey:'',
-          onClickTreeNodeCallBack:this.onClickTreeNode,
-          onCheckTreeNodeCallBack:this.onClickTreeNode,
+          nodeKey: 'floorId',
+          defaultExpandedkeys: [],
+          defaultCheckedKeys: [],
+          showCheckbox: this.fromFlag == 1 ? true : false,
+          currentKey: '',
+          onClickTreeNodeCallBack: this.onClickTreeNode,
+          onCheckTreeNodeCallBack: this.onClickTreeNode,
         },
-        curPage:1,
-        rankType:'dqzh',
-        myChart:'',
-        tableData:{
-          total:0
+        curPage: 1,
+        rankType: 'dqzh',
+        myChart: '',
+        tableData: {
+          total: 0
         },
-        defaultChecked:[],
-        rank:'asc',
-        seq:0,
-        myChart1:'',
-        myChart2:'',
-        checkedFloorList:[],
-        getDataFlag:false,
-        selectParams:{
-          energy:[{name:''}]
+        defaultChecked: [],
+        rank: 'asc',
+        seq: 0,
+        myChart1: '',
+        myChart2: '',
+        checkedFloorList: [],
+        getDataFlag: false,
+        selectParams: {
+          energy: [{name: ''}]
         },
-        commonParams:{},
-        tableConfig:{
+        commonParams: {},
+        tableConfig: {
           ref: "tableRef",
-          data:[],
-          columnConfig:[],
+          data: [],
+          columnConfig: [],
           uiConfig: {
             height: "auto",//"", //高度
             pagination: {
               //是否分页，分页是否自定义
               layout: "total,->, prev, pager, next, jumper",
               pageSizes: [10, 20, 50],
-              handler(pageSize,currentPage,table){
+              handler(pageSize, currentPage, table) {
                 // console.log(pageSize,currentPage,table)
                 _this.handleCurrentChange(currentPage)
               }
@@ -98,251 +99,257 @@
     },
     computed: {
       floorNameList() {
-        return this.checkedFloorList.map((item)=>item.floor).join('、')
+        return this.checkedFloorList.map((item) => item.floor).join('、')
       },
-      energyNameList(){
-        return this.selectParams.energy.map((item)=>item.name).join('、')
+      energyNameList() {
+        return this.selectParams.energy.map((item) => item.name).join('、')
       },
-      tableTip(){
-        if(this.fromFlag==1 ||this.fromFlag==2 ||this.fromFlag==4){
+      tableTip() {
+        if (this.fromFlag == 1 || this.fromFlag == 2 || this.fromFlag == 4) {
           return `${this.tmpCommonTip}展示排名`
-        }else if(this.fromFlag==3){
+        } else if (this.fromFlag == 3) {
           return `${this.tmpCommonTip}分项能耗展示排名`
-        }else if(this.fromFlag==5){
-          return `${this.floorNameList}${this.selectParams.startTime}`+
-            `${this.selectParams.lastTime?'至'+this.selectParams.lastTime:''}用${this.selectParams.energy[0].name}分项展示排名`
+        } else if (this.fromFlag == 5) {
+          return `${this.floorNameList}${this.selectParams.startTime}` +
+            `${this.selectParams.lastTime ? '至' + this.selectParams.lastTime : ''}用${this.selectParams.energy[0].name}分项展示排名`
         }
       },
-      floorId(){
-        return this.checkedFloorList.map((item)=>item.floorId).join(',')
+      floorId() {
+        return this.checkedFloorList.map((item) => item.floorId).join(',')
       },
-      tmpCommonTip(){
-        return `${this.floorNameList}${this.selectParams.startTime}`+
-          `${this.selectParams.lastTime?'至'+this.selectParams.lastTime:''}${this.energyNameList}`
+      tmpCommonTip() {
+        return `${this.floorNameList}${this.selectParams.startTime}` +
+          `${this.selectParams.lastTime ? '至' + this.selectParams.lastTime : ''}${this.energyNameList}`
       }
     },
-    watch:{
-      fromFlag(){
+    watch: {
+      fromFlag() {
       }
     },
     methods: {
-      async getAllFloor(){
-        let res  = await CommonApi.getAllFloorOfA3()
+      async getAllFloor() {
+        let res = await CommonApi.getAllFloorOfA3()
         this.floorList = res
-        if(this.fromFlag==1){
-          res[0].disabled=true
-          let tmp =res[0].nodes[0].nodes
-          this.treeConfig.defaultExpandedkeys=[res[0].nodes[0].floorId]
-          this.treeConfig.defaultCheckedKeys =[tmp[4].floorId,tmp[5].floorId]
-          this.checkedFloorList=[{floorId:tmp[4].floorId,floor:tmp[4].floor},
-            {floorId:tmp[5].floorId,floor:tmp[5].floor}]
-        }else{
-          this.treeConfig.defaultExpandedkeys=[res[0].floorId]
-          this.treeConfig.currentKey=res[0].floorId
-          this.checkedFloorList=[{floorId:res[0].floorId,floor:res[0].floor}]
+        if (this.fromFlag == 1) {
+          res[0].disabled = true
+          let tmp = res[0].nodes[0].nodes
+          this.treeConfig.defaultExpandedkeys = [res[0].nodes[0].floorId]
+          this.treeConfig.defaultCheckedKeys = [tmp[4].floorId, tmp[5].floorId]
+          this.checkedFloorList = [{floorId: tmp[4].floorId, floor: tmp[4].floor},
+            {floorId: tmp[5].floorId, floor: tmp[5].floor}]
+        } else {
+          this.treeConfig.defaultExpandedkeys = [res[0].floorId]
+          this.treeConfig.currentKey = res[0].floorId
+          this.checkedFloorList = [{floorId: res[0].floorId, floor: res[0].floor}]
         }
-        this.getDataFlag=true
+        this.getDataFlag = true
       },
-      getData(params){
-        if(this.checkedFloorList.length==0){
+      getData(params) {
+        if (this.checkedFloorList.length == 0) {
           this.$message({
             message: '请先选择楼层',
             type: 'warning',
-            duration:800,
-            center:true
+            duration: 800,
+            center: true
           });
           return;
         }
-        this.curPage=1
-        this.tableData={total:0}
-        this.selectParams=params
-        if(this.fromFlag==1){
-            this.commonParams={...{
-                ids:this.floorId,
-                catalog:params.energy.map((item)=>item.id).join(',')
-              },...params
-            }
-           this.getZoomCompareChart()
-           this.getZoomCompareTable()
-        }else if(this.fromFlag==2){
-           this.commonParams={...{
+        this.curPage = 1
+        this.tableData = {total: 0}
+        this.selectParams = params
+        if (this.fromFlag == 1) {
+          this.commonParams = {
+            ...{
+              ids: this.floorId,
+              catalog: params.energy.map((item) => item.id).join(',')
+            }, ...params
+          }
+          this.getZoomCompareChart()
+          this.getZoomCompareTable()
+        } else if (this.fromFlag == 2) {
+          this.commonParams = {
+            ...{
               floorId: this.floorId,
-              catalog:params.energy.map((item)=>item.id).join(',')
-            },...params
-           }
-           this.getTbhbChart()
-           this.getTbhbTable()
-        }else if(this.fromFlag==3){
-          this.commonParams={...{
+              catalog: params.energy.map((item) => item.id).join(',')
+            }, ...params
+          }
+          this.getTbhbChart()
+          this.getTbhbTable()
+        } else if (this.fromFlag == 3) {
+          this.commonParams = {
+            ...{
               floorId: this.floorId,
-              catalog:params.energy[0].parent,
-              ids:params.energy.map((item)=>item.id).join(','),
-              parent:1 //必传代表A3
-            },...params
+              catalog: params.energy[0].parent,
+              ids: params.energy.map((item) => item.id).join(','),
+              parent: 1 //必传代表A3
+            }, ...params
           }
           this.getTypeChart()
           this.getTypeTable()
-        }else if(this.fromFlag==4){
-          this.commonParams={...{
+        } else if (this.fromFlag == 4) {
+          this.commonParams = {
+            ...{
               floor: this.floorId,
-              catalog:params.energy[0].id,
-            },...params
+              catalog: params.energy[0].id,
+            }, ...params
           }
           this.getTimeEnergyChart()
           this.getTimeEnergyTable()
-        }else if(this.fromFlag==5){
-          this.commonParams={...{
+        } else if (this.fromFlag == 5) {
+          this.commonParams = {
+            ...{
               floor: this.floorId,
-              catalog:params.energy[0].id,
-            },...params
+              catalog: params.energy[0].id,
+            }, ...params
           }
           this.getCategoryEnergyChart()
           this.getCategoryEnergyTable()
         }
       },
-      async getZoomCompareChart(){
-        let res =  await CommonApi.getZoomCompareChart(this.commonParams)
+      async getZoomCompareChart() {
+        let res = await CommonApi.getZoomCompareChart(this.commonParams)
         this.initZoomChart(res)
       },
-      initZoomChart(res){
+      initZoomChart(res) {
         this.myChart = this.$echarts.init(this.$refs.myChart);
         let titleText = `${this.tmpCommonTip}趋势对比`
         let legendData = this.floorNameList.split("、")
         let xAxis
-        if(this.selectParams.selectType==3 && this.selectParams.redioType==0){
-          xAxis = res[0].map((item)=>item.time.slice(0,16))
-        }else{
-          xAxis = res[0].map((item)=>item.time.slice(0,10))
+        if (this.selectParams.selectType == 1) {
+          xAxis = res[0].map((item) => item.time.slice(0, 16))
+        } else if (this.selectParams.selectType == 2) {
+          xAxis = res[0].map((item) => item.time.slice(0, 10))
+        } else if (this.selectParams.selectType == 3) {
+          xAxis = res[0].map((item) => item.time.slice(5, 16))
         }
-        let yAxis=res[0] && res[0][0]&& res[0][0].unit
-        let series=[]
+        console.log("111111111111", xAxis)
+        let yAxis = res[0] && res[0][0] && res[0][0].unit
+        let series = []
         let tmp
-        res.map((item,index)=>{
-          tmp = item.map((everyFloor)=>everyFloor.value)
+        res.map((item, index) => {
+          tmp = item.map((everyFloor) => everyFloor.value)
           series.push({
-            name:item[index] && item[index].floor,
-            type:'bar',
-            data:tmp
+            name: item[index] && item[index].floor,
+            type: 'bar',
+            data: tmp
           })
         })
-        let data={
+        let data = {
           titleText,
           legendData,
-          // xAxis,
+          xAxis,
+          xAxisUi: {
+            axisLabel: {
+              rotate: 40
+            },
+          },
           yAxis,
           series
         }
-        let option = {
-          xAxis:[
-            {
-               type: 'category',
-               data: xAxis,
-               axisLabel: {  
-                    interval:1,  
-                    rotate:40  
-                }  
-            }
-          ]
-        }
-        ChartUtils.handleBarChart(this.myChart,data)
-        this.myChart.setOption(option)
+        ChartUtils.handleBarChart(this.myChart, data)
       },
-      async getZoomCompareTable(){
-        let tableParams = {...this.commonParams,...{
-            page:this.curPage,
-            size:10
+      async getZoomCompareTable() {
+        let tableParams = {
+          ...this.commonParams, ...{
+            page: this.curPage,
+            size: 10
           }
         }
         let res = await CommonApi.getZoomCompareTable(tableParams)
-        if(res && res.value) {
-          let tmp=[]
-          res.value.map((item)=>{
-            item[1]=item[1].slice(0,10)
-            let obj={}
-            res.title.map((tit,index)=>{
-              if(tit=="占比(%)"){
-                obj[tit+index]=item[index]
-              }else{
-                obj[tit]=item[index]
+        if (res && res.value) {
+          let tmp = []
+          res.value.map((item) => {
+            item[1] = item[1].slice(0, 10)
+            let obj = {}
+            res.title.map((tit, index) => {
+              if (tit == "占比(%)") {
+                obj[tit + index] = item[index]
+              } else {
+                obj[tit] = item[index]
               }
             })
             tmp.push(obj)
           })
-          let columnConfig=[]
-          for(let key in tmp[0]){
+          let columnConfig = []
+          for (let key in tmp[0]) {
             columnConfig.push({
-              label:key.indexOf('占比')!=-1?'占比(%)':key,
-              prop:key
+              label: key.indexOf('占比') != -1 ? '占比(%)' : key,
+              prop: key
             })
           }
-          console.log(columnConfig)
-          this.tableConfig.columnConfig=columnConfig
-          this.tableConfig.data=tmp
+          // console.log(columnConfig)
+          this.tableConfig.columnConfig = columnConfig
+          this.tableConfig.data = tmp
           this.tableConfig.uiConfig.pagination.total = res.total;
           this.$refs[this.tableConfig.ref].doLayout()
-        }else{
-          this.tableConfig.data=[]
+        } else {
+          this.tableConfig.data = []
         }
       },
-      async getTbhbChart(){
+      async getTbhbChart() {
         let res = await CommonApi.getTbhbChart(this.commonParams)
         this.initTbhbChart(res)
       },
       initTbhbChart(res) {
         this.myChart = this.$echarts.init(this.$refs.myChart);
         let xAxis
-        if(this.selectParams.selectType==3 && this.selectParams.redioType==0){
-          xAxis = res.value.map((item)=>item.date && item.date.slice(0,16) ||'')
-        }else if(this.selectParams.selectType==2 && this.selectParams.redioType==1){
-          xAxis = res.value.map((item)=>item.date && item.date.slice(0,7) || '')
-        }else{
-          xAxis = res.value.map((item)=>item.date && item.date.slice(0,10) || '')
+        if (this.selectParams.selectType == 3 && this.selectParams.redioType == 0) {
+          xAxis = res.value.map((item) => item.date && item.date.slice(0, 16) || '')
+        } else if (this.selectParams.selectType == 2 && this.selectParams.redioType == 1) {
+          xAxis = res.value.map((item) => item.date && item.date.slice(0, 7) || '')
+        } else {
+          xAxis = res.value.map((item) => item.date && item.date.slice(0, 10) || '')
         }
-        let dqzh={
-          name:'当期综合能耗',
-          type:'bar',
-          barMaxWidth:80,
-          data:res.value.map((item)=>item.dqzh)
+        let dqzh = {
+          name: '当期综合能耗',
+          type: 'bar',
+          barMaxWidth: 80,
+          data: res.value.map((item) => item.dqzh)
         }
-        let tqzh={
-          name:'同期综合能耗',
-          type:'bar',
-          barMaxWidth:80,
-          data:res.value.map((item)=>item.tqzh)
+        let tqzh = {
+          name: '同期综合能耗',
+          type: 'bar',
+          barMaxWidth: 80,
+          data: res.value.map((item) => item.tqzh)
         }
-        let sqzh={
-          name:'上期综合能耗',
-          type:'bar',
-          barMaxWidth:80,
-          data:res.value.map((item)=>item.sqzh)
+        let sqzh = {
+          name: '上期综合能耗',
+          type: 'bar',
+          barMaxWidth: 80,
+          data: res.value.map((item) => item.sqzh)
         }
-        let tbzz={
-          name:'综合能耗同比增长率',
-          type:'line',
+        let tbzz = {
+          name: '综合能耗同比增长率',
+          type: 'line',
           yAxisIndex: 1,
-          data:res.value.map((item)=>item.tbzz)
+          data: res.value.map((item) => item.tbzz)
         }
-        let data=res.value.map((item)=>item.hbzz)
-        let hbzz={
-          name:'综合能耗环比增长率',
-          type:'line',
+        let data = res.value.map((item) => item.hbzz)
+        let hbzz = {
+          name: '综合能耗环比增长率',
+          type: 'line',
           yAxisIndex: 1,
           data,
           formatter: '{c} %'
         }
-        let series=[dqzh,tqzh,sqzh,tbzz,hbzz]
-        let titleText=`${this.tmpCommonTip}同比环比柱状折线图`
-        let legendData=['当期综合能耗','同期综合能耗','上期综合能耗','综合能耗同比增长率','综合能耗环比增长率']
-        let yAxis =res.unit
-        let data2={
+        let series = [dqzh, tqzh, sqzh, tbzz, hbzz]
+        let titleText = `${this.tmpCommonTip}同比环比柱状折线图`
+        let legendData = ['当期综合能耗', '同期综合能耗', '上期综合能耗', '综合能耗同比增长率', '综合能耗环比增长率']
+        let yAxis = res.unit
+        let data2 = {
           titleText,
           legendData,
-          // xAxis,
+          xAxis,
+          xAxisUi: {
+            axisLabel: {
+              rotate: 40
+            }
+          },
           yAxis,
           series,
-          showSecondY:true
+          showSecondY: true
         }
-        let option={
+        let option = {
           yAxis: [{
             type: 'value',
             name: res.unit,
@@ -358,339 +365,327 @@
               }
             }
           ],
-          xAxis:[
-            {
-               type: 'category',
-               data: xAxis,
-               axisLabel: {  
-                    interval:0,  
-                    rotate:40  
-                }  
-            }
-          ]
         }
-        ChartUtils.handleBarChart(this.myChart,data2)
+        ChartUtils.handleBarChart(this.myChart, data2)
         this.myChart.setOption(option)
       },
-      async getTbhbTable(){
-        let tableParams = {...this.commonParams,...{
-            rankType:this.rankType,
-            rank:this.rank,
-            page:this.curPage,
-            size:10,
+      async getTbhbTable() {
+        let tableParams = {
+          ...this.commonParams, ...{
+            rankType: this.rankType,
+            rank: this.rank,
+            page: this.curPage,
+            size: 10,
           }
         }
         let res = await CommonApi.getTbhbTable(tableParams)
-        let unit ="("+res.unit.split("（")[1]
+        let unit = "(" + res.unit.split("（")[1]
         this.tableConfig.columnConfig = [
-          {label:'排名',prop:'xulie',width:"100px"},
-          {label:`时间`,prop:'date'},
-          {label:`当期综合能耗${unit}`,prop:'dqzh'},
-          {label:`同期综合能耗${unit}`,prop:'tqzh',sortable:'custom'},
-          {label:`上期综合能耗${unit}`,prop:'sqzh',sortable:'custom'},
-          {label:'综合能耗同比增长率(%)',prop:'tbzz',sortable:'custom',
-            formatter: function(row, value) {
-              return value+"%";
+          {label: '排名', prop: 'xulie', width: "100px"},
+          {label: `时间`, prop: 'date'},
+          {label: `当期综合能耗${unit}`, prop: 'dqzh'},
+          {label: `同期综合能耗${unit}`, prop: 'tqzh', sortable: 'custom'},
+          {label: `上期综合能耗${unit}`, prop: 'sqzh', sortable: 'custom'},
+          {
+            label: '综合能耗同比增长率(%)', prop: 'tbzz', sortable: 'custom',
+            formatter: function (row, value) {
+              return value + "%";
             }
           },
-          {label:'综合能耗环比增长率(%)',prop:'hbzz',sortable:'custom',
-            formatter: function(row, value) {
-              return value+"%";
+          {
+            label: '综合能耗环比增长率(%)', prop: 'hbzz', sortable: 'custom',
+            formatter: function (row, value) {
+              return value + "%";
             }
           }]
-         if(res && res.value){
-           this.tableConfig.data=res.value
-         }else{
-           this.tableConfig.data=[]
-         }
+        if (res && res.value) {
+          this.tableConfig.data = res.value
+        } else {
+          this.tableConfig.data = []
+        }
       },
-      async getTypeChart(){
-        let res =  await CommonApi.getTypeChart(this.commonParams)
+      async getTypeChart() {
+        let res = await CommonApi.getTypeChart(this.commonParams)
         // this.showChart=true
         this.initTypeChart(res)
       },
-      initTypeChart(res){
+      initTypeChart(res) {
         this.myChart = this.$echarts.init(this.$refs.myChart);
-        let titleText =`${this.tmpCommonTip}趋势对比`
+        let titleText = `${this.tmpCommonTip}趋势对比`
         let xAxis = []
-        if(this.selectType==3 && this.redioType==0){
-          xAxis= res[0].map(item=>item.time?item.time.slice(0,16):'')
-        }else{
-          xAxis= res[0].map(item=>item.time?item.time.slice(0,10):'')
+        if (this.selectType == 3 && this.redioType == 0) {
+          xAxis = res[0].map(item => item.time ? item.time.slice(0, 16) : '')
+        } else {
+          xAxis = res[0].map(item => item.time ? item.time.slice(0, 10) : '')
         }
-        let legendData = this.selectParams.energy.map((item)=>item.name)
-        let yAxis =  res[0] && res[0][0] && res[0][0].unit
-        let series=[]
+        let legendData = this.selectParams.energy.map((item) => item.name)
+        let yAxis = res[0] && res[0][0] && res[0][0].unit
+        let series = []
         let tmp
-        res.map((item,index)=>{
-          tmp = item.map((everyDay)=>everyDay.value)
+        res.map((item, index) => {
+          tmp = item.map((everyDay) => everyDay.value)
           series.push({
-            name:item[index] && item[index].name,
-            type:'bar',
-            data:tmp
+            name: item[index] && item[index].name,
+            type: 'bar',
+            data: tmp
           })
         })
-        let data={
+        let data = {
           titleText,
           legendData,
           yAxis,
+          xAxisUi: {
+            axisLabel: {
+              rotate: 40
+            }
+          },
           series
         }
-        let option = {
-          xAxis:[
-            {
-               type: 'category',
-               data: xAxis,
-               axisLabel: {  
-                    interval:0,  
-                    rotate:40  
-                }  
-            }
-          ]
-        }
-        ChartUtils.handleBarChart(this.myChart,data)
-        this.myChart.setOption(option);
+        ChartUtils.handleBarChart(this.myChart, data)
       },
-      async getTypeTable(){
-        let tableParams = {...this.commonParams,...{
-            page:this.curPage,
-            size:10
+      async getTypeTable() {
+        let tableParams = {
+          ...this.commonParams, ...{
+            page: this.curPage,
+            size: 10
           }
         }
         let res = await CommonApi.getTypeTable(tableParams)
 
-        if(res && res.value){
-          let tmp=[]
-          res.value.map((item)=>{
-            item[1]=item[1].slice(0,10)
-            let obj={}
-            res.title.map((tit,index)=>{
-              if(tit=="占比(%)"){
-                obj[tit+index]=item[index]
-              }else{
-                obj[tit]=item[index]
+        if (res && res.value) {
+          let tmp = []
+          res.value.map((item) => {
+            item[1] = item[1].slice(0, 10)
+            let obj = {}
+            res.title.map((tit, index) => {
+              if (tit == "占比(%)") {
+                obj[tit + index] = item[index]
+              } else {
+                obj[tit] = item[index]
               }
               // obj.name=tit
             })
             tmp.push(obj)
           })
-          let columnConfig=[]
+          let columnConfig = []
           // res[0].title.map((item)=>{
           //    columnConfig.push({
           //      label:item,
           //      prop:item
           //    })
           // })
-          for(let key in tmp[0]){
+          for (let key in tmp[0]) {
             columnConfig.push({
-              label:key.indexOf('占比')!=-1?'占比(%)':key,
-              prop:key
+              label: key.indexOf('占比') != -1 ? '占比(%)' : key,
+              prop: key
             })
           }
-          this.tableConfig.columnConfig=columnConfig
-          this.tableConfig.data=tmp
+          this.tableConfig.columnConfig = columnConfig
+          this.tableConfig.data = tmp
           this.tableConfig.uiConfig.pagination.total = res.total;
         }
       },
-      async getTimeEnergyChart(){
+      async getTimeEnergyChart() {
         let res = await EnergyApi.getTimeEnergyChart(this.commonParams)
         this.initTimeEnergyChart(res)
       },
-      initTimeEnergyChart(res){
+      initTimeEnergyChart(res) {
         this.myChart = this.$echarts.init(this.$refs.myChart);
-        let titleText =`${this.tmpCommonTip}柱状图`
+        let titleText = `${this.tmpCommonTip}柱状图`
         let legendData = []
         let xAxis
-        if(this.selectParams.selectType==3 && this.selectParams.redioType==0){
-          xAxis = res.map((item)=>item.time.slice(10,16))
-        }else{
-          xAxis = res.map((item)=>item.time.slice(0,10))
+        if (this.selectParams.selectType == 3 && this.selectParams.redioType == 0) {
+          xAxis = res.map((item) => item.time.slice(10, 16))
+        } else {
+          xAxis = res.map((item) => item.time.slice(0, 10))
         }
-        let yAxis=res[0] && res[0].unit
-        let series=[]
+        let yAxis = res[0] && res[0].unit
+        let series = []
         series.push({
-          name:this.selectParams.energy[0].name,
-          type:'bar',
-          data:res.map((item)=>item.value)
+          name: this.selectParams.energy[0].name,
+          type: 'bar',
+          data: res.map((item) => item.value)
         })
-        let data={
+        let data = {
           titleText,
           legendData,
           yAxis,
           series
         }
-         let option = {
-          xAxis:[
+        let option = {
+          xAxis: [
             {
-               type: 'category',
-               data: xAxis,
-               axisLabel: {  
-                    interval:0,  
-                    rotate:40  
-                }  
+              type: 'category',
+              data: xAxis,
+              axisLabel: {
+                interval: 0,
+                rotate: 40
+              }
             }
           ]
         }
-        ChartUtils.handleBarChart(this.myChart,data)
+        ChartUtils.handleBarChart(this.myChart, data)
         this.myChart.setOption(option);
       },
-      async getTimeEnergyTable(){
-        let tableParams = {...this.commonParams,...{
-            seq:this.seq,
-            rank:this.rank,
-            page:this.curPage,
-            size:10,
+      async getTimeEnergyTable() {
+        let tableParams = {
+          ...this.commonParams, ...{
+            seq: this.seq,
+            rank: this.rank,
+            page: this.curPage,
+            size: 10,
           }
         }
         let res = await EnergyApi.getTimeEnergyTable(tableParams)
-        if(res && res.list){
-          this.tableConfig.columnConfig=[{label:'排名',prop:'xuhao'},
-            {label:'时间',prop:'shijian',sortable:'custom'},
-            {label:this.selectParams.energy[0].name,prop:'yongdianlaing',sortable:'custom'}]
-          this.tableConfig.data=res.list
-          this.tableConfig.uiConfig.pagination.total=res.total
+        if (res && res.list) {
+          this.tableConfig.columnConfig = [{label: '排名', prop: 'xuhao'},
+            {label: '时间', prop: 'shijian', sortable: 'custom'},
+            {label: this.selectParams.energy[0].name, prop: 'yongdianlaing', sortable: 'custom'}]
+          this.tableConfig.data = res.list
+          this.tableConfig.uiConfig.pagination.total = res.total
         }
       },
-      async getCategoryEnergyChart(){
+      async getCategoryEnergyChart() {
         let res = await EnergyApi.getCategoryEnergyChart(this.commonParams)
         this.initCategoryBarChart(res)
         this.initCategoryPieChart(res)
       },
-      initCategoryBarChart(res){
+      initCategoryBarChart(res) {
         let myChart1 = this.$echarts.init(this.$refs.myChart1);
-        let titleText =`${this.floorNameList}${this.selectParams.startTime}`+
-          `${this.selectParams.lastTime?'至'+this.selectParams.lastTime:''}用${this.selectParams.energy[0].name}分项能耗统计`
+        let titleText = `${this.floorNameList}${this.selectParams.startTime}` +
+          `${this.selectParams.lastTime ? '至' + this.selectParams.lastTime : ''}用${this.selectParams.energy[0].name}分项能耗统计`
         let legendData = []
-        let xAxis = res.map((item)=>item.name)
-        let yAxis=res[0] && res[0].unit
-        let series=[]
+        let xAxis = res.map((item) => item.name)
+        let yAxis = res[0] && res[0].unit
+        let series = []
         series.push({
-          type:'bar',
-          data:res.map((item)=>item.value)
+          type: 'bar',
+          data: res.map((item) => item.value)
         })
-        let data={
+        let data = {
           titleText,
           legendData,
           xAxis,
           yAxis,
           series
         }
-        ChartUtils.handleBarChart(myChart1,data)
+        ChartUtils.handleBarChart(myChart1, data)
       },
-      initCategoryPieChart(res){
+      initCategoryPieChart(res) {
         let myChart2 = this.$echarts.init(this.$refs.myChart2);
-        let titleText =`${this.floorNameList}${this.selectParams.startTime}`+
-          `${this.selectParams.lastTime?'至'+this.selectParams.lastTime:''}用${this.selectParams.energy[0].name}分项能耗占比分析`
-        let legendData = res.map((item)=>item.name)
-        let series=[]
-        res.map((item)=>{
+        let titleText = `${this.floorNameList}${this.selectParams.startTime}` +
+          `${this.selectParams.lastTime ? '至' + this.selectParams.lastTime : ''}用${this.selectParams.energy[0].name}分项能耗占比分析`
+        let legendData = res.map((item) => item.name)
+        let series = []
+        res.map((item) => {
           series.push({
-            name:item.name,
-            value:item.value
+            name: item.name,
+            value: item.value
           })
         })
-        let data={
+        let data = {
           titleText,
-          titleUi:{
-            textStyle:{
-              color:'#008DEA',
-              fontSize:'14',
-              top:0,
-              left:0
+          titleUi: {
+            textStyle: {
+              color: '#008DEA',
+              fontSize: '14',
+              top: 0,
+              left: 0
             }
           },
           legendData,
-          seriesData:series,
-          seriesUi:{
-            radius:'50%'
+          seriesData: series,
+          seriesUi: {
+            radius: '50%'
           },
-          color:['#4DA1FF', '#83D587', '#FFCE33', '#FF7B8C','#66fbf9',"#dab54c"],
+          color: ['#4DA1FF', '#83D587', '#FFCE33', '#FF7B8C', '#66fbf9', "#dab54c"],
         }
-        ChartUtils.hollowPieChart(myChart2,data)
+        ChartUtils.hollowPieChart(myChart2, data)
       },
-      async getCategoryEnergyTable(){
-        let tableParams = {...this.commonParams,...{
-            page:this.curPage,
-            size:10,
+      async getCategoryEnergyTable() {
+        let tableParams = {
+          ...this.commonParams, ...{
+            page: this.curPage,
+            size: 10,
           }
         }
         let res = await EnergyApi.getCategoryEnergyTable(tableParams)
-        if(res && res.value){
-           this.tableConfig.columnConfig = [{label:'排名',prop:'xulie'},
-             {label:'能耗类型',prop:'name'},
-             {label:'数值',prop:'value'},
-             {label:'占比',prop:'zhanbi'}]
-           this.tableConfig.data=res.value
-           this.tableConfig.uiConfig.pagination.total=res.total
+        if (res && res.value) {
+          this.tableConfig.columnConfig = [{label: '排名', prop: 'xulie'},
+            {label: '能耗类型', prop: 'name'},
+            {label: '数值', prop: 'value'},
+            {label: '占比', prop: 'zhanbi'}]
+          this.tableConfig.data = res.value
+          this.tableConfig.uiConfig.pagination.total = res.total
         }
       },
-      handleCurrentChange(value){
-        this.curPage=value
-        if(this.fromFlag==1){
+      handleCurrentChange(value) {
+        this.curPage = value
+        if (this.fromFlag == 1) {
           this.getZoomCompareTable()
-        }else if(this.fromFlag==2){
+        } else if (this.fromFlag == 2) {
           this.getTbhbTable()
-        }else if(this.fromFlag==3){
+        } else if (this.fromFlag == 3) {
           this.getTypeTable()
-        }else if(this.fromFlag==4){
+        } else if (this.fromFlag == 4) {
           this.getTimeEnergyTable()
-        }else if(this.fromFlag==5){
+        } else if (this.fromFlag == 5) {
           this.getCategoryEnergyTable()
         }
       },
-      sortTable(column){
+      sortTable(column) {
         this.seq = column.prop == 'shijian' ? 0 : 1
-        this.rank=column.order=='ascending'?'asc':'desc'
-        this.rankType=column.prop
-        if(this.fromFlag==2){
+        this.rank = column.order == 'ascending' ? 'asc' : 'desc'
+        this.rankType = column.prop
+        if (this.fromFlag == 2) {
           this.getTbhbTable()
-        }else if(this.fromFlag==4){
+        } else if (this.fromFlag == 4) {
           this.getTimeEnergyTable()
-        }else{
+        } else {
           this.getCategoryEnergyTable()
         }
       },
-      async onClickExportBtn(){
+      async onClickExportBtn() {
         let url
-        let params=''
-        for(let key in this.commonParams){
-          if(key!='energy'){
-            params+=key+'='+this.commonParams[key]+'&'
+        let params = ''
+        for (let key in this.commonParams) {
+          if (key != 'energy') {
+            params += key + '=' + this.commonParams[key] + '&'
           }
         }
-        params+='rankType='+this.rankType+'&rank='+this.rank+'&seq='+this.seq+'&page='+this.curPage+'&size=10'
-        if(this.fromFlag==1){
-           url=`/vibe-web/energyCount/energy/energy_speceExcle`
-        }else if(this.fromFlag==2){
+        params += 'rankType=' + this.rankType + '&rank=' + this.rank + '&seq=' + this.seq + '&page=' + this.curPage + '&size=10'
+        if (this.fromFlag == 1) {
+          url = `/vibe-web/energyCount/energy/energy_speceExcle`
+        } else if (this.fromFlag == 2) {
           url = `/vibe-web/energyCount/energy/energy_comseqExcel`
-        }else if(this.fromFlag==3){
-          url=`/vibe-web/energyCount/energy/energy_typeBiaoExcel`
-        }else if(this.fromFlag==4){
+        } else if (this.fromFlag == 3) {
+          url = `/vibe-web/energyCount/energy/energy_typeBiaoExcel`
+        } else if (this.fromFlag == 4) {
           url = `/vibe-web/energyCount/energy/energy_fenshiBiaoExcel`
-        }else if(this.fromFlag==5){
+        } else if (this.fromFlag == 5) {
           url = `/vibe-web/energyCount/energy/energy_fenxiangBiaoExcel`
         }
         CommonFun.exportMethod({
           url,
           params,
-        },this)
+        }, this)
       },
-      handleFloorCanCheck(checkNode){
-        if(checkNode.length<4){
-          this.floorList[0].nodes.map((item)=>{
-            item.disabled=false
-            item.nodes.length && item.nodes.map((child)=>{
-              child.disabled=false
+      handleFloorCanCheck(checkNode) {
+        if (checkNode.length < 4) {
+          this.floorList[0].nodes.map((item) => {
+            item.disabled = false
+            item.nodes.length && item.nodes.map((child) => {
+              child.disabled = false
             })
           })
-        }else{
-          this.floorList[0].nodes.map((item)=>{
-            item.disabled=true
-            item.nodes.length && item.nodes.map((child)=>{
-              child.disabled=true
-              checkNode.map((check)=>{
-                if(child.floorId==check.floorId){
-                  child.disabled=false
+        } else {
+          this.floorList[0].nodes.map((item) => {
+            item.disabled = true
+            item.nodes.length && item.nodes.map((child) => {
+              child.disabled = true
+              checkNode.map((check) => {
+                if (child.floorId == check.floorId) {
+                  child.disabled = false
                 }
               })
             })
@@ -698,28 +693,28 @@
           return;
         }
       },
-      onClickTreeNode(val){
-        if(this.fromFlag==1){
+      onClickTreeNode(val) {
+        if (this.fromFlag == 1) {
           this.handleFloorCanCheck(val)
-          if(val.length>4){
-             return;
+          if (val.length > 4) {
+            return;
           }
-          this.checkedFloorList=val
-        }else{
-          this.checkedFloorList=[val]
+          this.checkedFloorList = val
+        } else {
+          this.checkedFloorList = [val]
         }
       },
-      fixTree(){
+      fixTree() {
         $(".common-tree-box").css({
-          height:($(document).height()-110)+'px'
+          height: ($(document).height() - 110) + 'px'
         })
       }
     },
-    async mounted(){
+    async mounted() {
       await this.getAllFloor()
       // this.getData()
       this.fixTree()
-      $(window).resize(()=>{
+      $(window).resize(() => {
         this.fixTree()
       })
     }
@@ -727,45 +722,55 @@
 </script>
 
 <style lang="less">
-  .energy-common{
-    width:100%;
-    .table-box,.my-chart{
+  .energy-common {
+    width: 100%;
+
+    .table-box, .my-chart {
       margin-top: 20px;
-      padding:20px;
+      padding: 20px;
       background: @white !important;
       overflow: hidden;
     }
-    .my-chart{
+
+    .my-chart {
       /*width: 100%;*/
-      height:450px;
+      height: 450px;
     }
-    .export-btn{
+
+    .export-btn {
       margin-right: 10px;
     }
-    .category-chart{
-      width:48%;
+
+    .category-chart {
+      width: 48%;
     }
-    .table-box{
+
+    .table-box {
       clear: both;
     }
-    .hide{
-      height:0;
-      padding:0;
-      border:none;
+
+    .hide {
+      height: 0;
+      padding: 0;
+      border: none;
     }
-    .table-tip{
-      color:@mainBgColor;
+
+    .table-tip {
+      color: @mainBgColor;
       font-weight: bold;
     }
-    .two-chart{
-      margin-top:20px;
+
+    .two-chart {
+      margin-top: 20px;
       background: @white;
       overflow: hidden;
-      .my-chart{
-        padding:0;
+
+      .my-chart {
+        padding: 0;
       }
     }
-    .table-tip-box{
+
+    .table-tip-box {
       margin-bottom: 20px;
     }
   }

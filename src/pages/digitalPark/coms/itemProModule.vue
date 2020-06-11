@@ -201,6 +201,7 @@
                   }
                 },
                 axisLine: {
+                  show:false,
                   lineStyle: {
                     color: color,
                   }
@@ -212,8 +213,16 @@
               },
               yAxisUi:{
                 axisLine: {
+                  show:false,
                   lineStyle: {
                     color: color,
+                  }
+                },
+                splitLine: {
+                  lineStyle: {
+                    color: '#435E61',
+                    opacity: 0.7,
+                    width:0.5
                   }
                 },
               }

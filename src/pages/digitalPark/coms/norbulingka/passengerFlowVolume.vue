@@ -25,7 +25,7 @@
             tooltip: {
               trigger: 'axis',
               axisPointer: {
-                type: 'cross'
+                // type: 'cross'
               },
             },
             toolbox: {
@@ -57,7 +57,8 @@
             yAxis: {
               name:'人',
               nameTextStyle:{
-                color: this.moduleItem.type!=2?'#fff':''
+                color: this.moduleItem.type!=2?'#fff':'',
+                align:'right'
               },
               type: 'value',
               splitLine: {
@@ -77,7 +78,7 @@
             },
             series: [
               {
-                name: '报警',
+                name: '人数',
                 type: 'line',
                 smooth: true,
                 areaStyle: {},
