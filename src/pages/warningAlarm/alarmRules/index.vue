@@ -275,6 +275,8 @@ export default {
                 span: 12,
                 offset: 6,
                 row: true,
+                tip:'字段暂时没有传',
+                tipPlacement:"right",
                 dicData: notificationWay
               },
               {
@@ -402,7 +404,7 @@ export default {
       console.log(obj);
       let str = "";
       // let relationIdArr = []
-      // 对选中的数据中的relationId 进行拼接
+      // 对选中的数据中的warnId 进行拼接
       obj.forEach(item => {
         str += item.warnId + ",";
         // relationIdArr.push(item.relationId)
@@ -474,12 +476,7 @@ export default {
         { label: "报警规则", prop: "singleWarnCond" },
         {
           label: "报警级别",
-          prop: "eventRank",
-          type: "select",
-          props: {
-            label: "rankName",
-            value: "rankId"
-          }
+          prop: "eventRank.rankName"
         },
         { label: "通知方式", prop: "notify" },
         { label: "录入类型", prop: "removed" }
@@ -532,15 +529,12 @@ export default {
     }
   },
   created() {
-    // 报警级别
-    // warningAlarm.geteventRanks().then(res => {
-    //   this.Form.setColumnByProp("eventRank", {
-    //     dicData: res
-    //   });
-    //   this.Table.setColumnByProp("eventRank", {
-    //     dicData: res
-    //   });
-    // });
+    // 报警级别;
+    warningAlarm.geteventRanks().then(res => {
+      this.Form.setColumnByProp("eventRank", {
+        dicData: res
+      });
+    });
 
     this.getTableData();
   },
