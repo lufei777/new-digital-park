@@ -9,6 +9,7 @@ class chartUtils {
     let {textStyle: xLabelTextStyle = {}} = xAxisLabel
     let {lineStyle: xLineStyle = {}} = xAxisLine
 
+    console.log(xAxisLabel)
     let {
       yAxisUi = {},
       yAxisUi: {
@@ -17,6 +18,7 @@ class chartUtils {
         splitLine: ySplitLine = {}
       } = {}
     } = data
+
 
     let {textStyle: yLabelTextStyle = {}} = yAxisLabel
     let {lineStyle: yLineStyle = {}} = yAxisLine
@@ -29,7 +31,7 @@ class chartUtils {
         type: yAxisUi.type || 'value',
         name: data.yAxis,
         data: data.yAxisData,
-        min: data.yMin || '',
+        min: data.yMin || 1,
         axisTick: {
           show: false,
         },

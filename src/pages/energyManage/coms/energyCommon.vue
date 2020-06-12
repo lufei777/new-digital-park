@@ -292,7 +292,7 @@
       initTbhbChart(res) {
         this.myChart = this.$echarts.init(this.$refs.myChart);
         //同比环比时间类型只有月且只能选择范围
-        let xAxis = res.value.map((item) => item.date && item.date.slice(0, 10))
+        let xAxis = res.value.map((item) => item.date && item.date.slice(0, 10) || '')
         let dqzh = {
           name: '当期综合能耗',
           type: 'bar',

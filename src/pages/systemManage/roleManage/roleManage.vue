@@ -5,7 +5,15 @@
           <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除记录</el-button>
           <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
         </div>
-      <CommonTable :tableObj="roleList" :curPage="1"/>
+      <!--<CommonTable :tableObj="roleList" :curPage="1"/>-->
+      <z-table :ref="tableConfig.ref" :options="tableConfig">
+        <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
+          <el-button type="text" @click="rowClick(row)">分配权限</el-button>
+          <el-button type="text" @click="deleteRow(row)">分配用户</el-button>
+          <el-button type="text" @click="rowClick(row)">编辑</el-button>
+          <el-button type="text" @click="deleteRow(row)">删除</el-button>
+        </template>
+      </z-table>
     </div>
     <div class="item-row-detail-table radius-shadow">
       <table>
@@ -32,7 +40,36 @@
       return {
         roleList:{},
         curPage:1,
-        curRole:{}
+        curRole:{},
+        tableConfig:{
+          ref: "tableRef",
+          data:[],
+          columnConfig:[{
+            label:'序号',
+            prop:''
+          },{
+            label:'角色ID',
+            prop:'roleId'
+          },{
+            label:'角色名称',
+            prop:'roleName'
+          },{
+            label:'相关权限',
+            prop:'permission'
+          },{
+            label:'相关用户',
+            prop:'roleList'
+          }],
+          btnConfig:[],
+          customTop: true,
+          operation: true,
+          uiConfig: {
+            height: "auto",
+            selection: true,
+          },
+          tableMethods: {
+          },
+        }
       }
     },
     methods: {
@@ -141,7 +178,7 @@
 </script>
 
 <style lang="less">
-  @import '../commonProject/less/dataDetailRow.less';
+  @import '../../commonProject/less/dataDetailRow.less';
   .role-manage{
     .role-list{
       padding:20px;

@@ -178,7 +178,7 @@
         CommonFun.loadPage(this.moduleData)
       },
       moduleItemData(item){
-        let color = isYDScreen()?'#8FD3FA':isNorbulingkaScreen()?'#fff':this.type!=2?'8FD3FA':''
+        let color = isYDScreen()?'#8FD3FA':isNorbulingkaScreen()?'#fff':this.type!=2?'#8FD3FA':''
         return {
           ...item,
           ...{type:this.type},
@@ -323,6 +323,7 @@
       box-sizing: border-box;
       margin-top: 10px;
     }
+
     .padding-box{
       padding:20px;
       box-sizing: border-box;
@@ -331,4 +332,7 @@
       /*width:99%;*/
     }
   }
+ .white-color-name{
+   color:#fff;
+ }
 </style>

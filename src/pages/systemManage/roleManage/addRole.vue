@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import CommonApi from '../../service/api/common'
+import CommonApi from '../../../service/api/common'
 export default {
   data() {
     return {
