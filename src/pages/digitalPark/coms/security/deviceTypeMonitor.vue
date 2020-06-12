@@ -1,6 +1,6 @@
 <template>
   <div class="device-type-monitor-coms">
-    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
+    <div class="module-item-top-name" :class="moduleItem.type==1?'white-color-name':''">{{moduleItem.moduleName}}</div>
     <div class="device-box flex-align-around my-chart">
       <div class="progress-box flex-column-center progress-box1">
         <el-progress type="circle" :percentage="deviceData.ball.percent"

@@ -323,6 +323,7 @@
       box-sizing: border-box;
       margin-top: 10px;
     }
+
     .padding-box{
       padding:20px;
       box-sizing: border-box;
@@ -331,4 +332,7 @@
       /*width:99%;*/
     }
   }
+ .white-color-name{
+   color:#fff;
+ }
 </style>

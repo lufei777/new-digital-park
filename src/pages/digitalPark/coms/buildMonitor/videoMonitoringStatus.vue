@@ -1,6 +1,6 @@
 <template>
   <div class="video-monitoring-status-coms">
-    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
+    <div class="module-item-top-name" :class="moduleItem.type==1?'white-color-name':''">{{moduleItem.moduleName}}</div>
     <div class="my-chart" ref="myChart"></div>
   </div>
 </template>

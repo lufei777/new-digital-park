@@ -1,7 +1,7 @@
 <template>
   <div class="environment-line-coms">
     <div class="choose-box flex-align-between">
-      <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
+      <div class="module-item-top-name" :class="moduleItem.type==1?'white-color-name':''">{{moduleItem.moduleName}}</div>
       <div class="choose-box-inner flex">
         <div v-for="item in typeList" :key="item.id"
              class="item-choose hover-pointer"
@@ -104,6 +104,7 @@
 
 <style lang="less">
   .environment-line-coms {
+    overflow: hidden;
     .choose-box {
       width: 100%;
     }

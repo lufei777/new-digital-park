@@ -1,6 +1,6 @@
 <template>
   <div class="asset-growth-statistics">
-    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
+    <div class="module-item-top-name" :class="moduleItem.type==1?'white-color-name':''">{{moduleItem.moduleName}}</div>
     <div ref="myChart" class="my-chart" id="asset-growth-statistics-chart"></div>
   </div>
 </template>

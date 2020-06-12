@@ -1,6 +1,6 @@
 <template>
   <div class="elevator-monitor-coms">
-    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
+    <div class="module-item-top-name" :class="moduleItem.type==1?'white-color-name':''">{{moduleItem.moduleName}}</div>
     <div class="my-chart flex" v-if="!iszg">
       <div class="chart-item-box">
         <div ref="myChart1" class="chart-item"></div>

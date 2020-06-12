@@ -1,6 +1,6 @@
 <template>
   <div class="environmental-monitoring">
-    <div  class="module-item-top-name">{{moduleItem.moduleName}}</div>
+    <div  class="module-item-top-name" :class="moduleItem.type==1?'white-color-name':''">{{moduleItem.moduleName}}</div>
     <div class="flex-align-center envir-content">
       <img src="../../../../../static/image/digitalPark/home_environment.png" alt="">
       <div>

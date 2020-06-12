@@ -66,16 +66,26 @@
           <el-dropdown-item
             command="1"
             :class="{'large-item':fromFlag==2}"
-          >{{$t('homeHeader.personalCenter')}}</el-dropdown-item>
+          >{{$t('homeHeader.personalCenter')}}
+          </el-dropdown-item>
           <el-dropdown-item
             command="2"
             :class="{'large-item':fromFlag==2}"
-          >{{$t('homeHeader.changePassword')}}</el-dropdown-item>
+          >{{$t('homeHeader.changePassword')}}
+          </el-dropdown-item>
           <el-dropdown-item
             command="3"
             :class="{'large-item':fromFlag==2}"
-          >{{$t('homeHeader.signOut')}}</el-dropdown-item>
+          >{{$t('homeHeader.signOut')}}
+          </el-dropdown-item>
+          <el-dropdown-item
+            command="4"
+            v-if="isCZClient"
+            :class="{'large-item':fromFlag==2}"
+          >最小化
+          </el-dropdown-item>
         </el-dropdown-menu>
+
       </el-dropdown>
     </span>
   </div>
@@ -127,6 +137,9 @@ export default {
     },
     isydScreen(){
        return isYDScreen()
+    },
+    isCZClient(){
+      return IsCZClient()
     }
   },
   watch: {
@@ -162,7 +175,11 @@ export default {
         })
         // 清空菜单列表
         this.$store.commit("digitalPark/activeMenuIndex", "");
-      } else {
+      } else if(val==4){
+        if (IsCZClient()) {
+          minimizeWindow();
+        }
+      }else{
         this.setSystemMenu()
         if (val == 1) {
           this.$store.commit("digitalPark/activeMenuIndex", "/personalInformation")

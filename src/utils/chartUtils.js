@@ -31,7 +31,7 @@ class chartUtils {
         type: yAxisUi.type || 'value',
         name: data.yAxis,
         data: data.yAxisData,
-        min: data.yMin || '',
+        min: data.yMin || 1,
         axisTick: {
           show: false,
         },

@@ -2,7 +2,7 @@
   <div class="task-person-task">
     <!--<div ref="pieCharts" class="my-chart" id="task-person-task-chart"></div>-->
     <!--<div class="my-chart">-->
-    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
+    <div class="module-item-top-name" :class="moduleItem.type==1?'white-color-name':''">{{moduleItem.moduleName}}</div>
     <img class="my-chart"
 
       src="../../../../../static/image/digitalPark/renwu1_tmp.png" alt="">

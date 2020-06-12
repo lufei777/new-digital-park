@@ -32,7 +32,7 @@
                      :key="index"
                      :is="item.componentName"
                      :moduleItem="{...item,...{type:type}}"
-                     :class="['item-content','flex-column-center',item.dragFlag?'item-drag-product':'']"
+                     :class="getDragItemClass(item)"
                      :style="contentBg(item)"
                      :id="item.id"
           />
@@ -116,7 +116,7 @@
       }),
       curCom(){
         return this.type==1?'dashboard':this.type==2?'homePage':'largeSizeScreen'
-      }
+      },
     },
     watch: {
       dragFlag() {
@@ -297,6 +297,14 @@
           dom.addClass('smallFontSize')
         }
       },
+      getDragItemClass(item){
+        return {
+          'item-content':true,
+          'flex-column-center':true,
+          'item-drag-product':item.dragFlag,
+          'item-content-bg': this.type!=2
+        }
+      }
     },
     async mounted() {
       document.body.ondrop = function (event) {
@@ -384,6 +392,10 @@
       background-repeat: no-repeat;
       background-size: 100% 100%;
       border: 1px solid #d0d3dc;
+    }
+
+    .item-content-bg{
+      background: #061C34;
     }
 
     .my-chart {
@@ -501,6 +513,7 @@
     .drag-shadow {
       background-image: url('../../../../static/image/digitalPark/content_bg.png');
       background-repeat: no-repeat;
+      background-size: 100% 100%;
     }
 
     .moduleBtnBg {
@@ -534,6 +547,7 @@
         /*font-size: 12px;*/
       /*}*/
     }
+
 
     .left-module-list, .module-content-list, .preview-panel {
       &::-webkit-scrollbar { /*滚动条整体样式*/
