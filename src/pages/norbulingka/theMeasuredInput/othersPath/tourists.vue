@@ -27,6 +27,7 @@
     <div class="panel">
       <!-- 表单部分 -->
       <z-table
+        :load='loading'
         :ref="tableData.ref"
         :options="tableData"
       >
@@ -40,7 +41,7 @@
             <el-button
               @click="del(obj)"
               :disabled='!obj.selectedData.length'
-            >删除</el-button>
+            >批量删除</el-button>
           </div>
         </template>
         <template
@@ -69,6 +70,9 @@
 </template>
 
 <script>
+// 导入接口
+import  norbulingka   from '@/service/api/norbulingka'
+// 字典配置
 import { Norbulingka } from "utils/dictionary";
 import { type } from 'os';
 // 工程分类
@@ -76,6 +80,7 @@ const projectType = Norbulingka.projectType;
 export default {
   data() {
     return {
+      loading:false,
       model: {},
       formData: {
         ref: "formData",
@@ -184,7 +189,7 @@ export default {
         // 日游客量 dailyCount   瞬时游客量 tempCount      日期 date
         { label: "日游客量", prop: "dailyCount" },
         { label: "瞬时游客量", prop: "tempCount" },
-        { label: "日期", prop: "data" }
+        { label: "日期", prop: "date" }
       ];
       // 赋值给表格的配置项
       this.tableData.columnConfig = list;
@@ -226,7 +231,24 @@ export default {
     // 添加
     add(){
        this.$router.push({path:'/temtourists',query:{mark:'add',}})
+    },
+    // 表格中的数据
+    getTableData(pageParams = { page: 1, rows: 10 }) {
+      this.loading = true,
+        norbulingka
+          .queryTouristByPage(pageParams)
+          .then(res => {
+            // console.log(res);
+            this.$refs[this.tableData.ref].setData(res.list);
+            this.$refs[this.tableData.ref].setTotal(res.total);
+          })
+          .finally(res => {
+            this.loading = false;
+          });
     }
+  },
+  created() {
+    this.getTableData()
   },
   mounted() {
     this.tablePropList();

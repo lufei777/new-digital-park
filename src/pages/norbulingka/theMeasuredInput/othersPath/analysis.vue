@@ -27,6 +27,7 @@
     <div class="panel">
       <!-- 表单部分 -->
       <z-table
+        :load='loading'
         :ref="tableData.ref"
         :options="tableData"
       >
@@ -77,9 +78,12 @@ import { Norbulingka } from "utils/dictionary";
 const diseasesSort = Norbulingka.diseasesSort;
 // 病害类型 diseaseType
 const diseaseType = Norbulingka.diseaseType;
+// 导入接口
+import norbulingka from "@/service/api/norbulingka";
 export default {
   data() {
     return {
+      loading: false,
       model: {},
       formData: {
         ref: "formData",
@@ -136,40 +140,20 @@ export default {
         ref: "tabel",
         customTop: true,
         customTopPosition: "right",
-        data: [
-          /**
-             *      
-             { label: "病害位置", prop: "damagePosition" },
-            { label: "病害分类", prop: "damageType1" },
-            { label: "病害类型", prop: "damageType1" },
-            { label: "日期", prop: "data" },
-             *   
-            */
-          // 模拟的假数据
-          {
-            damagePosition: "北京姑娘",
-            damageType1: "造像，碑刻，壁画",
-            damageType2: "裂隙与空鼓",
-            data: "2021-5-29 16:04:48.0"
-          },
-          {
-            damagePosition: "北京姑娘",
-            damageType1: "造像，碑刻，壁画",
-            damageType2: "裂隙与空鼓",
-            data: "2021-5-29 16:04:48.0"
-          }
-        ],
+        data: [],
         columnConfig: [],
         operation: {
-          prop: "operation",
-          label: "操作",
-          fixed: "right",
           width: 200
         },
         uiConfig: {
           height: "auto",
           selection: true,
-          showIndex: true
+          showIndex: true,
+          pagination: {
+            handler: (pageSize, currentPage, table) => {
+              this.getTableData({ page: currentPage, rows: pageSize });
+            }
+          }
         }
       }
     };
@@ -193,7 +177,7 @@ export default {
         { label: "病害位置", prop: "damagePosition" },
         { label: "病害分类", prop: "damageType1" },
         { label: "病害类型", prop: "damageType2" },
-        { label: "日期", prop: "data" }
+        { label: "日期", prop: "date" }
       ];
       // 赋值给表格的配置项
       this.tableData.columnConfig = list;
@@ -221,7 +205,7 @@ export default {
       console.log(obj.row);
       this.$router.push({
         path: "/temanalysis",
-        query: { flag: false,mark:'edit', ...obj.row }
+        query: { flag: false, mark: "edit", ...obj.row }
       });
     },
     // 详情
@@ -229,12 +213,29 @@ export default {
       console.log(obj.row);
       this.$router.push({
         path: "/temanalysis",
-        query: { flag: true,mark:'detail', ...obj.row }
+        query: { flag: true, mark: "detail", ...obj.row }
       });
     },
     add() {
-      this.$router.push({ path: "/temanalysis", query: { mark:'add'} });
+      this.$router.push({ path: "/temanalysis", query: { mark: "add" } });
+    },
+    // 表格中的数据
+    getTableData(pageParams = { page: 1, rows: 10 }) {
+      (this.loading = true),
+        norbulingka
+          .queryDamageByPage(pageParams)
+          .then(res => {
+            // console.log(res);
+            this.$refs[this.tableData.ref].setData(res.list);
+            this.$refs[this.tableData.ref].setTotal(res.total);
+          })
+          .finally(res => {
+            this.loading = false;
+          });
     }
+  },
+  created() {
+    this.getTableData();
   },
   mounted() {
     this.tablePropList();

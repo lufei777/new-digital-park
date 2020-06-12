@@ -27,6 +27,7 @@
     <div class="panel">
       <!-- 表格部分 -->
       <z-table
+        :load='loading'
         :ref="tableData.ref"
         :options="tableData"
       >
@@ -52,6 +53,8 @@
 </template>
 
 <script>
+// 导入接口
+import norbulingka from "@/service/api/norbulingka";
 import commonFun from "@/utils/commonFun";
 // 字典配置
 import { Norbulingka } from "utils/dictionary";
@@ -61,6 +64,7 @@ const typeSelect = Norbulingka.typeSelect;
 export default {
   data() {
     return {
+      loading: false,
       model: {},
       formData: {
         ref: "formData",
@@ -74,7 +78,6 @@ export default {
             prop: "group",
             forms: [
               //类型选择
-
               {
                 type: "select",
                 prop: "collectionName",
@@ -112,24 +115,9 @@ export default {
         ref: "tabel",
         customTop: true,
         customTopPosition: "right",
-        data: [
-          /**
-             *      
-            { label:'类型',prop:'type'},
-        { label:'录入时间',prop:'date'},
-             *   
-            */
-          // 模拟的假数据
-          {
-            type: "考古记录",
-            date: "2020-06-01"
-          }
-        ],
+        data: [ ],
         columnConfig: [],
         operation: {
-          prop: "operation",
-          label: "操作",
-          fixed: "right",
           width: 200
         },
         uiConfig: {
@@ -137,6 +125,12 @@ export default {
           selection: true,
           showIndex: {
             width: 200
+          },
+          //分页
+          pagination: {
+            handler: (pageSize, currentPage, table) => {
+              this.getTableData({ page: currentPage, rows: pageSize });
+            }
           }
         }
       }
@@ -193,7 +187,25 @@ export default {
     // 详情
     propertyDetail(obj) {
       console.log(obj.row);
+    },
+    // 表格中的数据
+    getTableData(pageParams = { page: 1, rows: 10 }) {
+      this.loading = true,
+        norbulingka
+          .queryUnionPollingByPage(pageParams)
+          .then(res => {
+            // console.log(res);
+            this.$refs[this.tableData.ref].setData(res.list);
+            this.$refs[this.tableData.ref].setTotal(res.total);
+          })
+          .finally(res => {
+            this.loading = false;
+          });
     }
+  },
+  created() {
+    // 页面初始化调取表格中的数据
+    this.getTableData();
   },
   mounted() {
     this.tablePropList();
