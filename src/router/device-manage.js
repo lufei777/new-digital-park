@@ -2,8 +2,8 @@ export default [{
   path: '/devicemanage',
   name: 'devicemanage',
   meta: { title: '设备管理' },
-  // component: () => import('@/pages/commonProject/coms/commonIndex'),=
-  component: () => import('@/pages/deviceManage'),
+  component: () => import('@/pages/commonProject/coms/commonIndex'),
+  // component: () => import('@/pages/deviceManage'),
   redirect: '/devicemanage/deviceinfo',
   children: [{
     path: 'deviceinfo',
