@@ -45,21 +45,21 @@
             <div class="dept-task-header flex-align-between">
               <div>{{taskStartTime}}年与{{taskEndTime}}年工单数量环比柱状图分析</div>
               <div class="dept-class">
-                 <el-date-picker
+                <el-date-picker
                   v-model="taskStartTime"
                   type="date"
                   placeholder="选择日期"
                   size="small"
-                  @change="handleStartTimeChange">
-                </el-date-picker>
+                  @change="handleStartTimeChange"
+                ></el-date-picker>
                 <span class="tag-style">至</span>
-                 <el-date-picker
+                <el-date-picker
                   v-model="taskEndTime"
                   type="date"
                   placeholder="选择日期"
                   size="small"
-                  @change="handleEndTimeChange">
-                </el-date-picker>
+                  @change="handleEndTimeChange"
+                ></el-date-picker>
               </div>
             </div>
             <div class="pie-charts analysis-pie-charts" ref="MoManalysisCharts"></div>
@@ -135,6 +135,20 @@
       <div>
         <div class="tip frist-tip flex-align">
           <span class="icon"></span>
+          <span>当日现场工单</span>
+        </div>
+        <div class="task-overview-table officeLocation-table panel">
+          <div class="flex-align-between table-tip-box">
+            <div class="table-tip">当日现场工单</div>
+          </div>
+          <z-table :ref="officeLocationTable.ref" :options="officeLocationTable">
+          </z-table>
+        </div>
+      </div>
+      <!-- 工单排名 -->
+      <div>
+        <div class="tip frist-tip flex-align">
+          <span class="icon"></span>
           <span>工单排名</span>
         </div>
         <div class="task-overview-table panel">
@@ -143,9 +157,6 @@
             <el-button type="primary" @click="onClickExportBtn">导出表格</el-button>
           </div>
           <z-table :ref="tableData.ref" :options="tableData">
-            <!-- <template slot="operation" slot-scope="obj">
-              <el-button type="text" @click="editRow(obj)">详情</el-button>
-            </template>-->
           </z-table>
         </div>
       </div>
@@ -199,6 +210,29 @@ export default {
         }
         // btnConfig: {}
       },
+      officeLocationTable: {
+        ref: "officeLocationTable",
+        // operation: {
+        //   width: 150
+        // },
+        data: [],
+        columnConfig: [],
+        uiConfig: {
+          height: "auto", //"", //高度
+          selection: false, //是否多选
+          searchable: false,
+          showIndex: true,
+          pagination: {
+            //是否分页，分页是否自定义
+            layout: "total,->, prev, pager, next, jumper",
+            pageSizes: [10, 20, 50],
+            handler(pageSize, currentPage, table) {
+              _this.handleCurrentChange(currentPage);
+            }
+          }
+        }
+        // btnConfig: {}
+      },
       todayFinish: "",
       allTask: "0",
       completeTask: "0",
@@ -211,8 +245,10 @@ export default {
       deptSelectName: "",
       taskTypeData: [],
       taskNumRankData: [],
-      taskStartTime:moment().startOf('year').format('YYYY-MM-DD'),
-      taskEndTime:moment().format('YYYY-MM-DD')
+      taskStartTime: moment()
+        .startOf("year")
+        .format("YYYY-MM-DD"),
+      taskEndTime: moment().format("YYYY-MM-DD")
     };
   },
   computed: {
@@ -235,7 +271,7 @@ export default {
         { label: "未完成", prop: "unFinishedTaskNum" },
         { label: "超时", prop: "overtimeTaskNum" },
         { label: "补录", prop: "supplementTaskNum" },
-        { label: "现场", prop: "locationTaskNum" },
+        { label: "现场", prop: "locationTaskNum" }
       ];
       this.tableData.columnConfig = labelList;
       let res = await TaskManageApi.getPersonalTaskRanking();
@@ -243,9 +279,86 @@ export default {
         this.tableData.data = res;
       }
     },
+    async officeLocationList() {
+      let labelList = [
+        { label: "工单编号", prop: "taskNumber" },
+        { label: "工单名称", prop: "taskName" },
+        { label: "工单类型", prop: "type" },
+        { label: "工单描述", prop: "description" },
+        { label: "创建时间", prop: "beginTime" },
+        { label: "预计结束时间", prop: "endTime" },
+        { label: "优先级", prop: "urgent" },
+        { label: "状态", prop: "taskStatus" },
+        { label: "创建人", prop: "founderName" },
+        { label: "处理人", prop: "username" },
+        { label: "地点", prop: "officeLocation" },
+        { label: "补录", prop: "isSupplementText" },
+        { label: "设备点位", prop: "caption" }
+      ];
+      this.officeLocationTable.columnConfig = labelList;
+      let res = await TaskManageApi.taskList({
+        pageNum: this.currentPage,
+        pageSize: 10,
+        type: 1,
+        ugrent: 1,
+        status: 0,
+        // beginTime: "2020-06",
+        beginTime: moment().format("YYYY-MM-DD"),
+        taskType: 2
+      });
+      if (res && res.list) {
+        res.list.map((item, ind) => {
+          switch (item.status) {
+            case "1":
+              item.taskStatus = "待派";
+              break;
+            case "2":
+              item.taskStatus = "已派";
+              break;
+            case "3":
+              item.taskStatus = "处理中";
+              break;
+            case "4":
+              item.taskStatus = "已完成";
+              break;
+            default:
+              item.taskStatus = "";
+              break;
+          }
+          item.urgent =
+            item.urgent == "1"
+              ? "正常"
+              : item.urgent == "2"
+              ? "重要"
+              : item.urgent == "3"
+              ? "紧急"
+              : "";
+
+          item.officeLocation =
+            item.officeLocation == 0
+              ? "公司"
+              : item.officeLocation == 1
+              ? "现场"
+              : "";
+
+          item.isSupplementText =
+            item.isSupplement == "1"
+              ? "正常"
+              : item.isSupplement == "0"
+              ? "补录"
+              : "正常";
+        });
+
+        this.officeLocationTable.data = res.list;
+        this.officeLocationTable.uiConfig.pagination.total = res.total;
+      } else {
+        this.officeLocationTable.data = [];
+        this.officeLocationTable.uiConfig.pagination.total = res.total;
+      }
+    },
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.taskList();
+      this.officeLocationList();
     },
     editRow(val) {
       this.$router.push({
@@ -413,19 +526,19 @@ export default {
       let res = await TaskManageApi.getTaskNumRanking();
       this.taskNumRankData = res;
     },
-    handleStartTimeChange(value){
-      this.taskStartTime = moment(value).format('YYYY-MM-DD')
-       this.createCharts()
+    handleStartTimeChange(value) {
+      this.taskStartTime = moment(value).format("YYYY-MM-DD");
+      this.createCharts();
     },
-    handleEndTimeChange(value){
-      this.taskEndTime = moment(value).format('YYYY-MM-DD')
-      this.createCharts()
+    handleEndTimeChange(value) {
+      this.taskEndTime = moment(value).format("YYYY-MM-DD");
+      this.createCharts();
     },
     async createCharts() {
-       let res = await TaskManageApi.getTaskLinkRatio({
-         startTime:this.taskStartTime,
-         endTime:this.taskEndTime
-       });
+      let res = await TaskManageApi.getTaskLinkRatio({
+        startTime: this.taskStartTime,
+        endTime: this.taskEndTime
+      });
       let resData = res.values;
       let myChart = this.$echarts.init(this.$refs.MoManalysisCharts);
       let xAxis = resData.map(item => (item.date ? item.date : ""));
@@ -567,6 +680,7 @@ export default {
       this.fixTree();
     });
     this.taskList();
+    this.officeLocationList();
     this.homeTaskCount();
     await this.getTaskTypeStatistics();
     await this.getDepartmentTree();
@@ -682,12 +796,12 @@ export default {
           //   margin-left: 10px;
           //   width: 180px;
           // }
-           .tag-style{
-              font-size:14px;
-              margin:0 5px;
-            }
-          .el-date-editor{
-            width:150px;
+          .tag-style {
+            font-size: 14px;
+            margin: 0 5px;
+          }
+          .el-date-editor {
+            width: 150px;
           }
         }
       }
@@ -707,20 +821,20 @@ export default {
           width: 100%;
           margin-top: 20px;
         }
-	  }
-	  .task-rank-content {
-		  width: 32%;
-		  height: 460px !important;
-		  padding-left: 6%;
-		  .task-rank-title {
-			  height: 60px;
-			  line-height: 60px;
-			  font-weight: bold;
-			  font-size: 18px;
-		  }
-	  }
+      }
+      .task-rank-content {
+        width: 32%;
+        height: 460px !important;
+        padding-left: 6%;
+        .task-rank-title {
+          height: 60px;
+          line-height: 60px;
+          font-weight: bold;
+          font-size: 18px;
+        }
+      }
       .task-rank {
-		height: 80%;
+        height: 80%;
         width: 100%;
         display: flex;
         flex-direction: column;
@@ -793,6 +907,9 @@ export default {
     .table-tip-box {
       margin-bottom: 20px;
     }
+  }
+  .officeLocation-table {
+     margin-bottom: 20px!important;
   }
 }
 </style>

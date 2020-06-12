@@ -4,7 +4,7 @@
       <Tree :tree-list="taskData" :tree-config="taskTreeConfig"></Tree>
     </div>
     <div class="right-content panel-container">
-      <CommonSelect @showSelectParams="updateSelectParams" :radiusShadowShow="true" />
+      <CommonSelect @showSelectParams="updateSelectParams" :taskTypes="taskTypesList" />
       <el-tabs type="border-card" v-model="taskActiveName" @tab-click="handleClick" class="panel">
         <el-tab-pane
           v-for="(item,index) in tabTypeList"
@@ -88,7 +88,15 @@ export default {
       },
       deleteRowShow: true,
       deviceId: "",
-      commonParams: {}
+      commonParams: {},
+      taskTypesList: [
+        { label: "全部", value: "5", status: "0" },
+        { label: "待派", value: "0", status: "1" },
+        { label: "已派", value: "3", status: "2" },
+        { label: "处理中", value: "2", status: "3" },
+        { label: "已完成", value: "0", status: "4" },
+        { label: "已挂起", value: "0", status: "5" }
+      ]
     };
   },
   computed: {
@@ -156,7 +164,7 @@ export default {
       let labelList = [
         { label: "工单编号", prop: "taskNumber" },
         { label: "工单名称", prop: "taskName" },
-        { label: "工单类型", prop: "typeText" },
+        { label: "工单类型", prop: "type" },
         { label: "工单描述", prop: "description" },
         { label: "创建时间", prop: "beginTime" },
         { label: "预计结束时间", prop: "endTime" },
@@ -178,6 +186,7 @@ export default {
         }
       };
       let res = await TaskManageApi.taskList(params);
+      this.taskTypesList = res.taskTypes;
       if (res && res.list) {
         res.list.map((item, ind) => {
           this.deviceId = item.deviceId;
@@ -191,6 +200,9 @@ export default {
                 break;
               case "4":
                 item.taskStatus = "已完成";
+                break;
+              case "5":
+                item.taskStatus = "挂单中";
                 break;
               default:
                 item.taskStatus = "";
@@ -209,6 +221,9 @@ export default {
                 break;
               case "4":
                 item.taskStatus = "已完成";
+                break;
+              case "5":
+                item.taskStatus = "挂单中";
                 break;
               default:
                 item.taskStatus = "";
@@ -337,6 +352,17 @@ export default {
             },
             id: val.scopeRow.row.id,
             acceptStatus: val.scopeRow.row.status
+          }
+        });
+      } else {
+        this.$router.push({
+          name: "NewTask",
+          query: {
+            extraOptions: {
+              disabled: true
+            },
+            id: val.scopeRow.row.id,
+            allTaskStatus: "000"
           }
         });
       }

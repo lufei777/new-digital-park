@@ -7,7 +7,7 @@
       <Tree :tree-list="taskData" :tree-config="taskTreeConfig"></Tree>
     </div>
     <div class="right-content panel-container">
-      <CommonSelect />
+      <CommonSelect :taskTypes="taskTypesList"/>
       <div class="already-task-table panel">
         <div class="operator-box flex-row-reverse">
             <el-button type="primary">刷新</el-button>
@@ -85,7 +85,15 @@ export default {
           ]
         }
       },
-      todayFinish: ""
+      todayFinish: "",
+      taskTypesList: [
+        { label: "全部", value: "5", status: "0" },
+        { label: "待派", value: "0", status: "1" },
+        { label: "已派", value: "3", status: "2" },
+        { label: "处理中", value: "2", status: "3" },
+        { label: "已完成", value: "0", status: "4" },
+        { label: "已挂起", value: "0", status: "5" }
+      ]
     };
   },
   computed: {
