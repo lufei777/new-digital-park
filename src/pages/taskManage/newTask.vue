@@ -57,12 +57,14 @@
                 v-show="taskOperationShow"
                 @click="submit(obj)"
               >{{taskOperation}}</el-button>
+               <el-button type="primary" @click="suspendTask" v-if="suspendShow">{{suspendStatus}}</el-button>
               <el-button
                 :type="anotherButton"
                 @click="anotherSubmit(obj)"
                 v-show="anotherTaskOperationShow"
               >{{anotherTaskOperation}}</el-button>
               <el-button type="plain" @click="addTempTask" v-show="saveButtonShow">保存</el-button>
+
               <el-button @click="back(obj)" v-show="taskBackShow">返回</el-button>
             </div>
           </template>
@@ -325,7 +327,10 @@ export default {
       activities: [],
       circulationUrl: "",
       srcList: [],
-      saveButtonShow: false
+      saveButtonShow: false,
+      suspendStatus: "挂起",
+      suspendShow: false
+
     };
   },
   computed: {
@@ -344,7 +349,7 @@ export default {
         taskPicList: this.model.taskPicList,
         delFlag: 1,
         officeLocation: this.model.officeLocation,
-        deviceId:this.model.devicePoint
+        deviceId: this.model.devicePoint
       };
     },
     taskId() {
@@ -375,14 +380,25 @@ export default {
       this.taskOperationShow = false;
       // this.anotherTaskOperation = "关闭";
       this.anotherButton = "primary";
+    }  else if (this.taskId.status == 5) {
+      this.taskOperationShow = false;
+      // this.anotherTaskOperation = "关闭";
+      this.anotherButton = "primary";
     } else if (this.taskId.acceptStatus == 2) {
       this.taskTypeStatus = 1;
       this.taskOperation = "接单";
       this.anotherTaskOperation = "退单";
     } else if (this.taskId.acceptStatus == 3) {
+      this.suspendShow = true
       this.taskTypeStatus = 3;
       this.taskOperation = "转派";
       this.anotherTaskOperation = "完成";
+    } else if (this.taskId.acceptStatus == 5) {
+      this.suspendShow = true
+      this.taskTypeStatus = 3;
+      this.suspendStatus = "解除挂起";
+      this.anotherTaskOperationShow = false;
+      this.taskOperationShow = false;
     } else if (this.taskId.acceptStatus == 4 || this.taskId.status == 4) {
       // this.taskOperation = "完成";
       this.anotherTaskOperationShow = false;
@@ -436,6 +452,33 @@ export default {
             return false;
           }
         });
+      });
+    },
+    async cancelHold() {
+      let res = await TaskManageApi.getCancelHold({
+        id: this.taskId.id
+      });
+      if (res) {
+        this.$message({
+          type: "success",
+          message: res
+        });
+        this.$router.push("/aboutMe");
+      }
+    },
+    suspendTask() {
+      
+      this.$confirm(`确定${this.suspendStatus}工单吗？`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        if (this.suspendStatus == "挂起") {
+          this.taskTypeStatus = 5;
+          this.dealTask();
+        } else {
+          this.cancelHold();
+        }
       });
     },
     async save() {
@@ -538,9 +581,9 @@ export default {
             trigger: "change"
           }
         });
-        this.$refs[this.newTaskForm.ref].setColumnByProp("ordererName", {
-          display: false
-        });
+        // this.$refs[this.newTaskForm.ref].setColumnByProp("ordererName", {
+        //   display: false
+        // });
         this.$refs[this.newTaskForm.ref].setColumnByProp("reason", {
           display: true,
           rules: {
@@ -688,11 +731,7 @@ export default {
       this.designatorName = obj.name;
     },
     back() {
-      if (this.taskId.allTaskStatus == "000") {
-        this.$router.push("taskOverview");
-      } else {
-        this.$router.push("aboutMe");
-      }
+      this.$router.push("aboutMe");
     },
     async detailTask() {
       this.$refs[this.newTaskForm.ref].setColumnByProp("department", {
@@ -701,9 +740,9 @@ export default {
       this.$refs[this.newTaskForm.ref].setColumnByProp("designatorId", {
         display: false
       });
-      this.$refs[this.newTaskForm.ref].setColumnByProp("ordererName", {
-        display: true
-      });
+      // this.$refs[this.newTaskForm.ref].setColumnByProp("ordererName", {
+      //   display: true
+      // });
       this.$refs[this.newTaskForm.ref].setColumnByProp("taskPicList", {
         display: false
       });
@@ -757,9 +796,9 @@ export default {
           }
         });
 
-        this.$refs[this.newTaskForm.ref].setColumnByProp("ordererName", {
-          display: false
-        });
+        // this.$refs[this.newTaskForm.ref].setColumnByProp("ordererName", {
+        //   display: false
+        // });
         return;
       }
 

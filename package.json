@@ -23,7 +23,8 @@
     "vconsole": "^3.3.4",
     "vue": "^2.6.11",
     "vue-router": "^3.0.7",
-    "vuedraggable": "^2.23.2"
+    "vuedraggable": "^2.23.2",
+    "x2js": "^3.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
