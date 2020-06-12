@@ -85,7 +85,7 @@ export default {
             type: "select",
             label: "设备类型:",
             placeholder: " ",
-            prop: "deviceCatalogName",
+            prop: "parentCatalogName",
             span: 10,
             offset: 1,
             dicData:deviceType
@@ -105,7 +105,7 @@ export default {
             type: "input",
             label: "点位类型",
             placeholder: " ",
-            prop: "monitorCatalogName",
+            prop: "catalogName",
             span: 10,
             offset: 1
           },
@@ -114,7 +114,7 @@ export default {
             type: "input",
             label: "报警规则",
             placeholder: " ",
-            prop: "singlewarn",
+            prop: "singleWarnCond",
             span: 10,
             offset: 1
             // dicData:
@@ -134,7 +134,7 @@ export default {
                   label: "rankName",
                   value: "rankId"
                 }
-              },
+          },
           // 通知方式
           {
             type: "select",
