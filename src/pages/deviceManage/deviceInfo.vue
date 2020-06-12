@@ -1109,7 +1109,7 @@ export default {
       arr.push(node[idKey]);
       if (node[childrenKey] && Object.prototype.toString.call(node[childrenKey]) === '[object Array]') {
         node[childrenKey].forEach((item) => {
-          this.getIdsByNode(arr, item, idKey);
+          this.getIdsByNode(arr, item, childrenKey, idKey);
         });
       }
     }
