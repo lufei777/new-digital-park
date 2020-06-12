@@ -36,7 +36,7 @@
         <!--</transition>-->
       </draggable>
     </div>
-    <!--<AlertAlarm />-->
+    <AlertAlarm />
   </div>
 </template>
 
@@ -67,7 +67,7 @@
         headName: '',
         moduleList:[],// CommonFun.largeScreenDefaultData.modules,
         animationFlag: false,
-        outDisable: false,
+        outDisable: true,
         innerDisable: true,
         centerIndex: 0,
         styleObj: {
@@ -143,7 +143,7 @@
           height: document.body.offsetHeight,
           widthPercent: this.widthPercent,
           heightPercent: this.heightPercent,
-          // preview:isYDScreen()?'ydCity':''
+          preview:isYDScreen()?'ydCity':''
         })
         res.modules.map((item)=>{
           item.bgStatus='normal'
@@ -186,9 +186,11 @@
           "margin-top": marginTop + "px"
         }
 
+        let columnEnd = (isNorbulingkaScreen() || xLen >=this.moduleMaxWidth)?this.centerIndex + 3:
+                         this.centerIndex + 4
         this.styleObj.centerStyle = {
           "grid-column-start": this.centerIndex + 1,
-          "grid-column-end":document.body.offsetWidth<2000?this.centerIndex+3:xLen < this.moduleMaxWidth ? this.centerIndex + 4 : this.centerIndex + 3,
+          "grid-column-end":columnEnd,
           "grid-row-start": 1,
           "grid-row-end":xLen < this.moduleMaxWidth ? 4 : 3,
           "width":res.xModule.mainNum*res.xModule.length,

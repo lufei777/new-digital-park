@@ -16,6 +16,7 @@
   background:linear-gradient(0deg,rgba(1,234,254,1) 0%, rgba(255,255,255,1) 100%);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
+  text-align: left;
 }
 .large-size-screen-normal .module-item-top-name{
   margin-top: 10px;

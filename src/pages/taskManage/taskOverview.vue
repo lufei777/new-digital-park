@@ -390,7 +390,7 @@ export default {
       let color = ["#4DA1FF", "#83D587", "#FFCE33", "#FF7B8C"];
       let titleText = "工单类型统计";
       let seriesData = [];
-      res.values.map(item => {
+      res.values && res.values.map(item => {
         var itemObj = {
           value: item.taskNum,
           name: item.name

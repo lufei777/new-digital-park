@@ -77,6 +77,9 @@
               handler: function (index) {
                 return  _this.setIndex(index);
               }
+            },
+            pagination:{
+              pageSize:5
             }
           },
         },
@@ -98,12 +101,14 @@
       },
       setTableData() {
         let params = {
-          start: moment(this.startTime).format('YYYY-MM-DD HH:mm:SS'),
-          end: moment(this.endTime).format('YYYY-MM-DD HH:mm:SS')
+          start:this.startTime && moment(this.startTime).format('YYYY-MM-DD HH:mm:SS') || '',
+          end: this.endTime && moment(this.endTime).format('YYYY-MM-DD HH:mm:SS') || ''
         }
         this.tableConfig.serverMode.data = {...pageInfo, ...params}
       },
       onClickSearchBtn() {
+        this.$refs[this.tableConfig.ref].setCurrentPage(1)
+        this.setTableData()
         this.$refs[this.tableConfig.ref].refreshTable()
       },
       setIndex(index){

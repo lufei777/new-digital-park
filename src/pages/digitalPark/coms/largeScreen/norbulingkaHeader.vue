@@ -56,7 +56,7 @@
       },
       setCurDate(){
         this.timer = setInterval(() => {
-          this.curDate =moment().format('YYYY年MM月DD日 hh:mm:ss'); // 修改数据date
+          this.curDate =moment().format('YYYY年MM月DD日 HH:mm:ss'); // 修改数据date
         }, 1000)
       }
     },

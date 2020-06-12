@@ -32,9 +32,9 @@
     </div>
     <TreeModal :tree-modal-config="treeModalConfig"/>
     <div class="panel">
-      <div class="operator-btn-box flex-row-reverse">
-        <el-button type="primary" @click="onClickMultiDealBtn">批量处理</el-button>
-      </div>
+      <!--<div class="operator-btn-box flex-row-reverse">-->
+        <!--<el-button type="primary" @click="onClickMultiDealBtn">批量处理</el-button>-->
+      <!--</div>-->
       <z-table class="custom-table"
                :ref="tableConfig.ref" :options="tableConfig"
                @row-update="rowUpdate"
@@ -126,7 +126,7 @@
           }],
           uiConfig: {
             height: "auto",
-            selection: true,
+            // selection: true,
             showIndex: {
               handler: function (index) {
                 return _this.setIndex(index);

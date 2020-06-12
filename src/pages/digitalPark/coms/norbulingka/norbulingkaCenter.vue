@@ -47,7 +47,7 @@ export default {
         this.fixedProList=res
       },
       onClickItemFixPro(item,index){
-        this.activeIndex=index
+        // this.activeIndex=index
         // CommonFun.loadPage(item)
       }
     },
