@@ -97,6 +97,10 @@ class taskManageApi {
     @get
     getTaskLinkRatio() { }
 
+    @url('/oaApi/task/cancelHold')
+    @post
+    getCancelHold() { }
+
 }
 
 export default new taskManageApi()

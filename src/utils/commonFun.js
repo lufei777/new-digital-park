@@ -2046,7 +2046,6 @@ class commonFun {
     window.closeVideoWin && window.closeVideoWin()
     window.closeClientPage && window.closeClientPage()
 
-
     //激活菜单
     store.commit("digitalPark/activeMenuIndex", this.setMenuIndex(item))
     if (item.routeAddress) {

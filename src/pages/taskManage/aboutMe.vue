@@ -1,13 +1,11 @@
 <template>
   <div class="about-me panel-container">
-    <div
-      :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
-      class="energy-tree-box radius-shadow"
-    >
+    <div class="common-tree-box radius-shadow">
       <Tree :tree-list="taskData" :tree-config="taskTreeConfig"></Tree>
     </div>
-    <div class="right-content">
-      <el-tabs type="border-card" v-model="taskActiveName" @tab-click="handleClick">
+    <div class="right-content panel-container">
+      <CommonSelect @showSelectParams="updateSelectParams" :taskTypes="taskTypesList" />
+      <el-tabs type="border-card" v-model="taskActiveName" @tab-click="handleClick" class="panel">
         <el-tab-pane
           v-for="(item,index) in tabTypeList"
           :label="item.text"
@@ -23,7 +21,7 @@
               <template slot="operation" slot-scope="obj">
                 <el-button type="text" @click="editRow(obj)">详情</el-button>
                 <el-button type="text" @click="deleteRow(obj)" v-if="deleteRowShow">删除</el-button>
-                 <el-button type="text" @click="taskPosition(obj)">定位</el-button>
+                <el-button type="text" @click="taskPosition(obj)">定位</el-button>
                 <!-- window.parent.FindAssetLocation -->
               </template>
             </z-table>
@@ -89,7 +87,16 @@ export default {
         }
       },
       deleteRowShow: true,
-      deviceId:""
+      deviceId: "",
+      commonParams: {},
+      taskTypesList: [
+        { label: "全部", value: "5", status: "0" },
+        { label: "待派", value: "0", status: "1" },
+        { label: "已派", value: "3", status: "2" },
+        { label: "处理中", value: "2", status: "3" },
+        { label: "已完成", value: "0", status: "4" },
+        { label: "已挂起", value: "0", status: "5" }
+      ]
     };
   },
   computed: {
@@ -149,11 +156,15 @@ export default {
   },
   methods: {
     onClickTreeNodeCallBack() {},
+    updateSelectParams(params) {
+      this.commonParams = params;
+      this.taskList();
+    },
     async taskList() {
       let labelList = [
         { label: "工单编号", prop: "taskNumber" },
         { label: "工单名称", prop: "taskName" },
-        { label: "工单类型", prop: "typeText" },
+        { label: "工单类型", prop: "type" },
         { label: "工单描述", prop: "description" },
         { label: "创建时间", prop: "beginTime" },
         { label: "预计结束时间", prop: "endTime" },
@@ -166,14 +177,19 @@ export default {
         { label: "设备点位", prop: "caption" }
       ];
       this.tableData.columnConfig = labelList;
-      let res = await TaskManageApi.taskList({
-        pageNum: this.currentPage,
-        pageSize: 10,
-        type: this.taskType
-      });
+      let params = {
+        ...this.commonParams,
+        ...{
+          pageNum: this.currentPage,
+          pageSize: 10,
+          type: this.taskType
+        }
+      };
+      let res = await TaskManageApi.taskList(params);
+      this.taskTypesList = res.taskTypes;
       if (res && res.list) {
         res.list.map((item, ind) => {
-          this.deviceId = item.deviceId
+          this.deviceId = item.deviceId;
           if (this.taskActiveName == "third") {
             switch (item.status) {
               case "2":
@@ -184,6 +200,9 @@ export default {
                 break;
               case "4":
                 item.taskStatus = "已完成";
+                break;
+              case "5":
+                item.taskStatus = "挂单中";
                 break;
               default:
                 item.taskStatus = "";
@@ -202,6 +221,9 @@ export default {
                 break;
               case "4":
                 item.taskStatus = "已完成";
+                break;
+              case "5":
+                item.taskStatus = "挂单中";
                 break;
               default:
                 item.taskStatus = "";
@@ -295,14 +317,15 @@ export default {
       this.taskId = val.scopeRow.row.id;
       this.showDeleteTip();
     },
-    taskPosition(val){
-      console.log("val",val)
+    taskPosition(val) {
+      console.log("val", val);
       // window.parent.FindAssetLocation()
-      if(val.row.deviceId && type=="type") {
+      if (val.row.deviceId && type == "type") {
         //  window.FindAssetLocation && window.FindAssetLocation(val.row.deviceId +'')
-         window.parent.FindAssetLocation &&  window.parent.FindAssetLocation(val.row.deviceId+'')
+        window.FindAssetLocation?window.FindAssetLocation(val.row.deviceId + ""):
+        window.parent.FindAssetLocation(val.row.deviceId + "");
       } else {
-         this.$message({
+        this.$message({
           type: "warning",
           message: "没有可定位的设备!"
         });
@@ -331,6 +354,17 @@ export default {
             acceptStatus: val.scopeRow.row.status
           }
         });
+      } else {
+        this.$router.push({
+          name: "NewTask",
+          query: {
+            extraOptions: {
+              disabled: true
+            },
+            id: val.scopeRow.row.id,
+            allTaskStatus: "000"
+          }
+        });
       }
     },
     refresh() {
@@ -341,7 +375,7 @@ export default {
       this.$router.push("newTask");
     },
     fixTree() {
-      $(".energy-tree-box").css({
+      $(".common-tree-box").css({
         height: $(document).height() - 110 + "px"
       });
     }
@@ -370,8 +404,12 @@ export default {
 <style lang="less">
 .about-me {
   .el-tabs {
-    height: 100%;
+    // height: 100%;
     border: none;
+    margin-top: 20px;
+  }
+  .panel {
+    padding: 0;
   }
   .right-content {
     height: 100%;

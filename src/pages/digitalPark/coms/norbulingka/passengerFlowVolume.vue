@@ -1,6 +1,9 @@
 <template>
   <div class="passenger-flow-volume">
-    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
+    <div class="module-item-top-name flex-align">
+      <i class="module-item-top-icon"></i>
+      <span>{{moduleItem.moduleName}}</span>
+    </div>
     <div ref="myChart" class="my-chart"></div>
   </div>
 </template>
@@ -22,7 +25,7 @@
             tooltip: {
               trigger: 'axis',
               axisPointer: {
-                type: 'cross'
+                // type: 'cross'
               },
             },
             toolbox: {
@@ -54,7 +57,8 @@
             yAxis: {
               name:'人',
               nameTextStyle:{
-                color: this.moduleItem.type!=2?'#fff':''
+                color: this.moduleItem.type!=2?'#fff':'',
+                align:'right'
               },
               type: 'value',
               splitLine: {
@@ -74,12 +78,12 @@
             },
             series: [
               {
-                name: '报警',
+                name: '人数',
                 type: 'line',
                 smooth: true,
                 areaStyle: {},
-                data: [10, 28, 25, 26, 27, 30, 55, 50, 40, 39, 38,
-                  39, 40, 50, 60, 75, 80, 70, 60, 40, 10, 10, 5, 20],
+                data: [0, 0, 0, 0, 0, 0, 0,40, 90, 120, 150,
+                  146, 166, 170, 134, 98, 60, 54, 70, 40, 10,0,0 ,0],
                 itemStyle : {
                   normal : {
                     // color:'#00FF00',

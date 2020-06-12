@@ -4,7 +4,7 @@
       <span class="icon"></span>
       <span>能耗总览</span>
     </div>
-    <div class="overview-list flex-align-between">
+    <div class="overview-list">
       <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
@@ -28,7 +28,7 @@
           </p>
         </div>
       </div>
-      <div class="overview-item flex-align-between">
+      <div class="overview-item flex-align-between" v-if="!iszg">
         <div class="overview_box">
           <p class="numTitle">
             <span>总用能人数</span>
@@ -39,7 +39,7 @@
           </p>
         </div>
       </div>
-      <div class="overview-item flex-align-between">
+      <div class="overview-item flex-align-between"  v-if="!iszg">
         <div class="overview_box">
           <p class="numTitle">
             <span>人均用电</span>
@@ -50,7 +50,7 @@
           </p>
         </div>
       </div>
-      <div class="overview-item flex-align-between">
+      <div class="overview-item flex-align-between" v-if="!iszg">
         <div class="overview_box">
           <p class="numTitle">
             <span>人均用水</span>
@@ -747,6 +747,8 @@ export default {
     margin-top: 0px !important;
   }
   .overview-list {
+    display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
   }
   .overview-item {
@@ -755,6 +757,7 @@ export default {
     border-radius: 6px;
     color: @white;
     margin-bottom: 20px;
+    margin-right: 1.33%;
     .overview_box {
       margin-left: 20px;
       .numTitle span {
@@ -769,6 +772,10 @@ export default {
         margin-left: 10px;
       }
     }
+  }
+  .overview-item:nth-child(4),
+  .overview-item:nth-child(8){
+    margin-right: 0;
   }
   .overview-item:nth-child(1),
   .overview-item:nth-child(6) {

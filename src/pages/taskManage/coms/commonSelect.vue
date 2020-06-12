@@ -1,4 +1,5 @@
 <template>
+  <!-- :class="!radiusShadowShow?'radius-shadow':''"-->
   <div class="condition-select flex-align radius-shadow">
     <div class="item-group">
       <label>优先级：</label>
@@ -10,10 +11,10 @@
       <label>状态：</label>
       <el-select v-model="statusId" placeholder="请选择">
         <el-option
-          v-for="item in statusTypeList"
-          :key="item.id"
-          :label="item.name"
-          :value="item.id"
+          v-for="(item,index ) in statusTypeList"
+          :key="item.index"
+          :label="item.label"
+          :value="item.status"
         ></el-option>
       </el-select>
     </div>
@@ -21,6 +22,17 @@
       <label>时间类型：</label>
       <el-select v-model="curDateType" placeholder="请选择" @change="handleDateTypeChange">
         <el-option v-for="item in dateTypeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+      </el-select>
+    </div>
+    <div class="item-group">
+      <label>地点：</label>
+      <el-select v-model="officeLocation" placeholder="请选择" @change="handleLocationTypeChange">
+        <el-option
+          v-for="item in officeLocationList"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        ></el-option>
       </el-select>
     </div>
     <div class="item-group">
@@ -32,69 +44,77 @@
     <div style="flex-shrink: 0" class="flex item-group">
       <div>
         <label>创建时间：</label>
-        <el-date-picker v-model="startTime" :type="dateType" :clearable="false"></el-date-picker>
+        <el-date-picker
+          v-model="startTime"
+          :type="dateType"
+          @change="handleStartTimeChange"
+          :clearable="false"
+        ></el-date-picker>
       </div>
       <div v-show="showLastTime">
         <span class="tag-style">至</span>
-        <el-date-picker v-model="lastTime" :type="dateType" :clearable="false"></el-date-picker>
+        <el-date-picker
+          v-model="lastTime"
+          :type="dateType"
+          @change="handleLastTimeChange"
+          :clearable="false"
+        ></el-date-picker>
       </div>
     </div>
 
-    <el-button type="primary" class="sure-btn">确定</el-button>
+    <div class="operating-btn">
+      <el-button type="primary" class="sure-btn" @click="handleClickSureBtn">确定</el-button>
+      <el-button @click="onClickResetBtn">重置</el-button>
+    </div>
+
+    <!-- <el-button type="primary" @click="refresh">刷新</el-button>
+    <el-button type="primary" @click="addTask">新增</el-button>-->
   </div>
 </template>
 
 <script>
-let dateTypeList = [
-  {
-    name: "年",
-    id: 1
-  },
-  {
-    name: "月",
-    id: 2
-  },
-  {
-    name: "日",
-    id: 3
-  }
-];
-
 import { mapState } from "vuex";
 import moment from "moment";
 export default {
   name: "ConditionSelect",
   components: {},
-  props: [],
+  props: {
+    taskTypes: Array
+  },
   data() {
     return {
       levelId: 1,
-      statusId: 1,
+      statusId: "0",
       curDateType: 1,
       dateType: "month",
       radio: "0",
-      startTime: moment(
-        new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000 * 10)
-      ).format("YYYY-MM"),
+      startTime: moment(new Date()).format("YYYY-MM"),
       lastTime: "",
       showLastTime: false,
-      curEnergy: []
+      curEnergy: [],
+      officeLocation: 0,
+      statusTypeList: []
     };
+  },
+  watch: {
+    taskTypes(val) {
+      this.statusTypeList = val;
+    }
   },
   computed: {
     dateTypeList() {
       return [
         {
           name: "年",
-          id: 1
+          id: 0
         },
         {
           name: "月",
-          id: 2
+          id: 1
         },
         {
           name: "日",
-          id: 3
+          id: 2
         }
       ];
     },
@@ -114,23 +134,15 @@ export default {
         }
       ];
     },
-    statusTypeList() {
+    officeLocationList() {
       return [
         {
-          name: "待派",
+          name: "公司",
+          id: 0
+        },
+        {
+          name: "现场",
           id: 1
-        },
-        {
-          name: "待接",
-          id: 2
-        },
-        {
-          name: "处理中",
-          id: 3
-        },
-        {
-          name: "已完成",
-          id: 4
         }
       ];
     }
@@ -144,17 +156,54 @@ export default {
         this.lastTime = moment(new Date()).format("YYYY-MM");
       }
     },
-     timeFormat(time,value){
-        let formatType = this.dateType =='year'?'YYYY':this.dateType=='month'?'YYYY-MM':'YYYY-MM-DD'
-        this[time]=this[time]?moment(value).format(formatType):''
-      },
-     handleDateTypeChange(value){
-        this.dateType=value==1?'year':value==2?"month":'date'
-        this.timeFormat('startTime',this.startTime)
-        this.timeFormat('lastTime',this.lastTime)
-      },
+    timeFormat(time, value) {
+      let formatType =
+        this.dateType == "year"
+          ? "YYYY"
+          : this.dateType == "month"
+          ? "YYYY-MM"
+          : "YYYY-MM-DD";
+      this[time] = this[time] ? moment(value).format(formatType) : "";
+    },
+    handleStartTimeChange(value) {
+      this.timeFormat("startTime", value);
+    },
+    handleLastTimeChange(value) {
+      this.timeFormat("lastTime", value);
+    },
+    handleDateTypeChange(value) {
+      this.dateType = value == 0 ? "year" : value == 1 ? "month" : "date";
+      this.timeFormat("startTime", this.startTime);
+      this.timeFormat("lastTime", this.lastTime);
+    },
+    handleLocationTypeChange(val) {
+      this.officeLocation = val;
+    },
+    handleClickSureBtn() {
+      let params = {
+        ugrent: this.levelId,
+        status: this.statusId,
+        beginTime: this.startTime,
+        endTime: this.lastTime,
+        taskType: this.curDateType,
+        officeLocation: this.officeLocation
+      };
+      this.$emit("showSelectParams", params);
+    },
+    onClickResetBtn() {
+      let params = {};
+      this.levelId = 1;
+      this.statusId = "0";
+      this.startTime = moment(new Date()).format("YYYY-MM");
+      this.lastTime = "";
+      this.curDateType = 1;
+      this.officeLocation = 0;
+      this.$emit("showSelectParams", params);
+    }
   },
-  mounted() {}
+  mounted() {
+    this.statusTypeList = this.taskTypes;
+  }
 };
 </script>
 
@@ -167,16 +216,27 @@ export default {
     margin: 0 5px;
   }
   .sure-btn {
-    margin-left: 10px;
+    // margin-left: 10px;
   }
+  .item-group {
+    margin-right: 33px;
+  }
+  .operating-btn {
+    .el-button,
+    .el-button--primary,
+    .el-button--default {
+      width: 72px !important;
+    }
+  }
+
   .el-select {
-    width: 100px;
+    width: 95px;
   }
   .frist-radio {
     margin-right: 20px;
   }
   .el-date-editor.el-input {
-    width: 135px;
+    width: 133px;
   }
 }
 </style>

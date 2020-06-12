@@ -179,6 +179,9 @@
       .tip-icon {
         font-size: 18px;
       }
+      .park-logo {
+        font-size: 40px;
+      }
     }
   }
 </style>

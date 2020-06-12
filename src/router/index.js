@@ -28,68 +28,68 @@ import MessageManage from './message-manage'; 									// 信息发布
 import personalManage from './personal-manage'; 								// 人事管理
 import thirdParty from './third-party'; 												// 物业管理
 import RevenueExpendManage from './revenue-expend-manage'; 			// 收支管理
-import ExpoetData from './commonRouter/exportData'; 						// 导出数据
+import ExportData from './commonRouter/exportData'; 						// 导出数据
 import MonitoringAlarm from './warning-alarm'; 									// 预警报警
 import Norbulingka from './norbulingka'; 												// 罗布林卡
 import DeviceManage from './device-manage'; 										// 设备管理
 
 // 数字园区
 let DigitalRouters = flattenDeep([
-	vibeWeb,
-	DigitalParkRouter,
-	AssetManage,
-	EnergyRouter,
-	LeaseManage,
-	CleaningManage,
-	CostManage,
-	PurchaseManage,
-	StockManage,
-	taskManage,
-	visitorManage,
-	ParkingLotManage,
-	contractManage,
-	NewsManage,
-	MessageManage,
-	personalManage,
-	thirdParty,
-	RevenueExpendManage,
-	ExpoetData,
-	MonitoringAlarm,
-	Norbulingka,
-	DeviceManage
+  vibeWeb,
+  DigitalParkRouter,
+  AssetManage,
+  EnergyRouter,
+  LeaseManage,
+  CleaningManage,
+  CostManage,
+  PurchaseManage,
+  StockManage,
+  taskManage,
+  visitorManage,
+  ParkingLotManage,
+  contractManage,
+  NewsManage,
+  MessageManage,
+  personalManage,
+  thirdParty,
+  RevenueExpendManage,
+  ExportData,
+  MonitoringAlarm,
+  Norbulingka,
+  DeviceManage
 ]);
 
 Vue.use(Router);
 const router = new Router({
-	routes: DigitalRouters
+  routes: DigitalRouters
 });
 
 router.beforeEach((to, from, next) => {
-	const hasToken = getToken();
+  const hasToken = getToken();
 
-	if (hasToken) {
-		if (to.path === '/login') {
-			next({ path: '/' });
-		} else {
-			next();
-		}
-	} else {
-		if (to.meta.loginCheck === false) {
-			next();
-		} else {
-			next({ path: '/login' });
-		}
-	}
-	// if (to.path != '/vibe-web') {
-	//   store.commit('digitalPark/activeMenuIndex', to.path);
-	// }
-	//客户端关闭视频
-	window.closeVideoWin && window.closeVideoWin();
+  if (hasToken) {
+    if (to.path === '/login') {
+      next({ path: '/' });
+    } else {
+      next();
+    }
+  } else {
+    if (to.meta.loginCheck === false) {
+      next();
+    } else {
+      next({ path: '/login' });
+    }
+  }
+  // if (to.path != '/vibe-web') {
+  //   store.commit('digitalPark/activeMenuIndex', to.path);
+  // }
+  //客户端关闭视频
+  window.closeVideoWin && window.closeVideoWin();
 
-	//大屏
-	if (window.name === 'largeScreen') {
-		store.commit('digitalPark/menuList', JSON.parse(localStorage.menuList));
-		store.commit('digitalPark/activeMenuIndex', Cookies.get('activeMenuIndex'));
-	}
+  //大屏
+  if (window.name === 'largeScreen') {
+    store.commit('digitalPark/menuList', JSON.parse(localStorage.menuList));
+    store.commit('digitalPark/activeMenuIndex', Cookies.get('activeMenuIndex'));
+  }
 });
 export default router;

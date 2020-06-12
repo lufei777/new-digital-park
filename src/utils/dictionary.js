@@ -499,7 +499,8 @@ export const ProjectName = {
 // 根据项目显示不同的title
 export const Title = {
   [ProjectName.ZG]: '中钢大厦数字建筑运管平台',
-  [ProjectName.YDCity]: '伊甸城BIM运管平台'
+  [ProjectName.YDCity]: '伊甸城BIM运管平台',
+  [ProjectName.NORBULINGKA]: '罗布林卡世界文化遗产监测预警平台'
 }
 
 //任务概览任务类型

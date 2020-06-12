@@ -2,33 +2,52 @@ import elementResizeDetectorMaker from 'element-resize-detector'
 
 class chartUtils {
   //柱状图处理
-  handleBarChart(dom, data, resizeBox) {
+  handleBarChart(dom, data) {
     let {legendUi = {}, legendUi: {axisPointer: tooltipAxisPointer = {}} = {}} = data
-    let {xAxisUi = {}, xAxisUi:{axisLabel:xAxisLabel = {},axisLine:xAxisLine = {}} = {}} = data
-    let {textStyle:xLabelTextStyle = {}} = xAxisLabel
-    let {lineStyle:xLineStyle = {}} = xAxisLine
 
-    let {yAxisUi = {}, yAxisUi:{axisLabel:yAxisLabel = {},axisLine:yAxisLine = {}} = {}} = data
-    let {textStyle:yLabelTextStyle = {}} = yAxisLabel
-    let {lineStyle:yLineStyle = {}} = yAxisLine
-    // console.log("1132",xAxisUi,xAxisLabel,xLabelTextStyle)
+    let {xAxisUi = {}, xAxisUi: {axisLabel: xAxisLabel = {}, axisLine: xAxisLine = {}} = {}} = data
+    let {textStyle: xLabelTextStyle = {}} = xAxisLabel
+    let {lineStyle: xLineStyle = {}} = xAxisLine
+
+    let {
+      yAxisUi = {},
+      yAxisUi: {
+        axisLabel: yAxisLabel = {},
+        axisLine: yAxisLine = {},
+        splitLine: ySplitLine = {}
+      } = {}
+    } = data
+
+    let {textStyle: yLabelTextStyle = {}} = yAxisLabel
+    let {lineStyle: yLineStyle = {}} = yAxisLine
+    let {lineStyle: ySplitLineStyle = {}} = ySplitLine
+    // console.log("1132",ySplitLine)
 
     let yAxis
     if (!data.showSecondY) {  //是否隐藏第二个y轴，默认不传及隐藏
       yAxis = [{
         type: yAxisUi.type || 'value',
         name: data.yAxis,
-        data:data.yAxisData,
+        data: data.yAxisData,
+        min: data.yMin || '',
         axisTick: {
           show: false,
         },
         axisLine: {
-          show: true,
+          show: yAxisLine.show == false ? xAxisLine.show : true,  //是否显示y轴
           lineStyle: {
             color: yLineStyle.color || '#333',
             width: 1,
           }
-        }
+        },
+        splitLine: {
+          show: ySplitLine.show == false ? ySplitLine.show : true,
+          lineStyle: {
+            color: ySplitLineStyle.color || '#666',
+            opacity: ySplitLineStyle.opacity || 1,
+            width: ySplitLineStyle.width || 1
+          }
+        },
       }]
     } else {
       yAxis = [{
@@ -62,16 +81,17 @@ class chartUtils {
       calculable: true,
       color: data.color || ['#4094ff', '#013b4e', '#FAAD14', '#F5222D'],
       xAxis: [{
-        type: xAxisUi.type ||'category',
+        type: xAxisUi.type || 'category',
         data: data.xAxis,
         axisLabel: {
           show: xLabelTextStyle.show || true,
           textStyle: {
             color: xLabelTextStyle.color || '',
-          }
+          },
+          rotate:xAxisLabel.rotate || ''
         },
         axisLine: {
-          show: xLineStyle.show || true,  //这里的show用于设置是否显示x轴那一条线 默认为true
+          show: xAxisLine.show == false ? xAxisLine.show : true,  //是否显示x轴那一条线
           lineStyle: {  //lineStyle里面写x轴那一条线的样式
             color: xLineStyle.color || '#333',
             width: 1,    //轴线的粗细值为0的时候线隐藏
@@ -80,8 +100,8 @@ class chartUtils {
         axisTick: {
           show: false,  //是否显示网状线 默认为true
         },
-        splitLine:{
-          show:false
+        splitLine: {
+          show: false
         }
       }],
       yAxis: yAxis,
