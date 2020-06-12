@@ -1,6 +1,9 @@
 <template>
-  <div class="digital-park-login" @click="showErrTip=false">
-    <img src="../../../../static/image/digitalPark/logo.png" class="logo-img" alt />
+  <div class="digital-park-login" @click="showErrTip=false" :style="getBg">
+    <img src="../../../../static/image/digitalPark/logo.png"
+         class="logo-img"
+         v-if="!isLargeScreen"
+    />
     <div class="login-box flex-column flex-align" v-loading="loading">
       <span class="login-title">{{this.title}}</span>
       <div class="flex-item flex-align border-basic name-box">
@@ -23,9 +26,9 @@
           @keyup.enter.native="onClickLoginBtn"
         ></el-input>
       </div>
-      <div class="flex-item">
-        <el-checkbox v-model="checked">自动登录</el-checkbox>
-      </div>
+      <!--<div class="flex-item">-->
+        <!--<el-checkbox v-model="checked">自动登录</el-checkbox>-->
+      <!--</div>-->
       <el-button
         class="flex-item"
         :style="{ height:'60px','fontSize':'22px' }"
@@ -42,12 +45,9 @@
 </template>
 
 <script>
-import SystemManageApi from '@/service/api/systemManage'
-import { mapMutations } from 'vuex';
 import { setToken, setIsCZClient } from '@/utils/auth';
-import { getProjectTitle } from '@/utils/project';
-import { isYDScreen } from "../../../utils/project";
-
+import { getProjectTitle,getLargeScreenName,isNorbulingkaScreen } from '@/utils/project';
+import { Title } from'@/utils/dictionary'
 export default {
   name: 'DigitalParkLogin',
   components: {
@@ -60,6 +60,23 @@ export default {
       showErrTip: false,
       loading: false,
       checked: ''
+    }
+  },
+  computed: {
+    projectName() {
+      return window.__CZ_SYSTEM;
+    },
+    title() {
+      return getLargeScreenName()!=''?Title[getLargeScreenName()]:
+        (getProjectTitle() || '数字园区综合管理平台');
+    },
+    isLargeScreen(){
+      return getLargeScreenName()!=''
+    },
+    getBg(){
+      return isNorbulingkaScreen()?
+        {'background-image': 'url("../../../../static/image/digitalPark/nor_login_bg.png")'}:
+        {'background-image': 'url("../../../../static/image/digitalPark/login_bg.png")'}
     }
   },
   methods: {
@@ -89,7 +106,11 @@ export default {
       this.$store.dispatch('user/login', params).then(res => {
         Cookies.set('username', this.name)
         Cookies.set('moduleType', 2)
-        this.$router.push("/digitalPark/homePage")
+        if(this.isLargeScreen){
+          this.$router.push("/largeSizeScreen")
+        }else{
+          this.$router.push("/digitalPark/homePage")
+        }
         this.$store.dispatch('user/getUserInfo')
       }).catch(err => {
         this.errTip = '用户名或密码错误'
@@ -104,14 +125,6 @@ export default {
       })
     }
   },
-  computed: {
-    projectName() {
-      return window.__CZ_SYSTEM;
-    },
-    title() {
-      return getProjectTitle() || '数字园区综合管理平台';
-    }
-  },
   mounted() {
     window.CZClient = {
       setToken: (token, isCZClient = true) => {
@@ -119,7 +132,7 @@ export default {
         setIsCZClient(isCZClient);
         this.$store.dispatch('user/getUserInfo')
         // window.location.reload();
-        if(window.__CZ_LargeScreen!=''){
+        if(this.isLargeScreen){
           this.$router.push('/largeSizeScreen');
         }else{
           this.$router.push('/digitalPark/homePage');
@@ -134,7 +147,8 @@ export default {
 .digital-park-login {
   width: 100%;
   height: 100%;
-  background-image: url("../../../../static/image/digitalPark/login_bg.png");
+  /*background-image: url("../../../../static/image/digitalPark/login_bg.png");*/
+  /*background-image: url("../../../../static/image/digitalPark/nor_login_bg.png");*/
   background-repeat: no-repeat;
   background-size: 100% 100%;
   overflow: hidden;

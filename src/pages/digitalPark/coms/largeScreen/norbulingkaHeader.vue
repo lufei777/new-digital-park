@@ -1,15 +1,16 @@
 <template>
   <div class="norbulingka-header">
-    <div class="header-name">
-      <i class="iconfont iconyidianchengLOGO park-logo"></i>
+    <div class="header-name flex-align-center">
+      <img class="park-logo"
+           src="../../../../../static/image/digitalPark/nor_logo.png"/>
       <span>{{headName}}</span>
     </div>
     <div class="logout-box">
        <span class="cur-date">{{curDate}}</span>
-      <span class="news" @click="loadNews">
+      <span class="news hover-pointer" @click="loadNews">
         <i class="iconfont iconlingdang news-icon"></i>{{$t('homeHeader.news')}}({{alarmListCount}})
       </span>
-      <span class="logout" @click="onClickLogoutBtn">
+      <span class="logout hover-pointer" @click="onClickLogoutBtn">
         <i class="iconfont iconguanbi logout-icon"></i>退出
       </span>
     </div>
@@ -17,7 +18,7 @@
 </template>
 
 <script>
-  import {isZG} from '@/utils/project';
+  import { isZG } from '@/utils/project';
   import { IsCZClient } from '@/utils/auth';
   import CommonLargeHeader from './js/header'
   export default {
@@ -99,6 +100,7 @@
 
     .park-logo {
       font-size: 36px;
+      margin-right: 5px;
     }
 
     .logout-box {

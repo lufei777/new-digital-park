@@ -114,7 +114,7 @@
     methods: {
       getClass(item){
         // console.log(item)
-        let centerFlag= item.id==0 && item.moduleList
+        let centerFlag= item.moduleList.length && item.moduleList[0].chart==0
         return{
           'center-show':centerFlag,
           'out-drag-product':!centerFlag,
@@ -145,27 +145,18 @@
           heightPercent: this.heightPercent,
           // preview:isYDScreen()?'ydCity':''
         })
-        // let res = await DigitalParkApi.getModulesByType({
-        //   type:0,
-        //   menuId:1
-        // })
-        // res={
-        //   modules:res,
-        //   xModule:{
-        //     num:3,
-        //     length:422
-        //   },
-        //   yModule:{
-        //     num:3,
-        //     length:422
-        //   }
-        // }
-        console.log(res)
         res.modules.map((item)=>{
           item.bgStatus='normal'
         })
         this.moduleList = res.modules || []
-        this.centerIndex = res.modules.findIndex(item => item.id == 0 && item.moduleList)
+        res.modules.map((item,index)=>{
+          item.moduleList.map((child)=>{
+            if(child.chart==0){
+              this.centerIndex = index
+            }
+          })
+        })
+        // this.centerIndex = res.modules.findIndex(item => item.id == 0 && item.moduleList)
         this.drawPageStyle(res)
         this.$nextTick(()=> {
           // this.styleObj.centerSize = {
@@ -197,9 +188,11 @@
 
         this.styleObj.centerStyle = {
           "grid-column-start": this.centerIndex + 1,
-          "grid-column-end": xLen < this.moduleMaxWidth ? this.centerIndex + 4 : this.centerIndex + 3,
+          "grid-column-end":document.body.offsetWidth<2000?this.centerIndex+3:xLen < this.moduleMaxWidth ? this.centerIndex + 4 : this.centerIndex + 3,
           "grid-row-start": 1,
-          "grid-row-end": xLen < this.moduleMaxWidth ? 4 : 3,
+          "grid-row-end":xLen < this.moduleMaxWidth ? 4 : 3,
+          "width":res.xModule.mainNum*res.xModule.length,
+          "height":res.yModule.mainNum*res.yModule.length
           // visibility:isYDScreen()?"collapse":'unset'
         }
 
@@ -247,9 +240,9 @@
         // console.log("evt", evt, this.moduleList)
         $(".center-show").css({...this.styleObj.centerStyle, ...this.styleObj.centerSize})
         $(".large-size-screen-normal .out-drag-product").css(this.styleObj.dragStyle)
-        if(!this.fullStatus){  //不是在配置页
-          this.updateLargeScreenModule()
-        }
+        // if(!this.fullStatus){  //不是在配置页
+        //   this.updateLargeScreenModule()
+        // }
         // this.getLargeScreenModuleList()
       },
       onOutStart() {
@@ -303,15 +296,12 @@
         if(isYDScreen()){
           return;
         }
-        // debugger
         this.moduleList.map((item)=>{
           item.bgStatus='normal'
         })
         if(flag==1 && item.menuName!='功能模块入口'){
           item.bgStatus='hover'
         }
-
-        // flag==1?item.bgStatus='hover':'normal'
       },
       getModuleStyle(){
         if(isYDScreen()){

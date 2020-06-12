@@ -31,8 +31,8 @@ class DigitalParkApi {
   @get
   getLargeScreenModule(){}
 
-  @url("/oaApi/userModuleRel/modules/resolution")
-  @put
+  @url("/oaApi/modules/resolution")
+  @post
   updateLargeScreenModule(){}
 
 }
