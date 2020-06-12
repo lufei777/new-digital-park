@@ -27,6 +27,7 @@
     <div class="panel">
       <!-- 表单部分 -->
       <z-table
+        :load="loading"
         :ref="tableData.ref"
         :options="tableData"
       >
@@ -43,7 +44,7 @@
             <el-button
               @click="del(obj)"
               :disabled='!obj.selectedData.length'
-            >删除</el-button>
+            >批量删除</el-button>
           </div>
         </template>
         <template
@@ -75,9 +76,14 @@
 import { Norbulingka } from "utils/dictionary";
 // 工程分类
 const projectType = Norbulingka.projectType;
+// 导入接口
+import norbulingka from "@/service/api/norbulingka";
+
 export default {
   data() {
     return {
+      // 开启 懒加载
+      loading: false,
       model: {},
       formData: {
         ref: "formData",
@@ -130,34 +136,20 @@ export default {
         ref: "tabel",
         customTop: true,
         customTopPosition: "right",
-        data: [
-          /**
-             *      
-             { label: "工程名称", prop: "projectName" },
-            { label: "发掘次数", prop: "number" },
-            { label: "发掘面积", prop: "area" },
-            { label: "日期", prop: "data" }
-             *   
-            */
-          // 模拟的假数据
-          {
-            projectName: "test",
-            number: "12",
-            area: "101",
-            data: "2021-5-29 16:04:48.0"
-          }
-        ],
+        data: [],
         columnConfig: [],
         operation: {
-          prop: "operation",
-          label: "操作",
-          fixed: "right",
           width: 200
         },
         uiConfig: {
           height: "auto",
           selection: true,
-          showIndex: { width: 150 }
+          showIndex: { width: 150 },
+          pagination: {
+            handler: (pageSize, currentPage, table) => {
+              this.getTableData({ page: currentPage, rows: pageSize });
+            }
+          }
         }
       }
     };
@@ -215,7 +207,7 @@ export default {
       console.log(obj.row);
       this.$router.push({
         path: "/temarchaeological",
-        query: { flag: false,mark:'edit', ...obj.row }
+        query: { flag: false, mark: "edit", ...obj.row }
       });
     },
     // 详情
@@ -223,16 +215,34 @@ export default {
       console.log(obj.row);
       this.$router.push({
         path: "/temarchaeological",
-        query: { flag: true,mark:'detail', ...obj.row }
+        query: { flag: true, mark: "detail", ...obj.row }
       });
     },
     // 添加
     add() {
-      this.$router.push({ path: "/temarchaeological", query: { mark:'add' } });
+      this.$router.push({ path: "/temarchaeological", query: { mark: "add" } });
+    },
+    //表格数据==》考古发掘表格中的数据
+    getTableData(pageParams = { page: 1, rows: 10 }) {
+      // 考古发掘表格中的数据
+      norbulingka
+        .blurQueryArchaeology(pageParams)
+        .then(res => {
+          console.log(res);
+          this.loading = true;
+          this.$refs[this.tableData.ref].setData(res.list);
+          this.$refs[this.tableData.ref].setTotal(res.total);
+        })
+        .finally(res => {
+          this.loading = false;
+        });
     }
   },
   mounted() {
     this.tablePropList();
+  },
+  created() {
+    this.getTableData();
   }
 };
 </script>

@@ -48,42 +48,32 @@ export default {
   data() {
     let localStorageMenuData = {
       name: "罗布林卡二期",
-    //   routeAddress: "/norbulinka",
-      
-        
-          // name: "罗布林卡",
-          // level: 3,
-          // status: 1,
-          childNode:[
-              {
-                  name:'遗产要素',
-                  routeAddress:'/norbulinka',
-                  childNode:[]
-              },
-              {
-                  name:'项目工程',
-                  routeAddress:'/protectrecord',
-                  childNode:[]
-              },
-              {
-                  name:'日常巡查',
-                  routeAddress:'/routininspections',
-                  childNode:[]
-              },
-              {
-                  name:'实测录入',
-                  routeAddress:'/inputhome',
-                  childNode:[]
-              },
-              {
-                name:'检测报告',
-                routeAddress:'/heritageevaluation',
-                childNode:[]
-              },
-              
-
-          
-        
+      childNode: [
+        {
+          name: "遗产要素",
+          routeAddress: "/norbulinka",
+          childNode: []
+        },
+        {
+          name: "项目工程",
+          routeAddress: "/protectrecord",
+          childNode: []
+        },
+        {
+          name: "日常巡查",
+          routeAddress: "/routininspections",
+          childNode: []
+        },
+        {
+          name: "实测录入",
+          routeAddress: "/inputhome",
+          childNode: []
+        },
+        {
+          name: "检测报告",
+          routeAddress: "/heritageevaluation",
+          childNode: []
+        }
       ],
       firstMenuId: 0,
       secondMenuId: 0,

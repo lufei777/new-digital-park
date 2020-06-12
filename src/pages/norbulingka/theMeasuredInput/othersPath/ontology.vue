@@ -28,6 +28,7 @@
     <div class="panel">
       <!-- 表单部分 -->
       <z-table
+        :load='loadig'
         :ref="tableData.ref"
         :options="tableData"
       >
@@ -44,7 +45,7 @@
             <el-button
               @click="del(obj)"
               :disabled='!obj.selectedData.length'
-            >删除</el-button>
+            >批量删除</el-button>
           </div>
         </template>
         <template
@@ -80,10 +81,13 @@ const ontology = Norbulingka.ontology;
 const assessment = Norbulingka.assessment;
 // 遗产要素保存状态
 const saveStatues = Norbulingka.saveStatues;
+// 导入接口
+import  norbulingka   from '@/service/api/norbulingka'
 
 export default {
   data() {
     return {
+      loading:false,
       model: {},
       formData: {
         ref: "formData",
@@ -141,23 +145,7 @@ export default {
         ref: "tabel",
         customTop: true,
         customTopPosition: "right",
-        data: [
-          /**
-             *      
-             { label: "文物本体", prop: "parentId" },
-            { label: "评估状态", prop: "evaluation" },
-            { label: "保存状态", prop: "protectStatus" },
-            { label: "日期", prop: "data" },
-             *   
-            */
-          // 模拟的假数据
-          {
-            parentId: "002",
-            evaluation: "滕王阁序",
-            protectStatus: "关山难越",
-            data: "2021-5-29"
-          }
-        ],
+        data: [  ],
         columnConfig: [],
         operation: {
           prop: "operation",
@@ -168,7 +156,12 @@ export default {
         uiConfig: {
           height: "auto",
           selection: true,
-          showIndex: true
+          showIndex: true,
+          pagination:{
+            handler:(pageSize, currentPage, table) =>{
+              this.getTableData({page:currentPage,rows:pageSize})
+            }
+          }
         }
       }
     };
@@ -192,7 +185,7 @@ export default {
         { label: "文物本体", prop: "parentId" },
         { label: "评估状态", prop: "evaluation" },
         { label: "保存状态", prop: "protectStatus" },
-        { label: "日期", prop: "data" }
+        { label: "日期", prop: "date" }
       ];
       // 赋值给表格的配置项
       this.tableData.columnConfig = list;
@@ -234,7 +227,24 @@ export default {
     // 添加
     add() {
       this.$router.push({ path: "/temontolagy", query: { mark: "add" } });
+    },
+    // 表格中的数据
+    getTableData(pageParams = { page: 1, rows: 10 }) {
+      this.loading = true,
+        norbulingka
+          .queryBuildingByPage(pageParams)
+          .then(res => {
+            // console.log(res);
+            this.$refs[this.tableData.ref].setData(res.list);
+            this.$refs[this.tableData.ref].setTotal(res.total);
+          })
+          .finally(res => {
+            this.loading = false;
+          });
     }
+  },
+  created(){
+    this.getTableData()
   },
   mounted() {
     this.tablePropList();
