@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-park-home-page-new" >
+  <div class="dashboard-park-home-page-new">
     <Header v-if="!hideHeader"
             from-flag="1"
             :moduleType.sync="moduleType"
@@ -38,17 +38,17 @@
       </div>
 
       <div class="dashboard-center">
-        <!--<img v-if="pageFlag==2 && !isyd" src="../../../../static/image/digitalPark/unity_priview.png"-->
-             <!--class="unity_priview"-->
-             <!--alt="">-->
-        <!--<iframe v-if="pageFlag==1 && !isyd"-->
-                <!--src="../../../../static/clientModel/zgHomePage/index.html"-->
-                <!--frameborder="0"-->
-                <!--class="unity-frame"></iframe>-->
-        <!--<iframe v-if="isyd" src="../../../../static/clientModel/ydCityHomePage/index.html"-->
-                <!--frameborder="0"-->
-                <!--class="unity-frame"></iframe>-->
-        <AlertAlarm v-if="pageFlag==1"/>
+        <img v-if="pageFlag==2 && !isyd" src="../../../../static/image/digitalPark/unity_priview.png"
+        class="unity_priview"
+        alt="">
+        <iframe v-if="pageFlag==1 && !isyd"
+        src="../../../../static/clientModel/zgHomePage/index.html"
+        frameborder="0"
+        class="unity-frame"></iframe>
+        <iframe v-if="isyd" src="../../../../static/clientModel/ydCityHomePage/index.html"
+        frameborder="0"
+        class="unity-frame"></iframe>
+        <AlertAlarm v-if="pageFlag==1 && !iszg"/>
       </div>
       <div class="dashboard-right">
         <draggable :list="proModuleList2"
@@ -118,7 +118,7 @@
   import CommonFun from '../../../utils/commonFun'
   import Header from '../coms/header'
   import AlertAlarm from '../coms/alarm/alertAlarm'
-  import {isYD} from "@/utils/project";
+  import {isYD, isZG} from "@/utils/project";
 
   export default {
     name: 'DashBoardHomePageNew',
@@ -161,6 +161,9 @@
       },
       isyd() {
         return isYD()
+      },
+      iszg() {
+        return isZG()
       }
     },
     watch: {
@@ -172,12 +175,12 @@
           this.headName = menuTree[0].name
         }
       },
-      fullStatus(){
+      fullStatus() {
         let dom = $(".item-drag-product,.fixed-prod-module")
-        console.log("111",$(".item-drag-product").length)
-        if(this.fullStatus=='full'){
+        console.log("111", $(".item-drag-product").length)
+        if (this.fullStatus == 'full') {
           dom.removeClass('smallFontSize')
-        }else if(this.fullStatus=='noFull'){
+        } else if (this.fullStatus == 'noFull') {
           dom.addClass('smallFontSize')
         }
       }
@@ -192,8 +195,8 @@
         this.proModuleList1 = res.slice(0, 3)
         this.proModuleList2 = res.slice(3)
         this.loading = false
-        this.$nextTick(()=>{
-          if(this.fullStatus=='noFull') {
+        this.$nextTick(() => {
+          if (this.fullStatus == 'noFull') {
             let dom = $(".item-drag-product,.fixed-prod-module")
             dom.addClass('smallFontSize')
           }
@@ -533,16 +536,19 @@
       .news-box, .digital-title, .dashboard-nav-operator {
         flex: 1;
       }
+
       .digital-nav-operator {
         font-size: 14px;
 
-        .nav-right-item{
+        .nav-right-item {
           /*width:230px;*/
           text-align: right;
-          span{
-            width:120px;
+
+          span {
+            width: 120px;
           }
         }
+
         .nav-right-item .el-input__inner {
           // width:150px;
           font-size: 14px;
@@ -553,15 +559,17 @@
           width: 30px;
           height: 30px;
         }
-        .nav-right-item .el-select{
-          width:120px;
+
+        .nav-right-item .el-select {
+          width: 120px;
         }
 
         .nav-right-item .el-input__suffix {
-          width:30px;
+          width: 30px;
           right: 10px;
-          .el-input__suffix-inner{
-            width:100%;
+
+          .el-input__suffix-inner {
+            width: 100%;
           }
         }
 
@@ -597,7 +605,7 @@
       padding: 10px 0;
       flex-shrink: 0;
       float: left;
-      margin:15px 1% 1%;
+      margin: 15px 1% 1%;
       background-repeat: no-repeat;
       background-size: 100% 100%;
       overflow: hidden;
@@ -663,7 +671,8 @@
         height: 10px;
       }
     }
-    .smallFontSize{
+
+    .smallFontSize {
       font-size: 12px;
     }
   }

@@ -222,7 +222,6 @@
         } else if (this.selectParams.selectType == 3) {
           xAxis = res[0].map((item) => item.time.slice(5, 16))
         }
-        console.log("111111111111", xAxis)
         let yAxis = res[0] && res[0][0] && res[0][0].unit
         let series = []
         let tmp
@@ -292,14 +291,8 @@
       },
       initTbhbChart(res) {
         this.myChart = this.$echarts.init(this.$refs.myChart);
-        let xAxis
-        if (this.selectParams.selectType == 3 && this.selectParams.redioType == 0) {
-          xAxis = res.value.map((item) => item.date && item.date.slice(0, 16) || '')
-        } else if (this.selectParams.selectType == 2 && this.selectParams.redioType == 1) {
-          xAxis = res.value.map((item) => item.date && item.date.slice(0, 7) || '')
-        } else {
-          xAxis = res.value.map((item) => item.date && item.date.slice(0, 10) || '')
-        }
+        //同比环比时间类型只有月且只能选择范围
+        let xAxis = res.value.map((item) => item.date && item.date.slice(0, 10))
         let dqzh = {
           name: '当期综合能耗',
           type: 'bar',

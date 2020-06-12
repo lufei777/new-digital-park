@@ -307,8 +307,8 @@ export default {
       // window.parent.FindAssetLocation()
       if (val.row.deviceId && type == "type") {
         //  window.FindAssetLocation && window.FindAssetLocation(val.row.deviceId +'')
-        window.parent.FindAssetLocation &&
-          window.parent.FindAssetLocation(val.row.deviceId + "");
+        window.FindAssetLocation?window.FindAssetLocation(val.row.deviceId + ""):
+        window.parent.FindAssetLocation(val.row.deviceId + "");
       } else {
         this.$message({
           type: "warning",
