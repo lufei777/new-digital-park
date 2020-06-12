@@ -141,7 +141,7 @@
 </script>
 
 <style lang="less">
-  @import '../commonProject/less/dataDetailRow.less';
+  @import '../../commonProject/less/dataDetailRow.less';
   .role-manage{
     .role-list{
       padding:20px;

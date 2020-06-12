@@ -178,7 +178,7 @@
         CommonFun.loadPage(this.moduleData)
       },
       moduleItemData(item){
-        let color = isYDScreen()?'#8FD3FA':isNorbulingkaScreen()?'#fff':this.type!=2?'8FD3FA':''
+        let color = isYDScreen()?'#8FD3FA':isNorbulingkaScreen()?'#fff':this.type!=2?'#8FD3FA':''
         return {
           ...item,
           ...{type:this.type},

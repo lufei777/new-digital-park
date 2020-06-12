@@ -60,7 +60,7 @@
         let data = {
           legendData: [],
           series,
-          xAxis: res.map((item) => item.time),
+          xAxis: res.map((item) => item.name),
           xAxisUi:this.moduleItem.xAxisUi || {}
         }
         ChartUtils.handleBarChart(myChart, data)

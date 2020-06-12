@@ -221,7 +221,7 @@
 </script>
 
 <style lang="less">
-  @import '../commonProject/less/dataDetailRow.less';
+  @import '../../commonProject/less/dataDetailRow.less';
   .user-manage{
     .left-zoom-nav{
       width:17%;
