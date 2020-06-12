@@ -11,10 +11,10 @@
       <label>状态：</label>
       <el-select v-model="statusId" placeholder="请选择">
         <el-option
-          v-for="item in statusTypeList"
-          :key="item.id"
-          :label="item.name"
-          :value="item.id"
+          v-for="(item,index ) in statusTypeList"
+          :key="item.index"
+          :label="item.label"
+          :value="item.status"
         ></el-option>
       </el-select>
     </div>
@@ -22,6 +22,17 @@
       <label>时间类型：</label>
       <el-select v-model="curDateType" placeholder="请选择" @change="handleDateTypeChange">
         <el-option v-for="item in dateTypeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+      </el-select>
+    </div>
+    <div class="item-group">
+      <label>地点：</label>
+      <el-select v-model="officeLocation" placeholder="请选择" @change="handleLocationTypeChange">
+        <el-option
+          v-for="item in officeLocationList"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        ></el-option>
       </el-select>
     </div>
     <div class="item-group">
@@ -55,7 +66,7 @@
       <el-button type="primary" class="sure-btn" @click="handleClickSureBtn">确定</el-button>
       <el-button @click="onClickResetBtn">重置</el-button>
     </div>
-    
+
     <!-- <el-button type="primary" @click="refresh">刷新</el-button>
     <el-button type="primary" @click="addTask">新增</el-button>-->
   </div>
@@ -67,21 +78,28 @@ import moment from "moment";
 export default {
   name: "ConditionSelect",
   components: {},
-  props: ["radiusShadowShow"],
+  props: {
+    taskTypes: Array
+  },
   data() {
     return {
       levelId: 1,
-      statusId: 1,
+      statusId: "0",
       curDateType: 1,
       dateType: "month",
       radio: "0",
-      startTime: moment(
-        new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000 * 10)
-      ).format("YYYY-MM"),
+      startTime: moment(new Date()).format("YYYY-MM"),
       lastTime: "",
       showLastTime: false,
-      curEnergy: []
+      curEnergy: [],
+      officeLocation: 0,
+      statusTypeList: []
     };
+  },
+  watch: {
+    taskTypes(val) {
+      this.statusTypeList = val;
+    }
   },
   computed: {
     dateTypeList() {
@@ -116,23 +134,15 @@ export default {
         }
       ];
     },
-    statusTypeList() {
+    officeLocationList() {
       return [
         {
-          name: "待派",
+          name: "公司",
+          id: 0
+        },
+        {
+          name: "现场",
           id: 1
-        },
-        {
-          name: "待接",
-          id: 2
-        },
-        {
-          name: "处理中",
-          id: 3
-        },
-        {
-          name: "已完成",
-          id: 4
         }
       ];
     }
@@ -154,7 +164,6 @@ export default {
           ? "YYYY-MM"
           : "YYYY-MM-DD";
       this[time] = this[time] ? moment(value).format(formatType) : "";
-      console.log("this[time]", this[time]);
     },
     handleStartTimeChange(value) {
       this.timeFormat("startTime", value);
@@ -167,27 +176,34 @@ export default {
       this.timeFormat("startTime", this.startTime);
       this.timeFormat("lastTime", this.lastTime);
     },
+    handleLocationTypeChange(val) {
+      this.officeLocation = val;
+    },
     handleClickSureBtn() {
       let params = {
         ugrent: this.levelId,
         status: this.statusId,
         beginTime: this.startTime,
-        endTime: this.lastTime
-        // taskType: this.curDateType
+        endTime: this.lastTime,
+        taskType: this.curDateType,
+        officeLocation: this.officeLocation
       };
       this.$emit("showSelectParams", params);
     },
     onClickResetBtn() {
       let params = {};
-      //  ugrent: this.levelId,
-      //   status: this.statusId,
-      this.startTime = "";
+      this.levelId = 1;
+      this.statusId = "0";
+      this.startTime = moment(new Date()).format("YYYY-MM");
       this.lastTime = "";
-      // this.curDateType = ""
+      this.curDateType = 1;
+      this.officeLocation = 0;
       this.$emit("showSelectParams", params);
     }
   },
-  mounted() {}
+  mounted() {
+    this.statusTypeList = this.taskTypes;
+  }
 };
 </script>
 
@@ -202,12 +218,17 @@ export default {
   .sure-btn {
     // margin-left: 10px;
   }
+  .item-group {
+    margin-right: 33px;
+  }
   .operating-btn {
-     .el-button, .el-button--primary, .el-button--default{
-      width: 72px!important;
+    .el-button,
+    .el-button--primary,
+    .el-button--default {
+      width: 72px !important;
     }
   }
- 
+
   .el-select {
     width: 95px;
   }

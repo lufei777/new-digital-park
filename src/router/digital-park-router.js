@@ -51,4 +51,8 @@ export default [{
   path:'/clientOverView',
   name:'ClientOverView',
   component:()=>import("@/pages/digitalPark/clientOverView/index")
+},{
+  path:'/historyVideo',
+  name:'HistoryVideo',
+  component:()=>import("@/pages/digitalPark/clientOverView/historyVideo")
 }]

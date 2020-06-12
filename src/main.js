@@ -10,6 +10,8 @@ import store from "./vuex/store";
 import LangEN from "./utils/lang/en.js";
 import LangZH from "./utils/lang/zh.js";
 
+import x2js from 'x2js' //xml数据处理插件
+Vue.prototype.$x2js = new x2js() //创建x2js对象，挂到vue原型上
 // 获取项目
 import { getProjectName } from "./utils/project";
 
