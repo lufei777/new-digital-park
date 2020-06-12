@@ -135,7 +135,7 @@ export default {
         { label: "年度", prop: "year" },
         { label: "月份", prop: "month" },
         { label: tableTitleText+"表号", prop: "nameId" },
-        { label: "电表名称", prop: "name" },
+        { label: tableTitleText+"表名称", prop: "name" },
         { label: "本次表示数", prop: "value" }
       ]
       this.tableConfig.columnConfig = column2;
