@@ -34,6 +34,22 @@
           <!--<el-button type="text" @click="rowClick(row)">编辑</el-button>-->
           <el-button type="text" @click="deleteRow(row,$index)">删除</el-button>
         </template>
+        <template slot="spaceId" slot-scope="{isEdit,row,column,size}">
+           <z-input
+             :size="size"
+             v-if="isEdit"
+             type="tree"
+             :props="{
+               label: 'floor',
+               value: 'floorId',
+               children: 'nodes'
+             }"
+             :dic="treeModalConfig.treeList"
+             v-model="row[column.prop]"
+             :nodeClick="(...args)=>{ onClickSpaceNode(...args,row,column) }"
+           />
+          <span v-if="!isEdit">{{row.name}}</span>
+        </template>
       </z-table>
     </div>
 
@@ -46,13 +62,15 @@
   import {isZG} from '@/utils/project';
   import TreeModal from '@/components/treeModal/index'
   import CommonFun from '@/utils/commonFun'
+  import zTree from '@/components/zvue/components/input/src/input'
   let pageInfo = {
     pageCount: 10
   }
   export default {
     name: "buildInfoSetting",
     components: {
-      TreeModal
+      TreeModal,
+      zTree
     },
     data() {
       let _this = this
@@ -118,34 +136,34 @@
             label: '城市名',
             prop: 'city',
             cell:true,
-            // focus:_this.onClickSpaceNode()
           },
-          //   {
-          //     label: '上级建筑',
-          //     prop: 'parentId',
-          //     cell:true,
-          //     type: "tree",
-          //     props: {
-          //       label: "floor",
-          //       value: "floorId",
-          //       children: "nodes",
-          //     },
-          //     dicData: [],
-          //     disabled:true,
-          // },
+            {
+              label: '上级建筑',
+              prop: 'parentId',
+              cell:true,
+              type: "tree",
+              props: {
+                label: "floor",
+                value: "floorId",
+                children: "nodes",
+              },
+              dicData: [],
+              disabled:true,
+          },
             {
             label: '建筑名称',
             prop: 'spaceId',
             cell:true,
-            type: "tree",
-            props: {
-              label: "floor",
-              value: "floorId",
-              children: "nodes",
-            },
-            dicData: [],
-            nodeClick:_this.onClickSpaceNode,
+            slot:true,
             disabled:false,
+            // type: "tree",
+            // props: {
+            //   label: "floor",
+            //   value: "floorId",
+            //   children: "nodes",
+            // },
+            // dicData: [],
+            // nodeClick:_this.onClickSpaceNode,
           }, {
             label: '建筑面积（㎡）' ,
             prop: 'area',
@@ -201,6 +219,7 @@
           spaceName: ''
         },
         deleteArr:[],
+
       };
     },
     computed: {},
@@ -211,12 +230,12 @@
         this.treeModalConfig.treeConfig.defaultExpandedkeys = [res[0].floorId]
         this.searchParams.spaceName = res[0].floor
         this.searchParams.spaceId = res[0].floorId
-        this.$refs[this.tableConfig.ref].setColumnByProp("spaceId", {
-          dicData: res
-        });
-        // this.$refs[this.tableConfig.ref].setColumnByProp("parentId", {
+        // this.$refs[this.tableConfig.ref].setColumnByProp("spaceId", {
         //   dicData: res
         // });
+        this.$refs[this.tableConfig.ref].setColumnByProp("parentId", {
+          dicData: res
+        });
       },
       async getBuildInfoList(){
         let params = {
@@ -346,8 +365,9 @@
         await EnergyApi.deleteBuildInfo(delArr)
         this.getBuildInfoList()
       },
-      onClickSpaceNode(val){
-        console.log("node",val)
+      onClickSpaceNode(...args){
+        // console.log("node",args)
+        this.tableConfig.data[args[3].$index].parentId=args[0].parentId==0?null:args[0].parentId
       }
     },
     async mounted() {
