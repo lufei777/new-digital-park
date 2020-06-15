@@ -3,10 +3,14 @@
     <div v-show="!isFull">
       <div :class="type==3?'large-set-tip':'set-tip'">模块设置</div>
       <div class="module-change" v-if="type!=3">
-        <el-button @click="onClickModuleBtn('2')" :class="type==2?'moduleBtnBg':'defaultBtn'">
+        <el-button @click="onClickModuleBtn('2')"
+                   :class="type==2?'moduleBtnBg':'defaultBtn'"
+        >
           {{$t('homeHeader.waterfall')}}
         </el-button>
-        <el-button @click="onClickModuleBtn('1')" :class="type==1?'moduleBtnBg':'defaultBtn'">
+        <el-button @click="onClickModuleBtn('1')"
+                   :class="type==1?'moduleBtnBg':'defaultBtn'"
+        >
           {{$t('homeHeader.dashboard')}}
         </el-button>
       </div>
@@ -15,26 +19,39 @@
       <div :class="isFull?'hide':'left-module-list'">
         <div v-for="item in proModuleList"
              :key="item.id"
-             :class="[type==3?'large-item-left-pro':'item-left-pro','hover-pointer',item.activeFlag?'active-pro':'']"
+             :class="[type==3?'large-item-left-pro':'item-left-pro',
+             'hover-pointer',
+             item.activeFlag?'active-pro':''
+             ]"
              @click="onClickItemProModule(item)">{{item.menuName}}
         </div>
       </div>
       <div class="module-content-list" v-show="!isFull">
 
-        <draggable :list="contentList"
+        <draggable  :list="contentList"
                    v-bind="getOptions()"
                    @start="onDragStart"
                    @end="onDragEnd"
                    class="content-drag-box"
 
         >
-          <component v-for="(item,index) in contentList"
-                     :key="index"
-                     :is="item.componentName"
-                     :moduleItem="{...item,...{type:type}}"
-                     :class="getDragItemClass(item)"
-                     :style="contentBg(item)"
-                     :id="item.id"
+          <!--<component v-for="(item,index) in contentList"-->
+                     <!--:key="index"-->
+                     <!--:is="item.componentName"-->
+                     <!--:moduleItem="{...item,...{type:type}}"-->
+                     <!--:class="getDragItemClass(item)"-->
+                     <!--:style="contentBg(item)"-->
+                     <!--:id="item.id"-->
+          <!--/>-->
+          <ItemProModule
+            v-for="(item,index) in contentList"
+            :key="index"
+            :moduleData="{...item}"
+            :type="type"
+            :class="getDragItemClass(item)"
+            :style="contentBg(item)"
+            :id="item.id"
+            :isConfig="true"
           />
         </draggable>
       </div>
@@ -82,7 +99,7 @@
   import {mapState} from 'vuex'
   import DashboardNew from '../home/dashboardNew'
   import LargeSizeScreen from '../../largeSizeScreen/index'
-
+  import ItemProModule from '../coms/itemProModule'
   export default {
     name: 'ModuleConfigure',
     components: {
@@ -90,7 +107,8 @@
       draggable,
       HomePage,
       DashboardNew,
-      LargeSizeScreen
+      LargeSizeScreen,
+      ItemProModule
     },
     data() {
       return {
@@ -398,10 +416,10 @@
       background: #061C34;
     }
 
-    .my-chart {
-      width: 100%;
-      flex-grow: 1;
-    }
+    /*.my-chart {*/
+      /*width: 100%;*/
+      /*flex-grow: 1;*/
+    /*}*/
 
     .preview-panel {
       width: 100%;
