@@ -119,6 +119,7 @@
   import Header from '../coms/header'
   import AlertAlarm from '../coms/alarm/alertAlarm'
   import {isYD, isZG} from "@/utils/project";
+  import elementResizeDetectorMaker from 'element-resize-detector'
 
   export default {
     name: 'DashBoardHomePageNew',
@@ -177,12 +178,13 @@
       },
       fullStatus() {
         let dom = $(".item-drag-product,.fixed-prod-module")
-        console.log("111", $(".item-drag-product").length)
+        // console.log("111", $(".item-drag-product").length)
         if (this.fullStatus == 'full') {
           dom.removeClass('smallFontSize')
         } else if (this.fullStatus == 'noFull') {
           dom.addClass('smallFontSize')
         }
+        $(window).resize()
       }
     },
     methods: {

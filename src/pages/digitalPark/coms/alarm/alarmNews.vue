@@ -1,6 +1,6 @@
 <template>
   <div class="alarm-news">
-    <div class="module-item-top-name" :class="moduleItem.type==1?'white-color-name':''">{{moduleItem.moduleName}}</div>
+    <div class="module-item-top-name" >{{moduleItem.moduleName}}</div>
     <div class="my-chart alarm-list">
       <div v-for="(item,index) in alarmList"
            :key="index"

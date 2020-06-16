@@ -97,7 +97,7 @@
           ref: "tableRef",
           editBtn: true,
           operation: {
-            width: 100
+            width: 150
           },
           customTop: true,
           data: [],
@@ -213,16 +213,12 @@
           "dateTypeCode": data.dateTypeCode
         }]
         await EnergyApi.setStandardValue(tmp)
+        this.getSpaceStandardTree()
         callback()
       },
       async rowEdit(obj, index) {
-        // console.log("edit", obj)
-        // this.curRowIndex = index
-        // this.curDetail = obj
-        // await this.editAssetUseDetail({ ...obj, ...{ isEdit: 1 } })
       },
       async rowEditCancel(obj, index) {
-        // await this.editAssetUseDetail({ ...obj.preDetail, ...{ isEdit: 0 } })
       },
       selectionChange(data) {
         // console.log(data)
@@ -243,7 +239,7 @@
           })
           return;
         }
-        console.log("tmp", tmp)
+        // console.log("tmp", tmp)
         tmp.map((item) => {
           item.$cellEdit = false
         })

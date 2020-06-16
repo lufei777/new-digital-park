@@ -1,6 +1,6 @@
 <template>
   <div class="alarm-list-table-coms">
-    <div class="alarm-list-table-coms-inner flex-wrap">
+    <div class="alarm-list-table-coms-inner">
       <div class="time-box">
         <el-date-picker
           v-model="startTime"
@@ -67,7 +67,7 @@
             {
               label: "状态", prop: "handled",
               formatter: function (row, column) {
-                return row.handled == 1 ? '已处        理' : '未处理'
+                return row.handled == 1 ? '已处理' : '未处理'
               }
             }
           ],

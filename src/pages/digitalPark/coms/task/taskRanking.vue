@@ -2,7 +2,7 @@
   <div class="task-ranking" >
     <!--<div ref="pieCharts" class="my-chart" id="task-ranking-chart"></div>-->
     <!--<div class="my-chart">-->
-    <div class="module-item-top-name" :class="moduleItem.type==1?'white-color-name':''">{{moduleItem.moduleName}}</div>
+    <div class="module-item-top-name" >{{moduleItem.moduleName}}</div>
     <div class="my-chart" v-if="curType!=2">
       <div class="task-header flex" :class="moduleItem.type!=2?'':'task-header-white'">
         <span>排名</span>

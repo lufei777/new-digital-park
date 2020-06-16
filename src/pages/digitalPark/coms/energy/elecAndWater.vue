@@ -32,7 +32,7 @@
   export default {
     name: "elecAndWater",
     components: {},
-    props: ["moduleItem","fromFlag"],
+    props: ["moduleItem","fromFlag",'type'],
     data() {
       return {
         energy:0,
@@ -49,10 +49,6 @@
       progressColor(){
         return this.fromFlag==1?'#00dfff':'#03C281'
       },
-      // getProgressWidth(){
-      //   let width = $(".elec-sum-coms-inner").width()*0.4
-      //   return width
-      // }
     },
     methods: {
       async getEnergyData(){
@@ -80,7 +76,8 @@
           }
           this.tbzz=res.elecProp.value[0].tbzz
           this.hbzz=res.elecProp.value[0].hbzz
-          $(".elec-progress-box .el-progress__text").html(`<div class="elec-alarm-num">${res.alarm.length?res.alarm.number:0}个</div><br />报警数量`)
+          $(".elec-progress-box .el-progress__text").html(
+            `<div class="elec-alarm-num">${res.alarm.length?res.alarm.number:0}个</div><br />报警数量`)
         }else{
           this.totalNum = res.num.waterNum
           this.energy =res.energy.waterSum
@@ -93,13 +90,17 @@
           }
           this.tbzz=res.waterProp.value[0].tbzz
           this.hbzz=res.waterProp.value[0].hbzz
-          $(".water-progress-box .el-progress__text").html(`<div class="water-alarm-num">${res.alarm.length?res.alarm.number:0}个</div><br />报警数量`)
+          $(".water-progress-box .el-progress__text").html(
+            `<div class="water-alarm-num">${res.alarm.length?res.alarm.number:0}个</div><br />报警数量`)
         }
       }
 
     },
     mounted() {
       this.getEnergyData()
+      $(".elec-and-water-coms .el-progress__text").css({
+        color:this.moduleItem.fontColor
+      })
     }
   };
 </script>
@@ -124,7 +125,7 @@
     .data-info-module-name{
       font-size:18px;
       font-weight:bold;
-      color:#333;
+      /*color:#333;*/
     }
     .elec-data,.water-data{
       font-size:36px;
@@ -136,7 +137,7 @@
       text-align: left;
       font-size:12px;
       font-weight:400;
-      color:#666;
+      /*color:#666;*/
       margin-top:20px;
     }
     .elec-alarm-num,.water-alarm-num{

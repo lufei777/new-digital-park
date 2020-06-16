@@ -1,4 +1,4 @@
-.large-size-screen-normal .yd-out-drag-product{
+.large-size-screen-normal .out-drag-product{
   /*background:rgba(0,0,0,.7);*/
   /*border-radius: 16px;*/
   background-image: url('../../../../static/image/digitalPark/content_bg5.png');
@@ -23,7 +23,7 @@
 }
 
 @media screen and (max-width: 1920px) {
-  .large-size-screen-normal .yd-out-drag-product {
+  .large-size-screen-normal .out-drag-product{
     background-image: url('../../../../static/image/digitalPark/content_bg5.png');
     font-size: 12px;
     width: 320px;

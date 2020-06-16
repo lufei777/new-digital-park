@@ -132,6 +132,9 @@
         this.floorList = res
         if (this.fromFlag == 1) {
           res[0].disabled = true
+          res[0].nodes.map((item) => {
+            item.disabled = true
+          })
           let tmp = res[0].nodes[0].nodes
           this.treeConfig.defaultExpandedkeys = [res[0].nodes[0].floorId]
           this.treeConfig.defaultCheckedKeys = [tmp[4].floorId, tmp[5].floorId]

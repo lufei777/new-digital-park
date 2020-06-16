@@ -27,7 +27,7 @@
       </div>
       <div class="item-group block demonstrationFloor">
         <label>楼层检索：</label>
-        <el-input v-model="curEnergy" @focus="onShowModal"></el-input>
+        <el-input v-model="spaceName" @focus="onShowModal"></el-input>
       </div>
       <div class="item-group block">
         <label>月份：</label>
@@ -49,7 +49,7 @@
       </div>
       <z-table :ref="tableConfig.ref" :options="tableConfig"></z-table>
       <TreeModal :tree-modal-config="treeModalConfig"/>
-      <!--<DiagnoseTrend :show-modal="showTrendModal"/>-->
+      <DiagnoseTrend :show-modal="showTrendModal" :trendDate="trendDate" :search-params="searchParams"/>
     </div>
   </div>
 </template>
@@ -73,8 +73,8 @@
     data() {
       let _this = this;
       return {
-        curEnergy: "", //楼层检索
-        curEnergyId: "0",
+        spaceName: "", //楼层检索
+        spaceId: "0",
         energyA3Text: '',
         energyA3: "1", //建筑群
         energySubentry: "", //能源分项
@@ -117,7 +117,8 @@
             }
           },
           tableMethods: {
-            sortChange: _this.sortTable
+            sortChange: _this.sortTable,
+            rowClick: _this.rowClick,
           }
         },
         treeModalConfig: {
@@ -134,7 +135,9 @@
           onClickSureBtnCallback: this.onClickModalSureBtn,
           onClickCancelBtnCallback: this.onClickModalCancelBtn
         },
-        showTrendModal:true
+        showTrendModal:false,
+        trendDate:'',
+        searchParams:{}
       };
     },
     computed: {
@@ -154,7 +157,7 @@
           lou: this.energyA3,
           standard: this.indexEnergy,
           type: this.energySubentry,
-          parent: this.curEnergyId,
+          parent: this.spaceId,
           page: this.page,
           size: 10
         };
@@ -182,7 +185,7 @@
               name: "水",
               parent: 37
             })
-            console.log("this.energySubentryData", this.energySubentryData)
+            // console.log("this.energySubentryData", this.energySubentryData)
             this.energySubentry = res[1].energyType[0].id;
           } else if (this.energySaveFlag == 1 || this.energySaveFlag == 2) {
             this.energySubentryData = res[0].energyType;
@@ -192,9 +195,9 @@
       },
       async getAllFloorOfA3() {
         this.treeModalConfig.treeList = await CommonApi.getAllFloorOfA3()
-        this.curEnergyId = this.treeModalConfig.treeList[0].floorId
+        this.spaceId = this.treeModalConfig.treeList[0].floorId
         this.energyA3Text = this.treeModalConfig.treeList[0].floor
-        this.curEnergy = this.treeModalConfig.treeList[0].floor
+        this.spaceName = this.treeModalConfig.treeList[0].floor
         this.treeModalConfig.treeConfig.defaultExpandedkeys = [this.treeModalConfig.treeList[0].floorId]
       },
       async getList() {
@@ -214,6 +217,7 @@
             });
             tmp.push(obj);
           });
+          // console.log(tmp)
           let columnConfig = []
           for (let key in tmp[0]) {
             let widthSet
@@ -233,6 +237,7 @@
               },
             })
           }
+          columnConfig[0].hide=true
           this.tableConfig.columnConfig = columnConfig;
           this.tableConfig.data = tmp;
           this.tableConfig.uiConfig.pagination.total = res.total;
@@ -264,8 +269,8 @@
         this.treeModalConfig.showModal = true
       },
       onClickModalSureBtn(val) {
-        this.curEnergyId = val.floorId
-        this.curEnergy = val.floor
+        this.spaceId = val.floorId
+        this.spaceName = val.floor
         this.treeModalConfig.showModal = false
       },
       onClickModalCancelBtn() {
@@ -275,6 +280,20 @@
         this.page = value;
         this.getList();
       },
+      rowClick(val1,val2){
+        this.showTrendModal = true
+        let date = val2.property
+        this.trendDate = date
+        let tmp = this.energySubentryData.find(item => {
+          return item.id == this.energySubentry;
+        });
+        this.searchParams = {
+          energyName:tmp.name,
+          spaceId:val1.id,
+          energyType:this.energySubentry,
+          dateType:(this.energySaveFlag==1 || this.energySaveFlag==3)?1:2
+        }
+      }
     },
     async created() {
       await this.getEnergyList();

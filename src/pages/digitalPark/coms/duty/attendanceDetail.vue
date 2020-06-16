@@ -1,6 +1,6 @@
 <template>
   <div class="attendance-detail">
-    <div class="module-item-top-name" :class="moduleItem.type==1?'white-color-name':''">{{moduleItem.moduleName}}</div>
+    <div class="module-item-top-name" >{{moduleItem.moduleName}}</div>
     <div class="my-chart">
       <z-table :ref="tableConfig.ref" :options="tableConfig"></z-table>
     </div>
