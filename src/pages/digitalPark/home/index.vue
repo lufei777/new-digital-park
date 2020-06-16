@@ -137,7 +137,8 @@ export default {
   },
   computed: {
     ...mapState({
-      dragFlag: state => state.digitalPark.dragFlag
+      dragFlag: state => state.digitalPark.dragFlag,
+      menuTree:state => state.digitalPark.menuTree
     }),
     isydSystem() {
       return window.__CZ_SYSTEM=='ydCity' ;
@@ -175,13 +176,9 @@ export default {
       this.showMoreProduct = !this.showMoreProduct;
     },
     async getMenuTree() {
-      let res = await DigitalParkApi.getMenuTree({
-        language: Cookies.get("lang")
-      });
-      this.title = res[0].name
-      this.titleIcon = res[0].icon
-      this.menuData = res[0];
-      localStorage.setItem('menuTree', JSON.stringify(res))
+      this.title = this.menuTree[0].name
+      this.titleIcon = this.menuTree[0].icon
+      this.menuData = this.menuTree[0];
     },
     getItemBg(item) {
       let backgroundImage = "";

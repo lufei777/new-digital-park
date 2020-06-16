@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { flattenDeep } from 'utils/czUtils';
+Vue.use(Router);
+// 插件引入
 import store from '../vuex/store';
 import { getToken } from '@/utils/auth'; // get token from cookie
 
@@ -34,7 +35,7 @@ import Norbulingka from './norbulingka'; 												// 罗布林卡
 import DeviceManage from './device-manage'; 										// 设备管理
 
 // 数字园区
-let DigitalRouters = flattenDeep([
+let DigitalRouters = [].concat(
   vibeWeb,
   DigitalParkRouter,
   AssetManage,
@@ -57,11 +58,10 @@ let DigitalRouters = flattenDeep([
   MonitoringAlarm,
   Norbulingka,
   DeviceManage
-]);
+)
 
-Vue.use(Router);
 const router = new Router({
-  routes: DigitalRouters
+  routes: []
 });
 
 router.beforeEach((to, from, next) => {
@@ -92,4 +92,74 @@ router.beforeEach((to, from, next) => {
     store.commit('digitalPark/activeMenuIndex', Cookies.get('activeMenuIndex'));
   }
 });
+
+// 根据返回情况规划路由
+(function (window, document) {
+  // 这些菜单必须展示
+  let extraPaths = ['/vibe-web', '/login',
+    '/digitalPark/homePage', '/digitalPark/dashboardHomePage',
+    '/digitalPark/moduleConfigure', '/news',
+    '/largeSizeScreen', '/clientOverView',
+    '/historyVideo', '/exportData'];
+
+  // 根据后台返回的路由获取拍平后的路由
+  let flatMenus = (menu, menus, menupaths) => {
+    let flatmenus = menus || [];
+    let flatmenupaths = menupaths || [];
+    // 挑选字段
+    let { id, icon, name, routeAddress: path, clientType } = menu;
+    // 放入集合
+    flatmenus.push({ id, icon, name, path, clientType });
+    flatmenupaths.push(path);
+    // 递归处理
+    if (Array.isArray(menu.childNode) && menu.childNode.length) {
+      menu.childNode.forEach(childrenMenu => {
+        flatMenus(childrenMenu, flatmenus, flatmenupaths);
+      });
+    }
+    // 返回字段
+    return { flatmenus, flatmenupaths };
+  }
+
+  // 根据铺平的路由格式化出菜单
+  let formatRoutes = (flatmenupaths, routes) => {
+    return routes.map(route => {
+      if (flatmenupaths.includes(route.path) || flatmenupaths.includes(route.redirect)) {
+        return route
+      }
+      // 进行递归处理children
+      if (route.children && route.children.length) {
+        route.children = formatRoutes(flatmenupaths, route.children);
+        // 如果递归完还存在children，则重新赋值redirect再返回
+        if (route.children && route.children.length) {
+          let firstIndex = flatmenupaths.indexOf(route.redirect);
+          // 如果不是redirect不存在，则设为子级的某项
+          if (firstIndex === -1) {
+            // 防止自己没有 / 情况
+            let firstPath = route.children[0].path;
+            if (!firstPath.startsWith('/')) {
+              firstPath = `${route.path}/${firstPath}`;
+            }
+            route.redirect = firstPath
+          }
+          return route;
+        }
+
+        return false;
+      }
+    }).filter(item => item);
+  }
+
+  store.dispatch('digitalPark/getMenus').then(res => {
+    let flat = flatMenus(res[0]);
+    // console.log("flatMenus", flat.flatmenus)
+    // console.log("flatmenupaths", flat.flatmenupaths)
+    let routes = formatRoutes(flat.flatmenupaths.concat(extraPaths), DigitalRouters);
+    // console.log("DigitalRouters", DigitalRouters)
+    // console.log("routes", routes)
+    router.addRoutes(routes);
+  })
+})(window, document);
+
+
 export default router;

@@ -161,14 +161,14 @@ export default {
     },
     prependClick: {
       type: Function,
-      default: () => {}
+      default: () => { }
     },
     prepend: {
       type: String
     },
     appendClick: {
       type: Function,
-      default: () => {}
+      default: () => { }
     },
     append: {
       type: String
@@ -387,7 +387,7 @@ export default {
         isLeaf: this.leafKey
       });
     },
-    typeParam: function() {
+    typeParam: function () {
       if (this.rawtype) return this.rawtype;
       switch (this.type) {
         case "textarea":
@@ -489,10 +489,13 @@ export default {
   max-height: 300px;
   background-color: #fff;
   position: absolute;
-  z-index: 2001;
+  z-index: 2060;
   overflow: hidden;
   .el-scrollbar__wrap {
     overflow-x: hidden;
+  }
+  /deep/ .el-tree-node__content {
+    padding: 0;
   }
 }
 </style>

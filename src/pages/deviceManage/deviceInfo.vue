@@ -771,7 +771,8 @@ export default {
     },
     // 查询列表发送的数据
     deviceListParam() {
-      let res = { assetVo: Object.assign({ kind: DEVICE.text }, this.model) }
+      let { spaceId, ...model } = this.model;
+      let res = { assetVo: Object.assign({ kind: DEVICE.text }, model) }
       if (this.catalogs.length) {
         res.catalogs = this.catalogs
       }
