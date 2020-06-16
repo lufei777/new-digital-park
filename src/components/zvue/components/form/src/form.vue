@@ -132,18 +132,18 @@
                         ></slot>
                       </template>
                       <!-- input的slot处理 -->
-                      <template v-if="column.prependslot" #[column.prependslot]="{prependClick}">
+                      <template v-if="column.prependSlot" #[column.prependSlot]="{prependClick}">
                         <slot
-                          :name="column.prependslot"
+                          :name="column.prependSlot"
                           v-bind="slotProps"
                           :disabled="vaildDiabled(column,group)"
                           :textMode="vaildTextMode(column,group)"
                           :clickevent="prependClick"
                         ></slot>
                       </template>
-                      <template v-if="column.appendslot" #[column.appendslot]="{appendClick}">
+                      <template v-if="column.appendSlot" #[column.appendSlot]="{appendClick}">
                         <slot
-                          :name="column.appendslot"
+                          :name="column.appendSlot"
                           v-bind="slotProps"
                           :disabled="vaildDiabled(column,group)"
                           :textMode="vaildTextMode(column,group)"
