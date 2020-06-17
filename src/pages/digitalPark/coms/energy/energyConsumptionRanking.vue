@@ -1,6 +1,6 @@
 <template>
   <div class="building-status-proportion">
-    <div class="module-item-top-name" :class="moduleItem.type==1?'white-color-name':''"
+    <div class="module-item-top-name"
       >
       {{moduleItem.moduleName}}
     </div>

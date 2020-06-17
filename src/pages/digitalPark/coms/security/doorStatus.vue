@@ -1,7 +1,7 @@
 <template>
   <div class="door-status-coms">
     <div class="module-item-top-name"
-         :class="moduleItem.type==1?'white-color-name':''"
+
     >
       {{moduleItem.moduleName}}
     </div>
@@ -57,7 +57,7 @@
           xAxisUi:this.moduleItem.xAxisUi || {},
           yAxisUi:this.moduleItem.yAxisUi || {}
         };
-        console.log(data)
+        // console.log(data)
         ChartUtils.handleBarChart(myChart,data)
       }
     },

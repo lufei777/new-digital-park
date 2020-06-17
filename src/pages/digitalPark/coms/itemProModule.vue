@@ -1,6 +1,6 @@
 <template>
   <div class="item-product-coms" v-if="isConfig">
-    <div v-if="isConfig" class="component-box">
+    <div v-if="isConfig" class="component-box config-component-box">
       <component
         class="item-component flex-column-center"
         :is="moduleData.componentName"
@@ -60,6 +60,7 @@
                    ]"
           :is="item.componentName"
           :moduleItem="{...item,...{type:2}}"
+          :type="type"
         />
       </draggable>
     </div>
@@ -200,9 +201,11 @@
         let color = isYDScreen() ? '#8FD3FA' : isNorbulingkaScreen() ? '#fff' : this.type != 2 ? '#8FD3FA' : ''
         return {
           ...item,
-          ...{type: this.type},
           ...{
             largeScreen: this.moduleData.largeScreen,
+            type: this.type,
+            fontColor:this.type!=2?'#fff':'#666',
+            fontSize: 30,
             legendUi: {
               bottom: '3%',
               right: '3%',
@@ -211,9 +214,7 @@
                 fontSize: this.moduleData.largeScreen && !isYDScreen() ? 30 : this.legendFontSize
               },
             },
-            fontSize: 30,
-            ...{
-              xAxisUi: {
+            xAxisUi: {
                 axisLabel: {
                   textStyle: {
                     color: color
@@ -230,7 +231,7 @@
                   width: 1,
                 }
               },
-              yAxisUi: {
+            yAxisUi: {
                 axisLine: {
                   show: false,
                   lineStyle: {
@@ -244,9 +245,8 @@
                     width: 0.5
                   }
                 },
-              }
+              },
             }
-          }
         }
       },
       findNode(menu, obj, secondMenu) {
@@ -267,25 +267,18 @@
         })
         return this.findMenu;
       },
+      setItemStyle(){
+        $(".config-component-box").css({
+          color:this.type!=2?'#fff':'#666'
+        })
+      }
     },
     mounted() {
       document.body.ondrop = function (event) {
         event.preventDefault();
         event.stopPropagation();
       }
-      //
-      // $(".my-chart canvas").click(function (e) {
-      //   e.stopPropagation()
-      // })
-
-      // $(".item-component,.two-component").css({
-      //   height:$(".component-box").height()
-      // })
-      // // console.log($(".component-box").height(), $(".item-component").height())
-      // $(".my-chart").css({
-      //   height:$(".item-component").height()*0.8
-      // })
-      // // console.log( $(".my-chart").height())
+      this.setItemStyle()
     }
   }
 </script>
@@ -352,9 +345,5 @@
     .drag-component{
       height:100%;
     }
-  }
-
-  .white-color-name {
-    color: #fff;
   }
 </style>

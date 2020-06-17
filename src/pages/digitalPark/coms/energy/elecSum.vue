@@ -1,6 +1,6 @@
 <template>
   <div class="elec-sum-coms">
-    <elecAndWater from-flag="1" :module-item="moduleItem"></elecAndWater>
+    <elecAndWater from-flag="1" :module-item="moduleItem" :type="type"></elecAndWater>
   </div>
 </template>
 
@@ -11,7 +11,7 @@ export default {
   components: {
     elecAndWater
   },
-  props: ["moduleItem"],
+  props: ["moduleItem","type"],
   data() {
     return {}
   },

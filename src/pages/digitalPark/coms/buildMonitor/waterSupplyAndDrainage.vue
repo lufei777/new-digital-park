@@ -1,6 +1,6 @@
 <template>
   <div class="water-supply-drainage-coms">
-    <div  class="module-item-top-name" :class="moduleItem.type==1?'white-color-name':''">{{moduleItem.moduleName}}</div>
+    <div  class="module-item-top-name" >{{moduleItem.moduleName}}</div>
     <div class="flex-align-center water-content">
       <div v-for="(item,index) in waterData" :key="index" class="item-water">
         <span>{{item.title}}</span>
@@ -45,7 +45,7 @@
 <style lang="less">
   .water-supply-drainage-coms {
      .water-content{
-       height:95%;
+       height:90%;
      }
     .item-water{
       padding:0 20px;
@@ -54,7 +54,7 @@
     }
     .item-count{
       margin-top: 10px;
-      padding:40px 25px;
+      padding:30px 25px;
       background: rgba(255,255,255,.2);
     }
     .up-count{

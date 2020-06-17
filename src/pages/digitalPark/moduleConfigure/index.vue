@@ -204,6 +204,7 @@
         res.map((item) => {
           item.moduleList.map((module) => {
             module.dragFlag = true
+            module.menuName=item.menuName
             userList.map((userItem) => {
               userItem.moduleList.map((userModule) => {
                 if (module.id == userModule.id) {
@@ -233,12 +234,12 @@
       onClickFullScreenBtn() {
           this.isFull = !this.isFull
           let erd = elementResizeDetectorMaker()
-          let that = this
-          erd.listenTo($(".item-product-coms").eq(0), function () {
-            that.$nextTick(function () {
-              $(window).resize()
-            })
-          })
+          // let that = this
+          // erd.listenTo($(".item-product-coms").eq(0), function () {
+          //   that.$nextTick(function () {
+          //     $(window).resize()
+          //   })
+          // })
 
         // $(".park-home-page .item-module").css({
         //   height:548+'px'
@@ -308,7 +309,7 @@
         }
       },
       changeFontSize(){
-        let dom = $(".dashboard-park-home-page-new .item-drag-product,.dashboard-park-home-page-new .fixed-prod-module")
+        let dom = $(".dashboard-park-home-page-new .item-drag-product, .dashboard-park-home-page-new .fixed-prod-module")
         if(this.isFull){
           dom.removeClass('smallFontSize')
         }else{

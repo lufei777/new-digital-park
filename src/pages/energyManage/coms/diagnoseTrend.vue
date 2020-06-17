@@ -1,14 +1,14 @@
 <template>
   <div class="diagnose-trend">
     <el-dialog
-      title="提示"
+      :title="title"
       :visible.sync="showDialog"
       width="50%"
       >
       <div>
         <div  class="flex-row-reverse">
           <div class="flex-align-center  time-box">
-            <el-button>上一日</el-button>
+            <el-button @click="onClickPreBtn">上一日</el-button>
             <el-date-picker
               v-model="date"
               type="date"
@@ -16,7 +16,7 @@
               class="choose-date"
             >
             </el-date-picker>
-            <el-button>下一日</el-button>
+            <el-button @click="onClickNextBtn">下一日</el-button>
           </div>
           <el-select v-model="chartType" >
             <el-option value="1" label="曲线图"></el-option>
@@ -37,11 +37,11 @@
     name: "diagnoseTrend",
     components: {
     },
-    props: ["showModal"],
+    props: ["showModal","trendDate",'searchParams'],
     data() {
       return {
         chartType:'1',
-        date:''
+        date:""
       }
     },
     computed: {
@@ -53,10 +53,31 @@
           this.onClickCancelBtn()
         }
       },
+      title(){
+        return `${this.searchParams.dateType==1?'全天':'夜间'}${this.searchParams.energyName}浪费诊断趋势图`
+      }
+    },
+    watch:{
+      trendDate(){
+        this.date = this.trendDate
+      },
+      date(){
+        this.getTrendData()
+      }
     },
     methods: {
       onClickCancelBtn(){
         this.$parent.showTrendModal=false
+      },
+      onClickPreBtn(){
+        this.date = moment(this.date).subtract(1,'days').format()
+      },
+      onClickNextBtn(){
+        this.date = moment(this.date).subtract(-1,'days').format()
+      },
+      getTrendData(){
+         let params = {...this.searchParams,...{dateTime:this.date}}
+         console.log('parm',params)
       }
     },
     async created() {

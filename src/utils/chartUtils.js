@@ -9,7 +9,7 @@ class chartUtils {
     let {textStyle: xLabelTextStyle = {}} = xAxisLabel
     let {lineStyle: xLineStyle = {}} = xAxisLine
 
-    console.log(xAxisLabel)
+    // console.log(xAxisLabel)
     let {
       yAxisUi = {},
       yAxisUi: {
