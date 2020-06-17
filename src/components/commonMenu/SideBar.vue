@@ -26,23 +26,21 @@
         :collapse="menuConfig.isCollapse"
         @select="handleSelect"
       >
-        <sidebar-item :menuData="menuData" :specialRoute="menuConfig.specialRoute"/>
+        <sidebar-item :menuData="menuData" :specialRoute="menuConfig.specialRoute" />
       </el-menu>
       <div v-if="!(menuConfig.specialRoute || isyd)">
-        <div
-          class="iconfont iconjia hover-pointer shortcut-btn"
-          @click="onClickShortcutBtn"
-        ></div>
+        <div class="iconfont iconjia hover-pointer shortcut-btn" @click="onClickShortcutBtn"></div>
 
-          <ul class="shortcut-list" v-show="showShortcutList">
-            <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
-              <li v-for="(item,index) in shortcutList"
-                  class="hover-pointer"
-                  :key="index"
-                  @click="onClickItemShortcut(item)"
-              >{{item.name}}</li>
-            </el-scrollbar>
-          </ul>
+        <ul class="shortcut-list" v-show="showShortcutList">
+          <el-scrollbar wrap-class="scrollbar-wrapper" :native="false">
+            <li
+              v-for="(item,index) in shortcutList"
+              class="hover-pointer"
+              :key="index"
+              @click="onClickItemShortcut(item)"
+            >{{item.name}}</li>
+          </el-scrollbar>
+        </ul>
       </div>
     </div>
   </el-scrollbar>
@@ -51,7 +49,7 @@
 import commonFun from "@/utils/commonFun";
 import SidebarItem from "./SidebarItem";
 import { mapState } from 'vuex'
-import {isYDScreen} from "../../utils/project";
+import { isYDScreen } from "../../utils/project";
 
 export default {
   name: "Sidebar",
@@ -59,17 +57,19 @@ export default {
   props: {
     menuData: {
       type: Object,
-      required: false
+      required: false,
+      default: () => ({})
     },
     menuConfig: {
-      type:Object,
+      type: Object,
+      default: () => ({})
     }
   },
   data() {
     return {
       showShortcutList: false,
-      temporarilyHidden:false,
-      activeTmp:''
+      temporarilyHidden: false,
+      activeTmp: ''
     };
   },
   computed: {
@@ -79,17 +79,17 @@ export default {
     activeMenuIndex() {
       //当前激活的菜单，顺序是cookie拿到的、父级传递的、默认的父级没传时使用菜单第一个
       return this.menuConfig.specialRoute ? "" :
-             this.activeMenuIndexVuex ||
-             this.menuConfig.activeIndex ||
-             this.setActiveIndex(this.menuData)
+        this.activeMenuIndexVuex ||
+        this.menuConfig.activeIndex ||
+        this.setActiveIndex(this.menuData)
     },
-    shortcutList(){
+    shortcutList() {
       return JSON.parse(localStorage.getItem('shortcutList'))
     },
     ...mapState({
-      activeMenuIndexVuex:state=>state.digitalPark.activeMenuIndex
+      activeMenuIndexVuex: state => state.digitalPark.activeMenuIndex
     }),
-    isyd(){
+    isyd() {
       return isYDScreen()
     }
   },
@@ -104,10 +104,10 @@ export default {
     handleSelect(key, keyPath) {
       // console.log(key,keyPath)
     },
-    setActiveIndex(menu){
-      if(menu.childNode && menu.childNode.length!=0){
+    setActiveIndex(menu) {
+      if (menu.childNode && menu.childNode.length != 0) {
         this.setActiveIndex(menu.childNode[0])
-      }else{
+      } else {
         this.activeTmp = commonFun.setMenuIndex(menu)
       }
       return this.activeTmp;
@@ -115,12 +115,12 @@ export default {
     onClickShortcutBtn() {
       this.showShortcutList = !this.showShortcutList;
     },
-    onClickItemShortcut(item){
-      this.$store.commit("digitalPark/activeMenuIndex","");
-      if(commonFun.loadClientPage(item,JSON.parse(localStorage.getItem("menuList")))){
-        return ;
-      }else{
-        this.$store.commit("digitalPark/menuList",item);
+    onClickItemShortcut(item) {
+      this.$store.commit("digitalPark/activeMenuIndex", "");
+      if (commonFun.loadClientPage(item, JSON.parse(localStorage.getItem("menuList")))) {
+        return;
+      } else {
+        this.$store.commit("digitalPark/menuList", item);
         commonFun.loadPage(item)
       }
     }
@@ -169,8 +169,8 @@ export default {
     width: inherit;
   }
   .shortcut-btn {
-    width:80px;
-    height:80px;
+    width: 80px;
+    height: 80px;
     font-size: 16px;
     color: #fff;
     border-radius: 50%;
@@ -179,15 +179,15 @@ export default {
     left: -40px;
     z-index: 99;
     /*padding:20px;*/
-    border:2px solid #2B5681;
+    border: 2px solid #2b5681;
     text-align: right;
-    padding:15px 16px 0 0 ;
+    padding: 15px 16px 0 0;
     box-sizing: border-box;
     background: #000;
   }
   .shortcut-list {
     width: 190px;
-    height:400px;
+    height: 400px;
     background: #000;
     color: @white;
     text-align: center;

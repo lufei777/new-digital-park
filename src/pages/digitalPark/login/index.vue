@@ -1,11 +1,8 @@
 <template>
   <div class="digital-park-login" @click="showErrTip=false" :style="getBg">
-    <img src="../../../../static/image/digitalPark/logo.png"
-         class="logo-img"
-         v-if="!isLargeScreen"
-    />
+    <img src="../../../../static/image/digitalPark/logo.png" class="logo-img" v-if="!isLargeScreen" />
     <div class="login-box flex-column flex-align" v-loading="loading">
-      <span class="login-title">{{this.title}}</span>
+      <span class="login-title">{{title}}</span>
       <div class="flex-item flex-align border-basic name-box">
         <i class="iconfont iconzhanghao login-icon name-icon"></i>
         <el-input
@@ -27,7 +24,7 @@
         ></el-input>
       </div>
       <!--<div class="flex-item">-->
-        <!--<el-checkbox v-model="checked">自动登录</el-checkbox>-->
+      <!--<el-checkbox v-model="checked">自动登录</el-checkbox>-->
       <!--</div>-->
       <el-button
         class="flex-item"
@@ -46,8 +43,10 @@
 
 <script>
 import { setToken, setIsCZClient } from '@/utils/auth';
-import { getProjectTitle,getLargeScreenName,isNorbulingkaScreen } from '@/utils/project';
-import { Title } from'@/utils/dictionary'
+import { getProjectTitle, getLargeScreenName, isNorbulingkaScreen } from '@/utils/project';
+import { Title } from '@/utils/dictionary'
+import { flatMenus, formatRoutes } from 'utils/util';
+
 export default {
   name: 'DigitalParkLogin',
   components: {
@@ -67,16 +66,16 @@ export default {
       return window.__CZ_SYSTEM;
     },
     title() {
-      return getLargeScreenName()!=''?Title[getLargeScreenName()]:
+      return getLargeScreenName() != '' ? Title[getLargeScreenName()] :
         (getProjectTitle() || '数字园区综合管理平台');
     },
-    isLargeScreen(){
-      return getLargeScreenName()!=''
+    isLargeScreen() {
+      return getLargeScreenName() != ''
     },
-    getBg(){
-      return isNorbulingkaScreen()?
-        {'background-image': 'url("../../../../static/image/digitalPark/nor_login_bg.png")'}:
-        {'background-image': 'url("../../../../static/image/digitalPark/login_bg.png")'}
+    getBg() {
+      return isNorbulingkaScreen() ?
+        { 'background-image': 'url("../../../../static/image/digitalPark/nor_login_bg.png")' } :
+        { 'background-image': 'url("../../../../static/image/digitalPark/login_bg.png")' }
     }
   },
   methods: {
@@ -106,12 +105,7 @@ export default {
       this.$store.dispatch('user/login', params).then(res => {
         Cookies.set('username', this.name)
         Cookies.set('moduleType', 2)
-        if(this.isLargeScreen){
-          this.$router.push("/largeSizeScreen")
-        }else{
-          this.$router.push("/digitalPark/homePage")
-        }
-        this.$store.dispatch('user/getUserInfo')
+        this.loginSuccessCb();
       }).catch(err => {
         this.errTip = '用户名或密码错误'
         this.showErrTip = true
@@ -123,20 +117,34 @@ export default {
 
         console.error(err);
       })
+    },
+    loginSuccessCb() {
+      // 判断大屏
+      if (this.isLargeScreen) {
+        this.$router.push("/largeSizeScreen")
+      } else {
+        this.$router.push("/digitalPark/homePage")
+      }
+      
+      // 获取用户信息
+      this.$store.dispatch('user/getUserInfo')
+
+      // 获取菜单并规划菜单
+      this.$store.dispatch('digitalPark/getMenus').then(res => {
+        // 活后台返回菜单拍平path
+        let flat = flatMenus(res[0]);
+        // 将私有路由进行拆分 验证
+        let routes = formatRoutes(flat.flatmenupaths, this.$store.getters.privateRouters);
+        // 添加进当前路由中
+        this.$router.$addRoutes(routes);
+      })
     }
   },
   mounted() {
     window.CZClient = {
       setToken: (token, isCZClient = true) => {
         setToken(token);
-        setIsCZClient(isCZClient);
-        this.$store.dispatch('user/getUserInfo')
-        // window.location.reload();
-        if(this.isLargeScreen){
-          this.$router.push('/largeSizeScreen');
-        }else{
-          this.$router.push('/digitalPark/homePage');
-        }
+        this.this.loginSuccessCb();
       }
     }
   }

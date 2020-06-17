@@ -3,7 +3,9 @@ import Router from 'vue-router';
 Vue.use(Router);
 // 插件引入
 import store from '../vuex/store';
-import { getToken } from '@/utils/auth'; // get token from cookie
+import { getToken } from 'utils/auth'; // get token from cookie
+import { getMenuTree } from 'utils/project';
+import { flatMenus, formatRoutes } from 'utils/util';
 
 import helloRouter from './hello-router';
 // 公共路由
@@ -11,6 +13,7 @@ import vibeWeb from './vibeWeb'; // 旧项目
 
 // 项目私有路由
 import DigitalParkRouter from './digital-park-router'; 					// 数字园区
+import SystemManage from './system-manage'                      // 系统设置
 import AssetManage from './asset-manage'; 											// 资产管理
 import EnergyRouter from './energy-router'; 										// 能源管理
 import LeaseManage from './lease-manage'; 											// 租赁管理
@@ -34,10 +37,16 @@ import MonitoringAlarm from './warning-alarm'; 									// 预警报警
 import Norbulingka from './norbulingka'; 												// 罗布林卡
 import DeviceManage from './device-manage'; 										// 设备管理
 
-// 数字园区
-let DigitalRouters = [].concat(
+// 数字园区 公共模块
+let publicRouters = [].concat(
   vibeWeb,
   DigitalParkRouter,
+  ExportData,
+  SystemManage
+)
+
+// 数字园区 私有模块
+let privateRouters = [].concat(
   AssetManage,
   EnergyRouter,
   LeaseManage,
@@ -54,20 +63,18 @@ let DigitalRouters = [].concat(
   personalManage,
   thirdParty,
   RevenueExpendManage,
-  ExportData,
   MonitoringAlarm,
   Norbulingka,
   DeviceManage
 )
+store.commit('digitalPark/setPrivateRouters', privateRouters);
 
 const router = new Router({
-  routes: []
+  routes: publicRouters
 });
 
 router.beforeEach((to, from, next) => {
-  const hasToken = getToken();
-
-  if (hasToken) {
+  if (getToken()) {
     if (to.path === '/login') {
       next({ path: '/' });
     } else {
@@ -93,73 +100,22 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-// 根据返回情况规划路由
-(function (window, document) {
-  // 这些菜单必须展示
-  let extraPaths = ['/vibe-web', '/login',
-    '/digitalPark/homePage', '/digitalPark/dashboardHomePage',
-    '/digitalPark/moduleConfigure', '/news',
-    '/largeSizeScreen', '/clientOverView',
-    '/historyVideo', '/exportData'];
+// 重写addRoutes，刷新再次添加时报错有重复的路由
+router.$addRoutes = (routes) => {
+  router.matcher = new Router({
+    routes: publicRouters
+  }).matcher;
+  router.addRoutes(routes)
+}
 
-  // 根据后台返回的路由获取拍平后的路由
-  let flatMenus = (menu, menus, menupaths) => {
-    let flatmenus = menus || [];
-    let flatmenupaths = menupaths || [];
-    // 挑选字段
-    let { id, icon, name, routeAddress: path, clientType } = menu;
-    // 放入集合
-    flatmenus.push({ id, icon, name, path, clientType });
-    flatmenupaths.push(path);
-    // 递归处理
-    if (Array.isArray(menu.childNode) && menu.childNode.length) {
-      menu.childNode.forEach(childrenMenu => {
-        flatMenus(childrenMenu, flatmenus, flatmenupaths);
-      });
-    }
-    // 返回字段
-    return { flatmenus, flatmenupaths };
-  }
-
-  // 根据铺平的路由格式化出菜单
-  let formatRoutes = (flatmenupaths, routes) => {
-    return routes.map(route => {
-      if (flatmenupaths.includes(route.path) || flatmenupaths.includes(route.redirect)) {
-        return route
-      }
-      // 进行递归处理children
-      if (route.children && route.children.length) {
-        route.children = formatRoutes(flatmenupaths, route.children);
-        // 如果递归完还存在children，则重新赋值redirect再返回
-        if (route.children && route.children.length) {
-          let firstIndex = flatmenupaths.indexOf(route.redirect);
-          // 如果不是redirect不存在，则设为子级的某项
-          if (firstIndex === -1) {
-            // 防止自己没有 / 情况
-            let firstPath = route.children[0].path;
-            if (!firstPath.startsWith('/')) {
-              firstPath = `${route.path}/${firstPath}`;
-            }
-            route.redirect = firstPath
-          }
-          return route;
-        }
-
-        return false;
-      }
-    }).filter(item => item);
-  }
-
-  store.dispatch('digitalPark/getMenus').then(res => {
-    let flat = flatMenus(res[0]);
-    // console.log("flatMenus", flat.flatmenus)
-    // console.log("flatmenupaths", flat.flatmenupaths)
-    let routes = formatRoutes(flat.flatmenupaths.concat(extraPaths), DigitalRouters);
-    // console.log("DigitalRouters", DigitalRouters)
-    // console.log("routes", routes)
-    router.addRoutes(routes);
-  })
-})(window, document);
-
+// 如果是刷新，则需要重新addRoutes
+if (getToken()) {
+  // 活后台返回菜单拍平path
+  let flat = flatMenus(getMenuTree()[0]);
+  // 将私有路由进行拆分 验证
+  let routes = formatRoutes(flat.flatmenupaths, privateRouters);
+  // 添加进当前路由中
+  router.$addRoutes(routes);
+}
 
 export default router;

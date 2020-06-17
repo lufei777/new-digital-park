@@ -1,4 +1,5 @@
 import SystemManageApi from "@/service/api/systemManage";
+import { removeMenuTree } from 'utils/project';
 import { setToken, getToken, removeToken, setUserInfo, getUserInfo, removeUserInfo } from '@/utils/auth';
 
 const state = {
@@ -47,13 +48,17 @@ const actions = {
   // 退出登录
   logout({ commit }) {
     return new Promise(async (resolve, reject) => {
-      await SystemManageApi.logOut().catch(err => reject(reject));
-      commit('setToken', '');
-      commit('setUserInfo', {});
-      // 清除token，清除用户信息
-      removeToken();
-      removeUserInfo();
-      resolve();
+      await SystemManageApi.logOut().then(_ => {
+        commit('setToken', '');
+        commit('setUserInfo', {});
+        // 清除token
+        removeToken();
+        // 清除用户信息
+        removeUserInfo();
+        // 清空菜单信息
+        removeMenuTree();
+        resolve();
+      }).catch(err => reject(reject));
     })
   },
   // 重置token和用户信息

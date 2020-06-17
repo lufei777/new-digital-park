@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 import DigitalParkApi from "@/service/api/digitalPark";
-import { setMenuTree } from "utils/project";
+import { setMenuTree, getMenuTree } from "utils/project";
 
 const state = {
   dragFlag: true,
@@ -10,7 +10,8 @@ const state = {
   stockInReApplyId: '',
   activeMenuIndex: Cookies.get("activeMenuIndex"),
   menuList: JSON.parse(localStorage.getItem("menuList")), // 单个模块的菜单列表
-  menuTree: null, // 数字园区整体菜单列表
+  menuTree: getMenuTree() || [], // 数字园区整体菜单列表
+  privateRouters: [],  // 模块列表
   largeScreenIframeSrc: '',
   contentHeight: ''
 }
@@ -47,6 +48,9 @@ const mutations = {
   },
   setMenuTree(state, payload) {
     state.menuTree = payload;
+  },
+  setPrivateRouters(state, payload) {
+    state.privateRouters = payload;
   }
 }
 

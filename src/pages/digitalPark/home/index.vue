@@ -18,7 +18,7 @@
         <NavOperator :moduleType.sync="moduleType" from-flag="1" />
       </div>
       <div class="sidebar-container">
-        <Sidebar :menu-data="menuData" :menuConfig="menuConfig" />
+        <Sidebar :menu-data="menuTree[0]" :menuConfig="menuConfig" />
       </div>
     </div>
 
@@ -114,7 +114,6 @@ export default {
   },
   data() {
     return {
-      title: "数字园区",
       productList: [],
       showMoreProduct: false,
       modelValue: "1",
@@ -131,7 +130,6 @@ export default {
       },
       carouselImgList: [],
       copyrightShow: false,
-      titleIcon: '',
       messageList:[]
     };
   },
@@ -145,6 +143,12 @@ export default {
     },
     isyd(){
       return isYD()
+    },
+    title(){
+      return this.menuTree[0]?.name || '数字园区'
+    },
+    titleIcon(){
+      return this.menuTree[0]?.icon || ''
     }
   },
   watch: {
@@ -175,10 +179,10 @@ export default {
     onShowMoreProduct() {
       this.showMoreProduct = !this.showMoreProduct;
     },
-    async getMenuTree() {
-      this.title = this.menuTree[0].name
+    getMenuTree() {
+      /* this.title = this.menuTree[0].name
       this.titleIcon = this.menuTree[0].icon
-      this.menuData = this.menuTree[0];
+      this.menuData = this.menuTree[0]; */
     },
     getItemBg(item) {
       let backgroundImage = "";

@@ -46,21 +46,6 @@ export const isNorbulingkaScreen = () => {
   return getLargeScreenName() === NORBULINGKA;
 }
 
-/**
- * 项目公有数据
- */
-// 获取lang
-const LangKey = 'lang';
-export const setLang = (lang) => {
-  return Cookies.set(LangKey, lang);
-}
-export const getLang = () => {
-  return Cookies.get(LangKey);
-}
-export const removeLang = () => {
-  return Cookies.remove(LangKey);
-}
-
 // 菜单项
 const MenuTreeKey = 'menuTree';
 export const setMenuTree = (menuTree) => {
@@ -69,6 +54,6 @@ export const setMenuTree = (menuTree) => {
 export const getMenuTree = () => {
   return JSON.parse(localStorage.getItem(MenuTreeKey));
 }
-export const remoteMenuTree = () => {
+export const removeMenuTree = () => {
   return localStorage.removeItem(MenuTreeKey);
 }
