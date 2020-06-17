@@ -1,73 +1,81 @@
 <template>
-  <div class="add-role radius-shadow">
-    <el-form
-      ref="roleForm"
-      :rules="rules"
-      :model="roleForm"
-      label-position="right"
-      label-width="120px"
-    >
-      <el-form-item label="角色名" prop="name">
-        <el-input v-model="roleForm.name"></el-input>
-      </el-form-item>
-      <el-form-item label="角色详情" prop="caption">
-        <el-input v-model="roleForm.caption" type="textarea" rows="4" :maxlength="255"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="submitForm('roleForm')">确定</el-button>
-        <el-button @click="goBack" class="go-back">返回</el-button>
-      </el-form-item>
-    </el-form>
+  <div class="add-role radius-shadow  panel-container">
+    <z-form :ref="formConfig.ref" :options="formConfig" v-model="formModel" @submit="submit">
+      <template slot="menuBtn" slot-scope="scope">
+        <el-button @click="goBack(scope)">返回</el-button>
+      </template>
+    </z-form>
   </div>
 </template>
 
 <script>
-import CommonApi from '../../../service/api/common'
+import SystemManageApi from '@/service/api/systemManage'
 export default {
   data() {
     return {
-      roleForm: {
-        name: "",
-        caption: ""
+      formModel: {},
+      formConfig: {
+        ref: "formRef",
+        size: "medium",
+        menuPosition: "center",
+        labelWidth: 150,
+        emptyBtn: false,
+        forms: [
+          // {
+          //   type: "input",
+          //   label: "角色ID",
+          //   prop: "id",
+          //   span: 24,
+          //   rules: {
+          //     required: true,
+          //     message: "请输入角色ID",
+          //     trigger: "blur"
+          //   }
+          // },
+          {
+            type: "input",
+            label: "角色名称",
+            prop: "name",
+            span: 24,
+            rules: {
+              required: true,
+              message: "请输入角色名称",
+              trigger: "blur"
+            }
+          },
+          {
+            type: "textarea",
+            label: "描述",
+            prop: "caption",
+            span: 24,
+            rules: {
+            }
+          }
+        ]
       },
-      rules: {
-          name:[{ required: true, message: '角色名不能为空', trigger: 'blur' },
-                    { min: 1, message: '至少输入1个字符', trigger: 'blur' }],
-            caption:[{required: true, message: '请输入角色详情', trigger: 'blur'}],
-      }
     };
   },
   computed:{
-      roleId(){
-          return this.$route.query.roleId
-      }
+    roleId(){
+        return this.$route.query.roleId
+    },
+    api(){
+      return this.roleId?'updateRole':'addRole'
+    }
   },
   methods: {
-   async addRole() {
-       let res
-        if(this.roleId){
-           res = await CommonApi.updateRole(this.roleForm)
-        }else{
-           res = await CommonApi.addRole(this.roleForm)
-        }
+    async submit(model, hide) {
+      await SystemManageApi[this.api]({...this.formModel,...{id:this.roleId}})
+        .then(res => {
           this.$message({
-            type: 'success',
-            message: this.roleId?'修改成功！':'添加成功！',
-            duration:1000
+            type: "success",
+            message: res
           });
-         if(res){
-            this.$router.push('./roleManage')
-          }
-    },
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.addRole();
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+          this.$router.push('./roleManage')
+        })
+        .finally(msg => {
+          hide();
+        });
     },
     goBack(){
         history.go(-1)

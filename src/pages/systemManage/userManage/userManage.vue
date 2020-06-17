@@ -1,11 +1,11 @@
 <template>
-  <div class="user-manage">
+  <div class="user-manage panel-container">
       <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
          class="user-tree-box radius-shadow">
         <Tree :tree-list="treeList" :tree-config="treeConfig"/>
       </div>
-    <div class="right-content">
-        <div class="choose-box flex-align radius-shadow">
+    <div class="right-content panel-container">
+        <div class="choose-box flex-align radius-shadow panel">
           <div class="block flex-align-center">
             <span>编号</span>
             <el-input v-model="id" />
@@ -25,7 +25,7 @@
             <el-button type="primary" icon="el-icon-search" @click="onClickSearchBtn">搜索</el-button>
            
       </div>
-       <div class="table-wrapper radius-shadow">
+       <div class="table-wrapper radius-shadow panel">
         <div class="operator-box flex-row-reverse">
           <el-button type="primary"  @click="onClickExportBtn">导出</el-button>
           <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除记录</el-button>
@@ -33,18 +33,18 @@
         </div>
         <CommonTable :tableObj="tableData" :curPage="1"/>
       </div>
-      <div class="item-row-detail-table radius-shadow">
-        <table>
-          <tbody>
-          <tr><th>用户名</th><td>{{curUser.login_id}}</td></tr>
-          <tr><th>姓名</th><td>{{curUser.name}}</td></tr>
-          <tr><th>电话号码</th><td>{{curUser.phone}}</td></tr>
-          <tr><th>Email</th><td>{{curUser.mail}}</td></tr>
-          <tr><th>所在部门</th><td>{{curUser.departmentText}}</td></tr>
-          <tr><th>分配角色名称</th><td>{{curUser.roleText}}</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <!--<div class="item-row-detail-table radius-shadow">-->
+        <!--<table>-->
+          <!--<tbody>-->
+          <!--<tr><th>用户名</th><td>{{curUser.login_id}}</td></tr>-->
+          <!--<tr><th>姓名</th><td>{{curUser.name}}</td></tr>-->
+          <!--<tr><th>电话号码</th><td>{{curUser.phone}}</td></tr>-->
+          <!--<tr><th>Email</th><td>{{curUser.mail}}</td></tr>-->
+          <!--<tr><th>所在部门</th><td>{{curUser.departmentText}}</td></tr>-->
+          <!--<tr><th>分配角色名称</th><td>{{curUser.roleText}}</td></tr>-->
+          <!--</tbody>-->
+        <!--</table>-->
+      <!--</div>-->
     </div>
   </div>
 </template>

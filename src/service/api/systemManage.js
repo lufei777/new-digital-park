@@ -1,45 +1,57 @@
-import { get, post, put, url,} from '../axios/ApiDecorator'
+import {get, post, put, url,} from '../axios/ApiDecorator'
 
 class SystemManage {
-    //部门树
-    @url('/oaApi/dept/tree')
-    @get
-    getDepartmentTree() { }
+  //部门树
+  @url('/oaApi/dept/tree')
+  @get
+  getDepartmentTree() {}
 
-    //人员列表
-    @url("/oaApi/user/listBy")
-    @get
-    listBy() { }
+  //人员列表
+  @url("/oaApi/user/listBy")
+  @get
+  listBy() {}
 
-    //获取当前登录用户
-    @url("/oaApi/user/getNowUser")
-    @get
-    getUserInfo() { }
+  //获取当前登录用户
+  @url("/oaApi/user/getNowUser")
+  @get
+  getUserInfo() {}
 
-    //登录
-    @url('/oaApi/user/mobileLogin')
-    @post
-    login() { }
+  //登录
+  @url('/oaApi/user/mobileLogin')
+  @post
+  login() {}
 
-    //修改密码
-    @url('/oaApi/user/password')
-    @put
-    modifyPwd() { }
+  //修改密码
+  @url('/oaApi/user/password')
+  @put
+  modifyPwd() {}
 
-    //修改用户信息
-    @url('/oaApi/user')
-    @put
-    editPersonInformation() { }
+  //修改用户信息
+  @url('/oaApi/user')
+  @put
+  editPersonInformation() {}
 
-    //退出登录
-    @url('/oaApi/user/logout')
-    @get
-    logOut() { }
+  //退出登录
+  @url('/oaApi/user/logout')
+  @get
+  logOut() {}
 
-    //获取部门+人员
-    @url("/oaApi/dept/treeUser")
-    @get
-    getDeptUserTree(){}
+  //获取部门+人员
+  @url("/oaApi/dept/treeUser")
+  @get
+  getDeptUserTree() {}
+
+  @url("/user-service/role/list")
+  @get
+  getRoleList() {}
+
+  @url("/user-service/role/addRole")
+  @post
+  addRole(){}
+
+  @url("/user-service/role/editRole")
+  @post
+  editRole(){}
 }
 
 export default new SystemManage()

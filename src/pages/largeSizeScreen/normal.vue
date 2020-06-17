@@ -36,7 +36,7 @@
         <!--</transition>-->
       </draggable>
     </div>
-    <AlertAlarm/>
+    <!--<AlertAlarm/>-->
   </div>
 </template>
 
