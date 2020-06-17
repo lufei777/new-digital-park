@@ -68,7 +68,7 @@
               </template>
               <template #operation="{row,column,index,isEdit,size}">
                 <el-button :size="size" type="text" @click="edit(row)">编辑</el-button>
-                <el-button :size="size" type="text">定位</el-button>
+                <el-button :size="size" type="text" @click="location(row)">定位</el-button>
                 <el-button :size="size" type="text" @click="del(row)">删除</el-button>
               </template>
             </z-table>
@@ -177,7 +177,7 @@ import { AssetType } from 'utils/dictionary';
 import commonApi from 'api/common';
 import deviceManageApi from 'api/deviceManage';
 import { validNotChinese } from 'utils/validate';
-import { getUserInfo } from 'utils/auth';
+import { getUserInfo, IsCZClient } from 'utils/auth';
 const DEVICE = AssetType.DEVICE;
 // 新增设备
 let assetAddUrl = '/vibe-web/asset/assetAdd';
@@ -950,6 +950,14 @@ export default {
         this.deviceInfoModel = res;
         this.getPropsByTagName(typeName, 'edit');
       })
+    },
+    // 定位
+    location(row) {
+      if (IsCZClient()) {
+        Location.ProbeButtonClicked(row.id);
+      } else {
+        this.$message.warning('请在客户端中使用定位');
+      }
     },
     // 导入成功操作
     uploadAfter(data, hide, done) {

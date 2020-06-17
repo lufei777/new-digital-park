@@ -126,12 +126,14 @@
         >
           <template #time_interval_appendSlot="{disabled,size}">
             <el-select
-              style="width:80px !important;"
+              style="width:60px !important;"
               :disabled="disabled"
               :size="size"
-              v-model="time_interval_unit"
+              v-model="deviceInfoModel.unit"
             >
-              <template v-for="item in time_interval_unit">
+              <template
+                v-for="item in  [{label: 'm',value: 'm'},{label: 's',value: 's'},{label: 'h',value: 'h'}]"
+              >
                 <el-option :key="item.label" :label="item.label" :value="item.value"></el-option>
               </template>
             </el-select>
@@ -182,21 +184,6 @@ const getValueUnit = (unit, value) => {
   }
   return value;
 }
-
-const time_interval_unit = [
-  {
-    label: 'm',
-    value: 'm'
-  },
-  {
-    label: 's',
-    value: 's'
-  },
-  {
-    label: 'h',
-    value: 'h'
-  }
-]
 
 export default {
   data() {
@@ -366,21 +353,6 @@ export default {
         width: '80%',
         forms: [
           {
-            label: '资产类型',
-            prop: 'typeName',
-            type: 'select',
-            clearable: true,
-            dicUrl: deviceManageApi.assetTypeList,
-            dicQuery: { id: DEVICE.kind },
-            props: {
-              label: 'text',
-              value: 'name'
-            },
-            rules: {
-              required: true
-            }
-          },
-          {
             label: "类别",
             prop: "kind",
             type: 'select',
@@ -389,6 +361,27 @@ export default {
             props: {
               label: 'text',
               value: 'id'
+            },
+            rules: {
+              required: true
+            },
+            change: ({ value }) => {
+              deviceManageApi.assetTypeList({ id: value }).then(res => {
+                this.$refs[this.deviceTypeForm.ref].setColumnByProp('typeName', {
+                  dicData: res
+                })
+              })
+            }
+          },
+          {
+            label: '资产类型',
+            prop: 'typeName',
+            type: 'select',
+            clearable: true,
+            dicData: [],
+            props: {
+              label: 'text',
+              value: 'name'
             },
             rules: {
               required: true
@@ -403,7 +396,6 @@ export default {
           }
         ]
       },
-      time_interval_unit: 'm',
       // 监测器信息表单
       deviceInfoModel: {},
       // 设备信息默认表单
@@ -464,7 +456,7 @@ export default {
       deviceInfoForm: {
         ref: 'deviceInfoForm',
         itemSpan: 8,
-        width: '90%',
+        width: '95%',
         labelWidth: 110,
         forms: []
       },
@@ -504,6 +496,10 @@ export default {
           {
             label: '监测间隔',
             prop: 'time_interval'
+          },
+          {
+            label: '监测间隔单位',
+            prop: 'unit'
           },
           {
             label: '监测值',
@@ -692,7 +688,6 @@ export default {
     },
     // 监测数据
     monitorData(row) {
-      console.log("monitorData -> row", row)
     },
 
     /**
@@ -716,7 +711,7 @@ export default {
     // 新增编辑提交
     deviceInfoSubmit(model, done) {
       // 添加单位
-      model.time_interval += this.time_interval_unit;
+      model.time_interval += model.unit || 'm';
       this._axiosFormData(this.assetUrl, model).then(res => {
         this.$message.success('操作成功');
         // 弹出编辑抽屉
@@ -756,7 +751,6 @@ export default {
 
           this.$nextTick(() => {
             deviceManageApi.addServiceList(params).then(res => {
-              console.log("服务 -> res", res)
               this.$refs[this.deviceInfoForm.ref].setColumnByProp('source', res);
             })
           })
