@@ -19,11 +19,14 @@
           slot-scope="obj"
         >
           <div>
+            <!-- 编辑的保存 -->
+            <el-button @click="editSave(obj)"  v-if="$route.query.mark =='edit'" >编辑保存</el-button>
+            <!-- 添加的保存 -->
             <el-button
-            v-if="$route.query.mark !=='detail'"
+              v-if="$route.query.mark =='add'"
               type='primary'
               @click="save(obj)"
-            >保存</el-button>
+            >添加保存</el-button>
             <el-button
               type='primary'
               @click="back(obj)"
@@ -37,6 +40,8 @@
 </template>
 
 <script>
+// 导入接口
+import norbulingka from "@/service/api/norbulingka";
 import { Norbulingka } from "utils/dictionary";
 const culturalType = Norbulingka.culturalType;
 const collectionYear = Norbulingka.collectionYear;
@@ -77,6 +82,7 @@ export default {
             type: "number",
             span: 7,
             prop: "id",
+            disabled:true
           },
           {
             label: "编号类型",
@@ -84,19 +90,25 @@ export default {
             span: 7,
             offset: 1,
             prop: "serialType",
-            dicData: [
-              { label: "藏品总登记号", value: 0 },
-              { label: "辅助账号", value: 1 },
-              { label: "索书号", value: 2 },
-              { label: "档案编号", value: 3 }
-            ]
+            dicUrl: norbulingka.getSelectOptionOther,
+            dicQuery: { parentId: 0, catalogId: 4001 },
+            props: {
+              label: "name",
+              value: "id"
+            }
+            // dicData: [
+            //   { label: "藏品总登记号", value: 0 },
+            //   { label: "辅助账号", value: 1 },
+            //   { label: "索书号", value: 2 },
+            //   { label: "档案编号", value: 3 }
+            // ]
           },
           {
             label: "藏品编号",
             type: "number",
             span: 7,
             offset: 1,
-            prop: "serial",
+            prop: "serial"
           },
           // 藏品名称	collectionName	藏品原名 primaryName	文物类别	culturalType
           {
@@ -104,11 +116,11 @@ export default {
             type: "input",
             span: 7,
             prop: "collectionName",
-            rules:[
-                {
-                  required:true,
-                  message:'必填字段'
-                }
+            rules: [
+              {
+                required: true,
+                message: "必填字段"
+              }
             ]
           },
           {
@@ -124,14 +136,22 @@ export default {
             span: 7,
             offset: 1,
             prop: "culturalType",
-            dicData: culturalType
+            // dicData: culturalType
+            dicUrl: norbulingka.getSelectOptionOther,
+            dicQuery: { parentId: 0, catalogId: 5001 },
+            props: {
+              label: "name",
+              value: "id"
+            }
           },
           // 具体年代	practicalYear	藏品年代3	year1/ year2/ year3
           {
             label: "具体年代",
             type: "year",
             span: 7,
-            prop: "practicalYear"
+            prop: "practicalYear",
+            valueFormat: "yyyy",
+            format: "yyyy"
           },
           {
             label: "藏品年代",
@@ -139,71 +159,48 @@ export default {
             placeholder: "藏品年代三级联动",
             span: 7,
             offset: 1,
-            prop: "year1",
+            prop: "years",
+            dicUrl: norbulingka.getSelectOptionOther,
+            dicQuery: { parentId: 0, catalogId: 3001 },
+            props: {
+              label: "name",
+              value: "id",
+              children: "children"
+            }
             // row:true,
-            dicData: collectionYear
+            // dicData: collectionYear
           },
           // 地质类别	characterType1/ characterType2/ 	(藏品质地：relicCharacter)
           {
-            label: "地质类别",
+            label: "质地类别",
             type: "cascader",
             span: 7,
-            prop: "characterType1",
+            prop: "characterTypes",
             offset: 1,
-            dicData: [
-              {
-                label: "单一地质",
-                value: 0,
-                children: [
-                  {
-                    label: "有机质",
-                    value: 0,
-                    children: [
-                      {
-                        label: "木",
-                        value: 0
-                      },
-                      {
-                        label: "竹",
-                        value: 1
-                      },
-                      {
-                        label: "纸",
-                        value: 2
-                      }
-                    ]
-                  },
-                  {
-                    label: "无机质",
-                    value: 1
-                  }
-                ]
-              },
-              { label: "复合或者组合地质", value: 1 }
-            ]
+
+            dicUrl: norbulingka.getSelectOptionOther,
+            dicQuery: { parentId: 0, catalogId: 13001 },
+            props: {
+              label: "name",
+              value: "id",
+              children: "children"
+            }
           },
-          {
-            label: "藏品质地",
-            type: "input",
-            row: true,
-            span: 7,
-            // offset: 1,
-            prop: "relicCharacter"
-          },
+          // {
+          //   label: "藏品质地",
+          //   type: "input",
+          //   row: true,
+          //   span: 7,
+          //   // offset: 1,
+          //   prop: "relicCharacter"
+          // },
           // 实际数量	realQuantity	具体尺寸	specificDimension
           {
             label: "实际数量",
             type: "number",
             span: 7,
             prop: "realQuantity",
-            offset: 1,
-            rules:[
-              {
-                // required:true,
-                message:'只能输入整数',
-                trigger:'change'
-              }
-            ]
+            // offset: 1
           },
           {
             label: "具体尺寸",
@@ -211,56 +208,56 @@ export default {
             span: 7,
             offset: 1,
             prop: "specificDimension",
-            row: true,
-            rules:[
-              {
-                // required:true,
-                message:'只能输入整数',
-                trigger:'change'
-              }
-            ]
+            row: true
+            // rules:[
+            //   {
+            //     // required:true,
+            //     message:'只能输入整数',
+            //     trigger:'change'
+            //   }
+            // ]
           },
           // 藏品通长	openLength	藏品通宽	openWidth	藏品通高	openHeight
           {
             label: "藏品通长",
             type: "number",
             span: 7,
-            prop: "openLength",
-            rules:[
-              {
-                // required:true,
-                message:'只能输入整数',
-                trigger:'blur'
-              }
-            ]
+            prop: "openLength"
+            // rules:[
+            //   {
+            //     // required:true,
+            //     message:'只能输入整数',
+            //     trigger:'blur'
+            //   }
+            // ]
           },
           {
             label: "藏品通宽",
             type: "number",
             span: 7,
-            offset: 1,
-            prop: "openWidth",
-            rules:[
-              {
-                // required:true,
-                message:'只能输入整数',
-                trigger:'blur'
-              }
-            ]
+            offset: 1
+            // prop: "openWidth",
+            // rules:[
+            //   {
+            //     // required:true,
+            //     message:'只能输入整数',
+            //     trigger:'blur'
+            //   }
+            // ]
           },
           {
             label: "藏品通高",
             type: "number",
             span: 7,
             offset: 1,
-            prop: "openHeight",
-            rules:[
-              {
-                // required:true,
-                message:'只能输入整数',
-                trigger:'blur'
-              }
-            ]
+            prop: "openHeight"
+            // rules:[
+            //   {
+            //     // required:true,
+            //     message:'只能输入整数',
+            //     trigger:'blur'
+            //   }
+            // ]
           },
           // 质量范围	massRange	具体质量	specificMass	质量单位	massUnit
           {
@@ -268,12 +265,18 @@ export default {
             type: "select",
             span: 7,
             prop: "massRange",
-            dicData: [
-              { label: "<0.1kg", value: 1 },
-              { label: "0.001-1kg", value: 2 },
-              { label: "1-50kg", value: 3 },
-              { label: "50-100kg", value: 4 }
-            ]
+            dicUrl: norbulingka.getSelectOptionOther,
+            dicQuery: { parentId: 0, catalogId: 12001 },
+            props: {
+              label: "name",
+              value: "id"
+            }
+            // dicData: [
+            //   { label: "<0.1kg", value: 1 },
+            //   { label: "0.001-1kg", value: 2 },
+            //   { label: "1-50kg", value: 3 },
+            //   { label: "50-100kg", value: 4 }
+            // ]
           },
           {
             label: "具体质量",
@@ -295,11 +298,17 @@ export default {
             type: "select",
             span: 7,
             prop: "culturalRank",
-            dicData: [
-              { label: "1级", value: 1 },
-              { label: "2级", value: 2 },
-              { label: "3级", value: 3 }
-            ]
+            dicUrl: norbulingka.getSelectOptionOther,
+            dicQuery: { parentId: 0, catalogId: 7001 },
+            props: {
+              label: "name",
+              value: "id"
+            }
+            // dicData: [
+            //   { label: "1级", value: 1 },
+            //   { label: "2级", value: 2 },
+            //   { label: "3级", value: 3 }
+            // ]
           },
           {
             label: "文物来源",
@@ -307,34 +316,46 @@ export default {
             span: 7,
             offset: 1,
             prop: "culturalSource",
+            dicUrl: norbulingka.getSelectOptionOther,
+            dicQuery: { parentId: 0, catalogId: 8001 },
+            props: {
+              label: "name",
+              value: "id"
+            }
             // row: true,
-            dicData: [
-              { label: "依法交换", value: 1 },
-              { label: "旧藏", value: 2 },
-              { label: "采集", value: 3 },
-              { label: ".......", value: 4 }
-            ]
+            // dicData: [
+            //   { label: "依法交换", value: 1 },
+            //   { label: "旧藏", value: 2 },
+            //   { label: "采集", value: 3 },
+            //   { label: ".......", value: 4 }
+            // ]
           },
           // 完残程度	intactDisabled_Degree	完残状况	intactDisabled_State	保存状态	saveState
           {
             label: "完残程度",
             type: "select",
             span: 7,
-            prop: "intactDisabled_Degree",
+            prop: "intactDisabledDegree",
             offset: 1,
-            dicData: [
-              { label: "完整", value: 1 },
-              { label: "基本完整", value: 2 },
-              { label: "残缺", value: 3 },
-              { label: "严重残缺", value: 4 }
-            ]
+            dicUrl: norbulingka.getSelectOptionOther,
+            dicQuery: { parentId: 0, catalogId: 9001 },
+            props: {
+              label: "name",
+              value: "id"
+            }
+            // dicData: [
+            //   { label: "完整", value: 1 },
+            //   { label: "基本完整", value: 2 },
+            //   { label: "残缺", value: 3 },
+            //   { label: "严重残缺", value: 4 }
+            // ]
           },
           {
             label: "完残状况",
             type: "input",
             span: 7,
             // offset: 1,
-            prop: "intactDisabled_State"
+            prop: "intactDisabledState"
           },
           {
             label: "保存状态",
@@ -342,12 +363,18 @@ export default {
             span: 7,
             offset: 1,
             prop: "saveState",
-            dicData: [
-              { label: "状态稳定，不需要修复", value: 1 },
-              { label: "部分损坏，需要修复", value: 2 },
-              { label: "腐蚀损毁严重，急需修复", value: 3 },
-              { label: "已修复", value: 4 }
-            ]
+            dicUrl: norbulingka.getSelectOptionOther,
+            dicQuery: { parentId: 0, catalogId: 10001 },
+            props: {
+              label: "name",
+              value: "id"
+            }
+            // dicData: [
+            //   { label: "状态稳定，不需要修复", value: 1 },
+            //   { label: "部分损坏，需要修复", value: 2 },
+            //   { label: "腐蚀损毁严重，急需修复", value: 3 },
+            //   { label: "已修复", value: 4 }
+            // ]
           },
           // 入藏时间范围	enterCollection_Time	入藏年度	enterCollection_Year
           {
@@ -355,20 +382,28 @@ export default {
             type: "select",
             span: 7,
             offset: 1,
-            prop: "enterCollection_Time",
-            dicData: [
-              { label: "1949之前", value: 1 },
-              { label: "1949-1965", value: 2 },
-              { label: "1966-1976", value: 3 },
-              { label: "2001至今", value: 4 }
-            ]
+            prop: "enterCollectionTime",
+            dicUrl: norbulingka.getSelectOptionOther,
+            dicQuery: { parentId: 0, catalogId: 11001 },
+            props: {
+              label: "name",
+              value: "id"
+            }
+            // dicData: [
+            //   { label: "1949之前", value: 1 },
+            //   { label: "1949-1965", value: 2 },
+            //   { label: "1966-1976", value: 3 },
+            //   { label: "2001至今", value: 4 }
+            // ]
           },
           {
             label: "入藏年度",
             type: "year",
             span: 7,
             // offset: 1,
-            prop: "enterCollection_Year",
+            prop: "enterCollectionYear",
+            valueFormat: "yyyy",
+            format: "yyyy",
             row: true
           },
           // 藏品著着	author	藏品版本	versions	藏品存卷	saveRoll
@@ -411,24 +446,76 @@ export default {
   },
   methods: {
     submit(obj) {
-      console.log(obj)
+      console.log(obj);
     },
     back(obj) {
       this.$router.back();
     },
-    // 保存
+    // 编辑的保存
+    editSave(obj){
+      this.Form.getFormModel(res => {
+        // console.log('编辑',res)
+        let params = res 
+        if (Object.keys(res).length === 0) {
+          return false;
+        }
+        else{
+          norbulingka.updateRelic({...params}).then(res => {
+              this.$message({
+              message: "编辑成功！",
+              type: "success"
+            });
+            this.$router.back()
+          }).finally(res => {
+
+          }) 
+        }
+      }) 
+    },
+    // 添加的保存
     save(obj) {
       this.Form.getFormModel(res => {
         console.log("保存", res);
         // 判断必填字段是否为空 没填情况下阻止跳转
-        if(Object.keys(res).length ===0){
-          return false
-        }else{
-           this.$router.back();
+        if (Object.keys(res).length === 0) {
+          return false;
+        } else {
+          // 添加藏品档案的的接口
+          // console.log(res)
+          if(res.years && res.years[0]){
+          res['year1'] =Array.from(res.years)[0]
+          }   
+          // res['year1'] =Array.from(res.years)[0]
+          if(res.years &&  res.years[1]) {
+            res['year2'] =Array.from(res.years)[1]
+          }
+          if(res.years &&  res.years[2]){
+            res['year3'] =Array.from(res.years)[2]
+          }
+          if(res.characterTypes && res.characterTypes[0]){
+            res['characterType1'] = res.characterTypes[0]
+          }
+          if(res.characterTypes && res.characterTypes[1]){
+            res['characterType2'] = res.characterTypes[1]
+          }
+          if(res.characterTypes && res.characterTypes[2]){
+            res['relicCharacter'] = res.characterTypes[2]
+          }
+          
+          // 因为 year/ characterType1 不符合后端的要求 所以删除掉
+          delete res.years
+          delete res.characterTypes
+          // console.log(res)
+          norbulingka.insertRelic2({ ...res }).then(res => {
+            this.$message({
+              message: "保存成功！",
+              type: "success"
+            });
+             this.$router.back();
+          });
+         
         }
-
       });
-     
     }
   },
   created() {

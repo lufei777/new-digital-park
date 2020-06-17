@@ -115,7 +115,7 @@ export default {
         ref: "tabel",
         customTop: true,
         customTopPosition: "right",
-        data: [ ],
+        data: [],
         columnConfig: [],
         operation: {
           width: 200
@@ -152,7 +152,16 @@ export default {
       // 配置表格的列名称和属性
       var list = [
         //类型   录入时间 date
-        { label: "类型", prop: "type" },
+        {
+          label: "类型",
+          prop: "collectionName",
+          type: "select",
+          dicData: typeSelect
+          // props:{
+          //   label:'name',
+          //   value:'id'
+          // }
+        },
         { label: "录入时间", prop: "date" }
       ];
       // 赋值给表格的配置项
@@ -190,7 +199,7 @@ export default {
     },
     // 表格中的数据
     getTableData(pageParams = { page: 1, rows: 10 }) {
-      this.loading = true,
+      (this.loading = true),
         norbulingka
           .queryUnionPollingByPage(pageParams)
           .then(res => {

@@ -27,6 +27,7 @@
     <div class="panel">
       <!-- 表单部分 -->
       <z-table
+        :load='loading'
         :ref="tableData.ref"
         :options="tableData"
       >
@@ -41,9 +42,9 @@
               type='primary'
             >添加</el-button>
             <el-button
-              @click="del(obj)"
+              @click="orderDel(obj)"
               :disabled='!obj.selectedData.length'
-            >删除</el-button>
+            >批量删除</el-button>
           </div>
         </template>
         <template
@@ -72,11 +73,16 @@
 </template>
 
 <script>
+// 导入接口
+import norbulingka from "@/service/api/norbulingka";
 import commonFun from "@/utils/commonFun";
 export default {
   data() {
     return {
+      // 保存的查询条件
+      condition: null,
       model: {},
+      loading: false,
       formData: {
         ref: "formData",
         size: "medium",
@@ -144,7 +150,12 @@ export default {
         uiConfig: {
           height: "auto",
           selection: true,
-          showIndex: true
+          showIndex: true,
+          pagination: {
+            handler: (pageSize, currentPage, table) => {
+              this.getTableData({ page: 1, rows: pageSize, ...this.condition });
+            }
+          }
         }
       }
     };
@@ -163,7 +174,7 @@ export default {
     // 表格配置项
     tablePropList() {
       // 配置表格的列名称和属性
-      let res = commonFun.protectItem;
+      // let res = commonFun.protectItem;
       var list = [
         { label: "工程名称", prop: "projectName" },
         { label: "施工单位", prop: "constructDept" },
@@ -172,14 +183,23 @@ export default {
       ];
       // 赋值给表格的配置项
       this.tableData.columnConfig = list;
-      this.tableData.data = res;
+      // this.tableData.data = res;
     },
     submit(obj) {
       console.log(obj);
     },
+    // 表格中的搜索
     search(obj) {
       console.log(obj);
-      console.log(this.model);
+      this.Form.getFormModel(res => {
+        // console.log(res)
+        let params = res;
+        this.condition = res;
+        norbulingka.queryProtectByPage({ ...res }).then(res => {
+          this.getTableData({ page: 1, rows: 10, ...params });
+        });
+      });
+      // console.log(this.model);
     },
     // 表单上的'清除'
     clearData(obj) {
@@ -187,29 +207,83 @@ export default {
     },
     // 编辑
     propertyEdit(obj) {
-      this.$router.push({
-        name: "DetailEdit",
-        params: { flag: false,mark:'edit', ...obj.row }
+      console.log(obj);
+      // let data = null;
+      norbulingka
+        .queryDetailProtectProjectById({ id: obj.row.id })
+        .then(res => {
+          this.$router.push({
+            name: "DetailEdit",
+            params: { flag: false, mark: "edit", ...res }
+          });
+        });
+    },
+    // 表格中的批量删除
+    orderDel(obj) {
+      let arr = obj.selectedData;
+      //  console.log(arr)
+      let str = "";
+      arr.forEach(item => {
+        str = str + item.id + ",";
+      });
+      let ids = str;
+      norbulingka.deleteProtectProject({ ids }).then(res => {
+        console.log(res);
+        this.$message({
+          message: "删除成功！",
+          type: "success"
+        });
+        this.getTableData({ page: 1, rows: 10 });
       });
     },
     // 删除
-    propertyDel(obj) {},
+    propertyDel(obj) {
+      // console.log(obj)
+      let ids = obj.row.id;
+      norbulingka.deleteProtectProject({ ids }).then(res => {
+        // 删除成功后进行提示
+        this.$message({
+          type: "success",
+          message: "删除成功！"
+        });
+        // 刷新页面
+        this.getTableData({ page: 1, rows: 10 });
+      });
+    },
     // 详情
     propertyDetail(obj) {
       this.$router.push({
         name: "DetailEdit",
-        params: { flag: true,mark:'detail', ...obj.row }
+        params: { flag: true, mark: "detail", ...obj.row }
       });
     },
     // 添加
     addProject(obj) {
       this.$router.push({
         name: "DetailEdit",
-        params: {mark:'add', ...obj.row }
+        params: { mark: "add", ...obj.row }
       });
+    },
+    getTableData(pageParams = { page: 1, rows: 10 }) {
+      // 考古发掘表格中的数据
+      norbulingka
+        .queryProtectByPage(pageParams)
+        .then(res => {
+          console.log(res);
+          this.loading = true;
+          this.$refs[this.tableData.ref].setData(res.list);
+          this.$refs[this.tableData.ref].setTotal(res.total);
+        })
+        .finally(res => {
+          this.loading = false;
+        });
     }
   },
+  created() {
+    this.getTableData();
+  },
   mounted() {
+    // 表格
     this.tablePropList();
   }
 };

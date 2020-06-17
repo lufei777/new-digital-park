@@ -36,6 +36,8 @@
 
 <script>
 import { Norbulingka } from "utils/dictionary";
+// 导入接口
+import norbulingka from "@/service/api/norbulingka";
 const topTitle = {
   add: {
     title: "添加  本体情况"

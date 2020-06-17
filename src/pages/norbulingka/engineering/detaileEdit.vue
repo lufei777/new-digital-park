@@ -17,8 +17,19 @@
           slot-scope="obj"
         >
           <div>
-            <el-button v-if=" $route.params.mark !=='detail' " @click="save" type='primary'>保存</el-button>
-            <el-button @click="goBack" >返回</el-button>
+            <!-- 添加的保存 -->
+            <el-button
+              v-if=" $route.params.mark =='add' "
+              @click="addSave(obj)"
+              type='primary'
+            >添加保存</el-button>
+            <!-- 编辑的保存 -->
+            <el-button
+              v-if=" $route.params.mark =='edit' "
+              @click="editSave(obj)"
+              type='primary'
+            >编辑保存</el-button>
+            <el-button @click="goBack">返回</el-button>
           </div>
         </template>
       </z-Form>
@@ -28,6 +39,8 @@
 </template>
 
 <script>
+// 导入接口
+import norbulingka from "@/service/api/norbulingka";
 const topTitle = {
   add: {
     title: "添加 保护工程"
@@ -42,7 +55,7 @@ const topTitle = {
 export default {
   data() {
     return {
-      title:'模板',
+      title: "模板",
       model: {},
       formData: {
         ref: "formData",
@@ -59,10 +72,10 @@ export default {
             span: 8,
             offset: 1,
             row: true,
-            rules:[
+            rules: [
               {
-                required:true,
-                message:'必填字段',
+                required: true,
+                message: "必填字段"
               }
             ]
           }
@@ -77,7 +90,7 @@ export default {
               {
                 prop: "relateElement",
                 type: "checkbox",
-                span: 10,
+                span: 14,
                 offset: 1,
                 dicData: [
                   { label: "乌尧颇章", value: 0 },
@@ -123,6 +136,7 @@ export default {
                   { label: "现场展示", value: 2 }
                 ]
               },
+
               // 图片：	photoFile
               {
                 label: "图片",
@@ -130,7 +144,23 @@ export default {
                 type: "upload",
                 span: 6,
                 offset: 1,
-                row: true
+                accept: ["jpg", "jpeg", "png"],
+                action: "/oaApi/image/upload",
+                row: true,
+                propsHttp: {
+                  name: "fileName",
+                  url: "fileUrl",
+                  res: "data"
+                }
+                // props: {
+                //   label: "housePictureName",
+                //   value: "housePictureUrl"
+                // },
+                // propsHttp: {
+                //   name: "fileName",
+                //   url: "fileUrl",
+                //   res: "data"
+                // }
               },
               // 立项批复文件文号：	projectReplyFileNum
               {
@@ -155,7 +185,13 @@ export default {
                 label: "立项报告",
                 prop: "projectReport2",
                 type: "upload",
+                action: "/oaApi/image/upload",
                 span: 6,
+                propsHttp: {
+                  name: "fileName",
+                  url: "fileUrl",
+                  res: "data"
+                },
                 offset: 1,
                 row: true
               },
@@ -182,6 +218,8 @@ export default {
                 label: "方案开始年月",
                 prop: "planStartDate",
                 type: "month",
+                valueFormat: "yyyy-MM",
+                format: "yyyy-MM",
                 span: 6,
                 // width: "120",
                 offset: 1,
@@ -200,8 +238,10 @@ export default {
               {
                 label: "方案批复年份",
                 prop: "planReplyDate",
-                type: "input",
+                type: "year",
                 span: 6,
+                valueFormat: "yyyy",
+                format: "yyyy",
                 // width: 120,
                 offset: 1
               },
@@ -210,9 +250,15 @@ export default {
                 label: "方案",
                 prop: "planReport2",
                 type: "upload",
+                action: "/oaApi/image/upload",
                 span: 6,
                 offset: 1,
-                row: true
+                row: true,
+                propsHttp: {
+                  name: "fileName",
+                  url: "fileUrl",
+                  res: "data"
+                }
               },
               // 方案设计经费国家补助：	planBudget
               {
@@ -256,9 +302,15 @@ export default {
                 label: "文件",
                 prop: "otherReport2",
                 type: "upload",
+                action: "/oaApi/image/upload",
                 span: 6,
                 offset: 1,
-                row: true
+                row: true,
+                propsHttp: {
+                  name: "fileName",
+                  url: "fileUrl",
+                  res: "data"
+                }
               },
               // 是否上报世界遗产中心：	isReport
               {
@@ -279,6 +331,8 @@ export default {
                 prop: "feedBackTime",
                 type: "date",
                 span: 6,
+                valueFormat: "yyyy-MM-dd",
+                format: "yyyy-MM-dd",
                 offset: 1
                 // width: 180
               },
@@ -296,18 +350,24 @@ export default {
                   { label: "待审核", value: 2 }
                 ]
               },
-              // 往来文件：otherReport2
+              // 往来文件：filePath2
               {
                 label: "往来文件",
-                prop: "otherReport2",
+                prop: "filePath2",
                 type: "upload",
+                action: "/oaApi/image/upload",
                 offset: 1,
-                span: 6
+                span: 6,
+                propsHttp: {
+                  name: "fileName",
+                  url: "fileUrl",
+                  res: "data"
+                }
               },
               // 保护工程进展情况： progress
               {
                 label: "保护工程进展情况",
-                prop: " progress",
+                prop: "progress",
                 type: "select",
                 span: 6,
                 offset: 1,
@@ -335,13 +395,19 @@ export default {
                 offset: 1,
                 span: 6
               },
-              // 监理报告： otherReport2
+              // 监理报告： supervisionReport2
               {
                 label: "监理报告",
-                prop: "otherReport2",
+                prop: "supervisionReport2",
                 type: "upload",
+                action: "/oaApi/image/upload",
                 span: 6,
-                offset: 1
+                offset: 1,
+                propsHttp: {
+                  name: "fileName",
+                  url: "fileUrl",
+                  res: "data"
+                }
               },
               // 开工时间：startTime
               {
@@ -350,6 +416,8 @@ export default {
                 type: "date",
                 span: 6,
                 offset: 1,
+                valueFormat: "yyyy-MM-dd",
+                format: "yyyy-MM-dd",
                 row: true
               },
               // 竣工时间： endTime
@@ -357,22 +425,31 @@ export default {
                 label: "竣工时间",
                 prop: "endTime",
                 type: "date",
+                valueFormat: "yyyy-MM-dd",
+                format: "yyyy-MM-dd",
                 offset: 1,
                 span: 6
               },
               // 竣工报告：otherReport2
               {
                 label: "竣工报告",
-                prop: "otherReport2",
+                prop: "endReport2",
                 type: "upload",
+                action: "/oaApi/image/upload",
                 span: 6,
-                offset: 1
+                offset: 1,
+                propsHttp: {
+                  name: "fileName",
+                  url: "fileUrl",
+                  res: "data"
+                }
               },
-              // 其他资料： otherReport2
+              // 其他资料： otherFiles2
               {
                 label: "其他资料",
-                prop: "otherReport2",
+                prop: "otherFiles2",
                 type: "upload",
+                action: "/oaApi/image/upload",
                 span: 6,
                 offset: 1
               },
@@ -401,6 +478,8 @@ export default {
                 prop: "governCheckTime",
                 type: "date",
                 span: 6,
+                valueFormat: "yyyy-MM-dd",
+                format: "yyyy-MM-dd",
                 // width: 180,
                 offset: 1,
                 row: true
@@ -409,8 +488,8 @@ export default {
               {
                 prop: "btn",
                 formslot: true,
-                span: 6,
-                offset: 9
+                span: 10,
+                offset: 6
               }
             ]
           }
@@ -418,37 +497,113 @@ export default {
       }
     };
   },
-  computed:{
+  computed: {
     Form() {
-      return this.$refs[this.formData.ref]
+      return this.$refs[this.formData.ref];
     }
   },
   methods: {
-    save(obj){
+    // 添加的保存
+    addSave(obj) {
       this.Form.getFormModel(res => {
-      // console.log('d',res)
-      if(res.projectName === null){
-        return false
-      }else{
-        this.$router.back()
-      }
-      })
+        console.log("d", res);
+        let parmas = res;
+        if (res.projectName === null) {
+          return false;
+        } else {
+          // delete parmas.mark
+          // 对传入的参数进行处理===有些字段是不需要的
+          // 字符串拼接 relateElement要求不是字符串不是数组
+          let str = "";
+          if (parmas.relateElement) {
+            parmas.relateElement.forEach(item => {
+              str = str + item + ",";
+            });
+            parmas.relateElement = str;
+          }
+
+          [
+            "photoFile",
+            "mark",
+            "projectReport2",
+            "planReport2",
+            "otherReport2",
+            "otherFiles2",
+            "supervisionReport2",
+            "endReport2",
+            "filePath2"
+          ].forEach(item => {
+            delete parmas[item];
+          });
+          // 项目工程的增加接口
+          norbulingka.insertWithFileProtectProject({ ...parmas }).then(res => {
+            this.$message({
+              type: "success",
+              message: "添加成功！"
+            });
+            // this.$router.back();
+          });
+        }
+      });
     },
-    goBack(obj){
-       this.$router.back()
+    // 编辑的保存
+    editSave() {
+      this.Form.getFormModel(res => {
+        // console.log('d',res)
+        let parmas = res;
+        if (res.projectName === null) {
+          return false;
+        } else {
+          let str = "";
+          if (
+            parmas.relateElement &&
+            Object.values(parmas.relateElement) >= 1
+          ) {
+            parmas.relateElement.forEach(item => {
+              str = str + item + ",";
+            });
+            parmas.relateElement = str;
+          }
+
+          [
+            "photoFile",
+            "mark",
+            "projectReport2",
+            "planReport2",
+            "otherReport2",
+            "otherFiles2",
+            "supervisionReport2",
+            "endReport2",
+            "filePath2"
+          ].forEach(item => {
+            delete parmas[item];
+          });
+          norbulingka.updateProtectProject({ ...parmas }).then(res => {
+            this.$message.success({ message: "编辑成功" });
+            this.$router.back();
+          });
+        }
+      });
+    },
+    goBack(obj) {
+      this.$router.back();
     }
   },
   created() {
-    var parmars = this.$route.params;
-    console.log(parmars);
-    if (parmars.flag) {
-      this.formData.textMode = true;
-       this.title = _.cloneDeep(topTitle[parmars.mark].title);
-      this.model = { ...parmars };
-    } else {
-      this.model = { ...parmars };
-       this.title = _.cloneDeep(topTitle[parmars.mark].title);
-    }
+    // console.log(parmars);
+
+    this.$nextTick(() => {
+      var parmars = this.$route.params;
+      console.log(parmars);
+      if (parmars.flag) {
+        this.formData.textMode = true;
+        this.title = _.cloneDeep(topTitle[parmars.mark].title);
+        this.model = { ...parmars };
+      } else {
+        this.model = { ...parmars };
+        this.title = _.cloneDeep(topTitle[parmars.mark].title);
+      }
+    });
   }
 };
 </script>
@@ -456,7 +611,7 @@ export default {
 .toptitle {
   margin-bottom: 20px;
   span {
-    padding:0 10px;
+    padding: 0 10px;
     font-weight: bold;
     font-size: 18px;
   }

@@ -17,11 +17,18 @@
           slot-scope="obj"
         >
           <div>
+            <!-- 编辑的保存 -->
             <el-button
-            v-if="$route.query.mark !== 'detail'"
               type='primary'
-              @click="save(obj)"
-            >保存</el-button>
+              v-if="$route.query.mark == 'edit'"
+              @click="editSave"
+            >编辑保存</el-button>
+            <!-- 添加的保存 -->
+            <el-button
+              v-if="$route.query.mark == 'add'"
+              type='primary'
+              @click="addSave(obj)"
+            >添加保存</el-button>
             <el-button
               type='danger'
               @click="back(obj)"
@@ -35,6 +42,8 @@
 </template>
 
 <script>
+// 导入接口
+import norbulingka from "@/service/api/norbulingka";
 const topTitle = {
   add: {
     title: "添加 日常巡查"
@@ -72,17 +81,18 @@ export default {
             prop: "checkType",
             type: "select",
             offset: 6,
-            rules:[
-                {
-                  message:'必填',
-                  required:true,
-                }
+            rules: [
+              {
+                message: "必填",
+                required: true
+              }
             ],
-            dicData: [
-              { label: "安全事故记录", value: 0 },
-              { label: "群体事件记录", value: 1 },
-              { label: "保养与维护工程记录", value: 2 }
-            ]
+            dicUrl: norbulingka.getSelectOption,
+            dicQuery: { catalogId: 16001 },
+            props: {
+              label: "name",
+              value: "id"
+            }
           },
           // 巡检人员 : person
           {
@@ -90,31 +100,42 @@ export default {
             prop: "person",
             type: "select",
             offset: 6,
-            rules:[
-                {
-                  message:'必填',
-                  required:true,
-                }
+            rules: [
+              {
+                message: "必填",
+                required: true
+              }
             ],
-            dicData: [
-              { label: "admine", value: 0 },
-              { label: "访客", value: 1 },
-              { label: "审计", value: 2 }
-            ]
+            dicUrl: norbulingka.userNameList,
+            props: {
+              label: "name",
+              value: "id"
+            }
           },
           // 照片 : photoFile
           {
             label: "照片",
-            prop: "photoFile",
+            prop: "photo",
+            listType: "picture-card",
             type: "upload",
             offset: 6,
             action: "/oaApi/image/upload",
             accept: ["jpg", "jpeg", "png"],
-            tip: "只能上传jpg/png文件。",
-            rules:[
+            dataType: "string",
+            // props: {
+            //   label: "contractPictureName",
+            //   value: "contractPictureUrl"
+            // },
+            propsHttp: {
+              name: "fileName",
+              url: "fileUrl",
+              res: "data"
+            },
+            // tip: "只能上传jpg/png文件。",
+            rules: [
               {
-                required:true,
-                message:'必填'
+                required: true,
+                message: "必填"
               }
             ]
           },
@@ -125,9 +146,9 @@ export default {
             prop: "description",
             clearable: true,
             maxlength: 255,
-            minRows: 8,
+            minRows: 6,
             offset: 6,
-            showWordLimit: true,
+            showWordLimit: true
           },
           // 处理情况 : result
           {
@@ -136,36 +157,69 @@ export default {
             prop: "result",
             clearable: true,
             maxlength: 255,
-            minRows: 8,
+            minRows: 6,
             offset: 6,
             showWordLimit: true
           },
           {
             prop: "btn",
             formslot: true,
-            span: 6,
-            offset: 9
+            span: 10,
+            offset: 7
           }
         ]
       }
     };
   },
   methods: {
-    submit(obj) {
-      console.log(obj);
+    submit(model, done) {
+      norbulingka
+        .addDailyCheck(model)
+        .then(res => {
+          this.$message({
+            type: "success",
+            message: "添加成功！"
+          });
+          this.$router.back();
+        })
+        .finally(() => {
+          done();
+        });
     },
-    // 保存
-    save(obj) {
-      // console.log(obj);
+    // 编辑保存
+    editSave(obj) {
       this.Form.getFormModel(res => {
-        // console.log("保存", res);
+        console.log("保存", res);
+        let params = res;
         // 判断必填字段是否为空 没填情况下阻止跳转
         if (Object.keys(res).length === 0) {
           return false;
         } else {
-          this.$router.back();
+          delete params.mark;
+          let str = "";
+          if (params.photoFile && Object.values(params.photoFile).length >= 1) {
+            params.photoFile.forEach(item => {
+              let picurl = item.value;
+              var index = picurl.lastIndexOf("/");
+              picurl = picurl.substring(index + 1);
+              str = str + picurl + ",";
+            });
+          }
+          delete params.photoFile;
+          params["photo"] = str;
+          norbulingka.updateDailyCheck({ ...params }).then(res => {
+            this.$message({
+              type: "success",
+              message: "编辑成功！"
+            });
+            this.$router.back();
+          });
         }
       });
+    },
+    // 添加保存
+    addSave() {
+      this.Form.submit();
     },
     // 返回
     back(obj) {
@@ -183,6 +237,11 @@ export default {
       this.model = { ...query };
       this.title = topTitle[query.mark].title;
     }
+    // if(query.photo){
+    //   this.$nextTick(() => {
+
+    //   })
+    // }
   },
   mounted() {},
   computed: {

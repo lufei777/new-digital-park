@@ -35,6 +35,8 @@
 </template>
 
 <script>
+// 导入接口
+import norbulingka from "@/service/api/norbulingka";
 import { Norbulingka } from "utils/dictionary";
 const topTitle = {
   add: {
