@@ -144,7 +144,7 @@ export default {
     window.CZClient = {
       setToken: (token, isCZClient = true) => {
         setToken(token);
-        this.this.loginSuccessCb();
+        this.loginSuccessCb();
       }
     }
   }
