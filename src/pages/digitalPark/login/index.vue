@@ -125,7 +125,7 @@ export default {
       } else {
         this.$router.push("/digitalPark/homePage")
       }
-      
+
       // 获取用户信息
       this.$store.dispatch('user/getUserInfo')
 
@@ -144,6 +144,7 @@ export default {
     window.CZClient = {
       setToken: (token, isCZClient = true) => {
         setToken(token);
+        setIsCZClient(true);
         this.loginSuccessCb();
       }
     }

@@ -165,13 +165,17 @@ export default {
     },
     async onClickUserConfigure(val) { //点击用户
       Cookies.set('moduleType', this.cookieModuleType)
+      // 退出
       if (val == 3) {
         //如果是客户端
         if (IsCZClient()) {
-          goBackClientLogin();
+          window.goBackClientLogin && window.goBackClientLogin();
         } 
+        // 清除登录信息
         this.$store.dispatch('user/logout').then(() => {
-          this.$router.push("/login");
+          if(!IsCZClient()){
+            this.$router.push("/login");
+          }
         })
         // 清空菜单列表
         this.$store.commit("digitalPark/activeMenuIndex", "");
