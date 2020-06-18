@@ -221,17 +221,16 @@ export default {
         language: Cookies.get("lang")
       }).finally(() => {
         this.loading = false;
+        // 客户端loading消失
+        if (IsCZClient()) {
+          window.hideClientLoading && window.hideClientLoading()
+        }
       })
       res.map(item => {
         item.moduleDragFlag = true; //控制模块内容
         // item.parentModuleDragFlag=true //控制块，不可与块内容用同一变量
       });
       this.userProModuleList = res;
-      
-      // 客户端loading消失
-      if (IsCZClient()) {
-        window.hideClientLoading && window.hideClientLoading()
-      }
     },
     async onDragChange(evt) {
       console.log("out-moudle-change", evt);
