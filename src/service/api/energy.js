@@ -61,6 +61,10 @@ class EnergyApi {
   @url("/vibe-web/reckon/addBuildInfo")
   @get
   addBuildInfo(){}
+
+  @url("/vibe-web/reckon/getTrendAnalysis")
+  @get
+  getTrendAnalysisData(){}
 }
 
 export default new EnergyApi()

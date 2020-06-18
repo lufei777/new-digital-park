@@ -14,9 +14,7 @@
     data() {
       return {
         curDevice: 0,
-        moduleData:{},
-        videoModule:{},
-        curUrl:''
+        urlList:[]
       };
     },
     methods: {
@@ -27,48 +25,40 @@
           catalogIds: 2001,
           flag: 'device'
         })
-        this.curDevice = res.list.rows[0].id
+        res.list.rows.map(async(item,index)=>{
+          if(index<4){
+            this.curDevice = item.id
+            let tmp = await this.getVideoUrl()
+            // console.log('tmp',tmp)
+            this.urlList.push(tmp)
+          }
+        })
       },
       async getVideoUrl() {
         let res = await CommonApi.getVideoUrl({
           kind: 1,
           id: this.curDevice
         })
-        this.curUrl=res.data.rtspUrlPattern
-        this.getParams()
+        return res.data.rtspUrlPattern
       },
       getParams(){
-        // if(this.videoModule && this.videoModule.moduleList.length){
           let dom = $(".item-id-"+this.moduleItem.id)
           if(dom && dom.length){
             let offset = dom.offset().left
             let top =  dom.offset().top
             let width = dom.width()
             let height = dom.height()
-            console.log(offset,top,width,height,this.curUrl)
+            console.log(offset,top,width,height,this.urlList)
             setTimeout(()=>{
-              window.openVideoWin && window.openVideoWin(offset,top,width,height,this.curUrl)
+              window.openVideoWin && window.openVideoWin(offset,top,width,height,this.urlList.join(","))
             },2000)
-
           }
-
-        // }
       },
-      async getModuleList(){
-        let res = await DigitalParkApi.getLargeScreenModule({
-          width: document.body.offsetWidth,
-          height: document.body.offsetHeight,
-        })
-        this.moduleData=res
-        let tmp =  res.modules.find((item)=>item.moduleList[0] &&
-                   item.moduleList[0].componentName=='videoMonitor')
-        this.videoModule=tmp
-      }
     },
     async mounted() {
-      // await this.getModuleList()
       await this.getCameraList()
-      this.getVideoUrl()
+      await this.getParams()
+      // this.getVideoUrl()
     }
   };
 </script>

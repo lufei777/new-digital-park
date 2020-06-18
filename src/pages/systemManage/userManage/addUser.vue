@@ -1,53 +1,59 @@
 <template>
-  <div class="add-user radius-shadow">
+  <div class="add-user radius-shadow panel-container">
     <div class="tip flex-align">
       <span class="icon"></span>
       <span>{{tipText}}</span>
     </div>
-    <el-form ref="userForm" :rules="rules" :model="userForm" label-position="right" label-width="120px" >
-      <el-form-item label="用户名" prop="login_id">
-        <el-input v-model="userForm.login_id"></el-input>
-      </el-form-item>
-      <el-form-item label="姓名" prop="name">
-        <el-input v-model="userForm.name"></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input v-model="userForm.password" type="password"></el-input>
-      </el-form-item>
-      <el-form-item label="确认密码" prop="re_password">
-        <el-input v-model="userForm.re_password" type="password"></el-input>
-      </el-form-item>
-      <el-form-item label="手机号" prop="phone">
-        <el-input v-model="userForm.phone"></el-input>
-      </el-form-item>
-      <el-form-item label="Email" prop="mail">
-        <el-input v-model="userForm.mail"></el-input>
-      </el-form-item>
-      <el-form-item label="所在部门" prop="departmentName">
-        <el-input v-model="userForm.departmentName" @focus="onShowModal"></el-input>
-      </el-form-item>
-      <el-form-item label="用户身份" prop="rid">
-        <el-select v-model="userForm.rid">
-          <el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="submitForm('userForm')">确定</el-button>
-        <el-button @click="goBack" class="go-back">返回</el-button>
-      </el-form-item>
-    </el-form>
-    <TreeModal :tree-modal-config="treeModalConfig"></TreeModal>
+    <!--<el-form ref="userForm" :rules="rules" :model="userForm" label-position="right" label-width="120px" >-->
+      <!--<el-form-item label="用户名" prop="login_id">-->
+        <!--<el-input v-model="userForm.login_id"></el-input>-->
+      <!--</el-form-item>-->
+      <!--<el-form-item label="姓名" prop="name">-->
+        <!--<el-input v-model="userForm.name"></el-input>-->
+      <!--</el-form-item>-->
+      <!--<el-form-item label="密码" prop="password">-->
+        <!--<el-input v-model="userForm.password" type="password"></el-input>-->
+      <!--</el-form-item>-->
+      <!--<el-form-item label="确认密码" prop="re_password">-->
+        <!--<el-input v-model="userForm.re_password" type="password"></el-input>-->
+      <!--</el-form-item>-->
+      <!--<el-form-item label="手机号" prop="phone">-->
+        <!--<el-input v-model="userForm.phone"></el-input>-->
+      <!--</el-form-item>-->
+      <!--<el-form-item label="Email" prop="mail">-->
+        <!--<el-input v-model="userForm.mail"></el-input>-->
+      <!--</el-form-item>-->
+      <!--<el-form-item label="所在部门" prop="departmentName">-->
+        <!--<el-input v-model="userForm.departmentName" @focus="onShowModal"></el-input>-->
+      <!--</el-form-item>-->
+      <!--<el-form-item label="用户身份" prop="rid">-->
+        <!--<el-select v-model="userForm.rid">-->
+          <!--<el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id">-->
+          <!--</el-option>-->
+        <!--</el-select>-->
+      <!--</el-form-item>-->
+      <!--<el-form-item>-->
+        <!--<el-button type="primary" @click="submitForm('userForm')">确定</el-button>-->
+        <!--<el-button @click="goBack" class="go-back">返回</el-button>-->
+      <!--</el-form-item>-->
+    <!--</el-form>-->
+    <div class="form-box">
+      <z-form :ref="formConfig.ref" :options="formConfig" v-model="formModel" @submit="submit">
+        <template slot="menuBtn" slot-scope="scope">
+          <el-button @click="goBack(scope)">返回</el-button>
+        </template>
+      </z-form>
+    </div>
   </div>
 </template>
 
 <script>
-  import CommonApi from '@/service/api/common'
   import TreeModal from '@/components/treeModal/index'
+  import SystemManageApi from '@/service/api/systemManage'
+  import {mapState} from 'vuex'
   export default {
     name: 'AddUser',
     components: {
-      TreeModal
     },
     // props:['curUserId','isEdit'],
     data () {
@@ -102,18 +108,110 @@
                  { validator: checkPhone, trigger: 'blur' }],
           mail:[{ validator: checkMail, trigger: 'blur' }],
         },
-        roleList:[],
+        // roleList:[],
         showDialog:false,
         departmentList:[],
-        treeModalConfig:{
-          treeList:[],
-          treeConfig:{
-            defaultExpandedkeys:[],
-          },
-          showModal:false,
-          onClickSureBtnCallback:this.onClickModalSureBtn,
-          onClickCancelBtnCallback:this.onClickModalCancelBtn
-        }
+        formModel: {},
+        formConfig: {
+          ref: "formRef",
+          size: "medium",
+          menuPosition: "center",
+          labelWidth: 150,
+          emptyBtn: false,
+          forms: [
+            {
+              type: "input",
+              label: "用户名",
+              prop: "loginId",
+              span: 24,
+              rules: {
+                required: true,
+                // message: "请输入角色ID",
+                trigger: "blur"
+              }
+            },
+            {
+              type: "input",
+              label: "姓名",
+              prop: "name",
+              span: 24,
+              rules: {
+                required: true,
+                message: "请输入角色名称",
+                triCgger: "blur"
+              }
+            },
+            {
+              type: "tree",
+              label: "所属部门",
+              prop: "department",
+              span: 24,
+              dicData:[],
+              props: {
+                label: "name",
+                value: "id",
+                children: "childNode",
+              },
+              rules: {
+                required: true,
+                // message: "请输入角色名称",
+                trigger: "change"
+              }
+            },
+            // {
+            //   type: "password",
+            //   label: "密码",
+            //   prop: "password",
+            //   span: 24,
+            //   rules: {
+            //   }
+            // },
+            // {
+            //   type: "password",
+            //   label: "确认密码",
+            //   prop: "rePassword",
+            //   span: 24,
+            //   rules: {
+            //   }
+            // },
+            {
+              type: "input",
+              label: "E-mail",
+              prop: "mail",
+              span: 24,
+              rules: {
+              }
+            },
+            {
+              type: "input",
+              label: "手机号",
+              prop: "phone",
+              span: 24,
+              rules: {
+              }
+            },
+            {
+              type: "textarea",
+              label: "已分配角色",
+              prop: "roleList",
+              span: 24,
+              disabled:true
+            },
+            {
+              type: "tree",
+              label: "分配角色",
+              prop: "role",
+              multiple:true,
+              dicData:[],
+              props: {
+                label: "name",
+                value: "id",
+                children: "childNode",
+              },
+              span: 24,
+            },
+          ]
+        },
       }
     },
     computed:{
@@ -122,84 +220,68 @@
       },
       curUserId(){
         return this.$route.query.curUserId
-      }
+      },
+      api(){
+        return this.curUserId?'updateUser':'addUser'
+      },
+      ...mapState({
+        userInfo: state => state.user.userInfo
+      })
     },
     watch:{
     },
     methods: {
-      async getItemUser(){
-        let res =await CommonApi.getItemUser({
-          id:this.curUserId
+      async getUserDetail(){
+        let res =await SystemManageApi.getUserDetail({
+          userId:this.curUserId
         })
-        this.userForm={
-          id:this.curUserId,
-          login_id:res.login_id,
-          name:res.name,
-          password:res.password,
-          re_password:res.password,
-          mail:res.mail,
-          phone:res.phone,
-          department:res.department,
-          departmentName:res.deptName?null:res.department,
-          rid:res.rlist[0].id,
-        }
+        this.formModel = res
       },
       async getRoleList(){
-        let res  = await CommonApi.getRoleList()
-        this.roleList=res.rows
-        this.userForm.rid=res.rows[0] && res.rows[0].id
+        let res = await SystemManageApi.getRoleList({
+          userId: this.userInfo.id
+        })
+        this.$refs[this.formConfig.ref].setColumnByProp("role", {
+          dicData:res.list
+        });
       },
-       submitForm(formName){
-          this.$refs[formName].validate((valid) => {
-           if (valid) {
-             this.addUser()
-           } else {
-             console.log('error submit!!');
-             return false;
-           }
-         });
+      async getDepartmentList(){
+        let res = await SystemManageApi.getDepartmentTree()
+        this.$refs[this.formConfig.ref].setColumnByProp("department", {
+           dicData:res
+        });
       },
-      async addUser(){
-        let res
+      async submit(model, hide) {
+        let params = this.formModel
         if(this.curUserId){
-           res = await CommonApi.editUser(this.userForm)
-        }else{
-           res = await CommonApi.addUser(this.userForm)
+          params = {...this.formModel,...{loginId:this.curUserId}}
         }
-          this.$message({
-            type: 'success',
-            message: this.curUserId?'修改成功！':'添加成功！',
-            duration:1000
+        await SystemManageApi[this.api](params)
+          .then(res => {
+            this.$message({
+              type: "success",
+              message: res
+            });
+            // this.$router.push('./userManage')
+          })
+          .finally(msg => {
+            hide();
           });
-          if(res){
-            this.$router.push('./userManage')
-          }
+        // console.log(this.formModel.role)
+        // await SystemManageApi.assignRole({
+        //   userId:this.curUserId,
+        //   roleIds:this.formModel.role.join(",")
+        // })
       },
       goBack(){
         history.go(-1)
       },
-      async getDepartmentList(){
-        this.treeModalConfig.treeList = await CommonApi.getDeptTree()
-        this.userForm.departmentName= this.treeModalConfig.treeList[0].text
-        this.treeModalConfig.treeConfig.defaultExpandedkeys=[this.treeModalConfig.treeList[0].id]
-      },
-      onShowModal(){
-        this.treeModalConfig.showModal=true
-      },
-      onClickModalSureBtn(val){
-        this.userForm.department=val.id
-        this.userForm.departmentName=val.text
-        this.treeModalConfig.showModal=false
-      },
-      onClickModalCancelBtn(){
-        this.treeModalConfig.showModal=false
-      }
     },
     mounted(){
        this.getRoleList()
        this.getDepartmentList()
        if(this.curUserId){
-        this.getItemUser()
+        this.getUserDetail()
       }
     }
   }
@@ -208,19 +290,11 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
   .add-user{
-    padding:10px;
-    background: @white;
-    .el-form{
-      width:50%;
-      margin:30px auto;
-    }
-    .el-input{
-      width:60%;
-    }
-    .go-back{
-    }
-    .el-input{
-      width:280px;
+    padding:20px;
+    box-sizing: border-box;
+    .form-box{
+      width:40%;
+      margin:0 auto;
     }
   }
 </style>
