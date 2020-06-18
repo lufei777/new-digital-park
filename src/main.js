@@ -10,8 +10,6 @@ import store from "./vuex/store";
 import LangEN from "./utils/lang/en.js";
 import LangZH from "./utils/lang/zh.js";
 
-import x2js from 'x2js' //xml数据处理插件
-Vue.prototype.$x2js = new x2js() //创建x2js对象，挂到vue原型上
 // 获取项目
 import { getProjectName } from "./utils/project";
 
@@ -67,7 +65,7 @@ const i18n = new VueI18n({
 import _ from "lodash";
 Vue.prototype._ = _;
 
-//fragment
+//fragment 虚拟节点，不会有div标签
 import VueFragment from "vue-fragment";
 Vue.use(VueFragment.Plugin);
 
@@ -80,12 +78,16 @@ if (!Cookies.get("moduleType")) {
 import echarts from "echarts";
 Vue.prototype.$echarts = echarts;
 
-//编辑器
+//富文本编辑器
 import VueQuillEditor from "vue-quill-editor";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 Vue.use(VueQuillEditor);
+
+// xml数据处理插件
+import x2js from 'x2js'
+Vue.prototype.$x2js = new x2js();
 
 Vue.config.productionTip = false;
 

@@ -10,21 +10,15 @@ module.exports = {
 		assetsPublicPath: '/',
 		proxyTable: [
 			{
-				context: [ '/oaApi', '/user-service', '/vibe-web', '/norb-service' ],
-				// target: 'http://39.98.130.147:8080'
+				context: ['/oaApi', '/user-service', '/vibe-web', '/norb-service'],
 				// target:'http://192.168.1.50:8080' //预警报警调试用
-				target: 'http://192.168.1.88:9001' // 罗布林卡二期接口调试
-				// target:'http://39.98.130.147:8080'
+				// target: 'http://192.168.1.88:9001' // 罗布林卡二期接口调试
+				target: 'http://39.98.130.147:9001'
 				/* changeOrigin: true,//是否允许跨越*/
 				/* pathRewrite: {
 					'/user-service': ''
 					} */
 			}
-			/* {
-        context: ['/vibe-web'],
-        // target:'http://192.168.1.232:8080'
-        target: 'http://39.98.130.147:8080'
-      } */
 		],
 
 		// Various Dev Server settings
@@ -74,7 +68,7 @@ module.exports = {
 		// Before setting to `true`, make sure to:
 		// npm install --save-dev compression-webpack-plugin
 		productionGzip: false,
-		productionGzipExtensions: [ 'js', 'css' ],
+		productionGzipExtensions: ['js', 'css'],
 
 		// Run the build command with an extra argument to
 		// View the bundle analyzer report after build finishes:

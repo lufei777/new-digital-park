@@ -4,11 +4,11 @@
     class="text-overflow-eliipsis"
     :title="displayValue"
   >
-    <!-- <slot v-else :name="column.prependslot" :textMode="textMode"></slot> -->
+    <!-- <slot v-else :name="column.prependSlot" :textMode="textMode"></slot> -->
     <span v-if="column.prepend && comDisplayValue !== EMPTY_VALUE">{{column.prepend}}</span><!--
     --><span>{{comDisplayValue}}</span><!--
     --><span v-if="column.append && comDisplayValue !== EMPTY_VALUE">{{column.append}}</span>
-    <!-- <slot v-else :name="column.appendslot" :textMode="textMode"></slot> -->
+    <!-- <slot v-else :name="column.appendSlot" :textMode="textMode"></slot> -->
   </div>
   <component
     v-else
@@ -47,11 +47,11 @@
       ></slot>
     </template>
     <!-- input的slot处睆 -->
-    <template v-if="column.prependslot" #[column.prependslot]="{prependClick}">
-      <slot :name="column.prependslot" :prependClick="prependClick"></slot>
+    <template v-if="column.prependSlot" #[column.prependSlot]="{prependClick}">
+      <slot :name="column.prependSlot" :prependClick="prependClick"></slot>
     </template>
-    <template v-if="column.appendslot" #[column.appendslot]="{appendClick}">
-      <slot :name="column.appendslot" :appendClick="appendClick"></slot>
+    <template v-if="column.appendSlot" #[column.appendSlot]="{appendClick}">
+      <slot :name="column.appendSlot" :appendClick="appendClick"></slot>
     </template>
   </component>
 </template>
@@ -272,8 +272,8 @@ export default {
     :prefixIcon="column.prefixIcon"
     :prefix="column.prefix"
     :prepend="column.prepend"
-    :prependslot="column.prependslot"
-    :appendslot="column.appendslot"
+    :prependSlot="column.prependSlot"
+    :appendSlot="column.appendSlot"
     :prop="column.prop"
     :showPassword="column.showPassword"
     :readonly="column.readonly"

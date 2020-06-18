@@ -18,7 +18,7 @@
         <NavOperator :moduleType.sync="moduleType" from-flag="1" />
       </div>
       <div class="sidebar-container">
-        <Sidebar :menu-data="menuData" :menuConfig="menuConfig" />
+        <Sidebar :menu-data="menuTree[0]" :menuConfig="menuConfig" />
       </div>
     </div>
 
@@ -114,7 +114,6 @@ export default {
   },
   data() {
     return {
-      title: "数字园区",
       productList: [],
       showMoreProduct: false,
       modelValue: "1",
@@ -131,19 +130,25 @@ export default {
       },
       carouselImgList: [],
       copyrightShow: false,
-      titleIcon: '',
       messageList:[]
     };
   },
   computed: {
     ...mapState({
-      dragFlag: state => state.digitalPark.dragFlag
+      dragFlag: state => state.digitalPark.dragFlag,
+      menuTree:state => state.digitalPark.menuTree
     }),
     isydSystem() {
       return window.__CZ_SYSTEM=='ydCity' ;
     },
     isyd(){
       return isYD()
+    },
+    title(){
+      return this.menuTree[0]?.name || '数字园区'
+    },
+    titleIcon(){
+      return this.menuTree[0]?.icon || ''
     }
   },
   watch: {
@@ -174,14 +179,10 @@ export default {
     onShowMoreProduct() {
       this.showMoreProduct = !this.showMoreProduct;
     },
-    async getMenuTree() {
-      let res = await DigitalParkApi.getMenuTree({
-        language: Cookies.get("lang")
-      });
-      this.title = res[0].name
-      this.titleIcon = res[0].icon
-      this.menuData = res[0];
-      localStorage.setItem('menuTree', JSON.stringify(res))
+    getMenuTree() {
+      /* this.title = this.menuTree[0].name
+      this.titleIcon = this.menuTree[0].icon
+      this.menuData = this.menuTree[0]; */
     },
     getItemBg(item) {
       let backgroundImage = "";
@@ -220,17 +221,16 @@ export default {
         language: Cookies.get("lang")
       }).finally(() => {
         this.loading = false;
+        // 客户端loading消失
+        if (IsCZClient()) {
+          window.hideClientLoading && window.hideClientLoading()
+        }
       })
       res.map(item => {
         item.moduleDragFlag = true; //控制模块内容
         // item.parentModuleDragFlag=true //控制块，不可与块内容用同一变量
       });
       this.userProModuleList = res;
-      
-      // 客户端loading消失
-      if (IsCZClient()) {
-        window.hideClientLoading && window.hideClientLoading()
-      }
     },
     async onDragChange(evt) {
       console.log("out-moudle-change", evt);

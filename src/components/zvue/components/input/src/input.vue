@@ -42,15 +42,15 @@
       @click.native="handleClick"
       @change="handleChange"
     >
-      <template slot="prepend" v-if="prepend || prependslot">
+      <template slot="prepend" v-if="prepend || prependSlot">
         <!-- <span @click="prependClick()">{{prepend}}</span> -->
         <div :style="pendStyle(prependClick)" @click="prependClick()" v-html="prepend"></div>
-        <slot v-if="prependslot" :name="prependslot" :prependClick="prependClick"></slot>
+        <slot v-if="prependSlot" :name="prependSlot" :prependClick="prependClick"></slot>
       </template>
-      <template slot="append" v-if="append || appendslot">
+      <template slot="append" v-if="append || appendSlot">
         <!-- <span @click="appendClick()">{{append}}</span> -->
         <div :style="pendStyle(appendClick)" @click="appendClick()" v-html="append"></div>
-        <slot v-if="appendslot" :name="appendslot" :appendClick="appendClick"></slot>
+        <slot v-if="appendSlot" :name="appendSlot" :appendClick="appendClick"></slot>
       </template>
       <template slot="suffix" v-if="suffix">
         <div v-html="suffix"></div>
@@ -161,20 +161,20 @@ export default {
     },
     prependClick: {
       type: Function,
-      default: () => {}
+      default: () => { }
     },
     prepend: {
       type: String
     },
     appendClick: {
       type: Function,
-      default: () => {}
+      default: () => { }
     },
     append: {
       type: String
     },
-    prependslot: String,
-    appendslot: String,
+    prependSlot: String,
+    appendSlot: String,
     suffix: {},
     prefix: {},
     autofocus: Boolean,
@@ -387,7 +387,7 @@ export default {
         isLeaf: this.leafKey
       });
     },
-    typeParam: function() {
+    typeParam: function () {
       if (this.rawtype) return this.rawtype;
       switch (this.type) {
         case "textarea":
@@ -489,10 +489,13 @@ export default {
   max-height: 300px;
   background-color: #fff;
   position: absolute;
-  z-index: 2001;
+  z-index: 2060;
   overflow: hidden;
   .el-scrollbar__wrap {
     overflow-x: hidden;
+  }
+  /deep/ .el-tree-node__content {
+    padding: 0;
   }
 }
 </style>

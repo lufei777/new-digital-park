@@ -1,8 +1,11 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { flattenDeep } from 'utils/czUtils';
+Vue.use(Router);
+// 插件引入
 import store from '../vuex/store';
-import { getToken } from '@/utils/auth'; // get token from cookie
+import { getToken } from 'utils/auth'; // get token from cookie
+import { getMenuTree } from 'utils/project';
+import { flatMenus, formatRoutes } from 'utils/util';
 
 import helloRouter from './hello-router';
 // 公共路由
@@ -10,6 +13,7 @@ import vibeWeb from './vibeWeb'; // 旧项目
 
 // 项目私有路由
 import DigitalParkRouter from './digital-park-router'; 					// 数字园区
+import SystemManage from './system-manage'                      // 系统设置
 import AssetManage from './asset-manage'; 											// 资产管理
 import EnergyRouter from './energy-router'; 										// 能源管理
 import LeaseManage from './lease-manage'; 											// 租赁管理
@@ -33,10 +37,16 @@ import MonitoringAlarm from './warning-alarm'; 									// 预警报警
 import Norbulingka from './norbulingka'; 												// 罗布林卡
 import DeviceManage from './device-manage'; 										// 设备管理
 
-// 数字园区
-let DigitalRouters = flattenDeep([
+// 数字园区 公共模块
+let publicRouters = [].concat(
   vibeWeb,
   DigitalParkRouter,
+  ExportData,
+  SystemManage
+)
+
+// 数字园区 私有模块
+let privateRouters = [].concat(
   AssetManage,
   EnergyRouter,
   LeaseManage,
@@ -53,21 +63,18 @@ let DigitalRouters = flattenDeep([
   personalManage,
   thirdParty,
   RevenueExpendManage,
-  ExportData,
   MonitoringAlarm,
   Norbulingka,
   DeviceManage
-]);
+)
+store.commit('digitalPark/setPrivateRouters', privateRouters);
 
-Vue.use(Router);
 const router = new Router({
-  routes: DigitalRouters
+  routes: publicRouters
 });
 
 router.beforeEach((to, from, next) => {
-  const hasToken = getToken();
-
-  if (hasToken) {
+  if (getToken()) {
     if (to.path === '/login') {
       next({ path: '/' });
     } else {
@@ -92,4 +99,23 @@ router.beforeEach((to, from, next) => {
     store.commit('digitalPark/activeMenuIndex', Cookies.get('activeMenuIndex'));
   }
 });
+
+// 重写addRoutes，刷新再次添加时报错有重复的路由
+router.$addRoutes = (routes) => {
+  router.matcher = new Router({
+    routes: publicRouters
+  }).matcher;
+  router.addRoutes(routes)
+}
+
+// 如果是刷新，则需要重新addRoutes
+if (getToken()) {
+  // 活后台返回菜单拍平path
+  let flat = flatMenus(getMenuTree()[0]);
+  // 将私有路由进行拆分 验证
+  let routes = formatRoutes(flat.flatmenupaths, privateRouters);
+  // 添加进当前路由中
+  router.$addRoutes(routes);
+}
+
 export default router;

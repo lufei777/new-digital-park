@@ -102,6 +102,9 @@
       },
       isNorbulingka() {
         return isNorbulingkaScreen()
+      },
+      menuTree(){
+        return this.$store.getters.menuTree
       }
     },
     watch: {
@@ -129,12 +132,8 @@
       getInnerOptions() {
         return {draggable: '.inner-drag-content', group: 'product', disabled: this.innerDisable}
       },
-      async getMenuTree() {
-        let res = await DigitalParkApi.getMenuTree({
-          language: Cookies.get("lang")
-        });
-        localStorage.setItem('menuTree', JSON.stringify(res))
-        this.headName = res[0].name
+      getMenuTree() {
+        this.headName = this.menuTree[0].name
       },
       async getLargeScreenModuleList(flag) {
         this.setConfigParams(flag)  //配置页时需要缩小或还原

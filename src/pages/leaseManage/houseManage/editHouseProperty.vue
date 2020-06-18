@@ -150,7 +150,7 @@ export default {
             dataType: "number",
             clearable: true,
             span: 12,
-            appendslot: "housepriceappend",
+            appendSlot: "housepriceappend",
             rules: [
               {
                 required: true,
