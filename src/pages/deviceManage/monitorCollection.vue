@@ -366,6 +366,7 @@ export default {
               required: true
             },
             change: ({ value }) => {
+              this.addModel.typeName = "";
               deviceManageApi.assetTypeList({ id: value }).then(res => {
                 this.$refs[this.deviceTypeForm.ref].setColumnByProp('typeName', {
                   dicData: res
@@ -377,6 +378,7 @@ export default {
             label: '资产类型',
             prop: 'typeName',
             type: 'select',
+            filterable: true,
             clearable: true,
             dicData: [],
             props: {
@@ -428,6 +430,30 @@ export default {
           }
         },
         {
+          label: '监测间隔',
+          prop: 'time_interval',
+          appendSlot: "time_interval_appendSlot",
+          rules: {
+            required: true
+          }
+        },
+        {
+          label: '分类',
+          prop: 'catalogId',
+          type: 'select',
+          dicUrl: deviceManageApi.queryMonitorCatalogId,
+          dicQuery: {
+            catalog: 2001
+          },
+          props: {
+            label: 'name',
+            value: 'id'
+          },
+          rules: {
+            required: true
+          }
+        },
+        {
           label: '服务',
           prop: 'source',
           type: 'select',
@@ -437,20 +463,14 @@ export default {
           }
         },
         {
-          label: '监测间隔',
-          prop: 'time_interval',
-          appendSlot: "time_interval_appendSlot",
-          rules: {
-            required: true
-          }
-        },
-        {
           label: '结果转换表达式',
-          prop: 'transform'
+          prop: 'transform',
+          width: 115
         },
         {
           label: '警告条件表达式',
-          prop: 'warn_cond'
+          prop: 'warn_cond',
+          width: 115
         }
       ],
       deviceInfoForm: {
@@ -751,7 +771,9 @@ export default {
 
           this.$nextTick(() => {
             deviceManageApi.addServiceList(params).then(res => {
-              this.$refs[this.deviceInfoForm.ref].setColumnByProp('source', res);
+              this.$refs[this.deviceInfoForm.ref].setColumnByProp('source', {
+                dicData: res
+              });
             })
           })
           resolve();

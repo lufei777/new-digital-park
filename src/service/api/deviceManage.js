@@ -163,6 +163,18 @@ class EnergyApi {
   @url('/vibe-web//asset/queryAssetList')
   @get
   queryAssetList() { }
+
+  /**
+   * 获取监测器分类
+   * catalog=2001，参数固定2001
+   * {
+   *  name
+   *  id
+   * }
+   * */
+  @url('/vibe-web/asset/queryMonitorCatalogId')
+  @get
+  queryMonitorCatalogId() { }
 }
 
 export default new EnergyApi()
