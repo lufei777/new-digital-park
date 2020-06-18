@@ -52,6 +52,27 @@ class SystemManage {
   @url("/user-service/role/editRole")
   @post
   editRole(){}
+
+  @url("/user-service/role/assignRole")
+  @post
+  assignRole(){}
+
+  @url("/user-service/user/listInfo")
+  @get
+  getUserList(){}
+
+  @url("/user-service/user/addUser")
+  @post
+  addUser(){}
+
+  @url("/user-service/user/updateUser")
+  @post
+  updateUser(){}
+
+  @url("/user-service/user/userDetail")
+  @get
+  getUserDetail(){}
+
 }
 
 export default new SystemManage()

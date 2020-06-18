@@ -1,25 +1,25 @@
-.large-size-screen-normal .out-drag-product{
-  background-image: url('../../../../static/image/digitalPark/nor_module_bg.png');
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  font-size: 14px;
-  width:420px;
-  height:290px;
-  margin:auto;
-}
-.large-size-screen-normal .single-module-name{
-  display: none;
-}
-.large-size-screen-normal .module-item-top-name{
-  /*margin-top: 10px;*/
-  padding:10px 0;
-  font-size: 16px;
-}
-.module-item-top-icon{
-  display: block;
-  height:14px;
-  width:6px;
-  background: #FFF81D;
-  margin-right: 10px;
-}
+/*.large-size-screen-normal .nor-out-drag-product{*/
+  /*background-image: url('../../../../static/image/digitalPark/nor_module_bg.png');*/
+  /*background-size: 100% 100%;*/
+  /*background-repeat: no-repeat;*/
+  /*font-size: 14px;*/
+  /*width:420px;*/
+  /*height:290px;*/
+  /*margin:auto;*/
+/*}*/
+/*.large-size-screen-normal .single-module-name{*/
+  /*display: none;*/
+/*}*/
+/*.large-size-screen-normal .module-item-top-name{*/
+  /*!*margin-top: 10px;*!*/
+  /*padding:10px 0;*/
+  /*font-size: 16px;*/
+/*}*/
+/*.module-item-top-icon{*/
+  /*display: block;*/
+  /*height:14px;*/
+  /*width:6px;*/
+  /*background: #FFF81D;*/
+  /*margin-right: 10px;*/
+/*}*/
 

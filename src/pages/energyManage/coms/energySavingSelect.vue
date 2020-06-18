@@ -22,7 +22,7 @@
         <label>指标选择：</label>
         <el-select v-model="indexEnergy" placeholder="请选择">
           <el-option label="参考标准" value="1"></el-option>
-          <el-option label="国家标准" value="2"></el-option>
+          <el-option label="自定义标准" value="2"></el-option>
         </el-select>
       </div>
       <div class="item-group block demonstrationFloor">
@@ -49,7 +49,7 @@
       </div>
       <z-table :ref="tableConfig.ref" :options="tableConfig"></z-table>
       <TreeModal :tree-modal-config="treeModalConfig"/>
-      <DiagnoseTrend :show-modal="showTrendModal" :trendDate="trendDate" :search-params="searchParams"/>
+      <DiagnoseTrend :show-modal="showTrendModal" :search-params="searchParams"/>
     </div>
   </div>
 </template>
@@ -281,17 +281,24 @@
         this.getList();
       },
       rowClick(val1,val2){
-        this.showTrendModal = true
+        console.log(val1,val2)
         let date = val2.property
+        if(date.indexOf("-")==-1) return;
+        if(date.indexOf('(')!=-1){
+          date = date.split("(")[0]
+        }
+        this.showTrendModal = true
         this.trendDate = date
         let tmp = this.energySubentryData.find(item => {
           return item.id == this.energySubentry;
         });
         this.searchParams = {
+          date,
           energyName:tmp.name,
           spaceId:val1.id,
           energyType:this.energySubentry,
-          dateType:(this.energySaveFlag==1 || this.energySaveFlag==3)?1:2
+          dateType:(this.energySaveFlag==1 || this.energySaveFlag==3)?1:2,
+          spaceName:val1['建筑楼层']
         }
       }
     },

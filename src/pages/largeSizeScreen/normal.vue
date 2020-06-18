@@ -119,9 +119,11 @@
         let centerFlag = item.moduleList.length && item.moduleList[0].chart == 0
         return {
           'center-show': centerFlag,
-          'out-drag-product': !centerFlag,
+          'out-drag-product': !centerFlag && isNormalScreen(),
           'out-drag-product-normal': !centerFlag && item.bgStatus == 'normal',
           'out-drag-product-hover': !centerFlag && item.bgStatus == 'hover',
+          'yd-out-drag-product': !centerFlag && isYDScreen(),
+          'nor-out-drag-product': !centerFlag && isNorbulingkaScreen(),
         }
       },
       getOptions() {
@@ -319,7 +321,7 @@
       this.getModuleStyle()
       let _this = this
       $(window).resize(async function () {
-        await _this.getLargeScreenModuleList()
+        // await _this.getLargeScreenModuleList()
         // let obj = {
         //   width: "1920px",
         //   height: '1080px'
@@ -357,6 +359,18 @@
     .out-drag-product {
       background-size: 100% 100%;
       background-repeat: no-repeat;
+      margin: auto;
+      width:940px;
+      height:528px;
+      overflow: hidden;
+    }
+
+     .out-drag-product-normal{
+      background-image: url('../../../static/image/digitalPark/content_bg3.png');
+    }
+
+    .out-drag-product-hover{
+      background-image: url('../../../static/image/digitalPark/content_bg4.png');
     }
 
     .center-show {
@@ -382,6 +396,56 @@
       font-size: @largeScreenFontSize;
       color: @white;
     }
+
+    .yd-out-drag-product{
+      background-image: url('../../../static/image/digitalPark/content_bg5.png');
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      font-size: 14px;
+      width:640px;
+      height:366px;
+      .single-module-name{
+        width:100%;
+        padding-left:2.5%;
+        line-height: 40px;
+        font-size:18px;
+        box-sizing: border-box;
+        font-weight: bold;
+        background:linear-gradient(0deg,rgba(1,234,254,1) 0%, rgba(255,255,255,1) 100%);
+        -webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;
+        text-align: left;
+      }
+      .module-item-top-name{
+        margin-top: 10px;
+      }
+    }
+
+    .nor-out-drag-product{
+      background-image: url('../../../static/image/digitalPark/nor_module_bg.png');
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      font-size: 14px;
+      width:420px;
+      height:290px;
+      margin:auto;
+      .single-module-name{
+        display: none;
+      }
+      .module-item-top-name{
+        /*margin-top: 10px;*/
+        padding:10px 0;
+        font-size: 16px;
+      }
+      .module-item-top-icon{
+        display: block;
+        height:14px;
+        width:6px;
+        background: #FFF81D;
+        margin-right: 10px;
+      }
+    }
+
   }
 
   .large-size-screen-bg {
@@ -390,5 +454,23 @@
 
   .nor-large-size-screen {
     background-image: url('../../../static/image/digitalPark/nor_bg.png');
+  }
+
+  @media screen and (max-width: 1920px) {
+    .large-size-screen-normal .yd-out-drag-product{
+      background-image: url('../../../static/image/digitalPark/content_bg5.png');
+      font-size: 12px;
+      width: 320px;
+      height: 168px;
+      .single-module-name {
+        width: 100%;
+        padding-left: 2.5%;
+        line-height: 1.5;
+        font-size: 14px;
+      }
+      .module-item-top-name {
+        margin-top: 10px;
+      }
+    }
   }
 </style>

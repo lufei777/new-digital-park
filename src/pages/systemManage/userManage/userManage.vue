@@ -4,7 +4,7 @@
          class="user-tree-box radius-shadow">
         <Tree :tree-list="treeList" :tree-config="treeConfig"/>
       </div>
-    <div class="right-content panel-container">
+    <div class="right-content  panel-container">
         <div class="choose-box flex-align radius-shadow panel">
           <div class="block flex-align-center">
             <span>编号</span>
@@ -25,13 +25,20 @@
             <el-button type="primary" icon="el-icon-search" @click="onClickSearchBtn">搜索</el-button>
            
       </div>
-       <div class="table-wrapper radius-shadow panel">
+        <div class="table-wrapper radius-shadow  panel">
         <div class="operator-box flex-row-reverse">
           <el-button type="primary"  @click="onClickExportBtn">导出</el-button>
           <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除记录</el-button>
           <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
         </div>
-        <CommonTable :tableObj="tableData" :curPage="1"/>
+        <!--<CommonTable :tableObj="tableData" :curPage="1"/>-->
+         <z-table :ref="tableConfig.ref" :options="tableConfig">
+           <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
+             <el-button type="text" @click="editRow(row)">编辑</el-button>
+             <el-button type="text" @click="deleteRow(row)">删除</el-button>
+             <el-button type="text" @click="deleteRow(row)">分配角色</el-button>
+           </template>
+         </z-table>
       </div>
       <!--<div class="item-row-detail-table radius-shadow">-->
         <!--<table>-->
@@ -54,6 +61,7 @@
   import CommonApi from '@/service/api/common'
   import CommonTable from '@/components/commonTable/index'
   import Tree from '@/components/tree/index'
+  import SystemManageApi from '@/service/api/systemManage'
   export default {
     name: 'UserManage',
     components: {
@@ -80,7 +88,53 @@
         curUser:{},
         isEdit:false,
         department:1,
-        roleList:{}
+        roleList:{},
+        tableConfig: {
+          ref: "tableRef",
+          serverMode: {
+            url: SystemManageApi.getUserList,
+            data: {}
+          },
+          propsHttp: {
+            list: "list",
+            total: "total",
+            pageSize: "pageSize",
+            pageNum: "pageNum"
+          },
+          columnConfig: [{
+            label: '编号',
+            prop: 'id'
+          }, {
+            label: '用户名',
+            prop: 'loginId'
+          }, {
+            label: '姓名',
+            prop: 'name'
+          }, {
+            label: 'E-mail',
+            prop: 'mail'
+          }, {
+            label: '电话',
+            prop: 'phone'
+          },
+            // {
+            //   label:'相关权限',
+            //   prop:'permission'
+            // },{
+            //   label:'相关用户',
+            //   prop:'roleList'
+            // }
+          ],
+          btnConfig: [],
+          operation: {
+            width: 200
+          },
+          uiConfig: {
+            height: "auto",
+            selection: true,
+          },
+          tableMethods: {},
+        }
       }
     },
     computed:{
@@ -99,48 +153,48 @@
         this.getUserList()
       },
       async getUserList(){
-        let res = await CommonApi.getUserList({
-          id:this.id,
-          login_id:this.login_id,
-          mail:this.mail,
-          phone:this.phone,
-          department:this.department,
-          page:this.curPage,
-          size:10
+        let res = await SystemManageApi.getUserList({
+          // id:this.id,
+          // login_id:this.login_id,
+          // mail:this.mail,
+          // phone:this.phone,
+          // department:this.department,
+          // page:this.curPage,
+          // size:10
         })
-        if(!res || !res.total){
-          res={
-            rows:[],
-            total:0
-          }
-        }
-        res.rows.map((item)=>{
-          this.treeList.map((tree)=>{
-            if(item.department==tree.id){
-              item.departmentText=tree.text
-            }
-          })
-           this.roleList.rows.map((role)=>{
-             if(item.department==role.id){
-               item.roleText=role.name
-             }
-           })
-        })
-        res.labelList=[{name:'',prop:'',type:'selection'},
-                        {name:'编号',prop:'id'},
-                       {name:'用户名',prop:'login_id'},
-                       {name:'姓名',prop:'name'},
-                       {name:'E-mail',prop:'mail'},
-                       {name:'电话号码',prop:'phone'}]
-        res.dataList=res.rows
-        res.hideExportBtn=true
-        res.showOperator=true
-        this.tableData=res
-        if(res.rows.length){
-          this.curUser=res.rows[0]
-        }else{
-          this.curUser={}
-        }
+        // if(!res || !res.total){
+        //   res={
+        //     rows:[],
+        //     total:0
+        //   }
+        // }
+        // res.rows.map((item)=>{
+        //   this.treeList.map((tree)=>{
+        //     if(item.department==tree.id){
+        //       item.departmentText=tree.text
+        //     }
+        //   })
+        //    this.roleList.rows.map((role)=>{
+        //      if(item.department==role.id){
+        //        item.roleText=role.name
+        //      }
+        //    })
+        // })
+        // res.labelList=[{name:'',prop:'',type:'selection'},
+        //                 {name:'编号',prop:'id'},
+        //                {name:'用户名',prop:'login_id'},
+        //                {name:'姓名',prop:'name'},
+        //                {name:'E-mail',prop:'mail'},
+        //                {name:'电话号码',prop:'phone'}]
+        // res.dataList=res.rows
+        // res.hideExportBtn=true
+        // res.showOperator=true
+        // this.tableData=res
+        // if(res.rows.length){
+        //   this.curUser=res.rows[0]
+        // }else{
+        //   this.curUser={}
+        // }
       },
       onClickSearchBtn(){
         this.curPage=1
@@ -191,6 +245,7 @@
         });
       },
       editRow(data){
+        console.log(data)
         this.$router.push(`/addUser?curUserId=${data.id}`)
       },
       onClickAddBtn(){
@@ -210,8 +265,8 @@
     },
     async mounted(){
       await this.getDeptTree()
-      await this.getRoleList()
-      this.getUserList()
+      // await this.getRoleList()
+      // this.getUserList()
       this.fixTree()
       $(window).resize(()=>{
         this.fixTree()

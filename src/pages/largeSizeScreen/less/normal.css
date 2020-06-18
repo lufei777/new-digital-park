@@ -1,18 +1,18 @@
-.large-size-screen-normal .out-drag-product,
-.large-size-screen-normal .out-drag-product-hover {
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  margin: auto;
-  width:940px;
-  height:528px;
-  overflow: hidden;
-}
-.large-size-screen-normal .item-content{
-  height:100%;
-}
-.large-size-screen-normal .out-drag-product-normal{
-  background-image: url('../../../../static/image/digitalPark/content_bg3.png');
-}
-.large-size-screen-normal .out-drag-product-hover{
-  background-image: url('../../../../static/image/digitalPark/content_bg4.png');
-}
+/*.large-size-screen-normal .out-drag-product,*/
+/*.large-size-screen-normal .out-drag-product-hover {*/
+  /*background-repeat: no-repeat;*/
+  /*background-size: 100% 100%;*/
+  /*margin: auto;*/
+  /*width:940px;*/
+  /*height:528px;*/
+  /*overflow: hidden;*/
+/*}*/
+/*.large-size-screen-normal .item-content{*/
+  /*height:100%;*/
+/*}*/
+/*.large-size-screen-normal .out-drag-product-normal{*/
+  /*background-image: url('../../../../static/image/digitalPark/content_bg3.png');*/
+/*}*/
+/*.large-size-screen-normal .out-drag-product-hover{*/
+  /*background-image: url('../../../../static/image/digitalPark/content_bg4.png');*/
+/*}*/
