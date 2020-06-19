@@ -42,7 +42,7 @@
         CommonLargeHeader.onClickLogoutBtn()
       },
       loadNews() {  //点击消息
-        CommonLargeHeader.loadNews('ydHeader')
+        CommonLargeHeader.loadNews()
       },
       goToWebPage(item, obj) {
         CommonLargeHeader.goToWebPage(item, obj)

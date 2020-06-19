@@ -6,6 +6,17 @@
     <!--<div v-for="(item,index) in showAlarmList" :key="index">-->
       <!--<div>{{item}}</div>-->
     <!--</div>-->
+    <!--<video src="../../../../../static/sound/dingding.mp3"-->
+           <!--muted-->
+           <!--ref="myAudio" id="myAudio" @canplay="handleCanPlay"-->
+           <!--width="100"-->
+           <!--height="100"-->
+    <!--&gt;</video>-->
+    <audio class="audio" src="../../../../../static/sound/dingding.mp3"
+           controls
+           ref="audio"
+           muted
+           hidden="true"></audio>
   </div>
 </template>
 
@@ -56,16 +67,18 @@
         this.b1=this.a1
         this.a1=res.path
         let str = `<div class="alert-alarm alert-alarm1">${this.a1}</div>`
-        // let str2 = `<div class="alert-alarm alert-alarm2">${this.b1}</div>`
 
-        // $(".alert-alarm2").animate({bottom:"60px"},500)
+       let str2 =  `<audio class="audio" src="../../../../../static/sound/dingding.mp3"
+           controls
+           ref="audio"
+           muted
+           hidden="true"></audio>`
         $(".alert-alarm-box").append($(str))
+        this.$refs.audio.play()
         $(".alert-alarm1").animate({bottom:"50px"},600)
         this.hideTimer = setTimeout(()=>{
-          $(".alert-alarm-box").empty()
+          $(".alert-alarm-box").empty().append($(str2))
         },5000)
-
-
         // console.log("a",this.a1)
         // console.log("b",this.b1)
         // }
@@ -86,10 +99,15 @@
       webSocketClose(e){  //关闭
         // console.log('断开连接',e);
       },
-
+      // handleCanPlay(){
+      //   this.$nextTick(() => {
+      //     this.$refs.myAudio.play()
+      //   })
+      // }
     },
     mounted(){
       this.initWebSocket()
+      // this.$refs.audio.play()
     },
     beforeDestroy(){
       this.websock.close();

@@ -28,7 +28,7 @@
           </p>
         </div>
       </div>
-      <div class="overview-item flex-align-between" v-if="!iszg">
+      <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
             <span>总用能人数</span>
@@ -39,7 +39,7 @@
           </p>
         </div>
       </div>
-      <div class="overview-item flex-align-between"  v-if="!iszg">
+      <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
             <span>人均用电</span>
@@ -50,7 +50,7 @@
           </p>
         </div>
       </div>
-      <div class="overview-item flex-align-between" v-if="!iszg">
+      <div class="overview-item flex-align-between">
         <div class="overview_box">
           <p class="numTitle">
             <span>人均用水</span>

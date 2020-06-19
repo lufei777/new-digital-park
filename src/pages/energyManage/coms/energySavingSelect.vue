@@ -355,5 +355,8 @@
         font-size: 20px;
       }
     }
+    .el-table__body .cell:hover{
+      cursor: pointer;
+    }
   }
 </style>
