@@ -2,16 +2,16 @@
   <div class="role-manage panel-container">
     <div class="role-list radius-shadow panel">
       <div class="operator-box flex-row-reverse">
-        <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除记录</el-button>
-        <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
+        <el-button type="primary" icon="el-icon-delete" @click="deleteTip">批量记录</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加</el-button>
       </div>
       <!--<CommonTable :tableObj="roleList" :curPage="1"/>-->
       <z-table :ref="tableConfig.ref" :options="tableConfig">
         <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
+          <el-button type="text" @click="editRow(row)">编辑</el-button>
+          <el-button type="text" @click="deleteRow(row)">删除</el-button>
           <el-button type="text" @click="rowClick(row)">分配权限</el-button>
           <el-button type="text" @click="deleteRow(row)">分配用户</el-button>
-          <el-button type="text" @click="rowClick(row)">编辑</el-button>
-          <el-button type="text" @click="deleteRow(row)">删除</el-button>
         </template>
       </z-table>
     </div>
@@ -44,20 +44,26 @@
         curRole: {},
         tableConfig: {
           ref: "tableRef",
-          data: [],
+          serverMode: {
+            url: SystemManageApi.getRoleList,
+            data: {}
+          },
+          propsHttp: {
+            list: "list",
+            total: "total",
+            pageSize: "pageSize",
+            pageNum: "pageNum"
+          },
           columnConfig: [{
-            label: '序号',
-            prop: ''
-          }, {
             label: '角色ID',
-            prop: 'roleId'
+            prop: 'id'
           }, {
             label: '角色名称',
-            prop: 'roleName'
+            prop: 'name'
           },
             {
               label: '角色描述',
-              prop: 'remark'
+              prop: 'caption'
             },
             // {
             //   label:'相关权限',
@@ -69,7 +75,9 @@
           ],
           btnConfig: [],
           customTop: true,
-          operation: true,
+          operation:{
+            width:250
+          },
           uiConfig: {
             height: "auto",
             selection: true,
@@ -84,55 +92,14 @@
       })
     },
     methods: {
-      async getRoleList() {
-        // let res = await CommonApi.getRoleList({
-        //   page: this.curPage,
-        //   rows: 10
-        // })
-        // if (!res || !res.total) {
-        //   res = {
-        //     rows: [],
-        //     total: 0
-        //   }
-        // }
-        // res.labelList = [{name: '', prop: '', type: 'selection'},
-        //   {name: '角色', prop: 'name'},
-        //   {name: '权限', prop: 'menuData'},
-        //   {name: '角色介绍', prop: 'caption'}]
-        // res.rows.map((item) => {
-        //   let tmp = '', detailTmp = ''
-        //   item.menuTree && item.menuTree.children && item.menuTree.children.map((child) => {
-        //     tmp += child.caption + ' '
-        //     detailTmp += child.caption + '、'
-        //     child.children && child.children.map((secondChild) => {
-        //       detailTmp += secondChild.caption + '、'
-        //     })
-        //   })
-        //   item.menuData = tmp
-        //   item.menuDataDetail = detailTmp
-        // })
-        // res.dataList = res.rows
-        // res.hideExportBtn = true
-        // res.showOperator = true
-        // this.roleList = res
-        // if (res.rows.length) {
-        //   this.curRole = res.rows[0]
-        //   this.getUserList(res.rows[0].department)
-        // } else {
-        //   this.curRole = {}
-        // }
-        let res = await SystemManageApi.getRoleList({
-          userId: this.userInfo.id
-        })
-      },
       deleteRow(data) {
         this.deleteId = data.id
         // this.deleteTip()
         CommonFun.deleteTip(this, this.deleteId, '至少选择一条数据！', this.sureDelete)
       },
       async sureDelete() {
-        await CommonApi.deleteRole({
-          ids: this.deleteId,
+        await SystemManageApi.deleteRole({
+          id: this.deleteId,
         })
         this.$message({
           type: 'success',
@@ -184,10 +151,18 @@
           tmp += item.name + " "
         })
         this.curRole.userList = tmp
-      }
+      },
+      setTableData(){
+        this.tableConfig.serverMode.data = {
+          userId:this.userInfo.id
+        }
+      },
     },
     async mounted() {
-      this.getRoleList()
+      // this.$refs[this.tableConfig.ref].refreshTable()
+    },
+    created(){
+      this.setTableData()
     }
   }
 </script>

@@ -53,6 +53,10 @@ class SystemManage {
   @post
   editRole(){}
 
+  @url("/user-service/role/removeRole")
+  @get
+  deleteRole(){}
+
   @url("/user-service/role/assignRole")
   @post
   assignRole(){}

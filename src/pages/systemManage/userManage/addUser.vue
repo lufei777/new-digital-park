@@ -224,9 +224,12 @@
       api(){
         return this.curUserId?'updateUser':'addUser'
       },
+      assign(){
+        return this.$route.query.assign
+      },
       ...mapState({
         userInfo: state => state.user.userInfo
-      })
+      }),
     },
     watch:{
     },
@@ -235,6 +238,9 @@
         let res =await SystemManageApi.getUserDetail({
           userId:this.curUserId
         })
+        let tmp = (res.rlist|| []).map((item)=>item.name)
+        res.roleList = tmp.join(",")
+        res.role  = (res.rlist || []).map((item)=>item.id)
         this.formModel = res
       },
       async getRoleList(){
@@ -242,7 +248,8 @@
           userId: this.userInfo.id
         })
         this.$refs[this.formConfig.ref].setColumnByProp("role", {
-          dicData:res.list
+          dicData:res.list,
+          defaultCheckedKeys:this.formModel.role
         });
       },
       async getDepartmentList(){
@@ -255,6 +262,8 @@
         let params = this.formModel
         if(this.curUserId){
           params = {...this.formModel,...{loginId:this.curUserId}}
+        }else if(!this.curUserId && !this.assign){
+          params.roleIds = this.formModel.role.join(",")
         }
         await SystemManageApi[this.api](params)
           .then(res => {
@@ -267,6 +276,7 @@
           .finally(msg => {
             hide();
           });
+
         // console.log(this.formModel.role)
         // await SystemManageApi.assignRole({
         //   userId:this.curUserId,
@@ -276,13 +286,54 @@
       goBack(){
         history.go(-1)
       },
+      setColumn(){
+        if(this.curUserId && !this.assign) {
+          this.$refs[this.formConfig.ref].setColumnByProp("roleList", {
+            hide: true
+          });
+          this.$refs[this.formConfig.ref].setColumnByProp("role", {
+            hide: true
+          });
+        }else if(this.curUserId && this.assign){
+           this.formConfig.forms = [ {
+             type: "input",
+             label: "姓名",
+             prop: "name",
+             span: 24,
+             disabled:true
+           },{
+             type: "textarea",
+             label: "已分配角色",
+             prop: "roleList",
+             span: 24,
+             disabled:true
+           },{
+             type: "tree",
+             label: "分配角色",
+             prop: "role",
+             multiple:true,
+             dicData:[],
+             props: {
+               label: "name",
+               value: "id",
+               children: "childNode",
+             },
+             span: 24,
+           }]
+        }
+      }
     },
     mounted(){
-       this.getRoleList()
-       this.getDepartmentList()
+       if(!this.assign){
+         this.getDepartmentList()
+       }
        if(this.curUserId){
         this.getUserDetail()
-      }
+       }
+       if(!this.curUserId || this.assign){
+         this.getRoleList()
+       }
+       this.setColumn()
     }
   }
 </script>

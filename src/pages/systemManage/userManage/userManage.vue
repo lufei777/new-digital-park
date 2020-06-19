@@ -36,7 +36,7 @@
            <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
              <el-button type="text" @click="editRow(row)">编辑</el-button>
              <el-button type="text" @click="deleteRow(row)">删除</el-button>
-             <el-button type="text" @click="deleteRow(row)">分配角色</el-button>
+             <el-button type="text" @click="assignRole(row)">分配角色</el-button>
            </template>
          </z-table>
       </div>
@@ -245,8 +245,10 @@
         });
       },
       editRow(data){
-        console.log(data)
         this.$router.push(`/addUser?curUserId=${data.id}`)
+      },
+      assignRole(data){
+        this.$router.push(`/addUser?curUserId=${data.id}&assign=true`)
       },
       onClickAddBtn(){
         this.$router.push('/addUser')
