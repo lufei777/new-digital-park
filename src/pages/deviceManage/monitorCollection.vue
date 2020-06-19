@@ -473,6 +473,8 @@ export default {
           width: 115
         }
       ],
+      // 信息其余表单
+      deviceInfoExtraForms: [],
       deviceInfoForm: {
         ref: 'deviceInfoForm',
         itemSpan: 8,
@@ -544,6 +546,9 @@ export default {
     },
     currentAssetId() {
       return this.Table.currentRowData.id;
+    },
+    currentAssetKind() {
+      return this.Table.currentRowData.kind;
     },
     assetUrl() {
       let url = assetEditUrl;
@@ -652,7 +657,7 @@ export default {
     // 监控列表行点击
     monitorRowClick(row) {
       if (row) {
-        this.getDetailMaintain(row.id);
+        this.getDetailMaintain(row.id, row.kind);
       } else {
         this.clearDetailMaintain();
       }
@@ -661,16 +666,13 @@ export default {
     /**
      * 监测器详情
      */
-    getDetailMaintain(id) {
+    getDetailMaintain(id, kind) {
       // 设备详情
-      this.getDeviceDetail(id || this.currentAssetId)
+      this.getDeviceDetail(id || this.currentAssetId, kind || this.currentAssetKind)
     },
     // 设别详情
-    getDeviceDetail(id) {
-      deviceManageApi.getAsset({
-        kind: DEVICE.text,
-        id
-      }).then(res => {
+    getDeviceDetail(id, kind) {
+      deviceManageApi.getAsset({ kind, id }).then(res => {
         this.deviceDetailModel = res.data;
       }).catch(err => {
         this.deviceDetailModel = {};
@@ -701,10 +703,13 @@ export default {
       let parentIdObj = { parentId: this.parentId }
 
       deviceManageApi.toAssetEdit({ kind: row.kind }, { id: row.id }).then(res => {
-        this.deviceInfoModel = Object.assign(res.assetVo, parentIdObj);
-      })
+        // 编辑时，如果有特殊字段，则拼接上
+        res.assetVo?.valueList.length ? this.extraFormsHandle(res.assetVo.valueList) : '';
 
-      this.getPropsByTagName({ kind: row.kind, typeName: row.typeName })
+        this.deviceInfoModel = Object.assign(res.assetVo, parentIdObj);
+
+        this.innerDrawer = true;
+      })
     },
     // 监测数据
     monitorData(row) {
@@ -730,6 +735,15 @@ export default {
     },
     // 新增编辑提交
     deviceInfoSubmit(model, done) {
+      // 处理多来的字段存在valueList[]字段中
+      if (this.deviceInfoExtraForms.length) {
+        this.deviceInfoExtraForms.forEach((item, index) => {
+          item.value = model[item.name];
+          delete model[item.name];
+        });
+        model.valueList = this.deviceInfoExtraForms;
+      }
+
       // 添加单位
       model.time_interval += model.unit || 'm';
       this._axiosFormData(this.assetUrl, model).then(res => {
@@ -756,16 +770,8 @@ export default {
     getPropsByTagName(params) {
       return new Promise((resolve, reject) => {
         deviceManageApi.getFormProperty(params).then(res => {
-          // 拿到返回的数据进行处理
-          let extraForms = res.map(item => {
-            this.deviceInfoModel[item.name] = item.value;
-            return {
-              label: item.caption,
-              prop: item.name,
-            }
-          })
-          // 添加额外的forms属性
-          this.deviceInfoForm.forms = this.deviceInfoForms.concat(extraForms);
+          // 处理特殊字段
+          this.extraFormsHandle(res);
           // 弹出编辑抽屉
           this.innerDrawer = true;
 
@@ -780,30 +786,29 @@ export default {
         }).catch(err => reject(err));
       })
     },
+    // 拓展信息额外form属性处理
+    extraFormsHandle(res) {
+      // 额外的属性
+      this.deviceInfoExtraForms = res;
+
+      // 拿到返回的数据进行处理
+      const extraForms = res.map(item => {
+        return {
+          label: item.caption,
+          prop: item.name,
+          valueDefault: item.value
+        }
+      })
+
+      // 添加额外的forms属性
+      this.deviceInfoForm.forms = this.deviceInfoForms.concat(extraForms);
+    },
     //Form Data形式传递参数
     _axiosFormData(url, data, method = 'post') {
       return this.$axios({
         url,
         method,
-        data,
-        transformRequest: [function (data) {
-          let ret = ''
-          for (let key in data) {
-            let item = data[key];
-            if (typeof item === 'undefined' || item == null) {
-              item = '';
-            }
-            if (item instanceof File) {
-              ret += encodeURIComponent(key) + '=' + item + '&'
-            } else {
-              ret += encodeURIComponent(key) + '=' + encodeURIComponent(item) + '&'
-            }
-          }
-          return ret
-        }],
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        data
       })
     },
     delInfo() {
