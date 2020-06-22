@@ -18,7 +18,7 @@
             <!-- <el-input v-model="hkvInfo.ip" placeholder="ip"></el-input>
             <el-input v-model="hkvInfo.port" placeholder="port"></el-input>
             <el-input v-model="hkvInfo.username" placeholder="username"></el-input>
-            <el-input v-model="hkvInfo.password" placeholder="password"></el-input> -->
+            <el-input v-model="hkvInfo.password" placeholder="password"></el-input>-->
             <el-button type="primary" :loading="loginLoading" @click="onLogin">登录</el-button>
             <el-button type="primary" :loading="startPlayLoading" @click="clickStartRealPlay">开始预览</el-button>
             <el-button type="primary" @click="clickStopRealPlay">停止预览</el-button>
@@ -64,14 +64,20 @@ export default {
     };
   },
   created: function() {},
+  computed: {
+    videoData() {
+      return this.$route.query;
+    }
+  },
   mounted: function() {
     // if(dialogVisible)
     if (this.tabPosition == 2) {
       // alert(222222)
       // this.videoInitPlugin();
     }
+    console.log("videoData", this.videoData);
     this.videoInitPlugin();
-     this.onLogin()
+    this.onLogin();
     // 初始化video界面
   },
   watch: {
@@ -86,7 +92,6 @@ export default {
   destroyed: function() {
     this.clickStopRealPlay();
     this.onLogout();
-   
   },
   methods: {
     onLogin() {
@@ -108,13 +113,19 @@ export default {
             that.getChannelInfo();
             that.getDevicePort(that.hkvInfo.ip + "_" + that.hkvInfo.port);
 
-
             var szDeviceIdentify = that.hkvInfo.ip + "_" + that.hkvInfo.port;
 
-            var j = that.hkvInfo.channels.length > 4 ? 4 : that.hkvInfo.channels.length;
+            var j =
+              that.hkvInfo.channels.length > 4
+                ? 4
+                : that.hkvInfo.channels.length;
             for (var i = 0; i < j; i++) {
               setTimeout(
-                that.startRealPlay(szDeviceIdentify, i, that.hkvInfo.channels[i]),
+                that.startRealPlay(
+                  szDeviceIdentify,
+                  i,
+                  that.hkvInfo.channels[i]
+                ),
                 500
               );
             }
@@ -445,7 +456,7 @@ export default {
     width: 500px;
     height: 300px;
   }
- 
+
   .my-tag {
     margin-left: 3px;
   }
@@ -454,9 +465,10 @@ export default {
     margin-top: 5px;
   }
 }
- #canvas0,.play-window {
-    width: 600px;
-    height: 300px;
-    border: 1px solid red!important;
-  }
+#canvas0,
+.play-window {
+  width: 600px;
+  height: 300px;
+  border: 1px solid red !important;
+}
 </style>
