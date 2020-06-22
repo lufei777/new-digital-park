@@ -135,7 +135,7 @@
           }
         }
         params+='stockRecordIds='+stockRecordIds
-        CommonFun.exportMethod({url, params,},this)
+        CommonFun.exportMethod({url, params})
       }
     },
     mounted() {

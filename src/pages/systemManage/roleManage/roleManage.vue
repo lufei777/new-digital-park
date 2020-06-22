@@ -2,16 +2,15 @@
   <div class="role-manage panel-container">
     <div class="role-list radius-shadow panel">
       <div class="operator-box flex-row-reverse">
-        <el-button type="primary" icon="el-icon-delete" @click="deleteTip">批量记录</el-button>
-        <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加</el-button>
+        <!--<el-button type="primary"@click="onClickMultiDelBtn">批量记录</el-button>-->
+        <el-button type="primary" @click="onClickAddBtn">添加</el-button>
       </div>
-      <!--<CommonTable :tableObj="roleList" :curPage="1"/>-->
       <z-table :ref="tableConfig.ref" :options="tableConfig">
         <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
           <el-button type="text" @click="editRow(row)">编辑</el-button>
           <el-button type="text" @click="deleteRow(row)">删除</el-button>
           <el-button type="text" @click="rowClick(row)">分配权限</el-button>
-          <el-button type="text" @click="deleteRow(row)">分配用户</el-button>
+          <!--<el-button type="text" @click="assignUser(row)">分配用户</el-button>-->
         </template>
       </z-table>
     </div>
@@ -39,8 +38,6 @@
     components: {},
     data() {
       return {
-        roleList: {},
-        curPage: 1,
         curRole: {},
         tableConfig: {
           ref: "tableRef",
@@ -74,7 +71,6 @@
             // }
           ],
           btnConfig: [],
-          customTop: true,
           operation:{
             width:250
           },
@@ -92,65 +88,33 @@
       })
     },
     methods: {
+      onClickAddBtn() {
+        this.$router.push('/addRole')
+      },
+      onClickMultiDelBtn(){
+        let tmp = this.$refs[this.tableConfig.ref].getSelectedData()
+        this.deleteId = tmp.map((item)=>item.id).join(",")
+        CommonFun.deleteTip(this, this.deleteId, '至少选择一条数据！', this.sureDelete)
+      },
+      editRow(data) {
+        this.$router.push(`/addRole?roleId=${data.id}`)
+      },
       deleteRow(data) {
         this.deleteId = data.id
-        // this.deleteTip()
         CommonFun.deleteTip(this, this.deleteId, '至少选择一条数据！', this.sureDelete)
       },
       async sureDelete() {
         await SystemManageApi.deleteRole({
-          id: this.deleteId,
+          roleId: this.deleteId,
         })
         this.$message({
           type: 'success',
           message: '删除成功!'
         });
-        this.getRoleList()
+        this.$refs[this.tableConfig.ref].refreshTable()
       },
-      handleSelectionChange(val) {
-        let tmp = val.map((item) => item.id)
-        this.deleteId = tmp.join(",")
-      },
-      deleteTip() {
-        if (!this.deleteId) {
-          this.$message({
-            type: 'warning',
-            message: '请先选择角色！',
-            duration: 1000
-          });
-          return;
-        }
-        this.$confirm('确定要删除吗?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.sureDelete()
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除',
-          });
-        });
-      },
-      editRow(data) {
-        this.$router.push(`/addRole?roleId=${data.id}`)
-      },
-      onClickAddBtn() {
-        this.$router.push('/addRole')
-      },
-      rowClick(row) {
-        this.curRole = row
-      },
-      async getUserList(data) {
-        let res = await CommonApi.getUserList({
-          department: data
-        })
-        let tmp = ""
-        res.rows.map((item) => {
-          tmp += item.name + " "
-        })
-        this.curRole.userList = tmp
+      assignUser(){
+        this.$router.push("/userManage?from=assignUser")
       },
       setTableData(){
         this.tableConfig.serverMode.data = {
@@ -158,12 +122,11 @@
         }
       },
     },
-    async mounted() {
-      // this.$refs[this.tableConfig.ref].refreshTable()
-    },
     created(){
       this.setTableData()
-    }
+    },
+    mounted() {
+    },
   }
 </script>
 

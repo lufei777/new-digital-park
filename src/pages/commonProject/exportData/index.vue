@@ -241,13 +241,10 @@ export default {
         params += key + "=" + this.commonParams[key] + "&";
       }
       let url = `/vibe-web/device_data/probesHistoryExportExcel`;
-      CommonFun.exportMethod(
-        {
+      CommonFun.exportMethod({
           url,
           params
-        },
-        this
-      );
+        });
     },
     submit() {},
     resetChange() {}

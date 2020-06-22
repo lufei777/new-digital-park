@@ -2014,7 +2014,7 @@ class commonFun {
 
 
   //导出
-  exportMethod(data, that) {
+  exportMethod(data) {
     axios({
       headers: {
         'X-SSO-Token': getToken()
@@ -2032,10 +2032,10 @@ class commonFun {
       link.click()
       document.body.removeChild(link)
     }).catch(error => {
-      that.$message({
-        type: 'error',
+      Message({
         message: error,
-      });
+        type: 'error'
+      })
     })
   }
 
