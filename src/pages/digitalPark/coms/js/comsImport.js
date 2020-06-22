@@ -5,18 +5,11 @@ import buildingStatusProportion from '../statis/buildingStatusProportion'
 import assetTypeProportion from '../asset/assetTypeProportion'
 import energyConsumptionRanking from '../energy/energyConsumptionRanking'
 import buildingEarlyWarningAlarm from '../alarm/buildingEarlyWarningAlarm'
-import operateExpenditure from '../income/operateExpenditure'
-import assetGrowthStatistics from '../asset/assetGrowthStatistics'
 import taskRanking from '../task/taskRanking'
 import attendanceDetail from '../duty/attendanceDetail'
 import taskPersonTask from '../task/taskPersonTask'
-import TestModuleOne from '../energy/TestModuleOne'
-import TestModuleTwo from '../parking/TestModuleTwo'
-import TestModuleThree from '../energy/TestModuleThree'
-import emergencies from '../alarm/emergencies'
 import escapeRoutes from '../alarm/escapeRoutes'
 import saleStatistics from '../statis/saleStatistics'
-import inventoryAnalysis from '../stock/inventoryAnalysis'
 import messageRelease from '../message/messageRelease'
 import environmentalMonitoring from '../buildMonitor/environmentalMonitoring'
 import waterSupplyAndDrainage from '../buildMonitor/waterSupplyAndDrainage'
@@ -62,18 +55,11 @@ class exportComs {
     assetTypeProportion,
     energyConsumptionRanking,
     buildingEarlyWarningAlarm,
-    operateExpenditure,
-    assetGrowthStatistics,
     taskRanking,
     attendanceDetail,
     taskPersonTask,
-    TestModuleOne,
-    TestModuleTwo,
-    TestModuleThree,
-    emergencies,
     escapeRoutes,
     saleStatistics,
-    inventoryAnalysis,
     messageRelease,
     environmentalMonitoring,
     waterSupplyAndDrainage,

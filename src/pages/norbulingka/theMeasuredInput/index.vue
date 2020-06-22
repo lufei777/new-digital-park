@@ -1,9 +1,8 @@
 <template>
   <div class="panel-container">
-    <div class="panel">
       <!-- 导航菜单 -->
       <div
-        class="nav"
+        class="panel nav"
         v-if="JSON.stringify($route.query).length==2"
       >
         <el-menu
@@ -25,7 +24,6 @@
       </div>
       <!-- 渲染区域占位符 -->
       <router-view></router-view>
-    </div>
 
   </div>
 </template>  

@@ -6,6 +6,7 @@
       <div class="client-module-list">
         <div v-for="item in moduleList" :key="item.id" class="item-client-module">
           <ItemProModule
+            class="item-client-module-inner"
             :moduleData="item"
             :type="1"
           />
@@ -86,6 +87,10 @@
       box-sizing: border-box;
       background: rgba(52,67,99,.8);
       border-radius: 8px;
+    }
+    .item-client-module-inner{
+      width:100%;
+      height:100%;
     }
     .item-product-coms .single-module-name{
       text-align: center;

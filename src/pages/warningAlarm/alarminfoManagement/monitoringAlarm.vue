@@ -60,7 +60,7 @@
           >应答</el-button>
           <el-button
             type="text"
-            @click="propertyDel(obj)"
+            @click="propertyClose(obj)"
           >关闭</el-button>
           <el-button
             type="text"
@@ -262,7 +262,10 @@ export default {
         that.fetchTableList({ ...res }, { rows: 10, page: 1 });
       });
     },
-
+    // 表格中的关闭
+    propertyClose(obj){ },
+    // 表格中的 '定位' 按钮
+    propertyLocation(obj){ },
     // '查看' 按钮
     propertyDetail(obj) {
       // console.log('当前行的信息',obj.row)

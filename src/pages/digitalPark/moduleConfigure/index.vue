@@ -3,10 +3,14 @@
     <div v-show="!isFull">
       <div :class="type==3?'large-set-tip':'set-tip'">模块设置</div>
       <div class="module-change" v-if="type!=3">
-        <el-button @click="onClickModuleBtn('2')" :class="type==2?'moduleBtnBg':'defaultBtn'">
+        <el-button @click="onClickModuleBtn('2')"
+                   :class="type==2?'moduleBtnBg':'defaultBtn'"
+        >
           {{$t('homeHeader.waterfall')}}
         </el-button>
-        <el-button @click="onClickModuleBtn('1')" :class="type==1?'moduleBtnBg':'defaultBtn'">
+        <el-button @click="onClickModuleBtn('1')"
+                   :class="type==1?'moduleBtnBg':'defaultBtn'"
+        >
           {{$t('homeHeader.dashboard')}}
         </el-button>
       </div>
@@ -15,26 +19,39 @@
       <div :class="isFull?'hide':'left-module-list'">
         <div v-for="item in proModuleList"
              :key="item.id"
-             :class="[type==3?'large-item-left-pro':'item-left-pro','hover-pointer',item.activeFlag?'active-pro':'']"
+             :class="[type==3?'large-item-left-pro':'item-left-pro',
+             'hover-pointer',
+             item.activeFlag?'active-pro':''
+             ]"
              @click="onClickItemProModule(item)">{{item.menuName}}
         </div>
       </div>
       <div class="module-content-list" v-show="!isFull">
 
-        <draggable :list="contentList"
+        <draggable  :list="contentList"
                    v-bind="getOptions()"
                    @start="onDragStart"
                    @end="onDragEnd"
                    class="content-drag-box"
 
         >
-          <component v-for="(item,index) in contentList"
-                     :key="index"
-                     :is="item.componentName"
-                     :moduleItem="{...item,...{type:type}}"
-                     :class="['item-content','flex-column-center',item.dragFlag?'item-drag-product':'']"
-                     :style="contentBg(item)"
-                     :id="item.id"
+          <!--<component v-for="(item,index) in contentList"-->
+                     <!--:key="index"-->
+                     <!--:is="item.componentName"-->
+                     <!--:moduleItem="{...item,...{type:type}}"-->
+                     <!--:class="getDragItemClass(item)"-->
+                     <!--:style="contentBg(item)"-->
+                     <!--:id="item.id"-->
+          <!--/>-->
+          <ItemProModule
+            v-for="(item,index) in contentList"
+            :key="index"
+            :moduleData="{...item}"
+            :type="type"
+            :class="getDragItemClass(item)"
+            :style="contentBg(item)"
+            :id="item.id"
+            :isConfig="true"
           />
         </draggable>
       </div>
@@ -82,7 +99,7 @@
   import {mapState} from 'vuex'
   import DashboardNew from '../home/dashboardNew'
   import LargeSizeScreen from '../../largeSizeScreen/index'
-
+  import ItemProModule from '../coms/itemProModule'
   export default {
     name: 'ModuleConfigure',
     components: {
@@ -90,7 +107,8 @@
       draggable,
       HomePage,
       DashboardNew,
-      LargeSizeScreen
+      LargeSizeScreen,
+      ItemProModule
     },
     data() {
       return {
@@ -116,7 +134,7 @@
       }),
       curCom(){
         return this.type==1?'dashboard':this.type==2?'homePage':'largeSizeScreen'
-      }
+      },
     },
     watch: {
       dragFlag() {
@@ -186,6 +204,7 @@
         res.map((item) => {
           item.moduleList.map((module) => {
             module.dragFlag = true
+            module.menuName=item.menuName
             userList.map((userItem) => {
               userItem.moduleList.map((userModule) => {
                 if (module.id == userModule.id) {
@@ -215,12 +234,12 @@
       onClickFullScreenBtn() {
           this.isFull = !this.isFull
           let erd = elementResizeDetectorMaker()
-          let that = this
-          erd.listenTo($(".item-product-coms").eq(0), function () {
-            that.$nextTick(function () {
-              $(window).resize()
-            })
-          })
+          // let that = this
+          // erd.listenTo($(".item-product-coms").eq(0), function () {
+          //   that.$nextTick(function () {
+          //     $(window).resize()
+          //   })
+          // })
 
         // $(".park-home-page .item-module").css({
         //   height:548+'px'
@@ -290,13 +309,21 @@
         }
       },
       changeFontSize(){
-        let dom = $(".dashboard-park-home-page-new .item-drag-product,.dashboard-park-home-page-new .fixed-prod-module")
+        let dom = $(".dashboard-park-home-page-new .item-drag-product, .dashboard-park-home-page-new .fixed-prod-module")
         if(this.isFull){
           dom.removeClass('smallFontSize')
         }else{
           dom.addClass('smallFontSize')
         }
       },
+      getDragItemClass(item){
+        return {
+          'item-content':true,
+          'flex-column-center':true,
+          'item-drag-product':item.dragFlag,
+          'item-content-bg': this.type!=2
+        }
+      }
     },
     async mounted() {
       document.body.ondrop = function (event) {
@@ -386,10 +413,14 @@
       border: 1px solid #d0d3dc;
     }
 
-    .my-chart {
-      width: 100%;
-      flex-grow: 1;
+    .item-content-bg{
+      background: #061C34;
     }
+
+    /*.my-chart {*/
+      /*width: 100%;*/
+      /*flex-grow: 1;*/
+    /*}*/
 
     .preview-panel {
       width: 100%;
@@ -501,6 +532,7 @@
     .drag-shadow {
       background-image: url('../../../../static/image/digitalPark/content_bg.png');
       background-repeat: no-repeat;
+      background-size: 100% 100%;
     }
 
     .moduleBtnBg {
@@ -534,6 +566,7 @@
         /*font-size: 12px;*/
       /*}*/
     }
+
 
     .left-module-list, .module-content-list, .preview-panel {
       &::-webkit-scrollbar { /*滚动条整体样式*/

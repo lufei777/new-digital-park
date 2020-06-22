@@ -28,10 +28,14 @@ class commonLargeHeader {
         ]
       })
     );
-   store.commit("digitalPark/activeMenuIndex","@/html/alarm/alarm_index.html")
-
-   store.commit("digitalPark/largeScreenIframeSrc",
-      window.top.location.origin + '/#/vibe-web?updateId=' + _.uniqueId())
+    if(this.flag=='ydHeader'){
+      store.commit("digitalPark/activeMenuIndex","@/html/alarm/alarm_index.html")
+      store.commit("digitalPark/largeScreenIframeSrc",
+        window.top.location.origin + '/#/vibe-web?updateId=' + _.uniqueId())
+    }else{
+      store.commit("digitalPark/activeMenuIndex", '@/html/alarm/alarm_index.html')
+      router.push("/vibe-web");
+    }
   }
 
   goToWebPage(item, obj) {

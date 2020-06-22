@@ -111,7 +111,7 @@
     </el-drawer>
     <el-drawer
       title="监控采集新增"
-      size="80%"
+      size="50%"
       destroy-on-close
       :append-to-body="true"
       :visible.sync="innerDrawer"
@@ -123,7 +123,22 @@
           :ref="deviceInfoForm.ref"
           :options="deviceInfoForm"
           @submit="deviceInfoSubmit"
-        ></z-form>
+        >
+          <template #time_interval_appendSlot="{disabled,size}">
+            <el-select
+              style="width:60px !important;"
+              :disabled="disabled"
+              :size="size"
+              v-model="deviceInfoModel.unit"
+            >
+              <template
+                v-for="item in  [{label: 'm',value: 'm'},{label: 's',value: 's'},{label: 'h',value: 'h'}]"
+              >
+                <el-option :key="item.label" :label="item.label" :value="item.value"></el-option>
+              </template>
+            </el-select>
+          </template>
+        </z-form>
       </div>
     </el-drawer>
   </div>
@@ -170,11 +185,6 @@ const getValueUnit = (unit, value) => {
   return value;
 }
 
-// 监测器   服务
-// 控制器   刷新延迟
-// 公共     分类、名称、标题、监测间隔、结果转换表达式、警告条件表达式、描述
-
-let valueFormat = "yyyy-MM-dd HH:mm:ss";
 export default {
   data() {
     const userInfo = getUserInfo();
@@ -324,7 +334,7 @@ export default {
           }
         ],
         uiConfig: {
-          height: 'auto',
+          height: '%',
           pagination: {
             handler: this.handlePagination,
             layout: ' pager, ->, slot',
@@ -343,21 +353,6 @@ export default {
         width: '80%',
         forms: [
           {
-            label: '资产类型',
-            prop: 'typeName',
-            type: 'select',
-            clearable: true,
-            dicUrl: deviceManageApi.assetTypeList,
-            dicQuery: { id: DEVICE.kind },
-            props: {
-              label: 'text',
-              value: 'name'
-            },
-            rules: {
-              required: true
-            }
-          },
-          {
             label: "类别",
             prop: "kind",
             type: 'select',
@@ -366,6 +361,29 @@ export default {
             props: {
               label: 'text',
               value: 'id'
+            },
+            rules: {
+              required: true
+            },
+            change: ({ value }) => {
+              this.addModel.typeName = "";
+              deviceManageApi.assetTypeList({ id: value }).then(res => {
+                this.$refs[this.deviceTypeForm.ref].setColumnByProp('typeName', {
+                  dicData: res
+                })
+              })
+            }
+          },
+          {
+            label: '资产类型',
+            prop: 'typeName',
+            type: 'select',
+            filterable: true,
+            clearable: true,
+            dicData: [],
+            props: {
+              label: 'text',
+              value: 'name'
             },
             rules: {
               required: true
@@ -412,6 +430,30 @@ export default {
           }
         },
         {
+          label: '监测间隔',
+          prop: 'time_interval',
+          appendSlot: "time_interval_appendSlot",
+          rules: {
+            required: true
+          }
+        },
+        {
+          label: '分类',
+          prop: 'catalogId',
+          type: 'select',
+          dicUrl: deviceManageApi.queryMonitorCatalogId,
+          dicQuery: {
+            catalog: 2001
+          },
+          props: {
+            label: 'name',
+            value: 'id'
+          },
+          rules: {
+            required: true
+          }
+        },
+        {
           label: '服务',
           prop: 'source',
           type: 'select',
@@ -421,25 +463,22 @@ export default {
           }
         },
         {
-          label: '监测间隔',
-          prop: 'time_interval',
-          rules: {
-            required: true
-          }
-        },
-        {
           label: '结果转换表达式',
-          prop: 'transform'
+          prop: 'transform',
+          width: 115
         },
         {
           label: '警告条件表达式',
-          prop: 'warn_cond'
+          prop: 'warn_cond',
+          width: 115
         }
       ],
+      // 信息其余表单
+      deviceInfoExtraForms: [],
       deviceInfoForm: {
         ref: 'deviceInfoForm',
         itemSpan: 8,
-        width: '90%',
+        width: '95%',
         labelWidth: 110,
         forms: []
       },
@@ -481,6 +520,10 @@ export default {
             prop: 'time_interval'
           },
           {
+            label: '监测间隔单位',
+            prop: 'unit'
+          },
+          {
             label: '监测值',
             prop: 'value',
             formatter: (row, value) => {
@@ -503,6 +546,9 @@ export default {
     },
     currentAssetId() {
       return this.Table.currentRowData.id;
+    },
+    currentAssetKind() {
+      return this.Table.currentRowData.kind;
     },
     assetUrl() {
       let url = assetEditUrl;
@@ -550,7 +596,6 @@ export default {
       this.load = true;
       return new Promise((resolve, reject) => {
         deviceManageApi.searchDevices(this.deviceListParam, { page: page }).then(res => {
-          this.load = false;
           this.$refs[this.deviceInfoTable.ref].setData(res.rows);
           this.$refs[this.deviceInfoTable.ref].setTotal(res.total);
 
@@ -559,6 +604,8 @@ export default {
           resolve(res);
         }).catch(err => {
           reject(err)
+        }).finally(_ => {
+          this.load = false;
         })
       })
     },
@@ -569,7 +616,7 @@ export default {
     },
     // 搜索form提交
     searchFormSubmit(model, done) {
-      this.fetchDeviceList().then(res => {
+      this.fetchDeviceList().finally(res => {
         done();
       })
     },
@@ -610,7 +657,7 @@ export default {
     // 监控列表行点击
     monitorRowClick(row) {
       if (row) {
-        this.getDetailMaintain(row.id);
+        this.getDetailMaintain(row.id, row.kind);
       } else {
         this.clearDetailMaintain();
       }
@@ -619,16 +666,13 @@ export default {
     /**
      * 监测器详情
      */
-    getDetailMaintain(id) {
+    getDetailMaintain(id, kind) {
       // 设备详情
-      this.getDeviceDetail(id || this.currentAssetId)
+      this.getDeviceDetail(id || this.currentAssetId, kind || this.currentAssetKind)
     },
     // 设别详情
-    getDeviceDetail(id) {
-      deviceManageApi.getAsset({
-        kind: DEVICE.text,
-        id
-      }).then(res => {
+    getDeviceDetail(id, kind) {
+      deviceManageApi.getAsset({ kind, id }).then(res => {
         this.deviceDetailModel = res.data;
       }).catch(err => {
         this.deviceDetailModel = {};
@@ -659,14 +703,16 @@ export default {
       let parentIdObj = { parentId: this.parentId }
 
       deviceManageApi.toAssetEdit({ kind: row.kind }, { id: row.id }).then(res => {
-        this.deviceInfoModel = Object.assign(res.assetVo, parentIdObj);
-      })
+        // 编辑时，如果有特殊字段，则拼接上
+        res.assetVo?.valueList.length ? this.extraFormsHandle(res.assetVo.valueList) : '';
 
-      this.getPropsByTagName({ kind: row.kind, typeName: row.typeName })
+        this.deviceInfoModel = Object.assign(res.assetVo, parentIdObj);
+
+        this.innerDrawer = true;
+      })
     },
     // 监测数据
     monitorData(row) {
-      console.log("monitorData -> row", row)
     },
 
     /**
@@ -689,6 +735,17 @@ export default {
     },
     // 新增编辑提交
     deviceInfoSubmit(model, done) {
+      // 处理多来的字段存在valueList[]字段中
+      if (this.deviceInfoExtraForms.length) {
+        this.deviceInfoExtraForms.forEach((item, index) => {
+          item.value = model[item.name];
+          delete model[item.name];
+        });
+        model.valueList = this.deviceInfoExtraForms;
+      }
+
+      // 添加单位
+      model.time_interval += model.unit || 'm';
       this._axiosFormData(this.assetUrl, model).then(res => {
         this.$message.success('操作成功');
         // 弹出编辑抽屉
@@ -713,53 +770,45 @@ export default {
     getPropsByTagName(params) {
       return new Promise((resolve, reject) => {
         deviceManageApi.getFormProperty(params).then(res => {
-          // 拿到返回的数据进行处理
-          let extraForms = res.map(item => {
-            this.deviceInfoModel[item.name] = item.value;
-            return {
-              label: item.caption,
-              prop: item.name,
-            }
-          })
-          // 添加额外的forms属性
-          this.deviceInfoForm.forms = this.deviceInfoForms.concat(extraForms);
+          // 处理特殊字段
+          this.extraFormsHandle(res);
           // 弹出编辑抽屉
           this.innerDrawer = true;
 
           this.$nextTick(() => {
             deviceManageApi.addServiceList(params).then(res => {
-              console.log("服务 -> res", res)
-              this.$refs[this.deviceInfoForm.ref].setColumnByProp('source', res);
+              this.$refs[this.deviceInfoForm.ref].setColumnByProp('source', {
+                dicData: res
+              });
             })
           })
           resolve();
         }).catch(err => reject(err));
       })
     },
+    // 拓展信息额外form属性处理
+    extraFormsHandle(res) {
+      // 额外的属性
+      this.deviceInfoExtraForms = res;
+
+      // 拿到返回的数据进行处理
+      const extraForms = res.map(item => {
+        return {
+          label: item.caption,
+          prop: item.name,
+          valueDefault: item.value
+        }
+      })
+
+      // 添加额外的forms属性
+      this.deviceInfoForm.forms = this.deviceInfoForms.concat(extraForms);
+    },
     //Form Data形式传递参数
     _axiosFormData(url, data, method = 'post') {
       return this.$axios({
         url,
         method,
-        data,
-        transformRequest: [function (data) {
-          let ret = ''
-          for (let key in data) {
-            let item = data[key];
-            if (typeof item === 'undefined' || item == null) {
-              item = '';
-            }
-            if (item instanceof File) {
-              ret += encodeURIComponent(key) + '=' + item + '&'
-            } else {
-              ret += encodeURIComponent(key) + '=' + encodeURIComponent(item) + '&'
-            }
-          }
-          return ret
-        }],
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        data
       })
     },
     delInfo() {

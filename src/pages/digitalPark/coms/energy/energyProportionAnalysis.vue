@@ -1,6 +1,6 @@
 <template>
   <div class="energy-proportion-analysis">
-    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
+    <div class="module-item-top-name" >{{moduleItem.moduleName}}</div>
     <div class="select-box">
       <el-select v-model="energy" placeholder="请选择" @change="energyChange" size="mini">
         <el-option

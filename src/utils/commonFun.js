@@ -2079,6 +2079,7 @@ class commonFun {
   }
 
   loadClientPage(item) {
+
     if (typeof item === 'undefined') {
       return false;
     }

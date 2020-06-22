@@ -68,7 +68,7 @@
               </template>
               <template #operation="{row,column,index,isEdit,size}">
                 <el-button :size="size" type="text" @click="edit(row)">编辑</el-button>
-                <el-button :size="size" type="text">定位</el-button>
+                <el-button :size="size" type="text" @click="location(row)">定位</el-button>
                 <el-button :size="size" type="text" @click="del(row)">删除</el-button>
               </template>
             </z-table>
@@ -177,7 +177,7 @@ import { AssetType } from 'utils/dictionary';
 import commonApi from 'api/common';
 import deviceManageApi from 'api/deviceManage';
 import { validNotChinese } from 'utils/validate';
-import { getUserInfo } from 'utils/auth';
+import { getUserInfo, IsCZClient } from 'utils/auth';
 const DEVICE = AssetType.DEVICE;
 // 新增设备
 let assetAddUrl = '/vibe-web/asset/assetAdd';
@@ -586,6 +586,8 @@ export default {
         labelWidth: 110,
         forms: []
       },
+      // 信息其余表单
+      deviceInfoExtraForms: [],
 
       // 设备详情
       deviceDetailModel: {},
@@ -622,6 +624,12 @@ export default {
           {
             label: '设备采购日期',
             prop: 'purchase_date'
+          },
+          {
+            prop: 'picture',
+            type: 'upload',
+            listType: 'picture-card',
+            dataType: 'string'
           },
           {
             label: '描述',
@@ -771,7 +779,8 @@ export default {
     },
     // 查询列表发送的数据
     deviceListParam() {
-      let res = { assetVo: Object.assign({ kind: DEVICE.text }, this.model) }
+      let { spaceId, ...model } = this.model;
+      let res = { assetVo: Object.assign({ kind: DEVICE.text }, model) }
       if (this.catalogs.length) {
         res.catalogs = this.catalogs
       }
@@ -788,7 +797,7 @@ export default {
     // 请求连接
     fetch() {
       this.fetchDeviceTree();
-      this.fetchDeviceList();
+      this.fetchDeviceList(1);
       this.fetchSpaceTree();
     },
     // 加载空间树
@@ -813,7 +822,10 @@ export default {
     // 加载设备列表
     fetchDeviceList(page) {
       this.load = true;
-      deviceManageApi.searchDevices(this.deviceListParam, { page: page }).then(res => {
+      deviceManageApi.searchDevices(
+        this.deviceListParam,
+        { page: page || this.Table.currentPage }
+      ).then(res => {
         this.load = false;
         this.Table.setData(res.rows);
         this.Table.setTotal(res.total);
@@ -943,12 +955,22 @@ export default {
         if (res?.keepers) {
           res.keepers = res.keepers.id;
         }
-        delete res.parent;
-        delete res.valueList;
+
+        // 编辑时，如果有特殊字段，则拼接上
+        res?.valueList.length ? this.extraFormsHandle(res.valueList) : '';
 
         this.deviceInfoModel = res;
-        this.getPropsByTagName(typeName, 'edit');
+
+        this.innerDrawer = true;
       })
+    },
+    // 定位
+    location(row) {
+      if (IsCZClient()) {
+        Location.ProbeButtonClicked(row.id);
+      } else {
+        this.$message.warning('请在客户端中使用定位');
+      }
     },
     // 导入成功操作
     uploadAfter(data, hide, done) {
@@ -968,15 +990,25 @@ export default {
     // 编辑提交
     // TODO 设备信息编辑传参修改
     deviceInfoSubmit(model, done) {
-      let data = Object.assign({}, this.addModel, this.deviceInfoModel);
+      let data = Object.assign({}, this.addModel, model);
 
       // 保管人员 和 维修部门特殊修改
       data['kind'] = DEVICE.text
-      data['using_department.id'] = data.using_department
-      data['keepers.id'] = data.keepers
+      data.using_department = {
+        id: data.using_department
+      }
+      data.keepers = {
+        id: data.keepers
+      }
 
-      delete data.keepers
-      delete data.using_department
+      // 处理多来的字段存在valueList[]字段中
+      if (this.deviceInfoExtraForms.length) {
+        this.deviceInfoExtraForms.forEach((item, index) => {
+          item.value = data[item.name];
+          delete data[item.name];
+        });
+        data.valueList = this.deviceInfoExtraForms;
+      }
 
       this._axiosFormData(this.assetUrl, data).then(res => {
         this.$message.success('操作成功');
@@ -1052,48 +1084,36 @@ export default {
           kind: DEVICE.text,
           typeName
         }).then(res => {
-          // 拿到返回的数据进行处理
-          let extraForms = res.map(item => {
-            this.deviceInfoModel[item.name] = item.value;
-            return {
-              label: item.caption,
-              prop: item.name,
-            }
-          })
-          // 添加额外的forms属性
-          this.deviceInfoForm.forms = this.deviceInfoForms.concat(extraForms);
+          this.extraFormsHandle(res);
           // 弹出编辑抽屉
           this.innerDrawer = true;
           resolve();
         }).catch(err => reject(err));
       })
+    },// 拓展信息额外form属性处理
+    extraFormsHandle(res) {
+      // 额外的属性
+      this.deviceInfoExtraForms = res;
+
+      // 拿到返回的数据进行处理
+      const extraForms = res.map(item => {
+        return {
+          label: item.caption,
+          prop: item.name,
+          valueDefault: item.value
+        }
+      })
+
+      // 添加额外的forms属性
+      this.deviceInfoForm.forms = this.deviceInfoForms.concat(extraForms);
     },
     //Form Data形式传递参数
     _axiosFormData(url, data, method = 'post') {
       return this.$axios({
         url,
         method,
-        data,
-        transformRequest: [this.getPostFormData],
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        data
       })
-    },
-    getPostFormData(data) {
-      let ret = ''
-      for (let key in data) {
-        let item = data[key];
-        if (typeof item === 'undefined' || item == null) {
-          item = '';
-        }
-        if (item instanceof File) {
-          ret += encodeURIComponent(key) + '=' + item + '&'
-        } else {
-          ret += encodeURIComponent(key) + '=' + encodeURIComponent(item) + '&'
-        }
-      }
-      return ret
     },
     delInfo() {
       return this.$confirm("确认是否删除?", "提示", {
@@ -1109,7 +1129,7 @@ export default {
       arr.push(node[idKey]);
       if (node[childrenKey] && Object.prototype.toString.call(node[childrenKey]) === '[object Array]') {
         node[childrenKey].forEach((item) => {
-          this.getIdsByNode(arr, item, idKey);
+          this.getIdsByNode(arr, item, childrenKey, idKey);
         });
       }
     }

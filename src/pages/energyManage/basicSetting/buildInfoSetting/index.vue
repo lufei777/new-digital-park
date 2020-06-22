@@ -15,7 +15,7 @@
       </div>
       <div class="flex item-group btn-box">
         <el-button type="primary" @click="onClickSearchBtn">确定</el-button>
-        <!--<el-button>重置</el-button>-->
+        <el-button @click="onClickResetBtn">重置</el-button>
       </div>
     </div>
     <TreeModal :tree-modal-config="treeModalConfig"/>
@@ -34,6 +34,23 @@
           <!--<el-button type="text" @click="rowClick(row)">编辑</el-button>-->
           <el-button type="text" @click="deleteRow(row,$index)">删除</el-button>
         </template>
+        <template slot="spaceId" slot-scope="{isEdit,row,column,size,disabled}">
+           <z-input
+             v-if="isEdit"
+             type="tree"
+             v-model="row[column.prop]"
+             :size="size"
+             :disabled="disabled"
+             :props="{
+               label: 'floor',
+               value: 'floorId',
+               children: 'nodes'
+             }"
+             :dic="treeModalConfig.treeList"
+             :nodeClick="(...args)=>{ onClickSpaceNode(...args,row,column) }"
+           />
+          <span v-if="!isEdit">{{row.spaceName}}</span>
+        </template>
       </z-table>
     </div>
 
@@ -46,13 +63,15 @@
   import {isZG} from '@/utils/project';
   import TreeModal from '@/components/treeModal/index'
   import CommonFun from '@/utils/commonFun'
+  import zTree from '@/components/zvue/components/input/src/input'
   let pageInfo = {
     pageCount: 10
   }
   export default {
     name: "buildInfoSetting",
     components: {
-      TreeModal
+      TreeModal,
+      zTree
     },
     data() {
       let _this = this
@@ -118,34 +137,34 @@
             label: '城市名',
             prop: 'city',
             cell:true,
-            // focus:_this.onClickSpaceNode()
           },
-          //   {
-          //     label: '上级建筑',
-          //     prop: 'parentId',
-          //     cell:true,
-          //     type: "tree",
-          //     props: {
-          //       label: "floor",
-          //       value: "floorId",
-          //       children: "nodes",
-          //     },
-          //     dicData: [],
-          //     disabled:true,
-          // },
+          {
+              label: '上级建筑',
+              prop: 'parentId',
+              cell:true,
+              type: "tree",
+              props: {
+                label: "floor",
+                value: "floorId",
+                children: "nodes",
+              },
+              dicData: [],
+              disabled:true,
+          },
             {
             label: '建筑名称',
             prop: 'spaceId',
             cell:true,
-            type: "tree",
-            props: {
-              label: "floor",
-              value: "floorId",
-              children: "nodes",
-            },
-            dicData: [],
-            nodeClick:_this.onClickSpaceNode,
+            slot:true,
             disabled:false,
+            // type: "tree",
+            // props: {
+            //   label: "floor",
+            //   value: "floorId",
+            //   children: "nodes",
+            // },
+            // dicData: [],
+            // nodeClick:_this.onClickSpaceNode,
           }, {
             label: '建筑面积（㎡）' ,
             prop: 'area',
@@ -201,6 +220,7 @@
           spaceName: ''
         },
         deleteArr:[],
+
       };
     },
     computed: {},
@@ -209,14 +229,14 @@
         let res = await CommonApi.getAllFloorOfA3()
         this.treeModalConfig.treeList = res
         this.treeModalConfig.treeConfig.defaultExpandedkeys = [res[0].floorId]
-        this.searchParams.spaceName = res[0].floor
-        this.searchParams.spaceId = res[0].floorId
-        this.$refs[this.tableConfig.ref].setColumnByProp("spaceId", {
-          dicData: res
-        });
-        // this.$refs[this.tableConfig.ref].setColumnByProp("parentId", {
+        // this.searchParams.spaceName = res[0].floor
+        // this.searchParams.spaceId = res[0].floorId
+        // this.$refs[this.tableConfig.ref].setColumnByProp("spaceId", {
         //   dicData: res
         // });
+        this.$refs[this.tableConfig.ref].setColumnByProp("parentId", {
+          dicData: res
+        });
       },
       async getBuildInfoList(){
         let params = {
@@ -257,24 +277,26 @@
           await EnergyApi.updateBuildInfo(obj)
         }
         this.getBuildInfoList()
-        this.$refs[this.tableConfig.ref].setColumnByProp("spaceId", {
-          disabled:false
-        });
         callback()
       },
       async rowEdit(obj) {
+        if(!this.checkCanEdit()){
+          // console.log(this.tableConfig.data)
+          obj.$cellEdit=false
+          return;
+        }
         this.$refs[this.tableConfig.ref].setColumnByProp("spaceId", {
           disabled:true
         });
         await EnergyApi.updateBuildInfo({...obj,...{isEdit:1}})
+        this.getBuildInfoList()
       },
       async rowEditCancel(obj) {
         obj.$cellEdit=false
-        if(obj.flag){
-           this.getBuildInfoList()
-        }else{
-          await EnergyApi.updateBuildInfo({...obj,...{isEdit:0}})
+        if(!obj.flag) {
+          await EnergyApi.updateBuildInfo({...obj, ...{isEdit: 0}})
         }
+        this.getBuildInfoList()
       },
       onClickMultiDelBtn() {
         let tmp = this.$refs[this.tableConfig.ref].getSelectedData()
@@ -289,16 +311,7 @@
         CommonFun.deleteTip(this,true,'确定要删除吗？',()=>this.sureMulDelete(tmp))
       },
       onClickAddBtn(){
-        let tmp = this.tableConfig.data.find((item)=>{
-         return item.$cellEdit
-        })
-        if(tmp){
-          this.$message({
-            type:'warning',
-            message:'请先将数据补充完整'
-          })
-          return;
-        }
+        if(!this.checkCanEdit()) return ;
         let obj = {
           id:-1,
           spaceId: '',
@@ -311,18 +324,35 @@
           room: null,
           flag:true,  //代表是新增的
           $cellEdit:true,
+          isEdit:1
         }
         // this.$refs['tableRef'].rowCellAdd(obj)
         this.tableConfig.data.unshift(obj)
         this.tableConfig.uiConfig.pagination.total = this.tableConfig.uiConfig.pagination.total+1
+        this.$refs[this.tableConfig.ref].setColumnByProp("spaceId", {
+          disabled:false
+        });
       },
       setIndex(index) {
         return pageInfo.pageCount * (this.curPage - 1) + index + 1
       },
       handleCurrentChange(page) {
         this.curPage = page
+        this.getBuildInfoList()
       },
       onClickSearchBtn() {
+        this.getBuildInfoList()
+        this.$refs[this.tableConfig.ref].setColumnByProp("spaceId", {
+          disabled:false
+        });
+      },
+      onClickResetBtn(){
+        this.searchParams = {
+          buildType: '',
+          city:'',
+          spaceId: '',
+          spaceName: ''
+        }
         this.getBuildInfoList()
       },
       deleteRow(row,index){
@@ -346,8 +376,22 @@
         await EnergyApi.deleteBuildInfo(delArr)
         this.getBuildInfoList()
       },
-      onClickSpaceNode(val){
-        console.log("node",val)
+      onClickSpaceNode(...args){
+        this.tableConfig.data[args[3].$index].parentId = args[0].parentId==0?null:args[0].parentId
+      },
+      checkCanEdit(){
+        let tmp = this.tableConfig.data.find((item)=>{
+          return item.isEdit==1
+        })
+        if(tmp){
+          this.$message({
+            type:'warning',
+            message:'请先将数据补充完整'
+          })
+          return false;
+        }else{
+          return true;
+        }
       }
     },
     async mounted() {

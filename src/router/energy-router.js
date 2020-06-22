@@ -9,7 +9,6 @@ import ElecDiffer from '../pages/energyManage/energySaving/elecDiffer.vue'
 import NightElec from '../pages/energyManage/energySaving/nightElec.vue'
 import ElecAnalysis from '../pages/energyManage/energySaving/elecAnalysis.vue'
 import StatisAnalysis from './commonRouter/statisAnalysis'
-import SystemManage from './system-manage'
 import DeviceRecord from './commonRouter/deviceRecord'
 import TmpRouter from '../pages/commonProject/coms/tmpRouterBox'
 import DefaultPage from '../pages/commonProject/defaultPage/index'
@@ -98,5 +97,5 @@ export default [{
         meta: { title: '建筑信息设置' },
       }]
     }]
-  }].concat(StatisAnalysis, DataReport, SystemManage, DeviceRecord, Collect)
+  }].concat(StatisAnalysis, DataReport, DeviceRecord, Collect)
 }]

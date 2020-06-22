@@ -66,16 +66,26 @@
           <el-dropdown-item
             command="1"
             :class="{'large-item':fromFlag==2}"
-          >{{$t('homeHeader.personalCenter')}}</el-dropdown-item>
+          >{{$t('homeHeader.personalCenter')}}
+          </el-dropdown-item>
           <el-dropdown-item
             command="2"
             :class="{'large-item':fromFlag==2}"
-          >{{$t('homeHeader.changePassword')}}</el-dropdown-item>
+          >{{$t('homeHeader.changePassword')}}
+          </el-dropdown-item>
           <el-dropdown-item
             command="3"
             :class="{'large-item':fromFlag==2}"
-          >{{$t('homeHeader.signOut')}}</el-dropdown-item>
+          >{{$t('homeHeader.signOut')}}
+          </el-dropdown-item>
+          <el-dropdown-item
+            command="4"
+            v-if="isCZClient"
+            :class="{'large-item':fromFlag==2}"
+          >最小化
+          </el-dropdown-item>
         </el-dropdown-menu>
+
       </el-dropdown>
     </span>
   </div>
@@ -88,7 +98,7 @@ import { mapState } from "vuex";
 import CommonFun from '@/utils/commonFun'
 import { IsCZClient } from '@/utils/auth';
 import {isYDScreen,isZG,isYD} from "@/utils/project";
-
+import CommonLargeHeader from './largeScreen/js/header'
 export default {
   name: "DigitalNavOperator",
   components: {},
@@ -127,6 +137,9 @@ export default {
     },
     isydScreen(){
        return isYDScreen()
+    },
+    isCZClient(){
+      return IsCZClient()
     }
   },
   watch: {
@@ -152,17 +165,25 @@ export default {
     },
     async onClickUserConfigure(val) { //点击用户
       Cookies.set('moduleType', this.cookieModuleType)
+      // 退出
       if (val == 3) {
         //如果是客户端
         if (IsCZClient()) {
-          goBackClientLogin();
+          window.goBackClientLogin && window.goBackClientLogin();
         } 
+        // 清除登录信息
         this.$store.dispatch('user/logout').then(() => {
-          this.$router.push("/login");
+          if(!IsCZClient()){
+            this.$router.push("/login");
+          }
         })
         // 清空菜单列表
         this.$store.commit("digitalPark/activeMenuIndex", "");
-      } else {
+      } else if(val==4){
+        if (IsCZClient()) {
+          minimizeWindow();
+        }
+      }else{
         this.setSystemMenu()
         if (val == 1) {
           this.$store.commit("digitalPark/activeMenuIndex", "/personalInformation")
@@ -220,30 +241,8 @@ export default {
       this.$store.commit("digitalPark/updateUserInfo", false);
       this.setUserInfo(res)
     }, */
-    loadNews() {  //点击消息
-      Cookies.set('moduleType', this.cookieModuleType)
-      // loadNews TODO
-      localStorage.setItem(
-        "menuList",
-        JSON.stringify({
-          name: "消息管理",
-          childNode: [
-            {
-              id: '1',
-              name: "预警报警列表",
-              routeAddress: "@/html/alarm/alarm_index.html"
-            }
-          ]
-        })
-      );
-      if (this.fromFlag == 2) {
-        this.$store.commit("digitalPark/largeScreenIframeSrc",
-          window.top.location.origin + '/#/vibe-web?updateId=' + _.uniqueId())
-      } else {
-        this.$store.commit("digitalPark/activeMenuIndex", '@/html/alarm/alarm_index.html')
-        this.$router.push("/vibe-web");
-      }
-
+    loadNews() {
+      CommonLargeHeader.loadNews()
     },
     goToWebPage(item, obj) {
       //如果只有第一个参数，渲染的menu就是此对象的childNode；
@@ -278,7 +277,8 @@ export default {
     window.CZClient = {
       goToPersonal: this.onClickUserConfigure,  //跳转个人中心
       goBack: this.onClickGoBack,    //返回首页
-      goToWebPage: this.goToWebPage,
+      goToWebPage: this.goToWebPage, //跳转网页
+      loadNews: this.loadNews,  //跳转消息
     }
   }
 };

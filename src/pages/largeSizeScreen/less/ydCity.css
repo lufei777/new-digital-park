@@ -1,42 +1,42 @@
-.large-size-screen-normal .yd-out-drag-product{
-  /*background:rgba(0,0,0,.7);*/
-  /*border-radius: 16px;*/
-  background-image: url('../../../../static/image/digitalPark/content_bg5.png');
-  font-size: 14px;
-  width:640px;
-  height:366px;
-}
-.large-size-screen-normal .single-module-name{
-  width:100%;
-  padding-left:2.5%;
-  line-height: 40px;
-  font-size:18px;
-  box-sizing: border-box;
-  font-weight: bold;
-  background:linear-gradient(0deg,rgba(1,234,254,1) 0%, rgba(255,255,255,1) 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  text-align: left;
-}
-.large-size-screen-normal .module-item-top-name{
-  margin-top: 10px;
-}
+/*.large-size-screen-normal .yd-out-drag-product{*/
+  /*!*background:rgba(0,0,0,.7);*!*/
+  /*!*border-radius: 16px;*!*/
+  /*background-image: url('../../../../static/image/digitalPark/content_bg5.png');*/
+  /*font-size: 14px;*/
+  /*width:640px;*/
+  /*height:366px;*/
+/*}*/
+/*.large-size-screen-normal .single-module-name{*/
+  /*width:100%;*/
+  /*padding-left:2.5%;*/
+  /*line-height: 40px;*/
+  /*font-size:18px;*/
+  /*box-sizing: border-box;*/
+  /*font-weight: bold;*/
+  /*background:linear-gradient(0deg,rgba(1,234,254,1) 0%, rgba(255,255,255,1) 100%);*/
+  /*-webkit-background-clip:text;*/
+  /*-webkit-text-fill-color:transparent;*/
+  /*text-align: left;*/
+/*}*/
+/*.large-size-screen-normal .module-item-top-name{*/
+  /*margin-top: 10px;*/
+/*}*/
 
-@media screen and (max-width: 1920px) {
-  .large-size-screen-normal .yd-out-drag-product {
-    background-image: url('../../../../static/image/digitalPark/content_bg5.png');
-    font-size: 12px;
-    width: 320px;
-    height: 168px;
-  }
-  .large-size-screen-normal .single-module-name {
-    width: 100%;
-    padding-left: 2.5%;
-    line-height: 1.5;
-    font-size: 14px;
-  }
+/*@media screen and (max-width: 1920px) {*/
+  /*.large-size-screen-normal .yd-out-drag-product{*/
+    /*background-image: url('../../../../static/image/digitalPark/content_bg5.png');*/
+    /*font-size: 12px;*/
+    /*width: 320px;*/
+    /*height: 168px;*/
+  /*}*/
+  /*.large-size-screen-normal .single-module-name {*/
+    /*width: 100%;*/
+    /*padding-left: 2.5%;*/
+    /*line-height: 1.5;*/
+    /*font-size: 14px;*/
+  /*}*/
 
-  .large-size-screen-normal .module-item-top-name {
-    margin-top: 10px;
-  }
-}
+  /*.large-size-screen-normal .module-item-top-name {*/
+    /*margin-top: 10px;*/
+  /*}*/
+/*}*/

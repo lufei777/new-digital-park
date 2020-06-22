@@ -36,6 +36,8 @@
 <script>
 //导入字典中的定义的字段
 import { WarningAlerm } from "utils/dictionary";
+// 导入接口
+import warningAlarm from "@/service/api/warningAlarm";
 // 报警级别
 const alarmLevel = WarningAlerm.alarmLevel;
 // 报警状态
@@ -83,7 +85,7 @@ export default {
             type: "select",
             label: "设备类型:",
             placeholder: " ",
-            prop: "deviceCatalogName",
+            prop: "parentCatalogName",
             span: 10,
             offset: 1,
             dicData:deviceType
@@ -103,7 +105,7 @@ export default {
             type: "input",
             label: "点位类型",
             placeholder: " ",
-            prop: "monitorCatalogName",
+            prop: "catalogName",
             span: 10,
             offset: 1
           },
@@ -112,20 +114,26 @@ export default {
             type: "input",
             label: "报警规则",
             placeholder: " ",
-            prop: "singlewarn",
+            prop: "singleWarnCond",
             span: 10,
             offset: 1
             // dicData:
           },
           // 报警级别
           {
-            type: "select",
-            label: "报警级别",
-            placeholder: " ",
-            prop: "eventRank",
-            span: 10,
-            offset: 1,
-            dicData:alarmLevel
+                type: "select",
+                label: "报警级别",
+                prop: "eventRank",
+                span: 10,
+                offset: 1,
+                row: true,
+                // dicData: alarmLevel
+                dicUrl: warningAlarm.geteventRanks,
+                dicMethod: "get",
+                props: {
+                  label: "rankName",
+                  value: "rankId"
+                }
           },
           // 通知方式
           {
