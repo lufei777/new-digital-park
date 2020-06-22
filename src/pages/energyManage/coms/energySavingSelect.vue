@@ -263,7 +263,7 @@
         CommonFun.exportMethod({
           url,
           params
-        }, this)
+        })
       },
       onShowModal() {
         this.treeModalConfig.showModal = true

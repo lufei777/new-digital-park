@@ -55,7 +55,7 @@
     name: 'AddUser',
     components: {
     },
-    // props:['curUserId','isEdit'],
+    // props:['userId','isEdit'],
     data () {
       let that = this
       let checkRePwd=function(rule,value,callback){
@@ -82,18 +82,6 @@
         }
       }
       return {
-        userForm:{
-          login_id:'',
-          name:'',
-          password:'',
-          re_password:"",
-          mail:'',
-          phone:'',
-          department:'',
-          departmentName:'',
-          rid:'',
-          id:''
-        },
         rules: {
           login_id:[{ required: true, message: '请输入用户名', trigger: 'blur' },
                     { min: 4, message: '至少输入4个字符', trigger: 'blur' }],
@@ -180,6 +168,8 @@
               prop: "mail",
               span: 24,
               rules: {
+                validator: checkMail,
+                trigger: 'blur'
               }
             },
             {
@@ -188,6 +178,8 @@
               prop: "phone",
               span: 24,
               rules: {
+                validator: checkPhone,
+                trigger: 'blur'
               }
             },
             {
@@ -216,13 +208,13 @@
     },
     computed:{
       tipText(){
-        return this.curUserId?'编辑用户':'添加用户'
+        return this.userId?'编辑用户':'添加用户'
       },
-      curUserId(){
-        return this.$route.query.curUserId
+      userId(){
+        return this.$route.query.userId
       },
       api(){
-        return this.curUserId?'updateUser':'addUser'
+        return this.userId?'updateUser':'addUser'
       },
       assign(){
         return this.$route.query.assign
@@ -236,7 +228,7 @@
     methods: {
       async getUserDetail(){
         let res =await SystemManageApi.getUserDetail({
-          userId:this.curUserId
+          userId:this.userId
         })
         let tmp = (res.rlist|| []).map((item)=>item.name)
         res.roleList = tmp.join(",")
@@ -260,11 +252,7 @@
       },
       async submit(model, hide) {
         let params = this.formModel
-        if(this.curUserId){
-          params = {...this.formModel,...{loginId:this.curUserId}}
-        }else if(!this.curUserId && !this.assign){
-          params.roleIds = this.formModel.role.join(",")
-        }
+        params.roleIds = this.formModel.role.join(",")
         await SystemManageApi[this.api](params)
           .then(res => {
             this.$message({
@@ -279,7 +267,7 @@
 
         // console.log(this.formModel.role)
         // await SystemManageApi.assignRole({
-        //   userId:this.curUserId,
+        //   userId:this.userId,
         //   roleIds:this.formModel.role.join(",")
         // })
       },
@@ -287,14 +275,14 @@
         history.go(-1)
       },
       setColumn(){
-        if(this.curUserId && !this.assign) {
+        if(this.userId && !this.assign) {
           this.$refs[this.formConfig.ref].setColumnByProp("roleList", {
             hide: true
           });
           this.$refs[this.formConfig.ref].setColumnByProp("role", {
             hide: true
           });
-        }else if(this.curUserId && this.assign){
+        }else if(this.userId && this.assign){
            this.formConfig.forms = [ {
              type: "input",
              label: "姓名",
@@ -327,10 +315,10 @@
        if(!this.assign){
          this.getDepartmentList()
        }
-       if(this.curUserId){
+       if(this.userId){
         this.getUserDetail()
        }
-       if(!this.curUserId || this.assign){
+       if(!this.userId || this.assign){
          this.getRoleList()
        }
        this.setColumn()

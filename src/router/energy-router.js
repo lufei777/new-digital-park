@@ -82,7 +82,6 @@ export default [{
       meta: { title: '电流向及线损分析' },
     },{
       path: '/basicSetting',
-      name: 'StandardSetting',
       component: ()=>import('@/pages/commonProject/coms/tmpRouterBox'),
       meta: { title: '基础设置' },
       children:[{

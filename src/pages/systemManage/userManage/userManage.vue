@@ -1,94 +1,94 @@
 <template>
   <div class="user-manage panel-container">
-      <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
+    <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
          class="user-tree-box radius-shadow">
-        <Tree :tree-list="treeList" :tree-config="treeConfig"/>
-      </div>
+      <Tree :tree-list="treeList" :tree-config="treeConfig"/>
+    </div>
     <div class="right-content  panel-container">
-        <div class="choose-box flex-align radius-shadow panel">
-          <div class="block flex-align-center">
-            <span>编号</span>
-            <el-input v-model="id" />
-          </div>
-          <div class="block flex-align-center">
-            <span>用户名</span>
-            <el-input v-model="login_id" />
-          </div>
-            <div class="block flex-align-center">
-              <span>E-mail</span>
-              <el-input v-model="mail" />
-            </div>
-            <div class="block flex-align-center">
-              <span>电话号码</span>
-              <el-input v-model="phone" />
-            </div>
-            <el-button type="primary" icon="el-icon-search" @click="onClickSearchBtn">搜索</el-button>
-           
-      </div>
-        <div class="table-wrapper radius-shadow  panel">
-        <div class="operator-box flex-row-reverse">
-          <el-button type="primary"  @click="onClickExportBtn">导出</el-button>
-          <el-button type="primary" icon="el-icon-delete" @click="deleteTip">删除记录</el-button>
-          <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
+      <div class="choose-box flex-align radius-shadow panel">
+        <div class="block flex-align-center">
+          <span>编号：</span>
+          <el-input v-model="searchParams.id"/>
         </div>
-        <!--<CommonTable :tableObj="tableData" :curPage="1"/>-->
-         <z-table :ref="tableConfig.ref" :options="tableConfig">
-           <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
-             <el-button type="text" @click="editRow(row)">编辑</el-button>
-             <el-button type="text" @click="deleteRow(row)">删除</el-button>
-             <el-button type="text" @click="assignRole(row)">分配角色</el-button>
-           </template>
-         </z-table>
+        <div class="block flex-align-center">
+          <span>用户名：</span>
+          <el-input v-model="searchParams.loginId"/>
+        </div>
+        <div class="block flex-align-center">
+          <span>E-mail：</span>
+          <el-input v-model="searchParams.mail"/>
+        </div>
+        <div class="block flex-align-center">
+          <span>电话号码：</span>
+          <el-input v-model="searchParams.phone"/>
+        </div>
+        <el-button type="primary" @click="onClickSearchBtn">搜索</el-button>
+        <el-button @click="onClickResetBtn">重置</el-button>
+      </div>
+      <div class="table-wrapper radius-shadow  panel">
+        <div class="operator-box flex-row-reverse" v-if="fromFlag!='assignUser'">
+          <el-button type="primary" @click="onClickExportBtn">导出</el-button>
+          <!--<el-button type="primary" @click="onClickMultiDelBtn">删除</el-button>-->
+          <el-button type="primary" @click="onClickAddBtn">添加</el-button>
+        </div>
+        <z-table :ref="tableConfig.ref" :options="tableConfig">
+          <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
+            <el-button type="text" @click="editRow(row)">编辑</el-button>
+            <el-button type="text" @click="deleteRow(row)">删除</el-button>
+            <el-button type="text" @click="assignRole(row)">分配角色</el-button>
+          </template>
+        </z-table>
       </div>
       <!--<div class="item-row-detail-table radius-shadow">-->
-        <!--<table>-->
-          <!--<tbody>-->
-          <!--<tr><th>用户名</th><td>{{curUser.login_id}}</td></tr>-->
-          <!--<tr><th>姓名</th><td>{{curUser.name}}</td></tr>-->
-          <!--<tr><th>电话号码</th><td>{{curUser.phone}}</td></tr>-->
-          <!--<tr><th>Email</th><td>{{curUser.mail}}</td></tr>-->
-          <!--<tr><th>所在部门</th><td>{{curUser.departmentText}}</td></tr>-->
-          <!--<tr><th>分配角色名称</th><td>{{curUser.roleText}}</td></tr>-->
-          <!--</tbody>-->
-        <!--</table>-->
+      <!--<table>-->
+      <!--<tbody>-->
+      <!--<tr><th>用户名</th><td>{{curUser.login_id}}</td></tr>-->
+      <!--<tr><th>姓名</th><td>{{curUser.name}}</td></tr>-->
+      <!--<tr><th>电话号码</th><td>{{curUser.phone}}</td></tr>-->
+      <!--<tr><th>Email</th><td>{{curUser.mail}}</td></tr>-->
+      <!--<tr><th>所在部门</th><td>{{curUser.departmentText}}</td></tr>-->
+      <!--<tr><th>分配角色名称</th><td>{{curUser.roleText}}</td></tr>-->
+      <!--</tbody>-->
+      <!--</table>-->
       <!--</div>-->
     </div>
   </div>
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  let pageInfo = {
+    pageNum: 1,
+    pageSize: 10,
+  }
+  import {mapState} from 'vuex'
   import CommonApi from '@/service/api/common'
-  import CommonTable from '@/components/commonTable/index'
+  import CommonFun from '@/utils/commonFun'
   import Tree from '@/components/tree/index'
   import SystemManageApi from '@/service/api/systemManage'
+
   export default {
     name: 'UserManage',
     components: {
-      CommonTable,
       Tree
     },
-    data () {
+    data() {
       return {
-        treeList:[],
-        treeConfig:{
-          treeProps:{
-            label:'text',
-            children:'nodes'
+        treeList: [],
+        treeConfig: {
+          treeProps: {
+            label: 'text',
+            children: 'nodes'
           },
-          onClickTreeNodeCallBack:this.onClickTreeNodeCallBack,
-          defaultExpandedkeys:[]
+          onClickTreeNodeCallBack: this.onClickTreeNodeCallBack,
+          defaultExpandedkeys: []
         },
-        id:'',
-        login_id:'',
-        mail:'',
-        phone:'',
-        tableData:{},
-        curPage:1,
-        curUser:{},
-        isEdit:false,
-        department:1,
-        roleList:{},
+        searchParams: {
+          id: '',
+          loginId: '',
+          mail: '',
+          phone: '',
+          department: 1
+        },
         tableConfig: {
           ref: "tableRef",
           serverMode: {
@@ -125,7 +125,6 @@
             //   prop:'roleList'
             // }
           ],
-          btnConfig: [],
           operation: {
             width: 200
           },
@@ -134,178 +133,138 @@
             selection: true,
           },
           tableMethods: {},
-        }
+        },
+        deleteId: ''
       }
     },
-    computed:{
+    computed: {
       ...mapState({
-        menuIsCollapse:state=>state.digitalPark.menuIsCollapse
-      })
+        menuIsCollapse: state => state.digitalPark.menuIsCollapse
+      }),
+      fromFlag() {
+        //来自角色管理-分配用户
+        return this.$route.query.from
+      }
     },
     methods: {
-      async getDeptTree(){
+      async getDeptTree() {
         this.treeList = await CommonApi.getDeptTree()
-        this.department= this.treeList[0].id
-        this.treeConfig.defaultExpandedkeys=[this.treeList[0].id]
+        this.searchParams.department = this.treeList[0].id
+        this.treeConfig.defaultExpandedkeys = [this.treeList[0].id]
+        // this.onClickSearchBtn()
       },
-      onClickTreeNodeCallBack(val){
-        this.department=val.id
-        this.getUserList()
+      onClickTreeNodeCallBack(val) {
+        this.searchParams.department = val.id
       },
-      async getUserList(){
-        let res = await SystemManageApi.getUserList({
-          // id:this.id,
-          // login_id:this.login_id,
-          // mail:this.mail,
-          // phone:this.phone,
-          // department:this.department,
-          // page:this.curPage,
-          // size:10
-        })
-        // if(!res || !res.total){
-        //   res={
-        //     rows:[],
-        //     total:0
-        //   }
-        // }
-        // res.rows.map((item)=>{
-        //   this.treeList.map((tree)=>{
-        //     if(item.department==tree.id){
-        //       item.departmentText=tree.text
-        //     }
-        //   })
-        //    this.roleList.rows.map((role)=>{
-        //      if(item.department==role.id){
-        //        item.roleText=role.name
-        //      }
-        //    })
-        // })
-        // res.labelList=[{name:'',prop:'',type:'selection'},
-        //                 {name:'编号',prop:'id'},
-        //                {name:'用户名',prop:'login_id'},
-        //                {name:'姓名',prop:'name'},
-        //                {name:'E-mail',prop:'mail'},
-        //                {name:'电话号码',prop:'phone'}]
-        // res.dataList=res.rows
-        // res.hideExportBtn=true
-        // res.showOperator=true
-        // this.tableData=res
-        // if(res.rows.length){
-        //   this.curUser=res.rows[0]
-        // }else{
-        //   this.curUser={}
-        // }
+      onClickSearchBtn() {
+        this.getData()
       },
-      onClickSearchBtn(){
-        this.curPage=1
-        this.getUserList()
+      onClickResetBtn() {
+        this.searchParams = {
+          id: '',
+          loginId: '',
+          mail: '',
+          phone: '',
+          department: 1
+        }
+        this.getData()
       },
-      onClickExportBtn(){
-        let url = `/vibe-web/user/report?type=xlsx&id=${this.id}&login_id=${this.login_id}&mail=${this.mail}&phone=${this.phone}`;
-        location.href = url
+      getData() {
+        this.$refs[this.tableConfig.ref].setCurrentPage(1)
+        this.tableConfig.serverMode.data = {...this.searchParams, ...pageInfo}
+        this.$refs[this.tableConfig.ref].refreshTable()
       },
-      deleteRow(data){
-        this.deleteId=data.id
-        this.deleteTip()
+      onClickMultiDelBtn() {
+        let tmp = this.$refs[this.tableConfig.ref].getSelectedData()
+        this.deleteId = tmp.map((item) => item.id).join(",")
+        CommonFun.deleteTip(this, this.deleteId, '至少选择一条数据！', this.sureDelete)
       },
-      async sureDelete(){
-        await CommonApi.deleteUser({
-          ids:this.deleteId,
+      onClickAddBtn() {
+        this.$router.push('/addUser')
+      },
+      onClickExportBtn() {
+        // let url = `/vibe-web/user/report?type=xlsx&id=${this.id}&loginId=${this.login_id}&mail=${this.mail}&phone=${this.phone}`;
+        // location.href = url
+      },
+      deleteRow(data) {
+        this.deleteId = data.id
+        CommonFun.deleteTip(this, this.deleteId, '至少选择一条数据！', this.sureDelete)
+      },
+      async sureDelete() {
+        await SystemManageApi.deleteUser({
+          userId: this.deleteId,
         })
         this.$message({
           type: 'success',
           message: '删除成功!'
         });
-        this.getUserList()
+        this.$refs[this.tableConfig.ref].refreshTable()
       },
-      handleSelectionChange(val){
-        let tmp=val.map((item)=>item.id)
-        this.deleteId=tmp.join(",")
+      editRow(data) {
+        this.$router.push(`/addUser?userId=${data.id}`)
       },
-      deleteTip(){
-        if(!this.deleteId){
-          this.$message({
-            type: 'warning',
-            message: '请先选择用户！',
-            duration:1000
-          });
-          return;
-        }
-        this.$confirm('确定要删除吗?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.sureDelete()
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除',
-          });
-        });
+      assignRole(data) {
+        this.$router.push(`/addUser?userId=${data.id}&assign=true`)
       },
-      editRow(data){
-        this.$router.push(`/addUser?curUserId=${data.id}`)
-      },
-      assignRole(data){
-        this.$router.push(`/addUser?curUserId=${data.id}&assign=true`)
-      },
-      onClickAddBtn(){
-        this.$router.push('/addUser')
-      },
-      rowClick(row){
-        this.curUser=row
-      },
-      async getRoleList(){
-        this.roleList = await CommonApi.getRoleList()
-      },
-      fixTree(){
+      fixTree() {
         $(".user-tree-box").css({
-          height:($(document).height()-110)+'px'
+          height: ($(document).height() - 110) + 'px'
         })
       },
     },
-    async mounted(){
+    async created() {
       await this.getDeptTree()
-      // await this.getRoleList()
-      // this.getUserList()
+      this.getData()
+    },
+    mounted() {
       this.fixTree()
-      $(window).resize(()=>{
+      $(window).resize(() => {
         this.fixTree()
       })
+      if (this.fromFlag == 'assignUser') {
+        this.tableConfig.operation = false
+        this.tableConfig.btnConfig = false
+      }
     }
   }
 </script>
 
 <style lang="less">
   @import '../../commonProject/less/dataDetailRow.less';
-  .user-manage{
-    .left-zoom-nav{
-      width:17%;
+
+  .user-manage {
+    .left-zoom-nav {
+      width: 17%;
       float: left;
       position: fixed;
       height: 100%;
       overflow: auto;
       background: @mainBg;
       padding: 10px 0;
-      .el-tree{
+
+      .el-tree {
         background: @mainBg;
         font-size: 16px;
       }
-      .el-tree-node__content{
-        color:@white;
-        padding:5px 0;
+
+      .el-tree-node__content {
+        color: @white;
+        padding: 5px 0;
       }
-      .el-tree-node__content:hover{
-        color:#22dbfc;
+
+      .el-tree-node__content:hover {
+        color: #22dbfc;
       }
-      .el-tree-node:focus>.el-tree-node__content{
-        color:#22dbfc;
+
+      .el-tree-node:focus > .el-tree-node__content {
+        color: #22dbfc;
       }
     }
-    .tip{
+
+    .tip {
       height: 66px;
       border-bottom: 1px solid #eaeaea;
+
       .icon {
         width: 2px;
         height: 24px;
@@ -313,40 +272,48 @@
         border-radius: 2px;
         margin-right: 10px;
       }
-      span{
+
+      span {
         font-size: 24px;
-        color:#01465c;
+        color: #01465c;
       }
     }
-    .choose-box{
+
+    .choose-box {
       overflow: hidden;
-      padding:20px;
+      padding: 20px;
       background: @white;
       margin-bottom: 20px;
     }
-    .block{
-      margin-right:40px;
+
+    .block {
+      margin-right: 40px;
       display: flex;
-      span{
+
+      span {
         flex-shrink: 0;
         margin-right: 10px;
       }
     }
-    .operator-box{
+
+    .operator-box {
       background: @white;
       margin-bottom: 20px;
       padding: 10px;
-      .el-button{
-        margin-left:20px;
+
+      .el-button {
+        margin-left: 20px;
       }
     }
-    .item-row-detail-table{
-      tr:nth-child(6) td{
-        border-bottom:1px solid @mainBg;
+
+    .item-row-detail-table {
+      tr:nth-child(6) td {
+        border-bottom: 1px solid @mainBg;
       }
     }
-    .table-wrapper{
-      padding:20px;
+
+    .table-wrapper {
+      padding: 20px;
       background: @white;
       margin-bottom: 20px;
     }

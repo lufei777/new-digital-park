@@ -1,6 +1,6 @@
 <template>
-  <div class="operator-log">
-    <div class="choose-box flex-align radius-shadow">
+  <div class="operator-log panel-container">
+    <div class="choose-box flex-align radius-shadow panel">
       <div class="block flex-align-center">
         <span>操作者</span>
         <el-input v-model="loginName" />
@@ -33,10 +33,11 @@
         >
         </el-date-picker>
       </div>
-      <el-button type="primary" icon="el-icon-search" @click="onClickSearchBtn">搜索</el-button>
-      <el-button type="primary" icon="el-icon-refresh" @click="onClickRefreshBtn">刷新</el-button>
+      <el-button type="primary" @click="onClickSearchBtn">搜索</el-button>
+      <el-button  @click="onClickResetBtn">重置</el-button>
     </div>
-    <CommonTable :tableObj="logList" :curPage="1"/>
+    <z-table :ref="tableConfig.ref" :options="tableConfig" class="panel">
+    </z-table>
   </div>
 </template>
 
@@ -56,7 +57,39 @@
         lastTime:'',
         curPage:1,
         operatingContent:'',
-        loginName: ""
+        loginName: "",
+        tableConfig: {
+          ref: "tableRef",
+          serverMode: {
+            url: CommonApi.getLogList,
+            data: {
+              rows:10,
+            }
+          },
+          propsHttp: {
+            list: "rows",
+            total: "total",
+            pageSize: "pageSize",
+            pageNum: "pageNum"
+          },
+          columnConfig: [{
+            label: '操作者',
+            prop: 'loginName'
+          }, {
+            label: '操作内容',
+            prop: 'operatingContent'
+          }, {
+            label: '日期时间',
+            prop: 'optDate'
+          },{
+            label: '结果',
+            prop: 'result'
+          }],
+          uiConfig: {
+            height: "auto",
+            selection: true,
+          },
+        },
       }
     },
     methods: {
@@ -78,7 +111,7 @@
             total:0
           }
         }
-        res.labelList=[{name:'发起者',prop:'loginName'},
+        res.labelList=[{name:'操作者',prop:'loginName'},
                       {name:'事件描述',prop:'operatingContent'},
                       {name:'日期时间',prop:'optDate'},
                       {name:'结果',prop:'result'}]
@@ -90,7 +123,7 @@
         this.curPage=val
         this.getLogList()
       },
-      onClickRefreshBtn(){
+      onClickResetBtn(){
         this.curPage=1
         this.loginName=''
         this.operatingContent=''
@@ -104,7 +137,7 @@
       }
     },
     mounted(){
-      this.getLogList()
+      // this.getLogList()
     }
   }
 </script>

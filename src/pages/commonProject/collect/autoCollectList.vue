@@ -127,7 +127,7 @@ export default {
       }else{
         url = `/vibe-web/energyCount/energy/getBaseRepresentationNumberExcel`
       }
-      CommonFun.exportMethod({url, params}, this);
+      CommonFun.exportMethod({url, params});
     },
     async getLastMonthData(){
       let tableTitleText = this.curEnergy=="34"?"电":"水"

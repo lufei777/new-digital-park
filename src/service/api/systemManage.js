@@ -61,6 +61,10 @@ class SystemManage {
   @post
   assignRole(){}
 
+  @url("/user-service/role/details")
+  @get
+  getRoleDetail(){}
+
   @url("/user-service/user/listInfo")
   @get
   getUserList(){}
@@ -76,6 +80,10 @@ class SystemManage {
   @url("/user-service/user/userDetail")
   @get
   getUserDetail(){}
+
+  @url("/user-service/user/removeUser")
+  @get
+  deleteUser(){}
 
 }
 

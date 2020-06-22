@@ -664,7 +664,7 @@
         CommonFun.exportMethod({
           url,
           params,
-        }, this)
+        })
       },
       handleFloorCanCheck(checkNode) {
         if (checkNode.length < 4) {
