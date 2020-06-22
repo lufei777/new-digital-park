@@ -22,86 +22,99 @@
 </template>
 
 <script>
-import DigitalParkApi from '@/service/api/digitalPark'
-import CommonFun from '@/utils/commonFun'
-export default {
+  import DigitalParkApi from '@/service/api/digitalPark'
+  import CommonFun from '@/utils/commonFun'
+
+  export default {
     name: 'norbulingkaCenter',
     components: {},
     props: ['moduleItem'],
     data() {
-        return {
-          fixedProList:[],
-          activeIndex:-1
-        }
+      return {
+        fixedProList: [],
+        activeIndex: -1
+      }
     },
     computed: {},
     watch: {},
     methods: {
-      async getProductList(){
+      async getProductList() {
         let res = await DigitalParkApi.getProductList({
-          language:Cookies.get('lang')
+          language: Cookies.get('lang')
         })
-        res.map((item)=>{
-          item.clickFlag=false
+        res.map((item) => {
+          item.clickFlag = false
         })
-        this.fixedProList=res
+        this.fixedProList = res
       },
-      onClickItemFixPro(item,index){
+      onClickItemFixPro(item, index) {
         // this.activeIndex=index
-        // CommonFun.loadPage(item)
+        CommonFun.loadPage(item)
       }
     },
     mounted() {
       this.getProductList()
     }
-}
+  }
 </script>
 
 <style lang="less">
-  .norbu-center{
+  .norbu-center {
     font-size: 14px;
-    background-image:url('../../../../../static/image/digitalPark/nor_module_bg_big.png');
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
+    /*background-image:url('../../../../../static/image/digitalPark/nor_module_bg_big.png');*/
+    /*background-repeat: no-repeat;*/
+    /*background-size: 100% 100%;*/
     position: relative;
     box-sizing: border-box;
-    .module-item-top-name{
+
+    .module-item-top-name {
       margin-left: 20px;
     }
-    .product-list{
-      margin-top: 20px;
+
+    .product-list {
+      /*margin-top: 10px;*/
       overflow: hidden;
+      flex-shrink: 0;
     }
-    .item-product{
-      width:12%;
-      padding:10px;
+
+    .item-product {
+      width: 15%;
+      padding: 10px;
       float: left;
-      margin:0 1.1%;
+      margin: 10px 0.7%;
       box-sizing: border-box;
       border: 1px solid #0462BA;
       background: #012F46;
       border-radius: 30px;
       color: #A5FCFF;
     }
-    .item-product:hover,.active-product{
-      color:@white;
-      background:#0462BA;
+
+    .item-product:hover, .active-product {
+      color: @white;
+      background: #0462BA;
     }
-    .img-box{
-      margin-top: 70px;
-      width:100%;
+
+    .img-box {
+      margin-top: 20px;
+      width: 100%;
       flex-grow: 1;
       box-sizing: border-box;
       text-align: center;
-      border:30px solid #2C3C71;
-      margin-bottom: 20px;
+
+      /*margin-bottom: 20px;*/
       /*position: absolute;*/
       /*bottom:20px;*/
       /*margin:auto;*/
-      img{
-        width:100%;
-        height:100%;
+
+      img {
+        border: 20px solid #2C3C71;
+        width: 95%;
+        height: 90%;
       }
+    }
+
+    .my-chart {
+      overflow: hidden;
     }
   }
 </style>

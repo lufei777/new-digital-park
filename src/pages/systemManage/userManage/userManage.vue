@@ -183,8 +183,15 @@
         this.$router.push('/addUser')
       },
       onClickExportBtn() {
-        // let url = `/vibe-web/user/report?type=xlsx&id=${this.id}&loginId=${this.login_id}&mail=${this.mail}&phone=${this.phone}`;
-        // location.href = url
+        let url = '/user-service/user/exportRecord'
+        let params = ''
+        for (let key in this.searchParams) {
+            params += key + '=' + this.searchParams[key] + '&'
+        }
+        CommonFun.exportMethod({
+          url,
+          params,
+        })
       },
       deleteRow(data) {
         this.deleteId = data.id
