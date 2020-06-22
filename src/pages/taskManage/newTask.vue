@@ -57,7 +57,7 @@
                 v-show="taskOperationShow"
                 @click="submit(obj)"
               >{{taskOperation}}</el-button>
-               <el-button type="primary" @click="suspendTask" v-if="suspendShow">{{suspendStatus}}</el-button>
+              <el-button type="primary" @click="suspendTask" v-if="suspendShow">{{suspendStatus}}</el-button>
               <el-button
                 :type="anotherButton"
                 @click="anotherSubmit(obj)"
@@ -330,7 +330,6 @@ export default {
       saveButtonShow: false,
       suspendStatus: "挂起",
       suspendShow: false
-
     };
   },
   computed: {
@@ -380,7 +379,7 @@ export default {
       this.taskOperationShow = false;
       // this.anotherTaskOperation = "关闭";
       this.anotherButton = "primary";
-    }  else if (this.taskId.status == 5) {
+    } else if (this.taskId.status == 5) {
       this.taskOperationShow = false;
       // this.anotherTaskOperation = "关闭";
       this.anotherButton = "primary";
@@ -389,12 +388,12 @@ export default {
       this.taskOperation = "接单";
       this.anotherTaskOperation = "退单";
     } else if (this.taskId.acceptStatus == 3) {
-      this.suspendShow = true
+      this.suspendShow = true;
       this.taskTypeStatus = 3;
       this.taskOperation = "转派";
       this.anotherTaskOperation = "完成";
     } else if (this.taskId.acceptStatus == 5) {
-      this.suspendShow = true
+      this.suspendShow = true;
       this.taskTypeStatus = 3;
       this.suspendStatus = "解除挂起";
       this.anotherTaskOperationShow = false;
@@ -435,7 +434,13 @@ export default {
             message: res
           });
         }
-        this.$router.push("/aboutMe");
+        if (this.taskId.pageParams == 0) {
+          this.$router.push("waitTask");
+        } else if (this.taskId.pageParams == 1) {
+          this.$router.push("alreadyTask");
+        } else {
+          this.$router.push("aboutMe");
+        }
       }
     },
     async addTempTask() {
@@ -463,11 +468,16 @@ export default {
           type: "success",
           message: res
         });
-        this.$router.push("/aboutMe");
+        if (this.taskId.pageParams == 0) {
+          this.$router.push("waitTask");
+        } else if (this.taskId.pageParams == 1) {
+          this.$router.push("alreadyTask");
+        } else {
+          this.$router.push("aboutMe");
+        }
       }
     },
     suspendTask() {
-      
       this.$confirm(`确定${this.suspendStatus}工单吗？`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -496,7 +506,13 @@ export default {
           type: "success",
           message: res
         });
-        this.$router.push("/aboutMe");
+        if (this.taskId.pageParams == 0) {
+          this.$router.push("waitTask");
+        } else if (this.taskId.pageParams == 1) {
+          this.$router.push("alreadyTask");
+        } else {
+          this.$router.push("aboutMe");
+        }
       }
     },
     async findTempTask() {
@@ -686,7 +702,13 @@ export default {
           message: res,
           type: "success"
         });
-        this.$router.push("/aboutMe");
+        if (this.taskId.pageParams == 0) {
+          this.$router.push("waitTask");
+        } else if (this.taskId.pageParams == 1) {
+          this.$router.push("alreadyTask");
+        } else {
+          this.$router.push("aboutMe");
+        }
       }
     },
     resetChange() {},
@@ -731,7 +753,13 @@ export default {
       this.designatorName = obj.name;
     },
     back() {
-      this.$router.push("aboutMe");
+      if (this.taskId.pageParams == 0) {
+        this.$router.push("waitTask");
+      } else if (this.taskId.pageParams == 1) {
+        this.$router.push("alreadyTask");
+      } else {
+        this.$router.push("aboutMe");
+      }
     },
     async detailTask() {
       this.$refs[this.newTaskForm.ref].setColumnByProp("department", {

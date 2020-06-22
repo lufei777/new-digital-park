@@ -7,12 +7,12 @@
       <Tree :tree-list="taskData" :tree-config="taskTreeConfig"></Tree>
     </div>
     <div class="right-content panel-container">
-      <CommonSelect :taskTypes="taskTypesList"/>
+      <CommonSelect :taskTypes="taskTypesList" @showSelectParams="updateSelectParams" />
       <div class="wait-task-table panel">
         <div class="operator-box flex-row-reverse">
-            <el-button type="primary">刷新</el-button>
-            <el-button type="primary">删除</el-button>
-          </div>
+          <el-button type="primary">刷新</el-button>
+          <el-button type="primary">删除</el-button>
+        </div>
         <z-table :ref="tableData.ref" :options="tableData"></z-table>
       </div>
     </div>
@@ -24,7 +24,7 @@ import { mapState } from "vuex";
 import Tree from "../../components/tree/index";
 import CommonSelect from "../taskManage/coms/commonSelect";
 import TaskManageApi from "../../service/api/taskManage";
-
+import CommonFun from "../../utils/commonFun";
 export default {
   name: "WaitTask",
   components: {
@@ -35,6 +35,7 @@ export default {
     let _this = this;
     return {
       currentPage: 1,
+      taskId: "",
       taskTreeConfig: {
         nodeKey: "value",
         treeProps: {
@@ -90,10 +91,11 @@ export default {
         { label: "全部", value: "5", status: "0" },
         { label: "待派", value: "0", status: "1" },
         { label: "已派", value: "3", status: "2" },
-        { label: "处理中", value: "2", status: "3" },
-        { label: "已完成", value: "0", status: "4" },
+        // { label: "处理中", value: "2", status: "3" },
+        // { label: "已完成", value: "0", status: "4" },
         { label: "已挂起", value: "0", status: "5" }
-      ]
+      ],
+      commonParams: {}
     };
   },
   computed: {
@@ -137,25 +139,34 @@ export default {
   },
   methods: {
     onClickTreeNodeCallBack() {},
+    updateSelectParams(params) {
+      this.commonParams = params;
+      this.taskList();
+    },
     async taskList() {
+      console.log(1111);
       let labelList = [
-        { label: "工单编号", prop: "tenantNumber" },
+        { label: "工单编号", prop: "taskNumber" },
         { label: "工单名称", prop: "taskName" },
-        { label: "工单类型", prop: "typeText" },
+        { label: "工单类型", prop: "type" },
         { label: "工单描述", prop: "description" },
         { label: "创建时间", prop: "beginTime" },
         { label: "预计结束时间", prop: "endTime" },
-        { label: "优先级", prop: "priority" },
+        { label: "优先级", prop: "urgentText" },
         { label: "状态", prop: "taskStatus" },
         { label: "创建人", prop: "founderName" },
         { label: "处理人", prop: "username" }
       ];
       this.tableData.columnConfig = labelList;
-      let res = await TaskManageApi.taskList({
-        pageNum: this.currentPage,
-        pageSize: 10
-        // type: 1,
-      });
+      let params = {
+        ...this.commonParams,
+        ...{
+          pageNum: this.currentPage,
+          pageSize: 10,
+          taskStatus: 0
+        }
+      };
+      let res = await TaskManageApi.taskList(params);
       if (res.list) {
         res.list.map((item, ind) => {
           item.taskStatus =
@@ -168,18 +179,20 @@ export default {
               : item.status == "4"
               ? "已完成"
               : "";
-          item.typeText =
-            item.type == "1"
-              ? "巡检"
-              : item.type == "2"
-              ? "审批"
-              : item.type == "3"
-              ? "调试"
-              : "其他";
+
+          item.urgentText =
+            item.urgent == "1"
+              ? "正常"
+              : item.urgent == "2"
+              ? "重要"
+              : item.urgent == "3"
+              ? "紧急"
+              : "";
         });
-      }
-      if (res) {
         this.tableData.data = res.list;
+        this.tableData.uiConfig.pagination.total = res.total;
+      } else {
+        this.tableData.data = [];
         this.tableData.uiConfig.pagination.total = res.total;
       }
     },
@@ -192,6 +205,47 @@ export default {
       if (res) {
         this.todayFinish = res.todayFinish;
       }
+    },
+    showDeleteTip() {
+      CommonFun.deleteTip(
+        this,
+        this.taskId,
+        "请至少选择一条任务！",
+        this.sureDelete,
+        this.cancelDelete
+      );
+    },
+    async sureDelete() {
+      await TaskManageApi.closeTask({
+        taskId: this.taskId
+      });
+      this.$message({
+        type: "success",
+        message: "删除成功!"
+      });
+      this.taskId = "";
+      this.taskList();
+    },
+    cancelDelete() {
+      this.taskId = "";
+    },
+    deleteRow(val) {
+      console.log(val);
+      this.taskId = val.id;
+      this.showDeleteTip();
+    },
+    editRow(val) {
+      this.$router.push({
+        name: "NewTask",
+        query: {
+          extraOptions: {
+            disabled: true
+          },
+          id: val.id,
+          status: val.status,
+          pageParams: 0
+        }
+      });
     },
     fixTree() {
       $(".energy-tree-box").css({
