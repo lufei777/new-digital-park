@@ -1,9 +1,6 @@
 <template>
   <div class="building-status-proportion">
-    <div class="module-item-top-name"
-      >
-      {{moduleItem.moduleName}}
-    </div>
+    <div class="module-item-top-name tmp-hidden">{{moduleItem.moduleName}}</div>
     <div ref="pieCharts" class="my-chart"></div>
   </div>
 </template>

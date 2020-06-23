@@ -1,6 +1,6 @@
 <template>
   <div class="water-supply-drainage-coms">
-    <div  class="module-item-top-name" >{{moduleItem.moduleName}}</div>
+    <div class="module-item-top-name tmp-hidden">{{moduleItem.moduleName}}</div>
     <div class="flex-align-center water-content">
       <div v-for="(item,index) in waterData" :key="index" class="item-water">
         <span>{{item.title}}</span>

@@ -1,6 +1,6 @@
 <template>
   <div class="video-monitoring">
-    <div class="module-item-top-name" >{{moduleItem.moduleName}}</div>
+    <div class="tmp-hidden">{{moduleItem.moduleName}}</div>
     <div class="my-chart" ref="myChart"></div>
   </div>
 </template>
