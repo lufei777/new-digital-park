@@ -34,6 +34,8 @@
 </template>
 
 <script>
+// 导入接口
+import norbulingka from "@/service/api/norbulingka";
 export default {
   data() {
     return {

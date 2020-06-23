@@ -1,6 +1,6 @@
 <template>
       <div class='panel-container'>
-    <div>
+    <div class='panel'>
       <!-- 区分标题 -->
       <div class="toptitle">
         <span>{{title}}</span>
@@ -17,11 +17,18 @@
           slot-scope="obj"
         >
           <div>
+            <!-- 编辑保存 -->
             <el-button
-              v-if="$route.query.mark !== 'detail'"
+              v-if="$route.query.mark == 'edit'"
               type='primary'
-              @click="save(obj)"
-            >保存</el-button>
+              @click="editSave(obj)"
+            >编辑保存</el-button>
+            <!-- 添加保存 -->
+            <el-button
+              v-if="$route.query.mark == 'add'"
+              type='primary'
+              @click="addSave(obj)"
+            >添加保存</el-button>
             <el-button
               type='danger'
               @click="back(obj)"
@@ -36,7 +43,8 @@
 
 <script>
 import { Norbulingka } from "utils/dictionary";
-
+// 导入接口
+import norbulingka from "@/service/api/norbulingka";
 const topTitle = {
   add: {
     title: "添加  考古发现"
@@ -112,16 +120,23 @@ export default {
           // 现场照片 	 photoFile
           {
             label: "照片",
-            prop: "photoFile",
+            prop: "photo",
             type: "upload",
             offset: 6,
-            action:'/oaApi/image/upload',
+            action: "/oaApi/image/upload",
             accept: ["jpg", "jpeg", "png"],
             tip: "只能上传jpg/png文件。",
-             rules:[
+            listType: "picture-card",
+            dataType: "string",
+            propsHttp: {
+              name: "fileName",
+              url: "fileUrl",
+              res: "data"
+            },
+            rules: [
               {
-                required:true,
-                message:'添加照片'
+                required: true,
+                message: "添加照片"
               }
             ]
           },
@@ -139,7 +154,7 @@ export default {
           {
             prop: "btn",
             formslot: true,
-            span: 6,
+            span: 10,
             offset: 9
           }
         ]
@@ -147,18 +162,54 @@ export default {
     };
   },
   methods: {
-    submit(obj) {
-      console.log(obj);
+    submit(model,done) {
+      norbulingka
+        .insertArchaeology(model)
+        .then(res => {
+          this.$message({
+            type: "success",
+            message: "添加成功！"
+          });
+          this.$router.back();
+        })
+        .finally(() => {
+          done();
+        });
     },
-    // 保存
-    save(obj) {
+    //  编辑保存
+    editSave() {
       this.Form.getFormModel(res => {
+        console.log("保存", res);
+        let params = res;
+        // 判断必填字段是否为空 没填情况下阻止跳转
         if (Object.keys(res).length === 0) {
           return false;
         } else {
-          this.$router.back();
+          // delete params.mark;
+          // let str = "";
+          // if (params.photoFile && Object.values(params.photoFile).length >= 1) {
+          //   params.photoFile.forEach(item => {
+          //     let picurl = item.value;
+          //     var index = picurl.lastIndexOf("/");
+          //     picurl = picurl.substring(index + 1);
+          //     str = str + picurl + ",";
+          //   });
+          // }
+          // delete params.photoFile;
+          // params["photo"] = str;
+          norbulingka.updateArchaeology({ ...params }).then(res => {
+            this.$message({
+              type: "success",
+              message: "编辑成功！"
+            });
+            this.$router.back();
+          });
         }
       });
+    },
+    // 添加保存
+    addSave(obj) {
+      this.Form.submit()
     },
     // 返回
     back(obj) {

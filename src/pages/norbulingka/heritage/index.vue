@@ -19,9 +19,7 @@
               type='primary'
               @click="search(obj)"
             >搜索</el-button>
-            <el-button
-              @click="clearData(obj)"
-            >清除</el-button>
+            <el-button @click="clearData(obj)">清除</el-button>
           </div>
         </template>
       </z-form>
@@ -29,6 +27,7 @@
     <div class="panel">
       <!-- 表单部分 -->
       <z-table
+        :load='loading'
         :ref="tableData.ref"
         :options="tableData"
       >
@@ -38,11 +37,14 @@
         >
           <div>
             <!-- 添加、删除 -->
-            <el-button @click="addHeritage" type='primary'>添加</el-button>
+            <el-button
+              @click="addHeritage"
+              type='primary'
+            >添加</el-button>
             <el-button
               @click="del(obj)"
               :disabled='!obj.selectedData.length'
-            >删除</el-button>
+            >批量删除</el-button>
           </div>
         </template>
         <template
@@ -51,16 +53,16 @@
         >
           <div>
             <el-button
-              type="text"            
+              type="text"
               @click="propertyEdit(obj)"
             >编辑</el-button>
             <el-button
               type="text"
-               @click="propertyDel(obj)"
+              @click="propertyDel(obj)"
             >删除</el-button>
             <el-button
               type="text"
-               @click="propertyDetail(obj)"
+              @click="propertyDetail(obj)"
             >详情</el-button>
           </div>
         </template>
@@ -74,11 +76,16 @@
 import commonFun from "@/utils/commonFun";
 // 字典配置
 import { Norbulingka } from "utils/dictionary";
+// 导入接口
+import norbulingka from "@/service/api/norbulingka";
 // 文物级别
 const levelCultural = Norbulingka.levelCultural;
 export default {
   data() {
     return {
+      // 查询条件
+      condition: null,
+      loading: false,
       model: {},
       formData: {
         ref: "formData",
@@ -86,78 +93,56 @@ export default {
         labelWidth: "100",
         menuPosition: "right",
         menuBtn: false,
-        group:[
+        group: [
           {
-            label:'藏品档案',
-            prop:'group',
+            label: "遗产要素",
+            prop: "group",
             forms: [
-          //藏品名称 collectionName
+              //藏品名称 collectionName
 
-          {
-            type: "input",
-            prop: "collectionName",
-            placeholder: "",
-            label: "藏品名称",
-            span: 6,
-          },
-          // 藏品编号serial
-          {
-            type: "input",
-            prop: "serial",
-            placeholder: "",
-            label: "藏品编号",
-            span: 6,
-          },
-          // 文物级别 culturalRank
-          {
-            type: "select",
-            prop: "culturalRank",
-            placeholder: "",
-            label: "文物级别",
-            span: 6,
-            dicData: levelCultural
-          },
-          // 搜素按钮
-          {
-            prop: "btn",
-            formslot: true,
-            span: 6
+              {
+                type: "input",
+                prop: "collectionName",
+                label: "藏品名称",
+                span: 6
+              },
+              // 藏品编号serial
+              {
+                type: "input",
+                prop: "serial",
+                label: "藏品编号",
+                span: 6
+              },
+              // 文物级别 culturalRank
+              {
+                type: "select",
+                prop: "culturalRank",
+                placeholder: "",
+                label: "文物级别",
+                // dicUrl: norbulingka.getSelectOption,
+                // dicQuery: { catalogId: 7001, parentId: 0 },
+                span: 6,
+                // dicData: levelCultural
+                props: {
+                  label: "name",
+                  value: "id"
+                }
+              },
+              // 搜素按钮
+              {
+                prop: "btn",
+                formslot: true,
+                span: 6
+              }
+            ]
           }
         ]
-          }
-        ],
-        
       },
       tableData: {
         ref: "tabel",
         customTop: true,
         customTopPosition: "right",
-        data: [
-          /**
-             *      
-            {label:'藏品编号',prop:'serial'},
-            {label:'名称',  prop:'collectionName'},
-            {label:'原名',prop:'primaryName'},
-            {label:'具体年代',prop:'practicalYear'},
-            {label:'文物级别',prop:'culturalRank'},
-             *   
-            */
-            // 模拟的假数据
-          {
-            serial: "002",
-            collectionName: "八骏图",
-            primaryName: "关山难越",
-            practicalYear: "2021",
-            culturalRank: "二级",
-          },
-          {
-            serial: "003",
-            collectionName: "清明上河图",
-            primaryName: "谁悲失路之人",
-            practicalYear: "1989",
-            culturalRank: "二级",
-          }
-        ],
+        data: [],
         columnConfig: [],
         operation: {
           prop: "operation",
@@ -168,7 +153,17 @@ export default {
         uiConfig: {
           height: "auto",
           selection: true,
-          showIndex: false
+          showIndex: false,
+          pagination: {
+            handler: (pageSize, currentPage, table) => {
+              //翻页的时候需要携带查询添加
+              this.getTableData({
+                page: currentPage,
+                rows: pageSize,
+                ...this.condition
+              });
+            }
+          }
         }
       }
     };
@@ -184,53 +179,151 @@ export default {
     }
   },
   methods: {
-    // '添加' 按钮 
-    addHeritage(){this.$router.push({path:'/addeditdetail',query:{mark:'add'}})},
+    // '添加' 按钮
+    addHeritage() {
+      this.$router.push({ path: "/addeditdetail", query: { mark: "add" } });
+    },
     // 表格配置项
     tablePropList() {
       // 配置表格的列名称和属性
       var list = [
         // 藏品编号 serial  名称collectionName 原名primaryName 具体年代practicalYear 文物级别culturalRank
+        { label: "藏品序号", prop: "id" },
         { label: "藏品编号", prop: "serial" },
         { label: "名称", prop: "collectionName" },
         { label: "原名", prop: "primaryName" },
         { label: "具体年代", prop: "practicalYear" },
-        { label: "文物级别", prop: "culturalRank" }
+        {
+          label: "文物级别",
+          prop: "culturalRank",
+          type: "select",
+          props: {
+            label: "name",
+            value: "id"
+          }
+        }
       ];
       // 赋值给表格的配置项
       this.tableData.columnConfig = list;
     },
     submit(obj) {
-    //   console.log(obj);
+      //   console.log(obj);
     },
+    // 表单中的搜索按钮
     search(obj) {
-        this.Form.getFormModel(res =>{
-            console.log('搜索',res)
-        })
+      let data = obj;
+      console.log(obj);
+      this.Form.getFormModel(res => {
+        // console.log("搜索", res);
+        // params 为保存得查询条件 需要携带给查询的接口
+        let params = res;
+        //将查询的条件保存下来
+        this.condition = res;
+        norbulingka
+          .queryRelic2ByPage({ page: 1, rows: 10, ...res })
+          .then(res => {
+            // debugger
+            this.getTableData({ page: 1, rows: 10, ...params });
+          });
+      });
       console.log(this.Form.model);
-    //   console.log(this.model);
+      //   console.log(this.model);
     },
     // 清除
-    clearData(obj){this.Form.resetForm()},
+    clearData(obj) {
+      this.Form.resetForm();
+    },
     // 表单上方的删除
-    del(selectedData){},
+    del(selectedData) {
+      console.log(selectedData);
+      let arr = selectedData.selectedData;
+      var str = "";
+      arr.forEach(item => {
+        str = str + item.id + ",";
+      });
+      let ids = str;
+      // console.log(str)
+      norbulingka.deleteRelic2({ ids }).then(res => {
+        // console.log(res)
+        this.$message({
+          message: "批量删除成功！",
+          type: "success"
+        });
+        let page = this.Tables.currentPage;
+        this.getTableData({ page, rows: 10 });
+      });
+    },
     // 删除
-    propertyDel(obj){},
+    propertyDel(obj) {
+      console.log(obj);
+      // debugger
+      let ids = obj.row.id;
+      // debugger
+      norbulingka
+        .deleteRelic2({ ids })
+        .then(res => {
+          // console.log(res)
+          this.$message({
+            message: "删除成功！",
+            type: "success"
+          });
+          // let page = this.Tables.currentPage;
+          this.Tables.refreshTable()
+          // this.getTableData({ page:1, rows: 10 });
+          this.getTableData();
+          
+        })
+        .finally(res => {});
+    },
     // 编辑
-    propertyEdit(obj){ 
-        this.$router.push({path:'/addeditdetail',query:{mark:'edit',...obj.row}})
-      
+    propertyEdit(obj) {
+      console.log(obj);
+      this.$router.push({
+        path: "/addeditdetail",
+        query: { mark: "edit", ...obj.row }
+      });
     },
     // 详情
-    propertyDetail(obj){
-        // console.log(obj.row)
-        this.$router.push({path:'/addeditdetail',query:{flag:true,mark:'detail',...obj.row}})
+    propertyDetail(obj) {
+      // console.log(obj.row)
+      this.$router.push({
+        path: "/addeditdetail",
+        query: { flag: true, mark: "detail", ...obj.row }
+      });
     },
+    // 表格中的数据
+    getTableData(pageParams = { page: 1, rows: 10 }) {
+      this.loading = true
+      // 考古发掘表格中的数据
+      norbulingka
+        .queryRelic2ByPage(pageParams)
+        .then(res => {
+          // console.log(res);
+          // this.loading = true;
+          this.$refs[this.tableData.ref].setData(res.list);
+          this.$refs[this.tableData.ref].setTotal(res.total);
+        })
+        .finally(res => {
+          this.loading = false;
+        });
+    }
+  },
+  created() {
+    // 文物级别
+    norbulingka.getSelectOption({ catalogId: 7001, parentId: 0 }).then(res => {
+     this.Form.setColumnByProp("culturalRank", {
+        dicData: res
+      });
+      this.Tables.setColumnByProp("culturalRank", {
+        dicData: res
+      });
+    });
+
+    this.getTableData();
   },
   mounted() {
     this.tablePropList();
   }
-
 };
 </script>
 

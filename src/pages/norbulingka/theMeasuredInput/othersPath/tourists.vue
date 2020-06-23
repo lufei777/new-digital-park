@@ -82,6 +82,7 @@ export default {
     return {
       loading:false,
       model: {},
+      condition:null,
       formData: {
         ref: "formData",
         size: "medium",
@@ -197,27 +198,57 @@ export default {
     submit(obj) {
       //   console.log(obj);
     },
+    searchData(params){
+      norbulingka.queryTouristByPage({params}).then(res => {
+        this.Tables.refreshTable();
+        this.getTableData({...this.condition});
+      });
+    },
+
     // 搜索
     search(obj) {
       this.Form.getFormModel(res => {
-        console.log("搜索", res);
+        this.condition = res
+        this.searchData(res)
       });
-      console.log(this.Form.model);
-      //   console.log(this.model);
-      var that = this;
-      // 5秒后自动清空搜索内容
-      setTimeout(function() {
-        that.clearData();
-      }, 5000);
+      // console.log(this.Form.model);
+      // //   console.log(this.model);
+      // var that = this;
+      // // 5秒后自动清空搜索内容
+      // setTimeout(function() {
+      //   that.clearData();
+      // }, 5000);
     },
     // 清除
     clearData(obj) {
       this.Form.resetForm();
     },
+    //删除方法
+    delRowData(ids){
+      norbulingka.deleteTourist({ ids }).then(res => {
+        this.$message({
+          type: "success",
+          message: "删除成功！"
+        });
+        this.Tables.refreshTable();
+        this.getTableData();
+      });
+    },
     // 表单上方的删除
-    del(selectedData) {},
+    del({selectedData}) {
+      let arr = selectedData;
+      let str = "";
+      arr.forEach(item => {
+        str = str + item.id + ",";
+      });
+      let ids = str;
+      this.delRowData(ids)
+    },
     // 删除
-    propertyDel(obj) {},
+    propertyDel(obj) {
+      let ids = obj.row.id
+      this.delRowData(ids)
+    },
     // 编辑
      propertyEdit(obj) {
         console.log(obj.row)

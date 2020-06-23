@@ -1,6 +1,6 @@
 <template>
       <div class='panel-container'>
-    <div>
+    <div class= 'panel'>
       <!-- 区分标题 -->
       <div class="toptitle">
         <span>{{title}}</span>
@@ -17,11 +17,18 @@
           slot-scope="obj"
         >
           <div>
+            <!-- 编辑保存 -->
             <el-button
-            v-if="$route.query.mark !== 'detail'"
+            v-if="$route.query.mark == 'edit'"
               type='primary'
-              @click="save(obj)"
-            >保存</el-button>
+              @click="editSave(obj)"
+            >编辑保存</el-button>
+            <!-- 添加保存 -->
+            <el-button
+            v-if="$route.query.mark == 'add'"
+              type='primary'
+              @click="addSave(obj)"
+            >添加保存</el-button>
             <el-button
               type='danger'
               @click="back(obj)"
@@ -36,6 +43,8 @@
 
 <script>
 import { Norbulingka } from "utils/dictionary";
+// 导入接口
+import norbulingka from "@/service/api/norbulingka";
 const topTitle = {
   add: {
     title: "添加  本体情况"
@@ -93,12 +102,19 @@ export default {
           // 照片 : photoFile
           {
             label: "照片",
-            prop: "photoFile",
+            prop: "photo",
             type: "upload",
             offset: 6,
             action: "/oaApi/image/upload",
             accept: ["jpg", "jpeg", "png"],
             tip: "只能上传jpg/png文件。",
+            dataType: "string",
+            listType: "picture-card",
+            propsHttp: {
+              name: "fileName",
+              url: "fileUrl",
+              res: "data"
+            },
             rules:[
               {
                 required:true,
@@ -128,21 +144,51 @@ export default {
     };
   },
   methods: {
-    submit(obj) {
-      console.log(obj);
-    },
-    // 保存
-    save(obj) {
-      // console.log(obj);
-      // this.$router.back();
-     this.Form.getFormModel(res =>{
-       if(Object.keys(res.photoFile).length ===0){
-          return false;
-        } else {
+    submit(model, done) {
+      norbulingka
+        .insertBuildingsPhoto(model)
+        .then(res => {
+          this.$message({
+            type: "success",
+            message: "添加成功！"
+          });
           this.$router.back();
-        }
-        // console.log(res)
-      })
+        })
+        .finally(() => {
+          done();
+        });
+    },
+    // 添加保存
+   addSave(obj) {
+      this.Form.submit()
+    },
+    // 编辑保存
+    editSave(obj) {
+      this.Form.getFormModel(res => {
+        console.log("保存", res);
+        let params = res;
+        // 判断必填字段是否为空 没填情况下阻止跳转
+          delete params.mark;
+          // let str = "";
+          // if (params.photoFile && Object.values(params.photoFile).length >= 1) {
+          //   params.photoFile.forEach(item => {
+          //     let picurl = item.value;
+          //     var index = picurl.lastIndexOf("/");
+          //     picurl = picurl.substring(index + 1);
+          //     str = str + picurl + ",";
+          //   });
+          // }
+          // delete params.photoFile;
+          // params["photo"] = str;
+          norbulingka.updatBuildingsPhoto({ ...params }).then(res => {
+            this.$message({
+              type: "success",
+              message: "编辑成功！"
+            });
+            this.$router.back();
+          });
+        
+      });
     },
     // 返回
     back(obj) {

@@ -43,7 +43,7 @@
             <el-button
               @click="del(obj)"
               :disabled='!obj.selectedData.length'
-            >删除</el-button>
+            >批量删除</el-button>
           </div>
         </template>
         <template
@@ -72,6 +72,9 @@
 </template>
 
 <script>
+// 导入接口
+import norbulingka from "@/service/api/norbulingka";
+
 import commonFun from "@/utils/commonFun";
 // 字典配置
 import { Norbulingka } from "utils/dictionary";
@@ -82,6 +85,8 @@ const inspectionPersonnel = Norbulingka.inspectionPersonnel;
 export default {
   data() {
     return {
+      // 保存的查询条件
+      condition: null,
       model: {},
       formData: {
         ref: "formData",
@@ -97,22 +102,31 @@ export default {
               // 维护类型 maintenanceTypes
               {
                 type: "select",
-                prop: "maintenanceTypes",
+                prop: "checkType",
                 placeholder: "",
                 label: "维护类型",
                 span: 6,
                 offset: 1,
-                dicData: maintenanceTypes
+                // dicUrl: norbulingka.getSelectOption,
+                // dicQuery: { catalogId: 16001 },
+                props: {
+                  label: "name",
+                  value: "id"
+                }
+                // dicData: maintenanceTypes
               },
               // 巡检人员
               {
-                type: "select",
-                prop: "inspectionPersonnel",
-                placeholder: "",
+                type: "input",
+                prop: "person",
                 label: "巡检人员",
                 span: 6,
                 offset: 1,
-                dicData: inspectionPersonnel
+                // dicUrl: norbulingka.userNameList,
+                // props: {
+                //   label: "name",
+                //   value: "id"
+                // }
               },
 
               // 搜素 清除按钮
@@ -130,35 +144,7 @@ export default {
         ref: "tabel",
         customTop: true,
         customTopPosition: "right",
-        data: [
-          /**
-             *      
-             { label: "维护类型", prop: "checkType" },
-              { label: "巡检人员", prop: "person" },
-              { label: "处理结果 ",prop: "result" },
-              { label: " 日期",    prop: "date" }
-             *   
-            */
-          // 模拟的假数据
-          {
-            checkType: "安全事故记录",
-            person: "admin",
-            result: "能够",
-            date: "2020-05-27"
-          },
-          {
-            checkType: "安全事故记录",
-            person: "admin",
-            result: "能够",
-            date: "2020-05-27"
-          },
-          {
-            checkType: "安全事故记录",
-            person: "admin",
-            result: "能够",
-            date: "2020-05-27"
-          }
-        ],
+        data: [],
         columnConfig: [],
         operation: {
           prop: "operation",
@@ -169,7 +155,19 @@ export default {
         uiConfig: {
           height: "auto",
           selection: true,
-          showIndex: true
+          showIndex: {
+            width: 100
+          },
+          pagination: {
+            handler: (pageSize, currentPage, table) => {
+              // 翻页的时候也需要携带查询的条件
+              this.getTableData({
+                page: currentPage,
+                rows: pageSize,
+                ...this.condition
+              });
+            }
+          }
         }
       }
     };
@@ -190,20 +188,43 @@ export default {
       // 配置表格的列名称和属性
       var list = [
         // 维护类型  巡检人员  处理结果  日期
-        { label: "维护类型", prop: "checkType" },
-        { label: "巡检人员", prop: "person" },
+        {
+          label: "维护类型",
+          prop: "checkType",
+          type: "select",
+          props: {
+            label: "name",
+            value: "id"
+          }
+        },
+        {
+          label: "巡检人员",
+          prop: "person",
+          type: "select",
+          props: {
+            label: "name",
+            value: "id"
+          }
+        },
         { label: "处理结果 ", prop: "result" },
         { label: " 日期", prop: "date" }
       ];
       // 赋值给表格的配置项
       this.tableData.columnConfig = list;
     },
-    submit(obj) {
-      console.log(obj);
+    submit(model,done) {
+      console.log(model)
+      // console.log(obj);
     },
     search(obj) {
       this.Form.getFormModel(res => {
         console.log("搜索", res);
+        let params = res;
+        // 保存搜索条件
+        this.condition = res;
+        norbulingka.queryDailyCheckByPage({ ...params }).then(res => {
+          this.getTableData({ page: 1, rows: 10, ...params });
+        });
       });
     },
     clearData(obj) {
@@ -211,25 +232,99 @@ export default {
     },
     // 编辑
     propertyEdit(obj) {
+      console.log(obj)
       this.$router.push({
         path: "/editdetailadd",
-        query: { flag: false,mark:'edit', ...obj.row }
+        query: { flag: false, mark: "edit", ...obj.row }
+      });
+    },
+    // 批量删除
+    del(obj) {
+      console.log(obj.selectedData);
+      let arr = obj.selectedData;
+      let str = "";
+      arr.forEach(item => {
+        str = str + item.id + ",";
+      });
+      let ids = str;
+      norbulingka.deleteDailyCheck({ ids }).then(res => {
+        this.$message({
+          type: "success",
+          message: "批量删除成功！"
+        });
+        this.Tables.refreshTable()
+        this.getTableData();
       });
     },
     // 删除
-    propertyDel(obj) {},
+    propertyDel(obj) {
+      console.log(obj);
+
+      let ids = obj.row.id;
+      norbulingka.deleteDailyCheck({ ids }).then(res => {
+        this.$message({
+          type: "success",
+          message: "删除成功！"
+        });
+        var page = this.Tables.currentPage;
+        // console.log("page",page)
+        // this.getTableData({ page, rows: 10 });
+        this.Tables.refreshTable()
+        this.getTableData();
+      });
+    },
     // 详情
     propertyDetail(obj) {
       this.$router.push({
         path: "/editdetailadd",
-        query: { flag: true, mark:'detail', ...obj.row }
+        query: { flag: true, mark: "detail", ...obj.row }
       });
     },
     // 添加
     add() {
-      this.$router.push({ path: "/editdetailadd", query: { mark:'edit'} });
+      this.$router.push({ path: "/editdetailadd", query: { mark: "add" } });
+    },
+    // 表格的信息
+    getTableData(pageParams = { page: 1, rows: 10 }) {
+      this.loading = true;
+      // 考古发掘表格中的数据
+      norbulingka
+        .queryDailyCheckByPage(pageParams)
+        .then(res => {
+          // console.log(res);
+          
+          this.$refs[this.tableData.ref].setData(res.list);
+          this.$refs[this.tableData.ref].setTotal(res.total);
+          // this.$refs[this.tableData.ref].refreshTable();
+        })
+        .finally(res => {
+          this.loading = false;
+        });
     }
   },
+  created() {
+    //维护类型
+    norbulingka.getSelectOption({ catalogId: 16001 }).then(res => {
+      this.Form.setColumnByProp("checkType", {
+        dicData: res
+      });
+      this.Tables.setColumnByProp("checkType", {
+        dicData: res
+      });
+    });
+    // 更改需求后 巡检人员变成手动输入，不再是下拉框
+    norbulingka.userNameList().then(res => {
+      // this.Form.setColumnByProp("person", {
+      //   dicData: res
+      // });
+      this.Tables.setColumnByProp("person", {
+        dicData: res
+      });
+    });
+
+    this.getTableData();
+  },
+
   mounted() {
     this.tablePropList();
   }

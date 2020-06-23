@@ -28,7 +28,7 @@
     <div class="panel">
       <!-- 表单部分 -->
       <z-table
-        :load='loadig'
+        :load='loading'
         :ref="tableData.ref"
         :options="tableData"
       >
@@ -82,12 +82,12 @@ const assessment = Norbulingka.assessment;
 // 遗产要素保存状态
 const saveStatues = Norbulingka.saveStatues;
 // 导入接口
-import  norbulingka   from '@/service/api/norbulingka'
+import norbulingka from "@/service/api/norbulingka";
 
 export default {
   data() {
     return {
-      loading:false,
+      loading: false,
       model: {},
       formData: {
         ref: "formData",
@@ -102,33 +102,45 @@ export default {
             forms: [
               // 文物本体 parentId
               {
-                type: "select",
-                prop: "ontology",
+                prop: "parentId",
                 placeholder: "",
                 label: "文物本体",
                 span: 5,
-                dicData: ontology
+                type: "select",
+                props: {
+                  label: "name",
+                  value: "id"
+                }
+                // dicData: ontology
               },
               // 评估状态 assessment
               {
                 type: "select",
-                prop: "assessment",
+                prop: "evaluation",
                 placeholder: "",
                 label: "评估状态",
                 span: 5,
                 offset: 1,
-                dicData: assessment
+                props: {
+                  label: "name",
+                  value: "id"
+                }
+                // dicData: assessment
               },
               // 遗产要素保护状态 saveStatues
               {
                 type: "select",
-                prop: "saveStatues",
+                prop: "protectStatus",
                 placeholder: "",
                 label: "遗产要素保护状态",
                 span: 5,
                 width: "150",
                 offset: 1,
-                dicData: saveStatues
+                props: {
+                  label: "name",
+                  value: "id"
+                }
+                // dicData: saveStatues
               },
               // 搜素按钮
               {
@@ -145,7 +157,7 @@ export default {
         ref: "tabel",
         customTop: true,
         customTopPosition: "right",
-        data: [  ],
+        data: [],
         columnConfig: [],
         operation: {
           prop: "operation",
@@ -157,9 +169,9 @@ export default {
           height: "auto",
           selection: true,
           showIndex: true,
-          pagination:{
-            handler:(pageSize, currentPage, table) =>{
-              this.getTableData({page:currentPage,rows:pageSize})
+          pagination: {
+            handler: (pageSize, currentPage, table) => {
+              this.getTableData({ page: currentPage, rows: pageSize });
             }
           }
         }
@@ -182,9 +194,33 @@ export default {
       // 配置表格的列名称和属性
       var list = [
         // 文物本体 parentId   评估状态evaluation    保存状态protectStatus  日期 date
-        { label: "文物本体", prop: "parentId" },
-        { label: "评估状态", prop: "evaluation" },
-        { label: "保存状态", prop: "protectStatus" },
+        {
+          label: "文物本体",
+          prop: "parentId",
+          type: "select",
+          props: {
+            label: "name",
+            value: "id"
+          }
+        },
+        {
+          label: "评估状态",
+          prop: "evaluation",
+          type: "select",
+          props: {
+            label: "name",
+            value: "id"
+          }
+        },
+        {
+          label: "保存状态",
+          prop: "protectStatus",
+          type: "select",
+          props: {
+            label: "name",
+            value: "id"
+          }
+        },
         { label: "日期", prop: "date" }
       ];
       // 赋值给表格的配置项
@@ -193,21 +229,53 @@ export default {
     submit(obj) {
       //   console.log(obj);
     },
+    searchData(params) {
+      norbulingka.queryBuildingByPage({ params }).then(res => {
+        this.Tables.refreshTable();
+        this.getTableData({ ...this.condition });
+      });
+    },
+
+    // 搜索
     search(obj) {
       this.Form.getFormModel(res => {
-        console.log("搜索", res);
+        this.condition = res;
+        this.searchData(res);
       });
-      console.log(this.Form.model);
-      //   console.log(this.model);
     },
     // 清除
     clearData(obj) {
       this.Form.resetForm();
     },
     // 表单上方的删除
-    del(selectedData) {},
+    del(obj) {
+       let arr = obj.selectedData;
+      let str = "";
+      arr.forEach(item => {
+        str = str + item.id + ",";
+      });
+      let ids = str;
+      norbulingka.deleteBuildingsPhoto({ ids }).then(res => {
+        this.$message({
+          type: "success",
+          message: "批量删除成功！"
+        });
+      this.Tables.refreshTable()
+        this.getTableData()
+      });
+    },
     // 删除
-    propertyDel(obj) {},
+    propertyDel(obj) {
+      let ids = obj.row.id;
+      norbulingka.deleteBuildingsPhoto({ids}).then(res => {
+        this.$message({
+          type:'success',
+          message:'删除成功！'
+        })
+        this.Tables.refreshTable()
+        this.getTableData()
+      })
+    },
     // 编辑
     propertyEdit(obj) {
       console.log(obj.row);
@@ -230,7 +298,7 @@ export default {
     },
     // 表格中的数据
     getTableData(pageParams = { page: 1, rows: 10 }) {
-      this.loading = true,
+      this.loading = true
         norbulingka
           .queryBuildingByPage(pageParams)
           .then(res => {
@@ -243,8 +311,50 @@ export default {
           });
     }
   },
-  created(){
-    this.getTableData()
+  created() {
+    // 文物本体
+    norbulingka
+      .getSelectOptionOther({ catalogId: 17001, parentId: 0 })
+      .then(res => {
+        this.Form.setColumnByProp("parentId", {
+          dicData: res
+        });
+        this.Tables.setColumnByProp("parentId", {
+          dicData: res
+        });
+      });
+    //   norbulingka.getSelectOption({ catalogId: 16001 }).then(res => {
+    //   this.Form.setColumnByProp("checkType", {
+    //     dicData: res
+    //   });
+    //   this.Tables.setColumnByProp("checkType", {
+    //     dicData: res
+    //   });
+    // });
+    
+    // 评估状态
+    norbulingka
+      .getSelectOptionOther({ catalogId: 18001, parentId: 0 })
+      .then(res => {
+        this.Form.setColumnByProp("evaluation", {
+          dicData: res
+        });
+        this.Tables.setColumnByProp("evaluation", {
+          dicData: res
+        });
+      });
+    // 保存状态
+    norbulingka
+      .getSelectOptionOther({ catalogId: 19001, parentId: 0 })
+      .then(res => {
+        this.Form.setColumnByProp("protectStatus", {
+          dicData: res
+        });
+        this.Tables.setColumnByProp("protectStatus", {
+          dicData: res
+        });
+      });
+    this.getTableData();
   },
   mounted() {
     this.tablePropList();
