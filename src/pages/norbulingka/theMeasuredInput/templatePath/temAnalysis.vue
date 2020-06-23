@@ -1,6 +1,6 @@
 <template>
       <div class='panel-container'>
-    <div>
+    <div class='panel'>
       <!-- 区分标题 -->
       <div class="toptitle">
         <span>{{title}}</span>
@@ -11,17 +11,25 @@
         :options='formData'
         v-model="model"
         @submit="submit"
+        @change="selectChanged"
       >
         <template
           slot='btn'
           slot-scope="obj"
         >
           <div>
+            <!-- 编辑保存 -->
             <el-button
-              v-if="$route.query.mark !== 'detail'"
+              v-if="$route.query.mark == 'edit'"
               type='primary'
-              @click="save(obj)"
-            >保存</el-button>
+              @click="editSave(obj)"
+            >编辑保存</el-button>
+            <!-- 添加保存 -->
+            <el-button
+              v-if="$route.query.mark == 'add'"
+              type='primary'
+              @click="addSave(obj)"
+            >添加保存</el-button>
             <el-button
               type='danger'
               @click="back(obj)"
@@ -35,6 +43,8 @@
 </template>
 
 <script>
+// 导入接口
+import norbulingka from "@/service/api/norbulingka";
 import { Norbulingka } from "utils/dictionary";
 const topTitle = {
   add: {
@@ -50,6 +60,8 @@ const topTitle = {
 export default {
   data() {
     return {
+      // 类型选择
+      typeArr: [],
       title: "模板",
       model: {},
       formData: {
@@ -73,10 +85,10 @@ export default {
             prop: "damagePosition",
             type: "input",
             offset: 6,
-            rules:[
+            rules: [
               {
-                required:true,
-                message:'必填'
+                required: true,
+                message: "必填"
               }
             ]
           },
@@ -86,29 +98,49 @@ export default {
             prop: "damageType1",
             type: "select",
             offset: 6,
-            dicData: Norbulingka.diseasesSort
+            // ref: "inputone",
+            // dicData: Norbulingka.diseasesSort,
+            props: {
+              label: "name",
+              value: "id",
+              children: "children"
+            },
+            handler: val => {
+              console.log(val);
+            }
           },
           // 病害类型 : damageType
           {
             label: "病害类型",
-            prop: "damageType",
+            prop: "damageType2",
             type: "select",
             offset: 6,
-            dicData: Norbulingka.diseaseType
+            props: {
+              label: "name",
+              value: "id"
+            }
+            // dicData: Norbulingka.diseaseType
           },
           // 病害状态图 : photoFile
           {
             label: "照片",
-            prop: "photoFile",
+            prop: "photo",
             type: "upload",
             offset: 6,
-            action:'/oaApi/image/upload',
+            action: "/oaApi/image/upload",
             accept: ["jpg", "jpeg", "png"],
             tip: "只能上传jpg/png文件。",
-            rules:[
+            dataType: "string",
+            listType: "picture-card",
+            propsHttp: {
+              name: "fileName",
+              url: "fileUrl",
+              res: "data"
+            },
+            rules: [
               {
-                required:true,
-                message:'添加照片'
+                required: true,
+                message: "添加照片"
               }
             ]
           },
@@ -126,32 +158,94 @@ export default {
           {
             prop: "btn",
             formslot: true,
-            span: 6,
-            offset: 9
+            span: 10,
+            offset: 6
           }
         ]
       }
     };
   },
   methods: {
-    submit(obj) {
-      console.log(obj);
+    submit(model, done) {
+      norbulingka
+        .insertDamage(model)
+        .then(res => {
+          this.$message({
+            type: "success",
+            message: "添加成功！"
+          });
+          this.$router.back();
+        })
+        .finally(() => {
+          done();
+        });
+    },
+    // 添加保存
+    addSave() {
+      this.Form.submit();
+    },
+    // 编辑保存
+    editSave() {
+      this.Form.getFormModel(res => {
+        console.log("编辑保存", res);
+        let params = res;
+        // 判断必填字段是否为空 没填情况下阻止跳转
+        if (Object.keys(res).length === 0) {
+          return false;
+        } else {
+          delete params.mark;
+          norbulingka.updateDamage({ ...params }).then(res => {
+            this.$message({
+              type: "success",
+              message: "编辑成功！"
+            });
+            this.$router.back();
+          });
+        }
+      });
     },
     // 保存
     save(obj) {
       // console.log(obj);
       // this.$router.back();
       this.Form.getFormModel(res => {
-        if(Object.keys(res.photoFile).length === 0){
-            return false
-        }else{
+        if (Object.keys(res.photoFile).length === 0) {
+          return false;
+        } else {
           this.$router.back();
         }
-      })
+      });
     },
     // 返回
     back(obj) {
       this.$router.back();
+    },
+    
+    selectChanged(model) {
+      var damageType1 = model.damageType1;
+      // console.log(damageType1)
+      let res = [];
+      if (damageType1) {
+        this.typeArr.forEach(item => {
+          if (item.id === damageType1) {
+            res = item;
+            this.Form.setColumnByProp("damageType2", {
+              // props:{},
+              dicData: res.children
+            });
+          }
+        });
+      }
+      
+    },
+    findObj(arr,val){
+      let objArr =[]
+        arr.forEach(item => {
+          if(item.id == val){
+            objArr = item
+          }
+        })
+        return objArr
     }
   },
   created() {
@@ -160,14 +254,82 @@ export default {
     if (query.flag) {
       this.formData.textMode = true;
       this.model = { ...query };
-      this.title = topTitle[query.mark].title
+      this.title = topTitle[query.mark].title;
     } else {
       this.model = { ...query };
-      this.title = topTitle[query.mark].title
+      this.title = topTitle[query.mark].title;
     }
+    // 病害分类
+    norbulingka.getSelectOptionOther({ catalogId: 14001 }).then(res => {
+      this.typeArr = res;
+      // console.log(res);
+      this.Form.setColumnByProp("damageType1", {
+        dicData: res
+      });
+      // 获取病害分类的值 根据传递过来的值 为病害类型赋值
+      if(query.damageType1 ){
+        var cc= this.findObj(this.typeArr,query.damageType1)
+        // console.log(cc)
+        this.Form.setColumnByProp('damageType2',{
+          dicData:cc.children
+        })
+      }
+    });
+  },
+  watch: {
+    "model.damageType1": {
+      handler(val,old) {
+        // console.log(val);
+        // console.log(old);
+        // this.$nextTick(()=> {
+        //    var c =   this.findObj(this.typeArr,val)
+        //    console.log(c)
+        // })
+     
+        // let type = val.damageType1;
+        
+        // debugger 
+        let res = []      
+          // this.typeArr.forEach(item => { 
+          //   // console.log("res",item)
+          //   if (item.id == val) {
+             
+          //      res = item;
+          //       console.log(res)
+          //     this.Form.setColumnByProp("damageType2", {
+          //       // props:{},
+          //       dicData: item.children
+          //     });
+          //   }
+          // });
+        
+      },
+      immediate: true
+    }
+    // model(val) {
+
+    // }
+    // typeArr() {
+    //   let damageType = "",
+    //     arr = {};
+    //   this.Form.getFormModel(res => {
+    //     if (res.damageType1 && Object.values(res.damageType1).length >= 0) {
+    //       damageType = res.damageType1;
+    //     }
+    //   });
+    //   this.typeArr.forEach((item, index) => {
+    //     if (item.damageType1 === damageType) {
+    //       arr = item;
+    //       this.Form.setColumnByProp("damageType2", {
+    //         dicData: item.children
+    //       });
+    //     }
+    //   });
+    // }
   },
   mounted() {},
   computed: {
+    // 获取表单
     Form() {
       return this.$refs[this.formData.ref];
     }
@@ -175,8 +337,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.toptitle{
-  span{
+.toptitle {
+  span {
     padding: 0 15px;
     font-weight: bold;
     font-size: 18px;

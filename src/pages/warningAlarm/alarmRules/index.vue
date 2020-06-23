@@ -310,7 +310,7 @@ export default {
             currentPage: 1,
             handler: (pageSize, currentPage, table) => {
               //翻页操作
-              this.props = this.condition;
+              // this.props = this.condition;
               // console.log(this.props)
               // if (Object.values(this.props)) {
               //   this.getTableData(

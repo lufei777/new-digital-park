@@ -47,7 +47,8 @@ export default [
 				// 藏品档案
 				path: '/heritage',
 				name: 'Heritage',
-				meta: { title: '藏品档案' },
+				// meta: { title: '藏品档案' },
+				meta: { title: '遗产要素' },
 				component: Heritage
 			},
 			{
@@ -62,14 +63,14 @@ export default [
 				// 保护工程记录
 				path: '/protectrecord',
 				name: 'ProtectRecord ',
-				meta: { title: '保护工程记录' },
+				meta: { title: '项目工程' },
 				component: ProtectRecord
 			},
 			{
 				// （添加  编辑  详情）
 				path: '/detailedit',
 				name: 'DetailEdit',
-				meta: { title: '添加保护工程' },
+				// meta: { title: '添加保护工程' },
 				component: DetailEdit
 			},
 			// 日常巡查======================================================
@@ -85,7 +86,7 @@ export default [
 				// 日常巡查记录的模板==编辑，详情，添加
 				path: '/editdetailadd',
 				name: 'editdetailadd',
-				meta: { title: '添加日常巡查记录' },
+				// meta: { title: '添加日常巡查记录' },
 				component: () => import('../pages/norbulingka/routineInspections/editdetailadd.vue')
 			},
 
@@ -102,21 +103,22 @@ export default [
 				path: '/inputhome',
 				name: 'Home',
 				component: Home,
-				redirect: '/summaryinfo',
+				// redirect: '/summaryinfo',
+				redirect: '/ontology',
 				children: [
-					{
-						// 汇总信息
-						path: '/summaryinfo',
-						mate: { title: '汇总信息' },
-						name: 'SummaryInfo',
-						component: SummaryInfo
-					},
-					{
-						// 汇总信息 ==== 详请和编辑逻辑错误 修正中
-						path: '/inputinfo',
-						name: 'inputinfo',
-						component: () => import('../pages/norbulingka/theMeasuredInput/templatePath/inputInfo.vue')
-					},
+					// {
+					// 	// 汇总信息
+					// 	path: '/summaryinfo',
+					// 	mate: { title: '汇总信息' },
+					// 	name: 'SummaryInfo',
+					// 	component: SummaryInfo
+					// },
+					// {
+					// 	// 汇总信息 ==== 详请和编辑逻辑错误 修正中
+					// 	path: '/inputinfo',
+					// 	name: 'inputinfo',
+					// 	component: () => import('../pages/norbulingka/theMeasuredInput/templatePath/inputInfo.vue')
+					// },
 
 					{
 						// 本体情况
@@ -162,7 +164,7 @@ export default [
 					{
 						// 考古发掘====》编辑 ，详情 ，添加
 						path: '/temarchaeological',
-						name: 'Archaeological',
+						name: 'temarchaeological',
 						component: () =>
 							import('../pages/norbulingka/theMeasuredInput/templatePath/temArchaeological.vue')
 					},
