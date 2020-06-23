@@ -91,7 +91,7 @@ export default {
         menuBtn: false,
         group: [
           {
-            label: "保护工程记录",
+            label: "项目工程",
             prop: "group",
             forms: [
               // 工程名称 projectName
@@ -207,16 +207,28 @@ export default {
     },
     // 编辑
     propertyEdit(obj) {
-      console.log(obj);
+      // console.log(obj);
       // let data = null;
-      norbulingka
-        .queryDetailProtectProjectById({ id: obj.row.id })
-        .then(res => {
-          this.$router.push({
+      console.log(obj)
+      // obj.row.relateElement =  obj.row.relateElement.split(',')
+      // obj.row.relateElement = obj.row.relateElement.slice(0,-1)
+      this.$router.push({
             name: "DetailEdit",
-            params: { flag: false, mark: "edit", ...res }
+            params: { flag: false, mark: "edit", ...obj.row }
           });
-        });
+
+      // norbulingka
+      //   .queryDetailProtectProjectById({ id: obj.row.id })
+      //   .then(res => {
+      //     // res.relateElement = JSON.parse(res.relateElement)
+          
+      //     res.relateElement = res.relateElement.split(',')
+      //     console.log( res.relateElement)
+      //     this.$router.push({
+      //       name: "DetailEdit",
+      //       params: { flag: false, mark: "edit", ...res }
+      //     });
+      //   });
     },
     // 表格中的批量删除
     orderDel(obj) {
@@ -265,12 +277,13 @@ export default {
       });
     },
     getTableData(pageParams = { page: 1, rows: 10 }) {
+      this.loading = true;
       // 考古发掘表格中的数据
       norbulingka
         .queryProtectByPage(pageParams)
         .then(res => {
-          console.log(res);
-          this.loading = true;
+          // console.log(res);
+          
           this.$refs[this.tableData.ref].setData(res.list);
           this.$refs[this.tableData.ref].setTotal(res.total);
         })

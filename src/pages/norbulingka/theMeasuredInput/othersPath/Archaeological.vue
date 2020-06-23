@@ -84,6 +84,7 @@ export default {
     return {
       // 开启 懒加载
       loading: false,
+      condition:null,
       model: {},
       formData: {
         ref: "formData",
@@ -173,35 +174,78 @@ export default {
         { label: "工程名称", prop: "projectName" },
         { label: "发掘次数", prop: "number" },
         { label: "发掘面积( ㎡ )", prop: "area" },
-        { label: "日期", prop: "data" }
+        { label: "日期", prop: "date" }
       ];
       // 赋值给表格的配置项
       this.tableData.columnConfig = list;
     },
     submit(obj) {
       //   console.log(obj);
+
     },
+    searchData(params){
+      norbulingka.blurQueryArchaeology({params}).then(res => {
+        this.Tables.refreshTable();
+        this.getTableData({...this.condition});
+      });
+    },
+
     // 搜索
     search(obj) {
       this.Form.getFormModel(res => {
-        console.log("搜索", res);
+        this.condition = res
+        this.searchData(res)
       });
-      console.log(this.Form.model);
-      //   console.log(this.model);
-      var that = this;
-      // 5秒后自动清空搜索内容
-      setTimeout(function() {
-        that.clearData();
-      }, 5000);
+      // console.log(this.Form.model);
+      // //   console.log(this.model);
+      // var that = this;
+      // // 5秒后自动清空搜索内容
+      // setTimeout(function() {
+      //   that.clearData();
+      // }, 5000);
     },
     // 清除
     clearData(obj) {
       this.Form.resetForm();
     },
-    // 表单上方的删除
-    del(selectedData) {},
+    // 删除方法
+    delRowData(ids){
+      norbulingka.deleteArchaeology({ ids }).then(res => {
+        this.$message({
+          type: "success",
+          message: "删除成功！"
+        });
+        this.Tables.refreshTable();
+        this.getTableData();
+      });
+    },
+    // 批量删除
+    del({selectedData}) {
+      let arr = selectedData;
+      let str = "";
+      arr.forEach(item => {
+        str = str + item.id + ",";
+      });
+      let ids = str;
+      this.delRowData(ids)
+    },
     // 删除
-    propertyDel(obj) {},
+    propertyDel(obj) {
+       let ids = obj.row.id
+      this.$confirm('你确定要删除吗？',{
+        distinguishCancelAndClose: true,
+        confirmButtonText: '确认',
+          cancelButtonText: '取消'
+      })
+      .then(() => {
+            this.$message({
+              type: 'success',
+              message: '删除成功！'
+            });
+            this.delRowData(ids)
+          })
+     
+    },
     // 编辑
     propertyEdit(obj) {
       console.log(obj.row);
@@ -225,11 +269,12 @@ export default {
     //表格数据==》考古发掘表格中的数据
     getTableData(pageParams = { page: 1, rows: 10 }) {
       // 考古发掘表格中的数据
+      this.loading = true;
       norbulingka
         .blurQueryArchaeology(pageParams)
         .then(res => {
           console.log(res);
-          this.loading = true;
+          
           this.$refs[this.tableData.ref].setData(res.list);
           this.$refs[this.tableData.ref].setTotal(res.total);
         })

@@ -98,7 +98,7 @@ export default {
           {
             label: "巡检人员",
             prop: "person",
-            type: "select",
+            type: "input",
             offset: 6,
             rules: [
               {
@@ -106,31 +106,32 @@ export default {
                 required: true
               }
             ],
-            dicUrl: norbulingka.userNameList,
-            props: {
-              label: "name",
-              value: "id"
-            }
+            // dicUrl: norbulingka.userNameList,
+            // props: {
+            //   label: "name",
+            //   value: "id"
+            // }
           },
           // 照片 : photoFile
           {
             label: "照片",
             prop: "photo",
-            listType: "picture-card",
             type: "upload",
             offset: 6,
             action: "/oaApi/image/upload",
             accept: ["jpg", "jpeg", "png"],
             dataType: "string",
-            // props: {
-            //   label: "contractPictureName",
-            //   value: "contractPictureUrl"
-            // },
+            listType: "picture-card",
             propsHttp: {
               name: "fileName",
               url: "fileUrl",
               res: "data"
             },
+            // props: {
+            //   label: "contractPictureName",
+            //   value: "contractPictureUrl"
+            // },
+            
             // tip: "只能上传jpg/png文件。",
             rules: [
               {

@@ -1,6 +1,6 @@
 <template>
       <div class='panel-container'>
-    <div>
+    <div class='panel'>
       <!-- 区分标题 -->
       <div class="toptitle">
         <span>{{title}}</span>
@@ -17,11 +17,18 @@
           slot-scope="obj"
         >
           <div>
+            <!-- 编辑保存 -->
             <el-button
-            v-if="$route.query.mark !== 'detail'"
+              v-if="$route.query.mark == 'edit'"
               type='primary'
-              @click="save(obj)"
-            >保存</el-button>
+              @click="editSave(obj)"
+            >编辑保存</el-button>
+            <!-- 添加保存 -->
+            <el-button
+              v-if="$route.query.mark == 'add'"
+              type='primary'
+              @click="addSave(obj)"
+            >添加保存</el-button>
             <el-button
               type='danger'
               @click="back(obj)"
@@ -88,10 +95,10 @@ export default {
             prop: "description",
             type: "text",
             offset: 6,
-            rules:[
+            rules: [
               {
-                required:true,
-                message:'必填'
+                required: true,
+                message: "必填"
               }
             ]
           },
@@ -99,16 +106,23 @@ export default {
           // 照片 	 photoFile
           {
             label: "照片",
-            prop: "photoFile",
+            prop: "photo",
             type: "upload",
             offset: 6,
-            action:'/oaApi/image/upload',
+            action: "/oaApi/image/upload",
             accept: ["jpg", "jpeg", "png"],
             tip: "只能上传jpg/png文件。",
-            rules:[
+            listType: "picture-card",
+            dataType: "string",
+            propsHttp: {
+              name: "fileName",
+              url: "fileUrl",
+              res: "data"
+            },
+            rules: [
               {
-                required:true,
-                message:'添加照片'
+                required: true,
+                message: "添加照片"
               }
             ]
           },
@@ -116,7 +130,7 @@ export default {
           {
             type: "textarea",
             label: "情况说明",
-            prop: "description_",
+            prop: "details",
             clearable: true,
             maxlength: 255,
             minRows: 8,
@@ -126,26 +140,47 @@ export default {
           {
             prop: "btn",
             formslot: true,
-            span: 6,
-            offset: 9
+            span: 10,
+            offset: 6
           }
         ]
       }
     };
   },
   methods: {
-    submit(obj) {
-      console.log(obj);
-    },
-    // 保存
-    save(obj) {
-       this.Form.getFormModel(res => {
-        if(Object.keys(res).length === 0){
-            return false
-        }else{
+    submit(model, done) {
+      norbulingka
+        .insertOthers(model)
+        .then(res => {
+          this.$message({
+            type: "success",
+            message: "添加成功！"
+          });
           this.$router.back();
-        }
-      })
+        })
+        .finally(res => {
+          done();
+        });
+    },
+    // 编辑保存
+    editSave() {
+      this.Form.getFormModel(res => {
+         delete res.mark
+        norbulingka
+          .updateOthers(res)
+          .then(res => {
+            this.$message({
+              type: "success",
+              message: "编辑成功！"
+            });
+            this.$router.back();
+          })
+          .finally();
+      });
+    },
+    // 添加保存
+    addSave(obj) {
+      this.Form.submit();
     },
     // 返回
     back(obj) {

@@ -82,6 +82,7 @@ export default {
   data() {
     return {
       loading: false,
+      condition:null,
       model: {},
       formData: {
         ref: "formData",
@@ -143,7 +144,7 @@ export default {
           },
           pagination: {
             handler: (pageSize, currentPage, table) => {
-              this.getTableData({ page: currentPage, rows: pageSize });
+              this.getTableData({ page: currentPage, rows: pageSize ,...this.condition});
             }
           }
         }
@@ -177,26 +178,56 @@ export default {
       //   console.log(obj);
     },
     // 搜索
+    searchData(params){
+      norbulingka.queryOthersByPage({params}).then(res => {
+        this.Tables.refreshTable();
+        this.getTableData({...this.condition});
+      });
+    },
     search(obj) {
       this.Form.getFormModel(res => {
-        console.log("搜索", res);
+        // console.log("搜索", res);
+        this.condition = res
+        this.searchData(res)
       });
-      console.log(this.Form.model);
-      //   console.log(this.model);
-      var that = this;
+      // console.log(this.Form.model);
+      // //   console.log(this.model);
+      // var that = this;
       // 5秒后自动清空搜索内容
-      setTimeout(function() {
-        that.clearData();
-      }, 5000);
+      // setTimeout(function() {
+      //   that.clearData();
+      // }, 5000);
     },
     // 清除
     clearData(obj) {
       this.Form.resetForm();
     },
+    // 公共方法删除
+    delRowData(ids) {
+      norbulingka.deleteOthers({ ids }).then(res => {
+        this.$message({
+          type: "success",
+          message: "删除成功！"
+        });
+        this.Tables.refreshTable();
+        this.getTableData();
+      });
+    },
     // 表单上方的删除
-    del(selectedData) {},
+    del({ selectedData }) {
+      let arr = selectedData;
+      let str = "";
+      arr.forEach(item => {
+        str = str + item.id + ",";
+      });
+      let ids = str;
+      this.delRowData(ids);
+    },
     // 删除
-    propertyDel(obj) {},
+    propertyDel(obj) {
+      let ids = obj.row.id
+      this.delRowData(ids)
+    },
     // 编辑
     propertyEdit(obj) {
       console.log(obj.row);

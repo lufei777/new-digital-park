@@ -117,16 +117,16 @@ export default {
               },
               // 巡检人员
               {
-                type: "select",
+                type: "input",
                 prop: "person",
                 label: "巡检人员",
                 span: 6,
                 offset: 1,
                 // dicUrl: norbulingka.userNameList,
-                props: {
-                  label: "name",
-                  value: "id"
-                }
+                // props: {
+                //   label: "name",
+                //   value: "id"
+                // }
               },
 
               // 搜素 清除按钮
@@ -252,7 +252,8 @@ export default {
           type: "success",
           message: "批量删除成功！"
         });
-        this.getTableData({ page: 1, rows: 10 });
+        this.Tables.refreshTable()
+        this.getTableData();
       });
     },
     // 删除
@@ -267,7 +268,9 @@ export default {
         });
         var page = this.Tables.currentPage;
         // console.log("page",page)
-        this.getTableData({ page, rows: 10 });
+        // this.getTableData({ page, rows: 10 });
+        this.Tables.refreshTable()
+        this.getTableData();
       });
     },
     // 详情
@@ -283,12 +286,13 @@ export default {
     },
     // 表格的信息
     getTableData(pageParams = { page: 1, rows: 10 }) {
+      this.loading = true;
       // 考古发掘表格中的数据
       norbulingka
         .queryDailyCheckByPage(pageParams)
         .then(res => {
-          console.log(res);
-          this.loading = true;
+          // console.log(res);
+          
           this.$refs[this.tableData.ref].setData(res.list);
           this.$refs[this.tableData.ref].setTotal(res.total);
           // this.$refs[this.tableData.ref].refreshTable();
@@ -308,10 +312,11 @@ export default {
         dicData: res
       });
     });
+    // 更改需求后 巡检人员变成手动输入，不再是下拉框
     norbulingka.userNameList().then(res => {
-      this.Form.setColumnByProp("person", {
-        dicData: res
-      });
+      // this.Form.setColumnByProp("person", {
+      //   dicData: res
+      // });
       this.Tables.setColumnByProp("person", {
         dicData: res
       });

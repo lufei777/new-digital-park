@@ -44,7 +44,7 @@
             <el-button
               @click="del(obj)"
               :disabled='!obj.selectedData.length'
-            >删除</el-button>
+            >批量删除</el-button>
           </div>
         </template>
         <template
@@ -83,6 +83,7 @@ import norbulingka from "@/service/api/norbulingka";
 export default {
   data() {
     return {
+      condition: null,
       loading: false,
       model: {},
       formData: {
@@ -106,31 +107,40 @@ export default {
               },
               //  病害分类 damageType1
               {
-                type: "select",
+                type: "cascader",
                 prop: "damageType1",
                 placeholder: "",
                 label: "病害分类",
                 span: 5,
                 offset: 1,
-                dicData: diseasesSort
+                props: {
+                  label: "name",
+                  value: "id",
+                  children:'children'
+                }
+                // dicData: diseasesSort
               },
               //  病害类型 damageType2
-              {
-                type: "select",
-                prop: "damageType2",
-                placeholder: "",
-                label: "遗产要素保护状态",
-                span: 5,
-                width: "150",
-                offset: 1,
-                dicData: diseasesSort
-              },
+              // {
+              //   type: "select",
+              //   prop: "damageType",
+              //   placeholder: "",
+              //   label: "病害类型",
+              //   span: 5,
+              //   // width: "150",
+              //   offset: 1,
+              //   props: {
+              //     label: "name",
+              //     value: "id"
+              //   }
+              //   // dicData: diseasesSort
+              // },
               // 搜素按钮
               {
                 prop: "btn",
                 formslot: true,
-                offset: 2,
-                span: 5
+                // offset: 2,
+                span: 8
               }
             ]
           }
@@ -151,7 +161,11 @@ export default {
           showIndex: true,
           pagination: {
             handler: (pageSize, currentPage, table) => {
-              this.getTableData({ page: currentPage, rows: pageSize });
+              this.getTableData({
+                page: currentPage,
+                rows: pageSize,
+                ...this.condition
+              });
             }
           }
         }
@@ -175,8 +189,24 @@ export default {
       var list = [
         // 病害位置 damagePosition   病害分类 damageType1    病害类型 damageType2  日期 date
         { label: "病害位置", prop: "damagePosition" },
-        { label: "病害分类", prop: "damageType1" },
-        { label: "病害类型", prop: "damageType2" },
+        {
+          label: "病害分类",
+          prop: "damageType1",
+          type: "select",
+          props: {
+            label: "name",
+            value: "id"
+          }
+        },
+        {
+          label: "病害类型",
+          prop: "damageType2",
+          type: "select",
+          props: {
+            label: "name",
+            value: "id"
+          }
+        },
         { label: "日期", prop: "date" }
       ];
       // 赋值给表格的配置项
@@ -185,21 +215,58 @@ export default {
     submit(obj) {
       //   console.log(obj);
     },
+    searchData(params) {
+      norbulingka.queryDamageByPage({ params }).then(res => {
+        this.Tables.refreshTable();
+        this.getTableData({ ...this.condition });
+      });
+    },
+
+    // 搜索
     search(obj) {
       this.Form.getFormModel(res => {
-        console.log("搜索", res);
+        // 参数是string类型，不能是数组 要进行处理
+        if(res.damageType1 && Object.values(res.damageType1).length == 2){     
+          res['damageType2'] =res.damageType1[1]
+          res.damageType1 = res.damageType1[0]
+        } 
+        this.condition = res;
+        this.searchData(res);
       });
-      console.log(this.Form.model);
-      //   console.log(this.model);
     },
     // 清除
     clearData(obj) {
       this.Form.resetForm();
     },
     // 表单上方的删除
-    del(selectedData) {},
+    del(obj) {
+      let arr = obj.selectedData;
+      let str = "";
+      arr.forEach(item => {
+        str = str + item.id + ",";
+      });
+      let ids = str;
+      norbulingka.deleteDamage({ ids }).then(res => {
+        this.$message({
+          type: "success",
+          message: "批量删除成功！"
+        });
+        this.Tables.refreshTable();
+        this.getTableData();
+      });
+    },
     // 删除
-    propertyDel(obj) {},
+    propertyDel(obj) {
+      let ids = obj.row.id;
+      norbulingka.deleteDamage({ ids }).then(res => {
+        this.$message({
+          type: "success",
+          message: "删除成功！"
+        });
+        this.Tables.refreshTable();
+        this.getTableData();
+      });
+    },
     // 编辑
     propertyEdit(obj) {
       console.log(obj.row);
@@ -221,7 +288,7 @@ export default {
     },
     // 表格中的数据
     getTableData(pageParams = { page: 1, rows: 10 }) {
-      (this.loading = true),
+      this.loading = true
         norbulingka
           .queryDamageByPage(pageParams)
           .then(res => {
@@ -235,6 +302,24 @@ export default {
     }
   },
   created() {
+    // 病害分类
+    norbulingka.getSelectOptionOther({catalogId:14001}).then(res => {
+
+      this.Form.setColumnByProp('damageType1',{
+        dicData:res
+      })
+
+      this.Tables.setColumnByProp('damageType1',{
+        dicData:res
+      })
+      
+
+      this.Tables.setColumnByProp('damageType2',{
+        dicData:res
+      })
+    })
+    // 病害类型
+
     this.getTableData();
   },
   mounted() {

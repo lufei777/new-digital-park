@@ -106,29 +106,166 @@ export default new class {
 	@get
 	queryBuildingByPage() {}
 
+	// 增加 /ontology/insertBuildingsPhoto
+	@url('/norb-service/ontology/insertBuildingsPhoto')
+	@post
+	insertBuildingsPhoto() {}
+
+
+	// 删除 /ontology/deleteBuildingsPhoto
+	@url('/norb-service/ontology/deleteBuildingsPhoto')
+	@del
+	deleteBuildingsPhoto() {}
+
+	// 修改  /ontology/updatBuildingsPhoto
+	@url('/norb-service/ontology/updatBuildingsPhoto')
+	@post
+	updatBuildingsPhoto() {}
+
+	// 查询
+	@url('/norb-service/ontology/queryBuildingsPhotoDetails')
+	@get
+	queryBuildingsPhotoDetails() { }
+	
+	// ----------------------------------------------------------------
 	// 病害分析
 	@url('/norb-service/measuredInput/queryDamageByPage')
 	@get
-	queryDamageByPage() {}
+	queryDamageByPage() { }
+	
+	// 增加  /damage/insertDamage
+	@url('/norb-service/damage/insertDamage')
+	@post
+	insertDamage() { }
+
+	// 删除 /damage/deleteDamage
+	@url('/norb-service/damage/deleteDamage')
+	@del
+	deleteDamage() { }
+
+	// 修改  /damage/updateDamage
+	@url('/norb-service/damage/updateDamage')
+	@post
+	updateDamage() { }
+
+	// 查询/damage/queryDamageById
+	@url('/norb-service/damage/queryDamageById')
+	@get
+	queryDamageById() {}
+
+	// ---------------------------------------------------------
 	// 施工情况
 	@url('/norb-service/measuredInput/queryImplimentationByPage')
 	@get
 	queryImplimentationByPage() {}
+	
+	// 增加
+	@url('norb-service/implimentation/insertImplimentation')
+	@post
+	insertImplimentation(){ }
 
-	// 考古发掘
-	@url('/norb-service/measuredInput/blurQueryArchaeology')
+	// 修改
+	@url('norb-service/implimentation/updateImplimentation')
+	@post
+	updateImplimentation(){ }
+
+	// 删除
+	@url('norb-service/implimentation/deleteImplimentation')
+	@del
+	deleteImplimentation() { }
+
+	// 查询
+	@url('norb-service/implimentation/queryImplimentationById')
 	@get
-	blurQueryArchaeology() {}
+	queryImplimentationById() { }
 
+
+
+	// ------------------------------------------------------------------------
+	// 考古发掘
+	@url('/norb-service/measuredInput/queryArchaeologyByPage')
+	@get
+	blurQueryArchaeology() { }
+
+	// 增加
+	@url('/norb-service/archaeology/insertArchaeology')
+	@post
+	insertArchaeology() { }
+
+	// 修改
+	@url('/norb-service/archaeology/updateArchaeology')
+	@post
+	updateArchaeology () { }
+	// 删除
+	@url('/norb-service/archaeology/deleteArchaeology')
+	@del
+	deleteArchaeology() { }
+
+	// 查询	
+	// @url('/norb-service/archaeology/queryArchaeologyById')
+	// @get
+	// queryArchaeologyById() { }
+
+	// ------------------------------------------------------------------
 	//游客情况
 	@url('/norb-service/measuredInput/queryTouristByPage')
 	@get
 	queryTouristByPage() {}
 
+	// 增加  /tourist/insertTourist
+	@url('/norb-service/tourist/insertTourist')
+	@post
+	insertTourist() {}
+	// 修改
+	@url('/norb-service/tourist/updateTourist')
+	@post
+	updateTourist() { }
+
+	// 删除
+	@url('/norb-service/tourist/deleteTourist')
+	@del
+	deleteTourist() { }
+
+
+
+	// -----------------------------------------------------------------
 	// 其他
 	@url('/norb-service/measuredInput/queryOthersByPage')
 	@get
 	queryOthersByPage() {}
 
+	// 增加 
+	@url('/norb-service/other/insertOthers')
+	@post
+	insertOthers() { }
+
+	// 修改
+	@url('/norb-service/other/updateOthers')
+	@post
+	updateOthers() { }
+
+	// 删除
+	@url('/norb-service/other/deleteOthers')
+	@del
+	deleteOthers() { }
+
+
 	// 检测报告=========================================================================================
+		// 遗产评估
+
+		// 表格数据
+		@url('/norb-service/assessment/queryRelicEvaluationByPage')
+		@get
+		queryRelicEvaluationByPage() { }
+
+		// 上传
+		@url('/norb-service/assessment/uploadRelicEvaluation')
+		@post
+		uploadRelicEvaluation() { }
+
+		// 删除
+		@url('/norb-service/assessment/deleteRelicEvaluation')
+		@del
+		deleteRelicEvaluation() { }
+
 }();

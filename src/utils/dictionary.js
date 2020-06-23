@@ -647,18 +647,18 @@ export const WarningAlerm = {
 export const Norbulingka = {
 	//  工程分类
 	projectType: [
-		{ label: '未选择', value: 1 },
-		{ label: '文物维修', value: 2 },
-		{ label: '保护性设施', value: 3 },
-		{ label: '现场展示', value: 4 },
-		{ label: '环境整治', value: 5 }
+		// { label: '未选择', value: 1 },
+		{ label: '文物维修', value: 1 },
+		{ label: '保护性设施', value: 2 },
+		{ label: '现场展示', value: 3 },
+		{ label: '环境整治', value: 4 }
 	],
 	// 类型选择
 	typeSelect: [
 		{ label: '本体情况', value: 1 },
 		{ label: '病害分析', value: 2 },
 		{ label: '施工情况', value: 3 },
-		{ label: '游客记录', value: 4 },
+		{ label: '游客情况', value: 4 },
 		{ label: '考古发掘', value: 5 },
 		{ label: '其他', value: 6 }
 	],

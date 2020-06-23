@@ -84,8 +84,8 @@ export default {
   data() {
     return {
       // 查询条件
-      condition:null,
-      loading:false,
+      condition: null,
+      loading: false,
       model: {},
       formData: {
         ref: "formData",
@@ -95,7 +95,7 @@ export default {
         menuBtn: false,
         group: [
           {
-            label: "藏品档案",
+            label: "遗产要素",
             prop: "group",
             forms: [
               //藏品名称 collectionName
@@ -119,8 +119,8 @@ export default {
                 prop: "culturalRank",
                 placeholder: "",
                 label: "文物级别",
-                dicUrl: norbulingka.getSelectOption,
-                dicQuery: { catalogId: 7001, parentId: 0 },
+                // dicUrl: norbulingka.getSelectOption,
+                // dicQuery: { catalogId: 7001, parentId: 0 },
                 span: 6,
                 // dicData: levelCultural
                 props: {
@@ -157,7 +157,11 @@ export default {
           pagination: {
             handler: (pageSize, currentPage, table) => {
               //翻页的时候需要携带查询添加
-              this.getTableData({ page: currentPage, rows: pageSize,...this.condition });
+              this.getTableData({
+                page: currentPage,
+                rows: pageSize,
+                ...this.condition
+              });
             }
           }
         }
@@ -189,7 +193,15 @@ export default {
         { label: "名称", prop: "collectionName" },
         { label: "原名", prop: "primaryName" },
         { label: "具体年代", prop: "practicalYear" },
-        { label: "文物级别", prop: "culturalRank" }
+        {
+          label: "文物级别",
+          prop: "culturalRank",
+          type: "select",
+          props: {
+            label: "name",
+            value: "id"
+          }
+        }
       ];
       // 赋值给表格的配置项
       this.tableData.columnConfig = list;
@@ -199,19 +211,20 @@ export default {
     },
     // 表单中的搜索按钮
     search(obj) {
-      let data = obj
-      console.log(obj)
+      let data = obj;
+      console.log(obj);
       this.Form.getFormModel(res => {
         // console.log("搜索", res);
         // params 为保存得查询条件 需要携带给查询的接口
-        let params = res
+        let params = res;
         //将查询的条件保存下来
-        this.condition = res
-        norbulingka.queryRelic2ByPage({page:1,rows:10,...res}).then(res => {
-          // debugger
-          this.getTableData({page:1,rows:10,...params})
-
-        });
+        this.condition = res;
+        norbulingka
+          .queryRelic2ByPage({ page: 1, rows: 10, ...res })
+          .then(res => {
+            // debugger
+            this.getTableData({ page: 1, rows: 10, ...params });
+          });
       });
       console.log(this.Form.model);
       //   console.log(this.model);
@@ -222,46 +235,49 @@ export default {
     },
     // 表单上方的删除
     del(selectedData) {
-      console.log(selectedData)
-      let arr = selectedData.selectedData
-      var str = ''
+      console.log(selectedData);
+      let arr = selectedData.selectedData;
+      var str = "";
       arr.forEach(item => {
-        str = str +  item.id +','
-      })
-      let ids = str
+        str = str + item.id + ",";
+      });
+      let ids = str;
       // console.log(str)
-       norbulingka.deleteRelic2({ids}).then(res => {
-        // console.log(res)      
-          this.$message({
-          message: '批量删除成功！',
-          type: 'success'
+      norbulingka.deleteRelic2({ ids }).then(res => {
+        // console.log(res)
+        this.$message({
+          message: "批量删除成功！",
+          type: "success"
         });
-        let page = this.Tables.currentPage
-         this.getTableData({page, rows: 10})
-        
-      })
+        let page = this.Tables.currentPage;
+        this.getTableData({ page, rows: 10 });
+      });
     },
     // 删除
     propertyDel(obj) {
-      console.log(obj) 
+      console.log(obj);
       // debugger
-      let ids = obj.row.id
-      norbulingka.deleteRelic2({ids}).then(res => {
-        // console.log(res)      
+      let ids = obj.row.id;
+      // debugger
+      norbulingka
+        .deleteRelic2({ ids })
+        .then(res => {
+          // console.log(res)
           this.$message({
-          message: '删除成功！',
-          type: 'success'
-        });
-         let page = this.Tables.currentPage
-         this.getTableData({page, rows: 10})
-        
-      }).finally(res => {
-       
-      })
+            message: "删除成功！",
+            type: "success"
+          });
+          // let page = this.Tables.currentPage;
+          this.Tables.refreshTable()
+          // this.getTableData({ page:1, rows: 10 });
+          this.getTableData();
+          
+        })
+        .finally(res => {});
     },
     // 编辑
     propertyEdit(obj) {
-      console.log(obj)
+      console.log(obj);
       this.$router.push({
         path: "/addeditdetail",
         query: { mark: "edit", ...obj.row }
@@ -277,12 +293,13 @@ export default {
     },
     // 表格中的数据
     getTableData(pageParams = { page: 1, rows: 10 }) {
+      this.loading = true
       // 考古发掘表格中的数据
       norbulingka
         .queryRelic2ByPage(pageParams)
         .then(res => {
-          console.log(res);
-          this.loading = true;
+          // console.log(res);
+          // this.loading = true;
           this.$refs[this.tableData.ref].setData(res.list);
           this.$refs[this.tableData.ref].setTotal(res.total);
         })
@@ -292,6 +309,16 @@ export default {
     }
   },
   created() {
+    // 文物级别
+    norbulingka.getSelectOption({ catalogId: 7001, parentId: 0 }).then(res => {
+     this.Form.setColumnByProp("culturalRank", {
+        dicData: res
+      });
+      this.Tables.setColumnByProp("culturalRank", {
+        dicData: res
+      });
+    });
+
     this.getTableData();
   },
   mounted() {

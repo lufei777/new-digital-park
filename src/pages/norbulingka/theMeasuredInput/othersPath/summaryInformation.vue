@@ -89,7 +89,7 @@ export default {
               // 起始日期
               {
                 type: "date",
-                prop: "serial",
+                prop: "sDate",
                 placeholder: "",
                 label: "起始日期",
                 span: 6
@@ -97,7 +97,7 @@ export default {
               // 结束日期
               {
                 type: "date",
-                prop: "culturalRank",
+                prop: "eDate ",
                 label: "结束日期",
                 span: 6
               },
@@ -154,9 +154,9 @@ export default {
         //类型   录入时间 date
         {
           label: "类型",
-          prop: "collectionName",
+          prop: "id",
           type: "select",
-          dicData: typeSelect
+          dicData: typeSelect,
           // props:{
           //   label:'name',
           //   value:'id'

@@ -27,6 +27,7 @@
     <div class="panel">
       <!-- 表单部分 -->
       <z-table
+        :load='loading'
         :ref="tableData.ref"
         :options="tableData"
       >
@@ -34,9 +35,16 @@
           slot='custom-top'
           slot-scope="obj"
         >
-          <div>
+          <div id="slot">
             <!-- 上传、删除 -->
             <el-button type='primary'>上传</el-button>
+            <!-- <el-upload
+              action="/oaApi/image/upload"
+            >
+              <el-button
+                type="primary"
+              >点击上传</el-button>
+            </el-upload> -->
             <el-button
               @click="del(obj)"
               :disabled='!obj.selectedData.length'
@@ -67,9 +75,13 @@
 <script>
 // 导入接口
 import norbulingka from "@/service/api/norbulingka";
+// ../../../utils/commonFun
+ import CommonFun from '../../../utils/commonFun'
 export default {
   data() {
     return {
+      loading: false,
+      condition: null,
       model: {},
       formData: {
         ref: "formData",
@@ -95,7 +107,7 @@ export default {
               {
                 prop: "btn",
                 formslot: true,
-                span: 8
+                span: 10
               }
             ]
           }
@@ -105,30 +117,7 @@ export default {
         ref: "tabel",
         customTop: true,
         customTopPosition: "right",
-        data: [
-          /**
-             *      
-            {label:'藏品编号',prop:'serial'},
-            {label:'名称',  prop:'collectionName'},
-            {label:'原名',prop:'primaryName'},
-            {label:'具体年代',prop:'practicalYear'},
-            {label:'文物级别',prop:'culturalRank'},
-             *   
-            */
-          // 模拟的假数据
-          {
-            originName: "摄像头文件整理.docx",
-            uploadDate: "2020-05-27 10:34:16"
-          },
-          {
-            originName: "摄像头文件整理.docx",
-            uploadDate: "2020-05-27 10:34:16"
-          },
-          {
-            originName: "摄像头文件整理.docx",
-            uploadDate: "2020-05-27 10:34:16"
-          }
-        ],
+        data: [],
         columnConfig: [],
         operation: {
           prop: "operation",
@@ -139,10 +128,100 @@ export default {
         uiConfig: {
           height: "auto",
           selection: true,
-          showIndex: true
+          showIndex: {
+            label:'编号',
+            width: 100
+          }
         }
       }
     };
+  },
+
+  methods: {
+    // 表格配置项
+    tablePropList() {
+      // 配置表格的列名称和属性
+      var list = [
+        // 名称originName  上传时间 uploadDate
+        // { label: "编号", prop: "" },
+        { label: "文件名称", prop: "originName" },
+        { label: "年度", prop: "" },
+        { label: "类别", prop: "" },
+        { label: "填报类别", prop: "uploadDate" }
+      ];
+      // 赋值给表格的配置项
+      this.tableData.columnConfig = list;
+    },
+    submit(model, done) {
+      //   console.log(obj);
+    },
+    searchData(params) {
+      norbulingka.queryRelicEvaluationByPage({ params }).then(res => {
+        this.Tables.refreshTable();
+        this.getTableData({ ...this.condition });
+      });
+    },
+    // 搜索
+    search(obj) {
+      this.Form.getFormModel(res => {
+        // 参数是string类型，不能是数组 要进行处理
+        this.condition = res;
+        this.searchData(res);
+      });
+    },
+    // search(obj) {
+    //   this.Form.getFormModel(res => {
+    //     console.log("搜索", res);
+    //   });
+    //   console.log(this.Form.model);
+    //   //   console.log(this.model);
+    // },
+    // 清除
+    clearData(obj) {
+      this.Form.resetForm();
+    },
+    // 表单上方的删除
+    del({ selectedData }) {
+      let arr = selectedData;
+      let str = "";
+      arr.forEach(item => {
+        str = str + item.id + ",";
+      });
+      let ids = str;
+      norbulingka.deleteRelicEvaluation({ ids }).then(res => {
+        this.$message({
+          type: "success",
+          message: "删除成功！"
+        });
+        this.Tables.refreshTable();
+        this.getTableData();
+      });
+    },
+    downLoad() {
+      console.log("下载");
+      let url = '/oaApi/stockDeal/exportRecord'
+      let params =''
+      let arr = this.$refs[this.tableData.ref].getSelectData()
+      let stockRecordIds = arr.length? arr.map(item => item.id):'';
+    },
+    // 查看
+    propertyDetail(obj) {
+      console.log("查看")
+    },
+    // 表格中的数据
+    getTableData(pageParams = { page: 1, rows: 10 }) {
+      this.loading = true,
+      norbulingka
+        .queryRelicEvaluationByPage(pageParams)
+        .then(res => {
+          // console.log(res);
+          this.$refs[this.tableData.ref].setData(res.list);
+          this.$refs[this.tableData.ref].setTotal(res.total);
+        })
+        .finally(res => {
+          this.loading = false;
+        });
+    }
   },
   computed: {
     // 表格
@@ -154,42 +233,8 @@ export default {
       return this.$refs[this.tableData.ref];
     }
   },
-  methods: {
-    // 表格配置项
-    tablePropList() {
-      // 配置表格的列名称和属性
-      var list = [
-        // 名称originName  上传时间 uploadDate
-
-        { label: "名称", prop: "originName" },
-        { label: "上传时间", prop: "uploadDate" }
-      ];
-      // 赋值给表格的配置项
-      this.tableData.columnConfig = list;
-    },
-    submit(obj) {
-      //   console.log(obj);
-    },
-    search(obj) {
-      this.Form.getFormModel(res => {
-        console.log("搜索", res);
-      });
-      console.log(this.Form.model);
-      //   console.log(this.model);
-    },
-    // 清除
-    clearData(obj) {
-      this.Form.resetForm();
-    },
-    // 表单上方的删除
-    del(selectedData) {},
-    downLoad() {
-      console.log("下载");
-    },
-    // 查看
-    propertyDetail(obj) {
-      console.log("查看");
-    }
+  created() {
+    this.getTableData();
   },
   mounted() {
     this.tablePropList();

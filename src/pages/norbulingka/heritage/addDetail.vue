@@ -77,18 +77,18 @@ export default {
         // ]
         forms: [
           // 藏品序号：	id	编号类型：	serialType	藏品编号：	serial
-          {
-            label: "藏品序号",
-            type: "number",
-            span: 7,
-            prop: "id",
-            disabled:true
-          },
+          // {
+          //   label: "藏品序号",
+          //   type: "number",
+          //   span: 7,
+          //   prop: "id",
+          //   disabled:true
+          // },
           {
             label: "编号类型",
             type: "select",
             span: 7,
-            offset: 1,
+            // offset: 1,
             prop: "serialType",
             dicUrl: norbulingka.getSelectOptionOther,
             dicQuery: { parentId: 0, catalogId: 4001 },
@@ -105,16 +105,23 @@ export default {
           },
           {
             label: "藏品编号",
-            type: "number",
+            type: "input",
             span: 7,
-            offset: 1,
-            prop: "serial"
+            // offset: 1,
+            prop: "serial",
+            rules:[
+              {
+                required:true,
+                message:'必填项'
+              }
+            ]
           },
           // 藏品名称	collectionName	藏品原名 primaryName	文物类别	culturalType
           {
             label: "藏品名称",
             type: "input",
             span: 7,
+            // offset:1,
             prop: "collectionName",
             rules: [
               {
@@ -127,14 +134,14 @@ export default {
             label: "藏品原名",
             type: "input",
             span: 7,
-            offset: 1,
+            // offset: 1,
             prop: "primaryName"
           },
           {
             label: "文物类别",
             type: "select",
             span: 7,
-            offset: 1,
+            // offset: 1,
             prop: "culturalType",
             // dicData: culturalType
             dicUrl: norbulingka.getSelectOptionOther,
@@ -149,6 +156,7 @@ export default {
             label: "具体年代",
             type: "year",
             span: 7,
+            // offset:1,
             prop: "practicalYear",
             valueFormat: "yyyy",
             format: "yyyy"
@@ -158,7 +166,7 @@ export default {
             type: "cascader",
             placeholder: "藏品年代三级联动",
             span: 7,
-            offset: 1,
+            // offset: 1,
             prop: "years",
             dicUrl: norbulingka.getSelectOptionOther,
             dicQuery: { parentId: 0, catalogId: 3001 },
@@ -176,7 +184,7 @@ export default {
             type: "cascader",
             span: 7,
             prop: "characterTypes",
-            offset: 1,
+            // offset: 1,
 
             dicUrl: norbulingka.getSelectOptionOther,
             dicQuery: { parentId: 0, catalogId: 13001 },
@@ -199,14 +207,21 @@ export default {
             label: "实际数量",
             type: "number",
             span: 7,
+            // offset:1,
             prop: "realQuantity",
+            rules:[
+              {
+                required:true,
+                message:'必填项'
+              }
+            ]
             // offset: 1
           },
           {
             label: "具体尺寸",
             type: "number",
             span: 7,
-            offset: 1,
+            // offset: 1,
             prop: "specificDimension",
             row: true
             // rules:[
@@ -221,6 +236,7 @@ export default {
           {
             label: "藏品通长",
             type: "number",
+            // offset:1,
             span: 7,
             prop: "openLength"
             // rules:[
@@ -235,7 +251,7 @@ export default {
             label: "藏品通宽",
             type: "number",
             span: 7,
-            offset: 1
+            // offset: 1
             // prop: "openWidth",
             // rules:[
             //   {
@@ -249,7 +265,7 @@ export default {
             label: "藏品通高",
             type: "number",
             span: 7,
-            offset: 1,
+            // offset: 1,
             prop: "openHeight"
             // rules:[
             //   {
@@ -264,6 +280,7 @@ export default {
             label: "质量范围",
             type: "select",
             span: 7,
+            // offset:1,
             prop: "massRange",
             dicUrl: norbulingka.getSelectOptionOther,
             dicQuery: { parentId: 0, catalogId: 12001 },
@@ -282,14 +299,14 @@ export default {
             label: "具体质量",
             type: "input",
             span: 7,
-            offset: 1,
+            // offset: 1,
             prop: "specificMass"
           },
           {
             label: "质量单位",
             type: "input",
             span: 7,
-            offset: 1,
+            // offset: 1,
             prop: "massUnit"
           },
           // 文物级别	culturalRank	文物来源	culturalSource
@@ -297,13 +314,20 @@ export default {
             label: "文物级别",
             type: "select",
             span: 7,
+            // offset:1,
             prop: "culturalRank",
             dicUrl: norbulingka.getSelectOptionOther,
             dicQuery: { parentId: 0, catalogId: 7001 },
             props: {
               label: "name",
               value: "id"
-            }
+            },
+            rules:[
+              {
+                required:true,
+                message:'必填项'
+              }
+            ]
             // dicData: [
             //   { label: "1级", value: 1 },
             //   { label: "2级", value: 2 },
@@ -314,7 +338,7 @@ export default {
             label: "文物来源",
             type: "select",
             span: 7,
-            offset: 1,
+            // offset: 1,
             prop: "culturalSource",
             dicUrl: norbulingka.getSelectOptionOther,
             dicQuery: { parentId: 0, catalogId: 8001 },
@@ -336,7 +360,7 @@ export default {
             type: "select",
             span: 7,
             prop: "intactDisabledDegree",
-            offset: 1,
+            // offset: 1,
             dicUrl: norbulingka.getSelectOptionOther,
             dicQuery: { parentId: 0, catalogId: 9001 },
             props: {
@@ -361,7 +385,7 @@ export default {
             label: "保存状态",
             type: "select",
             span: 7,
-            offset: 1,
+            // offset: 1,
             prop: "saveState",
             dicUrl: norbulingka.getSelectOptionOther,
             dicQuery: { parentId: 0, catalogId: 10001 },
@@ -381,7 +405,7 @@ export default {
             label: "入藏时间范围",
             type: "select",
             span: 7,
-            offset: 1,
+            // offset: 1,
             prop: "enterCollectionTime",
             dicUrl: norbulingka.getSelectOptionOther,
             dicQuery: { parentId: 0, catalogId: 11001 },
@@ -404,21 +428,21 @@ export default {
             prop: "enterCollectionYear",
             valueFormat: "yyyy",
             format: "yyyy",
-            row: true
+            // row: true
           },
           // 藏品著着	author	藏品版本	versions	藏品存卷	saveRoll
           {
-            label: "藏品著着",
+            label: "藏品著者",
             type: "input",
             span: 7,
-            offset: 1,
+            // offset: 1,
             prop: "author"
           },
           {
             label: "藏品版本",
             type: "input",
             span: 7,
-            offset: 1,
+            // offset: 1,
             prop: "versions"
           },
           {

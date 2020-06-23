@@ -12,7 +12,7 @@
           @select="handleSelect"
           router
         >
-          <el-menu-item index="/summaryinfo">汇总信息</el-menu-item>
+          <!-- <el-menu-item index="/summaryinfo">汇总信息</el-menu-item> -->
           <el-menu-item index="/ontology">本体情况</el-menu-item>
           <el-menu-item index="/analysis">病害分析</el-menu-item>
           <el-menu-item index="/construction">施工情况</el-menu-item>
