@@ -1,6 +1,6 @@
 <template>
   <div class="hvac-coms">
-    <div class="module-item-top-name" >{{moduleItem.moduleName}}</div>
+    <div class="tmp-hidden">{{moduleItem.moduleName}}</div>
     <div class="flex-align-center water-content">
       <div v-for="(item,index) in hvacData" :key="index" class="item-water">
         <span>{{item.title}}</span>

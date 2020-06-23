@@ -1,6 +1,6 @@
 <template>
   <div class="inspection-coms">
-    <div class="module-item-top-name" >{{moduleItem.moduleName}}</div>
+    <div class="tmp-hidden">{{moduleItem.moduleName}}</div>
     <div class="my-chart">
       <div class="ganged-log-header">
         <span>值班日期</span>

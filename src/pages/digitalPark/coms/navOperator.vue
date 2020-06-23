@@ -285,7 +285,7 @@ export default {
 </script>
 
 
-<style lang="less">
+<style lang="less" scoped>
 .digital-nav-operator {
   font-size: 14px;
   .nav-right-item {
@@ -297,7 +297,7 @@ export default {
         cursor: pointer;
       }
     }
-    .el-input__inner {
+    /deep/ .el-input__inner {
       border: none;
       // padding-right: 5px;
       background: none;

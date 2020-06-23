@@ -1,32 +1,34 @@
 <template>
-  <div class="user-manage panel-container">
+  <div class="user-manage system-manage panel-container">
     <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
          class="user-tree-box radius-shadow">
       <Tree :tree-list="treeList" :tree-config="treeConfig"/>
     </div>
     <div class="right-content  panel-container">
       <div class="choose-box flex-align radius-shadow panel">
-        <div class="block flex-align-center">
-          <span>编号：</span>
+        <div class="item-group flex-align-center">
+          <label>编号：</label>
           <el-input v-model="searchParams.id"/>
         </div>
-        <div class="block flex-align-center">
-          <span>用户名：</span>
+        <div class="item-group flex-align-center">
+          <label>用户名：</label>
           <el-input v-model="searchParams.loginId"/>
         </div>
-        <div class="block flex-align-center">
-          <span>E-mail：</span>
+        <div class="item-group flex-align-center">
+          <label>E-mail：</label>
           <el-input v-model="searchParams.mail"/>
         </div>
-        <div class="block flex-align-center">
-          <span>电话号码：</span>
+        <div class="item-group flex-align-center">
+          <label>电话号码：</label>
           <el-input v-model="searchParams.phone"/>
         </div>
-        <el-button type="primary" @click="onClickSearchBtn">搜索</el-button>
-        <el-button @click="onClickResetBtn">重置</el-button>
+        <div class="item-group operator-box">
+          <el-button type="primary" @click="onClickSearchBtn">搜索</el-button>
+          <el-button @click="onClickResetBtn">重置</el-button>
+        </div>
       </div>
       <div class="table-wrapper radius-shadow  panel">
-        <div class="operator-box flex-row-reverse" v-if="fromFlag!='assignUser'">
+        <div class="operator-btn-box flex-row-reverse" v-if="fromFlag!='assignUser'">
           <el-button type="primary" @click="onClickExportBtn">导出</el-button>
           <!--<el-button type="primary" @click="onClickMultiDelBtn">删除</el-button>-->
           <el-button type="primary" @click="onClickAddBtn">添加</el-button>
@@ -80,7 +82,8 @@
             children: 'nodes'
           },
           onClickTreeNodeCallBack: this.onClickTreeNodeCallBack,
-          defaultExpandedkeys: []
+          defaultExpandedkeys: [],
+          currentKey:''
         },
         searchParams: {
           id: '',
@@ -132,6 +135,7 @@
             height: "auto",
             selection: true,
           },
+          customTop:true,
           tableMethods: {},
         },
         deleteId: ''
@@ -151,6 +155,7 @@
         this.treeList = await CommonApi.getDeptTree()
         this.searchParams.department = this.treeList[0].id
         this.treeConfig.defaultExpandedkeys = [this.treeList[0].id]
+        this.treeConfig.currentKey = this.treeList[0].id
         // this.onClickSearchBtn()
       },
       onClickTreeNodeCallBack(val) {
@@ -236,93 +241,8 @@
   }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
+  @import '../less/index.less';
   @import '../../commonProject/less/dataDetailRow.less';
 
-  .user-manage {
-    .left-zoom-nav {
-      width: 17%;
-      float: left;
-      position: fixed;
-      height: 100%;
-      overflow: auto;
-      background: @mainBg;
-      padding: 10px 0;
-
-      .el-tree {
-        background: @mainBg;
-        font-size: 16px;
-      }
-
-      .el-tree-node__content {
-        color: @white;
-        padding: 5px 0;
-      }
-
-      .el-tree-node__content:hover {
-        color: #22dbfc;
-      }
-
-      .el-tree-node:focus > .el-tree-node__content {
-        color: #22dbfc;
-      }
-    }
-
-    .tip {
-      height: 66px;
-      border-bottom: 1px solid #eaeaea;
-
-      .icon {
-        width: 2px;
-        height: 24px;
-        background: #01465c;
-        border-radius: 2px;
-        margin-right: 10px;
-      }
-
-      span {
-        font-size: 24px;
-        color: #01465c;
-      }
-    }
-
-    .choose-box {
-      overflow: hidden;
-      padding: 20px;
-      background: @white;
-      margin-bottom: 20px;
-    }
-
-    .block {
-      margin-right: 40px;
-      display: flex;
-
-      span {
-        flex-shrink: 0;
-        margin-right: 10px;
-      }
-    }
-
-    .operator-box {
-      background: @white;
-      margin-bottom: 20px;
-      padding: 10px;
-
-      .el-button {
-        margin-left: 20px;
-      }
-    }
-
-    .item-row-detail-table {
-      tr:nth-child(6) td {
-        border-bottom: 1px solid @mainBg;
-      }
-    }
-
-    .table-wrapper {
-      padding: 20px;
-      background: @white;
-      margin-bottom: 20px;
-    }
-  }
 </style>

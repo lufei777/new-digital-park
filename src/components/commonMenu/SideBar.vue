@@ -129,11 +129,11 @@ export default {
   }
 };
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .common-menu {
   overflow: hidden;
-  .el-menu-item,
-  .el-submenu .el-submenu__title {
+  /deep/ .el-menu-item,
+  /deep/ .el-submenu .el-submenu__title {
     font-size: 18px;
     height: 70px;
     line-height: 70px;
@@ -141,7 +141,7 @@ export default {
       /*padding:0 10px;*/
     }
   }
-  .el-submenu .el-menu {
+  /deep/ .el-submenu .el-menu {
     .el-menu-item,
     .el-submenu__title {
       font-size: 16px;
@@ -149,11 +149,11 @@ export default {
       line-height: 60px;
     }
   }
-  .el-submenu .el-menu .el-submenu .el-menu .el-menu-item {
+  /deep/ .el-submenu .el-menu .el-submenu .el-menu .el-menu-item {
     font-size: 14px;
     padding-left: 40px !important;
   }
-  .el-menu-demo {
+  /deep/  .el-menu-demo {
     border-bottom: none !important;
   }
   .title {

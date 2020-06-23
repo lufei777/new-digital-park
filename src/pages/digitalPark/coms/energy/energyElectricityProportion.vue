@@ -1,6 +1,6 @@
 <template>
   <div class="energy-electricity-proportion">
-    <div class="module-item-top-name" >{{moduleItem.moduleName}}</div>
+    <div class="tmp-hidden">{{moduleItem.moduleName}}</div>
     <div ref="myChart" class="my-chart" id="energy-electricity-proportion-chart"></div>
   </div>
 </template>

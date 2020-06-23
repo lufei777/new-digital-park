@@ -182,7 +182,7 @@ class CommonApi {
   getSpaceList(){}
 
   @url('/vibe-web/asset/assetAdd')
-  @get
+  @post
   addSpace(){}
 
   @url('/vibe-web/asset/deleteAsset')
@@ -194,7 +194,7 @@ class CommonApi {
   getItemSpaceDetail(){}
 
   @url('/vibe-web/asset/assetEdit')
-  @get
+  @post
   editSpace(){}
 
   @url('/vibe-web/energy/preview')

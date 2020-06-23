@@ -1,42 +1,9 @@
 <template>
   <div class="add-user radius-shadow panel-container">
     <div class="tip flex-align">
-      <span class="icon"></span>
+      <span class="icon left-tip-text-icon"></span>
       <span>{{tipText}}</span>
     </div>
-    <!--<el-form ref="userForm" :rules="rules" :model="userForm" label-position="right" label-width="120px" >-->
-      <!--<el-form-item label="用户名" prop="login_id">-->
-        <!--<el-input v-model="userForm.login_id"></el-input>-->
-      <!--</el-form-item>-->
-      <!--<el-form-item label="姓名" prop="name">-->
-        <!--<el-input v-model="userForm.name"></el-input>-->
-      <!--</el-form-item>-->
-      <!--<el-form-item label="密码" prop="password">-->
-        <!--<el-input v-model="userForm.password" type="password"></el-input>-->
-      <!--</el-form-item>-->
-      <!--<el-form-item label="确认密码" prop="re_password">-->
-        <!--<el-input v-model="userForm.re_password" type="password"></el-input>-->
-      <!--</el-form-item>-->
-      <!--<el-form-item label="手机号" prop="phone">-->
-        <!--<el-input v-model="userForm.phone"></el-input>-->
-      <!--</el-form-item>-->
-      <!--<el-form-item label="Email" prop="mail">-->
-        <!--<el-input v-model="userForm.mail"></el-input>-->
-      <!--</el-form-item>-->
-      <!--<el-form-item label="所在部门" prop="departmentName">-->
-        <!--<el-input v-model="userForm.departmentName" @focus="onShowModal"></el-input>-->
-      <!--</el-form-item>-->
-      <!--<el-form-item label="用户身份" prop="rid">-->
-        <!--<el-select v-model="userForm.rid">-->
-          <!--<el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id">-->
-          <!--</el-option>-->
-        <!--</el-select>-->
-      <!--</el-form-item>-->
-      <!--<el-form-item>-->
-        <!--<el-button type="primary" @click="submitForm('userForm')">确定</el-button>-->
-        <!--<el-button @click="goBack" class="go-back">返回</el-button>-->
-      <!--</el-form-item>-->
-    <!--</el-form>-->
     <div class="form-box">
       <z-form :ref="formConfig.ref" :options="formConfig" v-model="formModel" @submit="submit">
         <template slot="menuBtn" slot-scope="scope">
@@ -48,14 +15,12 @@
 </template>
 
 <script>
-  import TreeModal from '@/components/treeModal/index'
   import SystemManageApi from '@/service/api/systemManage'
   import {mapState} from 'vuex'
   export default {
     name: 'AddUser',
     components: {
     },
-    // props:['userId','isEdit'],
     data () {
       let that = this
       let checkRePwd=function(rule,value,callback){
@@ -327,7 +292,7 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less">
+<style lang="less" scoped>
   .add-user{
     padding:20px;
     box-sizing: border-box;

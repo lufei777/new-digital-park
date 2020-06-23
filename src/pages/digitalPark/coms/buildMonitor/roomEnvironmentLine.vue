@@ -1,6 +1,6 @@
 <template>
   <div class="environment-line-coms">
-    <div class="module-item-top-name flex-align">
+    <div class="module-item-top-name flex-align tmp-hidden">
       <i class="module-item-top-icon" v-if="isNorbulingkaScreen"></i>
       <span>{{moduleItem.moduleName}}</span>
     </div>

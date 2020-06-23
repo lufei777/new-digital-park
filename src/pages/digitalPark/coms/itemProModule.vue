@@ -1,6 +1,10 @@
 <template>
   <div class="item-product-coms" v-if="isConfig">
-    <div v-if="isConfig" class="component-box config-component-box">
+    <div class="module-item-top-name flex-align" v-if="moduleData.moduleName">
+      <i class="module-item-top-icon" v-if="isNorbulingkaScreen"></i>
+      <span>{{moduleData.moduleName}}</span>
+    </div>
+    <div class="component-box config-component-box">
       <component
         class="item-component flex-column-center"
         :is="moduleData.componentName"
@@ -18,7 +22,11 @@
       >
         {{moduleData.menuName}}
       </span>
-      <div class="component-box">
+      <div class="component-box flex-column">
+        <div class="module-item-top-name flex-align" v-if="moduleData.moduleList[0].moduleName">
+          <i class="module-item-top-icon" v-if="isNorbulingkaScreen"></i>
+          <span @click="onClickItemModuleName">{{moduleData.moduleList[0].moduleName}}</span>
+        </div>
         <component
           class="item-component flex-column-center"
           v-for="(item,index) in moduleData.moduleList"
@@ -93,6 +101,9 @@
       },
       legendFontSize() {
         return this.fullStatus == 'noFull' ? 12 : 14
+      },
+      isNorbulingkaScreen() {
+        return isNorbulingkaScreen()
       }
     },
     methods: {
@@ -155,6 +166,7 @@
       },
       onClickItemComponent() {
         let item = this.moduleData.moduleList[0]
+        console.log("tiem", item)
         // console.log("clickitem", item)
         //需要后台配合修改
         if (this.hideHeader || item.moduleName == "功能模块入口" || item.moduleName == '功能模块')
@@ -204,7 +216,7 @@
           ...{
             largeScreen: this.moduleData.largeScreen,
             type: this.type,
-            fontColor:this.type!=2?'#fff':'#666',
+            fontColor: this.type != 2 ? '#fff' : '#666',
             fontSize: 30,
             legendUi: {
               bottom: '3%',
@@ -215,38 +227,38 @@
               },
             },
             xAxisUi: {
-                axisLabel: {
-                  textStyle: {
-                    color: color
-                  }
-                },
-                axisLine: {
-                  show: false,
-                  lineStyle: {
-                    color: color,
-                  }
-                },
-                lineStyle: {
-                  color: color,
-                  width: 1,
+              axisLabel: {
+                textStyle: {
+                  color: color
                 }
               },
-            yAxisUi: {
-                axisLine: {
-                  show: false,
-                  lineStyle: {
-                    color: color,
-                  }
-                },
-                splitLine: {
-                  lineStyle: {
-                    color: '#435E61',
-                    opacity: 0.7,
-                    width: 0.5
-                  }
-                },
+              axisLine: {
+                show: false,
+                lineStyle: {
+                  color: color,
+                }
               },
-            }
+              lineStyle: {
+                color: color,
+                width: 1,
+              }
+            },
+            yAxisUi: {
+              axisLine: {
+                show: false,
+                lineStyle: {
+                  color: color,
+                }
+              },
+              splitLine: {
+                lineStyle: {
+                  color: '#435E61',
+                  opacity: 0.7,
+                  width: 0.5
+                }
+              },
+            },
+          }
         }
       },
       findNode(menu, obj, secondMenu) {
@@ -267,10 +279,15 @@
         })
         return this.findMenu;
       },
-      setItemStyle(){
-        $(".config-component-box").css({
-          color:this.type!=2?'#fff':'#666'
+      setItemStyle() {
+        $(".module-item-top-name, .config-component-box").css({
+          color: this.type != 2 ? '#fff' : '#666'
         })
+      },
+      onClickItemModuleName() {
+        if (this.isNorbulingkaScreen) {
+          this.onClickItemComponent()
+        }
       }
     },
     mounted() {
@@ -307,6 +324,7 @@
       display: flex;
       align-items: center;
       flex-direction: column;
+      overflow: hidden;
     }
 
     .two-component {
@@ -335,6 +353,18 @@
       margin-top: 10px;
     }
 
+    .module-item-top-icon {
+      display: block;
+      height: 14px;
+      width: 6px;
+      background: #FFF81D;
+      margin-right: 10px;
+    }
+
+    .tmp-hidden {
+      display: none;
+    }
+
     .padding-box {
       padding: 20px;
       box-sizing: border-box;
@@ -343,8 +373,9 @@
     .module-title {
       /*width:99%;*/
     }
-    .drag-component{
-      height:100%;
+
+    .drag-component {
+      height: 100%;
     }
   }
 </style>

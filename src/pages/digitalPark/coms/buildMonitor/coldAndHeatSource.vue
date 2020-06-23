@@ -1,6 +1,6 @@
 <template>
   <div class="cold-and-heat-source-coms">
-    <div class="module-item-top-name">{{moduleItem.moduleName}}</div>
+    <div class="tmp-hidden">{{moduleItem.moduleName}}</div>
     <div class="my-chart flex-colum-justify">
       <div class="flex-align-center item-progress-group">
         <!--<i class="iconfont iconlengreyuan item-icon"></i>-->

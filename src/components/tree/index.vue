@@ -16,9 +16,10 @@
           :show-checkbox="treeConfig.showCheckbox"
           :default-checked-keys="treeConfig.defaultCheckedKeys"
           :filter-node-method="filterNode"
+          :current-node-key="treeConfig.currentKey"
           @node-click="onClickNode"
           @check="handleCheck"
-          highlight-current
+          :highlight-current="highlight"
         >
         </el-tree>
       </el-scrollbar>
@@ -46,11 +47,23 @@
         this.$refs[this.treeConfig.ref ||'treeRef'].setCurrentKey(this.treeConfig.currentKey)
         return this.treeConfig.nodeKey || 'id'
       },
+      currentKey(){
+        return this.treeConfig.currentKey
+      },
+      highlight(){
+        return this.treeConfig.highlight==false?false:true
+      }
     },
     watch:{
       searchText(val) {
         this.$refs[this.treeConfig.ref ||'treeRef'].filter(val);
-      }
+      },
+      currentKey(){
+        console.log("curet",this.currentKey)
+        this.$nextTick(()=>{
+          this.$refs[this.treeConfig.ref ||'treeRef'].setCurrentKey(this.currentKey)
+        })
+      },
     },
     methods: {
       handleCheck(){
@@ -83,9 +96,7 @@
       },
     },
     mounted(){
-      setTimeout(()=>{
-        this.$refs[this.treeConfig.ref ||'treeRef'].setCurrentKey(this.treeConfig.currentKey)
-      },500)
+
     }
   }
 </script>
