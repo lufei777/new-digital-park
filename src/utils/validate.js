@@ -47,3 +47,14 @@ export const validNotChinese = (rule, value, callback) => {
     callback();
   }
 }
+
+// 只能是纯数字
+export const valiNumber = (rule, value, callback) =>{
+  let reg = /^[0-9]*$/
+  if(reg.test(value)){
+    callback();
+  }else{
+    callback(new Error("只能填写数字"))
+    
+  }
+}

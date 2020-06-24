@@ -207,14 +207,16 @@ export default {
     },
     // 编辑
     propertyEdit(obj) {
-      // console.log(obj);
-      // let data = null;
-      console.log(obj)
-      // obj.row.relateElement =  obj.row.relateElement.split(',')
-      // obj.row.relateElement = obj.row.relateElement.slice(0,-1)
+      let info = obj.row
+      // 多选框要的是数组进行转换
+      info.relateElement = info.relateElement.split(',')
+      // 后端返回多了一个逗号，把最后一个逗号删除
+      info.relateElement.pop()
+      console.log(info)
+
       this.$router.push({
             name: "DetailEdit",
-            params: { flag: false, mark: "edit", ...obj.row }
+            params: { flag: false, mark: "edit", ...info }
           });
 
       // norbulingka

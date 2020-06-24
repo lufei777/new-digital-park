@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import _ from 'lodash';
 Vue.use(Router);
 // 插件引入
 import store from '../vuex/store';
@@ -36,6 +37,7 @@ import ExportData from './commonRouter/exportData'; 						// 导出数据
 import MonitoringAlarm from './warning-alarm'; 									// 预警报警
 import Norbulingka from './norbulingka'; 												// 罗布林卡
 import DeviceManage from './device-manage'; 										// 设备管理
+import PropertyErpsystem from './property-erpsyetem'            // 物业ERP系统
 
 // 数字园区 公共模块
 let publicRouters = [].concat(
@@ -43,6 +45,10 @@ let publicRouters = [].concat(
   DigitalParkRouter,
   ExportData,
   SystemManage
+  
+  ,
+  Norbulingka,
+  PropertyErpsystem //物业系统ERP
 )
 
 // 数字园区 私有模块
@@ -65,7 +71,8 @@ let privateRouters = [].concat(
   RevenueExpendManage,
   MonitoringAlarm,
   Norbulingka,
-  DeviceManage
+  DeviceManage,
+  PropertyErpsystem
 )
 store.commit('digitalPark/setPrivateRouters', privateRouters);
 
@@ -113,7 +120,7 @@ if (getToken()) {
   // 活后台返回菜单拍平path
   let flat = flatMenus(getMenuTree()[0]);
   // 将私有路由进行拆分 验证
-  let routes = formatRoutes(flat.flatmenupaths, privateRouters);
+  let routes = formatRoutes(flat.flatmenupaths, _.cloneDeep(privateRouters));
   // 添加进当前路由中
   router.$addRoutes(routes);
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="panel-container">
       <!-- 导航菜单 -->
-      <div
+      <!-- <div
         class="panel nav"
         v-if="JSON.stringify($route.query).length==2"
       >
@@ -11,17 +11,17 @@
           mode="horizontal"
           @select="handleSelect"
           router
-        >
+        > -->
           <!-- <el-menu-item index="/summaryinfo">汇总信息</el-menu-item> -->
-          <el-menu-item index="/ontology">本体情况</el-menu-item>
+          <!-- <el-menu-item index="/ontology">本体情况</el-menu-item>
           <el-menu-item index="/analysis">病害分析</el-menu-item>
           <el-menu-item index="/construction">施工情况</el-menu-item>
-          <el-menu-item index="/archaeological">考古发掘</el-menu-item>
-          <el-menu-item index="/tourists">游客情况</el-menu-item>
-          <el-menu-item index="/others">其他</el-menu-item>
+          <el-menu-item index="/archaeological">考古发掘</el-menu-item> -->
+          <!-- <el-menu-item index="/tourists">游客情况</el-menu-item> -->
+          <!-- <el-menu-item index="/others">其他</el-menu-item>
         </el-menu>
 
-      </div>
+      </div> -->
       <!-- 渲染区域占位符 -->
       <router-view></router-view>
 

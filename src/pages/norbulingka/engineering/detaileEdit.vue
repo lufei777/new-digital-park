@@ -42,6 +42,8 @@
 <script>
 // 导入接口
 import norbulingka from "@/service/api/norbulingka";
+// 字典配置
+import { Norbulingka } from "utils/dictionary";
 const topTitle = {
   add: {
     title: "添加 保护工程"
@@ -96,18 +98,7 @@ export default {
                 span: 14,
                 offset: 1,
                 // dataType:'string',
-                dicData: [
-                  { label: "乌尧颇章", value: 0 },
-                  { label: "格桑颇章", value: 1 },
-                  { label: "却扎", value: 2 },
-                  { label: "曲然", value: 3 },
-                  { label: "康松思轮", value: 4 },
-                  { label: "湖心亭", value: 5 },
-                  { label: "鲁康", value: 6 },
-                  { label: "准增颇章", value: 7 },
-                  { label: "内马厩", value: 8 },
-                  { label: "金色颇章", value: 9 }
-                ],
+                dicData:Norbulingka.relateElement,
                 row: true
               },
               // 工程分类：	projectType
