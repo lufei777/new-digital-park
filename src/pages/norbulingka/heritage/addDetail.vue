@@ -20,7 +20,10 @@
         >
           <div>
             <!-- 编辑的保存 -->
-            <el-button @click="editSave(obj)"  v-if="$route.query.mark =='edit'" >编辑保存</el-button>
+            <el-button
+              @click="editSave(obj)"
+              v-if="$route.query.mark =='edit'"
+            >编辑保存</el-button>
             <!-- 添加的保存 -->
             <el-button
               v-if="$route.query.mark =='add'"
@@ -43,6 +46,9 @@
 // 导入接口
 import norbulingka from "@/service/api/norbulingka";
 import { Norbulingka } from "utils/dictionary";
+// import  { validNotChinese,validMail } from '@/utils/validate'
+import  { validNotChinese,validMail,valiNumber } from '../../../utils/validate'
+
 const culturalType = Norbulingka.culturalType;
 const collectionYear = Norbulingka.collectionYear;
 const topTitle = {
@@ -109,10 +115,15 @@ export default {
             span: 7,
             // offset: 1,
             prop: "serial",
-            rules:[
+            rules: [
+              {                
+                required: true,
+                message: "必填项",
+                
+              },
               {
-                required:true,
-                message:'必填项'
+                validator:valiNumber,
+                trigger: 'blur'
               }
             ]
           },
@@ -125,6 +136,7 @@ export default {
             prop: "collectionName",
             rules: [
               {
+                // validate:Validate.validNotChinese,
                 required: true,
                 message: "必填字段"
               }
@@ -161,15 +173,16 @@ export default {
             valueFormat: "yyyy",
             format: "yyyy"
           },
+
           {
             label: "藏品年代",
             type: "cascader",
-            placeholder: "藏品年代三级联动",
+            // placeholder: "藏品年代三级联动",
             span: 7,
             // offset: 1,
             prop: "years",
-            dicUrl: norbulingka.getSelectOptionOther,
-            dicQuery: { parentId: 0, catalogId: 3001 },
+            // dicUrl: norbulingka.getSelectOptionOther,
+            // dicQuery: { parentId: 0, catalogId: 3001 },
             props: {
               label: "name",
               value: "id",
@@ -186,8 +199,8 @@ export default {
             prop: "characterTypes",
             // offset: 1,
 
-            dicUrl: norbulingka.getSelectOptionOther,
-            dicQuery: { parentId: 0, catalogId: 13001 },
+            // dicUrl: norbulingka.getSelectOptionOther,
+            // dicQuery: { parentId: 0, catalogId: 13001 },
             props: {
               label: "name",
               value: "id",
@@ -209,10 +222,10 @@ export default {
             span: 7,
             // offset:1,
             prop: "realQuantity",
-            rules:[
+            rules: [
               {
-                required:true,
-                message:'必填项'
+                required: true,
+                message: "必填项"
               }
             ]
             // offset: 1
@@ -252,7 +265,7 @@ export default {
             type: "number",
             span: 7,
             // offset: 1
-            // prop: "openWidth",
+            prop: "openWidth"
             // rules:[
             //   {
             //     // required:true,
@@ -322,10 +335,10 @@ export default {
               label: "name",
               value: "id"
             },
-            rules:[
+            rules: [
               {
-                required:true,
-                message:'必填项'
+                required: true,
+                message: "必填项"
               }
             ]
             // dicData: [
@@ -427,7 +440,7 @@ export default {
             // offset: 1,
             prop: "enterCollectionYear",
             valueFormat: "yyyy",
-            format: "yyyy",
+            format: "yyyy"
             // row: true
           },
           // 藏品著着	author	藏品版本	versions	藏品存卷	saveRoll
@@ -476,25 +489,51 @@ export default {
       this.$router.back();
     },
     // 编辑的保存
-    editSave(obj){
+    editSave(obj) {
       this.Form.getFormModel(res => {
         // console.log('编辑',res)
-        let params = res 
+        let params = res;
         if (Object.keys(res).length === 0) {
           return false;
-        }
-        else{
-          norbulingka.updateRelic({...params}).then(res => {
-              this.$message({
-              message: "编辑成功！",
-              type: "success"
-            });
-            this.$router.back()
-          }).finally(res => {
+        } else {
 
-          }) 
+          // debugger
+          if (params.years && params.years[0]) {
+            params["year1"] = Array.from(params.years)[0];
+          }
+          // res['year1'] =Array.from(res.years)[0]
+          if (params.years && params.years[1]) {
+            params["year2"] = Array.from(params.years)[1];
+          }
+          if (params.years && params.years[2]) {
+            params["year3"] = Array.from(params.years)[2];
+          }
+          if (params.characterTypes && params.characterTypes[0]) {
+            params["characterType1"] = params.characterTypes[0];
+          }
+          if (params.characterTypes && params.characterTypes[1]) {
+            params["characterType2"] = params.characterTypes[1];
+          }
+          if (params.characterTypes && params.characterTypes[2]) {
+            params["relicCharacter"] = params.characterTypes[2];
+          }
+
+          // 因为 year/ characterType1 不符合后端的要求 所以删除掉
+          delete params.years;
+          delete params.characterTypes;
+
+          norbulingka
+            .updateRelic({ ...params })
+            .then(res => {
+              this.$message({
+                message: "编辑成功！",
+                type: "success"
+              });
+              this.$router.back();
+            })
+            .finally(res => {});
         }
-      }) 
+      });
     },
     // 添加的保存
     save(obj) {
@@ -506,44 +545,60 @@ export default {
         } else {
           // 添加藏品档案的的接口
           // console.log(res)
-          if(res.years && res.years[0]){
-          res['year1'] =Array.from(res.years)[0]
-          }   
+          if (res.years && res.years[0]) {
+            res["year1"] = Array.from(res.years)[0];
+          }
           // res['year1'] =Array.from(res.years)[0]
-          if(res.years &&  res.years[1]) {
-            res['year2'] =Array.from(res.years)[1]
+          if (res.years && res.years[1]) {
+            res["year2"] = Array.from(res.years)[1];
           }
-          if(res.years &&  res.years[2]){
-            res['year3'] =Array.from(res.years)[2]
+          if (res.years && res.years[2]) {
+            res["year3"] = Array.from(res.years)[2];
           }
-          if(res.characterTypes && res.characterTypes[0]){
-            res['characterType1'] = res.characterTypes[0]
+          if (res.characterTypes && res.characterTypes[0]) {
+            res["characterType1"] = res.characterTypes[0];
           }
-          if(res.characterTypes && res.characterTypes[1]){
-            res['characterType2'] = res.characterTypes[1]
+          if (res.characterTypes && res.characterTypes[1]) {
+            res["characterType2"] = res.characterTypes[1];
           }
-          if(res.characterTypes && res.characterTypes[2]){
-            res['relicCharacter'] = res.characterTypes[2]
+          if (res.characterTypes && res.characterTypes[2]) {
+            res["relicCharacter"] = res.characterTypes[2];
           }
-          
+
           // 因为 year/ characterType1 不符合后端的要求 所以删除掉
-          delete res.years
-          delete res.characterTypes
+          delete res.years;
+          delete res.characterTypes;
           // console.log(res)
           norbulingka.insertRelic2({ ...res }).then(res => {
             this.$message({
               message: "保存成功！",
               type: "success"
             });
-             this.$router.back();
+            this.$router.back();
           });
-         
         }
       });
     }
   },
   created() {
+    norbulingka
+      .getSelectOptionOther({ parentId: 0, catalogId: 3001 })
+      .then(res => {
+        this.Form.setColumnByProp("years", {
+          dicData: res
+        });
+      });
+
+    norbulingka
+      .getSelectOptionOther({ parentId: 0, catalogId: 13001 })
+      .then(res => {
+        this.Form.setColumnByProp("characterTypes", {
+          dicData: res
+        });
+      });
+
     let path = this.$route.query;
+    console.log('123',path)
     if (path.flag) {
       this.model = { ...path };
       // 若果是详情查看需要隐藏输入框的border

@@ -17,7 +17,7 @@
           <el-menu-item index="/analysis">病害分析</el-menu-item>
           <el-menu-item index="/construction">施工情况</el-menu-item>
           <el-menu-item index="/archaeological">考古发掘</el-menu-item>
-          <el-menu-item index="/tourists">游客情况</el-menu-item>
+          <!-- <el-menu-item index="/tourists">游客情况</el-menu-item> -->
           <el-menu-item index="/others">其他</el-menu-item>
         </el-menu>
 

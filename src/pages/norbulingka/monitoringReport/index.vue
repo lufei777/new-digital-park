@@ -37,7 +37,7 @@
         >
           <div id="slot">
             <!-- 上传、删除 -->
-            <el-button type='primary'>上传</el-button>
+            <el-button @click="openUpload" type='primary'>上传</el-button>
             <!-- <el-upload
               action="/oaApi/image/upload"
             >
@@ -69,6 +69,34 @@
       </z-table>
     </div>
 
+    <el-dialog
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      :modal='false'
+      :show-close='false'
+    >
+      <el-upload
+        class="upload-demo"
+        drag
+        action="/oaApi/image/upload"
+        multiple
+      >
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div
+          class="el-upload__tip"
+          slot="tip"
+        >只能上传word文件</div>
+      </el-upload>
+      <!-- <el-button @click="centerDialogVisible = false">取 消</el-button>
+      <el-button
+        type="primary"
+        @click="centerDialogVisible = false"
+      >确 定</el-button> -->
+
+    </el-dialog>
+    
+
   </div>
 </template>
 
@@ -76,10 +104,11 @@
 // 导入接口
 import norbulingka from "@/service/api/norbulingka";
 // ../../../utils/commonFun
- import CommonFun from '../../../utils/commonFun'
+import CommonFun from "../../../utils/commonFun";
 export default {
   data() {
     return {
+      centerDialogVisible: false,
       loading: false,
       condition: null,
       model: {},
@@ -129,7 +158,7 @@ export default {
           height: "auto",
           selection: true,
           showIndex: {
-            label:'编号',
+            label: "编号",
             width: 100
           }
         }
@@ -138,6 +167,9 @@ export default {
   },
 
   methods: {
+    openUpload() {
+        this.centerDialogVisible = true
+    },
     // 表格配置项
     tablePropList() {
       // 配置表格的列名称和属性
@@ -197,30 +229,31 @@ export default {
         this.getTableData();
       });
     },
-    downLoad() {
+    downLoad(obj) {
       console.log("下载");
-      let url = '/oaApi/stockDeal/exportRecord'
-      let params =''
-      let arr = this.$refs[this.tableData.ref].getSelectData()
-      let stockRecordIds = arr.length? arr.map(item => item.id):'';
+      let url = "/oaApi/stockDeal/exportRecord";
+      let params = "";
+      let arr = this.$refs[this.tableData.ref].getSelectData();
+      // let arr = obj.row
+      let stockRecordIds = arr.length ? arr.map(item => item.id) : "";
     },
     // 查看
     propertyDetail(obj) {
-      console.log("查看")
+      console.log("查看");
     },
     // 表格中的数据
     getTableData(pageParams = { page: 1, rows: 10 }) {
-      this.loading = true,
-      norbulingka
-        .queryRelicEvaluationByPage(pageParams)
-        .then(res => {
-          // console.log(res);
-          this.$refs[this.tableData.ref].setData(res.list);
-          this.$refs[this.tableData.ref].setTotal(res.total);
-        })
-        .finally(res => {
-          this.loading = false;
-        });
+      (this.loading = true),
+        norbulingka
+          .queryRelicEvaluationByPage(pageParams)
+          .then(res => {
+            // console.log(res);
+            this.$refs[this.tableData.ref].setData(res.list);
+            this.$refs[this.tableData.ref].setTotal(res.total);
+          })
+          .finally(res => {
+            this.loading = false;
+          });
     }
   },
   computed: {
@@ -241,6 +274,25 @@ export default {
   }
 };
 </script>
-
-<style  scoped lang="less">
+<style lang="less" scoped>
+.upload-excel {
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  .select-excel-template {
+    margin-bottom: 20px;
+    div:last-child {
+      line-height: 2;
+    }
+    .more-operator-box {
+      .el-button {
+        margin: 0;
+        padding: 10px;
+      }
+    }
+  }
+  .el-upload,
+  .el-upload-dragger {
+    width: 100%;
+  }
+}
 </style>
