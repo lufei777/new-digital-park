@@ -1,6 +1,6 @@
 <template>
   <div class="passenger-flow-volume">
-    <div class="module-item-top-name flex-align">
+    <div class="module-item-top-name flex-align tmp-hidden">
       <i class="module-item-top-icon"></i>
       <span>{{moduleItem.moduleName}}</span>
     </div>

@@ -30,7 +30,7 @@
           <ItemProModule
             class="inner-drag-content"
             type="1"
-            :moduleData="item?{...item,...{largeScreen:true,$index:index,type:1}}:{}"
+            :moduleData="getModuleData(item,index)"
           />
         </draggable>
         <!--</transition>-->
@@ -115,6 +115,12 @@
       }
     },
     methods: {
+      getModuleData(item,index) {
+        return {
+          ...item,
+          ...{largeScreen: isNorbulingkaScreen() ? false : true, $index: index, type: 1}
+        }
+      },
       getClass(item) {
         let centerFlag = item.moduleList.length && item.moduleList[0].chart == 0
         return {
@@ -133,9 +139,9 @@
       getInnerOptions() {
         return {draggable: '.inner-drag-content', group: 'product', disabled: this.innerDisable}
       },
-      getMenuTree() {
-        this.headName = this.menuTree[0].name
-      },
+      // getMenuTree() {
+      //   this.headName = this.menuTree[0].name
+      // },
       async getLargeScreenModuleList(flag) {
         this.setConfigParams(flag)  //配置页时需要缩小或还原
         let res = await DigitalParkApi.getLargeScreenModule({
@@ -317,7 +323,8 @@
       }
     },
     mounted() {
-      this.getMenuTree()
+      // this.getMenuTree()
+      this.headName = this.menuTree[0] && this.menuTree[0].name
       this.getLargeScreenModuleList()
       this.getModuleStyle()
       let _this = this

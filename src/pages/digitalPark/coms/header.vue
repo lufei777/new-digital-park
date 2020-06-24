@@ -31,7 +31,7 @@
     components: {
       NavOperator
     },
-    props:["moduleType",'fromFlag','headName','showGoBack'], //fromFlag 1：仪表盘 2:大屏
+    props:["moduleType",'fromFlag','showGoBack'], //fromFlag 1：仪表盘 2:大屏
     data () {
       return {
         newsList: [{id: 1, time: '2019-10-10 10:10:10', text: '消息消息消息1111111'},
@@ -50,6 +50,9 @@
       },
       isyd(){
         return isYD();
+      },
+      headName(){
+       return this.$store.getters.menuTree && this.$store.getters.menuTree[0].name || ''
       }
     },
     watch:{

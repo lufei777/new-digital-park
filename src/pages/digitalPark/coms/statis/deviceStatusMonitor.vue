@@ -45,31 +45,31 @@ export default {
   },
   methods:{
     async getMonitorState(){
-      // this.getProgressWidth = 75
-      // let res = await CommonApi.getMonitorState();
-      let res = {
-        values: [
-          {
-            value: 45,
-            color: "#35B8C9",
-            name: "正常"
-          },
-          {
-            value: 5,
-            color: "#D88B2E",
-            name: "错误"
-          },
-          {
-            value: 15,
-            color: "#B487DF",
-            name: "未知"
-          },
-          {
-            value: 25,
-            color: "#C75E56",
-            name: "警告"
-          }]
-      }
+      this.getProgressWidth = 75
+      let res = await CommonApi.getMonitorState();
+      // let res = {
+      //   values: [
+      //     {
+      //       value: 45,
+      //       color: "#35B8C9",
+      //       name: "正常"
+      //     },
+      //     {
+      //       value: 5,
+      //       color: "#D88B2E",
+      //       name: "错误"
+      //     },
+      //     {
+      //       value: 15,
+      //       color: "#B487DF",
+      //       name: "未知"
+      //     },
+      //     {
+      //       value: 25,
+      //       color: "#C75E56",
+      //       name: "警告"
+      //     }]
+      // }
       let sum=0
       res.values.map((item)=>{
         sum+=item.value

@@ -20,20 +20,27 @@
 <script>
   import { isZG } from '@/utils/project';
   import { IsCZClient } from '@/utils/auth';
-  import CommonLargeHeader from './js/header'
+  import CommonLargeHeader from './js/header';
+  import {mapState} from 'vuex';
   export default {
     name: 'NorbulingkaHeader',
     components: {},
     props: [], 
     data() {
       return {
-        headName: '罗布林卡世界文化遗产监测预警平台',
+        // headName: '罗布林卡世界文化遗产监测预警平台',
         curDate: '',
         alarmListCount: 0,
         timer:''
       }
     },
     computed: {
+       ...mapState({
+         menuTree:state=>state.digitalPark.menuTree
+       }),
+      headName(){
+         return this.menuTree[0] && this.menuTree[0].name
+      }
     },
     watch: {
     },
@@ -58,6 +65,9 @@
         this.timer = setInterval(() => {
           this.curDate =moment().format('YYYY年MM月DD日 HH:mm:ss'); // 修改数据date
         }, 1000)
+      },
+      onClickGoBack(){
+        this.$router.push("/largeSizeScreen")
       }
     },
     mounted() {
