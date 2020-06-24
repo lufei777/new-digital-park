@@ -37,7 +37,10 @@
         >
           <div>
             <!-- 添加、删除 -->
-            <el-button @click="add" type='primary'>添加</el-button>
+            <el-button
+              @click="add"
+              type='primary'
+            >添加</el-button>
             <el-button
               @click="del(obj)"
               :disabled='!obj.selectedData.length'
@@ -71,70 +74,69 @@
 
 <script>
 // 导入接口
-import  norbulingka   from '@/service/api/norbulingka'
+import norbulingka from "@/service/api/norbulingka";
 // 字典配置
 import { Norbulingka } from "utils/dictionary";
-import { type } from 'os';
+import { type } from "os";
 // 工程分类
 const projectType = Norbulingka.projectType;
 export default {
   data() {
     return {
-      loading:false,
+      loading: false,
       model: {},
-      condition:null,
+      condition: null,
       formData: {
         ref: "formData",
         size: "medium",
         labelWidth: "150",
         menuPosition: "right",
         menuBtn: false,
-         group:[
+        group: [
           {
-            label:'游客情况记录',
-            prop:'group',
+            // label:'游客情况记录',
+            // prop:'group',
             forms: [
-          // 日游客量 dailyCount
-          {
-            type: "number",
-            prop: "dailyCount",
-            label: "日游客量",
-            span: 8,
-            // rules:[
-            //  {
-            //   required: true,
-            //   message: "请输入数字",
-            //   trigger: "blur",
-            //  }
-            // ]
-          },
-          //   瞬时游客量 tempCount
-          {
-            type: "number",
-            prop: "tempCount",
-            label: "瞬时游客量",
-            span: 8,
-            offset: 1,
-            // rules:[
-            //  {
-            //   required: true,
-            //   message: "请输入数字",
-            //   trigger: "blur",
-            //  }
-            // ]
-          },
+              // 日游客量 dailyCount
+              {
+                type: "number",
+                prop: "dailyCount",
+                label: "日游客量",
+                span: 8
+                // rules:[
+                //  {
+                //   required: true,
+                //   message: "请输入数字",
+                //   trigger: "blur",
+                //  }
+                // ]
+              },
+              //   瞬时游客量 tempCount
+              {
+                type: "number",
+                prop: "tempCount",
+                label: "瞬时游客量",
+                span: 8,
+                offset: 1
+                // rules:[
+                //  {
+                //   required: true,
+                //   message: "请输入数字",
+                //   trigger: "blur",
+                //  }
+                // ]
+              },
 
-          // 搜素按钮
-          {
-            prop: "btn",
-            formslot: true,
-            offset: 2,
-            span: 5
+              // 搜素按钮
+              {
+                prop: "btn",
+                formslot: true,
+                offset: 2,
+                span: 5
+              }
+            ]
           }
         ]
-          }
-        ],
-        
       },
       tableData: {
         ref: "tabel",
@@ -166,7 +168,7 @@ export default {
           height: "auto",
           selection: true,
           showIndex: {
-            width:120
+            width: 120
           }
         }
       }
@@ -198,18 +200,18 @@ export default {
     submit(obj) {
       //   console.log(obj);
     },
-    searchData(params){
-      norbulingka.queryTouristByPage({params}).then(res => {
+    searchData(params) {
+      norbulingka.queryTouristByPage({ params }).then(res => {
         this.Tables.refreshTable();
-        this.getTableData({...this.condition});
+        this.getTableData({ ...this.condition });
       });
     },
 
     // 搜索
     search(obj) {
       this.Form.getFormModel(res => {
-        this.condition = res
-        this.searchData(res)
+        this.condition = res;
+        this.searchData(res);
       });
       // console.log(this.Form.model);
       // //   console.log(this.model);
@@ -224,7 +226,7 @@ export default {
       this.Form.resetForm();
     },
     //删除方法
-    delRowData(ids){
+    delRowData(ids) {
       norbulingka.deleteTourist({ ids }).then(res => {
         this.$message({
           type: "success",
@@ -235,37 +237,43 @@ export default {
       });
     },
     // 表单上方的删除
-    del({selectedData}) {
+    del({ selectedData }) {
       let arr = selectedData;
       let str = "";
       arr.forEach(item => {
         str = str + item.id + ",";
       });
       let ids = str;
-      this.delRowData(ids)
+      this.delRowData(ids);
     },
     // 删除
     propertyDel(obj) {
-      let ids = obj.row.id
-      this.delRowData(ids)
+      let ids = obj.row.id;
+      this.delRowData(ids);
     },
     // 编辑
-     propertyEdit(obj) {
-        console.log(obj.row)
-        this.$router.push({path:'/temtourists',query:{flag:false,mark:'edit',...obj.row}})
+    propertyEdit(obj) {
+      console.log(obj.row);
+      this.$router.push({
+        path: "/temtourists",
+        query: { flag: false, mark: "edit", ...obj.row }
+      });
     },
     // 详情
     propertyDetail(obj) {
       console.log(obj.row);
-      this.$router.push({path:'/temtourists',query:{flag:true,mark:'detail',...obj.row}})
+      this.$router.push({
+        path: "/temtourists",
+        query: { flag: true, mark: "detail", ...obj.row }
+      });
     },
     // 添加
-    add(){
-       this.$router.push({path:'/temtourists',query:{mark:'add',}})
+    add() {
+      this.$router.push({ path: "/temtourists", query: { mark: "add" } });
     },
     // 表格中的数据
     getTableData(pageParams = { page: 1, rows: 10 }) {
-      this.loading = true,
+      (this.loading = true),
         norbulingka
           .queryTouristByPage(pageParams)
           .then(res => {
@@ -279,7 +287,7 @@ export default {
     }
   },
   created() {
-    this.getTableData()
+    this.getTableData();
   },
   mounted() {
     this.tablePropList();

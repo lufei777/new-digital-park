@@ -94,8 +94,8 @@ export default {
         menuBtn: false,
         group: [
           {
-            label: "考古发掘记录",
-            prop: "group",
+            // label: "考古发掘记录",
+            // prop: "group",
             forms: [
               // 工程名称 projectName
               {

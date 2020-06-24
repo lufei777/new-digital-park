@@ -93,10 +93,9 @@ export default {
         labelWidth: "100",
         menuPosition: "right",
         menuBtn: false,
-        group: [
-          {
-            label: "遗产要素",
-            prop: "group",
+      
+            // label: "遗产要素",
+            // prop: "group",
             forms: [
               //藏品名称 collectionName
 
@@ -135,8 +134,7 @@ export default {
                 span: 6
               }
             ]
-          }
-        ]
+         
       },
       tableData: {
         ref: "tabel",

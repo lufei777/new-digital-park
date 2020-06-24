@@ -5,6 +5,14 @@ export default [
 		name: 'proerpsystem',
 		// component: () => import('@/pages/commonProject/coms/commonIndex'),
 		component:() => import('../pages/propertyErpSystem'),
-		// redirect: '/heritage',
+        redirect: '/proerpsystem/rentContract',
+        children:[
+            {
+                path:'rentContract',
+                name:'rentContract',
+                meta:{title:'租赁合同'},
+                component:() =>import('../pages/propertyErpSystem/rentManagement/originPages/rentContract.vue')
+            }
+        ]
     }
 ]

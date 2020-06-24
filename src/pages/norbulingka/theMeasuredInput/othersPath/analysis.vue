@@ -94,8 +94,8 @@ export default {
         menuBtn: false,
         group: [
           {
-            label: "病害分析记录",
-            prop: "group",
+            // label: "病害分析记录",
+            // prop: "group",
             forms: [
               // 病害位置 damagePosition
               {

@@ -93,8 +93,8 @@ export default {
         menuBtn: false,
         group: [
           {
-            label: "施工情况记录",
-            prop: "group",
+            // label: "施工情况记录",
+            // prop: "group",
             forms: [
               // 项目名称 projectName
               {

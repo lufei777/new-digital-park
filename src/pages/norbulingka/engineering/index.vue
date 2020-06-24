@@ -91,8 +91,8 @@ export default {
         menuBtn: false,
         group: [
           {
-            label: "项目工程",
-            prop: "group",
+            // label: "项目工程",
+            // prop: "group",
             forms: [
               // 工程名称 projectName
 
@@ -215,7 +215,7 @@ export default {
       console.log(info)
 
       this.$router.push({
-            name: "DetailEdit",
+            name: "norDetailEdit",
             params: { flag: false, mark: "edit", ...info }
           });
 
@@ -267,14 +267,15 @@ export default {
     // 详情
     propertyDetail(obj) {
       this.$router.push({
-        name: "DetailEdit",
+        name: "norDetailEdit",
         params: { flag: true, mark: "detail", ...obj.row }
       });
     },
     // 添加
     addProject(obj) {
       this.$router.push({
-        name: "DetailEdit",
+        // name: "DetailEdit",
+        name:'norDetailEdit',
         params: { mark: "add", ...obj.row }
       });
     },

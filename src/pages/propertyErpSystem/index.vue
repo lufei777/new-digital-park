@@ -51,11 +51,12 @@ export default {
       childNode: [
         {
           name: "租赁管理",
-          routeAddress: "",
+          routeAddress: "/proerpsystem",
+          redirect: '/proerpsystem/rentContract',
           childNode: [
             {
               name: "租赁合同",
-              routeAddress: ""
+              routeAddress: "/rentContract"
             },
             {
               name: "租户信息",

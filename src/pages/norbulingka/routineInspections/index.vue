@@ -96,8 +96,8 @@ export default {
         menuBtn: false,
         group: [
           {
-            label: "日常巡查记录",
-            prop: "group",
+            // label: "日常巡查记录",
+            // prop: "group",
             forms: [
               // 维护类型 maintenanceTypes
               {

@@ -92,8 +92,8 @@ export default {
         menuBtn: false,
         group: [
           {
-            label: "其他情况记录",
-            prop: "group",
+            // label: "其他情况记录",
+            // prop: "group",
             forms: [
               // 实测项目 projectName
               {

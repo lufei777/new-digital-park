@@ -70,7 +70,7 @@ export default {
           childNode: []
         },
         {
-          name: "检测报告",
+          name: "遗产检测报告",
           routeAddress: "/heritageevaluation",
           childNode: []
         }

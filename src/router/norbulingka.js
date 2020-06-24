@@ -46,7 +46,7 @@ export default [
 			{
 				// 藏品档案
 				path: '/heritage',
-				name: 'Heritage',
+				name: 'norHeritage',
 				// meta: { title: '藏品档案' },
 				meta: { title: '遗产要素' },
 				component: Heritage
@@ -54,7 +54,7 @@ export default [
 			{
 				// 藏品档案==》编辑，详情，添加
 				path: '/addeditdetail',
-				name: 'AddDetail',
+				name: 'norAddDetail',
 				meta: { title: '添加藏品档案' },
 				component: AddDetail
 			},
@@ -62,14 +62,14 @@ export default [
 			{
 				// 保护工程记录
 				path: '/protectrecord',
-				name: 'ProtectRecord ',
+				name: 'norProtectRecord ',
 				meta: { title: '项目工程' },
 				component: ProtectRecord
 			},
 			{
 				// （添加  编辑  详情）
 				path: '/detailedit',
-				name: 'DetailEdit',
+				name: 'norDetailEdit',
 				// meta: { title: '添加保护工程' },
 				component: DetailEdit
 			},
@@ -78,14 +78,14 @@ export default [
 			{
 				// 日常巡查记录
 				path: '/routininspections',
-				name: 'RoutinInspections',
-				meta: { title: '日常巡查记录' },
+				name: 'norRoutinInspections',
+				meta: { title: '日常巡查' },
 				component: RoutinInspections
 			},
 			{
 				// 日常巡查记录的模板==编辑，详情，添加
 				path: '/editdetailadd',
-				name: 'editdetailadd',
+				name: 'noreditdetailadd',
 				// meta: { title: '添加日常巡查记录' },
 				component: () => import('../pages/norbulingka/routineInspections/editdetailadd.vue')
 			},
@@ -94,8 +94,8 @@ export default [
 			// 遗产评估
 			{
 				path: '/heritageevaluation',
-				name: 'HeritageEvaluation',
-				meta: { title: '遗产评估' },
+				name: 'norHeritageEvaluation',
+				meta: { title: '遗产监测报告' },
 				component: HeritageEvaluation
 			},
 			// 实测录入=====================================================
@@ -123,82 +123,82 @@ export default [
 					{
 						// 本体情况
 						path: '/ontology',
-						name: 'Ontology',
+						name: 'norOntology',
 						meta: { title: '本体情况' },
 						component: Ontology
 					},
 					{
 						// 病害分析Analysis
 						path: '/analysis',
-						name: 'Analysis',
+						name: 'norAnalysis',
 						meta: { title: '病害分析' },
 						component: Analysis
 					},
 					{
 						// 病害分析Analysis ====》编辑 ，详情 ，添加
 						path: '/temanalysis',
-						name: 'temanalysis',
+						name: 'nortemanalysis',
 						component: () => import('../pages/norbulingka/theMeasuredInput/templatePath/temAnalysis.vue')
 					},
 					{
 						// 施工情况
 						path: '/construction',
-						name: 'Construction',
-						meta: { title: '施工情况' },
+						name: 'norConstruction',
+						meta: { title: '岁修情况' },
 						component: Construction
 					},
 					{
 						// 施工情况的模板 ====》编辑 ，详情 ，添加
 						path: '/temconstruction',
-						name: 'temconstruction',
+						name: 'nortemconstruction',
 						component: () =>
 							import('../pages/norbulingka/theMeasuredInput/templatePath/temconstruction.vue')
 					},
 					{
 						// 考古发掘
 						path: '/archaeological',
-						name: 'Archaeological',
+						name: 'norArchaeological',
 						meta: { title: '考古发掘' },
 						component: Archaeological
 					},
 					{
 						// 考古发掘====》编辑 ，详情 ，添加
 						path: '/temarchaeological',
-						name: 'temarchaeological',
+						name: 'nortemarchaeological',
 						component: () =>
 							import('../pages/norbulingka/theMeasuredInput/templatePath/temArchaeological.vue')
 					},
 					{
 						// 游客情况
 						path: '/tourists',
-						name: 'Tourists',
+						name: 'norTourists',
 						meta: { title: '游客情况' },
 						component: Tourists
 					},
 					{
 						// 游客情况====》编辑 ，详情 ，添加
 						path: '/temtourists',
-						name: 'temtourists',
+						name: 'nortemtourists',
 						meta: { title: '游客情况' },
 						component: () => import('../pages/norbulingka/theMeasuredInput/templatePath/temtourists.vue')
 					},
 					{
 						// 其他
 						path: '/others',
-						name: 'Others',
+						name: 'norOthers',
 						meta: { title: '其他' },
 						component: Others
 					},
 					{
 						// 其他====》编辑 ，详情 ，添加
 						path: '/temothers',
-						name: 'temothers',
+						name: 'nortemothers',
 						component: () => import('../pages/norbulingka/theMeasuredInput/templatePath/temothers.vue')
 					},
 					{
 						//本体情况====》 编辑 详情 添加的模板
 						path: '/temontolagy',
-						name: 'temontolagy',
+						name: 'nortemontolagy',
 						component: () => import('../pages/norbulingka/theMeasuredInput/templatePath/temOntology.vue')
 					}
 				]
