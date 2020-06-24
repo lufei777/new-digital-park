@@ -97,8 +97,8 @@ export default {
         menuBtn: false,
         group: [
           {
-            label: "本体情况列表",
-            prop: "group",
+            // label: "本体情况列表",
+            // prop: "group",
             forms: [
               // 文物本体 parentId
               {

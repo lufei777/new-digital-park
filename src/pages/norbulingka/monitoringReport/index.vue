@@ -37,7 +37,10 @@
         >
           <div id="slot">
             <!-- 上传、删除 -->
-            <el-button @click="openUpload" type='primary'>上传</el-button>
+            <el-button
+              @click="openUpload"
+              type='primary'
+            >上传</el-button>
             <!-- <el-upload
               action="/oaApi/image/upload"
             >
@@ -67,35 +70,35 @@
           </div>
         </template>
       </z-table>
-    </div>
 
-    <el-dialog
-      :visible.sync="centerDialogVisible"
-      width="30%"
-      :modal='false'
-      :show-close='false'
-    >
-      <el-upload
-        class="upload-demo"
-        drag
-        action="/oaApi/image/upload"
-        multiple
+      <el-dialog
+        :visible.sync="centerDialogVisible"
+        width="30%"
+        :modal='false'
+        :show-close='false'
       >
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div
-          class="el-upload__tip"
-          slot="tip"
-        >只能上传word文件</div>
-      </el-upload>
-      <!-- <el-button @click="centerDialogVisible = false">取 消</el-button>
+        <el-upload
+          class="upload-demo"
+          drag
+          action="/oaApi/image/upload"
+          multiple
+        >
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          <div
+            class="el-upload__tip"
+            slot="tip"
+          >只能上传word文件</div>
+        </el-upload>
+        <!-- <el-button @click="centerDialogVisible = false">取 消</el-button>
       <el-button
         type="primary"
         @click="centerDialogVisible = false"
       >确 定</el-button> -->
 
-    </el-dialog>
-    
+      </el-dialog>
+
+    </div>
 
   </div>
 </template>
@@ -120,8 +123,8 @@ export default {
         menuBtn: false,
         group: [
           {
-            label: "遗产评估",
-            prop: "group",
+            // label: "遗产评估",
+            // prop: "group",
             forms: [
               //文件名称 originName
               {
@@ -168,7 +171,7 @@ export default {
 
   methods: {
     openUpload() {
-        this.centerDialogVisible = true
+      this.centerDialogVisible = true;
     },
     // 表格配置项
     tablePropList() {
@@ -275,24 +278,4 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.upload-excel {
-  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
-    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
-  .select-excel-template {
-    margin-bottom: 20px;
-    div:last-child {
-      line-height: 2;
-    }
-    .more-operator-box {
-      .el-button {
-        margin: 0;
-        padding: 10px;
-      }
-    }
-  }
-  .el-upload,
-  .el-upload-dragger {
-    width: 100%;
-  }
-}
 </style>
