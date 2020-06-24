@@ -97,7 +97,7 @@ import CommonApi from "@/service/api/common";
 import { mapState } from "vuex";
 import CommonFun from '@/utils/commonFun'
 import { IsCZClient } from '@/utils/auth';
-import {isYDScreen,isZG,isYD} from "@/utils/project";
+import {isYDScreen,isZG,isYD,isNorbulingkaScreen } from "@/utils/project";
 import CommonLargeHeader from './largeScreen/js/header'
 export default {
   name: "DigitalNavOperator",
@@ -227,7 +227,9 @@ export default {
       this.$store.commit("digitalPark/menuList", secondLevelTree)
     },
     onClickGoBack() { //点击返回首页
-      if (Cookies.get("moduleType") == 2) {
+      if(isNorbulingkaScreen()){
+        this.$router.push("/largeSizeScreen");
+      }else if (Cookies.get("moduleType") == 2) {
         this.$router.push("/digitalPark/homePage");
       } else {
         this.$router.push("/digitalPark/dashboardHomePage");

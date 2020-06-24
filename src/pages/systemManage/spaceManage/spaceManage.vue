@@ -1,6 +1,6 @@
 <template>
-  <div class="space-manage system-manage panel-container">
-    <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
+  <div class="space-manage panel-container">
+   <!-- <div :class="menuIsCollapse?'collapse-left-zoom-nav':'unload-left-zoom-nav'"
          class="space-tree-box radius-shadow">
       <Tree :tree-list="treeList" :tree-config="treeConfig"/>
     </div>
@@ -35,17 +35,18 @@
           </template>
         </z-table>
       </div>
-      <!--<div class="item-row-detail-table">-->
-      <!--<table>-->
-      <!--<tbody>-->
-      <!--<tr><th>编号</th><td>{{curSpace.id}}</td></tr>-->
-      <!--<tr><th>名称</th><td>{{curSpace.caption}}</td></tr>-->
-      <!--<tr><th>工程用名</th><td>{{curSpace.name}}</td></tr>-->
-      <!--<tr><th>描述</th><td>{{curSpace.memo}}</td></tr>-->
-      <!--</tbody>-->
-      <!--</table>-->
-      <!--</div>-->
-    </div>
+      &lt;!&ndash;<div class="item-row-detail-table">&ndash;&gt;
+      &lt;!&ndash;<table>&ndash;&gt;
+      &lt;!&ndash;<tbody>&ndash;&gt;
+      &lt;!&ndash;<tr><th>编号</th><td>{{curSpace.id}}</td></tr>&ndash;&gt;
+      &lt;!&ndash;<tr><th>名称</th><td>{{curSpace.caption}}</td></tr>&ndash;&gt;
+      &lt;!&ndash;<tr><th>工程用名</th><td>{{curSpace.name}}</td></tr>&ndash;&gt;
+      &lt;!&ndash;<tr><th>描述</th><td>{{curSpace.memo}}</td></tr>&ndash;&gt;
+      &lt;!&ndash;</tbody>&ndash;&gt;
+      &lt;!&ndash;</table>&ndash;&gt;
+      &lt;!&ndash;</div>&ndash;&gt;
+    </div>-->
+    <RenderPage :from-flag="2"></RenderPage>
   </div>
 </template>
 
@@ -59,11 +60,13 @@
   import AddSpace from './addSpace'
   import Tree from '@/components/tree/index'
   import CommonFun from '@/utils/commonFun'
+  import RenderPage from '../renderPage'
   export default {
     name: 'SpaceManage',
     components: {
       AddSpace,
-      Tree
+      Tree,
+      RenderPage
     },
     data() {
       return {
@@ -83,7 +86,7 @@
           caption: '',
           parentId: 0,
         },
-        tableConfig: {
+      /*  tableConfig: {
           ref: "tableRef",
           serverMode: {
             url: CommonApi.getSpaceList,
@@ -120,7 +123,7 @@
             selection: true,
           },
           tableMethods: {},
-        },
+        },*/
         curSpace: {},
       }
     },
@@ -194,16 +197,16 @@
       },
     },
     async created(){
-      await this.getAssetAllTree()
-      this.getData()
+      // await this.getAssetAllTree()
+      // this.getData()
     },
     async mounted() {
 
       // this.getSpaceList()
-      this.fixTree()
-      $(window).resize(() => {
-        this.fixTree()
-      })
+      // this.fixTree()
+      // $(window).resize(() => {
+      //   this.fixTree()
+      // })
     }
   }
 </script>

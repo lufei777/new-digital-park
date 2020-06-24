@@ -1,6 +1,6 @@
 <template>
   <div class="norbu-center">
-    <div class="module-item-top-name flex-align">
+    <div class="module-item-top-name flex-align tmp-hidden">
       <i class="module-item-top-icon"></i>
       <span>{{moduleItem.moduleName}}</span>
     </div>
@@ -48,7 +48,8 @@
         this.fixedProList = res
       },
       onClickItemFixPro(item, index) {
-        // this.activeIndex=index
+        this.$store.commit('digitalPark/menuList', item)
+        localStorage.setItem('shortcutList',JSON.stringify(this.fixedProList))
         CommonFun.loadPage(item)
       }
     },

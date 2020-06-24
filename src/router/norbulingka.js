@@ -37,8 +37,8 @@ export default [
 	{
 		path: '/norbulinka',
 		name: 'norbulinka',
-		// component: () => import('@/pages/commonProject/coms/commonIndex'),
-		component:() => import('../pages/norbulingka'),
+		component: () => import('@/pages/commonProject/coms/commonIndex'),
+		// component:() => import('../pages/norbulingka'),
 		redirect: '/heritage',
 		children: [
 			// 遗产要素======================================================
