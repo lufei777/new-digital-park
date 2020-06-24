@@ -277,10 +277,33 @@ export default {
     },
     // 编辑
     propertyEdit(obj) {
-      console.log(obj);
+      // console.log(obj);
+      // debugger
+      var info = obj.row
+      if(info.year1 && info.year2 &&  info.year3 ){
+        //  具体年年代的是数字类型要转换
+      info['years'] = [Number(info.year1),Number(info.year2),Number(info.year3)]
+      }else if(info.year1 && info.year2){
+          info['years'] = [Number(info.year1),Number(info.year2)]
+      }else if(info.year1){
+           info['years'] = [Number(info.year1)]
+      }
+      
+      if(info.characterType1 && info.characterType2 && info.relicCharacter){
+          info['characterTypes']=[info.characterType1,info.characterType2,info.relicCharacter]
+      }else if(info.characterType1 && info.characterType2) {
+           info['characterTypes']=[info.characterType1,info.characterType2]
+      }
+      ['year1','year2','year3','characterType1','characterType2','relicCharacter'].forEach(item =>
+        delete info[item]
+      )
+    //  delete info.year1
+    //  delete info.year2
+    //  delete info.year3
+      console.log(info)
       this.$router.push({
         path: "/addeditdetail",
-        query: { mark: "edit", ...obj.row }
+        query: { mark: "edit", ...info }
       });
     },
     // 详情
@@ -319,6 +342,9 @@ export default {
       });
     });
 
+    this.$nextTick(() =>{
+      this.Tables.refreshTable()
+    })
     this.getTableData();
   },
   mounted() {

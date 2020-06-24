@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import _ from 'lodash';
 Vue.use(Router);
 // 插件引入
 import store from '../vuex/store';
@@ -43,6 +44,9 @@ let publicRouters = [].concat(
   DigitalParkRouter,
   ExportData,
   SystemManage
+  
+  ,
+  // Norbulingka
 )
 
 // 数字园区 私有模块
@@ -113,7 +117,7 @@ if (getToken()) {
   // 活后台返回菜单拍平path
   let flat = flatMenus(getMenuTree()[0]);
   // 将私有路由进行拆分 验证
-  let routes = formatRoutes(flat.flatmenupaths, privateRouters);
+  let routes = formatRoutes(flat.flatmenupaths, _.cloneDeep(privateRouters));
   // 添加进当前路由中
   router.$addRoutes(routes);
 }
