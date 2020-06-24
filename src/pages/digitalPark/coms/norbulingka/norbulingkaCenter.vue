@@ -48,9 +48,9 @@
         this.fixedProList = res
       },
       onClickItemFixPro(item, index) {
-          this.$store.commit('digitalPark/menuList',item)
-          CommonFun.loadPage(item)
-        // this.activeIndex=index
+        this.$store.commit('digitalPark/menuList', item)
+        localStorage.setItem('shortcutList',JSON.stringify(this.fixedProList))
+        CommonFun.loadPage(item)
       }
     },
     mounted() {

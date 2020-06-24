@@ -17,7 +17,7 @@ window.__CZ_SYSTEM = '';
  * ydCity  伊甸城
  * norbulingka  伊甸城
  */
-window.__CZ_LargeScreen = 'norbulingka'
+window.__CZ_LargeScreen = 'ydCity'
 
 
 //__CZ_SYSTEM 当前是哪个项目。

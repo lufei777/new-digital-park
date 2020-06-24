@@ -8,7 +8,7 @@
       <div class="choose-box flex-align radius-shadow panel">
         <div class="item-group flex-align-center">
           <label>编号：</label>
-          <el-input v-model="searchParams.did"/>
+          <el-input v-model="searchParams.id"/>
         </div>
         <div class="item-group flex-align-center">
           <label>机构简称：</label>
@@ -24,14 +24,13 @@
       </div>
       <div class="table-wrapper radius-shadow panel">
         <div class="operator-btn-box flex-row-reverse">
-          <el-button type="primary"  @click="deleteTip">删除</el-button>
+          <el-button type="primary"  @click="onClickMultiDelBtn">删除</el-button>
           <el-button type="primary" @click="onClickAddBtn">添加</el-button>
         </div>
         <z-table :ref="tableConfig.ref" :options="tableConfig">
           <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
             <el-button type="text" @click="editRow(row)">编辑</el-button>
             <el-button type="text" @click="deleteRow(row)">删除</el-button>
-            <el-button type="text" @click="assignRole(row)">分配角色</el-button>
           </template>
         </z-table>
       </div>
@@ -40,10 +39,16 @@
 </template>
 
 <script>
+
   import {mapState} from 'vuex'
   import CommonApi from '@/service/api/common'
   import Tree from '@/components/tree/index'
-
+  import SystemManageApi from '@/service/api/systemManage'
+  import CommonFun from '@/utils/commonFun'
+  let pageInfo = {
+    pageNum: 1,
+    pageSize: 10,
+  }
   export default {
     name: 'DepartmentManage',
     components: {
@@ -53,24 +58,25 @@
       return {
         treeList: [],
         treeConfig: {
+          treeProps:{
+            label:'name',
+            value:'id',
+            children:'childNode'
+          },
           defaultExpandedkeys: [],
           onClickTreeNodeCallBack: this.onClickItemTree,
         },
-
-        departList: {},
-        showAdd: false,
-        curPage: 1,
         searchParams:{
           parent: 0,
-          did: '',
+          id: '',
           name: '',
           abbr: '',
         },
         tableConfig: {
           ref: "tableRef",
           serverMode: {
-            url: CommonApi.queryDeptList,
-            data: {}
+            url:SystemManageApi.getDeptList,
+            data: {...pageInfo}
           },
           propsHttp: {
             list: "list",
@@ -86,7 +92,7 @@
             prop: 'name'
           }, {
             label: '机构全称',
-            prop: 'mail'
+            prop: 'abbr'
           }],
           operation: {
             width: 200
@@ -107,82 +113,33 @@
     },
     methods: {
       async getDeptTree() {
-        this.treeList = await CommonApi.getDeptTree()
+        this.treeList = await SystemManageApi.getDepartmentTree()
         this.treeConfig.defaultExpandedkeys = [this.treeList[0].id]
-        this.department = this.treeList[0].id
+        // this.searchParams.parent = this.treeList[0].id
       },
       onClickItemTree(val) {
-        this.parent = val.id
-      },
-      async queryDeptList() {
-        let res = await CommonApi.queryDeptList({
-          parent: this.parent,
-          did: this.did,
-          name: this.name,
-          abbr: this.abbr
-        })
-        if (!res || !res.total) {
-          res = {
-            rows: [],
-            total: 0
-          }
-        }
-        res.labelList = [{name: '', prop: '', type: 'selection'},
-          {name: '编号', prop: 'did'},
-          {name: '机构简称', prop: 'name'},
-          {name: '机构全称', prop: 'abbr'}]
-        res.dataList = res.rows
-        res.hideExportBtn = true
-        res.showOperator = true
-        this.departList = res
+        this.searchParams.parent = val.id
       },
       onClickSearchBtn() {
-        this.curPage = 1
-        this.queryDeptList()
+        this.getData()
       },
       deleteRow(data) {
-        this.deleteId = data.did
-        this.deleteTip()
+        this.deleteId = data.id
+        CommonFun.deleteTip(this, this.deleteId, '至少选择一条数据！', this.sureDelete)
       },
       async sureDelete() {
-        await CommonApi.deleteUser({
-          ids: this.deleteId,
+        await SystemManageApi.deleteDept({
+          deptIds: this.deleteId,
         })
         this.$message({
           type: 'success',
           message: '删除成功!'
         });
-        this.getUserList()
-      },
-      handleSelectionChange(val) {
-        let tmp = val.map((item) => item.did)
-        this.deleteId = tmp.join(",")
-      },
-      deleteTip() {
-        if (!this.deleteId) {
-          this.$message({
-            type: 'warning',
-            message: '请先选择机构！',
-            duration: 1000
-          });
-          return;
-        }
-        this.$confirm('确定要删除吗?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.sureDelete()
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除',
-          });
-        });
+        this.getDeptTree()
+        this.$refs[this.tableConfig.ref].refreshTable()
       },
       editRow(data) {
-        console.log(data)
-        this.$router.push(`/addDept?deptId=${data.did}`)
+        this.$router.push(`/addDept?deptId=${data.id}`)
       },
       onClickAddBtn() {
         this.$router.push("/addDept")
@@ -192,10 +149,22 @@
           height: ($(document).height() - 110) + 'px'
         })
       },
+      getData() {
+        this.$refs[this.tableConfig.ref].setCurrentPage(1)
+        this.tableConfig.serverMode.data = {...this.searchParams, ...pageInfo}
+        this.$refs[this.tableConfig.ref].refreshTable()
+      },
+      onClickMultiDelBtn(){
+        let tmp = this.$refs[this.tableConfig.ref].getSelectedData()
+        this.deleteId = tmp.map((item)=>item.id).join(",")
+        CommonFun.deleteTip(this, this.deleteId, '至少选择一条数据！', this.sureDelete)
+      },
+    },
+    async created(){
+      await this.getDeptTree()
+      this.getData()
     },
     async mounted() {
-      await this.getDeptTree()
-      await this.queryDeptList()
       this.fixTree()
       $(window).resize(() => {
         this.fixTree()

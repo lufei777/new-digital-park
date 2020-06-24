@@ -79,7 +79,7 @@ export default {
       })
       this.percentage = res.values
       this.$nextTick(()=>{
-        this.getProgressWidth = $(".device-status-monitor").width()*0.18
+        this.getProgressWidth = $(".device-status-monitor").width()*0.15
       })
     }
   },
@@ -140,6 +140,10 @@ export default {
     text-overflow:ellipsis;
     white-space: nowrap;
     width:80px;
+  }
+  .my-chart{
+    width:100%;
+    overflow: hidden;
   }
 }
 </style>

@@ -85,6 +85,25 @@ class SystemManage {
   @get
   deleteUser(){}
 
+  @url("/user-service/dept/addDept")
+  @post
+  addDept(){}
+
+  @url("/user-service/dept/editDept")
+  @post
+  editDept(){}
+
+  @url("/user-service/dept")
+  @get
+  getDeptDetail(){}
+
+  @url("/user-service/dept/lists")
+  @get
+  getDeptList(){}
+
+  @url("user-service/dept/removeDept")
+  @get
+  deleteDept(){}
 }
 
 export default new SystemManage()

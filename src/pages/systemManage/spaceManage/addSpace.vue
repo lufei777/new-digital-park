@@ -94,7 +94,7 @@
       async getItemSpaceDetail(){
         let res =await CommonApi.getItemSpaceDetail({
           id:this.spaceId,
-          kind:'SPACE'
+          kind:'SPACE',
         })
         this.formModel = res
       },
@@ -111,7 +111,13 @@
         });
       },
       async submit(model, hide) {
-        await CommonApi[this.api](this.formModel)
+        let params = {...this.formModel,
+          ...{
+            kind:'SPACE',
+            typeName:'3DSpace'
+          }
+        }
+        await CommonApi[this.api](params)
           .then(res => {
             this.$message({
               type: "success",

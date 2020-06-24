@@ -1,150 +1,157 @@
 <template>
-  <div class="add-space radius-shadow">
+  <div class="add-dept radius-shadow panel-container">
     <div class="tip flex-align">
       <span class="icon"></span>
       <span>{{tipText}}</span>
     </div>
-    <el-form ref="deptForm" :rules="rules" :model="deptForm" label-position="right" label-width="120px" >
-      <el-form-item label="机构简称" prop="name">
-        <el-input v-model="deptForm.name"></el-input>
-      </el-form-item>
-      <el-form-item label="机构全称" prop="abbr">
-        <el-input v-model="deptForm.abbr"></el-input>
-      </el-form-item>
-      <el-form-item label="父机构" prop="parentName">
-        <el-input v-model="deptForm.parentName" @focus="onShowModal"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="submitForm('deptForm')">确定</el-button>
-        <el-button @click="goBack" class="go-back">返回</el-button>
-      </el-form-item>
-    </el-form>
-    <TreeModal :tree-modal-config="treeModalConfig"></TreeModal>
+    <!--<el-form ref="deptForm" :rules="rules" :model="deptForm" label-position="right" label-width="120px" >-->
+    <!--<el-form-item label="机构简称" prop="name">-->
+    <!--<el-input v-model="deptForm.name"></el-input>-->
+    <!--</el-form-item>-->
+    <!--<el-form-item label="机构全称" prop="abbr">-->
+    <!--<el-input v-model="deptForm.abbr"></el-input>-->
+    <!--</el-form-item>-->
+    <!--<el-form-item label="父机构" prop="parentName">-->
+    <!--<el-input v-model="deptForm.parentName" @focus="onShowModal"></el-input>-->
+    <!--</el-form-item>-->
+    <!--<el-form-item>-->
+    <!--<el-button type="primary" @click="submitForm('deptForm')">确定</el-button>-->
+    <!--<el-button @click="goBack" class="go-back">返回</el-button>-->
+    <!--</el-form-item>-->
+    <!--</el-form>-->
+    <!--<TreeModal :tree-modal-config="treeModalConfig"></TreeModal>-->
+    <div class="form-box">
+      <z-form :ref="formConfig.ref" :options="formConfig" v-model="formModel" @submit="submit">
+        <template slot="menuBtn" slot-scope="scope">
+          <el-button @click="goBack(scope)">返回</el-button>
+        </template>
+      </z-form>
+    </div>
   </div>
 </template>
 
 <script>
   import CommonApi from '@/service/api/common'
   import TreeModal from '@/components/treeModal/index'
+  import SystemManageApi from '@/service/api/systemManage'
+
   export default {
     name: 'AddDept',
     components: {
       TreeModal
     },
-    data () {
+    data() {
       return {
-        deptForm:{
-          name:'',
-          abbr:'',
-          parent:0,
-          parentName:''
+        formModel: {},
+        formConfig: {
+          ref: "formRef",
+          size: "medium",
+          menuPosition: "center",
+          labelWidth: 150,
+          emptyBtn: false,
+          forms: [
+            {
+              type: "input",
+              label: "机构简称",
+              prop: "name",
+              span: 24,
+              rules: {
+                required: true,
+                message: "请输入机构简称",
+                trigger: "blur"
+              }
+            },
+            {
+              type: "input",
+              label: "机构全称",
+              prop: "abbr",
+              span: 24,
+              rules: {
+                // required: true,
+                // message: "请输入机构全称",
+                // trigger: "blur"
+              }
+            },
+            {
+              type: "tree",
+              label: "上层机构",
+              prop: "parent",
+              span: 24,
+              dicData:[],
+              props: {
+                label: "name",
+                value: "id",
+                children: "childNode",
+              },
+            },
+            {
+              type: "textarea",
+              label: "描述",
+              prop: "memo",
+              span: 24,
+              rules: {}
+            }
+          ]
         },
-        rules: {
-          abbr:[{ required: true, message: '请输入机构全称', trigger: 'blur' }],
-          name:[{ required: true, message: '请输入机构简称', trigger: 'blur' }],
-        },
-        treeModalConfig:{
-          treeList:[],
-          treeConfig:{
-            defaultExpandedkeys:[],
-          },
-          showModal:false,
-          onClickSureBtnCallback:this.onClickModalSureBtn,
-          onClickCancelBtnCallback:this.onClickModalCancelBtn
-        }
       }
     },
-    computed:{
-      tipText(){
-        return this.isEdit?'编辑机构':'添加机构'
+    computed: {
+      tipText() {
+        return this.deptId ? '编辑机构' : '添加机构'
       },
-      deptId(){
+      deptId() {
         return this.$route.query.deptId
+      },
+      api() {
+        return this.deptId ? 'editDept' : 'addDept'
       }
     },
-    watch:{
-    },
+    watch: {},
     methods: {
-      async getDeptDetail(){
-        let res =await CommonApi.getDeptDetail({
-          id:this.deptId,
-        })
-        this.deptForm={
-          did:this.deptId,
-          name:res.name,
-          abbr:res.abbr,
-          parent:res.parent
-        }
+      async getDeptDetail() {
+        console.log("deptId",this.deptId)
+        let res = await SystemManageApi.getDeptDetail({}, {deptId:this.deptId})
+        this.formModel = res
       },
-      submitForm(formName){
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.addSpace()
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      },
-      async addSpace(){
-        let res
-        if(this.deptId){
-          res = await CommonApi.editDept(this.deptForm)
-        }else{
-          res = await CommonApi.addDept(this.deptForm)
-        }
-        this.$message({
-          type: 'success',
-          message: this.spaceId?'修改成功！':'添加成功！',
-          duration:1000
-        });
-      },
-      goBack(){
+      goBack() {
         history.go(-1)
       },
-      async getDeptTree(){
-        this.treeModalConfig.treeList = await CommonApi.getDeptTree()
-        this.treeModalConfig.treeConfig.defaultExpandedkeys=[this.treeModalConfig.treeList[0].id]
+      async getDeptTree() {
+        let res = await SystemManageApi.getDepartmentTree()
+        this.$refs[this.formConfig.ref].setColumnByProp("parent", {
+          dicData:res
+        });
       },
-      onShowModal(){
-        this.treeModalConfig.showModal=true
+      async submit(model, hide) {
+        await SystemManageApi[this.api](this.formModel)
+          .then(res => {
+            this.$message({
+              type: "success",
+              message: res
+            });
+            this.$router.push('./departmentManage')
+          })
+          .finally(msg => {
+            hide();
+          });
       },
-      onClickModalSureBtn(val){
-        this.deptForm.parent=val.id
-        this.deptForm.parentName=val.text
-        this.treeModalConfig.showModal=false
-      },
-      onClickModalCancelBtn(){
-        this.treeModalConfig.showModal=false
-      }
     },
-    async mounted(){
-       await this.getDeptTree()
-       if(this.deptId){
-          this.getDeptDetail()
-       }
+    async mounted() {
+      await this.getDeptTree()
+      if (this.deptId) {
+        this.getDeptDetail()
+      }
     }
   }
 </script>
 
 <style lang="less">
-  .add-space{
-    padding:20px;
-    background: @white;
-    .el-form{
-      width:50%;
-      margin:30px auto;
-    }
-    .el-input{
-      width:60%;
-    }
-    .go-back{
-    }
-    .el-input{
-      width:280px;
-    }
-    .memo-length-tip{
-      float: right;
+  .add-dept {
+    padding: 20px;
+
+    .form-box {
+      width: 50%;
+      margin: 0 auto;
     }
   }
 </style>

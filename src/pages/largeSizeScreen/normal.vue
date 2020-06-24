@@ -324,6 +324,7 @@
     },
     mounted() {
       // this.getMenuTree()
+      // console.log("this,menutre",this.menuTree)
       this.headName = this.menuTree[0] && this.menuTree[0].name
       this.getLargeScreenModuleList()
       this.getModuleStyle()
