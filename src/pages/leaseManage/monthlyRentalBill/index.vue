@@ -144,8 +144,8 @@ export default {
         { label: "收费项目数", prop: "telephone" },
         { label: "账单金额合计(元)", prop: "contractTime" },
         { label: "账单状态", prop: "expireTime" },
-        { label: "本次冲抵额(元)", prop: "expireTime" },
-        { label: "租户类型", prop: "expireTime" }
+        { label: "本次冲抵额(元)", prop: "1" },
+        { label: "租户类型", prop: "2" }
       ];
       this.leaseContractTable.columnConfig = labelList;
     //   let res = await LeaseManageApi.contractList({
