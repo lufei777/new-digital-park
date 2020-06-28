@@ -268,4 +268,14 @@ export default new class {
 		@del
 		deleteRelicEvaluation() { }
 
+		// 编辑保存
+		@url('/norb-service/assessment/updateRelicEvaluation')
+		@post
+		updateRelicEvaluation() { }
+
+		@url('/norb-service/file/preview')
+		@get
+		preview() { }
+
+
 }();

@@ -30,6 +30,9 @@
         :load='loading'
         :ref="tableData.ref"
         :options="tableData"
+        @row-update="rowUpdate"
+        @row-edit="rowEdit"
+        @row-edit-cancel="rowEditCancel"
       >
         <template
           slot='custom-top'
@@ -37,17 +40,15 @@
         >
           <div id="slot">
             <!-- 上传、删除 -->
-            <el-button
-              @click="openUpload"
-              type='primary'
-            >上传</el-button>
-            <!-- <el-upload
-              action="/oaApi/image/upload"
-            >
-              <el-button
-                type="primary"
-              >点击上传</el-button>
-            </el-upload> -->
+            <z-upload
+              onlyButton
+              v-model="fileList"
+              buttonText="上传"
+              :showFileList="false"
+              :action="uploadAction"
+              :accept="['xls', 'xlsx', 'csv','doc','docx']"
+              :uploadAfter="uploadAfter"
+            ></z-upload>
             <el-button
               @click="del(obj)"
               :disabled='!obj.selectedData.length'
@@ -58,46 +59,29 @@
           slot="operation"
           slot-scope="obj"
         >
-          <div>
-            <el-button
-              type="text"
-              @click="downLoad()"
-            >下载</el-button>
-            <el-button
-              type="text"
-              @click="propertyDetail(obj)"
-            >查看</el-button>
-          </div>
+          <el-button
+            type="text"
+            @click="()=>{  }"
+          ></el-button>
+          <el-button
+            type="text"
+            @click="downLoad(obj)"
+          >下载</el-button>
+          <el-button
+            type="text"
+            @click="propertyDetail(obj)"
+          >查看</el-button>
+          <!-- <div>
+            
+          </div> -->
         </template>
       </z-table>
-
       <el-dialog
-        :visible.sync="centerDialogVisible"
-        width="30%"
-        :modal='false'
-        :show-close='false'
+        title="预览"
+        :visible.sync="filePreview"
       >
-        <el-upload
-          class="upload-demo"
-          drag
-          action="/oaApi/image/upload"
-          multiple
-        >
-          <i class="el-icon-upload"></i>
-          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          <div
-            class="el-upload__tip"
-            slot="tip"
-          >只能上传word文件</div>
-        </el-upload>
-        <!-- <el-button @click="centerDialogVisible = false">取 消</el-button>
-      <el-button
-        type="primary"
-        @click="centerDialogVisible = false"
-      >确 定</el-button> -->
-
+        <div v-html="fileHtml"></div>
       </el-dialog>
-
     </div>
 
   </div>
@@ -111,9 +95,14 @@ import CommonFun from "../../../utils/commonFun";
 export default {
   data() {
     return {
+      fileHtml: "",
+      filePreview: false,
       centerDialogVisible: false,
       loading: false,
       condition: null,
+      fileList: [],
+      // uploadAction: '/vibe-web/im/deviceData',
+      uploadAction: "/oaApi/image/upload",
       model: {},
       formData: {
         ref: "formData",
@@ -148,21 +137,33 @@ export default {
       tableData: {
         ref: "tabel",
         customTop: true,
+        editBtn: true,
         customTopPosition: "right",
         data: [],
         columnConfig: [],
         operation: {
-          prop: "operation",
-          label: "操作",
-          fixed: "right",
-          width: 200
+          // prop: "operation",
+          // label: "操作",
+          // fixed: "right",
+          width: 400
         },
         uiConfig: {
           height: "auto",
           selection: true,
           showIndex: {
             label: "编号",
-            width: 100
+            width: 250,
+            align: "left"
+          },
+          pagination: {
+            handler: (pageSize, currentPage, table) => {
+              // 翻页的时候也需要携带查询的条件
+              this.getTableData({
+                page: currentPage,
+                rows: pageSize,
+                ...this.condition
+              });
+            }
           }
         }
       }
@@ -170,8 +171,54 @@ export default {
   },
 
   methods: {
-    openUpload() {
-      this.centerDialogVisible = true;
+    // 表格中的保存
+
+    rowUpdate(model, index, done) {
+      (this.loading = true),
+        // console.log("表格中的保存", 111);
+        norbulingka
+          .updateRelicEvaluation(model)
+          .then(res => {
+            this.$message({
+              type: "success",
+              message: "编辑成功！"
+            });
+            this.getTableData();
+          })
+          .finally(res => {
+            this.loading = false;
+            done();
+          });
+      // console.log("model", model);
+      // console.log("index", index);
+      // console.log("done", done);
+    },
+    // 表格中的编辑
+    rowEdit(model, index) {
+      console.log("编辑", model, index);
+    },
+    // 表格中的取消编辑
+    rowEditCancel(model, index) {
+      console.log("取消编辑", model, index);
+    },
+    // 导入成功
+    uploadAfter(data, hide, done) {
+      console.log(data);
+      var originName = data.fileName;
+      var path = data.fileUrl;
+      norbulingka
+        .uploadRelicEvaluation({ originName, path })
+        .then(res => {
+          this.$message({
+            type: "success",
+            message: "上传成功！"
+          });
+          this.getTableData();
+        })
+        .finally(res => {
+          done();
+        });
+      //  console.log()
     },
     // 表格配置项
     tablePropList() {
@@ -180,9 +227,10 @@ export default {
         // 名称originName  上传时间 uploadDate
         // { label: "编号", prop: "" },
         { label: "文件名称", prop: "originName" },
-        { label: "年度", prop: "" },
-        { label: "类别", prop: "" },
-        { label: "填报类别", prop: "uploadDate" }
+        { label: "年度", prop: "year" },
+        // { label: "填报类别", prop: "uploadDate" },
+        { label: "类别", prop: "type", cell: true },
+        { label: "填报人员", prop: "responsiblePerson", cell: true }
       ];
       // 赋值给表格的配置项
       this.tableData.columnConfig = list;
@@ -204,13 +252,7 @@ export default {
         this.searchData(res);
       });
     },
-    // search(obj) {
-    //   this.Form.getFormModel(res => {
-    //     console.log("搜索", res);
-    //   });
-    //   console.log(this.Form.model);
-    //   //   console.log(this.model);
-    // },
+
     // 清除
     clearData(obj) {
       this.Form.resetForm();
@@ -233,16 +275,51 @@ export default {
       });
     },
     downLoad(obj) {
-      console.log("下载");
-      let url = "/oaApi/stockDeal/exportRecord";
-      let params = "";
-      let arr = this.$refs[this.tableData.ref].getSelectData();
-      // let arr = obj.row
-      let stockRecordIds = arr.length ? arr.map(item => item.id) : "";
+      console.log(obj);
+      var a = obj.row.path;
+      var b = obj.row.originName;
+      // let url = `http://localhost:8080/oaApi/file/${a}/${b}`;
+      let url = `oaApi/file/${a}/${b}`;
+
+      let link = document.createElement("a");
+      link.style.display = "none";
+      link.href = url;
+      // link.setAttribute("download", fileName); // 文件名
+      link.setAttribute("download", b); // 文件名
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     },
     // 查看
     propertyDetail(obj) {
+      // 文件预览的实现
       console.log("查看");
+      var a = obj.row.path;
+      var b = obj.row.originName;
+      // http://localhost:8080/oaApi/file/preview/1.docx
+      // let url = `http://localhost:8080/oaApi/file/${a}/${b}`;
+      // var url = norbulingka.preview()
+
+      let url = `oaApi/file/preview/1.doc`;
+      this.$axios({
+        url
+      }).then(res => {
+        this.filePreview = true;
+        this.fileHtml = res;
+      });
+
+      // window.open(url)
+
+      // let link = document.createElement("a");
+      // link.style.display = "none";
+      // link.href = url;
+      // // link.setAttribute("download", fileName); // 文件名
+      // // link.setAttribute("download", b); // 文件名
+
+      // document.body.appendChild(link);
+      // link.click();
+      // document.body.removeChild(link);
     },
     // 表格中的数据
     getTableData(pageParams = { page: 1, rows: 10 }) {
