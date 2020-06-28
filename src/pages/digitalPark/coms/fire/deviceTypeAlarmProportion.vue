@@ -1,7 +1,6 @@
 <template>
   <div class="device-type-alarm-proportion">
     <div class="my-chart" ref="myChart">
-      <div class="percentage-name">{{moduleItem.moduleName}}</div>
       <div v-for="(item,index) in rlarmProportionData.alarms" :key="index" class="progress-content">
         <el-progress :percentage="parseFloat(item.numberPercentage)" :show-text="false"></el-progress>
         <div class="percentage-text">

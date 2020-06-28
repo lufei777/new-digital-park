@@ -76,7 +76,7 @@
           },
           uiConfig: {
             height: "auto",
-            selection: true,
+            // selection: true,
           },
           tableMethods: {},
         }

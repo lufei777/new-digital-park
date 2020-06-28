@@ -32,7 +32,7 @@
       }
       let checkPhone=function(rule,value,callback){
         let reg=/^1(3|4|5|7|8)\d{9}$/
-        if(!reg.test(value)){
+        if(!reg.test(value)&& value.trim()!=''){
           callback(new Error('手机号格式不正确'));
         }else{
           callback()//必须写callback函数。否则提交时候校验不执行
@@ -165,6 +165,7 @@
                 value: "id",
                 children: "childNode",
               },
+              focus:that.onRoleFocus,
               span: 24,
             },
           ]
@@ -224,7 +225,7 @@
               type: "success",
               message: res
             });
-            // this.$router.push('./userManage')
+            this.$router.push('./userManage')
           })
           .finally(msg => {
             hide();
@@ -271,9 +272,15 @@
                value: "id",
                children: "childNode",
              },
+             focus:this.onRoleFocus,
              span: 24,
            }]
         }
+      },
+      onRoleFocus(){
+        this.$refs[this.formConfig.ref].setColumnByProp("role", {
+          defaultCheckedKeys:this.formModel.role
+        });
       }
     },
     mounted(){

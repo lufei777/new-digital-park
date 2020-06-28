@@ -1,7 +1,7 @@
 <template>
   <div class="add-dept radius-shadow panel-container">
     <div class="tip flex-align">
-      <span class="icon"></span>
+      <span class="icon left-tip-text-icon"></span>
       <span>{{tipText}}</span>
     </div>
     <!--<el-form ref="deptForm" :rules="rules" :model="deptForm" label-position="right" label-width="120px" >-->
@@ -84,13 +84,13 @@
                 children: "childNode",
               },
             },
-            {
-              type: "textarea",
-              label: "描述",
-              prop: "memo",
-              span: 24,
-              rules: {}
-            }
+            // {
+            //   type: "textarea",
+            //   label: "描述",
+            //   prop: "memo",
+            //   span: 24,
+            //   rules: {}
+            // }
           ]
         },
       }
@@ -109,7 +109,7 @@
     watch: {},
     methods: {
       async getDeptDetail() {
-        console.log("deptId",this.deptId)
+        // console.log("deptId",this.deptId)
         let res = await SystemManageApi.getDeptDetail({}, {deptId:this.deptId})
         this.formModel = res
       },
@@ -145,12 +145,12 @@
   }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
   .add-dept {
     padding: 20px;
-
+    box-sizing: border-box;
     .form-box {
-      width: 50%;
+      width: 40%;
       margin: 0 auto;
     }
   }
