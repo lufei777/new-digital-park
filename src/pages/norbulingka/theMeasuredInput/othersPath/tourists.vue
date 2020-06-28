@@ -102,7 +102,7 @@ export default {
                 type: "number",
                 prop: "dailyCount",
                 label: "日游客量",
-                span: 8
+                span: 6
                 // rules:[
                 //  {
                 //   required: true,
@@ -116,8 +116,8 @@ export default {
                 type: "number",
                 prop: "tempCount",
                 label: "瞬时游客量",
-                span: 8,
-                offset: 1
+                span: 6,
+                // offset: 1
                 // rules:[
                 //  {
                 //   required: true,
@@ -132,7 +132,7 @@ export default {
                 prop: "btn",
                 formslot: true,
                 offset: 2,
-                span: 5
+                span: 8
               }
             ]
           }
@@ -151,11 +151,11 @@ export default {
              *   
             */
           // 模拟的假数据
-          {
-            dailyCount: "111111",
-            tempCount: "222",
-            data: "2021-5-29 16:04:48.0"
-          }
+          // {
+          //   dailyCount: "111111",
+          //   tempCount: "222",
+          //   data: "2021-5-29 16:04:48.0"
+          // }
         ],
         columnConfig: [],
         operation: {
@@ -168,7 +168,8 @@ export default {
           height: "auto",
           selection: true,
           showIndex: {
-            width: 120
+            width: 300,
+            align:'left'
           }
         }
       }

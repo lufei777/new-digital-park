@@ -37,7 +37,7 @@ import ExportData from './commonRouter/exportData'; 						// 导出数据
 import MonitoringAlarm from './warning-alarm'; 									// 预警报警
 import Norbulingka from './norbulingka'; 												// 罗布林卡
 import DeviceManage from './device-manage'; 										// 设备管理
-import PropertyErpsystem from './property-erpsyetem'            // 物业ERP系统
+// import PropertyErpsystem from './property-erpsyetem'            // 物业ERP系统
 
 // 数字园区 公共模块
 let publicRouters = [].concat(
@@ -48,7 +48,8 @@ let publicRouters = [].concat(
   
   ,
   Norbulingka,
-  PropertyErpsystem //物业系统ERP
+  // PropertyErpsystem //物业系统ERP
+  LeaseManage
 )
 
 // 数字园区 私有模块
@@ -72,7 +73,6 @@ let privateRouters = [].concat(
   MonitoringAlarm,
   Norbulingka,
   DeviceManage,
-  PropertyErpsystem
 )
 store.commit('digitalPark/setPrivateRouters', privateRouters);
 

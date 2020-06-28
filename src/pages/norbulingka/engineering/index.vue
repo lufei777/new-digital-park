@@ -150,7 +150,10 @@ export default {
         uiConfig: {
           height: "auto",
           selection: true,
-          showIndex: true,
+          showIndex: {
+            width:300,
+            align:'left'
+          },
           pagination: {
             handler: (pageSize, currentPage, table) => {
               this.getTableData({ page: 1, rows: pageSize, ...this.condition });
