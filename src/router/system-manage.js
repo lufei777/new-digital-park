@@ -1,8 +1,4 @@
-import UserManage from '../pages/systemManage/userManage/userManage'
 import OperatorLog from '../pages/systemManage/operatorLog'
-import RoleManage from '../pages/systemManage/roleManage/roleManage'
-import DepartmentManage from '../pages/systemManage/departmentManage/departmentManage'
-import SpaceManage from '../pages/systemManage/spaceManage/spaceManage'
 import TmpRouter from '../pages/commonProject/coms/tmpRouterBox'
 import AddSpace from '../pages/systemManage/spaceManage/addSpace'
 import AddUser from '../pages/systemManage/userManage/addUser'
@@ -18,7 +14,7 @@ export default [{
   children: [{
     path: '/userManage',
     name: 'UserManage',
-    component: UserManage,
+    component: ()=>import('@/pages/systemManage/userManage/index'),
     meta: { title: '用户管理' }
   }, {
     path: '/operatorLog',
@@ -28,17 +24,17 @@ export default [{
   }, {
     path: '/roleManage',
     name: 'RoleManage',
-    component: RoleManage,
+    component: ()=>import('@/pages/systemManage/roleManage/index'),
     meta: { title: '角色管理' }
   }, {
     path: '/departmentManage',
     name: 'DepartmentManage',
-    component: DepartmentManage,
+    component: ()=>import('@/pages/systemManage/departmentManage/index'),
     meta: { title: '组织机构' }
   }, {
     path: '/spaceManage',
     name: 'SpaceManage',
-    component: SpaceManage,
+    component: ()=>import("@/pages/systemManage/spaceManage/index"),
     meta: { title: '空间管理' },
   }, {
     path: '/addSpace',

@@ -10,7 +10,7 @@
           <label>编号：</label>
           <el-input v-model="searchParams.id"/>
         </div>
-        <div class="item-group flex-align-center" v-if="fromFlag==1 || fromFlag==2">
+        <div class="item-group flex-align-center" v-if="fromFlag==1">
           <label>用户名：</label>
           <el-input v-model="searchParams.loginId"/>
         </div>
@@ -26,9 +26,13 @@
           <label>名称：</label>
           <el-input v-model="searchParams.caption"/>
         </div>
-        <div class="item-group flex-align-center" v-if="fromFlag==2">
-          <label>工程用名：</label>
+        <div class="item-group flex-align-center" v-if="fromFlag==2 || fromFlag==3">
+          <label>{{nameLabel}}：</label>
           <el-input v-model="searchParams.name"/>
+        </div>
+        <div class="item-group flex-align-center" v-if="fromFlag==3">
+          <label>机构全称：</label>
+          <el-input v-model="searchParams.abbr"/>
         </div>
         <div class="item-group operator-box">
           <el-button type="primary" @click="onClickSearchBtn">搜索</el-button>
@@ -38,7 +42,7 @@
       <div class="table-wrapper radius-shadow panel">
         <div class="operator-btn-box flex-row-reverse">
           <el-button type="primary" @click="onClickExportBtn" v-if="fromFlag==1">导出</el-button>
-          <!--<el-button type="primary" @click="onClickMultiDelBtn">删除</el-button>-->
+          <el-button type="primary" @click="onClickMultiDelBtn"  v-if="fromFlag==3">删除</el-button>
           <el-button type="primary" @click="onClickAddBtn">添加</el-button>
         </div>
         <z-table :ref="tableConfig.ref" :options="tableConfig">
@@ -69,32 +73,28 @@
     components: {
       Tree
     },
-    props: ["fromFlag"], // fromFlag 1:用户管理
+    props: ["fromFlag"], // fromFlag 1:用户管理  2:空间管理  3：机构管理
     data() {
       let config = this.getConfig()
+      let searchParams = this.setParams()
       return {
         treeList: [],
         treeConfig: {
-          treeProps: {
-            label: 'text',
-            children: 'nodes'
-          },
+          treeProps:config.treeProps,
+          //   {
+          //   label: 'text',
+          //   children: 'nodes'
+          // },
           onClickTreeNodeCallBack: this.onClickTreeNodeCallBack,
           defaultExpandedkeys: [],
           currentKey: ''
         },
-        searchParams: {
-          id: '',
-          loginId: '',
-          mail: '',
-          phone: '',
-          department: 1
-        },
+        searchParams: searchParams,
         tableConfig: {
           ref: "tableRef",
           serverMode: {
             url: config.serverUrl,
-            data: {}
+            data: {...pageInfo}
           },
           propsHttp: {
             list: "list",
@@ -108,7 +108,7 @@
           },
           uiConfig: {
             height: "auto",
-            selection: true,
+            selection: config.selection,
           },
           customTop: true,
           tableMethods: {},
@@ -121,10 +121,9 @@
       ...mapState({
         menuIsCollapse: state => state.digitalPark.menuIsCollapse
       }),
-      // fromFlag() {
-      //   //来自角色管理-分配用户
-      //   return this.$route.query.from
-      // }
+      nameLabel(){
+        return this.fromFlag==2?'工程用名':'机构简称'
+      }
     },
     methods: {
       getConfig() {
@@ -135,10 +134,15 @@
         }
         if (this.fromFlag == 1) {
           config = {
+            treeProps:{
+              label: 'name',
+              children: 'childNode'
+            },
             delConfig: {
               api: SystemManageApi.deleteUser,
               paramKey: 'userId'
             },
+            selection:false,
             serverUrl: SystemManageApi.getUserList,
             columnConfig: [
               {
@@ -168,10 +172,15 @@
           }
         } else if (this.fromFlag == 2) {
           config = {
+            treeProps:{
+                label: 'text',
+                children: 'nodes'
+            },
             delConfig: {
               api: CommonApi.deleteSpace,
               paramKey: 'ids'
             },
+            selection:false,
             serverUrl:CommonApi.getSpaceList,
             columnConfig: [{
               label: '编号',
@@ -187,30 +196,86 @@
               prop: 'memo'
             }],
           }
+        } else if (this.fromFlag == 3) {
+          config = {
+            treeProps:{
+              label: 'name',
+              children: 'childNode'
+            },
+            delConfig: {
+              api: SystemManageApi.deleteDept,
+              paramKey: 'deptIds'
+            },
+            selection:true,
+            serverUrl:SystemManageApi.getDeptList,
+            columnConfig:  [{
+                label: '编号',
+                prop: 'id'
+              },{
+                label: '机构简称',
+                prop: 'name'
+              }, {
+                label: '机构全称',
+                prop: 'abbr'
+            }],
+          }
         }
         return config
       },
+      setParams(){
+        let params = {}
+        if(this.fromFlag==1){
+          params = {
+            id: '',
+            loginId: '',
+            mail: '',
+            phone: '',
+            department: 1,
+          }
+        }else if(this.fromFlag==2){
+          params = {
+            caption:'', //名称
+            name:'', //工程用名
+            spaceId: 0
+          }
+        }else if(this.fromFlag==3){
+          params = {
+            id:'',
+            name:'',
+            abbr:'',
+            parent:''
+          }
+        }
+        return params
+      },
       async getDeptTree() {
-        this.treeList = await CommonApi.getDeptTree()
-        this.searchParams.department = this.treeList[0].id
+        this.treeList = await SystemManageApi.getDepartmentTree()
         this.treeConfig.defaultExpandedkeys = [this.treeList[0].id]
-        this.treeConfig.currentKey = this.treeList[0].id
+        if(this.fromFlag==1){
+          this.treeConfig.currentKey = this.treeList[0].id
+          this.searchParams.department = this.treeList[0].id
+        }
+
         // this.onClickSearchBtn()
+      },
+      async getAssetAllTree() {
+        this.treeList = await CommonApi.getAssetAllTree({
+          flag: 'space',
+          locationRoot: 1
+        })
+        this.treeConfig.defaultExpandedkeys = [this.treeList && this.treeList[0].id]
       },
       onClickTreeNodeCallBack(val) {
         this.searchParams.department = val.id
+        this.searchParams.spaceId = val.id
+        this.searchParams.parent = val.id
       },
       onClickSearchBtn() {
         this.getData()
       },
       onClickResetBtn() {
-        this.searchParams = {
-          id: '',
-          loginId: '',
-          mail: '',
-          phone: '',
-          department: 1
-        }
+        this.searchParams = this.setParams()
+        // this.initTree()
         this.getData()
       },
       getData() {
@@ -224,9 +289,15 @@
         CommonFun.deleteTip(this, this.deleteId, '至少选择一条数据！', this.sureDelete)
       },
       onClickAddBtn() {
+        let url = ''
         if (this.fromFlag == 1) {
-          this.$router.push('/addUser')
+          url = `/addUser`
+        }else if(this.fromFlag==2){
+          url = `/addSpace`
+        }else if(this.fromFlag==3) {
+          url = `/addDept`
         }
+        this.$router.push(url)
       },
       onClickExportBtn() {
         let url = '/user-service/user/exportRecord'
@@ -252,11 +323,19 @@
           message: '删除成功!'
         });
         this.$refs[this.tableConfig.ref].refreshTable()
+        if(this.fromFlag==3){
+          this.getDeptTree()
+        }
+        this.deleteId=''
       },
       editRow(data) {
         let url = ''
         if (this.fromFlag == 1) {
           url = `/addUser?userId=${data.id}`
+        }else if(this.fromFlag==2){
+          url = `/addSpace?spaceId=${data.id}`
+        }else if(this.fromFlag==3){
+          url = `/addDept?deptId=${data.id}`
         }
         this.$router.push(url)
       },
@@ -268,9 +347,16 @@
           height: ($(document).height() - 110) + 'px'
         })
       },
+      async initTree(){
+        if(this.fromFlag==1 || this.fromFlag==3){
+          await this.getDeptTree()
+        }else if(this.fromFlag==2){
+          await this.getAssetAllTree()
+        }
+      }
     },
     async created() {
-      await this.getDeptTree()
+      await this.initTree()
       this.getData()
     },
     mounted() {

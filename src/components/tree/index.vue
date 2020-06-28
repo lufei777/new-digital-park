@@ -52,14 +52,13 @@
       },
       highlight(){
         return this.treeConfig.highlight==false?false:true
-      }
+      },
     },
     watch:{
       searchText(val) {
         this.$refs[this.treeConfig.ref ||'treeRef'].filter(val);
       },
       currentKey(){
-        console.log("curet",this.currentKey)
         this.$nextTick(()=>{
           this.$refs[this.treeConfig.ref ||'treeRef'].setCurrentKey(this.currentKey)
         })
