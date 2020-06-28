@@ -156,7 +156,8 @@ export default {
           height: "auto",
           selection: true,
           showIndex: {
-            width: 100
+            width:250,
+            align:'left'
           },
           pagination: {
             handler: (pageSize, currentPage, table) => {
