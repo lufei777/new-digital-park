@@ -28,7 +28,7 @@
       </el-carousel-item>
     </el-carousel>
 
-    <div class="home-header-wrapper" v-loading="loading">
+    <div class="home-header-wrapper">
       <div class="home-center">
         <div class="product-module">
           <div class="flex-align-between module-title">

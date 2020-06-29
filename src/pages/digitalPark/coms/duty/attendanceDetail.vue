@@ -1,6 +1,22 @@
 <template>
   <div class="attendance-detail">
     <div class="tmp-hidden">{{moduleItem.moduleName}}</div>
+    <!--<div class="my-chart" v-if="type!=2">-->
+      <!--<div class="task-header flex">-->
+        <!--<span>员工ID</span>-->
+        <!--<span>姓名</span>-->
+        <!--<span>开始时间</span>-->
+        <!--<span>结束时间</span>-->
+      <!--</div>-->
+      <!--<ul class="task-list-ul">-->
+        <!--<li v-for="(item,index) in tableData" :key="index" class="item-task flex">-->
+          <!--<span>{{item.dutyPeople}}</span>-->
+          <!--<span>{{item.dutyPeopleName}}</span>-->
+          <!--<span>{{item.startTime}}条</span>-->
+          <!--<span>{{item.stopTime}}条</span>-->
+        <!--</li>-->
+      <!--</ul>-->
+    <!--</div>-->
     <div class="my-chart">
       <z-table :ref="tableConfig.ref" :options="tableConfig"></z-table>
     </div>
@@ -13,54 +29,9 @@ import ChartUtils from "../../../../utils/chartUtils";
 import CommonApi from '@/service/api/common'
 export default {
   name: "AttendanceDetail",
-  props: ["moduleItem"],
+  props: ["moduleItem",'type'],
   data() {
     return {
-      // tableConfig: {
-      //   ref: "tableConfig",
-      //   data: [
-      //     {
-      //       zbrq: "2019.11.6",
-      //       zbry: "李逵",
-      //       zbdd: "A座",
-      //       zbnr: "巡视",
-      //       jjry: "宋江"
-      //     },
-      //     {
-      //       zbrq: "2019.11.8",
-      //       zbry: "宋江",
-      //       zbdd: "B座",
-      //       zbnr: "巡视",
-      //       jjry: "李逵"
-      //     }
-      //   ],
-      //   columnConfig: [
-      //     {
-      //       prop: "zbrq",
-      //       label: "值班日期",
-      //       width: 200
-      //     },
-      //     {
-      //       prop: "zbry",
-      //       label: "值班人员"
-      //     },
-      //     {
-      //       prop: "zbdd",
-      //       label: "值班地点"
-      //     },
-      //     {
-      //       prop: "zbnr",
-      //       label: "值班内容"
-      //     },
-      //     {
-      //       prop: "jjry",
-      //       label: "交接人员"
-      //     }
-      //   ],
-      //   uiConfig: {
-      //     // height: "260px"
-      //   }
-      // }
       tableConfig: {
         ref: "tableConfig",
         serverMode:{
@@ -87,18 +58,19 @@ export default {
             pageSize:5
           }
         }
-      }
+      },
+      tableData:[]
     };
   },
   methods: {
-    // async getDutyList(){
-    //    let res = await CommonApi.getDutyList({
-    //      page:1,
-    //      pageSize:5,
-    //    })
-    // }
+     getData(){
+       let res = this.$refs[this.tableConfig.ref].allData
+       console.log("res",res)
+       this.tableData = res
+     }
   },
   mounted() {
+    // this.getData()
     // this.$refs[this.tableConfig.ref].refreshTable();
     // this.getDutyList()
   }
@@ -108,8 +80,32 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
 .attendance-detail {
-  .module-item-top-name{
-    margin-bottom: 10px;
+  .item-task{
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+    color: @white;
+    text-align: center;
+    span{
+      width:20%;
+      display: block;
+      float: left;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      height: 30px;
+      line-height: 30px;
+    }
+    span:last-child{
+      color:#01EAFE;
+    }
+  }
+  .task-li{
+    color:#666;
+    span{
+      height: 50px;
+      line-height: 50px;
+    }
   }
 }
 </style>

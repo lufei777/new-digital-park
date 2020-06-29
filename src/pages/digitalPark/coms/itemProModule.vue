@@ -84,7 +84,10 @@
 
   export default {
     name: 'ItemProModule',
-    //type：1仪表盘/大屏 2.瀑布流
+   /*
+     type-- 1：仪表盘/大屏 2：瀑布流
+     isConfig-- true：是配置页左侧列表
+   */
     props: ['moduleData', 'type', 'userProModuleList', 'hideHeader', 'fullStatus', 'isConfig'],
     components: {
       ...comsImport.exportComsList,
