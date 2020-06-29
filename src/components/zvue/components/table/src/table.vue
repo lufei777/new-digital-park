@@ -61,7 +61,7 @@
           fixed="left"
           type="selection"
           :width="config.selectionWidth"
-          :selectable="_selectable"
+          :selectable="tableMethods.selectable"
           align="center"
         ></el-table-column>
 
@@ -484,14 +484,6 @@ export default {
     _handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
     },
-    // 当前行是否可多选
-    _selectable(row, index) {
-      if (typeof this.tableMethods.selectable == "function") {
-        return this.tableMethods.selectable(row, index);
-      } else {
-        return true;
-      }
-    },
     // 当前行发生变化
     _currentChange(currentRow, oldCurrentRow) {
       this.currentRowData = currentRow;
@@ -881,29 +873,6 @@ export default {
     /**
      * 外部调用方法
      */
-    //get
-    // 获取表格多选框选中数据
-    getSelectedData() {
-      //多选获取当前选中值
-      return this.selectedData;
-    },
-    // 获取当前表格单击选中数据
-    getCurrentRowData() {
-      //单选获取当前选中行
-      return this.currentRowData;
-    },
-    // 获取表格全部数据
-    getTableData() {
-      if (this.isServerMode) {
-        return this.getTableShowData();
-      } else {
-        return this.tableData;
-      }
-    },
-    // 获取表格当前显示数据
-    getTableShowData() {
-      return this.tableShowData;
-    },
     //set
     // 设置表格数据
     setData(data) {
@@ -931,6 +900,8 @@ export default {
     refreshTable() {
       this._tableInit(true);
       this.doLayout();
+      // 清空多选数据
+      this.selectedData = [];
     },
     //搜索指定的属性配置
     findColumnIndex(prop) {
