@@ -320,7 +320,7 @@ export default {
     taskPosition(val) {
       console.log("val", val);
       // window.parent.FindAssetLocation()
-      if (val.row.deviceId && type == "type") {
+      if (val.row.deviceId && val.row.type == "设备") {
         //  window.FindAssetLocation && window.FindAssetLocation(val.row.deviceId +'')
         window.FindAssetLocation?window.FindAssetLocation(val.row.deviceId + ""):
         window.parent.FindAssetLocation(val.row.deviceId + "");
