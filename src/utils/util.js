@@ -20,27 +20,43 @@ export const flatMenus = (menu, menus, menupaths) => {
 // 根据铺平的路由格式化出菜单
 export const formatRoutes = (flatmenupaths, routes) => {
   return routes.map(route => {
+    /**
+     * TODO
+     * 暂时只能先检测最外层的path，不去处理子路由，因为可能会有 查看详情 修改 之类的路由
+     * 后台返回的菜单中并没有
+     */
+    // 如果菜单中有当前路由项，则再检查子项
     if (flatmenupaths.includes(route.path) || flatmenupaths.includes(route.redirect)) {
-      return route
+      return route;
     }
     // 进行递归处理children
     if (route.children && route.children.length) {
+      // 拼接子路由path，防止没有 / 的path
+      route.children = route.children.map(item => {
+        if (!item.path.startsWith('/')) {
+          item.path = `${route.path}/${item.path}`;
+        }
+        return item;
+      });
+      // 子路由处理，拼接path
       route.children = formatRoutes(flatmenupaths, route.children);
       // 如果递归完还存在children，则重新赋值redirect再返回
       if (route.children && route.children.length) {
+        // 检查菜单中是否有当前的重定向，如果没有，则需要更改重定向
         let firstIndex = flatmenupaths.indexOf(route.redirect);
-        // 如果不是redirect不存在，则设为子级的某项
+        // 如果redirect不存在，则设为子级的第一项
         if (firstIndex === -1) {
-          // 防止自己没有 / 情况
+          // 防止子路由没有 / 情况
           let firstPath = route.children[0].path;
-          if (!firstPath.startsWith('/')) {
-            firstPath = `${route.path}/${firstPath}`;
-          }
           route.redirect = firstPath
         }
+      }
+      return route;
+    } else {
+      // 如果没有子节点，可能是子路由，则需要判断子路由
+      if (flatmenupaths.includes(route.path) || flatmenupaths.includes(route.redirect)) {
         return route;
       }
-
       return false;
     }
   }).filter(item => item);
