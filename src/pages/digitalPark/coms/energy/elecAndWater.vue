@@ -58,10 +58,6 @@
           selectType: 3,
           catalogs:'4000,1002',
         });
-        this.$nextTick(()=>{
-         this.getProgressWidth = $(".elec-sum-coms-inner").width()*0.4
-        })
-
         this.alarm=res.alarm
         this.prop = res.prop
         if(this.fromFlag==1){
@@ -101,6 +97,7 @@
       $(".elec-and-water-coms .el-progress__text").css({
         color:this.moduleItem.fontColor
       })
+      this.getProgressWidth = $(".elec-sum-coms-inner").width()*0.4
     }
   };
 </script>

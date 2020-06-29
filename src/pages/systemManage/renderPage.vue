@@ -275,7 +275,7 @@
       },
       onClickResetBtn() {
         this.searchParams = this.setParams()
-        // this.initTree()
+        this.initTree()
         this.getData()
       },
       getData() {
