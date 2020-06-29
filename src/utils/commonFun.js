@@ -1042,7 +1042,7 @@ class commonFun {
     purchasePeople: "程琳",
     recorder: "程琳",
     remark: "公司需要"
-  }, 
+  },
   {
     id: 5,
     applicationName: "绿植采购",
@@ -1556,176 +1556,176 @@ class commonFun {
   // 预警报警的数据源
   warningAlram = [
     {
-      subSystem:'非法入侵',
-      deviceType:"入侵探测器",
-      deviceName:'1#入侵检测',
-      pointType:'入侵报警',
-      alarmRules:'1#会议室入侵报警规则',
-      alarmLevel:"严重",
-      notificationWay:'短信',
-      inputType:'点表导入'
+      subSystem: '非法入侵',
+      deviceType: "入侵探测器",
+      deviceName: '1#入侵检测',
+      pointType: '入侵报警',
+      alarmRules: '1#会议室入侵报警规则',
+      alarmLevel: "严重",
+      notificationWay: '短信',
+      inputType: '点表导入'
     },
     {
-      subSystem:'非法入侵',
-      deviceType:"入侵探测器",
-      deviceName:'点位类型',
-      pointType:'入侵报警',
-      alarmRules:'1#会议室入侵报警规则',
-      alarmLevel:"严重",
-      notificationWay:'短信',
-      inputType:'点表导入'
+      subSystem: '非法入侵',
+      deviceType: "入侵探测器",
+      deviceName: '点位类型',
+      pointType: '入侵报警',
+      alarmRules: '1#会议室入侵报警规则',
+      alarmLevel: "严重",
+      notificationWay: '短信',
+      inputType: '点表导入'
     },
     {
-      subSystem:'非法入侵',
-      deviceType:"入侵探测器",
-      deviceName:'点位类型',
-      pointType:'入侵报警',
-      alarmRules:'1#会议室入侵报警规则',
-      alarmLevel:"严重",
-      notificationWay:'短信',
-      inputType:'点表导入'
+      subSystem: '非法入侵',
+      deviceType: "入侵探测器",
+      deviceName: '点位类型',
+      pointType: '入侵报警',
+      alarmRules: '1#会议室入侵报警规则',
+      alarmLevel: "严重",
+      notificationWay: '短信',
+      inputType: '点表导入'
     },
     {
-      subSystem:'非法入侵',
-      deviceType:"入侵探测器",
-      deviceName:'点位类型',
-      pointType:'入侵报警',
-      alarmRules:'1#会议室入侵报警规则',
-      alarmLevel:"严重",
-      notificationWay:'短信',
-      inputType:'点表导入'
+      subSystem: '非法入侵',
+      deviceType: "入侵探测器",
+      deviceName: '点位类型',
+      pointType: '入侵报警',
+      alarmRules: '1#会议室入侵报警规则',
+      alarmLevel: "严重",
+      notificationWay: '短信',
+      inputType: '点表导入'
     },
     {
-      subSystem:'非法入侵',
-      deviceType:"入侵探测器",
-      deviceName:'点位类型',
-      pointType:'入侵报警',
-      alarmRules:'1#会议室入侵报警规则',
-      alarmLevel:"严重",
-      notificationWay:'短信',
-      inputType:'点表导入'
+      subSystem: '非法入侵',
+      deviceType: "入侵探测器",
+      deviceName: '点位类型',
+      pointType: '入侵报警',
+      alarmRules: '1#会议室入侵报警规则',
+      alarmLevel: "严重",
+      notificationWay: '短信',
+      inputType: '点表导入'
     }
 
   ]
   // 监控报警信息
-  monitorAlarm =[
+  monitorAlarm = [
     {
-      alarmName:'',
-      startTime:'',
-      alarmDescried:"",
-      alarmLevel:'严重',
-      alarmStatus:'已创建',
-      alarmType:"",
-      subSystem:'门禁管理',
-      deviceType:"门禁",
-      deviceName:"门禁002",
-      devicePoint:'非法刷卡报警',
+      alarmName: '',
+      startTime: '',
+      alarmDescried: "",
+      alarmLevel: '严重',
+      alarmStatus: '已创建',
+      alarmType: "",
+      subSystem: '门禁管理',
+      deviceType: "门禁",
+      deviceName: "门禁002",
+      devicePoint: '非法刷卡报警',
     },
     {
-      alarmName:'中钢大厦xxxxxx',
-      startTime:'',
-      alarmDescried:"入侵报警",
-      alarmLevel:'严重',
-      alarmStatus:'已创建',
-      alarmType:"",
-      subSystem:'门禁管理',
-      deviceType:"门禁",
-      deviceName:"门禁002",
-      devicePoint:'非法刷卡报警',
+      alarmName: '中钢大厦xxxxxx',
+      startTime: '',
+      alarmDescried: "入侵报警",
+      alarmLevel: '严重',
+      alarmStatus: '已创建',
+      alarmType: "",
+      subSystem: '门禁管理',
+      deviceType: "门禁",
+      deviceName: "门禁002",
+      devicePoint: '非法刷卡报警',
     },
     {
-      alarmName:'中钢大厦xxxxxx',
-      startTime:'',
-      alarmDescried:"入侵报警",
-      alarmLevel:'严重',
-      alarmStatus:'已创建',
-      alarmType:"",
-      subSystem:'门禁管理',
-      deviceType:"门禁",
-      deviceName:"门禁002",
-      devicePoint:'非法刷卡报警',
+      alarmName: '中钢大厦xxxxxx',
+      startTime: '',
+      alarmDescried: "入侵报警",
+      alarmLevel: '严重',
+      alarmStatus: '已创建',
+      alarmType: "",
+      subSystem: '门禁管理',
+      deviceType: "门禁",
+      deviceName: "门禁002",
+      devicePoint: '非法刷卡报警',
     },
     {
-      alarmName:'中钢大厦xxxxxx',
-      startTime:'',
-      alarmDescried:"入侵报警",
-      alarmLevel:'严重',
-      alarmStatus:'已创建',
-      alarmType:"",
-      subSystem:'门禁管理',
-      deviceType:"门禁",
-      deviceName:"门禁002",
-      devicePoint:'非法刷卡报警',
+      alarmName: '中钢大厦xxxxxx',
+      startTime: '',
+      alarmDescried: "入侵报警",
+      alarmLevel: '严重',
+      alarmStatus: '已创建',
+      alarmType: "",
+      subSystem: '门禁管理',
+      deviceType: "门禁",
+      deviceName: "门禁002",
+      devicePoint: '非法刷卡报警',
     },
   ]
   // 报警处理组模拟数据
   alarmGrounp = [
     {
-      subSystem:'门禁',
-      alarmLevel:'严重',
-      dealGroup:'门禁/高/处理组A',
-      handingPerson:'张三'
+      subSystem: '门禁',
+      alarmLevel: '严重',
+      dealGroup: '门禁/高/处理组A',
+      handingPerson: '张三'
     },
     {
-      subSystem:'',
-      alarmLevel:'',
-      dealGroup:'',
-      handingPerson:'李四'
+      subSystem: '',
+      alarmLevel: '',
+      dealGroup: '',
+      handingPerson: '李四'
     },
     {
-      subSystem:'门禁',
-      alarmLevel:'',
-      dealGroup:'',
-      handingPerson:'张三'
+      subSystem: '门禁',
+      alarmLevel: '',
+      dealGroup: '',
+      handingPerson: '张三'
     },
   ]
   // 通知方式管理
   notificationWay = [
     {
-      alarmLevel:'普通',
-      dialogType:'5秒自动关闭',
-      voice:'禁用',
-      msg:'警用'
+      alarmLevel: '普通',
+      dialogType: '5秒自动关闭',
+      voice: '禁用',
+      msg: '警用'
     },
     {
-      alarmLevel:'普通',
-      dialogType:'5秒自动关闭',
-      voice:'禁用',
-      msg:'警用'
+      alarmLevel: '普通',
+      dialogType: '5秒自动关闭',
+      voice: '禁用',
+      msg: '警用'
     },
     {
-      alarmLevel:'严重',
-      dialogType:'手动关闭',
-      voice:'禁用',
-      msg:'警用'
+      alarmLevel: '严重',
+      dialogType: '手动关闭',
+      voice: '禁用',
+      msg: '警用'
     },
     {
-      alarmLevel:'严重',
-      dialogType:'手动关闭',
-      voice:'禁用',
-      msg:'警用'
+      alarmLevel: '严重',
+      dialogType: '手动关闭',
+      voice: '禁用',
+      msg: '警用'
     },
   ]
   // 罗布林卡信息
   // 保护工程
   protectItem = [
     {
-      projectName:"测试",
-      constructDept:"中铁一局",
-      supervisionDept:"方建集团",
-      startTime:"2020-5-31",
+      projectName: "测试",
+      constructDept: "中铁一局",
+      supervisionDept: "方建集团",
+      startTime: "2020-5-31",
     },
     {
-      projectName:"测试",
-      constructDept:"中铁一局",
-      supervisionDept:"方建集团",
-      startTime:"2020-5-31",
+      projectName: "测试",
+      constructDept: "中铁一局",
+      supervisionDept: "方建集团",
+      startTime: "2020-5-31",
     },
     {
-      projectName:"测试",
-      constructDept:"中铁一局",
-      supervisionDept:"方建集团",
-      startTime:"2020-5-31",
+      projectName: "测试",
+      constructDept: "中铁一局",
+      supervisionDept: "方建集团",
+      startTime: "2020-5-31",
     }
   ]
 
@@ -2041,7 +2041,7 @@ class commonFun {
 
 
   //重新整合跳转，包括跳旧项目、新项目、客户端
-  loadPage(item,largeScreenFlag) {
+  loadPage(item, largeScreenFlag) {
     //客户端关闭视频
     window.closeVideoWin && window.closeVideoWin()
     window.closeClientPage && window.closeClientPage()
@@ -2052,26 +2052,30 @@ class commonFun {
       //客户端
       if (this.loadClientPage(item)) {
         return;
-      }else if (item.routeAddress.indexOf("@") != -1) {
+      } else if (item.routeAddress.indexOf("@") != -1) {
         //旧项目
         if (item.routeAddress == '@/html/docms/index.html?openid=emergency') {
           localStorage.setItem('backupType', 4)
         } else if (item.routeAddress == '@/html/docms/index.html?openid=assess') {
           localStorage.setItem('backupType', 5)
         }
-        if(largeScreenFlag){
+        if (largeScreenFlag) {
           store.commit("digitalPark/largeScreenIframeSrc",
-            window.top.location.origin+'/#/vibe-web?updateId='+_.uniqueId())
-        }else{
+            window.top.location.origin + '/#/vibe-web?updateId=' + _.uniqueId())
+        } else {
           router.push('/vibe-web')
         }
-      }else {
-      //新项目
-      if(largeScreenFlag) {
-        store.commit("digitalPark/largeScreenIframeSrc", window.top.location.origin + '/#' + item.routeAddress)
-      }else{
-        router.push(this.getLastItem(item).routeAddress);
-      }
+      } else {
+        //新项目
+        if (largeScreenFlag) {
+          store.commit("digitalPark/largeScreenIframeSrc", window.top.location.origin + '/#' + item.routeAddress)
+        } else {
+          if (item.childNode.length) {
+            this.loadPage(this.getLastItem(item));
+          } else {
+            router.push(item.routeAddress);
+          }
+        }
       }
     } else {
       router.push("/digitalPark/defaultPage");
@@ -2093,7 +2097,7 @@ class commonFun {
         router.push(`/clientOverView?productId=${item.id}`)
         this.invokeClientMethod('showClientOverView', JSON.stringify(item));
         return true;
-      }else{
+      } else {
         let menuTree = JSON.parse(localStorage.getItem("menuTree"))
         let firstMenu = menuTree[0].childNode.find(first => {
           return first.id == item.firstMenuId;
@@ -2101,10 +2105,10 @@ class commonFun {
         let secondMenu = firstMenu.childNode.find(second => {
           return second.id == item.secondMenuId;
         });
-        if(item.level==3 && item.name=='概览'){
+        if (item.level == 3 && item.name == '概览') {
           router.push(`/clientOverView?productId=${item.pid}`)
           this.invokeClientMethod('showClientOverView', JSON.stringify(secondMenu));
-        }else{
+        } else {
           let id = item.id
           if (item.childNode.length) {
             id = this.getLastItem(item).id
@@ -2130,7 +2134,7 @@ class commonFun {
   }
 
   getLastItem(item) {
-    if (item.childNode.length) {
+    if (item.childNode && item.childNode.length) {
       return this.getLastItem(item.childNode[0])
     } else {
       return item
@@ -2211,6 +2215,6 @@ class commonFun {
       tooltip: tooltip[type]
     }
   }
-  
+
 }
 export default new commonFun()
