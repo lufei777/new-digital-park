@@ -873,6 +873,10 @@ export default {
     /**
      * 外部调用方法
      */
+    //get
+    getSelectedData() {
+      return this.selectedData;
+    },
     //set
     // 设置表格数据
     setData(data) {

@@ -15,42 +15,44 @@
     <div v-if="filter" style="padding:0 10px;margin:5px 0 0 0;">
       <el-input size="mini" placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
     </div>
-    <el-option :value="text">
-      <el-tree
-        ref="tree"
-        class="tree-option"
-        style="padding:10px 0;"
-        :highlight-current="!multiple"
-        :data="dicList"
-        :node-key="valueKey"
-        :accordion="accordion"
-        :show-checkbox="multiple"
-        :props="treeProps"
-        :lazy="lazy"
-        :load="treeLoad"
-        :check-strictly="checkStrictly"
-        :current-node-key="multiple?'':text"
-        :filter-node-method="filterNode"
-        :default-expanded-keys="defaultExpandedKeys?defaultExpandedKeys:(defaultExpandAll?[]:keysList)"
-        :default-checked-keys="defaultCheckedKeys?defaultCheckedKeys:keysList"
-        :default-expand-all="defaultExpandAll"
-        @check="checkChange"
-        @node-click.self="handleNodeClick"
-        :icon-class="iconClass"
-      >
-        <template #default="{ data }">
-          <div style="width:100%;padding-right:10px;">
-            <slot
-              :name="prop+'Type'"
-              :labelkey="labelKey"
-              :valuekey="valueKey"
-              :item="data"
-              v-if="typeslot"
-            ></slot>
-            <span v-else>{{getLabelText(data)}}</span>
-          </div>
-        </template>
-      </el-tree>
+    <el-option :style="{height:'auto',padding:0}" :value="text">
+      <div class="zvue-input-tree">
+        <el-tree
+          ref="tree"
+          class="tree-option"
+          style="padding:10px 0;"
+          :highlight-current="!multiple"
+          :data="dicList"
+          :node-key="valueKey"
+          :accordion="accordion"
+          :show-checkbox="multiple"
+          :props="treeProps"
+          :lazy="lazy"
+          :load="treeLoad"
+          :check-strictly="checkStrictly"
+          :current-node-key="multiple?'':text"
+          :filter-node-method="filterNode"
+          :default-expanded-keys="defaultExpandedKeys?defaultExpandedKeys:(defaultExpandAll?[]:keysList)"
+          :default-checked-keys="defaultCheckedKeys?defaultCheckedKeys:keysList"
+          :default-expand-all="defaultExpandAll"
+          @check="checkChange"
+          @node-click.self="handleNodeClick"
+          :icon-class="iconClass"
+        >
+          <template #default="{ data }">
+            <div style="width:100%;padding-right:10px;">
+              <slot
+                :name="prop+'Type'"
+                :labelkey="labelKey"
+                :valuekey="valueKey"
+                :item="data"
+                v-if="typeslot"
+              ></slot>
+              <span v-else>{{getLabelText(data)}}</span>
+            </div>
+          </template>
+        </el-tree>
+      </div>
     </el-option>
   </el-select>
 </template>
