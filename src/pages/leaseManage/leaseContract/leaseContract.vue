@@ -210,10 +210,10 @@ export default {
       LeaseManageApi.removeContract({
         contractIds: this.contractIds
       }).then(res => {
-        // this.$message({
-        //   type: "success",
-        //   message: "删除成功!"
-        // });
+        this.$message({
+          type: "success",
+          message: res
+        });
         this.contractIds = "";
         this.contractList();
       });
@@ -224,7 +224,15 @@ export default {
     delRow(obj) {
       console.log("res", obj);
       this.contractIds = obj.scopeRow.row.contractId;
-      this.showDeleteTip();
+      if(obj.scopeRow.row.idDelete == 1) {
+        this.$message({
+          type: "warning",
+          message: obj.scopeRow.row.contractName + '未超期，不能删除'
+        });
+      } else {
+         this.showDeleteTip();
+      }
+     
     },
     batchDels(obj) {
       this.contractIds =

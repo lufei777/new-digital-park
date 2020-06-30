@@ -143,21 +143,21 @@ export default {
               }
             ]
           },
-          {
-            type: "input",
-            label: "总价",
-            prop: "housePrice",
-            dataType: "number",
-            clearable: true,
-            span: 12,
-            appendSlot: "housepriceappend",
-            rules: [
-              {
-                required: true,
-                trigger: "change"
-              }
-            ]
-          },
+          // {
+          //   type: "input",
+          //   label: "总价",
+          //   prop: "housePrice",
+          //   dataType: "number",
+          //   clearable: true,
+          //   span: 12,
+          //   appendSlot: "housepriceappend",
+          //   rules: [
+          //     {
+          //       required: true,
+          //       trigger: "change"
+          //     }
+          //   ]
+          // },
           {
             type: "input",
             label: "工程名称",
@@ -268,22 +268,22 @@ export default {
     }
   },
   watch: {
-    "model.isRent"(newVal, oldVal) {
-      if (newVal === LeaseManageDic.isRent[1].value) {
-        this.$refs[this.leaseManageForm.ref].setColumnByProp("housePrice", {
-          rules: []
-        });
-      } else {
-        this.$refs[this.leaseManageForm.ref].setColumnByProp("housePrice", {
-          rules: [
-            {
-              required: true,
-              trigger: "change"
-            }
-          ]
-        });
-      }
-    }
+    // "model.isRent"(newVal, oldVal) {
+    //   if (newVal === LeaseManageDic.isRent[1].value) {
+    //     this.$refs[this.leaseManageForm.ref].setColumnByProp("housePrice", {
+    //       rules: []
+    //     });
+    //   } else {
+    //     this.$refs[this.leaseManageForm.ref].setColumnByProp("housePrice", {
+    //       rules: [
+    //         {
+    //           required: true,
+    //           trigger: "change"
+    //         }
+    //       ]
+    //     });
+    //   }
+    // }
   }
 };
 </script>
