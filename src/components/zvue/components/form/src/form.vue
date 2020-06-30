@@ -730,9 +730,6 @@ export default {
   }
   // 下拉树的样式调整
   .zvue-input-tree {
-    .el-scrollbar__wrap {
-      overflow-x: hidden;
-    }
     .el-tree-node__content {
       padding: 0;
     }
