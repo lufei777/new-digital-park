@@ -1,195 +1,211 @@
 <template>
   <div class="zvue-form-wrapper" :style="{width:setPx(parentOption.width,'100%')}">
-    <el-form
-      v-loading="load"
-      :ref="formRef"
-      :status-icon="vaildData(parentOption.statusIcon,false)"
-      :label-suffix="parentOption.labelSuffix || ':'"
-      :rules="formRules"
-      :model="model"
-      :size="controlSize"
-      :label-width="setPx(parentOption.labelWidth,90)"
-      :label-position="parentOption.labelPosition"
-      :hide-required-asterisk="parentOption.hideRequiredAsterisk"
-      :show-message="parentOption.showMessage"
-      :inline-message="parentOption.inlineMessage"
-    >
-      <el-row :span="24">
-        <!-- :display="item.display" -->
-        <z-group
-          v-for="(group) in columnOption"
-          v-show="vaildData(!group.hide,true)"
-          :key="group.prop"
-          :display="group.display"
-          :icon="group.icon"
-          :label="group.label"
-          :card="parentOption.card"
-        >
-          <template #header v-if="$slots[group.prop+'Header']">
-            <slot :name="`${group.prop}Header`"></slot>
-          </template>
-          <div class="zvue-form-group">
-            <template v-for="(column, cindex) in group.forms">
-              <el-col
-                :key="column.prop"
-                :span="column.span || itemSpanDefault"
-                :offset="column.offset || 0"
-                :push="column.push || 0"
-                :pull="column.pull || 0"
-                :xs="24"
-                v-show="vaildData(!column.hide,true)"
-                v-if="vaildDisplay(column)"
-              >
-                <el-form-item
-                  :class="[validatenull(column.label)?'zvue-form-item_emptylabel' : '']"
-                  :label="column.label"
-                  :prop="column.prop"
-                  :required="column.required"
-                  :error="column.error"
-                  :show-message="column.showMessage"
-                  :inline-message="column.inlineMessage"
-                  :size="column.size || controlSize"
-                  :label-width="setPx(column.width,validatenull(parentOption.labelWidth) ? 90 : parentOption.labelWidth)"
-                >
-                  <!-- 自定义label -->
-                  <template #label v-if="column.labelslot">
-                    <slot
-                      v-bind="slotProps"
-                      :name="column.prop+'Label'"
-                      :column="column"
-                      :label="column.label"
-                      :value="model[column.prop]"
-                      :disabled="vaildDiabled(column,group)"
-                      :size="column.size || controlSize"
-                      :dic="DIC[column.prop]"
-                    ></slot>
-                  </template>
-                  <!-- 自定义error -->
-                  <template #error="{error}" v-if="column.errorslot">
-                    <slot
-                      v-bind="slotProps"
-                      :name="column.prop+'Error'"
-                      :column="column"
-                      :error="error"
-                      :value="model[column.prop]"
-                      :disabled="vaildDiabled(column,group)"
-                      :size="column.size || controlSize"
-                      :dic="DIC[column.prop]"
-                    ></slot>
-                  </template>
-                  <!-- 如果是禁用tooltip，则tabindex 为 -1 -->
-                  <el-tooltip
-                    :tabindex="!column.tip || column.type==='upload' ? -1 : 0"
-                    :disabled="!column.tip || column.type==='upload'"
-                    :content="vaildData(column.tip,getPlaceholder(column))"
-                    :placement="column.tipPlacement"
-                  >
-                    <!-- <span
-                      v-if="textMode && !['dynamic','upload'].includes(column.type)"
-                    >{{displayText(column)}}</span>-->
-                    <slot
-                      v-if="column.formslot"
-                      v-bind="slotProps"
-                      :name="column.prop"
-                      :value="model[column.prop]"
-                      :column="column"
-                      :label="model['$'+column.prop]"
-                      :size="column.size || controlSize"
-                      :dic="DIC[column.prop]"
-                      :disabled="vaildDiabled(column,group)"
-                      :textMode="vaildTextMode(column,group)"
-                    ></slot>
-                    <form-temp
-                      v-else
-                      v-model="model[column.prop]"
-                      :column="column"
-                      :dic="DIC[column.prop]"
-                      :upload-before="uploadBefore"
-                      :upload-after="uploadAfter"
-                      :upload-success="uploadSuccess"
-                      :upload-error="uploadError"
-                      :size="controlSize"
-                      :disabled="vaildDiabled(column,group)"
-                      :textMode="vaildTextMode(column,group)"
-                    >
-                      <!-- 自定义表单里内容 -->
-                      <template
-                        :slot="`${column.prop}Type`"
-                        slot-scope="{item,labelkey,valuekey,childrenkey,node}"
-                        v-if="column.typeslot"
-                      >
-                        <slot
-                          :name="`${column.prop}Type`"
-                          v-bind="slotProps"
-                          :size="column.size || controlSize"
-                          :item="item"
-                          :labelkey="labelkey"
-                          :valuekey="valuekey"
-                          :childrenkey="childrenkey"
-                          :node="node"
-                          :disabled="vaildDiabled(column,group)"
-                          :textMode="vaildTextMode(column,group)"
-                        ></slot>
-                      </template>
-                      <!-- input的slot处理 -->
-                      <template v-if="column.prependSlot" #[column.prependSlot]="{prependClick}">
-                        <slot
-                          :name="column.prependSlot"
-                          v-bind="slotProps"
-                          :disabled="vaildDiabled(column,group)"
-                          :textMode="vaildTextMode(column,group)"
-                          :clickevent="prependClick"
-                        ></slot>
-                      </template>
-                      <template v-if="column.appendSlot" #[column.appendSlot]="{appendClick}">
-                        <slot
-                          :name="column.appendSlot"
-                          v-bind="slotProps"
-                          :disabled="vaildDiabled(column,group)"
-                          :textMode="vaildTextMode(column,group)"
-                          :clickevent="appendClick"
-                        ></slot>
-                      </template>
-                    </form-temp>
-                  </el-tooltip>
-                </el-form-item>
-              </el-col>
-              <!-- 用作空行填充 -->
-              <el-col
-                :key="cindex"
-                tag="div"
-                style="display:inline-block;height:42px;"
-                :span="column.count"
-                v-if="column.row && column.span!==24 && column.count"
-              ></el-col>
+    <el-card :body-style="{ padding: '0px' }" shadow="never">
+      <div class="clearfix" slot="header" v-if="$scopedSlots.header_left || $scopedSlots.header_right">
+        <div style="float: left; padding: 3px 0">
+          <slot v-bind="slotProps" name="header_left"></slot>
+        </div>
+        <div style="float: right; padding: 3px 0">
+          <slot v-bind="slotProps" name="header_right"></slot>
+        </div>
+      </div>
+      <!-- 表单主体 -->
+      <el-form
+        v-loading="load"
+        :ref="formRef"
+        :status-icon="vaildData(parentOption.statusIcon,false)"
+        :label-suffix="parentOption.labelSuffix || ':'"
+        :rules="formRules"
+        :model="model"
+        :size="controlSize"
+        :label-width="setPx(parentOption.labelWidth,90)"
+        :label-position="parentOption.labelPosition"
+        :hide-required-asterisk="parentOption.hideRequiredAsterisk"
+        :show-message="parentOption.showMessage"
+        :inline-message="parentOption.inlineMessage"
+      >
+        <el-row :span="24">
+          <!-- :display="item.display" -->
+          <z-group
+            v-for="(group) in columnOption"
+            v-show="vaildData(!group.hide,true)"
+            :key="group.prop"
+            :display="group.display"
+            :icon="group.icon"
+            :label="group.label"
+            :arrow="group.arrow"
+            :collapse="group.collapse"
+            :card="parentOption.card"
+          >
+            <template #header v-if="$slots[group.prop+'Header']">
+              <slot :name="`${group.prop}Header`"></slot>
             </template>
-          </div>
-        </z-group>
-        <el-col :span="24" v-if="vaildData(parentOption.menuBtn,true)">
-          <el-form-item>
-            <!-- 菜单按钮组 -->
-            <div :class="`zvue-form-menu-${menuPosition}`">
-              <el-button
-                type="primary"
-                @click="submit"
-                :size="controlSize"
-                icon="el-icon-check"
-                :loading="vaildBoolean(parentOption.submitDisabled,allDisabled)"
-                v-if="vaildData(parentOption.submitBtn,true)"
-              >{{vaildData(parentOption.submitText,'确 定')}}</el-button>
-              <el-button
-                icon="el-icon-delete"
-                :size="controlSize"
-                :loading="vaildBoolean(parentOption.emptyDisabled,allDisabled)"
-                v-if="vaildData(parentOption.emptyBtn,true)"
-                @click="resetForm"
-              >{{vaildData(parentOption.emptyText,'清 空')}}</el-button>
-              <slot name="menuBtn" v-bind="slotProps"></slot>
+            <div class="zvue-form-group">
+              <template v-for="(column, cindex) in group.forms">
+                <el-col
+                  :key="column.prop"
+                  :span="column.span || itemSpanDefault"
+                  :offset="column.offset || 0"
+                  :push="column.push || 0"
+                  :pull="column.pull || 0"
+                  :xs="24"
+                  v-show="vaildData(!column.hide,true)"
+                  v-if="vaildDisplay(column)"
+                  :style="{paddingLeft:setPx((parentOption.gutter ||20)/2),paddingRight:setPx((parentOption.gutter ||20)/2)}"
+                >
+                  <el-form-item
+                    :class="[validatenull(column.label)?'zvue-form-item_emptylabel' : '']"
+                    :label="column.label"
+                    :prop="column.prop"
+                    :required="column.required"
+                    :error="column.error"
+                    :show-message="column.showMessage"
+                    :inline-message="column.inlineMessage"
+                    :size="column.size || controlSize"
+                    :label-width="setPx(column.width,validatenull(parentOption.labelWidth) ? 90 : parentOption.labelWidth)"
+                  >
+                    <!-- 自定义label -->
+                    <template #label v-if="column.labelslot">
+                      <slot
+                        v-bind="slotProps"
+                        :name="column.prop+'Label'"
+                        :column="column"
+                        :label="column.label"
+                        :value="model[column.prop]"
+                        :disabled="vaildDiabled(column,group)"
+                        :size="column.size || controlSize"
+                        :dic="DIC[column.prop]"
+                      ></slot>
+                    </template>
+                    <!-- 自定义error -->
+                    <template #error="{error}" v-if="column.errorslot">
+                      <slot
+                        v-bind="slotProps"
+                        :name="column.prop+'Error'"
+                        :column="column"
+                        :error="error"
+                        :value="model[column.prop]"
+                        :disabled="vaildDiabled(column,group)"
+                        :size="column.size || controlSize"
+                        :dic="DIC[column.prop]"
+                      ></slot>
+                    </template>
+                    <!-- 如果是禁用tooltip，则tabindex 为 -1 -->
+                    <el-tooltip
+                      :tabindex="!column.tip || column.type==='upload' ? -1 : 0"
+                      :disabled="!column.tip || column.type==='upload'"
+                      :content="vaildData(column.tip,getPlaceholder(column))"
+                      :placement="column.tipPlacement"
+                    >
+                      <!-- <span
+                      v-if="textMode && !['dynamic','upload'].includes(column.type)"
+                      >{{displayText(column)}}</span>-->
+                      <slot
+                        v-if="column.formslot"
+                        v-bind="slotProps"
+                        :name="column.prop"
+                        :value="model[column.prop]"
+                        :column="column"
+                        :label="model['$'+column.prop]"
+                        :size="column.size || controlSize"
+                        :dic="DIC[column.prop]"
+                        :disabled="vaildDiabled(column,group)"
+                        :textMode="vaildTextMode(column,group)"
+                      ></slot>
+                      <form-temp
+                        v-else
+                        v-model="model[column.prop]"
+                        :column="column"
+                        :dic="DIC[column.prop]"
+                        :upload-before="uploadBefore"
+                        :upload-after="uploadAfter"
+                        :upload-success="uploadSuccess"
+                        :upload-error="uploadError"
+                        :size="controlSize"
+                        :disabled="vaildDiabled(column,group)"
+                        :textMode="vaildTextMode(column,group)"
+                      >
+                        <!-- 自定义表单里内容 -->
+                        <template
+                          :slot="`${column.prop}Type`"
+                          slot-scope="{item,labelkey,valuekey,childrenkey,node}"
+                          v-if="column.typeslot"
+                        >
+                          <slot
+                            :name="`${column.prop}Type`"
+                            v-bind="slotProps"
+                            :size="column.size || controlSize"
+                            :item="item"
+                            :labelkey="labelkey"
+                            :valuekey="valuekey"
+                            :childrenkey="childrenkey"
+                            :node="node"
+                            :disabled="vaildDiabled(column,group)"
+                            :textMode="vaildTextMode(column,group)"
+                          ></slot>
+                        </template>
+                        <!-- input的slot处理 -->
+                        <template v-if="column.prependSlot" #[column.prependSlot]="{prependClick}">
+                          <slot
+                            :name="column.prependSlot"
+                            v-bind="slotProps"
+                            :size="controlSize"
+                            :disabled="vaildDiabled(column,group)"
+                            :textMode="vaildTextMode(column,group)"
+                            :clickevent="prependClick"
+                          ></slot>
+                        </template>
+                        <template v-if="column.appendSlot" #[column.appendSlot]="{appendClick}">
+                          <slot
+                            :name="column.appendSlot"
+                            v-bind="slotProps"
+                            :size="controlSize"
+                            :disabled="vaildDiabled(column,group)"
+                            :textMode="vaildTextMode(column,group)"
+                            :clickevent="appendClick"
+                          ></slot>
+                        </template>
+                      </form-temp>
+                    </el-tooltip>
+                  </el-form-item>
+                </el-col>
+                <!-- 用作空行填充 -->
+                <el-col
+                  :key="cindex"
+                  tag="div"
+                  style="display:inline-block;height:42px;"
+                  :span="column.count"
+                  v-if="column.row && column.span!==24 && column.count"
+                ></el-col>
+              </template>
             </div>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
+          </z-group>
+          <el-col :span="24" v-if="vaildData(parentOption.menuBtn,true)">
+            <el-form-item>
+              <!-- 菜单按钮组 -->
+              <div :class="`zvue-form-menu-${menuPosition}`">
+                <el-button
+                  type="primary"
+                  @click="submit"
+                  :size="controlSize"
+                  icon="el-icon-check"
+                  :loading="vaildBoolean(parentOption.submitDisabled,allDisabled)"
+                  v-if="vaildData(parentOption.submitBtn,true)"
+                >{{vaildData(parentOption.submitText,'确 定')}}</el-button>
+                <el-button
+                  icon="el-icon-delete"
+                  :size="controlSize"
+                  :loading="vaildBoolean(parentOption.emptyDisabled,allDisabled)"
+                  v-if="vaildData(parentOption.emptyBtn,true)"
+                  @click="resetForm"
+                >{{vaildData(parentOption.emptyText,'清 空')}}</el-button>
+                <slot name="menuBtn" v-bind="slotProps"></slot>
+              </div>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-card>
   </div>
 </template>
 <script>
@@ -714,9 +730,6 @@ export default {
   }
   // 下拉树的样式调整
   .zvue-input-tree {
-    .el-scrollbar__wrap {
-      overflow-x: hidden;
-    }
     .el-tree-node__content {
       padding: 0;
     }
@@ -732,6 +745,21 @@ export default {
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     height: auto;
+  }
+  // el-card
+  .el-card {
+    border: 0;
+  }
+  .el-card__header {
+    padding: 0;
+  }
+  .clearfix:before,
+  .clearfix:after {
+    display: block;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both;
   }
 }
 </style>

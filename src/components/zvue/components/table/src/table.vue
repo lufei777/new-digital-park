@@ -31,6 +31,8 @@
         :height="tableHeight"
         :size="controlSize"
         :show-header="options.showHeader"
+        :show-summary="parentOption.showSummary"
+        :summary-method="_tableSummaryMethod"
         @current-change="_currentChange"
         @expand-change="_expandChagne"
         @row-click="rowClick"
@@ -59,7 +61,7 @@
           fixed="left"
           type="selection"
           :width="config.selectionWidth"
-          :selectable="_selectable"
+          :selectable="tableMethods.selectable"
           align="center"
         ></el-table-column>
 
@@ -201,7 +203,7 @@ import {
   setPx
 } from "../../../utils/util";
 import { detail } from "../../../utils/detail";
-import { DIC_SPLIT } from "../../../global/variable";
+import { DIC_SPLIT, EMPTY_VALUE } from "../../../global/variable";
 
 //单双击冲突timer
 let dblclickTimer = null;
@@ -222,7 +224,8 @@ export default {
     load: {
       type: Boolean,
       default: false
-    }
+    },
+    summaryMethod: Function
   },
   provide() {
     return {
@@ -253,7 +256,8 @@ export default {
       formIndexList: [],
       currentRowData: [], // 当前选中行
       lastCurrentRowData: [], // 上一选中行
-      expandList: []  // 展开的列
+      expandList: [],  // 展开的列
+      sumsList: []
     };
   },
   created() {
@@ -424,8 +428,8 @@ export default {
     },
     // 计算高度
     _computedLayoutHeight() {
-      // 如果是根据内容自适应
-      if (this.uiConfig.height === "auto") return;
+      // 如果是 auto 或者 没有配置pagination 则根据内容自适应
+      if (this.uiConfig.height === "auto" || this.uiConfig.pagination === false) return;
 
       // 拿到设置高度
       let _height = this.uiConfig.height
@@ -480,14 +484,6 @@ export default {
     _handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
     },
-    // 当前行是否可多选
-    _selectable(row, index) {
-      if (typeof this.tableMethods.selectable == "function") {
-        return this.tableMethods.selectable(row, index);
-      } else {
-        return true;
-      }
-    },
     // 当前行发生变化
     _currentChange(currentRow, oldCurrentRow) {
       this.currentRowData = currentRow;
@@ -507,6 +503,59 @@ export default {
       } else {
         this.expandList = [...expandedRows];
       }
+    },
+    //合集统计逻辑
+    _tableSummaryMethod(param) {
+      //如果自己写逻辑则调用summaryMethod方法
+      if (typeof this.summaryMethod === "function")
+        return this.summaryMethod(param);
+      const { columns, data } = param;
+      const sums = [];
+      if (columns.length > 0) {
+        columns.forEach((column, index) => {
+          let currItem = this.sumColumnList.find(
+            item => item.name === column.property
+          );
+          if (index === 0) {
+            sums[index] = this.tableOption.sumText || config.sumText;
+          } else if (currItem) {
+            switch (currItem.type) {
+              case "count":
+                sums[index] = "计数：" + data.length;
+                break;
+              case "avg":
+                let avgValues = data.map(item => Number(item[column.property]));
+                let nowindex = 1;
+                sums[index] = avgValues.reduce((perv, curr) => {
+                  let value = Number(curr);
+                  if (!isNaN(value)) {
+                    return (perv * (nowindex - 1) + curr) / nowindex++;
+                  } else {
+                    return perv;
+                  }
+                }, 0);
+                sums[index] = "平均：" + sums[index].toFixed(2);
+                break;
+              case "sum":
+                let values = data.map(item => Number(item[column.property]));
+                sums[index] = values.reduce((perv, curr) => {
+                  let value = Number(curr);
+                  if (!isNaN(value)) {
+                    return perv + curr;
+                  } else {
+                    return perv;
+                  }
+                }, 0);
+                sums[index] = "合计：" + sums[index].toFixed(2);
+                break;
+            }
+          } else {
+            sums[index] = EMPTY_VALUE;
+          }
+        });
+      }
+      this.sumsList = sums;
+      return sums;
     },
 
     /**
@@ -825,27 +874,8 @@ export default {
      * 外部调用方法
      */
     //get
-    // 获取表格多选框选中数据
     getSelectedData() {
-      //多选获取当前选中值
       return this.selectedData;
-    },
-    // 获取当前表格单击选中数据
-    getCurrentRowData() {
-      //单选获取当前选中行
-      return this.currentRowData;
-    },
-    // 获取表格全部数据
-    getTableData() {
-      if (this.isServerMode) {
-        return this.getTableShowData();
-      } else {
-        return this.tableData;
-      }
-    },
-    // 获取表格当前显示数据
-    getTableShowData() {
-      return this.tableShowData;
     },
     //set
     // 设置表格数据
@@ -874,6 +904,8 @@ export default {
     refreshTable() {
       this._tableInit(true);
       this.doLayout();
+      // 清空多选数据
+      this.selectedData = [];
     },
     //搜索指定的属性配置
     findColumnIndex(prop) {
@@ -995,6 +1027,9 @@ export default {
     },
     isGroup() {
       return !this.validatenull(this.tableOption.group);
+    },
+    sumColumnList() {
+      return this.tableOption.sumColumnList || [];
     }
   },
   watch: {
@@ -1081,6 +1116,7 @@ export default {
   font-family: @TableFontFamily;
   font-size: @TableFontSize;
   width: 100%;
+
   .el-table {
     border: 1px solid @borderColor;
     border-bottom: 0px;
@@ -1150,6 +1186,13 @@ export default {
   .el-date-editor.el-input__inner,
   .el-select {
     width: 100% !important;
+  }
+  // 合计footer
+  .el-table__fixed-footer-wrapper,
+  .el-table__footer-wrapper {
+    td {
+      padding: 0 !important;
+    }
   }
 }
 </style>

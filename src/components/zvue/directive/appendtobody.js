@@ -2,7 +2,7 @@ var Clickoutside = {
   bind(el, binding, vnode) {
     if (binding.value) {
       setTimeout(() => {
-        window.top.document.body.append(el)
+        window.document.body.append(el)
       }, 0);
     }
   }

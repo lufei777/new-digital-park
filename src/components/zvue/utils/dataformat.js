@@ -32,6 +32,7 @@ let typeMap = {
     switch: 'switch',
     number: 'input-number',
     password: 'input',
+    tree:'input-tree'
 }
 
 export const getComponent = function (type, component) {
