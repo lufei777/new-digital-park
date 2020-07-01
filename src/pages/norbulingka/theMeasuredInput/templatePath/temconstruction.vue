@@ -22,13 +22,13 @@
               v-if="$route.query.mark == 'edit'"
               type='primary'
               @click="editSave(obj)"
-            >编辑保存</el-button>
+            >保存</el-button>
             <!-- 添加保存 -->
             <el-button
               v-if="$route.query.mark == 'add'"
               type='primary'
               @click="addSave(obj)"
-            >添加保存</el-button>
+            >保存</el-button>
             <el-button
               type='danger'
               @click="back(obj)"

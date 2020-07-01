@@ -43,6 +43,7 @@
             >添加</el-button>
             <el-button
               @click="del(obj)"
+              type='primary'
               :disabled='!obj.selectedData.length'
             >批量删除</el-button>
           </div>
@@ -74,6 +75,7 @@
 
 <script>
 import { Norbulingka } from "utils/dictionary";
+import CommonFun from "@/utils/commonFun";
 // 工程分类
 const projectType = Norbulingka.projectType;
 // 导入接口
@@ -111,6 +113,7 @@ export default {
                 prop: "number",
                 placeholder: "",
                 label: "发掘次数",
+                minRows:0,
                 span: 5
               },
               //  发掘面积 area
@@ -118,6 +121,7 @@ export default {
                 type: "number",
                 prop: "area",
                 label: "发掘面积",
+                minRows:0,
                 span: 5,
                 append: "㎡"
               },
@@ -186,18 +190,22 @@ export default {
       //   console.log(obj);
 
     },
-    searchData(params){
-      norbulingka.blurQueryArchaeology({params}).then(res => {
-        this.Tables.refreshTable();
-        this.getTableData({...this.condition});
-      });
-    },
+    // searchData(params){
+    //   norbulingka.blurQueryArchaeology({params}).then(res => {
+    //     this.Tables.refreshTable();
+    //     this.getTableData({...this.condition});
+    //   });
+    // },
 
     // 搜索
     search(obj) {
       this.Form.getFormModel(res => {
         this.condition = res
-        this.searchData(res)
+        // this.searchData(res)
+        norbulingka.blurQueryArchaeology({...res}).then(res => {
+        // this.Tables.refreshTable();
+        this.getTableData({page:1,rows:10,...this.condition});
+      });
       });
       // console.log(this.Form.model);
       // //   console.log(this.model);
@@ -212,16 +220,33 @@ export default {
       this.Form.resetForm();
     },
     // 删除方法
-    delRowData(ids){
-      norbulingka.deleteArchaeology({ ids }).then(res => {
-        this.$message({
-          type: "success",
-          message: "删除成功！"
+    delRowData(ids) {
+      this.$confirm("确认删除吗?", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        norbulingka.deleteArchaeology({ ids }).then(res => {
+          this.$message({
+            type: "success",
+            message: "删除成功！"
+          });
+          // this.Tables.refreshTable();
+          this.getTableData();
         });
-        this.Tables.refreshTable();
-        this.getTableData();
       });
     },
+
+    // delRowData(ids){
+    //   norbulingka.deleteArchaeology({ ids }).then(res => {
+    //     this.$message({
+    //       type: "success",
+    //       message: "删除成功！"
+    //     });
+    //     this.Tables.refreshTable();
+    //     this.getTableData();
+    //   });
+    // },
     // 批量删除
     del({selectedData}) {
       let arr = selectedData;
@@ -238,7 +263,8 @@ export default {
       this.$confirm('你确定要删除吗？',{
         distinguishCancelAndClose: true,
         confirmButtonText: '确认',
-          cancelButtonText: '取消'
+        cancelButtonText: '取消',
+        type:'warning'
       })
       .then(() => {
             this.$message({
@@ -280,6 +306,7 @@ export default {
           
           this.$refs[this.tableData.ref].setData(res.list);
           this.$refs[this.tableData.ref].setTotal(res.total);
+           this.$refs[this.tableData.ref].setCurrentPage(pageParams.page);
         })
         .finally(res => {
           this.loading = false;

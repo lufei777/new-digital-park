@@ -83,7 +83,7 @@ export default [
 				path:'/integratedquery',
 				name:'leaseintegratedquery',
 				meta:{title:'租赁月账单综合查询'},
-				component:() => import('../pages/leaseManage/queryStatistics/integratedQuality.vue')
+				component:() => import('../pages/leaseManage/queryStatistics/integratedQuality/rentStatistics.vue')
 			}
 
 

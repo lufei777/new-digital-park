@@ -18,17 +18,21 @@
               :disabled="obj.disabled"
               type="primary"
               @click="onClickSearchBtn(obj)"
-            >搜索</el-button>
+            >查询</el-button>
             <el-button
               :disabled="obj.disabled"
               @click="clearForm(obj)"
-            >清除</el-button>
+            >重置</el-button>
           </div>
         </template>
       </z-form>
     </div>
 
     <div class="lease-contract-table panel">
+      <div class="tab-title flex-align-between">
+        <span> </span>
+        <em>{{title}}</em>
+      </div>
       <z-table
         :ref="leaseContractTable.ref"
         :options="leaseContractTable"
@@ -39,15 +43,18 @@
         >
           <div class="operator-box flex-row-reverse">
             <el-button
-              :size="obj.size"
+            size='small'
+            type="primary"
+            >自定义查询结果</el-button>
+            <el-button
+              
               type="primary"
               @click="generate(obj)"
-            >生成</el-button>
+            >打印</el-button>
             <el-button
-              :size="obj.size"
               type="primary"
               @click="addContract(obj)"
-            >新增</el-button>
+            >导出</el-button>
           </div>
         </template>
 
@@ -78,6 +85,7 @@ export default {
   data() {
     let _this = this;
     return {
+      title:'2020年 5-7 月租赁月账单查询',
       model: {},
       leaseContractForm: {
         ref: "leaseContractForm",
@@ -131,6 +139,7 @@ export default {
       leaseContractTable: {
         ref: "leaseContractTable",
         customTop: true,
+        // 操作设置
         operation: {
           width: 200
         },
@@ -219,7 +228,7 @@ export default {
       );
     },
     //生成
-    generate() {},
+    generate(obj) {console.log(obj)},
     // 新增
     addContract() {
       this.$router.push({ path: "addmothly" });
@@ -257,4 +266,19 @@ export default {
   //   width: 180px!important;
   // }
 }
+.tab-title {
+      width: 57%;
+      height: 50px;
+      line-height: 50px;
+
+      span {
+        color: red;
+        font-size: 14px;
+      }
+
+      em {
+        font-style: normal;
+        font-size: 20px;
+      }
+    }
 </style>

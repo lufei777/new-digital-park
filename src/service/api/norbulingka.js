@@ -276,6 +276,11 @@ export default new class {
 		@url('/norb-service/file/preview')
 		@get
 		preview() { }
+		
+		// 下载
+		@url('/norb-service/oaApi/file/read/rename')
+		@get
+		rename() {} 
 
 
 }();

@@ -44,6 +44,7 @@
             >添加</el-button>
             <el-button
               @click="del(obj)"
+              type='primary'
               :disabled='!obj.selectedData.length'
             >批量删除</el-button>
           </div>
@@ -83,6 +84,7 @@ const assessment = Norbulingka.assessment;
 const saveStatues = Norbulingka.saveStatues;
 // 导入接口
 import norbulingka from "@/service/api/norbulingka";
+import CommonFun from "@/utils/commonFun";
 
 export default {
   data() {
@@ -169,12 +171,12 @@ export default {
           height: "auto",
           selection: true,
           showIndex: {
-            width:250,
-            align:'left'
+            width: 250,
+            align: "left"
           },
           pagination: {
             handler: (pageSize, currentPage, table) => {
-              this.getTableData({ page: currentPage, rows: pageSize });
+              this.getTableData({ page: currentPage, rows: pageSize ,...this.condition});
             }
           }
         }
@@ -232,52 +234,58 @@ export default {
     submit(obj) {
       //   console.log(obj);
     },
-    searchData(params) {
-      norbulingka.queryBuildingByPage({ params }).then(res => {
-        this.Tables.refreshTable();
-        this.getTableData({ ...this.condition });
-      });
-    },
+    // searchData(params) {
+    //   norbulingka.queryBuildingByPage({ params }).then(res => {
+    //     this.Tables.refreshTable();
+    //     this.getTableData({ ...this.condition });
+    //   });
+    // },
 
     // 搜索
     search(obj) {
       this.Form.getFormModel(res => {
         this.condition = res;
-        this.searchData(res);
+        // this.searchData(res);
+        norbulingka.queryBuildingByPage({...res }).then(res => {
+        this.Tables.refreshTable();
+        this.getTableData({ page:1,rows:10,...this.condition });
+      });
       });
     },
     // 清除
     clearData(obj) {
       this.Form.resetForm();
     },
+    delRowData(ids) {
+      this.$confirm("确认删除吗?", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        norbulingka.deleteBuildingsPhoto({ ids }).then(res => {
+          this.$message({
+            type: "success",
+            message: "批量删除成功！"
+          });
+          // this.Tables.refreshTable();
+          this.getTableData();
+        });
+      });
+    },
     // 表单上方的删除
     del(obj) {
-       let arr = obj.selectedData;
+      let arr = obj.selectedData;
       let str = "";
       arr.forEach(item => {
         str = str + item.id + ",";
       });
       let ids = str;
-      norbulingka.deleteBuildingsPhoto({ ids }).then(res => {
-        this.$message({
-          type: "success",
-          message: "批量删除成功！"
-        });
-      this.Tables.refreshTable()
-        this.getTableData()
-      });
+      this.delRowData(ids);
     },
     // 删除
     propertyDel(obj) {
       let ids = obj.row.id;
-      norbulingka.deleteBuildingsPhoto({ids}).then(res => {
-        this.$message({
-          type:'success',
-          message:'删除成功！'
-        })
-        this.Tables.refreshTable()
-        this.getTableData()
-      })
+      this.delRowData(ids);
     },
     // 编辑
     propertyEdit(obj) {
@@ -301,20 +309,22 @@ export default {
     },
     // 表格中的数据
     getTableData(pageParams = { page: 1, rows: 10 }) {
-      this.loading = true
-        norbulingka
-          .queryBuildingByPage(pageParams)
-          .then(res => {
-            // console.log(res);
-            this.$refs[this.tableData.ref].setData(res.list);
-            this.$refs[this.tableData.ref].setTotal(res.total);
-          })
-          .finally(res => {
-            this.loading = false;
-          });
+      this.loading = true;
+      norbulingka
+        .queryBuildingByPage(pageParams)
+        .then(res => {
+          // console.log(res);
+          this.$refs[this.tableData.ref].setData(res.list);
+          this.$refs[this.tableData.ref].setTotal(res.total);
+          this.$refs[this.tableData.ref].setCurrentPage(pageParams.page);
+        })
+        .finally(res => {
+          this.loading = false;
+        });
     }
   },
   created() {
+    this.getTableData();
     // 文物本体
     norbulingka
       .getSelectOptionOther({ catalogId: 17001, parentId: 0 })
@@ -334,7 +344,7 @@ export default {
     //     dicData: res
     //   });
     // });
-    
+
     // 评估状态
     norbulingka
       .getSelectOptionOther({ catalogId: 18001, parentId: 0 })
@@ -357,7 +367,6 @@ export default {
           dicData: res
         });
       });
-    this.getTableData();
   },
   mounted() {
     this.tablePropList();

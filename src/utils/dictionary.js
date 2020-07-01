@@ -690,7 +690,7 @@ export const Norbulingka = {
 	],
 	// 文物本体
 	ontology: [
-		{ label: '未选择', value: 1 },
+		// { label: '未选择', value: 1 },
 		{ label: '乌尧颇章', value: 2 },
 		{ label: '格桑颇章', value: 3 },
 		{ label: '缺扎', value: 4 },
