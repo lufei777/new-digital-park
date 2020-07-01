@@ -44,9 +44,7 @@ let publicRouters = [].concat(
   vibeWeb,
   DigitalParkRouter,
   ExportData,
-  SystemManage
-  
-  ,
+  SystemManage,
   Norbulingka,
   // PropertyErpsystem //物业系统ERP
   LeaseManage

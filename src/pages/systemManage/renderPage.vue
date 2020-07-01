@@ -243,7 +243,7 @@
             id:'',
             name:'',
             abbr:'',
-            parent:''
+            parentId:''
           }
         }
         return params
@@ -268,7 +268,7 @@
       onClickTreeNodeCallBack(val) {
         this.searchParams.department = val.id
         this.searchParams.spaceId = val.id
-        this.searchParams.parent = val.id
+        this.searchParams.parentId = val.id
       },
       onClickSearchBtn() {
         this.getData()
