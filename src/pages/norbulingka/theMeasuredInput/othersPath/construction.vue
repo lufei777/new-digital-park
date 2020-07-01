@@ -76,7 +76,7 @@
 <script>
 import { Norbulingka } from "utils/dictionary";
 // 工程分类
-const projectType = Norbulingka.projectType;
+const projectType = Norbulingka.proType;
 import CommonFun from "@/utils/commonFun";
 // 导入接口
 import norbulingka from "@/service/api/norbulingka";

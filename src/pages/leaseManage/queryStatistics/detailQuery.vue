@@ -43,26 +43,24 @@
         >
           <div class="operator-box flex-row-reverse">
             <el-button
-            size='small'
-            type="primary"
+              size='small'
+              type="primary"
             >自定义查询结果</el-button>
             <el-button
-              
               type="primary"
               @click="generate(obj)"
             >打印</el-button>
             <el-button
               type="primary"
-              @click="addContract(obj)"
+              @click="exportFile(obj)"
             >导出</el-button>
           </div>
         </template>
 
-        <template
+        <!-- <template
           slot="operation"
           slot-scope="obj"
         >
-          <!-- <el-button type="text" @click="detailContract(obj)">详情</el-button> -->
           <el-button
             type="text"
             @click="editRow(obj)"
@@ -71,7 +69,7 @@
             type="text"
             @click="delRow(obj)"
           >作废</el-button>
-        </template>
+        </template> -->
       </z-table>
     </div>
   </div>
@@ -80,12 +78,16 @@
 <script>
 import LeaseManageApi from "@/service/api/leaseManage";
 import CommonFun from "@/utils/commonFun";
+let pageInfo = {
+  pageNum: 1,
+  pageSize: 10
+};
 export default {
   name: "monthrentalbill",
   data() {
     let _this = this;
     return {
-      title:'2020年 5-7 月租赁月账单查询',
+      title: "2020年 5-7 月租赁月账单查询",
       model: {},
       leaseContractForm: {
         ref: "leaseContractForm",
@@ -100,7 +102,9 @@ export default {
             label: "年",
             type: "year",
             span: 6,
-            prop: "year"
+            prop: "year",
+            valueFormat: "yyyy"
+            // format:'yyyy'
           },
           //   {
           //     label: "时间日期范围",
@@ -117,7 +121,9 @@ export default {
             label: "月",
             type: "month",
             span: 6,
-            prop: "month"
+            prop: "month",
+            valueFormat: "MM",
+            format:'MM'
           },
 
           //  租户名称
@@ -140,17 +146,27 @@ export default {
         ref: "leaseContractTable",
         customTop: true,
         // 操作设置
-        operation: {
-          width: 200
-        },
-        props: {
-          rowKey: "contractId"
-        },
+        // operation: {
+        //   width: 200
+        // },
+        // props: {
+        //   rowKey: "contractId"
+        // },
         data: [],
         columnConfig: [],
+        serverMode: {
+          url: LeaseManageApi.queryMonthBillDetailed,
+          data: pageInfo
+        },
+        propsHttp: {
+          list: "data",
+          total: "total",
+          pageSize: "pageSize",
+          pageNum: "pageNum"
+        },
         uiConfig: {
           height: "auto", //"", //高度
-          selection: true, //是否多选
+          selection: false, //是否多选
           showIndex: {
             width: 50
           },
@@ -184,15 +200,22 @@ export default {
     },
     async contractList() {
       let labelList = [
-        { label: "租赁月账单编号", prop: "1" },
-        { label: "租户", prop: "2" },
-        { label: "合同名称", prop: "3" },
-        { label: "账期", prop: "4" },
-        { label: "收费项目数", prop: "5" },
-        { label: "账单金额合计(元)", prop: "6" },
-        { label: "账单状态", prop: "7" },
-        { label: "本次冲抵额(元)", prop: "8" },
-        { label: "租户类型", prop: "9" }
+        { label: "账单编号", prop: "billNumber" },
+        { label: "合同编码", prop: "contractNumber" },
+        { label: "合同名称", prop: "contractName" },
+        { label: "账期", prop: "billTime" },
+        { label: "租户名称", prop: "tenantName" },
+        { label: "账单金额", prop: "billCost" },
+        { label: "租金", prop: "leaseCost" },
+        { label: "物业费", prop: "propertyFeeCost" },
+        { label: "电费", prop: "electricityFeesCost" },
+        { label: "水费", prop: "waterCost" },
+        { label: "维修费", prop: "maintenanceCost" },
+        { label: "会议费", prop: "meetingCost" },
+        { label: "视频会议费", prop: "videoMeetingCost" },
+        { label: "停车券费", prop: "stopCatCost" },
+        { label: "停车月租", prop: "stopCatMonthCost" },
+        { label: "公务车有偿使用", prop: "officialVehicleCost" }
       ];
       this.leaseContractTable.columnConfig = labelList;
       //   let res = await LeaseManageApi.contractList({
@@ -203,6 +226,27 @@ export default {
       //     this.leaseContractTable.data = res.list;
       //     this.leaseContractTable.uiConfig.pagination.total = res.total;
       //   }
+    },
+
+    // 导出
+    exportFile(obj){
+      // /oaApi/month/bill/exportMonthBillDetailed
+      //  let url = '/oaApi/stockDeal/exportRecord'
+       let url = '/oaApi/month/bill/exportMonthBillDetailed'
+        let params=''
+        let arr = this.$refs[this.leaseContractTable.ref].getSelectedData()
+        let stockRecordIds = arr.length?arr.map((item)=>item.id):''
+        for(let key in this.leaseContractTable.serverMode.data){
+          if(key!=pageInfo){
+            params+=key+'='+this.leaseContractTable.serverMode.data[key]+'&'
+          }
+        }
+        params+='stockRecordIds='+stockRecordIds
+        CommonFun.exportMethod({url, params})
+
+      // LeaseManageApi.exportMonthBillDetailed().then(res =>{
+      //   console.log(res)
+      // })
     },
     // 搜索
     onClickSearchBtn(...args) {
@@ -228,7 +272,9 @@ export default {
       );
     },
     //生成
-    generate(obj) {console.log(obj)},
+    generate(obj) {
+      console.log(obj);
+    },
     // 新增
     addContract() {
       this.$router.push({ path: "addmothly" });
@@ -267,18 +313,18 @@ export default {
   // }
 }
 .tab-title {
-      width: 57%;
-      height: 50px;
-      line-height: 50px;
+  width: 57%;
+  height: 50px;
+  line-height: 50px;
 
-      span {
-        color: red;
-        font-size: 14px;
-      }
+  span {
+    color: red;
+    font-size: 14px;
+  }
 
-      em {
-        font-style: normal;
-        font-size: 20px;
-      }
-    }
+  em {
+    font-style: normal;
+    font-size: 20px;
+  }
+}
 </style>
