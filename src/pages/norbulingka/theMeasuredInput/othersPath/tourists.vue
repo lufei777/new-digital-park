@@ -43,6 +43,7 @@
             >添加</el-button>
             <el-button
               @click="del(obj)"
+              type='primary'
               :disabled='!obj.selectedData.length'
             >批量删除</el-button>
           </div>
@@ -78,8 +79,13 @@ import norbulingka from "@/service/api/norbulingka";
 // 字典配置
 import { Norbulingka } from "utils/dictionary";
 import { type } from "os";
+import CommonFun from "@/utils/commonFun";
 // 工程分类
 const projectType = Norbulingka.projectType;
+let pageInfo = {
+  page: 1,
+  rows: 10
+};
 export default {
   data() {
     return {
@@ -102,6 +108,7 @@ export default {
                 type: "number",
                 prop: "dailyCount",
                 label: "日游客量",
+                minRows: 0,
                 span: 6
                 // rules:[
                 //  {
@@ -117,6 +124,7 @@ export default {
                 prop: "tempCount",
                 label: "瞬时游客量",
                 span: 6,
+                minRows: 0
                 // offset: 1
                 // rules:[
                 //  {
@@ -142,21 +150,17 @@ export default {
         ref: "tabel",
         customTop: true,
         customTopPosition: "right",
-        data: [
-          /**
-             *      
-             { label: "日游客量", prop: "dailyCount" },
-            { label: "瞬时游客量", prop: "tempCount" },
-            { label: "日期", prop: "data" }
-             *   
-            */
-          // 模拟的假数据
-          // {
-          //   dailyCount: "111111",
-          //   tempCount: "222",
-          //   data: "2021-5-29 16:04:48.0"
-          // }
-        ],
+        data: [],
+        serverMode: {
+          url: norbulingka.queryTouristByPage,
+          data: pageInfo
+        },
+        propsHttp: {
+          list: "list",
+          total: "total",
+          pageSize: "rows",
+          pageNum: "page"
+        },
         columnConfig: [],
         operation: {
           prop: "operation",
@@ -169,7 +173,16 @@ export default {
           selection: true,
           showIndex: {
             width: 300,
-            align:'left'
+            align: "left"
+          },
+          pagination: {
+            handler: (pageSize, currentPage, table) => {
+              this.getTableData({
+                page: currentPage,
+                rows: pageSize,
+                ...this.condition
+              });
+            }
           }
         }
       }
@@ -198,21 +211,34 @@ export default {
       // 赋值给表格的配置项
       this.tableData.columnConfig = list;
     },
-    submit(obj) {
+    submit(model, hide) {
       //   console.log(obj);
+      this.tableData.serverMode.data = Object.assign(
+        _.cloneDeep(pageInfo),
+        model
+      );
+      this.Tables.refreshTable();
+      // this.refreshTable();
+
+      // {page:1,rows:10,...model}
     },
-    searchData(params) {
-      norbulingka.queryTouristByPage({ params }).then(res => {
-        this.Tables.refreshTable();
-        this.getTableData({ ...this.condition });
-      });
-    },
+    // searchData(params) {
+    //   norbulingka.queryTouristByPage({ params }).then(res => {
+    //     // this.Tables.refreshTable();
+    //     this.getTableData({ page: 1, rows: 10, ...this.condition });
+    //   });
+    // },
 
     // 搜索
     search(obj) {
+      // this.Form.submit()
       this.Form.getFormModel(res => {
         this.condition = res;
-        this.searchData(res);
+        // this.searchData(res);
+        norbulingka.queryTouristByPage({ ...res }).then(res => {
+          // this.Tables.refreshTable();
+          this.getTableData({ page: 1, rows: 10, ...this.condition });
+        });
       });
       // console.log(this.Form.model);
       // //   console.log(this.model);
@@ -226,15 +252,28 @@ export default {
     clearData(obj) {
       this.Form.resetForm();
     },
+
     //删除方法
     delRowData(ids) {
-      norbulingka.deleteTourist({ ids }).then(res => {
-        this.$message({
-          type: "success",
-          message: "删除成功！"
+      this.$confirm("确认删除吗?", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        norbulingka.deleteTourist({ ids }).then(res => {
+          this.$message({
+            type: "success",
+            message: "删除成功！"
+          });
+          // this.Tables.refreshTable();
+          this.getTableData();
         });
-        this.Tables.refreshTable();
-        this.getTableData();
+      });
+    },
+
+    deleteRow(ids) {
+      leaseManageApi.deleteTourist({ ids }).then(res => {
+        this.refreshTable();
       });
     },
     // 表单上方的删除
@@ -245,6 +284,7 @@ export default {
         str = str + item.id + ",";
       });
       let ids = str;
+      // CommonFun.deleteTip(this, ids, "至少选择一条数据", this.deleteRow);
       this.delRowData(ids);
     },
     // 删除
@@ -281,14 +321,19 @@ export default {
             // console.log(res);
             this.$refs[this.tableData.ref].setData(res.list);
             this.$refs[this.tableData.ref].setTotal(res.total);
+            this.$refs[this.tableData.ref].setCurrentPage(pageParams.page);
           })
           .finally(res => {
             this.loading = false;
           });
     }
+    // setTablesDatas(){
+    //   this.tableData.severMode.data=pageInfo
+    // }
   },
   created() {
     this.getTableData();
+    // this.setTablesDatas
   },
   mounted() {
     this.tablePropList();

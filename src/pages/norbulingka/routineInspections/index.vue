@@ -42,6 +42,7 @@
             >添加</el-button>
             <el-button
               @click="del(obj)"
+              type='primary'
               :disabled='!obj.selectedData.length'
             >批量删除</el-button>
           </div>
@@ -82,6 +83,10 @@ import { Norbulingka } from "utils/dictionary";
 const maintenanceTypes = Norbulingka.maintenanceTypes;
 // 巡检人员
 const inspectionPersonnel = Norbulingka.inspectionPersonnel;
+let pageInfo = {
+  page: 1,
+  rows: 10
+};
 export default {
   data() {
     return {
@@ -121,7 +126,7 @@ export default {
                 prop: "person",
                 label: "巡检人员",
                 span: 6,
-                offset: 1,
+                offset: 1
                 // dicUrl: norbulingka.userNameList,
                 // props: {
                 //   label: "name",
@@ -144,6 +149,17 @@ export default {
         ref: "tabel",
         customTop: true,
         customTopPosition: "right",
+        // norbulingka.queryDailyCheckByPage
+        // serverMode: {
+        //   url: norbulingka.queryDailyCheckByPage,
+        //   data: pageInfo
+        // },
+        // propsHttp: {
+        //   list: "list",
+        //   total: "total",
+        //   pageSize: "rows",
+        //   pageNum: "page"
+        // },
         data: [],
         columnConfig: [],
         operation: {
@@ -156,8 +172,8 @@ export default {
           height: "auto",
           selection: true,
           showIndex: {
-            width:250,
-            align:'left'
+            width: 250,
+            align: "left"
           },
           pagination: {
             handler: (pageSize, currentPage, table) => {
@@ -213,11 +229,25 @@ export default {
       // 赋值给表格的配置项
       this.tableData.columnConfig = list;
     },
-    submit(model,done) {
-      console.log(model)
+    submit(model, done) {
+      console.log(model);
       // console.log(obj);
     },
+    // setData() {
+    //   debugger
+    //   // let searchParams = null
+    //   this.$refs[this.tableData.ref].setCurrentPage(1);
+    //   this.$refs[this.formData.ref].getFormModel(res => {
+    //     this.condition = res
+    //   })
+    //   this.tableData.serverMode.data = {
+    //     ...this.condition,
+    //     ...pageInfo
+    //   };
+    //   this.$refs[this.tableData.ref].refreshTable();
+    // },
     search(obj) {
+      // this.setData()
       this.Form.getFormModel(res => {
         console.log("搜索", res);
         let params = res;
@@ -233,10 +263,27 @@ export default {
     },
     // 编辑
     propertyEdit(obj) {
-      console.log(obj)
+      console.log(obj);
       this.$router.push({
         path: "/editdetailadd",
         query: { flag: false, mark: "edit", ...obj.row }
+      });
+    },
+    // 删除方法
+    delRowData(ids) {
+      this.$confirm("确认删除吗?", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        norbulingka.deleteDailyCheck({ ids }).then(res => {
+          this.$message({
+            type: "success",
+            message: "删除成功！"
+          });
+          // this.Tables.refreshTable();
+          this.getTableData();
+        });
       });
     },
     // 批量删除
@@ -248,31 +295,33 @@ export default {
         str = str + item.id + ",";
       });
       let ids = str;
-      norbulingka.deleteDailyCheck({ ids }).then(res => {
-        this.$message({
-          type: "success",
-          message: "批量删除成功！"
-        });
-        this.Tables.refreshTable()
-        this.getTableData();
-      });
+      this.delRowData(ids);
+      // norbulingka.deleteDailyCheck({ ids }).then(res => {
+      //   this.$message({
+      //     type: "success",
+      //     message: "批量删除成功！"
+      //   });
+      //   this.Tables.refreshTable()
+      //   this.getTableData();
+      // });
     },
     // 删除
     propertyDel(obj) {
       console.log(obj);
 
       let ids = obj.row.id;
-      norbulingka.deleteDailyCheck({ ids }).then(res => {
-        this.$message({
-          type: "success",
-          message: "删除成功！"
-        });
-        var page = this.Tables.currentPage;
-        // console.log("page",page)
-        // this.getTableData({ page, rows: 10 });
-        this.Tables.refreshTable()
-        this.getTableData();
-      });
+      this.delRowData(ids);
+      // norbulingka.deleteDailyCheck({ ids }).then(res => {
+      //   this.$message({
+      //     type: "success",
+      //     message: "删除成功！"
+      //   });
+      //   var page = this.Tables.currentPage;
+      //   // console.log("page",page)
+      //   // this.getTableData({ page, rows: 10 });
+      //   this.Tables.refreshTable()
+      //   this.getTableData();
+      // });
     },
     // 详情
     propertyDetail(obj) {
@@ -293,10 +342,11 @@ export default {
         .queryDailyCheckByPage(pageParams)
         .then(res => {
           // console.log(res);
-          
+
           this.$refs[this.tableData.ref].setData(res.list);
           this.$refs[this.tableData.ref].setTotal(res.total);
           // this.$refs[this.tableData.ref].refreshTable();
+          this.$refs[this.tableData.ref].setCurrentPage(pageParams.page);
         })
         .finally(res => {
           this.loading = false;

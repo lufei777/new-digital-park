@@ -23,13 +23,13 @@
               v-if="$route.query.mark == 'edit'"
               type='primary'
               @click="editSave(obj)"
-            >编辑保存</el-button>
+            >保存</el-button>
             <!-- 添加保存 -->
             <el-button
               v-if="$route.query.mark == 'add'"
               type='primary'
               @click="addSave(obj)"
-            >添加保存</el-button>
+            >保存</el-button>
             <el-button
               type='danger'
               @click="back(obj)"
@@ -67,7 +67,7 @@ export default {
       formData: {
         ref: "formData",
         size: "medium",
-        labelWidth: "100",
+        labelWidth: "180",
         menuPosition: "right",
         menuBtn: false,
         textMode: false,
@@ -220,7 +220,7 @@ export default {
     back(obj) {
       this.$router.back();
     },
-    
+
     selectChanged(model) {
       var damageType1 = model.damageType1;
       // console.log(damageType1)
@@ -236,16 +236,15 @@ export default {
           }
         });
       }
-      
     },
-    findObj(arr,val){
-      let objArr =[]
-        arr.forEach(item => {
-          if(item.id == val){
-            objArr = item
-          }
-        })
-        return objArr
+    findObj(arr, val) {
+      let objArr = [];
+      arr.forEach(item => {
+        if (item.id == val) {
+          objArr = item;
+        }
+      });
+      return objArr;
     }
   },
   created() {
@@ -263,69 +262,51 @@ export default {
     norbulingka.getSelectOptionOther({ catalogId: 14001 }).then(res => {
       this.typeArr = res;
       // console.log(res);
-      this.Form.setColumnByProp("damageType1", {
-        dicData: res
+      this.$nextTick(() => {
+        this.Form.setColumnByProp("damageType1", {
+          dicData: res
+        });
       });
       // 获取病害分类的值 根据传递过来的值 为病害类型赋值
-      if(query.damageType1 ){
-        var cc= this.findObj(this.typeArr,query.damageType1)
+      if (query.damageType1) {
+        var cc = this.findObj(this.typeArr, query.damageType1);
         // console.log(cc)
-        this.Form.setColumnByProp('damageType2',{
-          dicData:cc.children
-        })
+        this.Form.setColumnByProp("damageType2", {
+          dicData: cc.children
+        });
       }
     });
   },
   watch: {
     "model.damageType1": {
-      handler(val,old) {
-        // console.log(val);
-        // console.log(old);
-        // this.$nextTick(()=> {
-        //    var c =   this.findObj(this.typeArr,val)
-        //    console.log(c)
-        // })
-     
-        // let type = val.damageType1;
-        
-        // debugger 
-        let res = []      
-          // this.typeArr.forEach(item => { 
-          //   // console.log("res",item)
-          //   if (item.id == val) {
-             
-          //      res = item;
-          //       console.log(res)
-          //     this.Form.setColumnByProp("damageType2", {
-          //       // props:{},
-          //       dicData: item.children
-          //     });
-          //   }
-          // });
-        
+      handler(val, old) {
+        console.log(typeof val);
+        console.log(typeof old);
+        console.log(val);
+        console.log(old);
+        // console.log( old.length);
+        // val != undefined && val != null
+        // debugger
+        if (typeof val === "number") {
+          var child = null;
+          this.typeArr.forEach(item => {
+            if (item.id == val) {
+              child = item;
+              this.model.damageType2 = ''
+              this.Form.setColumnByProp("damageType2", {
+                dicData: child.children
+              });
+            }
+          });
+        }
+        if (typeof val == "string") {
+          this.model.damageType2 = ''
+          this.Form.setColumnByProp("damageType2", { dicData: [] });
+        }
       },
-      immediate: true
+      immediate: true,
+      deep: true
     }
-    // model(val) {
-
-    // }
-    // typeArr() {
-    //   let damageType = "",
-    //     arr = {};
-    //   this.Form.getFormModel(res => {
-    //     if (res.damageType1 && Object.values(res.damageType1).length >= 0) {
-    //       damageType = res.damageType1;
-    //     }
-    //   });
-    //   this.typeArr.forEach((item, index) => {
-    //     if (item.damageType1 === damageType) {
-    //       arr = item;
-    //       this.Form.setColumnByProp("damageType2", {
-    //         dicData: item.children
-    //       });
-    //     }
-    //   });
-    // }
   },
   mounted() {},
   computed: {

@@ -22,13 +22,13 @@
               v-if="$route.query.mark == 'edit'"
               type='primary'
               @click="editSave(obj)"
-            >编辑保存</el-button>
+            >保存</el-button>
             <!-- 添加保存 -->
             <el-button
               v-if="$route.query.mark == 'add'"
               type='primary'
               @click="addSave(obj)"
-            >添加保存</el-button>
+            >保存</el-button>
             <el-button
               type='danger'
               @click="back(obj)"
@@ -84,6 +84,7 @@ export default {
             prop: "dailyCount",
             type: "number",
             offset: 6,
+            minRows:0,
             rules:[
               {
                 required:true,
@@ -96,6 +97,7 @@ export default {
             label: "瞬时游客量",
             prop: "tempCount",
             type: "number",
+            minRows:0,
             offset: 6,
             rules:[
               {
