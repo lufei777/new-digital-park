@@ -137,6 +137,7 @@
         params+='stockRecordIds='+stockRecordIds
         CommonFun.exportMethod({url, params})
       }
+      
     },
     mounted() {
       // this.getOperatorRecord()

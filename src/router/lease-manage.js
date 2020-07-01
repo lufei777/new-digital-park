@@ -78,13 +78,21 @@ export default [
 				meta:{title:'租赁月账单明细查询'},
 				component:() => import('../pages/leaseManage/queryStatistics/detailQuery.vue')
 			},
-			// 租赁月账单综合查询
+			// 租赁月账单综合查询 - 按租户统计
 			{
-				path:'/integratedquery',
+				path:'/tenantstatistics',
 				name:'leaseintegratedquery',
-				meta:{title:'租赁月账单综合查询'},
-				component:() => import('../pages/leaseManage/queryStatistics/integratedQuality/rentStatistics.vue')
+				meta:{title:'按租户统计'},
+				component:() => import('../pages/leaseManage/queryStatistics/integratedQuality/tenantStatistics.vue')
+			},
+			// 租赁月账单综合查询 - 合同统计
+			{
+				path:'/contractstatistics',
+				name:'leasecontractStatistics',
+				meta:{title:'按合同统计'},
+				component:() => import('../pages/leaseManage/queryStatistics/integratedQuality/contractStatistics.vue')
 			}
+
 
 
 

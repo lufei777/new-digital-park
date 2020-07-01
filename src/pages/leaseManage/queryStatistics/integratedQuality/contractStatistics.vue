@@ -1,5 +1,5 @@
 <template>
-<!-- 租赁月账单综合查询 -->
+  <!-- 租赁月账单综合查询 ---合同统计 -->
   <div class="lease-contract panel-container">
     <div class="condition-box radius-shadow">
       <z-form
@@ -9,29 +9,52 @@
         @submit="submit"
         @reset-change="resetChange"
       >
-        <template slot="btn" slot-scope="obj">
+        <template
+          slot="btn"
+          slot-scope="obj"
+        >
           <div>
-            <el-button :disabled="obj.disabled" type="primary" @click="onClickSearchBtn(obj)">搜索</el-button>
-            <el-button :disabled="obj.disabled" @click="clearForm(obj)">清除</el-button>
+            <el-button
+              :disabled="obj.disabled"
+              type="primary"
+              @click="onClickSearchBtn(obj)"
+            >搜索</el-button>
+            <el-button
+              :disabled="obj.disabled"
+              @click="clearForm(obj)"
+            >清除</el-button>
           </div>
         </template>
       </z-form>
     </div>
 
     <div class="lease-contract-table panel">
-      <z-table :ref="leaseContractTable.ref" :options="leaseContractTable">
-        <template slot="custom-top" slot-scope="obj">
+      <z-table
+        :ref="leaseContractTable.ref"
+        :options="leaseContractTable"
+      >
+        <template
+          slot="custom-top"
+          slot-scope="obj"
+        >
           <div class="operator-box flex-row-reverse">
-            <el-button :size="obj.size" type="primary" @click="generate(obj)">生成</el-button>
-            <el-button :size="obj.size" type="primary" @click="addContract(obj)">新增</el-button>
+            <el-button
+              :size="obj.size"
+              type="primary"
+              @click="generate(obj)"
+            >打印</el-button>
+            <el-button
+              :size="obj.size"
+              type="primary"
+              @click="addContract(obj)"
+            >导出</el-button>
           </div>
         </template>
 
-        <template slot="operation" slot-scope="obj">
-          <!-- <el-button type="text" @click="detailContract(obj)">详情</el-button> -->
+        <!-- <template slot="operation" slot-scope="obj">
           <el-button type="text" @click="editRow(obj)">更新金额</el-button>
           <el-button type="text" @click="delRow(obj)">作废</el-button>
-        </template>
+        </template> -->
       </z-table>
     </div>
   </div>
@@ -40,6 +63,10 @@
 <script>
 import LeaseManageApi from "@/service/api/leaseManage";
 import CommonFun from "@/utils/commonFun";
+let pageInfo = {
+  pageNum: 1,
+  pageSize: 10
+};
 export default {
   name: "integrated",
   data() {
@@ -54,31 +81,31 @@ export default {
         submitBtn: false,
         emptyBtn: false,
         forms: [
-        // 月账单编号
-        {
-            label:'月账单编号',
-            type:'input',
-            span:6,
-            prop:'monthSerial'
-        },
+          // 月账单编号
+          {
+            label: "月账单编号",
+            type: "input",
+            span: 6,
+            prop: "monthSerial"
+          },
 
-        // 合同名称
-        {
-            label:'合同名称',
-            type:'input',
-            span:6,
-            prop:'contractName'
-        },
-        
-        //  账期
-        {
-            label:'账期',
-            type:'month',
-            span:6,
-            prop:'paymentDays',
+          // 合同名称
+          {
+            label: "合同名称",
+            type: "input",
+            span: 6,
+            prop: "contractName"
+          },
+
+          //  账期
+          {
+            label: "账期",
+            type: "month",
+            span: 6,
+            prop: "paymentDays",
             valueFormat: "yyyy-MM",
-            format: "yyyy-MM",
-        },
+            format: "yyyy-MM"
+          },
           {
             prop: "btn",
             span: 6,
@@ -91,12 +118,19 @@ export default {
       leaseContractTable: {
         ref: "leaseContractTable",
         customTop: true,
-        operation: {
-          width: 200
+        serverMode: {
+          url: LeaseManageApi.querySumStatContract,
+          data: pageInfo
         },
-        props: {
-          rowKey: "contractId"
+        propsHttp: {
+          list: "data",
+          total: "total",
+          pageSize: "pageSize",
+          pageNum: "pageNum"
         },
+        // props: {
+        //   rowKey: "contractId"
+        // },
         data: [],
         columnConfig: [],
         uiConfig: {
@@ -119,20 +153,18 @@ export default {
       contractIds: ""
     };
   },
-  computed:{
-      Form() {
-          return this.$refs[this.leaseContractForm.ref]
-      },
-      Table() {
-          return this.$refs[this.leaseContractTable.ref]
-      }
-      
+  computed: {
+    Form() {
+      return this.$refs[this.leaseContractForm.ref];
+    },
+    Table() {
+      return this.$refs[this.leaseContractTable.ref];
+    }
   },
   methods: {
     submit() {},
     resetChange() {},
     clearForm(...args) {
-
       this.$refs[this.leaseContractForm.ref].resetForm();
     },
     async contractList() {
@@ -148,14 +180,14 @@ export default {
         { label: "租户类型", prop: "expireTime" }
       ];
       this.leaseContractTable.columnConfig = labelList;
-    //   let res = await LeaseManageApi.contractList({
-    //     pageNum: this.currentPage,
-    //     pageSize: 10
-    //   });
-    //   if (res && res.list) {
-    //     this.leaseContractTable.data = res.list;
-    //     this.leaseContractTable.uiConfig.pagination.total = res.total;
-    //   }
+      //   let res = await LeaseManageApi.contractList({
+      //     pageNum: this.currentPage,
+      //     pageSize: 10
+      //   });
+      //   if (res && res.list) {
+      //     this.leaseContractTable.data = res.list;
+      //     this.leaseContractTable.uiConfig.pagination.total = res.total;
+      //   }
     },
     // 搜索
     onClickSearchBtn(...args) {
@@ -181,15 +213,15 @@ export default {
       );
     },
     //生成
-    generate() { },
+    generate() {},
     // 新增
-    addContract() { 
-        this.$router.push({path:'addmothly'})
+    addContract() {
+      this.$router.push({ path: "addmothly" });
     },
     // 更新
-    editRow(){},
+    editRow() {},
     // 作废
-    delRow() { }
+    delRow() {}
   },
   mounted() {
     this.contractList();
