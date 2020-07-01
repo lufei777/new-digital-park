@@ -1,7 +1,11 @@
 <template>
   <div class="zvue-form-wrapper" :style="{width:setPx(parentOption.width,'100%')}">
     <el-card :body-style="{ padding: '0px' }" shadow="never">
-      <div class="clearfix" slot="header" v-if="$scopedSlots.header_left || $scopedSlots.header_right">
+      <div
+        class="clearfix"
+        slot="header"
+        v-if="$scopedSlots.header_left || $scopedSlots.header_right"
+      >
         <div style="float: left; padding: 3px 0">
           <slot v-bind="slotProps" name="header_left"></slot>
         </div>
@@ -51,7 +55,10 @@
                   :xs="24"
                   v-show="vaildData(!column.hide,true)"
                   v-if="vaildDisplay(column)"
-                  :style="{paddingLeft:setPx((parentOption.gutter ||20)/2),paddingRight:setPx((parentOption.gutter ||20)/2)}"
+                  :style="{
+                    paddingLeft:setPx((parentOption.gutter || 20) / 2),
+                    paddingRight:setPx((parentOption.gutter || 20) / 2)
+                  }"
                 >
                   <el-form-item
                     :class="[validatenull(column.label)?'zvue-form-item_emptylabel' : '']"
@@ -104,7 +111,7 @@
                         v-if="column.formslot"
                         v-bind="slotProps"
                         :name="column.prop"
-                        :value="model[column.prop]"
+                        :value="getValueByPath(model,column.prop)"
                         :column="column"
                         :label="model['$'+column.prop]"
                         :size="column.size || controlSize"
@@ -112,9 +119,10 @@
                         :disabled="vaildDiabled(column,group)"
                         :textMode="vaildTextMode(column,group)"
                       ></slot>
+                      <!-- v-model="model[column.prop]" -->
                       <form-temp
                         v-else
-                        v-model="model[column.prop]"
+                        :value="getValueByPath(model,column.prop)"
                         :column="column"
                         :dic="DIC[column.prop]"
                         :upload-before="uploadBefore"
@@ -124,6 +132,7 @@
                         :size="controlSize"
                         :disabled="vaildDiabled(column,group)"
                         :textMode="vaildTextMode(column,group)"
+                        @input="modelInput($event,column)"
                       >
                         <!-- 自定义表单里内容 -->
                         <template
@@ -234,6 +243,8 @@ const setDefaultValue = function (defaultOptions, options, vm) {
     vm.$set(options, key, value);
   });
 };
+// input事件的timer，防止更新过快
+let modelInputTimer = null;
 
 export default {
   name: "zForm",
@@ -502,6 +513,22 @@ export default {
     },
     hide() {
       this.allDisabled = false;
+    },
+    modelInput(value, { type, prop }) {
+      // 如果是input类型，会有快速输入的情况，所以添加一个延时器
+      // 添加延时器会造成表单校验慢一拍
+      /* if (['input', 'password'].includes(type)) {
+        clearTimeout(modelInputTimer);
+        modelInputTimer = setTimeout(() => {
+          let parentObj = this.getPropByPath(this.model, prop).o;
+          parentObj[prop.split('.').pop()] = value;
+        }, 100);
+      } else {
+        let parentObj = this.getPropByPath(this.model, prop).o;
+        parentObj[prop.split('.').pop()] = value;
+      } */
+      let parentObj = this.getPropByPath(this.model, prop).o;
+      parentObj[prop.split('.').pop()] = value;
     },
     // get
     // 获取表单验证后的整个model

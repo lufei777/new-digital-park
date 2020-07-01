@@ -231,6 +231,7 @@ export const setDefaultValue = (defaultOptions, options, vm) => {
 export const _typeOf = (obj) => {
     return Object.prototype.toString.call(obj).split(' ')[1].slice(0, -1);
 }
+
 // 根据prop取值
 export const getValueByPath = function (object, prop) {
     prop = prop || '';
@@ -249,8 +250,9 @@ export const getValueByPath = function (object, prop) {
     }
     return result;
 };
+
 // 根据path取值
-export function getPropByPath(obj, path, strict) {
+export function getPropByPath(obj = {}, path = '', strict) {
     let tempObj = obj;
     path = path.replace(/\[(\w+)\]/g, '.$1');
     path = path.replace(/^\./, '');
@@ -275,3 +277,68 @@ export function getPropByPath(obj, path, strict) {
         v: tempObj ? tempObj[keyArr[i]] : null
     };
 };
+
+// 通过path赋值obj
+export const setValueByPath = (obj = {}, path = '', value) => {
+    let tempObj = obj;
+    path = path.replace(/\[(\w+)\]/g, '.$1');
+    path = path.replace(/^\./, '');
+
+    let keyArr = path.split('.');
+    let i = 0;
+    for (let len = keyArr.length; i < len; ++i) {
+        let key = keyArr[i];
+        if (!(key in tempObj)) {
+            if (i !== len - 1) {
+                tempObj[key] = {};
+                tempObj = tempObj[key];
+            } else {
+                tempObj[key] = value;
+            }
+        } else {
+            if (i !== len - 1) {
+                tempObj = tempObj[key];
+            } else {
+                tempObj[key] = value;
+            }
+        }
+    }
+
+    return obj;
+}
+
+// 节流
+export const throttle = (fn, interval, isFirstAutoRun) => {
+    /**
+     * 
+     * @param {要执行的函数} fn 
+     * @param {在操作多长时间后可再执行，第一次立即执行} interval 
+     */
+    var _self = fn;
+    var timer = null;
+    var first = true;
+
+    if (isFirstAutoRun) {
+        _self();
+    }
+
+    return function () {
+        var args = arguments;
+        var _me = this;
+
+        if (first) {
+            first = false;
+            _self.apply(_me, args);
+        }
+
+        if (timer) {
+            return false;
+        }
+
+        timer = setTimeout(function () {
+            clearTimeout(timer);
+            timer = null;
+            _self.apply(_me, args);
+        }, interval || 200);
+    }
+}

@@ -30,6 +30,7 @@
           <slot
             v-if="col.slot"
             :name="col.prop"
+            :value="getValueByPath(scopeRow.row, col.prop)"
             :label="handleDetail(scopeRow.row,col,DIC[col.prop])"
             :scopeRow="scopeRow"
             :row="scopeRow.row"
@@ -41,7 +42,7 @@
           ></slot>
           <form-temp
             v-else-if="cellEditFlag(scopeRow.row,col)"
-            v-model="scopeRow.row[col.prop]"
+            :value="getValueByPath(scopeRow.row, col.prop)"
             :isCrud="true"
             :column="col"
             :size="controlSize"
@@ -51,11 +52,22 @@
             :disabled="col.disabled"
             :textMode="col.textMode"
             @click.native.stop
+            @input="modelInput($event,scopeRow.row,col)"
           ></form-temp>
           <template v-else>
             <span
               v-if="['array'].includes(col.type)"
             >{{_detailData(getValueByPath(scopeRow.row, col.prop),col.dataType).join(' | ')}}</span>
+            <span v-else-if="['url'].includes(col.type)">
+              <el-link
+                type="primary"
+                v-bind="!!col.click ? '' :{
+                  href: getValueByPath(scopeRow.row, col.prop),
+                  target:col.target || '_blank'
+                }"
+                @click="col.click(getValueByPath(scopeRow.row, col.prop),scopeRow.row,col)"
+              >{{getValueByPath(scopeRow.row, col.prop)}}</el-link>
+            </span>
             <span v-else-if="col.displayAs=='switch' && ['switch'].includes(col.type)">
               <z-switch
                 :size="controlSize"
@@ -188,7 +200,11 @@ export default {
         }
       }
       return result;
-    }
+    },
+    modelInput(value, model, { type, prop }) {
+      let parentObj = this.getPropByPath(model, prop).o;
+      parentObj[prop.split('.').pop()] = value;
+    },
   }
 };
 </script>
