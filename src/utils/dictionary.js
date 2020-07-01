@@ -673,21 +673,22 @@ export const WarningAlerm = {
 
 // 罗布林卡
 export const Norbulingka = {
-  projectType: [
+  // 工程分类
+  proType: [
     // { label: '未选择', value: 1 },
     { label: '文物维修', value: 1 },
     { label: '保护性设施', value: 2 },
     { label: '现场展示', value: 3 },
     { label: '环境整治', value: 4 }
   ],
-
-  levelCultural: [
-    { label: '未选择', value: 1 },
-    { label: '一级', value: 2 },
-    { label: '二级', value: 3 },
-    { label: '三级', value: 4 },
-    { label: '一般', value: 5 },
-    { label: '未定级', value: 6 }
+  // 类型选择
+  typeSelect: [
+    { label: '本体情况', value: 1 },
+    { label: '病害分析', value: 2 },
+    { label: '施工情况', value: 3 },
+    { label: '游客情况', value: 4 },
+    { label: '考古发掘', value: 5 },
+    { label: '其他', value: 6 }
   ],
 };
 

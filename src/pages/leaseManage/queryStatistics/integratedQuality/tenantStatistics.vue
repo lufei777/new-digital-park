@@ -1,5 +1,5 @@
 <template>
-  <!-- 租赁月账单 -->
+  <!-- 租赁月账单综合查询 --- 租户统计  -->
   <div class="lease-contract panel-container">
     <div class="condition-box radius-shadow">
       <z-form
@@ -42,33 +42,19 @@
               :size="obj.size"
               type="primary"
               @click="generate(obj)"
-            >生成</el-button>
+            >打印</el-button>
             <el-button
               :size="obj.size"
               type="primary"
-              @click="addContract(obj)"
-            >新增</el-button>
+              @click="exportFile(obj)"
+            >导出</el-button>
           </div>
         </template>
 
-        <template
-          slot="operation"
-          slot-scope="obj"
-        >
-          <!-- <el-button type="text" @click="detailContract(obj)">详情</el-button> -->
-          <el-button
-            type="text"
-            @click="editRow(obj)"
-          >更新金额</el-button>
-          <el-button
-            type="text"
-            @click="delRow(obj)"
-          >作废</el-button>
-          <el-button
-            type="text"
-            @click="seeDetail(obj)"
-          >查看</el-button>
-        </template>
+        <!-- <template slot="operation" slot-scope="obj">
+          <el-button type="text" @click="editRow(obj)">更新金额</el-button>
+          <el-button type="text" @click="delRow(obj)">作废</el-button>
+        </template> -->
       </z-table>
     </div>
   </div>
@@ -82,7 +68,7 @@ let pageInfo = {
   pageSize: 10
 };
 export default {
-  name: "monthrentalbill",
+  name: "integrated",
   data() {
     let _this = this;
     return {
@@ -95,31 +81,41 @@ export default {
         submitBtn: false,
         emptyBtn: false,
         forms: [
-          // 月账单编号
+          // 年
           {
-            label: "月账单编号",
-            type: "input",
+            label: "年",
+            type: "year",
             span: 6,
-            prop: "monthSerial"
+            prop: "year",
+            valueFormat: "yyyy",
+            format: "yyyy"
           },
 
-          // 合同名称
+          // 月
           {
-            label: "合同名称",
+            label: "月",
             type: "input",
             span: 6,
-            prop: "contractName"
+            prop: "month",
+            valueFormat: "MM",
+            format: "MM"
           },
 
-          //  账期
+          //  租户名称
           {
-            label: "账期",
+            label: "租户名称",
             type: "month",
             span: 6,
-            prop: "paymentDays",
-            valueFormat: "yyyy-MM",
-            format: "yyyy-MM"
+            prop: "tenantName"
           },
+          // // 租赁区域
+          // {
+          //     label:'租赁区域',
+          //     type:'input',
+          //     span:6,
+          //     prop:'paymentDays',
+          // },
+
           {
             prop: "btn",
             span: 6,
@@ -133,7 +129,7 @@ export default {
         ref: "leaseContractTable",
         customTop: true,
         serverMode: {
-          url: LeaseManageApi.queryMonthBillList,
+          url: LeaseManageApi.querySumStatTenant,
           data: pageInfo
         },
         propsHttp: {
@@ -142,17 +138,14 @@ export default {
           pageSize: "pageSize",
           pageNum: "pageNum"
         },
-        operation: {
-          width: 200
-        },
-        props: {
-          rowKey: "contractId"
-        },
+        // props: {
+        //   rowKey: "contractId"
+        // },
         data: [],
         columnConfig: [],
         uiConfig: {
           height: "auto", //"", //高度
-          selection: true, //是否多选
+          selection: false, //是否多选
           showIndex: {
             width: 50
           },
@@ -161,7 +154,7 @@ export default {
             layout: "total,->, prev, pager, next, jumper",
             pageSizes: [10, 20, 50],
             handler(pageSize, currentPage, table) {
-              _this.handleCurrentChange(currentPage);
+              // _this.handleCurrentChange(currentPage);
             }
           }
         }
@@ -186,15 +179,16 @@ export default {
     },
     async contractList() {
       let labelList = [
-        { label: "租赁月账单编号", prop: "billNumber" },
-        { label: "租户", prop: "tenantName" },
-        { label: "合同名称", prop: "contractName" },
-        { label: "账期", prop: "billTime" },
-        { label: "收费项目数", prop: "chargeItems" },
-        { label: "账单金额合计(元)", prop: "billTotalAmount" },
-        { label: "账单状态", prop: "billStatus" },
-        { label: "本次冲抵额(元)", prop: "offsset" },
-        { label: "租户类型", prop: "tenant" }
+        { label: "年份", prop: "year" },
+        { label: "月度", prop: "month" },
+        { label: "租户面积(㎡)", prop: "houseArea" },
+        { label: "账单金额合计(元)", prop: "sumCost" },
+        { label: "本次冲抵金额(元)", prop: "offsset" },
+        { label: "核定金额(元)", prop: "approvedAmount" },
+        { label: "租金(元)", prop: "leaseCost" },
+        { label: "物业费(元)", prop: "propertyFeeCost" },
+        { label: "保洁费(元)", prop: "cleaningCost" },
+        { label: "其他(元)", prop: "otherCost" }
       ];
       this.leaseContractTable.columnConfig = labelList;
       //   let res = await LeaseManageApi.contractList({
@@ -205,10 +199,6 @@ export default {
       //     this.leaseContractTable.data = res.list;
       //     this.leaseContractTable.uiConfig.pagination.total = res.total;
       //   }
-    },
-    // 产看
-    seeDetail(obj){
-
     },
     // 搜索
     onClickSearchBtn(...args) {
@@ -232,6 +222,21 @@ export default {
         this.sureDelete,
         this.cancelDelete
       );
+    },
+    // 导出
+    exportFile(obj) {
+      let url = "/oaApi/month/bill/exportSumStatTenant";
+      let params = "";
+      let arr = this.$refs[this.leaseContractTable.ref].getSelectedData();
+      let stockRecordIds = arr.length ? arr.map(item => item.id) : "";
+      for (let key in this.leaseContractTable.serverMode.data) {
+        if (key != pageInfo) {
+          params +=
+            key + "=" + this.leaseContractTable.serverMode.data[key] + "&";
+        }
+      }
+      params += "stockRecordIds=" + stockRecordIds;
+      CommonFun.exportMethod({ url, params });
     },
     //生成
     generate() {},
