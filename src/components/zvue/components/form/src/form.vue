@@ -111,7 +111,7 @@
                         v-if="column.formslot"
                         v-bind="slotProps"
                         :name="column.prop"
-                        :value="model[column.prop]"
+                        :value="getValueByPath(model,column.prop)"
                         :column="column"
                         :label="model['$'+column.prop]"
                         :size="column.size || controlSize"
