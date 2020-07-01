@@ -76,6 +76,7 @@
               type: "tree",
               label: "上层机构",
               prop: "parent",
+              valueDefault:'0',
               span: 24,
               dicData:[],
               props: {

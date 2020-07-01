@@ -88,7 +88,7 @@
               <el-form-item
                 :key="i"
                 :label="child.attrName"
-                :prop="'ownAttrList.' + index + '.' + i + '.' + child.attrName"
+                :prop="'ownAttrList.' +  i + '.' + child.attrName"
                 :rules="{required:child.required=='1',message:'请输入'+child.attrName,trigger: 'blur'}"
               >
                 <el-input v-model="child[child.attrName]"></el-input>

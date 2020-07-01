@@ -73,5 +73,9 @@ export default [{
       component: ModifyPassword,
       meta: { title: '修改密码' },
     }]
+  },{
+    path: '/menuManage',
+    component: ()=>import('@/pages/systemManage/menuManage/index'),
+    meta: { title: '菜单管理' },
   }]
 }]

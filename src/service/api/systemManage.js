@@ -101,9 +101,17 @@ class SystemManage {
   @get
   getDeptList(){}
 
-  @url("user-service/dept/removeDept")
+  @url("/user-service/dept/removeDept")
   @get
   deleteDept(){}
+
+  @url("user-service/menu/menuList")
+  @get
+  getMenuList(){}
+
+  @url("/user-service/menu/addMenu")
+  @post
+  addMenu(){}
 }
 
 export default new SystemManage()
