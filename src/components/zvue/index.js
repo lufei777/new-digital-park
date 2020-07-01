@@ -32,8 +32,8 @@ import Clickout from "./directive/clickout"
 import Appendtobody from "./directive/appendtobody"
 
 // functions
-import { deepClone, vaildData, findArray, setPx, _typeOf, getValueByPath } from './utils/util';
-const prototypes = { deepClone, vaildData, findArray, setPx, _typeOf, getValueByPath }
+import { deepClone, vaildData, findArray, setPx, _typeOf, getValueByPath, getPropByPath } from './utils/util';
+const prototypes = { deepClone, vaildData, findArray, setPx, _typeOf, getValueByPath, getPropByPath }
 
 const components = [
     Dropdown,

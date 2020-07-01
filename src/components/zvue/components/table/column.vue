@@ -56,6 +56,16 @@
             <span
               v-if="['array'].includes(col.type)"
             >{{_detailData(getValueByPath(scopeRow.row, col.prop),col.dataType).join(' | ')}}</span>
+            <span v-else-if="['url'].includes(col.type)">
+              <el-link
+                type="primary"
+                v-bind="!!col.click ? '' :{
+                  href: getValueByPath(scopeRow.row, col.prop),
+                  target:col.target || '_blank'
+                }"
+                @click="col.click(getValueByPath(scopeRow.row, col.prop),scopeRow.row,col)"
+              >{{getValueByPath(scopeRow.row, col.prop)}}</el-link>
+            </span>
             <span v-else-if="col.displayAs=='switch' && ['switch'].includes(col.type)">
               <z-switch
                 :size="controlSize"

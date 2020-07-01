@@ -61,6 +61,7 @@ import { getComponent, getPlaceholder, setModelTranslate, dateTypeList } from ".
 import { validatenull } from "../../utils/validate";
 import { detail } from "../../utils/detail";
 import { DIC_PROPS, DIC_SPLIT, EMPTY_VALUE } from '../../global/variable';
+import { setValueByPath } from "../../utils/util";
 
 export default {
   name: "formTemp",
@@ -184,7 +185,9 @@ export default {
       let displayValue = '';
       // 变化后，将显示的值赋值在modelTranslate 和 displayValue 上，除lazy模式的cascader
       if (!['upload', 'dynamic'].includes(this.column.type) && ![this.column.props || this.props].lazy) {
-        displayValue = detail({ [this.column.prop]: this.text }, this.column, this.column.props, this.dic);
+        let obj = {};
+        setValueByPath(obj, this.column.prop, this.text)
+        displayValue = detail(obj, this.column, this.column.props, this.dic);
 
         displayValue instanceof Array ? displayValue = displayValue.join(DIC_SPLIT) : '';
       }

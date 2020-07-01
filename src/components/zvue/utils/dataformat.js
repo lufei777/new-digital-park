@@ -1,6 +1,6 @@
 import { KEY_COMPONENT_NAME } from '../global/variable'
 import { validatenull } from './validate'
-import { detailDataType } from './util';
+import { detailDataType, setValueByPath } from './util';
 
 const dateList = [
     'dates',
@@ -32,7 +32,7 @@ let typeMap = {
     switch: 'switch',
     number: 'input-number',
     password: 'input',
-    tree:'input-tree'
+    tree: 'input-tree'
 }
 
 export const getComponent = function (type, component) {
@@ -109,24 +109,6 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
         }
     }
 
-    // 日期处理，不是很恰当，后面可能需要去除
-    /* if (dateList.includes(type) || ['time', 'timerange'].includes(type)) {
-        if (value instanceof Array && value.length > 0) {
-            value = value.map(date => {
-                if (validatenull(date)) {
-                    return new Date();
-                }
-                if (typeof date === 'string') {
-                    return new Date(date);
-                } else {
-                    return date;
-                }
-            });
-        } else if (typeof value === "string" && value.length != 0) {
-            value = new Date(value);
-        }
-    } */
-
     // 如果是范围滑块，则需要初始化为[0,0]
     if (type === 'slider') {
         if (curentForm.range) {
@@ -136,15 +118,6 @@ export const initVal = ({ listType, type, multiple, dataType, value, curentForm 
             })
         }
     }
-
-    // 数字处理
-    /* if ((type === 'number' || curentForm.rawtype === 'number'
-        || dataType === 'number') && typeof value !== 'undefined') {
-        value = parseFloat(value);
-        if (isNaN(value)) {
-            value = undefined;
-        }
-    } */
 
     // 数据转换，解决数据不匹配问题
     if (dataType) {
@@ -202,44 +175,42 @@ export const formInitVal = (list = []) => {
     let tableForm = {};
     let searchForm = {};
     list.forEach(ele => {
+        
+        let currentValue = null;
         if (ele.notModel) return;
+
         if (
             ['checkbox', 'cascader', 'dynamic', 'dates'].includes(ele.type) ||
             (ele.type === 'upload' && ele.listType !== 'picture-img') ||
             ele.multiple || ele.range || ele.dataType === 'array'
         ) {
-            tableForm[ele.prop] = [];
-            if (ele.search) searchForm[ele.prop] = [];
+            currentValue = [];
         } else if (
             ['number', 'rate', 'slider'].includes(ele.type) ||
             ele.dataType === 'number'
         ) {
-            tableForm[ele.prop] = undefined;
-            if (ele.search) {
-                searchForm[ele.prop] = undefined;
-            }
+            currentValue = undefined;
         } else if (['switch'].includes(ele.type) || ele.dataType === 'boolean') {
-            tableForm[ele.prop] = false;
-            if (ele.search) {
-                searchForm[ele.prop] = false;
-            }
+            currentValue = false;
         } else {
-            tableForm[ele.prop] = '';
-            if (ele.search) {
-                searchForm[ele.prop] = '';
-            }
+            currentValue = '';
         }
         // 表单默认值设置
         if (!validatenull(ele.valueDefault)) {
             if (ele.type === 'number' || ele.dataType === 'number') {
-                tableForm[ele.prop] = parseFloat(ele.valueDefault);
+                currentValue = parseFloat(ele.valueDefault);
             } else {
-                tableForm[ele.prop] = ele.valueDefault;
+                currentValue = ele.valueDefault;
             }
         }
+
+        setValueByPath(tableForm, ele.prop, currentValue);
+        if (ele.search)
+            setValueByPath(tableForm, ele.prop, currentValue);
+
         // 搜索表单默认值设置
         if (!validatenull(ele.searchDefault)) {
-            searchForm[ele.prop] = ele.searchDefault;
+            setValueByPath(searchForm, ele.prop, ele.searchDefault);
         }
     });
     return {
