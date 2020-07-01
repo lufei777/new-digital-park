@@ -43,6 +43,7 @@
             >添加</el-button>
             <el-button
               @click="del(obj)"
+              type='primary'
               :disabled='!obj.selectedData.length'
             >批量删除</el-button>
           </div>
@@ -74,6 +75,7 @@
 
 <script>
 import { Norbulingka } from "utils/dictionary";
+import CommonFun from "@/utils/commonFun";
 // 病害分类 diseasesSort
 const diseasesSort = Norbulingka.diseasesSort;
 // 病害类型 diseaseType
@@ -85,6 +87,7 @@ export default {
     return {
       condition: null,
       loading: false,
+      typeArr: [],
       model: {},
       formData: {
         ref: "formData",
@@ -107,7 +110,7 @@ export default {
               },
               //  病害分类 damageType1
               {
-                type: "cascader",
+                type: "select",
                 prop: "damageType1",
                 placeholder: "",
                 label: "病害分类",
@@ -116,11 +119,25 @@ export default {
                 props: {
                   label: "name",
                   value: "id",
-                  children:'children'
+                  children: "children"
                 }
                 // dicData: diseasesSort
               },
               //  病害类型 damageType2
+              {
+                type: "select",
+                prop: "damageType2",
+                placeholder: "",
+                label: "病害类型",
+                span: 5,
+                offset: 1,
+                props: {
+                  label: "name",
+                  value: "id",
+                  children: "children"
+                }
+                // dicData: diseasesSort
+              },
               // {
               //   type: "select",
               //   prop: "damageType",
@@ -140,7 +157,7 @@ export default {
                 prop: "btn",
                 formslot: true,
                 // offset: 2,
-                span: 8
+                span: 6
               }
             ]
           }
@@ -159,8 +176,8 @@ export default {
           height: "auto",
           selection: true,
           showIndex: {
-            width:250,
-            align:'left'
+            width: 250,
+            align: "left"
           },
           pagination: {
             handler: (pageSize, currentPage, table) => {
@@ -221,7 +238,7 @@ export default {
     searchData(params) {
       norbulingka.queryDamageByPage({ params }).then(res => {
         this.Tables.refreshTable();
-        this.getTableData({ ...this.condition });
+        this.getTableData({ page: 1, rows: 10, ...this.condition });
       });
     },
 
@@ -229,10 +246,10 @@ export default {
     search(obj) {
       this.Form.getFormModel(res => {
         // 参数是string类型，不能是数组 要进行处理
-        if(res.damageType1 && Object.values(res.damageType1).length == 2){     
-          res['damageType2'] =res.damageType1[1]
-          res.damageType1 = res.damageType1[0]
-        } 
+        if (res.damageType1 && Object.values(res.damageType1).length == 2) {
+          res["damageType2"] = res.damageType1[1];
+          res.damageType1 = res.damageType1[0];
+        }
         this.condition = res;
         this.searchData(res);
       });
@@ -240,6 +257,22 @@ export default {
     // 清除
     clearData(obj) {
       this.Form.resetForm();
+    },
+    delRowData(ids) {
+      this.$confirm("确认删除吗?", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        norbulingka.deleteDamage({ ids }).then(res => {
+          this.$message({
+            type: "success",
+            message: "删除成功！"
+          });
+          // this.Tables.refreshTable();
+          this.getTableData();
+        });
+      });
     },
     // 表单上方的删除
     del(obj) {
@@ -249,26 +282,12 @@ export default {
         str = str + item.id + ",";
       });
       let ids = str;
-      norbulingka.deleteDamage({ ids }).then(res => {
-        this.$message({
-          type: "success",
-          message: "批量删除成功！"
-        });
-        this.Tables.refreshTable();
-        this.getTableData();
-      });
+      this.delRowData(ids);
     },
     // 删除
     propertyDel(obj) {
       let ids = obj.row.id;
-      norbulingka.deleteDamage({ ids }).then(res => {
-        this.$message({
-          type: "success",
-          message: "删除成功！"
-        });
-        this.Tables.refreshTable();
-        this.getTableData();
-      });
+      this.delRowData(ids);
     },
     // 编辑
     propertyEdit(obj) {
@@ -291,40 +310,99 @@ export default {
     },
     // 表格中的数据
     getTableData(pageParams = { page: 1, rows: 10 }) {
-      this.loading = true
-        norbulingka
-          .queryDamageByPage(pageParams)
-          .then(res => {
-            // console.log(res);
-            this.$refs[this.tableData.ref].setData(res.list);
-            this.$refs[this.tableData.ref].setTotal(res.total);
-          })
-          .finally(res => {
-            this.loading = false;
-          });
+      this.loading = true;
+      norbulingka
+        .queryDamageByPage(pageParams)
+        .then(res => {
+          // console.log(res);
+          this.$refs[this.tableData.ref].setData(res.list);
+          this.$refs[this.tableData.ref].setTotal(res.total);
+          this.$refs[this.tableData.ref].setCurrentPage(pageParams.page);
+        })
+        .finally(res => {
+          this.loading = false;
+        });
     }
   },
   created() {
     // 病害分类
-    norbulingka.getSelectOptionOther({catalogId:14001}).then(res => {
+    norbulingka.getSelectOptionOther({ catalogId: 14001 }).then(res => {
+      this.typeArr = res;
+      this.Form.setColumnByProp("damageType1", {
+        dicData: res
+      });
 
-      this.Form.setColumnByProp('damageType1',{
-        dicData:res
-      })
+      this.Tables.setColumnByProp("damageType1", {
+        dicData: res
+      });
 
-      this.Tables.setColumnByProp('damageType1',{
-        dicData:res
-      })
-      
-
-      this.Tables.setColumnByProp('damageType2',{
-        dicData:res
-      })
-    })
+      this.Tables.setColumnByProp("damageType2", {
+        dicData: res
+      });
+    });
     // 病害类型
 
     this.getTableData();
   },
+  watch: {
+    "model.damageType1": {
+      handler(val, old) {
+        console.log(typeof val);
+        console.log(typeof old);
+        console.log(val);
+        console.log(old);
+        // console.log( old.length);
+        // val != undefined && val != null
+        // debugger
+        if (typeof val === "number") {
+          var child = null;
+          this.typeArr.forEach(item => {
+            if (item.id == val) {
+              child = item;
+              this.model.damageType2 = "";
+              this.Form.setColumnByProp("damageType2", {
+                dicData: child.children
+              });
+            }
+          });
+        }
+        if (typeof val == "string") {
+          this.model.damageType2 = "";
+          this.Form.setColumnByProp("damageType2", { dicData: [] });
+        }
+      },
+      immediate: true,
+      deep: true
+    }
+  },
+  // watch: {
+  //   "model.damageType1": {
+  //     handler(val, old) {
+  //       console.log(typeof val);
+  //       console.log(typeof old);
+  //       // console.log( old.length);
+  //       // val != undefined && val != null
+  //       if (typeof val === "number") {
+  //         var child = null;
+  //         this.typeArr.forEach(item => {
+  //           if (item.id == val) {
+  //             child = item;
+  //             this.Form.setColumnByProp("damageType2", {
+  //               dicData: child.children
+  //             });
+  //           }
+  //         });
+  //       }
+  //       if (typeof val === "string") {
+  //         this.Form.setColumnByProp("damageType2", {
+  //           dicData: []
+  //         });
+  //       }
+  //     },
+  //     // immediate: true,
+  //     // deep: true
+  //   }
+  // },
   mounted() {
     this.tablePropList();
   }

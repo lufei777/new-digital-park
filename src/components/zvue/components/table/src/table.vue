@@ -1,5 +1,5 @@
 <template>
-  <div class="zvue-table-wrapper" :style="{height:wrapperHeight,width:setPx(parentOption.width)}">
+  <div class="zvue-table-wrapper" :style="{height:wrapperHeight,width:setPx(tableOption.width)}">
     <div
       v-if="options.customTop || $scopedSlots['custom-top']"
       ref="customTop"
@@ -21,8 +21,11 @@
         cell-class-name="zvue-table-cell"
         ref="dataBaseTable"
         :row-key="rowKey"
-        :expand-row-keys="parentOption.expandRowKeys || expandList"
-        :default-expand-all="parentOption.defaultExpandAll"
+        :lazy="tableOption.lazy"
+        :tree-props="tableOption.treeProps || {children: 'children', hasChildren: 'hasChildren'}"
+        :load="_treeLoad"
+        :expand-row-keys="tableOption.expandRowKeys || expandList"
+        :default-expand-all="tableOption.defaultExpandAll"
         :row-style="config.rowStyle"
         :cell-style="config.cellStyle"
         :header-cell-style="config.headerCellStyle"
@@ -30,8 +33,8 @@
         :data="tableShowData"
         :height="tableHeight"
         :size="controlSize"
-        :show-header="options.showHeader"
-        :show-summary="parentOption.showSummary"
+        :show-header="tableOption.showHeader"
+        :show-summary="tableOption.showSummary"
         :summary-method="_tableSummaryMethod"
         @current-change="_currentChange"
         @expand-change="_expandChagne"
@@ -46,9 +49,9 @@
         <el-table-column
           type="expand"
           align="center"
-          v-if="parentOption.expand"
-          :width="parentOption.expandWidth || config.expandWidth"
-          :fixed="vaildData(parentOption.expandFixed,config.expandFixed)"
+          v-if="tableOption.expand"
+          :width="tableOption.expandWidth || config.expandWidth"
+          :fixed="vaildData(tableOption.expandFixed,config.expandFixed)"
         >
           <template #default="{row,index}">
             <slot :row="row" :index="index" name="expand"></slot>
@@ -112,18 +115,18 @@
               type="text"
               :size="controlSize"
               @click.stop="rowCell(scopeRow.row,scopeRow.$index)"
-              v-if="vaildBoolean(parentOption.editBtn,config.editBtn)"
+              v-if="vaildBoolean(tableOption.editBtn,config.editBtn)"
             >{{_editBtnText(scopeRow.row,scopeRow.index)}}</el-button>
             <!-- 取消按钮 -->
             <el-button
-              v-if="scopeRow.row.$cellEdit && vaildBoolean(parentOption.calcelBtn,config.calcelBtn)"
+              v-if="scopeRow.row.$cellEdit && vaildBoolean(tableOption.calcelBtn,config.calcelBtn)"
               type="text"
               :size="controlSize"
               @click.stop="rowCanel(scopeRow.row,scopeRow.$index)"
             >取 消</el-button>
             <!-- 操作列的slot -->
             <slot
-              v-if="vaildData(parentOption.operation,!!$scopedSlots.operation)"
+              v-if="vaildData(tableOption.operation,!!$scopedSlots.operation)"
               :name="config.operationSlotName"
               :scopeRow="scopeRow"
               :row="scopeRow.row"
@@ -500,7 +503,7 @@ export default {
         if (expandedRows.length) {
           (this.parentOption?.expandRowKeys || this.expandList).push(row[this.rowKey]);
         }
-      } else {
+      } else if (this._typeOf(expandedRows) === 'Array') {
         this.expandList = [...expandedRows];
       }
     },
@@ -556,6 +559,13 @@ export default {
       }
       this.sumsList = sums;
       return sums;
+    },
+    //树懒加载
+    _treeLoad(tree, treeNode, resolve) {
+      this.$emit('tree-load', tree, treeNode, (data) => {
+        tree.children = data;
+        resolve(data);
+      })
     },
 
     /**

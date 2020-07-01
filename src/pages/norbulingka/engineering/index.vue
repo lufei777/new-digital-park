@@ -76,6 +76,7 @@
 // 导入接口
 import norbulingka from "@/service/api/norbulingka";
 import commonFun from "@/utils/commonFun";
+
 export default {
   data() {
     return {
@@ -151,16 +152,23 @@ export default {
           height: "auto",
           selection: true,
           showIndex: {
-            width:300,
-            align:'left'
+            width: 300,
+            align: "left"
           },
           pagination: {
             handler: (pageSize, currentPage, table) => {
-              this.getTableData({ page: 1, rows: pageSize, ...this.condition });
+              console.log(currentPage);
+              this.getTableData({
+                page: currentPage,
+                rows: pageSize,
+                ...this.condition
+              });
+              // this.handleCurrentChange(currentPage)
             }
           }
         }
-      }
+      },
+      currentPage: 1
     };
   },
   computed: {
@@ -191,6 +199,11 @@ export default {
     submit(obj) {
       console.log(obj);
     },
+    // handleCurrentChange(val) {
+    //   this.currentPage = val;
+    //   console.log(val);
+    //   this.getTableData();
+    // },
     // 表格中的搜索
     search(obj) {
       console.log(obj);
@@ -210,30 +223,45 @@ export default {
     },
     // 编辑
     propertyEdit(obj) {
-      let info = obj.row
+      let info = obj.row;
       // 多选框要的是数组进行转换
-      info.relateElement = info.relateElement.split(',')
-      // 后端返回多了一个逗号，把最后一个逗号删除
-      info.relateElement.pop()
-      console.log(info)
+      // info.relateElement = info.relateElement.split(",");
+      // // 后端返回多了一个逗号，把最后一个逗号删除
+      // info.relateElement.pop();
+      // console.log(info);
+      if(info.planBudget == null ){
+        info.planBudget =undefined
+      }
+      if(info.planBudget2==null){
+        info.planBudget2 =undefined
+      }
+      if(info.protectBudget==null){
+        info.protectBudget =undefined
+      }
+      if(info.protectBudget2==null){
+        info.protectBudget2 =undefined
+      }
 
       this.$router.push({
-            name: "norDetailEdit",
-            params: { flag: false, mark: "edit", ...info }
+        path: "detailedit",
+        query: { flag: false, mark: "edit", ...info }
+      });
+    },
+    // 删除方法
+    delRowData(ids) {
+      this.$confirm("确认删除吗?", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        norbulingka.deleteProtectProject({ ids }).then(res => {
+          this.$message({
+            type: "success",
+            message: "删除成功！"
           });
-
-      // norbulingka
-      //   .queryDetailProtectProjectById({ id: obj.row.id })
-      //   .then(res => {
-      //     // res.relateElement = JSON.parse(res.relateElement)
-          
-      //     res.relateElement = res.relateElement.split(',')
-      //     console.log( res.relateElement)
-      //     this.$router.push({
-      //       name: "DetailEdit",
-      //       params: { flag: false, mark: "edit", ...res }
-      //     });
-      //   });
+          this.getTableData();
+        });
+      });
     },
     // 表格中的批量删除
     orderDel(obj) {
@@ -244,54 +272,76 @@ export default {
         str = str + item.id + ",";
       });
       let ids = str;
-      norbulingka.deleteProtectProject({ ids }).then(res => {
-        console.log(res);
-        this.$message({
-          message: "删除成功！",
-          type: "success"
-        });
-        this.getTableData({ page: 1, rows: 10 });
-      });
+      this.delRowData(ids);
+      // norbulingka.deleteProtectProject({ ids }).then(res => {
+      //   console.log(res);
+      //   this.$message({
+      //     message: "删除成功！",
+      //     type: "success"
+      //   });
+      //   this.getTableData({ page: 1, rows: 10 });
+      // });
     },
     // 删除
     propertyDel(obj) {
       // console.log(obj)
       let ids = obj.row.id;
-      norbulingka.deleteProtectProject({ ids }).then(res => {
-        // 删除成功后进行提示
-        this.$message({
-          type: "success",
-          message: "删除成功！"
-        });
-        // 刷新页面
-        this.getTableData({ page: 1, rows: 10 });
-      });
+      this.delRowData(ids);
+      // norbulingka.deleteProtectProject({ ids }).then(res => {
+      //   // 删除成功后进行提示
+      //   this.$message({
+      //     type: "success",
+      //     message: "删除成功！"
+      //   });
+      //   // 刷新页面
+      //   this.getTableData({ page: 1, rows: 10 });
+      // });
     },
     // 详情
     propertyDetail(obj) {
+      let info = obj.row;
+      // 多选框要的是数组进行转换
+      // info.relateElement = info.relateElement.split(",");
+      // // 后端返回多了一个逗号，把最后一个逗号删除
+      // info.relateElement.pop();
+      // console.log(info);
+      if(info.planBudget == null ){
+        info.planBudget =undefined
+      }
+      if(info.planBudget2==null){
+        info.planBudget2 =undefined
+      }
+      if(info.protectBudget==null){
+        info.protectBudget =undefined
+      }
+      if(info.protectBudget2==null){
+        info.protectBudget2 =undefined
+      }
       this.$router.push({
-        name: "norDetailEdit",
-        params: { flag: true, mark: "detail", ...obj.row }
+        path: "detailedit",
+        query: { flag: true, mark: "detail", ...info }
       });
     },
     // 添加
     addProject(obj) {
       this.$router.push({
         // name: "DetailEdit",
-        name:'norDetailEdit',
-        params: { mark: "add", ...obj.row }
+        path: "detailedit",
+        query: { mark: "add", ...obj.row }
       });
     },
-    getTableData(pageParams = { page: 1, rows: 10 }) {
+    // params={page:1,rows:10}
+    getTableData(params = { page: 1, rows: 10 }) {
       this.loading = true;
       // 考古发掘表格中的数据
       norbulingka
-        .queryProtectByPage(pageParams)
+        .queryProtectByPage(params)
         .then(res => {
           // console.log(res);
-          
+
           this.$refs[this.tableData.ref].setData(res.list);
           this.$refs[this.tableData.ref].setTotal(res.total);
+          this.$refs[this.tableData.ref].setCurrentPage(params.page);
         })
         .finally(res => {
           this.loading = false;

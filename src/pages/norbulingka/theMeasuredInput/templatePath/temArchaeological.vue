@@ -22,13 +22,13 @@
               v-if="$route.query.mark == 'edit'"
               type='primary'
               @click="editSave(obj)"
-            >编辑保存</el-button>
+            >保存</el-button>
             <!-- 添加保存 -->
             <el-button
               v-if="$route.query.mark == 'add'"
               type='primary'
               @click="addSave(obj)"
-            >添加保存</el-button>
+            >保存</el-button>
             <el-button
               type='danger'
               @click="back(obj)"
@@ -95,6 +95,7 @@ export default {
             label: "发掘次数",
             prop: "number",
             type: "number",
+            minRows:0,
             offset: 6,
             rules: [
               {
@@ -109,6 +110,7 @@ export default {
             label: "发掘面积",
             prop: "area",
             type: "number",
+            minRows:0,
             offset: 6,
             rules: {
               required: true,

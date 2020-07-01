@@ -46,11 +46,12 @@
               buttonText="上传"
               :showFileList="false"
               :action="uploadAction"
-              :accept="['xls', 'xlsx', 'csv','doc','docx']"
+              :accept="['doc','docx']"
               :uploadAfter="uploadAfter"
             ></z-upload>
             <el-button
               @click="del(obj)"
+              type='primary'
               :disabled='!obj.selectedData.length'
             >删除</el-button>
           </div>
@@ -80,6 +81,7 @@
         title="预览"
         :visible.sync="filePreview"
       >
+      <!-- 预览 -->
         <div v-html="fileHtml"></div>
       </el-dialog>
     </div>
@@ -91,7 +93,8 @@
 // 导入接口
 import norbulingka from "@/service/api/norbulingka";
 // ../../../utils/commonFun
-import CommonFun from "../../../utils/commonFun";
+// import CommonFun from "../../../utils/commonFun";
+import CommonFun from "@/utils/commonFun";
 export default {
   data() {
     return {
@@ -257,6 +260,24 @@ export default {
     clearData(obj) {
       this.Form.resetForm();
     },
+
+    // 公共删除方法
+    delRowData(ids) {
+      this.$confirm("确认删除吗?", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        norbulingka.deleteRelicEvaluation({ ids }).then(res => {
+          this.$message({
+            type: "success",
+            message: "删除成功！"
+          });
+          // this.Tables.refreshTable();
+          this.getTableData();
+        });
+      });
+    },
     // 表单上方的删除
     del({ selectedData }) {
       let arr = selectedData;
@@ -265,27 +286,34 @@ export default {
         str = str + item.id + ",";
       });
       let ids = str;
-      norbulingka.deleteRelicEvaluation({ ids }).then(res => {
-        this.$message({
-          type: "success",
-          message: "删除成功！"
-        });
-        this.Tables.refreshTable();
-        this.getTableData();
-      });
+      this.delRowData(ids)
+      // norbulingka.deleteRelicEvaluation({ ids }).then(res => {
+      //   this.$message({
+      //     type: "success",
+      //     message: "删除成功！"
+      //   });
+      //   this.Tables.refreshTable();
+      //   this.getTableData();
+      // });
     },
+    // 下载
     downLoad(obj) {
+      // /oaApi/file/read/rename?name=1.doc&newName=222.doc
+
       console.log(obj);
-      var a = obj.row.path;
-      var b = obj.row.originName;
+      var name = obj.row.path;
+      var newName = obj.row.originName;
       // let url = `http://localhost:8080/oaApi/file/${a}/${b}`;
-      let url = `oaApi/file/${a}/${b}`;
+      let url = `/oaApi/file/read/rename?name=${name}&newName=${newName}`;
+      // this.$axios({name,newName}).then(res => {
+      //   console.log(res)
+      // })
 
       let link = document.createElement("a");
       link.style.display = "none";
       link.href = url;
       // link.setAttribute("download", fileName); // 文件名
-      link.setAttribute("download", b); // 文件名
+      link.setAttribute("download", newName); // 文件名
 
       document.body.appendChild(link);
       link.click();
@@ -294,14 +322,14 @@ export default {
     // 查看
     propertyDetail(obj) {
       // 文件预览的实现
-      console.log("查看");
+      console.log("查看",obj);
       var a = obj.row.path;
       var b = obj.row.originName;
       // http://localhost:8080/oaApi/file/preview/1.docx
       // let url = `http://localhost:8080/oaApi/file/${a}/${b}`;
       // var url = norbulingka.preview()
 
-      let url = `oaApi/file/preview/1.doc`;
+      let url = `oaApi/file/preview/${a}`;
       this.$axios({
         url
       }).then(res => {
@@ -330,6 +358,7 @@ export default {
             // console.log(res);
             this.$refs[this.tableData.ref].setData(res.list);
             this.$refs[this.tableData.ref].setTotal(res.total);
+            this.$refs[this.tableData.ref].setCurrentPage(pageParams.page);
           })
           .finally(res => {
             this.loading = false;

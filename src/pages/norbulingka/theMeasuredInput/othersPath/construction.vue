@@ -43,6 +43,7 @@
             >添加</el-button>
             <el-button
               @click="del(obj)"
+              type='primary'
               :disabled='!obj.selectedData.length'
             >批量删除</el-button>
           </div>
@@ -76,14 +77,15 @@
 import { Norbulingka } from "utils/dictionary";
 // 工程分类
 const projectType = Norbulingka.projectType;
+import CommonFun from "@/utils/commonFun";
 // 导入接口
 import norbulingka from "@/service/api/norbulingka";
-import props from '../../../../components/zvue/common/props';
+import props from "../../../../components/zvue/common/props";
 export default {
   data() {
     return {
       loading: false,
-      condition:null,
+      condition: null,
       model: {},
       formData: {
         ref: "formData",
@@ -142,12 +144,16 @@ export default {
           height: "auto",
           selection: true,
           showIndex: {
-            width:250,
-            align:'left'
+            width: 250,
+            align: "left"
           },
           pagination: {
             handler: (pageSize, currentPage, table) => {
-              this.getTableData({ page: pageSize, rows: currentPage });
+              this.getTableData({
+                page: currentPage,
+                rows: pageSize,
+                ...this.condition
+              });
             }
           }
         }
@@ -171,7 +177,12 @@ export default {
       var list = [
         // 项目名称 projectName   工程分类 projectType      日期 date
         { label: "项目名称", prop: "projectName" },
-        { label: "工程分类", prop: "projectType" ,type:'select',dicData: projectType },
+        {
+          label: "工程分类",
+          prop: "projectType",
+          type: "select",
+          dicData: projectType
+        },
         { label: "记录日期", prop: "date" }
       ];
       // 赋值给表格的配置项
@@ -180,18 +191,22 @@ export default {
     submit(obj) {
       //   console.log(obj);
     },
-    searchData(params) {
-      norbulingka.queryImplimentationByPage({ params }).then(res => {
-        this.Tables.refreshTable();
-        this.getTableData({ ...this.condition });
-      });
-    },
+    // searchData(params) {
+    //   norbulingka.queryImplimentationByPage({ params }).then(res => {
+    //     // this.Tables.refreshTable();
+    //     this.getTableData({ page: 1, rows: 10, ...this.condition });
+    //   });
+    // },
 
     // 搜索
     search(obj) {
       this.Form.getFormModel(res => {
         this.condition = res;
-        this.searchData(res);
+        // this.searchData(res);
+        norbulingka.queryImplimentationByPage({ ...res }).then(res => {
+          // this.Tables.refreshTable();
+          this.getTableData({ page: 1, rows: 10, ...this.condition });
+        });
       });
       // console.log(this.Form.model);
       // //   console.log(this.model);
@@ -205,34 +220,38 @@ export default {
     clearData(obj) {
       this.Form.resetForm();
     },
+    delRowData(ids) {
+      this.$confirm("确认删除吗?", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        norbulingka.deleteImplimentation({ ids }).then(res => {
+          this.$message({
+            type: "success",
+            message: "删除成功！"
+          });
+          // this.Tables.refreshTable();
+          this.getTableData();
+        });
+      });
+    },
     // 表单上方的删除
     del({ selectedData }) {
+      console.log(selectedData);
+
       let arr = selectedData;
       let str = "";
       arr.forEach(item => {
         str = str + item.id + ",";
       });
       let ids = str;
-      norbulingka.deleteImplimentation({ ids }).then(res => {
-        this.$message({
-          type: "success",
-          message: "批量删除成功！"
-        });
-        this.Tables.refreshTable();
-        this.getTableData();
-      });
+      this.delRowData(ids);
     },
     // 删除
     propertyDel(obj) {
       let ids = obj.row.id;
-      norbulingka.deleteImplimentation({ ids }).then(res => {
-        this.$message({
-          type: "success",
-          message: "删除成功！"
-        });
-        this.Tables.refreshTable();
-        this.getTableData();
-      });
+      this.delRowData(ids);
     },
     propertyEdit(obj) {
       console.log(obj.row);
@@ -261,6 +280,7 @@ export default {
             // console.log(res);
             this.$refs[this.tableData.ref].setData(res.list);
             this.$refs[this.tableData.ref].setTotal(res.total);
+            this.$refs[this.tableData.ref].setCurrentPage(pageParams.page);
           })
           .finally(res => {
             this.loading = false;

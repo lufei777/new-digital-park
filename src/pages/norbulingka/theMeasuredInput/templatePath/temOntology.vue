@@ -1,6 +1,6 @@
 <template>
       <div class='panel-container'>
-    <div class= 'panel'>
+    <div class='panel'>
       <!-- 区分标题 -->
       <div class="toptitle">
         <span>{{title}}</span>
@@ -19,16 +19,16 @@
           <div>
             <!-- 编辑保存 -->
             <el-button
-            v-if="$route.query.mark == 'edit'"
+              v-if="$route.query.mark == 'edit'"
               type='primary'
               @click="editSave(obj)"
-            >编辑保存</el-button>
+            >保存</el-button>
             <!-- 添加保存 -->
             <el-button
-            v-if="$route.query.mark == 'add'"
+              v-if="$route.query.mark == 'add'"
               type='primary'
               @click="addSave(obj)"
-            >添加保存</el-button>
+            >保存</el-button>
             <el-button
               type='danger'
               @click="back(obj)"
@@ -83,21 +83,40 @@ export default {
             prop: "parentId",
             type: "select",
             offset: 6,
-            dicData: Norbulingka.ontology
+            props: {
+              label: "name",
+              value: "id"
+            },
+            // dicData: Norbulingka.ontology,
+            rules: [
+              {
+                required: true,
+                message: "必填项",
+                trigger: "blur"
+              }
+            ]
           },
           // 评估	evaluation
           {
             label: "评估",
             prop: "evaluation",
             type: "select",
-            offset: 6
+            offset: 6,
+            props: {
+              label: "name",
+              value: "id"
+            }
           },
           // 遗产要素保存状态	protectStatus
           {
             label: "遗产要素保存状态",
             prop: "protectStatus",
             type: "select",
-            offset: 6
+            offset: 6,
+            props: {
+              label: "name",
+              value: "id"
+            }
           },
           // 照片 : photoFile
           {
@@ -115,10 +134,10 @@ export default {
               url: "fileUrl",
               res: "data"
             },
-            rules:[
+            rules: [
               {
-                required:true,
-                message:'添加照片'
+                required: true,
+                message: "添加照片"
               }
             ]
           },
@@ -159,8 +178,8 @@ export default {
         });
     },
     // 添加保存
-   addSave(obj) {
-      this.Form.submit()
+    addSave(obj) {
+      this.Form.submit();
     },
     // 编辑保存
     editSave(obj) {
@@ -168,26 +187,25 @@ export default {
         console.log("保存", res);
         let params = res;
         // 判断必填字段是否为空 没填情况下阻止跳转
-          delete params.mark;
-          // let str = "";
-          // if (params.photoFile && Object.values(params.photoFile).length >= 1) {
-          //   params.photoFile.forEach(item => {
-          //     let picurl = item.value;
-          //     var index = picurl.lastIndexOf("/");
-          //     picurl = picurl.substring(index + 1);
-          //     str = str + picurl + ",";
-          //   });
-          // }
-          // delete params.photoFile;
-          // params["photo"] = str;
-          norbulingka.updatBuildingsPhoto({ ...params }).then(res => {
-            this.$message({
-              type: "success",
-              message: "编辑成功！"
-            });
-            this.$router.back();
+        delete params.mark;
+        // let str = "";
+        // if (params.photoFile && Object.values(params.photoFile).length >= 1) {
+        //   params.photoFile.forEach(item => {
+        //     let picurl = item.value;
+        //     var index = picurl.lastIndexOf("/");
+        //     picurl = picurl.substring(index + 1);
+        //     str = str + picurl + ",";
+        //   });
+        // }
+        // delete params.photoFile;
+        // params["photo"] = str;
+        norbulingka.updatBuildingsPhoto({ ...params }).then(res => {
+          this.$message({
+            type: "success",
+            message: "编辑成功！"
           });
-        
+          this.$router.back();
+        });
       });
     },
     // 返回
@@ -201,12 +219,54 @@ export default {
     if (query.flag) {
       this.formData.textMode = true;
       this.model = { ...query };
-      this.title = topTitle[query.mark].title
-
+      this.title = topTitle[query.mark].title;
     } else {
       this.model = { ...query };
-       this.title = topTitle[query.mark].title
+      this.title = topTitle[query.mark].title;
     }
+
+    //设置下拉框
+    norbulingka
+      .getSelectOptionOther({ catalogId: 17001, parentId: 0 })
+      .then(res => {
+        this.Form.setColumnByProp("parentId", {
+          dicData: res
+        });
+        // this.Tables.setColumnByProp("parentId", {
+        //   dicData: res
+        // });
+      });
+    //   norbulingka.getSelectOption({ catalogId: 16001 }).then(res => {
+    //   this.Form.setColumnByProp("checkType", {
+    //     dicData: res
+    //   });
+    //   this.Tables.setColumnByProp("checkType", {
+    //     dicData: res
+    //   });
+    // });
+
+    // 评估状态
+    norbulingka
+      .getSelectOptionOther({ catalogId: 18001, parentId: 0 })
+      .then(res => {
+        this.Form.setColumnByProp("evaluation", {
+          dicData: res
+        });
+        // this.Tables.setColumnByProp("evaluation", {
+        //   dicData: res
+        // });
+      });
+    // 保存状态
+    norbulingka
+      .getSelectOptionOther({ catalogId: 19001, parentId: 0 })
+      .then(res => {
+        this.Form.setColumnByProp("protectStatus", {
+          dicData: res
+        });
+        // this.Tables.setColumnByProp("protectStatus", {
+        //   dicData: res
+        // });
+      });
   },
   mounted() {},
   computed: {

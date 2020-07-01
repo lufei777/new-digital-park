@@ -58,3 +58,13 @@ export const valiNumber = (rule, value, callback) =>{
     
   }
 }
+// 中文和数字的
+export const valiNUmberandWorld = (rule, value, callback) =>{
+  let reg = /^[\u4e00-\u9fa5_0-9]+$/
+  if(reg.test(value)){
+    callback();
+  }else{
+    callback(new Error("只支持中文和数字"))
+    
+  }
+}

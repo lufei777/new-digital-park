@@ -23,13 +23,13 @@
             <el-button
               @click="editSave(obj)"
               v-if="$route.query.mark =='edit'"
-            >编辑保存</el-button>
+            >保存</el-button>
             <!-- 添加的保存 -->
             <el-button
               v-if="$route.query.mark =='add'"
               type='primary'
               @click="save(obj)"
-            >添加保存</el-button>
+            >保存</el-button>
             <el-button
               type='primary'
               @click="back(obj)"
@@ -47,7 +47,7 @@
 import norbulingka from "@/service/api/norbulingka";
 import { Norbulingka } from "utils/dictionary";
 // import  { validNotChinese,validMail } from '@/utils/validate'
-import  { validNotChinese,validMail,valiNumber } from '../../../utils/validate'
+import  { validNotChinese,validMail,valiNumber,valiNUmberandWorld } from '../../../utils/validate'
 
 const culturalType = Norbulingka.culturalType;
 const collectionYear = Norbulingka.collectionYear;
@@ -91,6 +91,24 @@ export default {
           //   disabled:true
           // },
           {
+            label: "藏品编号",
+            type: "input",
+            span: 7,
+            // offset: 1,
+            prop: "serial",
+            rules: [
+              {                
+                required: true,
+                message: "必填项",
+                
+              },
+              {
+                validator:valiNUmberandWorld,
+                trigger: 'blur'
+              }
+            ]
+          },
+          {
             label: "编号类型",
             type: "select",
             span: 7,
@@ -109,24 +127,7 @@ export default {
             //   { label: "档案编号", value: 3 }
             // ]
           },
-          {
-            label: "藏品编号",
-            type: "input",
-            span: 7,
-            // offset: 1,
-            prop: "serial",
-            rules: [
-              {                
-                required: true,
-                message: "必填项",
-                
-              },
-              {
-                validator:valiNumber,
-                trigger: 'blur'
-              }
-            ]
-          },
+          
           // 藏品名称	collectionName	藏品原名 primaryName	文物类别	culturalType
           {
             label: "藏品名称",
@@ -221,6 +222,7 @@ export default {
             type: "number",
             span: 7,
             // offset:1,
+            minRows:0,
             prop: "realQuantity",
             rules: [
               {
@@ -233,6 +235,7 @@ export default {
           {
             label: "具体尺寸",
             type: "number",
+            minRows:0,
             span: 7,
             // offset: 1,
             prop: "specificDimension",
@@ -249,6 +252,7 @@ export default {
           {
             label: "藏品通长",
             type: "number",
+            minRows:0,
             // offset:1,
             span: 7,
             prop: "openLength"
@@ -263,6 +267,7 @@ export default {
           {
             label: "藏品通宽",
             type: "number",
+            minRows:0,
             span: 7,
             // offset: 1
             prop: "openWidth"
@@ -277,6 +282,7 @@ export default {
           {
             label: "藏品通高",
             type: "number",
+            minRows:0,
             span: 7,
             // offset: 1,
             prop: "openHeight"
@@ -469,7 +475,7 @@ export default {
           {
             prop: "btn",
             formslot: true,
-            offset: 8,
+            offset: 6,
             span: 12
           }
         ]
@@ -597,6 +603,8 @@ export default {
         });
       });
 
+    
+    
     let path = this.$route.query;
     console.log('123',path)
     if (path.flag) {
