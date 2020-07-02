@@ -1,5 +1,5 @@
 <template>
-  <div class="add-meter radius-shadow">
+  <div class="add-meter radius-shadow panel-container">
     <!--<EnergyTree />-->
     <!--<div class="radius-shadow add-meter-box">-->
       <div class="tip flex-align">
@@ -93,6 +93,7 @@
   .add-meter{
     background: @white;
     padding:20px;
+    box-sizing: border-box;
     .el-form{
       width:50%;
       margin:30px auto;

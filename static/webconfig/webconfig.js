@@ -5,7 +5,7 @@
  * ydCity 伊甸城
  */
 
-window.__CZ_SYSTEM = '';
+window.__CZ_SYSTEM = 'zg';
 
 
 

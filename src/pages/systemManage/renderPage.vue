@@ -236,7 +236,7 @@
           params = {
             caption:'', //名称
             name:'', //工程用名
-            spaceId: 0
+            parentId: 0
           }
         }else if(this.fromFlag==3){
           params = {
@@ -266,9 +266,16 @@
         this.treeConfig.defaultExpandedkeys = [this.treeList && this.treeList[0].id]
       },
       onClickTreeNodeCallBack(val) {
-        this.searchParams.department = val.id
-        this.searchParams.spaceId = val.id
-        this.searchParams.parent = val.id
+        // this.searchParams.department = val.id
+        // this.searchParams.parent = val.id
+        // this.searchParams.parentId = val.id
+        if(this.fromFlag==1){   //1:用户管理  2:空间管理  3：机构管理
+          this.searchParams.department = val.id
+        }else if(this.fromFlag==2){
+          this.searchParams.parentId = val.id
+        }else if(this.fromFlag==3){
+          this.searchParams.parent = val.id
+        }
       },
       onClickSearchBtn() {
         this.getData()
