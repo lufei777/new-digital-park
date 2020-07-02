@@ -2048,17 +2048,20 @@ class commonFun {
 
     //激活菜单
     store.commit("digitalPark/activeMenuIndex", this.setMenuIndex(item))
+    localStorage.setItem('moduleId',this.getLastItem(item).id)
     if (item.routeAddress) {
       //客户端
       if (this.loadClientPage(item)) {
         return;
       } else if (item.routeAddress.indexOf("@") != -1) {
         //旧项目
+        //应急预案和总体评估的备份type参数
         if (item.routeAddress == '@/html/docms/index.html?openid=emergency') {
           localStorage.setItem('backupType', 4)
         } else if (item.routeAddress == '@/html/docms/index.html?openid=assess') {
           localStorage.setItem('backupType', 5)
         }
+
         if (largeScreenFlag) {
           store.commit("digitalPark/largeScreenIframeSrc",
             window.top.location.origin + '/#/vibe-web?updateId=' + _.uniqueId())
@@ -2071,7 +2074,7 @@ class commonFun {
           store.commit("digitalPark/largeScreenIframeSrc", window.top.location.origin + '/#' + item.routeAddress)
         } else {
           if (item.childNode.length) {
-            this.loadPage(this.getLastItem(item));
+            router.push(this.getLastItem(item).routeAddress);
           } else {
             router.push(item.routeAddress);
           }
@@ -2144,7 +2147,7 @@ class commonFun {
 
   //设置菜单index
   setMenuIndex(item, from) {
-    //from 1->代表是渲染菜单的时候使用item本身，不传则为点击的时候找到item的最子集
+    //from 1->代表是渲染菜单的时候，使用item本身；不传则为点击的时候，找到item的最子集
     let arr = ['defaultPage', 'digitalPark/dashboardHomePage', 'stockInApply']
     let flag = false
     if (item.routeAddress) {

@@ -68,12 +68,12 @@ export default {
       if (CommonFun.loadClientPage(item)) {
         return;
       }
-      this.loadPage(key, keyPath);
+      this.loadPage(key, keyPath,item);
     },
     handleOpen(key, keyPath) {
       this.loadPage(key, keyPath);
     },
-    loadPage(key, keyPath) {
+    loadPage(key, keyPath,item) {
       // 如果key没有值，则默认keyPath第一个
       if (key.length === 0) {
         key = keyPath[0];
@@ -83,17 +83,21 @@ export default {
         }
       }
       //应急预案和总体评估的备份type参数
-      if(key=='@/html/docms/index.html?openid=emergency'){
-        localStorage.setItem('backupType',4)
-      }else if(key=='@/html/docms/index.html?openid=assess'){
-        localStorage.setItem('backupType',5)
-      }
-      this.$store.commit("digitalPark/activeMenuIndex", key);
+      // if (key == '@/html/docms/index.html?openid=emergency') {
+      //   localStorage.setItem('backupType', 4)
+      // } else if (key == '@/html/docms/index.html?openid=assess') {
+      //   localStorage.setItem('backupType', 5)
+      // }
+      // this.$store.commit("digitalPark/activeMenuIndex", key);
+      // if (key.indexOf("@") != -1) {
+      //   this.iframeConfig.src = key.replace("@", "");
+      // } else {
+      //   this.$router.push(key);
+      // }
       if (key.indexOf("@") != -1) {
         this.iframeConfig.src = key.replace("@", "");
-      } else {
-        this.$router.push(key);
       }
+      CommonFun.loadPage(item)
     }
   },
   mounted() {

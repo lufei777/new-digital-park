@@ -224,7 +224,7 @@
       },
       setParams(){
         let params = {}
-        if(this.fromFlag==1){
+        if(this.fromFlag==1){   //1:用户管理  2:空间管理  3：机构管理
           params = {
             id: '',
             loginId: '',
@@ -243,7 +243,7 @@
             id:'',
             name:'',
             abbr:'',
-            parentId:''
+            parent:''
           }
         }
         return params
@@ -268,7 +268,7 @@
       onClickTreeNodeCallBack(val) {
         this.searchParams.department = val.id
         this.searchParams.spaceId = val.id
-        this.searchParams.parentId = val.id
+        this.searchParams.parent = val.id
       },
       onClickSearchBtn() {
         this.getData()
