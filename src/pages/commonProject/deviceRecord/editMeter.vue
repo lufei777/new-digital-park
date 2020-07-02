@@ -1,10 +1,10 @@
 <template>
-  <div class="edit-meter radius-shadow">
+  <div class="edit-meter radius-shadow panel-container">
     <div class="tip flex-align">
       <span class="icon"></span>
       <span>编辑表计</span>
     </div>
-    <el-form ref="meterForm" :rules="rules" :model="meterForm" label-position="right" label-width="120px" >
+    <el-form ref="formRef" :rules="rules" :model="meterForm" label-position="right" label-width="120px" >
       <el-form-item label="表名称" prop="caption">
         <el-input v-model="meterForm.caption" ></el-input>
       </el-form-item>
@@ -45,7 +45,7 @@
         <el-input v-model="meterForm.itemizeExpression"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('meterForm')">确定</el-button>
+        <el-button type="primary" @click="submitForm('formRef')">确定</el-button>
         <el-button @click="goBack" class="go-back">返回</el-button>
       </el-form-item>
     </el-form>
@@ -67,6 +67,8 @@
          let reg=/^[0-9]*[h|m|s]$/
          if(!reg.test(value)){
            callback(new Error('请填入正确的间隔时间:数字+时/分/秒 如10h/10m/10s'));
+         }else{
+           callback()
          }
       }
       return {
@@ -91,8 +93,8 @@
           caption:[{required:true,trigger: 'blur',message:'请输入表名称'}],
           name: [{ required: true, message: '请输入工程名称', trigger: 'blur' }],
           time_interval:[{required: true,validator: timeValidate, trigger: 'blur' }],
-          parentMeter:[{required: true, message: '请选择监测类型', trigger: 'blur' }],
-          parentId:[{required: true, message: '请选择安装位置',trigger:'blur'}]
+          parentMeter:[{required: true, message: '请选择父级表', trigger: 'change' }],
+          parentId:[{required: true, message: '请选择安装位置',trigger:'change'}]
         },
         meterDetail:{},
         energyList:[],
@@ -199,13 +201,28 @@
       onClickModalCancelBtn(){
         this.treeModalConfig.showModal=false
       },
-      async submitForm(){
-        console.log(this.meterForm)
+      submitForm(formName){
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.submit()
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      async submit(){
+
         if(this.curMeterId){
           let res = await CommonApi.updateMeter(this.meterForm)
         }else{
           let res = await CommonApi.addMeter(this.meterForm)
         }
+        this.$message({
+          type:'success',
+          message:this.curMeterId?'修改成功':'添加成功'
+        })
+        this.$router.push('/deviceRecord')
       },
       goBack(){
         history.go(-1)
