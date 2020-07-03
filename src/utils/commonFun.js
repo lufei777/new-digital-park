@@ -2073,7 +2073,7 @@ class commonFun {
         if (largeScreenFlag) {
           store.commit("digitalPark/largeScreenIframeSrc", window.top.location.origin + '/#' + item.routeAddress)
         } else {
-          if (item.childNode.length) {
+          if (item?.childNode?.length) {
             router.push(this.getLastItem(item).routeAddress);
           } else {
             router.push(item.routeAddress);
