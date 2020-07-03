@@ -38,11 +38,11 @@
           slot-scope="obj"
         >
           <div class="operator-box flex-row-reverse">
-            <el-button
+            <!-- <el-button
               :size="obj.size"
               type="primary"
               @click="generate(obj)"
-            >生成</el-button>
+            >生成</el-button> -->
             <el-button
               :size="obj.size"
               type="primary"
@@ -66,8 +66,8 @@
           >作废</el-button>
           <el-button
             type="text"
-            @click="seeDetail(obj)"
-          >查看</el-button>
+            @click="generate(obj)"
+          >生成</el-button>
         </template>
       </z-table>
     </div>
@@ -100,7 +100,7 @@ export default {
             label: "月账单编号",
             type: "input",
             span: 6,
-            prop: "monthSerial"
+            prop: "billNumber"
           },
 
           // 合同名称
@@ -116,7 +116,7 @@ export default {
             label: "账期",
             type: "month",
             span: 6,
-            prop: "paymentDays",
+            prop: "billTime",
             valueFormat: "yyyy-MM",
             format: "yyyy-MM"
           },
@@ -155,14 +155,6 @@ export default {
           selection: true, //是否多选
           showIndex: {
             width: 50
-          },
-          pagination: {
-            //是否分页，分页是否自定义
-            layout: "total,->, prev, pager, next, jumper",
-            pageSizes: [10, 20, 50],
-            handler(pageSize, currentPage, table) {
-              _this.handleCurrentChange(currentPage);
-            }
           }
         }
       },
@@ -179,7 +171,14 @@ export default {
     }
   },
   methods: {
-    submit() {},
+    submit(model, hide) {
+      hide();
+      this.leaseContractTable.serverMode.data = Object.assign(
+        _.cloneDeep(pageInfo),
+        model
+      );
+      this.$refs[this.leaseContractTable.ref].refreshTable();
+    },
     resetChange() {},
     clearForm(...args) {
       this.$refs[this.leaseContractForm.ref].resetForm();
@@ -194,7 +193,15 @@ export default {
         { label: "账单金额合计(元)", prop: "billTotalAmount" },
         { label: "账单状态", prop: "billStatus" },
         { label: "本次冲抵额(元)", prop: "offsset" },
-        { label: "租户类型", prop: "tenant" }
+        {
+          label: "租户类型",
+          prop: "tenant",
+          type: "select",
+          props: {
+            label: "name",
+            value: "id"
+          }
+        }
       ];
       this.leaseContractTable.columnConfig = labelList;
       //   let res = await LeaseManageApi.contractList({
@@ -206,19 +213,14 @@ export default {
       //     this.leaseContractTable.uiConfig.pagination.total = res.total;
       //   }
     },
-    // 产看
-    seeDetail(obj){
-
+    // 生成
+    generate(obj) {
+      console.log(obj);
+      this.$router.push({ path: "/recordedtaile", query: { ...obj.row } });
     },
     // 搜索
     onClickSearchBtn(...args) {
-      this.$refs[this.leaseContractForm.ref].getFormModel(res => {
-        console.log("model", res);
-      });
-      console.log("搜索", ...args);
-      this.curPcurrentPageage = 1;
-      // this.$refs[this.leaseContractTableConfig.ref].setCurrentPage(1)
-      this.contractList();
+      this.Form.submit();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -233,16 +235,43 @@ export default {
         this.cancelDelete
       );
     },
-    //生成
-    generate() {},
     // 新增
     addContract() {
       this.$router.push({ path: "addmothly" });
     },
+    deleteRow(billNumber) {
+      LeaseManageApi.deleteMonthBill({ billNumber: billNumber }).then(res => {
+        this.Table.refreshTable();
+        // this.
+      });
+    },
     // 更新
     editRow() {},
     // 作废
-    delRow() {}
+    delRow(obj) {
+      var billNumber = obj.row.billNumber;
+      this.$confirm("确认作废吗？", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(res => {
+        this.$message({
+          type: "success",
+          message: "删除成功!"
+        });
+        this.deleteRow(billNumber);
+      });
+    }
+  },
+  created() {
+    this.$nextTick(() => {
+      this.$refs[this.leaseContractTable.ref].setColumnByProp("tenant", {
+        dicData: [
+          { label: "内租户", value: 1 },
+          { label: "外租户", value: 2 }
+        ]
+      });
+    });
   },
   mounted() {
     this.contractList();

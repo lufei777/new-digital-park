@@ -28,15 +28,73 @@
       </z-form>
     </div>
 
-    <div class="lease-contract-table panel">
-      <div class="tab-title flex-align-between">
+    <div class="lease-contract-table panel" id='printTest'>
+      <!-- <div class="tab-title flex-align-between">
         <span> </span>
         <em>{{title}}</em>
+      </div> -->
+      <div
+        class="showbtn"
+        v-if="showorhide"
+      >
+        <!-- 自定义按钮展示 -->
+        <div class="inbtn">
+          <template
+            slot="custom-top"
+            slot-scope="scopeObj"
+          >
+            <div
+              class="el-table-button-group"
+              style="height:40px;"
+            >
+              <el-button-group>
+                <el-button
+                  type="primary"
+                  @click="testCustomTopObj(scopeObj)"
+                >自定义</el-button>
+
+                <template v-for="col in scopeObj.columnConfig">
+                  <el-button
+                    size='min'
+                    :key="col.prop"
+                    :type="col.hide ?'danger': 'primary'"
+                    @click="switchHide(col)"
+                  >{{col.label}}</el-button>
+                </template>
+              </el-button-group>
+            </div>
+          </template>
+        </div>
       </div>
       <z-table
         :ref="leaseContractTable.ref"
         :options="leaseContractTable"
       >
+        <!-- <template
+          slot="custom-top"
+          slot-scope="scopeObj"
+        >
+          <div
+            class="el-table-button-group"
+            style="height:40px;"
+          >
+            <el-button-group>
+              <el-button
+                type="primary"
+                @click="testCustomTopObj(scopeObj)"
+              >自定义</el-button>
+
+              <template v-for="col in scopeObj.columnConfig">
+                <el-button
+                  size='min'
+                  :key="col.prop"
+                  :type="col.hide ?'danger': 'primary'"
+                  @click="switchHide(col)"
+                >{{col.label}}</el-button>
+              </template>
+            </el-button-group>
+          </div>
+        </template> -->
         <template
           slot="custom-top"
           slot-scope="obj"
@@ -45,10 +103,11 @@
             <el-button
               size='small'
               type="primary"
+              @click="showSetBtn"
             >自定义查询结果</el-button>
             <el-button
               type="primary"
-              @click="generate(obj)"
+              v-print="'#printTest'"
             >打印</el-button>
             <el-button
               type="primary"
@@ -56,20 +115,6 @@
             >导出</el-button>
           </div>
         </template>
-
-        <!-- <template
-          slot="operation"
-          slot-scope="obj"
-        >
-          <el-button
-            type="text"
-            @click="editRow(obj)"
-          >更新金额</el-button>
-          <el-button
-            type="text"
-            @click="delRow(obj)"
-          >作废</el-button>
-        </template> -->
       </z-table>
     </div>
   </div>
@@ -87,6 +132,8 @@ export default {
   data() {
     let _this = this;
     return {
+      // 显示和隐藏控制
+      showorhide: false,
       title: "2020年 5-7 月租赁月账单查询",
       model: {},
       leaseContractForm: {
@@ -123,7 +170,7 @@ export default {
             span: 6,
             prop: "month",
             valueFormat: "MM",
-            format:'MM'
+            format: "MM"
           },
 
           //  租户名称
@@ -131,7 +178,7 @@ export default {
             label: "租户名称",
             type: "input",
             span: 6,
-            prop: "rentName"
+            prop: "tenantName"
           },
           {
             prop: "btn",
@@ -169,14 +216,6 @@ export default {
           selection: false, //是否多选
           showIndex: {
             width: 50
-          },
-          pagination: {
-            //是否分页，分页是否自定义
-            layout: "total,->, prev, pager, next, jumper",
-            pageSizes: [10, 20, 50],
-            handler(pageSize, currentPage, table) {
-              _this.handleCurrentChange(currentPage);
-            }
           }
         }
       },
@@ -193,7 +232,29 @@ export default {
     }
   },
   methods: {
-    submit() {},
+    showSetBtn() {
+      // this.show = !show;
+      console.log(111)
+      this.showorhide = !this.showorhide
+    },
+    switchHide(col) {
+      let tableRefs = this.$refs;
+      if (col.hide) {
+        this.$set(col, "hide", !col.hide);
+      } else {
+        this.$set(col, "hide", true);
+      }
+      tableRefs[this.leaseContractTable.ref].doLayout();
+    },
+
+    submit(model, hide) {
+      hide();
+      this.leaseContractTable.serverMode.data = Object.assign(
+        _.cloneDeep(pageInfo),
+        model
+      );
+      this.$refs[this.leaseContractTable.ref].refreshTable();
+    },
     resetChange() {},
     clearForm(...args) {
       this.$refs[this.leaseContractForm.ref].resetForm();
@@ -218,31 +279,24 @@ export default {
         { label: "公务车有偿使用", prop: "officialVehicleCost" }
       ];
       this.leaseContractTable.columnConfig = labelList;
-      //   let res = await LeaseManageApi.contractList({
-      //     pageNum: this.currentPage,
-      //     pageSize: 10
-      //   });
-      //   if (res && res.list) {
-      //     this.leaseContractTable.data = res.list;
-      //     this.leaseContractTable.uiConfig.pagination.total = res.total;
-      //   }
     },
 
     // 导出
-    exportFile(obj){
+    exportFile(obj) {
       // /oaApi/month/bill/exportMonthBillDetailed
       //  let url = '/oaApi/stockDeal/exportRecord'
-       let url = '/oaApi/month/bill/exportMonthBillDetailed'
-        let params=''
-        let arr = this.$refs[this.leaseContractTable.ref].getSelectedData()
-        let stockRecordIds = arr.length?arr.map((item)=>item.id):''
-        for(let key in this.leaseContractTable.serverMode.data){
-          if(key!=pageInfo){
-            params+=key+'='+this.leaseContractTable.serverMode.data[key]+'&'
-          }
+      let url = "/oaApi/month/bill/exportMonthBillDetailed";
+      let params = "";
+      let arr = this.$refs[this.leaseContractTable.ref].getSelectedData();
+      let stockRecordIds = arr.length ? arr.map(item => item.id) : "";
+      for (let key in this.leaseContractTable.serverMode.data) {
+        if (key != pageInfo) {
+          params +=
+            key + "=" + this.leaseContractTable.serverMode.data[key] + "&";
         }
-        params+='stockRecordIds='+stockRecordIds
-        CommonFun.exportMethod({url, params})
+      }
+      params += "stockRecordIds=" + stockRecordIds;
+      CommonFun.exportMethod({ url, params });
 
       // LeaseManageApi.exportMonthBillDetailed().then(res =>{
       //   console.log(res)
@@ -250,13 +304,7 @@ export default {
     },
     // 搜索
     onClickSearchBtn(...args) {
-      this.$refs[this.leaseContractForm.ref].getFormModel(res => {
-        console.log("model", res);
-      });
-      console.log("搜索", ...args);
-      this.curPcurrentPageage = 1;
-      // this.$refs[this.leaseContractTableConfig.ref].setCurrentPage(1)
-      this.contractList();
+      this.Form.submit();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -325,6 +373,17 @@ export default {
   em {
     font-style: normal;
     font-size: 20px;
+  }
+}
+.showSetBtn {
+  width: 100%;
+  height: auto;
+  display: none;
+  position: relative;
+  .inbtn {
+    position: absolute;
+    left: 0;
+    top: -100px;
   }
 }
 </style>

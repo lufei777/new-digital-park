@@ -808,7 +808,10 @@ export default {
       return this.$axios({
         url,
         method,
-        data
+        data,
+        headers: {
+          'Content-Type': 'application/json'
+        }
       })
     },
     delInfo() {

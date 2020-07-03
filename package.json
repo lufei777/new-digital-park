@@ -22,6 +22,7 @@
     "v-charts": "^1.19.0",
     "vconsole": "^3.3.4",
     "vue": "^2.6.11",
+    "vue-print-nb": "^1.5.0",
     "vue-router": "^3.0.7",
     "vuedraggable": "^2.23.2",
     "x2js": "^3.4.0"

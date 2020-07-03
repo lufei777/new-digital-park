@@ -53,49 +53,58 @@ export default [
 				name: 'billManage',
 				meta: { title: '账单管理' },
 				component: () => import('@/pages/leaseManage/billManage/billManage')
-            },
-            // 租赁月账单
-            {
-                path: '/monthlyrentalbill',
+			},
+			// 租赁月账单
+			{
+				path: '/monthlyrentalbill',
 				name: 'rentalbill',
 				meta: { title: '租赁月账单' },
 				component: () => import('@/pages/leaseManage/monthlyRentalBill/')
-            },
-            // 租赁月账单模板
-            {
-                path: '/addmothly',
+			},
+			// 租赁月账单模板
+			{
+				path: '/addmothly',
 				name: 'leasaddmothly',
 				component: () => import('@/pages/leaseManage/monthlyRentalBill/temmonthrentalbill')
 			},
+			// 记录详情
+			{
+				path: '/recordedtaile',
+				name: 'leaserecordedtaile',
+				meta: { title: '记录详情' },
+				component: () => import('../pages/leaseManage/monthlyRentalBill/recordDetails.vue')
+			},
+			// {
+			// 	path: '/leasetest',
+			// 	name: 'leasetest',
+			// 	meta: { title: '记录详情' },
+			// 	component: () => import('../pages/leaseManage/monthlyRentalBill/test.vue')
+			// },
 			// 租赁合同审核
 
 			// 租赁合同审核模板
 
 			// 租赁月账单明细查询
 			{
-				path:'/detailquery',
-				name:'leasedetailquery',
-				meta:{title:'租赁月账单明细查询'},
-				component:() => import('../pages/leaseManage/queryStatistics/detailQuery.vue')
+				path: '/detailquery',
+				name: 'leasedetailquery',
+				meta: { title: '租赁月账单明细查询' },
+				component: () => import('../pages/leaseManage/queryStatistics/detailQuery.vue')
 			},
 			// 租赁月账单综合查询 - 按租户统计
 			{
-				path:'/tenantstatistics',
-				name:'leaseintegratedquery',
-				meta:{title:'按租户统计'},
-				component:() => import('../pages/leaseManage/queryStatistics/integratedQuality/tenantStatistics.vue')
+				path: '/tenantstatistics',
+				name: 'leaseintegratedquery',
+				meta: { title: '按租户统计' },
+				component: () => import('../pages/leaseManage/queryStatistics/integratedQuality/tenantStatistics.vue')
 			},
 			// 租赁月账单综合查询 - 合同统计
 			{
-				path:'/contractstatistics',
-				name:'leasecontractStatistics',
-				meta:{title:'按合同统计'},
-				component:() => import('../pages/leaseManage/queryStatistics/integratedQuality/contractStatistics.vue')
+				path: '/contractstatistics',
+				name: 'leasecontractStatistics',
+				meta: { title: '按合同统计' },
+				component: () => import('../pages/leaseManage/queryStatistics/integratedQuality/contractStatistics.vue')
 			}
-
-
-
-
 		]
 	}
 ];

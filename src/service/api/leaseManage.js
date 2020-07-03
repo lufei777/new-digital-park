@@ -79,43 +79,55 @@ export default new class {
 	// 增加
 	@url('/oaApi/month/bill/addMonthBill')
 	@post
-    addMonthBill() {}
-    
-    // 修改
-    
+	addMonthBill() {}
 
-    // 删除
-    @url('/oaApi/month/bill/deleteMonthBill')
+	// 修改
+
+	// 删除
+	@url('/oaApi/month/bill/deleteMonthBill')
 	@del
-    deleteMonthBill() {}
+	deleteMonthBill() {}
 
-    // 查询 /month/bill/queryMonthBillList
-    @url('/oaApi/month/bill/queryMonthBillList')
+	// 查询 /month/bill/queryMonthBillList
+	@url('/oaApi/month/bill/queryMonthBillList')
 	@get
-    queryMonthBillList() {}
+	queryMonthBillList() {}
 
-    // 租赁月账单明细查询
-    @url('/oaApi/month/bill/queryMonthBillDetailed')
+	// 租赁月账单明细查询
+	@url('/oaApi/month/bill/queryMonthBillDetailed')
 	@get
-    queryMonthBillDetailed() {}
+	queryMonthBillDetailed() {}
 
-    // 导出
-    @url('/oaApi/month/bill/exportMonthBillDetailed')
+	// 导出
+	@url('/oaApi/month/bill/exportMonthBillDetailed')
 	@get
-    exportMonthBillDetailed() {}
+	exportMonthBillDetailed() {}
 
+	// 租赁月账单综合查询 - 租户统计
 
-    // 租赁月账单综合查询 - 租户统计
-
-    @url('/oaApi/month/bill/querySumStatTenant')
+	@url('/oaApi/month/bill/querySumStatTenant')
 	@get
-    querySumStatTenant() {}
+	querySumStatTenant() {}
 
-
-    // 租赁月账单综合查询 - 合同统计
-    @url('/oaApi/month/bill/querySumStatContract')
+	// 租赁月账单综合查询 - 合同统计
+	@url('/oaApi/month/bill/querySumStatContract')
 	@get
-    querySumStatContract() {}
+	querySumStatContract() {}
 
-    
+	// 生成账单编号
+	// /oaApi/tenant/createTenNum
+	@url('/oaApi/tenant/createTenNum')
+	@get
+	createTenNum() {}
+
+	// 租户类型
+	@url('/oaApi/tenant/tenantList')
+	@get
+	tenantList() {}
+
+	// 合同编号 
+	
+	@url('/oaApi/month/bill/queryContractByNumber')
+	@get
+	queryContractByNumber() {}
 }();

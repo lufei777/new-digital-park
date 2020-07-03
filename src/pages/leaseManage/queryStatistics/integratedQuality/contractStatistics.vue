@@ -28,7 +28,7 @@
       </z-form>
     </div>
 
-    <div class="lease-contract-table panel">
+    <div class="lease-contract-table panel" id='printTest'>
       <z-table
         :ref="leaseContractTable.ref"
         :options="leaseContractTable"
@@ -41,12 +41,12 @@
             <el-button
               :size="obj.size"
               type="primary"
-              @click="generate(obj)"
+              v-print="'#printTest'"
             >打印</el-button>
             <el-button
               :size="obj.size"
               type="primary"
-              @click="addContract(obj)"
+              @click="exportFile(obj)"
             >导出</el-button>
           </div>
         </template>
@@ -81,30 +81,42 @@ export default {
         submitBtn: false,
         emptyBtn: false,
         forms: [
-          // 月账单编号
+          // 年
           {
-            label: "月账单编号",
-            type: "input",
+            label: "年",
+            type: "year",
             span: 6,
-            prop: "monthSerial"
+            prop: "year",
+            valueFormat: "yyyy"
+            // format:'yyyy'
           },
+          //   {
+          //     label: "时间日期范围",
+          //     prop: "daterange",
+          //     type: "daterange",
+          //     span: 10,
+          //     valueFormat: "yyyy-MM-dd HH:mm:ss",
+          //     startPlaceholder: "时间日期开始范围自定义",
+          //     endPlaceholder: "时间日期结束范围自定义"
+          //   },
 
-          // 合同名称
+          // 月
           {
-            label: "合同名称",
-            type: "input",
-            span: 6,
-            prop: "contractName"
-          },
-
-          //  账期
-          {
-            label: "账期",
+            label: "月",
             type: "month",
             span: 6,
-            prop: "paymentDays",
-            valueFormat: "yyyy-MM",
-            format: "yyyy-MM"
+            prop: "month",
+            valueFormat: "MM",
+            format: "MM"
+          },
+
+
+          //  合同
+          {
+            label: "合同",
+            type: "input",
+            span: 6,
+            prop: "contractName",
           },
           {
             prop: "btn",
@@ -135,18 +147,18 @@ export default {
         columnConfig: [],
         uiConfig: {
           height: "auto", //"", //高度
-          selection: true, //是否多选
+          selection: false, //是否多选
           showIndex: {
             width: 50
-          },
-          pagination: {
-            //是否分页，分页是否自定义
-            layout: "total,->, prev, pager, next, jumper",
-            pageSizes: [10, 20, 50],
-            handler(pageSize, currentPage, table) {
-              _this.handleCurrentChange(currentPage);
-            }
           }
+          // pagination: {
+          //   //是否分页，分页是否自定义
+          //   layout: "total,->, prev, pager, next, jumper",
+          //   pageSizes: [10, 20, 50],
+          //   handler(pageSize, currentPage, table) {
+          //     _this.handleCurrentChange(currentPage);
+          //   }
+          // }
         }
       },
       currentPage: 1,
@@ -162,22 +174,30 @@ export default {
     }
   },
   methods: {
-    submit() {},
+    submit(model, hide) {
+      hide();
+      this.leaseContractTable.serverMode.data = Object.assign(_.cloneDeep(pageInfo), model);
+      this.Table.refreshTable();
+    },
     resetChange() {},
     clearForm(...args) {
       this.$refs[this.leaseContractForm.ref].resetForm();
     },
     async contractList() {
       let labelList = [
-        { label: "租赁月账单编号", prop: "contractNumber" },
-        { label: "租户", prop: "contractName" },
-        { label: "合同名称", prop: "houseName" },
-        { label: "账期", prop: "tenantName" },
-        { label: "收费项目数", prop: "telephone" },
-        { label: "账单金额合计(元)", prop: "contractTime" },
-        { label: "账单状态", prop: "expireTime" },
-        { label: "本次冲抵额(元)", prop: "expireTime" },
-        { label: "租户类型", prop: "expireTime" }
+        { label: "账期", prop: "billTime" },
+        { label: "月账单编号", prop: "contractNumber" },
+        { label: "收费通知单号", prop: "chargeNotice" },
+        { label: "合同名称", prop: "contractName" },
+        { label: "租户名称", prop: "tenantName" },
+        { label: "租户面积(㎡)", prop: "houseArea" },
+        { label: "账单金额合计(元)", prop: "sumCost" },
+        { label: "本次冲抵金额(元)", prop: "offsset" },
+        { label: "核定金额(元)", prop: "approvedAmount" },
+        { label: "租金(元)", prop: "leaseCost" },
+        { label: "物业费(元)", prop: "propertyFeeCost" },
+        { label: "保洁费(元)", prop: "cleaningCost" },
+        { label: "其他(元)", prop: "otherCost" }
       ];
       this.leaseContractTable.columnConfig = labelList;
       //   let res = await LeaseManageApi.contractList({
@@ -189,15 +209,25 @@ export default {
       //     this.leaseContractTable.uiConfig.pagination.total = res.total;
       //   }
     },
+
+    exportFile(obj) {
+      console.log(111);
+      let url = "/oaApi/month/bill/exportSumStatContract";
+      let params = "";
+      let arr = this.$refs[this.leaseContractTable.ref].getSelectedData();
+      let stockRecordIds = arr.length ? arr.map(item => item.id) : "";
+      for (let key in this.leaseContractTable.serverMode.data) {
+        if (key != pageInfo) {
+          params +=
+            key + "=" + this.leaseContractTable.serverMode.data[key] + "&";
+        }
+      }
+      params += "stockRecordIds=" + stockRecordIds;
+      CommonFun.exportMethod({ url, params });
+    },
     // 搜索
     onClickSearchBtn(...args) {
-      this.$refs[this.leaseContractForm.ref].getFormModel(res => {
-        console.log("model", res);
-      });
-      console.log("搜索", ...args);
-      this.curPcurrentPageage = 1;
-      // this.$refs[this.leaseContractTableConfig.ref].setCurrentPage(1)
-      this.contractList();
+      this.Form.submit()
     },
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -211,12 +241,6 @@ export default {
         this.sureDelete,
         this.cancelDelete
       );
-    },
-    //生成
-    generate() {},
-    // 新增
-    addContract() {
-      this.$router.push({ path: "addmothly" });
     },
     // 更新
     editRow() {},

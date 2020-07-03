@@ -11,7 +11,7 @@
       ></multi-header-column>
       <el-table-column
         v-else-if="!col.hide"
-        show-overflow-tooltip
+        :show-overflow-tooltip="vaildBoolean(col.showOverflowTooltip,true)"
         :key="col.prop"
         :prop="col.prop"
         :label="col.label"
@@ -57,7 +57,7 @@
           <template v-else>
             <span
               v-if="['array'].includes(col.type)"
-            >{{_detailData(getValueByPath(scopeRow.row, col.prop),col.dataType).join(' | ')}}</span>
+            >{{_detailData(getValueByPath(scopeRow.row, col.prop),col).join(' | ')}}</span>
             <span v-else-if="['url'].includes(col.type)">
               <el-link
                 type="primary"
@@ -101,7 +101,7 @@
 <script>
 import { detail } from "../../utils/detail";
 import { validatenull } from "../../utils/validate";
-import { deepClone } from "../../utils/util";
+import { deepClone, vaildBoolean } from "../../utils/util";
 import formTemp from "../formtemp";
 import { DIC_SPLIT, EMPTY_VALUE } from "../../global/variable";
 import multiHeaderColumn from './multiHeaderColumn';
@@ -133,15 +133,18 @@ export default {
     }
   },
   methods: {
+    vaildBoolean,
     validatenull,
     cellEditFlag(row, column) {
       // && column.slot !== true
       // console.log("isEdit", row, column, row.$cellEdit && column.cell);
       return !!(row.$cellEdit && column.cell);
     },
-    _detailData(list, dataType) {
+    _detailData(list, { dataType, props: { label } }) {
       if (!Array.isArray(list) && ["string", "number"].includes(dataType)) {
         return list.split(",");
+      } else if (Array.isArray(list)) {
+        return list.map(item => item[label]);
       }
       return list;
     },
