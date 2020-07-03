@@ -28,15 +28,73 @@
       </z-form>
     </div>
 
-    <div class="lease-contract-table panel">
-      <div class="tab-title flex-align-between">
+    <div class="lease-contract-table panel" id='printTest'>
+      <!-- <div class="tab-title flex-align-between">
         <span> </span>
         <em>{{title}}</em>
+      </div> -->
+      <div
+        class="showbtn"
+        v-if="showorhide"
+      >
+        <!-- 自定义按钮展示 -->
+        <div class="inbtn">
+          <template
+            slot="custom-top"
+            slot-scope="scopeObj"
+          >
+            <div
+              class="el-table-button-group"
+              style="height:40px;"
+            >
+              <el-button-group>
+                <el-button
+                  type="primary"
+                  @click="testCustomTopObj(scopeObj)"
+                >自定义</el-button>
+
+                <template v-for="col in scopeObj.columnConfig">
+                  <el-button
+                    size='min'
+                    :key="col.prop"
+                    :type="col.hide ?'danger': 'primary'"
+                    @click="switchHide(col)"
+                  >{{col.label}}</el-button>
+                </template>
+              </el-button-group>
+            </div>
+          </template>
+        </div>
       </div>
       <z-table
         :ref="leaseContractTable.ref"
         :options="leaseContractTable"
       >
+        <!-- <template
+          slot="custom-top"
+          slot-scope="scopeObj"
+        >
+          <div
+            class="el-table-button-group"
+            style="height:40px;"
+          >
+            <el-button-group>
+              <el-button
+                type="primary"
+                @click="testCustomTopObj(scopeObj)"
+              >自定义</el-button>
+
+              <template v-for="col in scopeObj.columnConfig">
+                <el-button
+                  size='min'
+                  :key="col.prop"
+                  :type="col.hide ?'danger': 'primary'"
+                  @click="switchHide(col)"
+                >{{col.label}}</el-button>
+              </template>
+            </el-button-group>
+          </div>
+        </template> -->
         <template
           slot="custom-top"
           slot-scope="obj"
@@ -45,10 +103,11 @@
             <el-button
               size='small'
               type="primary"
+              @click="showSetBtn"
             >自定义查询结果</el-button>
             <el-button
               type="primary"
-              @click="generate(obj)"
+              v-print="'#printTest'"
             >打印</el-button>
             <el-button
               type="primary"
@@ -56,20 +115,6 @@
             >导出</el-button>
           </div>
         </template>
-
-        <!-- <template
-          slot="operation"
-          slot-scope="obj"
-        >
-          <el-button
-            type="text"
-            @click="editRow(obj)"
-          >更新金额</el-button>
-          <el-button
-            type="text"
-            @click="delRow(obj)"
-          >作废</el-button>
-        </template> -->
       </z-table>
     </div>
   </div>
@@ -87,6 +132,8 @@ export default {
   data() {
     let _this = this;
     return {
+      // 显示和隐藏控制
+      showorhide: false,
       title: "2020年 5-7 月租赁月账单查询",
       model: {},
       leaseContractForm: {
@@ -185,6 +232,21 @@ export default {
     }
   },
   methods: {
+    showSetBtn() {
+      // this.show = !show;
+      console.log(111)
+      this.showorhide = !this.showorhide
+    },
+    switchHide(col) {
+      let tableRefs = this.$refs;
+      if (col.hide) {
+        this.$set(col, "hide", !col.hide);
+      } else {
+        this.$set(col, "hide", true);
+      }
+      tableRefs[this.leaseContractTable.ref].doLayout();
+    },
+
     submit(model, hide) {
       hide();
       this.leaseContractTable.serverMode.data = Object.assign(
@@ -311,6 +373,17 @@ export default {
   em {
     font-style: normal;
     font-size: 20px;
+  }
+}
+.showSetBtn {
+  width: 100%;
+  height: auto;
+  display: none;
+  position: relative;
+  .inbtn {
+    position: absolute;
+    left: 0;
+    top: -100px;
   }
 }
 </style>

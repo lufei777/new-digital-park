@@ -28,7 +28,7 @@
       </z-form>
     </div>
 
-    <div class="lease-contract-table panel">
+    <div class="lease-contract-table panel" id='printTest'>
       <z-table
         :ref="leaseContractTable.ref"
         :options="leaseContractTable"
@@ -41,7 +41,7 @@
             <el-button
               :size="obj.size"
               type="primary"
-              @click="generate(obj)"
+              v-print="'#printTest'"
             >打印</el-button>
             <el-button
               :size="obj.size"
