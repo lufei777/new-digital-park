@@ -32,7 +32,8 @@ let typeMap = {
     switch: 'switch',
     number: 'input-number',
     password: 'input',
-    tree: 'input-tree'
+    tree: 'input-tree',
+    table: 'input-table'
 }
 
 export const getComponent = function (type, component) {
@@ -151,6 +152,49 @@ export const calcCascader = (list = []) => {
     return list;
 };
 /**
+ * 搜索框获取动态组件
+ */
+export const getSearchType = (column, component = false) => {
+    const type = column.type;
+    const range = column.searchRange;
+    let result = type || 'input';
+    if (['select', 'radio', 'checkbox', 'switch'].includes(type)) {
+        result = 'select';
+    } else if (dateList.includes(type)) {
+        if (range) {
+            if (type === 'date') {
+                result = 'daterange';
+            } else if (type === 'datetime') {
+                result = 'datetimerange';
+            } else if (type === 'time') {
+                result = 'timerange';
+            } else {
+                result = type;
+            }
+        } else {
+            if (type === 'daterange') {
+                result = 'date';
+            } else if (type === 'datetimerange') {
+                result = 'datetime';
+            } else if (type === 'timerange') {
+                result = 'time';
+            } else {
+                result = type;
+            }
+        }
+    } else if (['cascader'].includes(type)) {
+        result = 'cascader';
+    } else if (['number'].includes(type)) {
+        result = 'input-number';
+    } else if (['textarea'].includes(type)) {
+        result = 'input';
+    }
+    if (component) {
+        result = KEY_COMPONENT_NAME + result;
+    }
+    return result;
+};
+/**
  * 计算空白列row
  */
 let count = 0;
@@ -175,9 +219,7 @@ export const formInitVal = (list = []) => {
     let tableForm = {};
     let searchForm = {};
     list.forEach(ele => {
-        
         let currentValue = null;
-        if (ele.notModel) return;
 
         if (
             ['checkbox', 'cascader', 'dynamic', 'dates'].includes(ele.type) ||
@@ -206,7 +248,7 @@ export const formInitVal = (list = []) => {
 
         setValueByPath(tableForm, ele.prop, currentValue);
         if (ele.search)
-            setValueByPath(tableForm, ele.prop, currentValue);
+            setValueByPath(searchForm, ele.prop, currentValue);
 
         // 搜索表单默认值设置
         if (!validatenull(ele.searchDefault)) {

@@ -15,34 +15,38 @@
       <z-table :ref="tableOptions.ref" :options="tableOptions">
         <template slot="custom-top" slot-scope="{size,selectedData}">
           <el-button :size="size" type="primary" @click="addedProperty">新增</el-button>
-          <el-button :size="size" type="primary" @click="bulkImport">批量导入</el-button>
           <el-button
             :disabled="!selectedData.length"
             :size="size"
             type="primary"
             @click="bulkDel(selectedData)"
           >批量删除</el-button>
-          <el-button
-            :disabled="!selectedData.length"
-            :size="size"
-            type="primary"
-            @click="bulkEdit(selectedData)"
-          >批量编辑</el-button>
         </template>
-        <template slot="operation" slot-scope="obj">
-          <el-button type="text" @click="propertyDetail(obj)">详情</el-button>
-          <el-button type="text" @click="propertyEdit(obj)">编辑</el-button>
-          <el-button type="text" @click="propertyDel(obj)">删除</el-button>
-          <el-button type="text" @click="propertyLocation(obj)">定位</el-button>
+        <template slot="operation" slot-scope="{row}">
+          <el-button type="text" @click="propertyDetail({row})">详情</el-button>
+          <el-button type="text" @click="propertyEdit({row})">编辑</el-button>
+          <el-button type="text" @click="propertyDel({row})">删除</el-button>
+          <el-button type="text" @click="bindingMeter({row})">点表绑定</el-button>
         </template>
       </z-table>
     </div>
+    <el-dialog
+      title="绑定点表"
+      destroy-on-close
+      :style="{height:'100%'}"
+      :visible.sync="bindingMeterDialog"
+      width="80%"
+    >
+      <binding-meter :tenantId="tenantElecId"></binding-meter>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { LeaseManageDic } from "@/utils/dictionary";
 import leaseManageApi from "@/service/api/leaseManage";
 import commonFun from "@/utils/commonFun.js";
+import electricityManageApi from 'api/electricityManage';
+import bindingMeter from '../common/bindingMeter';
 
 const dateValueFormat = "yyyy-MM-dd HH:mm:ss";
 let tableSendData = {
@@ -51,8 +55,14 @@ let tableSendData = {
 };
 
 export default {
+  inject: ['checkPermission'],
+  components: {
+    bindingMeter
+  },
   data() {
     return {
+      bindingMeterDialog: false,
+      tenantElecId: '',
       model: {},
       formOptions: {
         ref: "Form",
@@ -60,51 +70,67 @@ export default {
         menuBtn: false,
         forms: [
           {
-            type: "input",
-            label: "房产编号",
-            prop: "houseNumber",
-            placeholder: "请输入",
+            type: 'table',
+            label: "合同编号",
+            prop: "contractNumber",
             clearable: true,
-            span: 4
+            span: 6,
+            children: {
+              serverMode: {
+                url: leaseManageApi.contractList,
+                data: tableSendData
+              },
+              columnConfig: [
+                {
+                  label: '合同名称',
+                  prop: 'contractName'
+                },
+                {
+                  label: '合同编号',
+                  prop: 'contractNumber'
+                }
+              ]
+            },
+            props: {
+              label: 'contractNumber',
+              value: 'contractNumber'
+            }
           },
           {
-            type: "input",
-            label: "房产名称",
-            prop: "houseName",
-            placeholder: "请输入",
+            type: 'table',
+            label: "租户名称",
+            prop: "tenantNumber",
             clearable: true,
-            span: 4
-          },
-          {
-            type: "number",
-            label: "总价",
-            prop: "housePrice",
-            placeholder: "请输入",
-            clearable: true,
-            span: 4,
-            minRows: 0
-          },
-          {
-            type: "select",
-            label: "房产状态",
-            prop: "houseStatus",
-            placeholder: "请输入",
-            clearable: true,
-            span: 4,
-            dicData: Object.values(LeaseManageDic.HouseStatus)
-          },
-          {
-            type: "number",
-            label: "面积",
-            prop: "houseArea",
-            placeholder: "请输入",
-            clearable: true,
-            span: 4,
-            minRows: 0
+            span: 6,
+            children: {
+              serverMode: {
+                url: leaseManageApi.tenantList,
+                data: tableSendData
+              },
+              columnConfig: [
+                {
+                  label: '租户名称',
+                  prop: 'tenantName'
+                },
+                {
+                  label: '所租房产',
+                  prop: 'houseName'
+                },
+                {
+                  label: '联系方式',
+                  prop: 'telephone'
+                }
+              ]
+            },
+            props: {
+              label: 'tenantName',
+              value: 'tenantNumber'
+            }
           },
           {
             prop: "btn",
-            span: 4,
+            span: 6,
+            noModel: true,
             formslot: true,
             width: 55
           }
@@ -115,10 +141,10 @@ export default {
         customTop: true,
         customTopPosition: "right",
         operation: {
-          width: 200
+          width: 250
         },
         serverMode: {
-          url: leaseManageApi.getHouseList,
+          url: electricityManageApi.selectTenantUseElecList,
           data: {
             pageNum: 1,
             pageSize: 10
@@ -126,58 +152,44 @@ export default {
         },
         columnConfig: [
           {
-            prop: "houseNumber",
-            label: "房产编号",
-            width: 200
-          },
-          {
-            prop: "houseName",
-            label: "房产名称"
-          },
-          {
-            prop: "spaceName",
-            label: "空间位置"
-          },
-          {
-            prop: "houseStatus",
-            label: "房产状态",
-            type: "select",
-            dicData: LeaseManageDic.HouseStatus
-          },
-          {
-            prop: "houseArea",
-            label: "面积 m²"
-          },
-          {
-            prop: "housePrice",
-            label: "总价",
-            formatter(row, value) {
-              // debugger;
-              let pirceTypeLabel = "";
-              if (typeof row.priceType == "number") {
-                pirceTypeLabel =
-                  LeaseManageDic.PriceType[row.priceType - 1].label;
-              }
-              return value
-                ? `${value} ${pirceTypeLabel}`
-                : "--";
-            }
+            prop: "tenantName",
+            label: "客户名称"
           },
           {
             prop: "contractTime",
-            label: "签约时间"
+            label: "起始日期"
           },
           {
-            prop: "tenantName",
-            label: "租户姓名"
+            prop: "expireTime",
+            label: "结束日期"
+          },
+          {
+            prop: "elecMeter",
+            label: "对应点表号",
+            type: 'array',
+            showOverflowTooltip: false,
+            props: {
+              label: 'monitorName'
+            }
+          },
+          {
+            prop: "spaceName",
+            label: "所在楼层"
+          },
+          {
+            prop: 'proportion',
+            label: '分摊楼层公共电量比例(%)'
           }
         ],
         uiConfig: {
           height: "auto",
-          selection: true
+          selection: true,
+          showIndex: true
         }
       }
     };
+  },
+  mounted() {
   },
   methods: {
     search(...args) {
@@ -195,24 +207,24 @@ export default {
       this.Form.resetForm();
     },
     deleteRow(ids) {
-      leaseManageApi.removeHouse({ houseIds: ids }).then(res => {
+      electricityManageApi.deleteTenantUseElec(ids).then(res => {
         this.refreshTable();
       });
     },
-    addedProperty(obj) {
+    addedProperty({ row }) {
       this.$router.push({
-        name: "editHouseProperty"
+        name: "tenantelectricityadd",
+        query: {
+          flag: 'add'
+        }
       });
-    },
-    bulkImport(obj) {
-      this.$router.push({ name: "bulkimporthouseproperty" });
     },
     bulkDel(selectedData) {
       if (!selectedData.length) {
         commonFun.deleteTip(this, false, "请选择数据");
         return;
       }
-      let ids = selectedData.map(item => item.id).join(",")
+      let ids = selectedData.map(item => item.id);
       commonFun.deleteTip(
         this,
         true,
@@ -223,34 +235,32 @@ export default {
         () => { }
       );
     },
-    bulkEdit(obj) {
-      console.log(obj);
-    },
-    propertyDetail({ scopeRow: { $index, row, _self } }) {
+    propertyDetail({ row }) {
       this.$router.push({
-        name: "editHouseProperty",
+        name: "tenantelectricityadd",
         query: { id: row.id, flag: "detail" }
       });
     },
-    propertyEdit({ scopeRow: { $index, row, _self } }) {
+    propertyEdit({ row }) {
       this.$router.push({
-        name: "editHouseProperty",
+        name: "tenantelectricityadd",
         query: { id: row.id, flag: "edit" }
       });
     },
-    propertyDel({ scopeRow: { $index, row, _self } }) {
-      console.log($index, row, _self);
+    propertyDel({ row }) {
       commonFun.deleteTip(
         this,
         true,
         "确定要删除吗?",
         () => {
-          this.deleteRow(row.id);
+          this.deleteRow([row.id]);
         },
         () => { }
       );
     },
-    propertyLocation(obj) {
+    bindingMeter({ row }) {
+      this.tenantElecId = row.id;
+      this.bindingMeterDialog = true;
       // console.log(obj);
     },
     refreshTable() {

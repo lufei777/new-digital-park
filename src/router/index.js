@@ -38,6 +38,7 @@ import MonitoringAlarm from './warning-alarm'; 									// 预警报警
 import Norbulingka from './norbulingka'; 												// 罗布林卡
 import DeviceManage from './device-manage'; 										// 设备管理
 // import PropertyErpsystem from './property-erpsyetem'            // 物业ERP系统
+import ElectricityManage from './electricity-manage'; 										// 用电管理
 
 // 数字园区 公共模块
 let publicRouters = [].concat(
@@ -45,6 +46,8 @@ let publicRouters = [].concat(
   DigitalParkRouter,
   ExportData,
   SystemManage,
+  // PropertyErpsystem //物业系统ERP
+  // ElectricityManage
 )
 
 // 数字园区 私有模块
@@ -76,6 +79,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
+  // 如果有token
   if (getToken()) {
     if (to.path === '/login') {
       next({ path: '/' });
@@ -83,6 +87,7 @@ router.beforeEach((to, from, next) => {
       next();
     }
   } else {
+    // 如果没有token
     if (to.meta.loginCheck === false) {
       next();
     } else {
@@ -102,7 +107,7 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-// 重写addRoutes，刷新再次添加时报错有重复的路由
+// 重写addRoutes，避免刷新再次执行addRoutes时报错有重复的路由
 router.$addRoutes = (routes) => {
   router.matcher = new Router({
     routes: publicRouters

@@ -187,11 +187,11 @@ export const setPx = (val, defval = '') => {
  * @param {form的model} model
  * @param {是否去除空值和带$的值} translate 
  */
-export const filterDefaultParams = (model, modelTranslate, translate = false) => {
+export const filterDefaultParams = (model, modelTranslate, translate = false, noModelFileds = []) => {
     let data = deepClone(model);
     if (translate) return deepClone({ ...data, ...modelTranslate });
     for (let o in data) {
-        if (o.indexOf('$') !== -1 || validatenull(data[o])) {
+        if (o.indexOf('$') !== -1 || validatenull(data[o]) || noModelFileds.includes(o)) {
             delete data[o];
         }
     }

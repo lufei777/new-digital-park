@@ -673,7 +673,6 @@ export const WarningAlerm = {
 
 // 罗布林卡
 export const Norbulingka = {
-<<<<<<< HEAD
   //  工程分类
   projectType: [
     // { label: '未选择', value: 1 },
@@ -778,112 +777,6 @@ export const Norbulingka = {
   ],
   // 添加藏品档案 =============
   // 编号类型
-=======
-	//  工程分类
-	projectType: [
-		// { label: '未选择', value: 1 },
-		{ label: '文物维修', value: 1 },
-		{ label: '保护性设施', value: 2 },
-		{ label: '现场展示', value: 3 },
-		{ label: '环境整治', value: 4 }
-	],
-	// 类型选择
-	typeSelect: [
-		{ label: '本体情况', value: 1 },
-		{ label: '病害分析', value: 2 },
-		{ label: '施工情况', value: 3 },
-		{ label: '游客情况', value: 4 },
-		{ label: '考古发掘', value: 5 },
-		{ label: '其他', value: 6 }
-	],
-	// 文物级别
-	levelCultural: [
-		{ label: '未选择', value: 1 },
-		{ label: '一级', value: 2 },
-		{ label: '二级', value: 3 },
-		{ label: '三级', value: 4 },
-		{ label: '一般', value: 5 },
-		{ label: '未定级', value: 6 }
-	],
-	// 维护类型 Maintenance types
-	maintenanceTypes: [
-		{ label: '未选择', value: 1 },
-		{ label: '异常记录', value: 2 },
-		{ label: '保养与维护工程记录', value: 3 },
-		{ label: '安全事故记录', value: 4 },
-		{ label: '群体事件记录', value: 5 },
-		{ label: '未定级', value: 6 }
-	],
-	// 巡检人员 Inspection personnel
-	inspectionPersonnel: [
-		{ label: '未选择', value: 1 },
-		{ label: 'admin', value: 2 },
-		{ label: '审计员', value: 3 },
-		{ label: '访客', value: 4 }
-	],
-	// 文物本体
-	ontology: [
-		// { label: '未选择', value: 1 },
-		{ label: '乌尧颇章', value: 2 },
-		{ label: '格桑颇章', value: 3 },
-		{ label: '缺扎', value: 4 },
-		{ label: '曲然', value: 5 },
-		{ label: '康松思轮', value: 6 },
-		{ label: '措吉颇章(湖心亭)', value: 7 },
-		{ label: '鲁康(龙王亭)', value: 8 },
-		{ label: '鲁康厦(东龙王亭)', value: 9 },
-		{ label: '春增颇章', value: 10 },
-		{ label: '内马厩', value: 11 },
-		{ label: '金色颇章', value: 12 },
-		{ label: '格桑德吉', value: 13 },
-		{ label: '曲敏确杰', value: 14 },
-		{ label: '夏典拉康', value: 15 },
-		{ label: '噶厦官员办公室', value: 16 },
-		{ label: '"译仓"办公室', value: 17 },
-		{ label: '达旦明久颇章', value: 18 },
-		{ label: '其他建筑', value: 19 }
-	],
-	// 评估状态
-	assessment: [
-		{ label: '未选择', value: 1 },
-		{ label: '好', value: 2 },
-		{ label: '较好', value: 3 },
-		{ label: '一般', value: 4 }
-	],
-	// 保存状态
-	saveStatues: [
-		{ label: '未选择', value: 1 },
-		{ label: '保持原状', value: 2 },
-		{ label: '基本保持原状', value: 3 },
-		{ label: '部分改变原状', value: 4 },
-		{ label: '原状改变较大', value: 5 },
-		{ label: '完全改变原状', value: 6 }
-	],
-	// 病害分类 diseasesSort
-	diseasesSort: [
-		{ label: '未选择', value: 1 },
-		{ label: '建，构筑物', value: 2 },
-		{ label: '遗址', value: 3 },
-		{ label: '洞窟，龛', value: 4 },
-		{ label: '造像，碑刻，壁画', value: 5 },
-		{ label: '山体', value: 6 },
-		{ label: '水体', value: 7 },
-		{ label: '植被', value: 8 },
-		{ label: '街区', value: 9 }
-	],
-	// 病害类型 diseaseType
-	diseaseType: [
-		{ label: '未选择', value: 1 },
-		{ label: '危岩体', value: 2 },
-		{ label: '滑移', value: 3 },
-		{ label: '倾倒', value: 4 },
-		{ label: '渗漏', value: 5 },
-		{ label: '根劈', value: 6 },
-		{ label: '表层风化', value: 7 }
-	],
-	// 添加藏品档案 =============
-	// 编号类型
->>>>>>> dev
 
   // 文物类别
   culturalType: [
