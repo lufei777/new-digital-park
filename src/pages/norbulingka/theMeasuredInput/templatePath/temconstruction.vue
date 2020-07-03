@@ -46,7 +46,7 @@ import { Norbulingka } from "utils/dictionary";
 // 导入接口
 import norbulingka from "@/service/api/norbulingka";
 // 工程分类
-const projectType = Norbulingka.projectType;
+const projectType = Norbulingka.proType;
 const topTitle = {
   add: {
     title: "添加  施工情况"

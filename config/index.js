@@ -12,8 +12,10 @@ module.exports = {
 			{
 				context: ['/oaApi', '/user-service', '/vibe-web', '/norb-service'],
 				// target:'http://192.168.1.50:8080' //预警报警调试用
-				target: 'http://192.168.1.88:9001' // 罗布林卡二期接口调试
-				// target: 'http://192.168.1.130:9001' 
+				// target: 'http://192.168.1.88:9001' // 剑
+				// target: 'http://192.168.1.130:9001'  //金
+				// target: 'http://192.168.1.48:9001' //小
+				target:'http://192.168.1.156:8080' //祥
 				// target: 'http://39.98.130.147:9001'
 				/* changeOrigin: true,//是否允许跨越*/
 				/* pathRewrite: {

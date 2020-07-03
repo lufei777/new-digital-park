@@ -6,27 +6,27 @@
       <div class="form">
         <!-- 左 -->
         <div class="left">
-          <div class="top"><span>租户：</span>{{billArr.tenantName}}</div>
-          <div class="mid"><span>账期：</span>{{billArr.billTime}}</div>
-          <div class="bottom"><span>上次预付款余额：</span>{{billArr.lastPrepay}} 元</div>
+          <div class="top"><span>租户：</span>{{1}}</div>
+          <div class="mid"><span>账期：</span>{{1}}</div>
+          <div class="bottom"><span>上次预付款余额：</span>{{1}}</div>
         </div>
         <!-- 中 -->
         <div class="center">
-          <div class="top"><span>合同编号：</span>{{billArr.contractNumber}}</div>
+          <div class="top"><span>合同编号：</span>{{1}}</div>
           <div class="mid">
-            <div class="mid_left"><span>收费项目：</span>{{ billArr.chargeItems}}</div>
-            <div class="mid_right"><span>收费明细：</span>{{ billArr.chargeDetailed}}</div>
+            <div class="mid_left"><span>收费项目：</span>{{ 1}}</div>
+            <div class="mid_right"><span>收费明细：</span>{{ 1}}</div>
           </div>
           <div class="bottom">
-            <div class="mid_left"><span>本次冲抵额：</span>{{billArr.offsset}} 元</div>
-            <div class="mid_right"><span>本次预存款余额：</span>{{billArr.prepay}} 元</div>
+            <div class="mid_left"><span>收费项目：</span>{{1}}</div>
+            <div class="mid_right"><span>收费项目：</span>{{1}}</div>
           </div>
         </div>
         <!-- 右 -->
         <div class="right">
-          <div class="top"><span>租户面积：</span>{{billArr.housearea}}</div>
-          <div class="mid"><span>账单金额合计：</span>{{billArr.billTotalAmount}} 元</div>
-          <div class="bottom"><span>核定金额：</span>{{billArr.approvedAmount}} 元</div>
+          <div class="top"><span>租户面积：</span>{{1}}</div>
+          <div class="mid"><span>账单金额合计：</span>{{1}}</div>
+          <div class="bottom"><span>核定金额：</span>{{1}}</div>
         </div>
       </div>
       <span style="margin:30px 0px 10px 10px;display:block">账单明细</span>
@@ -41,22 +41,18 @@
             <tr>
               <th
                 v-for="(item ,index) in headList"
-                :key='headList'
+                key='index'
               >{{ item }}</th>
             </tr>
           </thead>
-          <!-- 表体 -->
           <tbody>
-            <tr
-              v-for="(item) in billdetailArr"
-              :key='item.id'
-            >
+            <tr v-for="(item) in tableList" :key='item.id'>
               <td v-for="i in item">{{i}}</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div style="padding:10px 50px;margin-right:100px;"><span>审核人：{{1}}</span> <span>经办人：{{1}} </span></div>
+      <div style="padding:10px 50px;margin-right:100px;"><span>审核人：{{测试}}</span> <span>经办人：{{测试}} </span></div>
     </div>
   </div>
 </template>
@@ -65,11 +61,6 @@
 export default {
   data() {
     return {
-      // 账单摘要
-      billArr: null,
-      // 账单明细
-      billdetailArr: [],
-      // 表格的标题
       headList: [
         "序号",
         "科目类型",
@@ -79,33 +70,64 @@ export default {
         "冲抵金额(元)",
         "备注"
       ],
-      
+      tableList: [
+        {
+          id: 1,
+          type: "测试",
+          start: "2012",
+          end: "",
+          money: "1250",
+          cdmoney: "200",
+          bz: "测试数据"
+        },
+        {
+          id: 2,
+          type: "测试",
+          start: "2012",
+          end: "2020",
+          money: "1250",
+          cdmoney: "200",
+          bz: "测试数据"
+        },
+        {
+          id: 3,
+          type: "",
+          start: "2012",
+          end: "2020",
+          money: "1250",
+          cdmoney: "200",
+          bz: "测试数据"
+        },
+        {
+          id: 4,
+          type: "测试",
+          start: "2012",
+          end: "2020",
+          money: "1250",
+          cdmoney: "200",
+          bz: "测试数据"
+        },
+        {
+          id: 5,
+          type: "测试",
+          start: "2012",
+          end: "",
+          money: "1250",
+          cdmoney: "200",
+          bz: "测试数据"
+        },
+        {
+          id: 6,
+          type: "",
+          start: "2012",
+          end: "2020",
+          money: "1250",
+          cdmoney: "200",
+          bz: ""
+        }
+      ]
     };
-  },
-  methods: {},
-  created() {
-    let arr = this.$route.query;
-    // 账单摘要
-    this.billArr = arr;
-    // 账单明细
-    let count = 1
-    let newarr =[]
-    arr.oaDetails.forEach(item => {
-      newarr.push({
-        id: count++ ,
-        subjectType: item.subjectType,
-        startTime: item.startTime,
-        endTime:item.endTime,
-        billAmount:item.billAmount,
-        offset:item.offset,
-        codeName:item.codeName
-      });
-    });
-    this.billdetailArr = newarr;
-
-    console.log('billdetailArr',this.billdetailArr);
-  },
-  mounted() {}
+  }
 };
 </script>
 
@@ -114,7 +136,7 @@ export default {
   .form {
     width: 100%;
     height: auto;
-    border: 1px solid #cccccc;
+    border: 1px solid  #cccccc;
     // border-top: 1px solid #cccccc;
     // border-bottom: 1px solid #cccccc;
     display: flex;
@@ -122,7 +144,7 @@ export default {
     .center,
     .left {
       flex: 1;
-      //   padding: 5px 0;
+    //   padding: 5px 0;
       border-right: 1px solid #cccccc;
       .top {
         border-bottom: 1px solid #ccc;
@@ -175,10 +197,10 @@ export default {
           //   }
         }
       }
-      tbody {
-        td {
-          text-align: center;
-        }
+      tbody{
+          td{
+              text-align: center;
+          }
       }
     }
   }
