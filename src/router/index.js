@@ -71,6 +71,7 @@ let privateRouters = [].concat(
   MonitoringAlarm,
   Norbulingka,
   DeviceManage,
+  ElectricityManage
 )
 store.commit('digitalPark/setPrivateRouters', privateRouters);
 
