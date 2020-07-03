@@ -55,7 +55,6 @@ let tableSendData = {
 };
 
 export default {
-  inject: ['checkPermission'],
   components: {
     bindingMeter
   },
@@ -165,7 +164,7 @@ export default {
           },
           {
             prop: "elecMeter",
-            label: "对应点表号",
+            label: "对应电表号",
             type: 'array',
             showOverflowTooltip: false,
             props: {
