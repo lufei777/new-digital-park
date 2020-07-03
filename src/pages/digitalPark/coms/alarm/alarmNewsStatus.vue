@@ -43,6 +43,7 @@ export default {
         end: ""
       });
       if (res.rows.length != 0) {
+
         res.rows.map((item, index) => {
           let alertStr = item.caption.split("->");
           let alertDevice = alertStr.pop();
