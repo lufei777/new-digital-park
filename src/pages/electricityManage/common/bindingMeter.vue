@@ -47,6 +47,11 @@
 import commonApi from 'api/common';
 import electricityManageApi from 'api/electricityManage';
 
+let tableSendData = {
+  pageNum: 1,
+  pageSize: 10
+};
+
 export default {
   props: {
     tenantId: Number
@@ -125,8 +130,8 @@ export default {
       electricityManageApi.getElecMeter({
         spaceId
       }).then(res => {
-        this.Table.setData(res.rows);
-        this.Table.setTotal(res.total);
+        this.Table.setData(res[this.Table.listKey]);
+        this.Table.setTotal(res[this.Table.totalKey]);
       }).finally(() => {
         this.load = false;
       })
@@ -144,11 +149,11 @@ export default {
     },
     // 点表绑定
     binding(selectedData) {
-      electricityManageApi.bindingTenantOfElec({
+      electricityManageApi.bindingTenantOfElec({}, {
         id: this.tenantId,
-        monitors: selectedData.map(item => item.id)
+        monitors: selectedData.map(item => item.id).join(',')
       }).then(res => {
-
+        this.$emit('success')
       })
     }
   }

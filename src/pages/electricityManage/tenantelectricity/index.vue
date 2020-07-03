@@ -37,7 +37,7 @@
       :visible.sync="bindingMeterDialog"
       width="80%"
     >
-      <binding-meter :tenantId="tenantElecId"></binding-meter>
+      <binding-meter @success="bindingSuccess" :tenantId="tenantElecId"></binding-meter>
     </el-dialog>
   </div>
 </template>
@@ -265,6 +265,10 @@ export default {
     },
     refreshTable() {
       this.Table.refreshTable();
+    },
+    bindingSuccess() {
+      this.bindingMeterDialog = false;
+      this.refreshTable();
     }
   },
   computed: {
