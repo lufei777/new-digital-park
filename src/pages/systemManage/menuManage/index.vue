@@ -60,7 +60,7 @@
             prop:'isHide',
             formatter:function (row) {
               // return row.icon
-              return row.isHide==1?'可见':'隐藏'
+              return row.isHidden==1?'隐藏':'可见'
             }
           },{
             label:'菜单路径',
