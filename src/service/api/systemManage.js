@@ -112,6 +112,14 @@ class SystemManage {
   @url("/user-service/menu/addMenu")
   @post
   addMenu(){}
+
+  @url("/user-service/menu/menuDetail")
+  @get
+  getMenuDetail(){}
+
+  @url("/user-service/menu/editMenu")
+  @post
+  editMenu(){}
 }
 
 export default new SystemManage()

@@ -4,22 +4,6 @@
       <span class="icon left-tip-text-icon"></span>
       <span>{{tipText}}</span>
     </div>
-    <!--<el-form ref="deptForm" :rules="rules" :model="deptForm" label-position="right" label-width="120px" >-->
-    <!--<el-form-item label="机构简称" prop="name">-->
-    <!--<el-input v-model="deptForm.name"></el-input>-->
-    <!--</el-form-item>-->
-    <!--<el-form-item label="机构全称" prop="abbr">-->
-    <!--<el-input v-model="deptForm.abbr"></el-input>-->
-    <!--</el-form-item>-->
-    <!--<el-form-item label="父机构" prop="parentName">-->
-    <!--<el-input v-model="deptForm.parentName" @focus="onShowModal"></el-input>-->
-    <!--</el-form-item>-->
-    <!--<el-form-item>-->
-    <!--<el-button type="primary" @click="submitForm('deptForm')">确定</el-button>-->
-    <!--<el-button @click="goBack" class="go-back">返回</el-button>-->
-    <!--</el-form-item>-->
-    <!--</el-form>-->
-    <!--<TreeModal :tree-modal-config="treeModalConfig"></TreeModal>-->
     <div class="form-box">
       <z-form :ref="formConfig.ref" :options="formConfig" v-model="formModel" @submit="submit">
         <template slot="menuBtn" slot-scope="scope">

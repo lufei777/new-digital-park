@@ -38,7 +38,7 @@ export default {
     async getAlarmMessageList() {
       let res = await CommonApi.getAlarmMessageList({
         pageNum: 1,
-        pageCount: 6,
+        pageCount: 5,
         start: "",
         end: ""
       });
@@ -57,7 +57,7 @@ export default {
               : "未处理";
         });
         this.alarmNewsData = res.rows
-        let height = parseInt($(".my-chart").height()/7)
+        let height = parseInt($(".my-chart").height()/6)
         // console.log("jeight",height)
         $(".alarm-news-header").css({
           "height":height+'px',
