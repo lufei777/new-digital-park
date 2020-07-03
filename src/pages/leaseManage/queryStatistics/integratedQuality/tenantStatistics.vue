@@ -94,7 +94,7 @@ export default {
           // 月
           {
             label: "月",
-            type: "input",
+            type: "month",
             span: 6,
             prop: "month",
             valueFormat: "MM",
@@ -104,7 +104,7 @@ export default {
           //  租户名称
           {
             label: "租户名称",
-            type: "month",
+            type: "input",
             span: 6,
             prop: "tenantName"
           },
@@ -148,14 +148,6 @@ export default {
           selection: false, //是否多选
           showIndex: {
             width: 50
-          },
-          pagination: {
-            //是否分页，分页是否自定义
-            layout: "total,->, prev, pager, next, jumper",
-            pageSizes: [10, 20, 50],
-            handler(pageSize, currentPage, table) {
-              // _this.handleCurrentChange(currentPage);
-            }
           }
         }
       },
@@ -172,7 +164,14 @@ export default {
     }
   },
   methods: {
-    submit() {},
+    submit(model, hide) {
+      hide();
+      this.leaseContractTable.serverMode.data = Object.assign(
+        _.conleDeep(pageInfo),
+        model
+      );
+      this.Table.refreshTable()
+    },
     resetChange() {},
     clearForm(...args) {
       this.$refs[this.leaseContractForm.ref].resetForm();
@@ -181,6 +180,7 @@ export default {
       let labelList = [
         { label: "年份", prop: "year" },
         { label: "月度", prop: "month" },
+        { label: "租户名称", prop: "tenantName" },
         { label: "租户面积(㎡)", prop: "houseArea" },
         { label: "账单金额合计(元)", prop: "sumCost" },
         { label: "本次冲抵金额(元)", prop: "offsset" },

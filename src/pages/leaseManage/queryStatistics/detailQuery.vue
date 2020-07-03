@@ -123,7 +123,7 @@ export default {
             span: 6,
             prop: "month",
             valueFormat: "MM",
-            format:'MM'
+            format: "MM"
           },
 
           //  租户名称
@@ -131,7 +131,7 @@ export default {
             label: "租户名称",
             type: "input",
             span: 6,
-            prop: "rentName"
+            prop: "tenantName"
           },
           {
             prop: "btn",
@@ -169,14 +169,6 @@ export default {
           selection: false, //是否多选
           showIndex: {
             width: 50
-          },
-          pagination: {
-            //是否分页，分页是否自定义
-            layout: "total,->, prev, pager, next, jumper",
-            pageSizes: [10, 20, 50],
-            handler(pageSize, currentPage, table) {
-              _this.handleCurrentChange(currentPage);
-            }
           }
         }
       },
@@ -193,7 +185,14 @@ export default {
     }
   },
   methods: {
-    submit() {},
+    submit(model, hide) {
+      hide();
+      this.leaseContractTable.serverMode.data = Object.assign(
+        _.cloneDeep(pageInfo),
+        model
+      );
+      this.$refs[this.leaseContractTable.ref].refreshTable();
+    },
     resetChange() {},
     clearForm(...args) {
       this.$refs[this.leaseContractForm.ref].resetForm();
@@ -218,31 +217,24 @@ export default {
         { label: "公务车有偿使用", prop: "officialVehicleCost" }
       ];
       this.leaseContractTable.columnConfig = labelList;
-      //   let res = await LeaseManageApi.contractList({
-      //     pageNum: this.currentPage,
-      //     pageSize: 10
-      //   });
-      //   if (res && res.list) {
-      //     this.leaseContractTable.data = res.list;
-      //     this.leaseContractTable.uiConfig.pagination.total = res.total;
-      //   }
     },
 
     // 导出
-    exportFile(obj){
+    exportFile(obj) {
       // /oaApi/month/bill/exportMonthBillDetailed
       //  let url = '/oaApi/stockDeal/exportRecord'
-       let url = '/oaApi/month/bill/exportMonthBillDetailed'
-        let params=''
-        let arr = this.$refs[this.leaseContractTable.ref].getSelectedData()
-        let stockRecordIds = arr.length?arr.map((item)=>item.id):''
-        for(let key in this.leaseContractTable.serverMode.data){
-          if(key!=pageInfo){
-            params+=key+'='+this.leaseContractTable.serverMode.data[key]+'&'
-          }
+      let url = "/oaApi/month/bill/exportMonthBillDetailed";
+      let params = "";
+      let arr = this.$refs[this.leaseContractTable.ref].getSelectedData();
+      let stockRecordIds = arr.length ? arr.map(item => item.id) : "";
+      for (let key in this.leaseContractTable.serverMode.data) {
+        if (key != pageInfo) {
+          params +=
+            key + "=" + this.leaseContractTable.serverMode.data[key] + "&";
         }
-        params+='stockRecordIds='+stockRecordIds
-        CommonFun.exportMethod({url, params})
+      }
+      params += "stockRecordIds=" + stockRecordIds;
+      CommonFun.exportMethod({ url, params });
 
       // LeaseManageApi.exportMonthBillDetailed().then(res =>{
       //   console.log(res)
@@ -250,13 +242,7 @@ export default {
     },
     // 搜索
     onClickSearchBtn(...args) {
-      this.$refs[this.leaseContractForm.ref].getFormModel(res => {
-        console.log("model", res);
-      });
-      console.log("搜索", ...args);
-      this.curPcurrentPageage = 1;
-      // this.$refs[this.leaseContractTableConfig.ref].setCurrentPage(1)
-      this.contractList();
+      this.Form.submit();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
