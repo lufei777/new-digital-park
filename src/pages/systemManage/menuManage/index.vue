@@ -12,6 +12,8 @@
 
 <script>
   import SystemManageApi from '@/service/api/systemManage'
+  import {SystemDic} from "@/utils/dictionary";
+
   export default {
     name: 'menuManage',
     components: {},
@@ -20,58 +22,45 @@
       return {
         tableConfig: {
           ref: "tableRef",
-          data:[],
-          serverMode: {
-            // url: SystemManageApi.getMenuList,
-            // data: {...pageInfo}
+          data: [],
+          props: {
+            rowKey: "id",
           },
-          propsHttp: {
-            list: "list",
-            total: "total",
-            pageSize: "pageSize",
-            pageNum: "pageNum"
-          },
-          props:{
-            rowKey:"id",
-          },
-          treeProps:{
+          treeProps: {
             children: 'childNode',
             hasChildren: 'hasChildren'
           },
-          columnConfig:[{
-            label:'菜单名称',
-            prop:'name'
-          },{
-            label:'菜单编号',
-            prop:'code'
-          },{
-            label:'排序',
-            prop:'sequence'
-          },{
-            label:'图标',
-            prop:'icon',
-            formatter:function (row) {
-              // return row.icon
-              // console.log("<i class ='iconfont "+row.icon+"'></i>")
-              return row.icon?"<i class ='iconfont "+row.icon+"'></i>":'--'
+          columnConfig: [{
+            label: '菜单名称',
+            prop: 'name'
+          }, {
+            label: '菜单编号',
+            prop: 'code'
+          }, {
+            label: '排序',
+            prop: 'sequence'
+          }, {
+            label: '图标',
+            prop: 'icon',
+            formatter: function (row) {
+              return row.icon ? "<i class ='iconfont " + row.icon + "'></i>" : '--'
             }
-          },{
-            label:'可见',
-            prop:'isHide',
-            formatter:function (row) {
-              // return row.icon
-              return row.isHide==1?'可见':'隐藏'
+          }, {
+            label: '可见',
+            prop: 'isHide',
+            formatter: function (row) {
+              return SystemDic.hiddenStatus[row.isHidden]
             }
-          },{
-            label:'菜单路径',
-            prop:'routeAddress'
+          }, {
+            label: '菜单路径',
+            prop: 'routeAddress'
           }],
           operation: {
             width: 200
           },
           uiConfig: {
             height: "auto",
-            pagination:false,
+            pagination: false,
           },
           customTop: true,
           tableMethods: {},
@@ -81,26 +70,18 @@
     computed: {},
     watch: {},
     methods: {
-      async getMenuList(){
+     async getMenuList() {
         let res = await SystemManageApi.getMenuList()
-        this.tableConfig.data = res[0].childNode
+        this.tableConfig.data=res[0].childNode
       },
-      editRow(row){},
-      deleteRow(row){},
+      editRow(row) {
+        this.$router.push(`/addMenu?menuId=${row.id}`)
+      },
+      deleteRow(row) {
+      },
     },
     mounted() {
       this.getMenuList()
-      // let data = [{
-      //   id:1,
-      //   code:'001',
-      //   name:'运维管理',
-      //   childNode:[{
-      //     id:1001,
-      //     code:'1001',
-      //     name:'系统管理'
-      //   }]
-      // }]
-      // this.tableConfig.data = data
     }
   }
 </script>
