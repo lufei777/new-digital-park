@@ -1043,37 +1043,37 @@ class commonFun {
     recorder: "程琳",
     remark: "公司需要"
   },
-  {
-    id: 5,
-    applicationName: "绿植采购",
-    purchaseType: "公司内部采购",
-    purchaseSum: "500元",
-    purchaseStatus: "待采购",
-    reportTime: "2019-12-01",
-    purchasePeople: "程琳",
-    recorder: "程琳",
-    remark: "装修需要"
-  }, {
-    id: 6,
-    applicationName: "鼠标采购",
-    purchaseType: "公司内部采购",
-    purchaseSum: "100元",
-    purchaseStatus: "待采购",
-    reportTime: "2019-12-01",
-    purchasePeople: "程琳",
-    recorder: "程琳",
-    remark: "员工需要"
-  }, {
-    id: 7,
-    applicationName: "卫生纸采购",
-    purchaseType: "公司内部采购",
-    purchaseSum: "500元",
-    purchaseStatus: "待采购",
-    reportTime: "2019-12-01",
-    purchasePeople: "程琳",
-    recorder: "程琳",
-    remark: "公司需要"
-  }]
+    {
+      id: 5,
+      applicationName: "绿植采购",
+      purchaseType: "公司内部采购",
+      purchaseSum: "500元",
+      purchaseStatus: "待采购",
+      reportTime: "2019-12-01",
+      purchasePeople: "程琳",
+      recorder: "程琳",
+      remark: "装修需要"
+    }, {
+      id: 6,
+      applicationName: "鼠标采购",
+      purchaseType: "公司内部采购",
+      purchaseSum: "100元",
+      purchaseStatus: "待采购",
+      reportTime: "2019-12-01",
+      purchasePeople: "程琳",
+      recorder: "程琳",
+      remark: "员工需要"
+    }, {
+      id: 7,
+      applicationName: "卫生纸采购",
+      purchaseType: "公司内部采购",
+      purchaseSum: "500元",
+      purchaseStatus: "待采购",
+      reportTime: "2019-12-01",
+      purchasePeople: "程琳",
+      recorder: "程琳",
+      remark: "公司需要"
+    }]
 
   purchaseOrderData = [{
     id: 1,
@@ -1469,22 +1469,22 @@ class commonFun {
     contractTime: '2020-01-12'
 
   },
-  {
-    id: 2,
-    billNumber: 'ZD-190225132201',
-    billName: '中钢B座用电账单',
-    billStatus: '待审核',
-    tenantName: '程琳',
-    contractTime: '2020-02-12'
-  },
-  {
-    id: 3,
-    billNumber: 'ZD-190225135221',
-    billName: '中钢C座用电账单',
-    billStatus: '已审核',
-    tenantName: '程琳',
-    contractTime: '2019-02-01'
-  }]
+    {
+      id: 2,
+      billNumber: 'ZD-190225132201',
+      billName: '中钢B座用电账单',
+      billStatus: '待审核',
+      tenantName: '程琳',
+      contractTime: '2020-02-12'
+    },
+    {
+      id: 3,
+      billNumber: 'ZD-190225135221',
+      billName: '中钢C座用电账单',
+      billStatus: '已审核',
+      tenantName: '程琳',
+      contractTime: '2019-02-01'
+    }]
 
   messageDevice = [{
     id: 'TradeCode21',
@@ -2073,10 +2073,10 @@ class commonFun {
         if (largeScreenFlag) {
           store.commit("digitalPark/largeScreenIframeSrc", window.top.location.origin + '/#' + item.routeAddress)
         } else {
-          if (item.childNode.length) {
-            router.push(this.getLastItem(item).routeAddress.trim());
+          if (item?.childNode?.length) {
+            router.push(this.getLastItem(item).routeAddress);
           } else {
-            router.push(item.routeAddress.trim());
+            router.push(item.routeAddress);
           }
         }
       }
@@ -2095,7 +2095,7 @@ class commonFun {
       this.invokeClientMethod('goToZGManage');
       return true;
     }
-    console.log("itemwww",IsCZClient(),item)
+
     if (IsCZClient() && item.clientType == 1) {
       if (item.level == 2) {
         router.push(`/clientOverView?productId=${item.id}`)
@@ -2106,11 +2106,9 @@ class commonFun {
         let firstMenu = menuTree[0].childNode.find(first => {
           return first.id == item.firstMenuId;
         });
-        console.log(firstMenu,secondMenu,item)
         let secondMenu = firstMenu.childNode.find(second => {
           return second.id == item.secondMenuId;
         });
-
         if (item.level == 3 && item.name == '概览') {
           router.push(`/clientOverView?productId=${item.pid}`)
           this.invokeClientMethod('showClientOverView', JSON.stringify(secondMenu));
@@ -2242,6 +2240,6 @@ class commonFun {
     store.commit("digitalPark/menuList", menuTmp);
     return true
   }
-  
+
 }
 export default new commonFun()

@@ -1,6 +1,6 @@
 <template>
   <div class="export-data">
-    <el-button @click="exportData">导出数据</el-button>
+    <NavOperator :showGoBack="true" class="nav-operator" />
     <el-dialog :visible.sync="dialogTableVisible">
       <z-form
         :ref="exportDataForm.ref"
@@ -24,11 +24,16 @@
 </template>
 
 <script>
-import { ExportData } from "@/utils/dictionary";
+import { ExportDataDic } from "@/utils/dictionary";
 import CommonApi from "../../../service/api/common";
 import CommonFun from "../../../utils/commonFun";
+import NavOperator from "@/pages/digitalPark/coms/navOperator";
 
 export default {
+  components: {
+    NavOperator
+  },
+  name: "ExportData",
   data() {
     return {
       dialogTableVisible: true,
@@ -77,7 +82,7 @@ export default {
             placeholder: "请输入",
             clearable: true,
             span: 4,
-            dicData: ExportData.timeType,
+            dicData: ExportDataDic.timeType,
             change: value => {
               this.dateType =
                 value.value == 1 ? "year" : value.value == 2 ? "month" : "date";
@@ -143,9 +148,6 @@ export default {
     }
   },
   methods: {
-    exportData() {
-      this.dialogTableVisible = true;
-    },
     dateTypeChange(name, typeValue) {
       this.$refs[this.exportDataForm.ref].setColumnByProp(name, {
         type: typeValue
@@ -242,9 +244,9 @@ export default {
       }
       let url = `/vibe-web/device_data/probesHistoryExportExcel`;
       CommonFun.exportMethod({
-          url,
-          params
-        });
+        url,
+        params
+      });
     },
     submit() {},
     resetChange() {}
@@ -270,6 +272,9 @@ export default {
 .export-data {
   // width: 100%;
   // height: 100%;
+  .nav-operator {
+    display: none;
+  }
   .el-dialog {
     width: 95%;
   }

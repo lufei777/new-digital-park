@@ -404,7 +404,7 @@ export const BooleanDic = {
 }
 
 //导出数据
-export const ExportData = {
+export const ExportDataDic = {
   timeType: [
     {
       label: "年",

@@ -270,6 +270,16 @@ export default {
         pageCount: 10,
       })
       this.alarmListCount = res.total>99?'99+':res.total
+    },
+    //三维跳导出数据页面
+    exportShow(spaceId,deviceId){
+       this.$router.push({
+          name: "ExportData",
+          query: {
+            spaceId: spaceId?deviceId:"",
+            deviceId: deviceId?deviceId:""
+          }
+        });
     }
   },
   created() {
@@ -281,6 +291,7 @@ export default {
       goBack: this.onClickGoBack,    //返回首页
       goToWebPage: this.goToWebPage, //跳转网页
       loadNews: this.loadNews,  //跳转消息
+      exportShow:this.exportShow
     }
   }
 };

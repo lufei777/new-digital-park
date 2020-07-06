@@ -12,6 +12,8 @@ import LangZH from "./utils/lang/zh.js";
 
 // 获取项目
 import { getProjectName } from "./utils/project";
+//打印插件
+import Print from 'vue-print-nb'
 
 // ElementUi
 import ElementUI from "element-ui";
@@ -25,7 +27,8 @@ Vue.use(ElementUI, {
     )
   }
 });
-
+// 打印插件注册
+Vue.use(Print)
 // 自适应表格列
 import AFTableColumn from "af-table-column";
 Vue.use(AFTableColumn);

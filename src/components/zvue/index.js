@@ -9,6 +9,7 @@ import Date from './components/date';
 import Group from './components/group';
 import Input from './components/input';
 import InputTree from './components/input-tree';
+import InputTable from './components/input-table';
 import InputNumber from './components/input-number';
 import Radio from './components/radio';
 import Select from './components/select';
@@ -45,6 +46,7 @@ const components = [
     Date,
     Input,
     InputTree,
+    InputTable,
     InputNumber,
     Radio,
     Select,

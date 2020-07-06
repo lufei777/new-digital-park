@@ -5,6 +5,7 @@
         class="clearfix"
         slot="header"
         v-if="$scopedSlots.header_left || $scopedSlots.header_right"
+        style="padding:0 10px;"
       >
         <div style="float: left; padding: 3px 0">
           <slot v-bind="slotProps" name="header_left"></slot>
@@ -279,7 +280,8 @@ export default {
       modelDefault: {}, // 表单的初始model
       model: {}, // 表单的model
       modelTranslate: {}, // 翻译的值
-      allDisabled: false
+      allDisabled: false,
+      noModelFileds: [] // 不返回的model值
     };
   },
   created() {
@@ -501,7 +503,8 @@ export default {
             filterDefaultParams(
               this.model,
               this.modelTranslate,
-              this.parentOption.translate
+              this.parentOption.translate,
+                this.noModelFileds
             ),
             this.hide
           );
@@ -540,7 +543,8 @@ export default {
               filterDefaultParams(
                 this.model,
                 this.modelTranslate,
-                this.parentOption.translate
+                this.parentOption.translate,
+                this.noModelFileds
               )
             );
           } else {
@@ -555,7 +559,8 @@ export default {
                 filterDefaultParams(
                   this.model,
                   this.modelTranslate,
-                  this.parentOption.translate
+                  this.parentOption.translate,
+                this.noModelFileds
                 )
               );
             } else {
@@ -600,6 +605,7 @@ export default {
       list.forEach((ele, index) => {
         // 循环列的全部属性
         (ele.forms || []).forEach((form, cindex) => {
+          if (form.noModel) this.noModelFileds.push(form.prop);
           //动态计算列的位置，如果为隐藏状态则或则手机状态不计算
           if (form.hide !== true && form.display !== false && !this.isMobile) {
             // 如果该项没有设置span，且设置了itemSpan，则赋值itemSpan

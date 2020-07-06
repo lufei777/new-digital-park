@@ -35,25 +35,20 @@
 </template>
 
 <script>
-import { Norbulingka } from "utils/dictionary";
-// 导入接口
-import norbulingka from "@/service/api/norbulingka";
-// const topTitle = {
-//   add: {
-//     title: "添加  本体情况"
-//   },
-//   edit: {
-//     title: "编辑 本体情况"
-//   },
-//   detail: {
-//     title: "本体情况 详情"
-//   }
-// };
+import LeaseManageApi from "@/service/api/leaseManage";
+import CommonFun from "@/utils/commonFun";
+let pageInfo = {
+  pageNum: 1,
+  pageSize: 10
+};
 export default {
   data() {
     return {
       // 区别模板的标题
-      title: "新增租赁管理",
+      title: "新增租赁月账单",
+      // 租户名称
+      tentList: [],
+
       model: {},
       formData: {
         ref: "formData",
@@ -66,93 +61,143 @@ export default {
           // 租赁月账单编号
           {
             type: "input",
-            prop: "1",
-            label: "租赁月账单编号",
+            prop: "billNumber",
+            label: "账单编号",
             span: 8,
             offset: 4,
             disabled: true,
-            tip: "不可更改项",
-            tipPlacement: "top"
+            rules: {
+              required: true
+            }
+            // placeholder:'11111',
+            // tip: "不可更改项",
+            // tipPlacement: "top"
           },
-
-          // 租户
+          // 租户类型
           {
-            type: "input",
-            prop: "2",
-            label: "租户",
+            type:'select',
+            prop:'tenant',
+            label:'租户类型',
+            span:8,
+            dicData:[
+              {label:'内租户',value:1},
+              {label:'外租户',value:2}
+            ],
+          },
+          // 租户名称
+          {
+            type: "select",
+            prop: "tenantNumber",
+            dataType:'string',
+            label: "租户名称",
             span: 8,
+             offset: 4,
+            props: {
+              label: "tenantName",
+              value: "tenantNumber"
+            },
+            // dicData:[
+            //   {label:'内租户',value:'1'},
+            //   {label:'外租户',value:'2'}
+            // ],
+            rules: {
+              required: true
+            }
             // offset:1,
-            disabled: true,
-            tip: "不可更改项",
-            tipPlacement: "top"
+            // disabled: true,
+            // tip: "不可更改项",
+            // tipPlacement: "top"
           },
 
-          // 合同名称
+          // 合同编号
           {
-            type: "input",
-            prop: "3",
+            type: "select",
+            prop: "contractNumber",
             label: "合同名称",
             span: 8,
-            offset: 4,
-            disabled: true,
-            tip: "不可更改项",
-            tipPlacement: "top"
+            // offset: 4,
+            dataType:'string',
+            rules: {
+              required: true
+            },
+            props: {
+              label: "contractName",
+              value: "contractNumber"
+            }
+            // disabled: true,
+            // tip: "不可更改项",
+            // tipPlacement: "top"
           },
 
           // 账期
           {
-            type: "input",
-            prop: "4",
+            type: "month",
+            prop: "billTime",
             label: "账期",
-            span: 8
+            span: 8,
+             offset: 4,
+            format: "yyyy-MM",
+            valueFormat: "yyyy-MM",
+            rules: {
+              required: true
+            },
             // offset:1,
           },
 
-          // 收费项目数
+          // 核定金额
           {
-            type: "input",
-            prop: "5",
-            label: "收费项目数",
+            type: "number",
+            prop: "approvedAmount",
+            label: "核定金额",
             span: 8,
-            offset: 4
+            minRows: 0,
+            // offset: 4
           },
 
-          // 账单金额合计（元）
+          // 上次预付款余额
           {
-            type: "input",
-            prop: "6",
+            type: "number",
+            prop: "lastPrepay",
             label: "账单金额合计",
+            minRows: 0,
             span: 8,
-            append: "（元）"
+             offset: 4,
+            // append: "（元）"
             // offset:1,
           },
 
           // 账单状态
-          {
-            type: "input",
-            prop: "7",
-            label: "账单状态",
-            span: 8,
-            offset: 4
-          },
+          // {
+          //   type: "input",
+          //   prop: "billStatus",
+          //   label: "账单状态",
+          //   span: 8,
+          //   offset: 4
+          // },
 
-          // 本次冲抵额（元）
+          // 冲抵额（元）
           {
-            type: "input",
-            prop: "8",
-            label: "本次冲抵额",
+            type: "number",
+            prop: "offsset",
+            label: "冲抵额",
             span: 8,
-            append: "（元）"
+            minRows: 0,
+            // offset: 4
+            // append: "（元）"
             // offset:1,
           },
 
-          // 租户
+          // 本次预存款余额
           {
-            type: "input",
-            prop: "9",
-            label: "租户",
+            type: "number",
+            prop: "prepay",
+            label: "本次预存款余额",
+            minRows: 0,
             span: 8,
-            offset: 4
+            offset: 4,
+            row:true,
+            // offset: 4,
+            // append: "（元）"
           },
           // 按钮
           {
@@ -166,10 +211,22 @@ export default {
     };
   },
   methods: {
-    submit(model, done) {},
+    submit(model, done) {
+      LeaseManageApi.addMonthBill(model)
+        .then(res => {
+          this.$message({
+            type: "success",
+            message: "增加成功！"
+          });
+          this.$router.back();
+        })
+        .finally(() => {
+          done();
+        });
+    },
     // 添加保存
     addSave(obj) {
-      // this.Form.submit()
+      this.Form.submit();
     },
 
     // 返回
@@ -177,7 +234,49 @@ export default {
       this.$router.back();
     }
   },
-  created() {},
+  watch: {
+    "model.tenantNumber": {
+      handler(newval, oldval) {
+        let arr = {};
+        console.log("1", newval);
+        if (typeof newval == "string") {
+          this.tentList.forEach(item => {
+            if (item.tenantNumber == newval) {
+              arr = item;
+              // 设置合同名称
+              LeaseManageApi.queryContractByNumber({
+                tenantId: item.tenantId
+              }).then(res => {
+
+                this.model.contractNumber = "";
+                this.Form.setColumnByProp("contractNumber", {
+                  dicData: res
+                });
+              });
+            }
+          });
+        }
+        console.log("2", oldval);
+      },
+      deep: true
+    }
+  },
+  created() {
+    // 合同编号
+    // LeaseManageApi.queryContractByNumber().then(res => {});
+    //  账单编号
+    LeaseManageApi.createTenNum({ numType: 4 }).then(res => {
+      this.model.billNumber = res;
+    });
+    // 租户名称
+    LeaseManageApi.tenantList().then(res => {
+      this.tentList = res;
+      this.Form.setColumnByProp("tenantNumber", {
+        // placeholder:res
+        dicData: res
+      });
+    });
+  },
   mounted() {},
   computed: {
     Form() {
