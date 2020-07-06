@@ -360,7 +360,7 @@ class CommonApi {
   @get
   getCO2Monitoring(){}
 
-  @url("/vibe-web/page_div_dailyCheck")
+  @url("/norb-service/dailyCheck/queryDailyCheckByPage")
   @get
   getDailyCheckList(){}
 

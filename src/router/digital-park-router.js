@@ -10,6 +10,7 @@ export default [{
   path: '/',
   redirect: '/digitalPark/homePage'
 },{
+},{
   path: '/login',
   name: 'Login',
   meta:{

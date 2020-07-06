@@ -120,6 +120,7 @@ class SystemManage {
   @url("/user-service/menu/editMenu")
   @post
   editMenu(){}
+
 }
 
 export default new SystemManage()

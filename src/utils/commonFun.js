@@ -2074,9 +2074,9 @@ class commonFun {
           store.commit("digitalPark/largeScreenIframeSrc", window.top.location.origin + '/#' + item.routeAddress)
         } else {
           if (item?.childNode?.length) {
-            router.push(this.getLastItem(item).routeAddress);
+            router.push(this.getLastItem(item).routeAddress.trim());
           } else {
-            router.push(item.routeAddress);
+            router.push(item.routeAddress.trim());
           }
         }
       }

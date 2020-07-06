@@ -230,7 +230,12 @@ export default {
       if(isNorbulingkaScreen()){
         this.$router.push("/largeSizeScreen");
       }else if (Cookies.get("moduleType") == 2) {
-        this.$router.push("/digitalPark/homePage");
+        this.$router.push({
+          name: "DigitalHomePage",
+          params:{
+            keepAlive:false
+          }
+        });
       } else {
         this.$router.push("/digitalPark/dashboardHomePage");
       }
