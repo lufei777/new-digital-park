@@ -19,15 +19,6 @@
         <el-main style="padding:0px;">
           <div class="panel">
             <z-table :load="load" :ref="tableOptions.ref" :options="tableOptions">
-              <!-- <template slot="custom-top" slot-scope="{size,selectedData}">
-                <el-button
-                  :disabled="!selectedData.length"
-                  :size="size"
-                  type="primary"
-                  @click="binding(selectedData)"
-                >绑定</el-button>
-              </template>-->
-
               <template #custom-top="{size,selectedData}">
                 <el-button
                   :disabled="!selectedData.length"

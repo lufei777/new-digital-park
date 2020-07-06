@@ -721,3 +721,18 @@ export const TaskpriorityType = {
     }
   ]
 }
+
+export const SystemDic = {
+  isHidden: [{
+    label: '隐藏',
+    value: 1
+  }, {
+    label: '可见',
+    value: 0
+  }],
+
+  hiddenStatus:{
+    1:'隐藏',
+    0:'可见'
+  }
+}
