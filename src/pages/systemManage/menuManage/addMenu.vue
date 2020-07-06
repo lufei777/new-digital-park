@@ -5,7 +5,15 @@
               v-model="formModel" @submit="submit"
       >
         <template slot="icon" slot-scope="scope">
-          <i class="iconfont" :class="formModel.icon"></i>
+          <i v-if="formModel.icon" class="iconfont" :class="formModel.icon"></i>
+          <span v-if="!formModel.icon">--</span>
+        </template>
+        <template slot="productBgUrl" slot-scope="scope">
+          <img v-if='formModel.productBgUrl'
+               :src="'../../../../static/image/digitalPark/'+formModel.productBgUrl+'.png'"
+               alt=""
+          />
+          <span v-if="!formModel.productBgUrl">--</span>
         </template>
         <template slot="menuBtn" slot-scope="scope">
           <el-button @click="goBack(scope)">返回</el-button>
@@ -28,27 +36,41 @@
 
       //不可以移动到本身及本身的子级下
       let checkPid = function (rule, value, callback) {
-         if(_this.curParentMenu.level < _this.formModel.level){
-           callback()
-         }else{
-           if (_this.curParentMenu.level > _this.formModel.level) {
+        if (value == '') {
+          callback(new Error('请选择上级菜单'));
+        } else if (_this.curParentMenu.level < _this.formModel.level) {
+          callback()
+        } else {
+          if (_this.curParentMenu.level > _this.formModel.level) {
 
-             let flag = _this.checkId(_this.formModel.childNode)
-             if (flag) {
-               callback(new Error('不可移动到自身的子级菜单下'));
-             } else {
-               callback()
-             }
+            let flag = _this.checkId(_this.formModel.childNode)
+            if (flag) {
+              callback(new Error('不可移动到自身的子级菜单下'));
+            } else {
+              callback()
+            }
 
-           }else if(_this.curParentMenu.level == _this.formModel.level &&
-             _this.curParentMenu.id == _this.formModel.id){
-             callback(new Error('不可移动到自身菜单下'));
-           }else{
-             callback();
-           }
-         }
+          } else if (_this.curParentMenu.level == _this.formModel.level &&
+            _this.curParentMenu.id == _this.formModel.id) {
+            callback(new Error('不可移动到自身菜单下'));
+          } else {
+            callback();
+          }
+        }
       }
-
+      let checkSequence = function (rule, value, callback) {
+        if (value == '') {
+          callback(new Error('请输入排序级别'));
+        } else if(!Number(value) && value!=0){
+          callback(new Error('请输入数字'));
+        }else if (value<1 || value>100){
+          callback(new Error('排序范围在1-100'));
+        }else if(Math.floor(value) != value){
+          callback(new Error('请输入整数'));
+        }else{
+          callback();
+        }
+      }
       return {
         formModel: {},
         formConfig: {
@@ -69,12 +91,12 @@
                 trigger: "blur"
               }
             },
-            {
-              type: "input",
-              label: "菜单编号",
-              prop: "abbr",
-              span: 24,
-            },
+            // {
+            //   type: "input",
+            //   label: "菜单编号",
+            //   prop: "abbr",
+            //   span: 24,
+            // },
             {
               type: "tree",
               label: "上层菜单",
@@ -91,7 +113,25 @@
                 validator: checkPid,
                 trigger: 'change'
               },
-              nodeClick:_this.onClickParentNode
+              nodeClick: _this.onClickParentNode
+            },
+            {
+              type: "input",
+              label: "排序",
+              prop: "sequence",
+              rules: {
+                required:'true',
+                validator: checkSequence,
+                trigger: 'change'
+              },
+              span: 24,
+            },
+            {
+              type: "input",
+              label: "菜单路径",
+              prop: "routeAddress",
+              span: 24,
+              disabled: true
             },
             {
               type: "radio",
@@ -102,28 +142,24 @@
               dicData: SystemDic.isHidden,
             },
             {
-              type: "input",
-              label: "排序",
-              prop: "sequence",
-              span: 24,
-            },
-            {
               // type: "input",
-              label:'图标',
-              prop:'icon',
-              formslot:true,
+              label: '图标',
+              prop: 'icon',
+              formslot: true,
+              span: 24,
             },
             {
-              type: "input",
-              label: "菜单路径",
-              prop: "routeAddress",
+              // type: "upload",
+              // listType: "picture-img",
+              label: '背景图',
+              prop: 'productBgUrl',
+              formslot: true,
               span: 24,
-              disabled: true
             },
           ]
         },
         menuList: [],
-        curParentMenu:{}
+        curParentMenu: {}
       }
     },
     computed: {
@@ -143,6 +179,7 @@
         let res = await SystemManageApi.getMenuDetail({
           menuId: this.menuId
         })
+        res.routeAddress = res.routeAddress ? res.routeAddress : '--'
         this.formModel = res
       },
       async submit(model, hide) {
@@ -153,6 +190,7 @@
               message: res
             });
             this.$router.push('/menuManage')
+            this.$store.dispatch('digitalPark/getMenus')
           })
           .finally(msg => {
             hide();
@@ -166,7 +204,7 @@
         });
       },
       checkId(menuList) {
-        let flag=false
+        let flag = false
         menuList.map((item) => {
           if (item.id == this.curParentMenu.id) {
             flag = true
@@ -176,20 +214,20 @@
         })
         return flag
       },
-      onClickParentNode(val){
+      onClickParentNode(val) {
         this.curParentMenu = val
       }
     },
     async mounted() {
       if (!this.menuId) {
         await this.getMenuList()
-      }else if(this.menuId){
+      } else if (this.menuId) {
         await this.getMenuDetail()
-        if(this.formModel.level==1){
+        if (this.formModel.level == 1) {
           this.$refs[this.formConfig.ref].setColumnByProp("pid", {
             hide: true
           });
-        }else{
+        } else {
           await this.getMenuList()
         }
       }

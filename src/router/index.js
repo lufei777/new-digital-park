@@ -45,7 +45,7 @@ let publicRouters = [].concat(
   vibeWeb,
   DigitalParkRouter,
   ExportData,
-  SystemManage
+  SystemManage,
 )
 
 // 数字园区 私有模块
@@ -83,6 +83,12 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
       next({ path: '/' });
     } else {
+      // if(from.path === '/digitalPark/homePage'){
+      //   from.meta.keepAlive = true;
+      // }
+      // if(typeof to.params.keepAlive === 'boolean'){
+      //   to.meta.keepAlive = to.params.keepAlive;
+      // }
       next();
     }
   } else {
