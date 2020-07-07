@@ -25,14 +25,34 @@ export default [{
       component: () => import('@/pages/electricityManage/tenantelectricitydetail'),
     },
     {
-      path: 'electricitypricemaintenance',
-      name: 'electricitypricemaintenance',
-      meta: { title: '电价维护' },
+      path: 'tenantelectricitymeter/add',
+      name: 'tenantelectricitymeteradd',
+      meta: { title: '维护租户点表明细' },
+      component: () => import('@/pages/electricityManage/tenantelectricitydetail/add'),
     },
     {
-      path: 'electricitymeterrecords',
-      name: 'bulkimporthouseproperty',
-      meta: { title: '用户点表抄表记录' }
+      path: 'elecpricemaintain',
+      name: 'elecpricemaintain',
+      meta: { title: '电价维护' },
+      component: () => import('@/pages/electricityManage/elecpricemaintain'),
+    },
+    {
+      path: 'elecpricemaintain/add',
+      name: 'elecpricemaintainadd',
+      meta: { title: '维护电价' },
+      component: () => import('@/pages/electricityManage/elecpricemaintain/add'),
+    },
+    {
+      path: 'meterreadrecords',
+      name: 'meterreadrecords',
+      meta: { title: '用户点表抄表记录' },
+      component: () => import('@/pages/electricityManage/meterreadrecords'),
+    },
+    {
+      path: 'meterreadrecords/add',
+      name: 'meterreadrecordsadd',
+      meta: { title: '用户点表抄表记录维护' },
+      component: () => import('@/pages/electricityManage/meterreadrecords/add'),
     }
   ],
 }]

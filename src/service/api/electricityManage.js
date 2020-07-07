@@ -61,18 +61,6 @@ export default new class {
 
   /***********  租户用电明细列表  ************ */
   /**
-   * 添加电表属性
-   * @param monitor  int 电表              
-   * @param useType  int 1:自用 2：收费      
-   * @param mileage  double 里程                   
-   * @param mulPower double  倍率                
-   * @param emarks String 备注
-   */
-  @url('/oaApi/useElec/addMeterElec')
-  @post
-  addMeterElec() { }
-
-  /**
    * 租户电表明细列表
    * @param pageNum
    * @param pageSize
@@ -84,6 +72,46 @@ export default new class {
   @url('/oaApi/useElec/selectMeterElecList')
   @get
   selectMeterElecList() { }
+
+  /**
+   * 添加电表属性
+   * @param [2,3] 单数组
+   */
+  @url('/oaApi/useElec/deleteMeterElec')
+  @post
+  deleteMeterElec() { }
+
+  /**
+   * 删除电表属性
+   * @param monitor  int 电表              
+   * @param useType  int 1:自用 2：收费      
+   * @param mileage  double 里程                   
+   * @param mulPower double  倍率                
+   * @param emarks String 备注
+   */
+  @url('/oaApi/useElec/addMeterElec')
+  @post
+  addMeterElec() { }
+  /**参数同新增 */
+  @url('/oaApi/useElec/updateMeterElecById')
+  @post
+  updateMeterElecById() { }
+
+  /**
+   * 添加电表属性
+   * @param int spaceId 空间id
+   */
+  @url('/oaApi/useElec/getElecMeterProbe')
+  @get
+  getElecMeterProbe() { }
+
+  /**
+   * 根据id查询电表明细详情
+   * @param int id
+   */
+  @url('/oaApi/useElec/selectMeterElecById')
+  @get
+  selectMeterElecById() { }
 
   /***********  电价维护  ************ */
   /**
@@ -115,9 +143,76 @@ export default new class {
 
   /**
    * 修改电表价格记录
-   * @param List<Integer> ids
+   *{
+   *    "id":1,  id唯一标识
+   *    "price":12, 电价
+   *    "peakPrice":12, 尖峰电价
+   *    "flayPrice":12, 平段电价
+   *    "valleyPrice":12, 谷段电价
+   *    "surcharge":23, 附加费
+   *    "remarks":"备注",
+   *    "startTime":"2020-02-12",
+   *    "endTime":"2020-12-23"
+   *}
    */
   @url('/oaApi/useElec/updateElecPrice')
   @post
   updateElecPrice() { }
+
+
+  /***********  电表抄表记录  ************ */
+  /**
+   * 抄表记录列表
+   * Integer pageNum 
+   * Integer pageSize 
+   * Integer year 年份 非必填
+   * Integer month 月 非必填
+   * String monitorNum  电表号 非必填
+   * Integer status 数据状态 审核状态 非必填
+   * Integer useType 1:自用 2：收费 非必填
+   */
+  @url('/oaApi/readMeter/selectReadMeterRecord')
+  @get
+  selectReadMeterRecord() { }
+
+  /**
+   * 添加抄表记录
+   * {
+   *     "monitor":236546,
+   *     "year":2020,
+   *     "month":3
+   *     "readTime":"",
+   *     "lastIndication":2020,//上次示数
+   *     "indication":6362,//本次示数
+   *     "diffNum":245,//抄表见量
+   *     "useElecMonth":245,//月用电量
+   *     "reader":" 抄表人",
+   *     "remarks":"备注"
+   * }
+   */
+  @url('/oaApi/readMeter/addReadMeterRecord')
+  @post
+  addReadMeterRecord() { }
+
+  /**
+   * 根据电表id获取电表信息
+   * int monitor  
+   */
+  @url('/oaApi/readMeter/getElecMeterInfo')
+  @post
+  getElecMeterInfo() { }
+
+  /***********  用电收费明细  ************ */
+  /**
+   * 用电收费明细列表
+   * Integer pageNum 
+   * Integer pageSize 
+   * Integer year 年份 非必填
+   * Integer month 月 非必填
+   * String contractNumber 合同编号
+   * String tenantNumber 租户编号
+   */
+  @url('/oaApi/readMeter/getChargeDetailsList')
+  @post
+  getChargeDetailsList() { }
 }

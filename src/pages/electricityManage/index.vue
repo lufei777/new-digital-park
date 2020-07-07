@@ -36,7 +36,7 @@ export default {
             {
               id: "123",
               name: "电价维护",
-              routeAddress: "/electricitymanage/electricitypricemaintenance",
+              routeAddress: "/electricitymanage/elecpricemaintain",
             }
           ]
         },
@@ -44,11 +44,11 @@ export default {
           id: "13",
           name: "电表抄表记录",
           routeAddress: "/expendrecord",
-          children: [
+          childNode: [
             {
               id: "131",
               name: "用户电表抄表记录",
-              routeAddress: "/electricitymanage/electricitymeterrecords",
+              routeAddress: "/electricitymanage/meterreadrecords",
             }
           ]
         }
