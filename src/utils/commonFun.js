@@ -2048,7 +2048,7 @@ class commonFun {
 
     //激活菜单
     store.commit("digitalPark/activeMenuIndex", this.setMenuIndex(item))
-    localStorage.setItem('moduleId',this.getLastItem(item).id)
+    localStorage.setItem('moduleId', this.getLastItem(item).id)
     if (item.routeAddress) {
       //客户端
       if (this.loadClientPage(item)) {
@@ -2074,10 +2074,15 @@ class commonFun {
           store.commit("digitalPark/largeScreenIframeSrc", window.top.location.origin + '/#' + item.routeAddress)
         } else {
           if (item?.childNode?.length) {
-            router.push(this.getLastItem(item).routeAddress);
-          } else {
-            router.push(item.routeAddress);
+            item = this.getLastItem(item);
           }
+          router.push({
+            path: item.routeAddress,
+            query: {
+              firstMenuId: item.firstMenuId,
+              secondMenuId: item.secondMenuId
+            }
+          });
         }
       }
     } else {
@@ -2085,6 +2090,7 @@ class commonFun {
     }
   }
 
+  // 判断是否跳转客户端
   loadClientPage(item) {
 
     if (typeof item === 'undefined') {
@@ -2138,7 +2144,7 @@ class commonFun {
   }
 
   getLastItem(item) {
-    if (item.childNode && item.childNode.length) {
+    if (item?.childNode?.length) {
       return this.getLastItem(item.childNode[0])
     } else {
       return item
@@ -2220,7 +2226,7 @@ class commonFun {
     }
   }
 
-  setMenuList(item){
+  setMenuList(item) {
     if (!item.routeAddress) {
       Message({
         type: 'warning',
@@ -2236,10 +2242,10 @@ class commonFun {
     let secondMenu = firstMenu && firstMenu.childNode.find(second => {
       return second.id == item.secondMenuId;
     });
-    let menuTmp = secondMenu ||{}
+    let menuTmp = secondMenu || {}
     store.commit("digitalPark/menuList", menuTmp);
     return true
   }
-  
+
 }
 export default new commonFun()

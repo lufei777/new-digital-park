@@ -721,3 +721,29 @@ export const TaskpriorityType = {
     }
   ]
 }
+
+// 用电管理
+export const electricityManageDic = {
+  // 电表用途
+  useType: [
+    {
+      label: '收费',
+      value: 2
+    },
+    {
+      label: '自用',
+      value: 1
+    }
+  ],
+  // 审核状态
+  /* status: [
+    {
+      label: '收费',
+      value: 2
+    },
+    {
+      label: '自用',
+      value: 1
+    }
+  ], */
+}

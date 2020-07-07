@@ -322,6 +322,8 @@ export default {
           }, 2000);
         }
 
+        if (!this.options.data) this.options.data = [];
+
         this._setTableData(this.options.data);
         this.setTotal(this.options.data.length);
       }

@@ -42,12 +42,8 @@
 </template>
 <script>
 import { electricityManageDic } from "@/utils/dictionary";
-import commonApi from "api/common";
 import electricityManageApi from 'api/electricityManage';
 import commonFun from "@/utils/commonFun.js";
-import { floorsTree } from "utils/formsItem";
-
-const { useType/*电表用途*/ } = electricityManageDic;
 
 const dateValueFormat = "yyyy-MM-dd HH:mm:ss";
 let tableSendData = {
@@ -66,35 +62,22 @@ export default {
         menuBtn: false,
         forms: [
           {
-            prop: "useType",
-            type: 'select',
-            label: "点表用途",
-            dicData: useType,
-            span: 4
+            type: 'date',
+            label: "开始时间",
+            prop: "startTime",
+            valueFormat: dateValueFormat,
+            span: 6
           },
           {
-            type: 'input',
-            label: "电表号",
-            prop: "monitorNum",
-            span: 5
-          },
-          {
-            type: 'input',
-            label: "电表名称",
-            prop: "monitorName",
-            span: 5
-          },
-          {
-            type: "tree",
-            label: "供电区域",
-            prop: "spaceId",
-            clearable: true,
-            ...floorsTree,
-            span: 5
+            type: 'date',
+            label: "结束时间",
+            prop: "endTime",
+            valueFormat: dateValueFormat,
+            span: 6
           },
           {
             prop: "btn",
-            span: 5,
+            span: 12,
             noModel: true,
             formslot: true,
             width: 55
@@ -108,7 +91,7 @@ export default {
           width: 250
         },
         serverMode: {
-          url: electricityManageApi.selectMeterElecList,
+          url: electricityManageApi.selectReadMeterRecord,
           data: {
             pageNum: 1,
             pageSize: 10
@@ -116,41 +99,41 @@ export default {
         },
         columnConfig: [
           {
-            prop: "monitorNum",
-            label: "电表号",
-            width: 150
+            label: "开始时间",
+            prop: "startTime"
           },
           {
-            prop: "monitorName",
-            label: "电表名称",
-            width: 150
+            label: "结束时间",
+            prop: "endTime"
           },
           {
-            prop: "useType",
-            label: "点表用途",
-            type: 'select',
-            dicData: useType
+            label: "收费电价(元/千瓦时)",
+            prop: "price"
           },
           {
-            prop: "floorName",
-            label: "安装位置"
+            label: "尖峰电价(元/千瓦时)",
+            prop: "peakPrice"
+          },
+          /* {
+            label: "峰段电价(元/千瓦时)",
+            prop: "endTime"
+          }, */
+          {
+            label: "谷段电价(元/千瓦时)",
+            prop: "valleyPrice"
           },
           {
-            prop: "spaceName",
-            label: "供电区域"
+            label: "平段电价(元/千瓦时)",
+            prop: "flayPrice"
           },
           {
-            prop: 'mileage',
-            label: '里程'
+            label: "代征各项基金和附加费系数(元/度)",
+            prop: "surcharge"
           },
           {
-            prop: 'mulPower',
-            label: '倍率'
+            label: "备注",
+            prop: "remarks"
           },
-          {
-            prop: 'remarks',
-            label: '备注'
-          }
         ],
         uiConfig: {
           height: "auto",
@@ -177,14 +160,14 @@ export default {
     },
     addedProperty({ row }) {
       this.$router.push({
-        name: "tenantelectricitymeteradd",
+        name: "elecpricemaintainadd",
         query: {
           flag: 'add'
         }
       });
     },
     deleteRow(ids) {
-      electricityManageApi.deleteMeterElec(ids).then(res => {
+      electricityManageApi.deleteElecPrice(ids).then(res => {
         this.refreshTable();
       });
     },
@@ -217,14 +200,14 @@ export default {
     },
     propertyEdit({ row }) {
       this.$router.push({
-        name: "tenantelectricitymeteradd",
-        query: { id: row.id, flag: "edit" }
+        name: "elecpricemaintainadd",
+        query: { id: row.id, flag: "edit", row: JSON.stringify(row) }
       });
     },
     propertyDetail({ row }) {
       this.$router.push({
-        name: "tenantelectricitymeteradd",
-        query: { id: row.id, flag: "detail" }
+        name: "elecpricemaintainadd",
+        query: { id: row.id, flag: "detail", row: JSON.stringify(row) }
       });
     },
     bindingMeter({ row }) {

@@ -389,6 +389,26 @@ export default {
       }
       return group ? list : result;
     },
+    // 根据prop获取forms
+    getFormByProp(prop, group = false) {
+      let formsOption = {};
+      let index = this.findColumnIndex(prop, group);
+      if (index !== -1) {
+        if (group) {
+          formsOption = this.options.group[index[0]].forms[index[1]];
+        } else {
+          formsOption = this.options.forms[index];
+        }
+        return formsOption;
+      } else {
+        this.$message({
+          type: "error",
+          message: `setColumnByProp -> 属性-${prop}-不存在`
+        });
+        console.error(`setColumnByProp -> 属性-${prop}-不存在`);
+      }
+      return -1;
+    },
     // 根据prop设置属性
     setColumnByProp(prop, setOptions, isInGroup) {
       let isGroup =
@@ -396,20 +416,9 @@ export default {
           ? isInGroup
           : typeof this.options.group !== "undefined";
       let options = this.options;
-      let index = this.findColumnIndex(prop, isGroup);
-      if (index !== -1) {
-        if (isGroup) {
-          var formsOption = options.group[index[0]].forms[index[1]];
-        } else {
-          var formsOption = options.forms[index];
-        }
+      let formsOption = this.getFormByProp(prop, isGroup);
+      if (formsOption !== -1) {
         setDefaultValue(setOptions, formsOption, this);
-      } else {
-        this.$message({
-          type: "error",
-          message: `setColumnByProp -> 属性-${prop}-不存在`
-        });
-        console.error(`setColumnByProp -> 属性-${prop}-不存在`);
       }
     },
     // 判断该项是否可用
@@ -504,7 +513,7 @@ export default {
               this.model,
               this.modelTranslate,
               this.parentOption.translate,
-                this.noModelFileds
+              this.noModelFileds
             ),
             this.hide
           );
@@ -560,7 +569,7 @@ export default {
                   this.model,
                   this.modelTranslate,
                   this.parentOption.translate,
-                this.noModelFileds
+                  this.noModelFileds
                 )
               );
             } else {
@@ -761,12 +770,6 @@ export default {
       display: block;
     }
   }
-  // 下拉树的样式调整
-  .zvue-input-tree {
-    .el-tree-node__content {
-      padding: 0;
-    }
-  }
   // 分组
   .zvue-form-group {
     display: -webkit-box;
@@ -793,6 +796,12 @@ export default {
   }
   .clearfix:after {
     clear: both;
+  }
+}
+// 下拉树的样式调整
+.zvue-input-tree {
+  .el-tree-node__content {
+    padding: 0;
   }
 }
 </style>
