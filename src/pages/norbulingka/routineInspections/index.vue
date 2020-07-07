@@ -266,7 +266,7 @@ export default {
       console.log(obj);
       this.$router.push({
         path: "/editdetailadd",
-        query: { flag: false, mark: "edit", ...obj.row }
+        query: { flag: false, mark: "edit", id:obj.row.id }
       });
     },
     // 删除方法
@@ -327,7 +327,7 @@ export default {
     propertyDetail(obj) {
       this.$router.push({
         path: "/editdetailadd",
-        query: { flag: true, mark: "detail", ...obj.row }
+        query: { flag: true, mark: "detail", id:obj.row.id }
       });
     },
     // 添加

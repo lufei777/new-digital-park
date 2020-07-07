@@ -241,10 +241,10 @@ export default {
       if(info.protectBudget2==null){
         info.protectBudget2 =undefined
       }
-
+      sessionStorage.setItem('PROJECT',JSON.stringify(info))
       this.$router.push({
         path: "detailedit",
-        query: { flag: false, mark: "edit", ...info }
+        query: { flag: false, mark: "edit"}
       });
     },
     // 删除方法
@@ -317,9 +317,10 @@ export default {
       if(info.protectBudget2==null){
         info.protectBudget2 =undefined
       }
+      sessionStorage.setItem('PROJECT',JSON.stringify(info))
       this.$router.push({
         path: "detailedit",
-        query: { flag: true, mark: "detail", ...info }
+        query: { flag: true, mark: "detail", }
       });
     },
     // 添加

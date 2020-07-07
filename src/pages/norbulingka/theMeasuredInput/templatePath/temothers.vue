@@ -165,7 +165,7 @@ export default {
     // 编辑保存
     editSave() {
       this.Form.getFormModel(res => {
-         delete res.mark
+        delete res.mark;
         norbulingka
           .updateOthers(res)
           .then(res => {
@@ -185,17 +185,31 @@ export default {
     // 返回
     back(obj) {
       this.$router.back();
+    },
+    // 数据
+    getFormData(arg) {
+      norbulingka.queryOthersByPage({ id: arg }).then(res => {
+        this.model = { ...this.model, ...res.list[0] };
+        console.log("list", res.list);
+      });
     }
   },
   created() {
+    if (Object.keys(this.$route.query).length !== 0) {
+      // var query = this.$route.query;
+      let { id, flag } = this.$route.query;
+      if (id) {
+        this.getFormData(id);
+      }
+    }
     var query = this.$route.query;
     console.log(query);
     if (query.mark === "detail") {
       this.formData.textMode = true;
-      this.model = { ...query };
+      // this.model = { ...query };
       this.title = topTitle[query.mark].title;
     } else {
-      this.model = { ...query };
+      // this.model = { ...query };
       this.title = topTitle[query.mark].title;
     }
   },

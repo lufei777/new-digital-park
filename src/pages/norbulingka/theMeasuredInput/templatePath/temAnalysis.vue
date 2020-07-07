@@ -57,10 +57,12 @@ const topTitle = {
     title: "病害分析 详情"
   }
 };
+let typeone = null;
 export default {
   data() {
     return {
-      // 类型选择
+      // 病害类型
+      diseasetypes: null,
       typeArr: [],
       title: "模板",
       model: {},
@@ -238,52 +240,116 @@ export default {
       }
     },
     findObj(arr, val) {
-      let objArr = [];
+      // debugger
+      let objArr = null;
       arr.forEach(item => {
         if (item.id == val) {
           objArr = item;
         }
       });
       return objArr;
-    }
-  },
-  created() {
-    var query = this.$route.query;
-    console.log(query);
-    if (query.flag) {
-      this.formData.textMode = true;
-      this.model = { ...query };
-      this.title = topTitle[query.mark].title;
-    } else {
-      this.model = { ...query };
-      this.title = topTitle[query.mark].title;
-    }
-    // 病害分类
-    norbulingka.getSelectOptionOther({ catalogId: 14001 }).then(res => {
-      this.typeArr = res;
-      // console.log(res);
-      this.$nextTick(() => {
+    },
+    // 表格数据
+    getFormData(arg) {
+      norbulingka.queryDamageByPage({ id: arg }).then(res => {
+        // 病害类型
+        // debugger;
+        this.diseasetypes = res.list[0].damageType1;
+        // console.log("this.diseasetypes", this.diseasetypes);
+        this.model = { ...this.model, ...res.list[0] };
+        // console.log("list", res.list);
+      });
+      // this.selectList()
+    },
+    //下拉框的接口
+    selectList() {
+      norbulingka.getSelectOptionOther({ catalogId: 14001 }).then(res => {
+        this.typeArr = res;
+        // console.log(res);
+
         this.Form.setColumnByProp("damageType1", {
           dicData: res
         });
+        // 获取病害分类的值 根据传递过来的值 为病害类型赋值
+        // debugger
+        console.log("this.diseasetypes", this.diseasetypes);
+
+        console.log("this.diseasetypes", this.diseasetypes);
+        if (this.diseasetypes != undefined && this.diseasetypes) {
+          // console.log("this.typeArr", this.typeArr);
+          var cc = this.findObj(this.typeArr, this.diseasetypes);
+          console.log("cc", cc);
+          console.log("this.diseasetypes", this.diseasetypes);
+          this.Form.setColumnByProp("damageType2", {
+            dicData: cc.children
+          });
+        }
       });
-      // 获取病害分类的值 根据传递过来的值 为病害类型赋值
-      if (query.damageType1) {
-        var cc = this.findObj(this.typeArr, query.damageType1);
-        // console.log(cc)
-        this.Form.setColumnByProp("damageType2", {
-          dicData: cc.children
-        });
+    }
+
+  },
+  created() {
+    this.selectList()
+    // 病害分类
+    // debugger
+
+    // var query = JSON.parse(this.$route.query);
+    let info = JSON.parse(localStorage.getItem('ANALYSIS'))
+    // console.log(JSON.parse(query.info));
+    if (Object.keys(this.$route.query).length !== 0) {
+      // var query = this.$route.query;
+      let { id, flag } = this.$route.query;
+      if (id) {
+        this.getFormData(id);
+        // console.log("this.diseasetypes", this.diseasetypes);
       }
-    });
+    }
+    var query = this.$route.query;
+    if (query.mark === "detail") {
+      this.formData.textMode = true;
+      this.model = { ...info };
+      this.title = topTitle[query.mark].title;
+    } else {
+      this.model = { ...info };
+      this.title = topTitle[query.mark].title;
+    }
+    if(query.mark ==='add'){
+      this.model ={ }
+    }
+    norbulingka.getSelectOptionOther({ catalogId: 14001 }).then(res => {
+        this.typeArr = res;
+        // console.log(res);
+
+        this.Form.setColumnByProp("damageType1", {
+          dicData: res
+        });
+        // 获取病害分类的值 根据传递过来的值 为病害类型赋值
+        // debugger
+        // console.log("this.diseasetypes", this.diseasetypes);
+
+        // console.log("this.diseasetypes", this.diseasetypes);
+        if (this.diseasetypes != undefined && this.diseasetypes) {
+          // console.log("this.typeArr", this.typeArr);
+          var cc = this.findObj(this.typeArr, info.damageType2);
+          // console.log("cc", cc);
+          
+          // console.log("this.diseasetypes", this.diseasetypes);
+          this.Form.setColumnByProp("damageType2", {
+            dicData: cc.children
+          });
+        }
+      });
+    // this.$nextTick(() => {
+
+    // });
   },
   watch: {
     "model.damageType1": {
       handler(val, old) {
-        console.log(typeof val);
-        console.log(typeof old);
-        console.log(val);
-        console.log(old);
+        // console.log(typeof val);
+        // console.log(typeof old);
+        // console.log(val);
+        // console.log(old);
         // console.log( old.length);
         // val != undefined && val != null
         // debugger
@@ -292,7 +358,7 @@ export default {
           this.typeArr.forEach(item => {
             if (item.id == val) {
               child = item;
-              this.model.damageType2 = ''
+              // this.model.damageType2 = "";
               this.Form.setColumnByProp("damageType2", {
                 dicData: child.children
               });
@@ -300,8 +366,11 @@ export default {
           });
         }
         if (typeof val == "string") {
-          this.model.damageType2 = ''
+          this.model.damageType2 = "";
           this.Form.setColumnByProp("damageType2", { dicData: [] });
+        }
+        if(val!==old){
+          this.model.damageType2 = "";
         }
       },
       immediate: true,
