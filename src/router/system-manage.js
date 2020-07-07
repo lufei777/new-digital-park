@@ -81,5 +81,9 @@ export default [{
     path: '/addMenu',
     component: ()=>import('@/pages/systemManage/menuManage/addMenu'),
     meta: { title: '菜单管理' },
+  },{
+    path: '/permissionManage',
+    component: ()=>import('@/pages/systemManage/permissionManage/index'),
+    meta: { title: '菜单管理' },
   }]
 }]

@@ -17,22 +17,6 @@
 </template>
 
 <script>
-  let typeList = [{
-    name: '温度',
-    id: isZG() ? 95 : 63
-  }, {
-    name: '湿度',
-    id: isZG() ? 168 : 62
-  }, {
-    name: '一氧化碳',
-    id: 187
-  }, {
-    name: '二氧化碳',
-    id: isZG() ? '165' : 94
-  }, {
-    name: 'PM2.5',
-    id: 171
-  }]
   import ChartUtils from '@/utils/chartUtils'
   import CommonApi from '@/service/api/common'
   import {isZG} from "@/utils/project";
@@ -61,7 +45,7 @@
           legendData: [],
           series,
           xAxis: res.map((item) => item.name),
-          xAxisUi:this.moduleItem.xAxisUi || {}
+          xAxisUi:{...this.moduleItem.xAxisUi,...{boundaryGap:false}} || {}
         }
         ChartUtils.handleBarChart(myChart, data)
       },
