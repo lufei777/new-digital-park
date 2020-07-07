@@ -605,17 +605,25 @@ export default {
 
     
     
-    let path = this.$route.query;
+   
+   let path = this.$route.query;
     console.log('123',path)
-    if (path.flag) {
-      this.model = { ...path };
+    let info = JSON.parse(localStorage.getItem('INFO'))
+    console.log()
+    
+    if (path.mark==='detail') {
+      this.model = { ...info };
       // 若果是详情查看需要隐藏输入框的border
       this.formData.textMode = true;
       // 配置页面中的标题
       this.title = _.cloneDeep(topTitle[path.mark].title);
     } else {
       this.title = _.cloneDeep(topTitle[path.mark].title);
-      this.model = { ...path };
+      this.model = { ...info };
+    }
+    if(path.mark ==='add'){
+      this.title = _.cloneDeep(topTitle[path.mark].title);
+      this.model ={}
     }
   }
 };

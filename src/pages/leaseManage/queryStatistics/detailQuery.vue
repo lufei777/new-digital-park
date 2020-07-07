@@ -28,49 +28,29 @@
       </z-form>
     </div>
 
-    <div class="lease-contract-table panel" id='printTest'>
-      <!-- <div class="tab-title flex-align-between">
-        <span> </span>
-        <em>{{title}}</em>
-      </div> -->
-      <div
-        class="showbtn"
-        v-if="showorhide"
+    <div class="lease-contract-table panel" id="printTest" ref='print'>
+      <el-dialog
+        :visible.sync="dialogTableVisible"
+        :modal='true'
       >
-        <!-- 自定义按钮展示 -->
-        <div class="inbtn">
-          <template
-            slot="custom-top"
-            slot-scope="scopeObj"
-          >
-            <div
-              class="el-table-button-group"
-              style="height:40px;"
-            >
-              <el-button-group>
-                <el-button
-                  type="primary"
-                  @click="testCustomTopObj(scopeObj)"
-                >自定义</el-button>
-
-                <template v-for="col in scopeObj.columnConfig">
-                  <el-button
-                    size='min'
-                    :key="col.prop"
-                    :type="col.hide ?'danger': 'primary'"
-                    @click="switchHide(col)"
-                  >{{col.label}}</el-button>
-                </template>
-              </el-button-group>
-            </div>
-          </template>
+        <!-- 自定义按钮弹框 -->
+        <div class="inlineshow">
+          <span style="margin:15px 20px;display:block;color:red"> 单击按钮 自定义显示列</span>
+          <el-button
+            v-for="col,index in btnList"
+            size='min'
+            :key="col.prop"
+            :type="col.hide ?'danger': 'primary'"
+            @click="switchHide(col)"
+          >{{col.label}}</el-button>
         </div>
-      </div>
+
+      </el-dialog>
       <z-table
         :ref="leaseContractTable.ref"
         :options="leaseContractTable"
       >
-        <!-- <template
+        <template
           slot="custom-top"
           slot-scope="scopeObj"
         >
@@ -78,41 +58,28 @@
             class="el-table-button-group"
             style="height:40px;"
           >
+           <!-- v-print="'printTest'" -->
             <el-button-group>
               <el-button
                 type="primary"
+               @click="printHtml"
+              >打印</el-button>
+              <!-- <el-button
+                type='primary'
+                @click="print"
+              >
+                打印
+              </el-button> -->
+              <el-button
+                type="primary"
+                @click="exportFile(obj)"
+              >导出</el-button>
+              <el-button
+                type="primary"
                 @click="testCustomTopObj(scopeObj)"
-              >自定义</el-button>
+              >自定义显示</el-button>
 
-              <template v-for="col in scopeObj.columnConfig">
-                <el-button
-                  size='min'
-                  :key="col.prop"
-                  :type="col.hide ?'danger': 'primary'"
-                  @click="switchHide(col)"
-                >{{col.label}}</el-button>
-              </template>
             </el-button-group>
-          </div>
-        </template> -->
-        <template
-          slot="custom-top"
-          slot-scope="obj"
-        >
-          <div class="operator-box flex-row-reverse">
-            <el-button
-              size='small'
-              type="primary"
-              @click="showSetBtn"
-            >自定义查询结果</el-button>
-            <el-button
-              type="primary"
-              v-print="'#printTest'"
-            >打印</el-button>
-            <el-button
-              type="primary"
-              @click="exportFile(obj)"
-            >导出</el-button>
           </div>
         </template>
       </z-table>
@@ -132,6 +99,10 @@ export default {
   data() {
     let _this = this;
     return {
+      // 打印设置
+      // 自定义按钮
+      btnList: [],
+      dialogTableVisible: false,
       // 显示和隐藏控制
       showorhide: false,
       title: "2020年 5-7 月租赁月账单查询",
@@ -232,10 +203,20 @@ export default {
     }
   },
   methods: {
+    printHtml() {
+      this.$print(this.$refs.print,{'no-print':'.el-table-button-group'})
+    },
+    testCustomTopObj(scopeObj) {
+      this.dialogTableVisible = !this.dialogTableVisible;
+      this.btnList = scopeObj.columnConfig;
+
+      console.log(scopeObj);
+    },
     showSetBtn() {
       // this.show = !show;
-      console.log(111)
-      this.showorhide = !this.showorhide
+      console.log(111);
+      this.showorhide = !this.showorhide;
+      console.log(this.showorhide);
     },
     switchHide(col) {
       let tableRefs = this.$refs;
@@ -261,9 +242,13 @@ export default {
     },
     async contractList() {
       let labelList = [
-        { label: "账单编号", prop: "billNumber" },
-        { label: "合同编码", prop: "contractNumber" },
-        { label: "合同名称", prop: "contractName" },
+        { label: "账单编号", prop: "billNumber", showOverflowTooltip: false },
+        {
+          label: "合同编码",
+          prop: "contractNumber",
+          showOverflowTooltip: false
+        },
+        { label: "合同名称", prop: "contractName", showOverflowTooltip: false },
         { label: "账期", prop: "billTime" },
         { label: "租户名称", prop: "tenantName" },
         { label: "账单金额", prop: "billCost" },
@@ -332,13 +317,28 @@ export default {
     // 作废
     delRow() {}
   },
+  created() {
+    // this.$nextTick(() => {
+    //   var body = document.querySelector(".el-table");
+    //   body.setAttribute("id", "#printTest");
+    //   console.log(body);
+    // });
+  },
   mounted() {
     this.contractList();
+    // 获取table中的表格部分 按钮部分不需要
+    // this.$nextTick(() => {
+    //   var body = document.querySelector(".el-table");
+    //   body.setAttribute("id", "#printTest");
+    //    console.log(body);
+    // });
+    // body.classList.add('#printTest')
+    // this.printObj.id= '#printTest'
   }
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .lease-contract {
   .condition-box {
     margin-bottom: 20px;
@@ -354,6 +354,10 @@ export default {
       .el-button {
         margin-left: 20px;
       }
+    }
+    // 按钮位置控制
+    /deep/.zvue-table-body {
+      // margin-top: 74px;
     }
   }
   // .el-input {
@@ -375,15 +379,40 @@ export default {
     font-size: 20px;
   }
 }
-.showSetBtn {
+.showbtn {
   width: 100%;
   height: auto;
   display: none;
   position: relative;
   .inbtn {
+    height: 80px;
+    width: 100%;
     position: absolute;
-    left: 0;
-    top: -100px;
+    right: 0;
+    top: 0px;
+    z-index: 100;
+    // .el-table-button-group {
+    //   // margin-bottom: 60px;
+    //   /deep/.tr_line{
+    //     display: inline-block;
+    //   }
+    // }
   }
 }
+.inlineshow {
+  // display: inline-block;
+  .el-button {
+    margin: 10px 2px;
+  }
+}
+// table {
+//   td {
+//     cursor: pointer;
+//     padding: 5px 10px;
+//   }
+//   td:hover {
+//     background-color: rgb(0, 141, 234);
+//     color: white;
+//   }
+// }
 </style>
