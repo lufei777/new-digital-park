@@ -216,17 +216,30 @@ export default {
     // 返回
     back(obj) {
       this.$router.back();
+    },
+    // 表格数据 
+    getFormData(arg) {
+      norbulingka.blurQueryArchaeology({ id: arg }).then(res => {
+        this.model = { ...this.model, ...res.list[0] };
+        console.log("list", res.list);
+      });
     }
   },
   created() {
+    if(Object.keys(this.$route.query).length !==0){
+      let {id,flag} = this.$route.query
+      if(id){
+        this.getFormData(id)
+      }
+    }
     var query = this.$route.query;
     console.log(query);
-    if (query.flag) {
+    if (query.mark ==='detail') {
       this.formData.textMode = true;
-      this.model = { ...query };
+      // this.model = { ...query };
       this.title = topTitle[query.mark].title;
     } else {
-      this.model = { ...query };
+      // this.model = { ...query };
       this.title = topTitle[query.mark].title;
     }
   },

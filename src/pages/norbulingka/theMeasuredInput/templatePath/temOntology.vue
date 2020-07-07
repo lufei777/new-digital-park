@@ -211,17 +211,41 @@ export default {
     // 返回
     back(obj) {
       this.$router.back();
+    },
+    // 数据
+    getFormData(arg) {
+      norbulingka.queryBuildingByPage({ id: arg }).then(res => {
+        this.model = { ...this.model, ...res.list[0] };
+        console.log("list", res.list);
+      });
     }
   },
   created() {
-    var query = this.$route.query;
+    if (Object.keys(this.$route.query).length !== 0) {
+      // var query = this.$route.query;
+      let { id, flag } = this.$route.query;
+      if (id) {
+        this.getFormData(id);
+      }
+    }
+
+    // let list = null;
+    // norbulingka.queryBuildingByPage({ id: query.id }).then(res => {
+    //   this.model = { ...res.list };
+    //   console.log("list", list);
+    // });
     // console.log(query);
-    if (query.flag) {
+    var query = this.$route.query;
+    if (query.mark === "detail") {
+      console.log(this.$route.query);
       this.formData.textMode = true;
-      this.model = { ...query };
+      // this.model = { ...list };
+
       this.title = topTitle[query.mark].title;
     } else {
-      this.model = { ...query };
+      console.log(this.$route.query);
+      // this.model = { ...list };
+      this.formData.textMode = false;
       this.title = topTitle[query.mark].title;
     }
 

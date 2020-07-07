@@ -349,9 +349,12 @@ export default {
       //  delete info.year2
       //  delete info.year3
       console.log(info);
+      // ...info
+      
+      localStorage.setItem('INFO',JSON.stringify(info))
       this.$router.push({
         path: "/addeditdetail",
-        query: { mark: "edit", ...info }
+        query: { mark: "edit" }
       });
     },
     // 详情
@@ -411,7 +414,7 @@ export default {
       }
       this.$router.push({
         path: "/addeditdetail",
-        query: { flag: true, mark: "detail", ...info }
+        query: { flag: true, mark: "detail"}
       });
     },
     // 表格中的数据

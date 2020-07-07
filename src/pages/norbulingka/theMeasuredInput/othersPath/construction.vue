@@ -253,11 +253,12 @@ export default {
       let ids = obj.row.id;
       this.delRowData(ids);
     },
+    // 编辑
     propertyEdit(obj) {
       console.log(obj.row);
       this.$router.push({
         path: "/temconstruction",
-        query: { flag: false, mark: "edit", ...obj.row }
+        query: { flag: false, mark: "edit", id:obj.row.id }
       });
     },
     // 详情
@@ -265,7 +266,7 @@ export default {
       console.log(obj.row);
       this.$router.push({
         path: "/temconstruction",
-        query: { flag: true, mark: "detail", ...obj.row }
+        query: { flag: true, mark: "detail", id:obj.row.id }
       });
     },
     add() {

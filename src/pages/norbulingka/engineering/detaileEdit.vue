@@ -584,18 +584,22 @@ export default {
   created() {
     // console.log(parmars);
 
-    this.$nextTick(() => {
+    
       var parmars = this.$route.query;
-      console.log(parmars);
-      if (parmars.flag) {
+      let info = JSON.parse(sessionStorage.getItem('PROJECT'))
+      console.log('1222',parmars);
+      if (parmars.mark ==='detail') {
         this.formData.textMode = true;
         this.title = _.cloneDeep(topTitle[parmars.mark].title);
-        this.model = { ...parmars };
+        this.model = { ...info };
       } else {
-        this.model = { ...parmars };
+        this.model = { ...info };
         this.title = _.cloneDeep(topTitle[parmars.mark].title);
       }
-    });
+      if(parmars.mark==='add'){
+        this.model ={}
+      }
+   
   }
 };
 </script>

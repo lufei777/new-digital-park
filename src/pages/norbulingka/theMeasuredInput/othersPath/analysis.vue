@@ -291,18 +291,20 @@ export default {
     },
     // 编辑
     propertyEdit(obj) {
-      console.log(obj.row);
+      localStorage.setItem('ANALYSIS',JSON.stringify(obj.row))
+      
       this.$router.push({
         path: "/temanalysis",
-        query: { flag: false, mark: "edit", ...obj.row }
+        query: { flag: false, mark: "edit", id:obj.row.id }
       });
     },
     // 详情
     propertyDetail(obj) {
       console.log(obj.row);
+     localStorage.setItem('ANALYSIS',JSON.stringify(obj.row))
       this.$router.push({
         path: "/temanalysis",
-        query: { flag: true, mark: "detail", ...obj.row }
+        query: { flag: true, mark: "detail", id:obj.row.id }
       });
     },
     add() {

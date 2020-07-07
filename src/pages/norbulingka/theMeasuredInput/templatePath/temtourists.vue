@@ -1,6 +1,6 @@
 <template>
       <div class='panel-container'>
-    <div class= 'panel'>
+    <div class='panel'>
       <!-- 区分标题 -->
       <div class="toptitle">
         <span>{{title}}</span>
@@ -45,9 +45,8 @@
 import { Norbulingka } from "utils/dictionary";
 // 导入接口
 import norbulingka from "@/service/api/norbulingka";
-import { del } from '../../../../service/axios/ApiDecorator';
+import { del } from "../../../../service/axios/ApiDecorator";
 const topTitle = {
-  
   add: {
     title: "添加  游客情况"
   },
@@ -61,7 +60,7 @@ const topTitle = {
 export default {
   data() {
     return {
-      title:'模板',
+      title: "模板",
       model: {},
       formData: {
         ref: "formData",
@@ -84,11 +83,11 @@ export default {
             prop: "dailyCount",
             type: "number",
             offset: 6,
-            minRows:0,
-            rules:[
+            minRows: 0,
+            rules: [
               {
-                required:true,
-                message:'必填日游客量'
+                required: true,
+                message: "必填日游客量"
               }
             ]
           },
@@ -97,12 +96,12 @@ export default {
             label: "瞬时游客量",
             prop: "tempCount",
             type: "number",
-            minRows:0,
+            minRows: 0,
             offset: 6,
-            rules:[
+            rules: [
               {
-                required:true,
-                message:'必填瞬时游客量'
+                required: true,
+                message: "必填瞬时游客量"
               }
             ]
           },
@@ -114,19 +113,19 @@ export default {
             type: "upload",
             offset: 6,
             accept: ["jpg", "jpeg", "png"],
-             action:'/oaApi/image/upload',
+            action: "/oaApi/image/upload",
             tip: "只能上传jpg/png文件。",
-            dataType:'string',
-            listType:'picture-card',
-            propsHttp:{
-              name:'fileName',
-              url:'fileUrl',
-              res:'data'
+            dataType: "string",
+            listType: "picture-card",
+            propsHttp: {
+              name: "fileName",
+              url: "fileUrl",
+              res: "data"
             },
-            rules:[
+            rules: [
               {
-                required:true,
-                message:'添加照片'
+                required: true,
+                message: "添加照片"
               }
             ]
           },
@@ -152,50 +151,66 @@ export default {
     };
   },
   methods: {
-    submit(model,done) {
-     norbulingka.insertTourist(model).then(res =>{
-        this.$message({
-          type:'success',
-          message:'添加成功！'
+    submit(model, done) {
+      norbulingka
+        .insertTourist(model)
+        .then(res => {
+          this.$message({
+            type: "success",
+            message: "添加成功！"
+          });
+          this.$router.back();
         })
-        this.$router.back()
-     }).finally(res => {
-       done()
-     })
+        .finally(res => {
+          done();
+        });
     },
     // 编辑保存
     editSave() {
       this.Form.getFormModel(res => {
-        delete res.mark
-         norbulingka.updateTourist(res).then(res => {
-            this.$message({
-              type: "success",
-              message: "编辑成功！"
-            });
-            this.$router.back();
+        delete res.mark;
+        norbulingka.updateTourist(res).then(res => {
+          this.$message({
+            type: "success",
+            message: "编辑成功！"
           });
-      })
-     
+          this.$router.back();
+        });
+      });
     },
     //添加保存
     addSave(obj) {
-      this.Form.submit()
+      this.Form.submit();
     },
     // 返回
     back(obj) {
       this.$router.back();
+    },
+    // 数据
+    getFormData(arg) {
+      norbulingka.queryTouristByPage({ id: arg }).then(res => {
+        this.model = { ...this.model, ...res.list[0] };
+        console.log("list", res.list);
+      });
     }
   },
   created() {
+    if (Object.keys(this.$route.query).length !== 0) {
+      // var query = this.$route.query;
+      let { id, flag } = this.$route.query;
+      if (id) {
+        this.getFormData(id);
+      }
+    }
     var query = this.$route.query;
     console.log(query);
-    if (query.flag) {
+    if (query.mark ==='detail') {
       this.formData.textMode = true;
-       this.title = topTitle[query.mark].title;
-      this.model = { ...query };
+      this.title = topTitle[query.mark].title;
+      // this.model = { ...query };
     } else {
-      this.model = { ...query };
-       this.title = topTitle[query.mark].title;
+      // this.model = { ...query };
+      this.title = topTitle[query.mark].title;
     }
   },
   mounted() {},
