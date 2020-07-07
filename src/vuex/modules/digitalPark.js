@@ -13,7 +13,8 @@ const state = {
   menuTree: getMenuTree() || [], // 数字园区整体菜单列表
   privateRouters: [],  // 模块列表
   largeScreenIframeSrc: '',
-  contentHeight: ''
+  contentHeight: '',
+  homeKeepAliveFlag:true   //控制瀑布流页的缓存/刷新
 }
 
 const mutations = {
@@ -51,7 +52,10 @@ const mutations = {
   },
   setPrivateRouters(state, payload) {
     state.privateRouters = payload;
-  }
+  },
+  homeKeepAliveFlag(state, data) {
+    state.homeKeepAliveFlag = data
+  },
 }
 
 const getters = {

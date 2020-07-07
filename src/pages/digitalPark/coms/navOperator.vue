@@ -116,7 +116,8 @@ export default {
   computed: {
     ...mapState({
       updateUserInfo: state => state.digitalPark.updateUserInfo,
-      userInfo: state => state.user.userInfo
+      userInfo: state => state.user.userInfo,
+      homeKeepAliveFlag:state => state.digitalPark.homeKeepAliveFlag
     }),
     myModuleType: {
       set() {
@@ -233,7 +234,7 @@ export default {
         this.$router.push({
           name: "DigitalHomePage",
           params:{
-            keepAlive:false
+            keepAlive:this.homeKeepAliveFlag
           }
         });
       } else {

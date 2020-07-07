@@ -245,6 +245,7 @@
             });
         }
         this.$router.push("/publishManage")
+        this.$store.commit('digitalPark/homeKeepAliveFlag',false)
       },
       goBack() {
         history.go(-1)

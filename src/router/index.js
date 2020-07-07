@@ -75,7 +75,6 @@ let privateRouters = [].concat(
   ElectricityManage
 )
 store.commit('digitalPark/setPrivateRouters', privateRouters);
-
 const router = new Router({
   routes: publicRouters
 });
@@ -86,6 +85,12 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
       next({ path: '/' });
     } else {
+      if(from.path === '/digitalPark/homePage'){
+        from.meta.keepAlive = true;
+      }
+      if(typeof to.params.keepAlive === 'boolean'){
+        to.meta.keepAlive = to.params.keepAlive;
+      }
       next();
     }
   } else {
