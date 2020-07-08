@@ -222,17 +222,15 @@ export default {
       this.contractIds = "";
     },
     delRow(obj) {
-      console.log("res", obj);
       this.contractIds = obj.scopeRow.row.contractId;
-      if(obj.scopeRow.row.idDelete == 1) {
+      if (obj.scopeRow.row.idDelete == 1) {
         this.$message({
           type: "warning",
-          message: obj.scopeRow.row.contractName + '未超期，不能删除'
+          message: obj.scopeRow.row.contractName + "未超期，不能删除"
         });
       } else {
-         this.showDeleteTip();
+        this.showDeleteTip();
       }
-     
     },
     batchDels(obj) {
       this.contractIds =

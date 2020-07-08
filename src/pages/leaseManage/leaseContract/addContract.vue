@@ -10,10 +10,14 @@
           @reset-change="resetChange"
         >
           <template slot="rentLine">
-            <h3 style="border:1px dashed #999"></h3>
+            <span
+              style="border-top:1px dashed #999;position: absolute;left: -11%;bottom: 0px;width: 111%;"
+            ></span>
           </template>
           <template slot="propertyLine">
-            <h3 style="border:1px dashed #999"></h3>
+            <span
+              style="border-top:1px dashed #999;position: absolute;left: -11%;bottom: 0px;width: 111%;"
+            ></span>
           </template>
           <!-- <template slot="cleaningLine">
             <h3 style="border:1px dashed #333"></h3>
@@ -65,6 +69,7 @@ export default {
             label: "合同信息",
             prop: "group1",
             display: true,
+            arrow: true,
             forms: [
               {
                 type: "select",
@@ -73,6 +78,11 @@ export default {
                 props: {
                   label: "tenantName",
                   value: "index"
+                },
+                rules: {
+                  required: true,
+                  message: "选择租户",
+                  trigger: "change"
                 },
                 placeholder: "请选择租户",
                 clearable: true,
@@ -262,7 +272,7 @@ export default {
             label: "收费约定",
             prop: "group2",
             display: true,
-            arrow: false,
+            arrow: true,
             forms: [
               {
                 type: "input",
@@ -270,9 +280,10 @@ export default {
                 prop: "monthPrice",
                 append: "元/月*平米",
                 clearable: true,
+                dataType: "number",
                 sapn: 12,
                 rules: {
-                  required:true,
+                  required: true,
                   trigger: "change"
                 }
               },
@@ -281,10 +292,11 @@ export default {
                 label: "合同租金计费月数",
                 prop: "billingMonths",
                 append: "月",
+                dataType: "number",
                 clearable: true,
                 sapn: 12,
                 rules: {
-                  required:true,
+                  required: true,
                   trigger: "change"
                 }
               },
@@ -294,9 +306,10 @@ export default {
                 prop: "dayPrice",
                 append: "元/月*平米",
                 clearable: true,
+                dataType: "number",
                 sapn: 12,
                 rules: {
-                  required:true,
+                  required: true,
                   trigger: "change"
                 }
               },
@@ -306,9 +319,10 @@ export default {
                 prop: "billingDays",
                 append: "日",
                 clearable: true,
+                dataType: "number",
                 sapn: 12,
                 rules: {
-                  required:true,
+                  required: true,
                   trigger: "change"
                 }
               },
@@ -320,7 +334,7 @@ export default {
                 dicData: LeaseManageDic.PayCycleType,
                 sapn: 12,
                 rules: {
-                  required:true,
+                  required: true,
                   trigger: "change"
                 }
               },
@@ -332,7 +346,7 @@ export default {
                 dicData: LeaseManageDic.PayCountWayType,
                 sapn: 12,
                 rules: {
-                  required:true,
+                  required: true,
                   trigger: "change"
                 }
               },
@@ -348,9 +362,10 @@ export default {
                 prop: "monthPrice2",
                 append: "元/月*平米",
                 clearable: true,
+                dataType: "number",
                 sapn: 12,
                 rules: {
-                  required:true,
+                  required: true,
                   trigger: "change"
                 }
               },
@@ -360,9 +375,10 @@ export default {
                 prop: "billingMonths2",
                 append: "月",
                 clearable: true,
+                dataType: "number",
                 sapn: 12,
                 rules: {
-                  required:true,
+                  required: true,
                   trigger: "change"
                 }
               },
@@ -372,9 +388,10 @@ export default {
                 prop: "dayPrice2",
                 append: "元/月*平米",
                 clearable: true,
+                dataType: "number",
                 sapn: 12,
                 rules: {
-                  required:true,
+                  required: true,
                   trigger: "change"
                 }
               },
@@ -384,9 +401,10 @@ export default {
                 prop: "billingDays2",
                 append: "日",
                 clearable: true,
+                dataType: "number",
                 sapn: 12,
                 rules: {
-                  required:true,
+                  required: true,
                   trigger: "change"
                 }
               },
@@ -398,7 +416,7 @@ export default {
                 dicData: LeaseManageDic.PayCycleType,
                 sapn: 12,
                 rules: {
-                  required:true,
+                  required: true,
                   trigger: "change"
                 }
               },
@@ -410,7 +428,7 @@ export default {
                 dicData: LeaseManageDic.PayCountWayType,
                 sapn: 12,
                 rules: {
-                  required:true,
+                  required: true,
                   trigger: "change"
                 }
               },
@@ -426,9 +444,10 @@ export default {
                 prop: "monthPrice3",
                 append: "元/月*平米",
                 clearable: true,
+                dataType: "number",
                 sapn: 12,
                 rules: {
-                  required:true,
+                  required: true,
                   trigger: "change"
                 }
               },
@@ -438,9 +457,10 @@ export default {
                 prop: "billingMonths3",
                 append: "月",
                 clearable: true,
+                dataType: "number",
                 sapn: 12,
                 rules: {
-                  required:true,
+                  required: true,
                   trigger: "change"
                 }
               },
@@ -450,9 +470,10 @@ export default {
                 prop: "dayPrice3",
                 append: "元/月*平米",
                 clearable: true,
+                dataType: "number",
                 sapn: 12,
                 rules: {
-                  required:true,
+                  required: true,
                   trigger: "change"
                 }
               },
@@ -462,9 +483,10 @@ export default {
                 prop: "billingDays3",
                 append: "日",
                 clearable: true,
+                dataType: "number",
                 sapn: 12,
                 rules: {
-                  required:true,
+                  required: true,
                   trigger: "change"
                 }
               },
@@ -476,7 +498,7 @@ export default {
                 dicData: LeaseManageDic.PayCycleType,
                 sapn: 12,
                 rules: {
-                  required:true,
+                  required: true,
                   trigger: "change"
                 }
               },
@@ -485,10 +507,11 @@ export default {
                 label: "保洁费付费计算方式",
                 prop: "payCountWay3",
                 clearable: true,
+                dataType: "number",
                 dicData: LeaseManageDic.PayCountWayType,
                 sapn: 12,
                 rules: {
-                  required:true,
+                  required: true,
                   trigger: "change"
                 }
               }
@@ -559,9 +582,9 @@ export default {
       },
       tenantId: "",
       houseId: "",
-      cleaningId:"",
-      propertyId:"",
-      rentId:""
+      cleaningId: "",
+      propertyId: "",
+      rentId: ""
     };
   },
   mounted() {
@@ -627,7 +650,6 @@ export default {
   },
   methods: {
     async submit(model, hide) {
-      console.log("hhhh", this.model.list, this.model);
       let apiConfig;
       let params;
       let oaContractDetails = [
@@ -640,7 +662,7 @@ export default {
           payCycle: this.model.payCycle,
           costType: 1,
           contractNumber: this.model.contractNumber,
-          id:this.rentId
+          id: this.rentId
         },
         {
           monthPrice: this.model.monthPrice2,
@@ -651,7 +673,7 @@ export default {
           payCycle: this.model.payCycle2,
           costType: 2,
           contractNumber: this.model.contractNumber,
-          id:this.propertyId
+          id: this.propertyId
         },
         {
           monthPrice: this.model.monthPrice3,
@@ -662,7 +684,7 @@ export default {
           payCycle: this.model.payCycle3,
           costType: 3,
           contractNumber: this.model.contractNumber,
-          id:this.cleaningId
+          id: this.cleaningId
         }
       ];
       if (this.editContractId) {
@@ -738,45 +760,43 @@ export default {
         contractId: contractId
       });
       if (res) {
-        console.log("res", res.oaContractDetails);
         this.model = res;
         this.model.selectTenant = res.tenantName;
         this.model.selectHouse = res.houseName;
         this.houseId = res.houseId;
         this.tenantId = res.tenantId;
-        if(res.oaContractDetails) {
-          res.oaContractDetails.map(item=>{
-            if(item.costType == 1 ){
-               this.model.monthPrice = item.monthPrice;
-               this.model.billingMonths = item.billingMonths;
-               this.model.dayPrice = item.dayPrice;
-               this.model.billingDays = item.billingDays;
-               this.model.payCountWay = item.payCountWay;
-               this.model.payCycle = item.payCycle;
-               this.model.contractNumber = item.contractNumber;
-               this.rentId = item.id
-            } else if(item.costType == 2) {
-               this.model.monthPrice2 = item.monthPrice;
-               this.model.billingMonths2 = item.billingMonths;
-               this.model.dayPrice2 = item.dayPrice;
-               this.model.billingDays2 = item.billingDays;
-               this.model.payCycle2 = item.payCycle;
-               this.model.payCountWay2 = item.payCountWay;
-               this.model.contractNumber2 = item.contractNumber;
-               this.propertyId = item.id
+        if (res.oaContractDetails) {
+          res.oaContractDetails.map(item => {
+            if (item.costType == 1) {
+              this.model.monthPrice = item.monthPrice;
+              this.model.billingMonths = item.billingMonths;
+              this.model.dayPrice = item.dayPrice;
+              this.model.billingDays = item.billingDays;
+              this.model.payCountWay = item.payCountWay;
+              this.model.payCycle = item.payCycle;
+              this.model.contractNumber = item.contractNumber;
+              this.rentId = item.id;
+            } else if (item.costType == 2) {
+              this.model.monthPrice2 = item.monthPrice;
+              this.model.billingMonths2 = item.billingMonths;
+              this.model.dayPrice2 = item.dayPrice;
+              this.model.billingDays2 = item.billingDays;
+              this.model.payCycle2 = item.payCycle;
+              this.model.payCountWay2 = item.payCountWay;
+              this.model.contractNumber2 = item.contractNumber;
+              this.propertyId = item.id;
             } else {
-               this.model.monthPrice3 = item.monthPrice;
-               this.model.billingMonths3 = item.billingMonths;
-               this.model.dayPrice3 = item.dayPrice;
-               this.model.billingDays3 = item.billingDays;
-               this.model.payCountWay3 = item.payCountWay;
-               this.model.payCycle3 = item.payCycle;
-               this.model.contractNumber3 = item.contractNumber;
-               this.cleaningId = item.id
+              this.model.monthPrice3 = item.monthPrice;
+              this.model.billingMonths3 = item.billingMonths;
+              this.model.dayPrice3 = item.dayPrice;
+              this.model.billingDays3 = item.billingDays;
+              this.model.payCountWay3 = item.payCountWay;
+              this.model.payCycle3 = item.payCycle;
+              this.model.contractNumber3 = item.contractNumber;
+              this.cleaningId = item.id;
             }
-          })
+          });
         }
-        
       }
     }
   }
