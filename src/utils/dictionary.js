@@ -731,8 +731,33 @@ export const SystemDic = {
     value: 0
   }],
 
-  hiddenStatus:{
-    1:'隐藏',
-    0:'可见'
+  hiddenStatus: {
+    1: '隐藏',
+    0: '可见'
   }
+}
+// 用电管理
+export const electricityManageDic = {
+  // 电表用途
+  useType: [
+    {
+      label: '收费',
+      value: 2
+    },
+    {
+      label: '自用',
+      value: 1
+    }
+  ],
+  // 审核状态
+  /* status: [
+    {
+      label: '收费',
+      value: 2
+    },
+    {
+      label: '自用',
+      value: 1
+    }
+  ], */
 }

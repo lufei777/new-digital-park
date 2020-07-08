@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="showDisplayValue && !isLazyCascader"
+    v-if="showDisplayValue && !noTextMode"
     class="text-overflow-eliipsis"
     :title="displayValue"
   >
@@ -12,7 +12,7 @@
   </div>
   <component
     v-else
-    :class="{'zvue-text-mode':(this.showDisplayValue && this.isLazyCascader)}"
+    :class="{'zvue-text-mode':(showDisplayValue && noTextMode)}"
     :is="getComponent(column.type,column.component)"
     :placeholder="getPlaceholder(column,column.type,comDisabled)"
     v-model="text"
@@ -146,25 +146,36 @@ export default {
     }
   },
   computed: {
-    isLazyCascader() {
-      let res = false;
-      if (this.column.type === 'cascader' && this.column.props && this.column.props.lazy) {
-        res = true
-      }
-      return res;
-    },
-    showDisplayValue() {
-      return this.textMode && !['upload', 'dynamic'].includes(this.column.type)
-    },
     valueKey() {
       return this.column.props ? this.column.props.value : DIC_PROPS.value;
     },
     labelKey() {
       return this.column.props ? this.column.props.label : DIC_PROPS.label;
     },
+    // 没有textMode的组件，需要在组件内部手动使用方法设置displayValue
+    noTextMode() {
+      if (['table'].includes(this.column.type)) {
+        return true
+      }
+      if (this.column.type === 'cascader' && this.column.props && this.column.props.lazy) {
+        return true
+      }
+      return false;
+    },
+    // 不可用detail处理的组件
+    noDetailHandler(){
+      // 变化后，将显示的值赋值在modelTranslate 和 displayValue 上，除lazy模式的cascader
+      return !['upload', 'dynamic', 'table'].includes(this.column.type);
+    },
+    showDisplayValue() {
+      // 不可用detail处理组件，和显示display组件不同，不可复用
+      // 例如table，既要显示displayValue，又要不可用detail组件处理
+      return this.textMode && !['upload', 'dynamic'].includes(this.column.type);
+    },
     comDisabled() {
       // 这个disabled是相对于lazy模式的cascader和showDisplayValue相对而言
-      return (this.showDisplayValue && this.isLazyCascader) ? true : this.disabled;
+      // 如果需要显示displayValue当时textMode，则禁用组件
+      return (this.showDisplayValue && this.noTextMode) ? true : this.disabled;
     },
     comDisplayValue() {
       let displayValue = this.displayValue;
@@ -183,8 +194,7 @@ export default {
     },
     getDisplayValue() {
       let displayValue = '';
-      // 变化后，将显示的值赋值在modelTranslate 和 displayValue 上，除lazy模式的cascader
-      if (!['upload', 'dynamic'].includes(this.column.type) && ![this.column.props || this.props].lazy) {
+      if (this.noDetailHandler && ![this.column.props || this.props].lazy) {
         let obj = {};
         setValueByPath(obj, this.column.prop, this.text)
         displayValue = detail(obj, this.column, this.column.props, this.dic);
@@ -212,116 +222,12 @@ export default {
     }
   }
 };
-/**
- * :action="column.action"
-    :append="column.append"
-    :accordion="column.accordion"
-    :allowCreate="column.allowCreate"
-    :autocomplete="column.autocomplete"
-    :autofocus="column.autofocus"
-    :autoUpload="column.autoUpload"
-    :accept="column.accept"
-    :activeColor="column.activeColor"
-    :border="column.border"
-    :button="column.button"
-    :children="column.children"
-    :checked="column.checked"
-    :clearable="column.clearable"
-    :colors="column.colors"
-    :canvasOption="column.canvasOption"
-    :controls-position="column.controlsPosition"
-    :checkStrictly="column.checkStrictly"
-    :collapseTags="column.collapseTags"
-    :data="column.data"
-    :dataType="column.dataType"
-    :defaultCheckedKeys="column.defaultCheckedKeys"
-    :defaultExpandedKeys="column.defaultExpandedKeys"
-    :defaultExpandAll="column.defaultExpandAll"
-    :defaultTime="column.defaultTime"
-    :dicData="column.dicData"
-    :dicUrl="column.dicUrl"
-    :dicMethod="column.dicMethod"
-    :dicQuery="column.dicQuery"
-    :drag="column.drag"
-    :defaultValue="column.defaultValue"
-    :defaultFirstOption="column.defaultFirstOption"
-    :endPlaceholder="column.endPlaceholder"
-    :filter="column.filter"
-    :filesize="column.filesize"
-    :filterable="column.filterable"
-    :format="column.format"
-    :formatTooltip="column.formatTooltip"
-    :iconClasses="column.iconClasses"
-    :iconList="column.iconList"
-    :inactiveColor="column.inactiveColor"
-    :group="column.group"
-    :label="column.label"
-    :limit="column.limit"
-    :listType="column.listType"
-    :loadText="column.loadText"
-    :min="column.min"
-    :max="column.max"
-    :minlength="column.minlength"
-    :maxlength="column.maxlength"
-    :minRows="column.minRows"
-    :maxRows="column.maxRows"
-    :multiple="column.multiple"
-    :options="column.options"
-    :onRemove="column.onRemove"
-    :parent="column.parent"
-    :pickerOptions="column.pickerOptions"
-    :precision="column.precision"
-    :prefixIcon="column.prefixIcon"
-    :prefix="column.prefix"
-    :prepend="column.prepend"
-    :prependSlot="column.prependSlot"
-    :appendSlot="column.appendSlot"
-    :prop="column.prop"
-    :showPassword="column.showPassword"
-    :readonly="column.readonly"
-    :remote="column.remote"
-    :remoteOptions="column.remoteOptions"
-    :range="column.range"
-    :showFileList="column.showFileList"
-    :showInput="column.showInput"
-    :showStops="column.showStops"
-    :showAllLevels="column.showAllLevels"
-    :showText="column.showText"
-    :startPlaceholder="column.startPlaceholder"
-    :step="column.step"
-    :suffix="column.suffix"
-    :suffixIcon="column.suffixIcon"
-    :showWordLimit="column.showWordLimit"
-    :separator="column.separator"
-    :texts="column.texts"
-    :tip="column.tip"
-    :type="column.type"
-    :typeslot="column.typeslot"
-    :typeformat="column.typeformat"
-    :rawtype="column.rawtype"
-    :value-format="column.valueFormat"
-    :voidIconClass="column.voidIconClass"
-    :appendClick="column.appendClick"
-    :blur="column.blur"
-    :click="column.click"
-    :change="column.change"
-    :changeOnSelect="column.changeOnSelect"
-    :changeoOnSelect="column.changeoOnSelect"
-    :expand-trigger="column.expandTrigger"
-    :focus="column.focus"
-    :prependClick="column.prependClick"
-    :nodeClick="column.nodeClick"
-
-    // upload
-    onlyButton
-    buttonText
- */
 </script>
 
 <style lang="less">
 .zvue-text-mode {
   .el-input__inner {
-    color: #000 !important;
+    color: #606266 !important;
     padding: 0 !important;
     background-color: inherit !important;
     border: none !important;

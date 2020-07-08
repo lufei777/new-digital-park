@@ -18,18 +18,23 @@
 <script>
 import electricityManageApi from 'api/electricityManage';
 import leaseManageApi from 'api/leaseManage';
+import { electricityManageDic } from "utils/dictionary";
+import { floorsTree } from "utils/formsItem";
+import { meterColumnConfig } from '../config';
+
+const { useType/*电表用途*/ } = electricityManageDic;
 
 const apiConfig = {
   add: {
-    title: "新增租户用电数据",
-    api: electricityManageApi.addTenantUseElec
+    title: "新增用户电表信息",
+    api: electricityManageApi.addMeterElec
   },
   edit: {
-    title: "编辑租户用电数据",
-    api: electricityManageApi.editTenantUseElec
+    title: "编辑用户电表明细",
+    api: electricityManageApi.updateMeterElecById
   },
   detail: {
-    title: "查看租户用电数据",
+    title: "查看用户电表明细",
     extraOptions: {
       textMode: true,
       submitBtn: false
@@ -54,90 +59,62 @@ export default {
         width: "70%",
         forms: [
           {
-            type: 'table',
-            label: "合同编号",
-            prop: "contractNumber",
-            clearable: true,
-            children: {
-              serverMode: {
-                url: leaseManageApi.contractList,
-                data: tableSendData
-              },
-              columnConfig: [
-                {
-                  label: '合同名称',
-                  prop: 'contractName'
-                },
-                {
-                  label: '合同编号',
-                  prop: 'contractNumber'
-                }
-              ]
-            },
-            props: {
-              label: 'contractNumber',
-              value: 'contractNumber'
-            },
-            change: ({ value, _self: { active: { contractId } } }) => {
-              // 查询合同详情，只有合同详情中有空间信息
-              leaseManageApi.contractDetail({ contractId }).then(res => {
-                const detail = _.pick(res, ['contractTime', 'expireTime', 'projectName', 'spaceName', 'tenantName', 'tenantNumber', 'contractName']);
-                this.model = { ...this.model, ...detail };
-              })
-            },
-            rules: {
-              required: true
+            type: 'tree',
+            label: "楼座名称",
+            prop: "spaceId",
+            noModel: true,
+            ...floorsTree,
+            change: ({ value }) => {
+              // 根据空间查询电表列表
+              this.setMonitor(value);
             }
           },
           {
-            type: 'input',
-            label: "合同名称",
-            prop: "contractName",
+            type: 'select',
+            label: "电表号",
+            prop: "monitor",
+            props: {
+              value: 'monitor',
+              label: 'name'
+            },
+            change: ({ selectValue }) => {
+              this.model.monitorName = selectValue.caption
+              this.model.floorName = selectValue.scaption
+            }
+          },
+          {
+            label: "电表名称",
+            prop: "monitorName",
             noModel: true,
             disabled: true
           },
           {
-            type: 'input',
-            label: "租户名称",
-            prop: "tenantName",
+            label: "安装楼层",
+            prop: "floorName",
             noModel: true,
             disabled: true
           },
           {
-            type: 'input',
-            label: "租户编号",
-            prop: "tenantNumber",
-            hide: true
+            type: 'select',
+            label: "电表用途",
+            prop: "useType",
+            dicData: useType
           },
           {
-            label: '起始日期',
-            prop: 'contractTime',
-            disabled: true,
-            noModel: true
-          },
-          {
-            label: '结束日期',
-            prop: 'expireTime',
-            disabled: true,
-            noModel: true
-          },
-          {
-            label: '工程名称',
-            prop: 'projectName',
-            disabled: true,
-            noModel: true
-          },
-          {
-            label: '所在楼层',
-            prop: 'spaceName',
-            disabled: true,
-            noModel: true
-          },
-          {
-            label: '用电量所占比例',
-            prop: 'proportion',
             type: 'number',
-            append: '%'
+            label: "倍率",
+            prop: "mulPower"
+          },
+          {
+            type: 'number',
+            label: "里程",
+            prop: "mileage",
+            row: true
+          },
+          {
+            type: 'textarea',
+            label: "备注",
+            prop: "remarks"
           }
         ]
       },
@@ -166,8 +143,7 @@ export default {
   },
   methods: {
     submit(model, hide) {
-      console.log("submit -> model", model)
-      this.pageConfig.api({}, model).then(res => {
+      this.pageConfig.api(model).then(res => {
         this.$router.back();
       }).finally(msg => {
         hide();
@@ -179,12 +155,23 @@ export default {
     back() {
       this.$router.back();
     },
+    setMonitor(spaceId) {
+      electricityManageApi.getElecMeterProbe({
+        spaceId
+      }).then(res => {
+        this.Form.setColumnByProp('monitor', {
+          dicData: res
+        })
+      })
+    },
     getPropertyDetail(id) {
       this.pageLoading = true;
       electricityManageApi
-        .selectTenantUseElecByid({ id })
+        .selectMeterElecById({ id })
         .then(res => {
           this.model = { ...this.model, ...res };
+          // 由于详情时不会触发，因此手动触发
+          this.setMonitor(this.model.spaceId);
         })
         .finally(() => {
           this.pageLoading = false;

@@ -1,5 +1,5 @@
 <template>
-  <el-popover v-model="show">
+  <el-popover :disabled="disabled" v-model="show">
     <el-input
       slot="reference"
       :size="size"
@@ -12,7 +12,12 @@
       :disabled="disabled"
       readonly
     ></el-input>
-    <z-table ref="inputTable" :options="option" @row-click="handleCurrentRowChange"></z-table>
+    <z-table
+      @hook:mounted="tableMuntend"
+      ref="inputTable"
+      :options="options"
+      @row-click="handleCurrentRowChange"
+    ></z-table>
   </el-popover>
 </template>
 
@@ -29,28 +34,24 @@ export default {
       active: null,
       show: false,
       create: false,
-      option: Object.assign({
+      options: {
         menuBtn: false,
         size: 'mini',
         headerAlign: 'center',
         align: 'center',
-        data: [],
         uiConfig: {
           height: '400',
           pagination: {}
-        }
-      }, this.column.children)
+        },
+        data: [],
+        ...this.column.children
+      }
     };
   },
   props: {
     formatter: Function,
-    onLoad: Function
-  },
-  mounted() {
-    // 如果不是serverMode则走onLoad方法
-    typeof this.onLoad === 'function' && this.onLoad({ page: '', value: '' }, data => {
-      this.setTable({ data: data[this.listKey], total: data[this.totalKey] });
-    })
+    onLoad: Function,
+    settempDisplayValue: Function
   },
   watch: {
     text: {
@@ -67,6 +68,13 @@ export default {
           this.handleCurrentRowChange(val);
         });
       }
+    },
+    // 监听children变化
+    "column.children.data": {
+      deep: true,
+      handler(val) {
+        this.options.data = val;
+      }
     }
   },
   computed: {
@@ -74,19 +82,20 @@ export default {
       return this.$refs.inputTable;
     },
     labelShow() {
-      if (validatenull(this.text)) {
-        return this.text
+      let labelShow = '';
+      if (validatenull(this.text) || this.active === null) {
+        labelShow = '';
+      } else {
+        if (typeof this.formatter == 'function') {
+          labelShow = this.formatter(this.active)
+        }
+        labelShow = this.active[this.labelKey] || ''
       }
-      if (this.active === null) {
-        return; '';
-      }
-      if (typeof this.formatter == 'function') {
-        return this.formatter(this.active)
-      }
-      return this.active[this.labelKey] || ''
+      this.settempDisplayValue(labelShow);
+      return labelShow;
     },
     isServerMode() {
-      return !!this.option.serverMode;
+      return !!this.options.serverMode;
     },
     listKey() {
       return this.Table ? this.Table.listKey : 'list'
@@ -96,13 +105,19 @@ export default {
     }
   },
   methods: {
+    tableMuntend() {
+      // 如果不是serverMode则走onLoad方法
+      typeof this.onLoad === 'function' && this.onLoad({ page: '', value: '' }, data => {
+        this.setTable({ data: data[this.listKey], total: data[this.totalKey] });
+      })
+    },
     setTable({ data = [], total }) {
       if (this.Table) {
         this.Table.setTotal(total);
         this.Table.setData(data);
       } else {
-        this.option.data = data;
-        this.option.uiConfig.pagination.total = total;
+        this.options.data = data;
+        this.options.uiConfig.pagination.total = total;
       }
     },
     handleClear() {
@@ -118,7 +133,7 @@ export default {
     onList(callback) {
       // 加载数据
       if (this.isServerMode) {
-        let { url, data } = this.option.serverMode;
+        let { url, data } = this.options.serverMode;
         if (typeof url === 'function') {
           url({ ...data, [this.valueKey]: this.text }).then(res => {
             if (typeof callback == 'function') {

@@ -24,7 +24,7 @@ function get(target, name, descriptor) {
     if (urlArgs.length) {
       url += '/' + urlArgs.join('/');
     }
-    
+
     return axios.get(url + '?' + DoApi.jsonUrlFormat(args));
   });
 }
