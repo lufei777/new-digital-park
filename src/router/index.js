@@ -39,6 +39,7 @@ import Norbulingka from './norbulingka'; 												// 罗布林卡
 import DeviceManage from './device-manage'; 										// 设备管理
 // import PropertyErpsystem from './property-erpsyetem'            // 物业ERP系统
 import ElectricityManage from './electricity-manage'; 										// 用电管理
+import MaintenanceManage from './maintenance-manage';           //维保管理
 
 // 数字园区 公共模块
 let publicRouters = [].concat(
@@ -72,7 +73,8 @@ let privateRouters = [].concat(
   MonitoringAlarm,
   Norbulingka,
   DeviceManage,
-  ElectricityManage
+  ElectricityManage,
+  MaintenanceManage
 )
 store.commit('digitalPark/setPrivateRouters', privateRouters);
 const router = new Router({
