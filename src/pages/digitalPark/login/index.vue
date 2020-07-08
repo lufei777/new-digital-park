@@ -119,16 +119,8 @@ export default {
       })
     },
     loginSuccessCb() {
-      // 判断大屏
-      if (this.isLargeScreen) {
-        this.$router.push("/largeSizeScreen")
-      } else {
-        this.$router.push("/digitalPark/homePage")
-      }
-
       // 获取用户信息
       this.$store.dispatch('user/getUserInfo')
-
       // 获取菜单并规划菜单
       this.$store.dispatch('digitalPark/getMenus').then(res => {
         // 活后台返回菜单拍平path
@@ -137,6 +129,13 @@ export default {
         let routes = formatRoutes(flat.flatmenupaths, this.$store.getters.privateRouters);
         // 添加进当前路由中
         this.$router.$addRoutes(routes);
+
+        //确保菜单存完以后再跳转
+        if (this.isLargeScreen) {
+          this.$router.push("/largeSizeScreen")
+        } else {
+          this.$router.push("/digitalPark/homePage")
+        }
       })
     }
   },
