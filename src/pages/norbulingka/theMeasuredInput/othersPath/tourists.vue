@@ -297,7 +297,7 @@ export default {
       console.log(obj.row);
       this.$router.push({
         path: "/temtourists",
-        query: { flag: false, mark: "edit", ...obj.row }
+        query: { flag: false, mark: "edit", id:obj.row.id }
       });
     },
     // 详情
@@ -305,7 +305,7 @@ export default {
       console.log(obj.row);
       this.$router.push({
         path: "/temtourists",
-        query: { flag: true, mark: "detail", ...obj.row }
+        query: { flag: true, mark: "detail", id:obj.row.id }
       });
     },
     // 添加

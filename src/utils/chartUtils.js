@@ -85,6 +85,7 @@ class chartUtils {
       xAxis: [{
         type: xAxisUi.type || 'category',
         data: data.xAxis,
+        boundaryGap:xAxisUi.boundaryGap==false?false:true,
         axisLabel: {
           show: xLabelTextStyle.show || true,
           textStyle: {

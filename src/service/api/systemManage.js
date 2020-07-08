@@ -105,7 +105,7 @@ class SystemManage {
   @get
   deleteDept(){}
 
-  @url("user-service/menu/menuList")
+  @url("/user-service/menu/menuList")
   @get
   getMenuList(){}
 
@@ -120,6 +120,10 @@ class SystemManage {
   @url("/user-service/menu/editMenu")
   @post
   editMenu(){}
+
+  @url("/user-service/permission/permissionList")
+  @get
+  getPermissionList(){}
 }
 
 export default new SystemManage()

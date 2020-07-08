@@ -30,7 +30,7 @@ export default function () {
                     this.click({ value: result, column: this.column, _self: this });
                 }
             },
-            handleChange(value) {
+            handleChange(value, selectValue) {
                 let result = value;
                 this.text = result;
 
@@ -52,7 +52,7 @@ export default function () {
 
                 // change方法触发
                 if (typeof this.change === 'function') {
-                    this.change({ value: result, column: this.column, _self: this });
+                    this.change({ value: result, column: this.column, _self: this, selectValue });
                 }
 
                 // 数据流触发

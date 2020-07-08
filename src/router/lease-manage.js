@@ -74,12 +74,33 @@ export default [
 				meta: { title: '记录详情' },
 				component: () => import('../pages/leaseManage/monthlyRentalBill/recordDetails.vue')
 			},
-			// {
-			// 	path: '/leasetest',
-			// 	name: 'leasetest',
-			// 	meta: { title: '记录详情' },
-			// 	component: () => import('../pages/leaseManage/monthlyRentalBill/test.vue')
-			// },
+
+			// 租赁月账单审核
+			{
+				path: '/billReview',
+				name: 'billReview',
+				meta: { title: '租赁月账单审核' },
+				component: () => import('../pages/leaseManage/billReview/index.vue'),
+				// redirect: '/auditing',
+				// children: [
+				// 	// 租赁月账单审核==>待审核
+				// 	{
+				// 		path: '/auditing',
+				// 		name: 'leaseauditing',
+				// 		meta: { title: '待审核' },
+				// 		component: () => import('../pages/leaseManage/billReview/auditing.vue')
+				// 	},
+				// 	// 租赁月账单审核==>已审核
+				// 	{
+				// 		path: '/checked',
+				// 		name: 'leasechecked',
+				// 		meta: { title: '已审核' },
+				// 		component: () => import('../pages/leaseManage/billReview/checked.vue')
+				// 	}
+				// ]
+			},
+
+			//
 			// 租赁合同审核
 
 			// 租赁合同审核模板

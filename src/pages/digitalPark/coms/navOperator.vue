@@ -116,7 +116,8 @@ export default {
   computed: {
     ...mapState({
       updateUserInfo: state => state.digitalPark.updateUserInfo,
-      userInfo: state => state.user.userInfo
+      userInfo: state => state.user.userInfo,
+      homeKeepAliveFlag:state => state.digitalPark.homeKeepAliveFlag
     }),
     myModuleType: {
       set() {
@@ -230,7 +231,12 @@ export default {
       if(isNorbulingkaScreen()){
         this.$router.push("/largeSizeScreen");
       }else if (Cookies.get("moduleType") == 2) {
-        this.$router.push("/digitalPark/homePage");
+        this.$router.push({
+          name: "DigitalHomePage",
+          params:{
+            keepAlive:this.homeKeepAliveFlag
+          }
+        });
       } else {
         this.$router.push("/digitalPark/dashboardHomePage");
       }

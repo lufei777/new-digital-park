@@ -121,11 +121,15 @@
           userId:this.userInfo.id
         }
       },
+      async getPermissionList(){
+        let res = await SystemManageApi.getPermissionList()
+      }
     },
     created(){
       this.setTableData()
     },
     mounted() {
+      this.getPermissionList()
     },
   }
 </script>
@@ -138,7 +142,7 @@
       padding: 20px;
       background: @white;
       margin-bottom: 20px;
-    }
+    }*
 
     .operator-box {
       background: @white;

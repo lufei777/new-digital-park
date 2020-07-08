@@ -81,10 +81,6 @@
         treeList: [],
         treeConfig: {
           treeProps:config.treeProps,
-          //   {
-          //   label: 'text',
-          //   children: 'nodes'
-          // },
           onClickTreeNodeCallBack: this.onClickTreeNodeCallBack,
           defaultExpandedkeys: [],
           currentKey: ''
@@ -266,9 +262,7 @@
         this.treeConfig.defaultExpandedkeys = [this.treeList && this.treeList[0].id]
       },
       onClickTreeNodeCallBack(val) {
-        // this.searchParams.department = val.id
-        // this.searchParams.parent = val.id
-        // this.searchParams.parentId = val.id
+        //需要分开赋值，否则后台接口会报错
         if(this.fromFlag==1){   //1:用户管理  2:空间管理  3：机构管理
           this.searchParams.department = val.id
         }else if(this.fromFlag==2){

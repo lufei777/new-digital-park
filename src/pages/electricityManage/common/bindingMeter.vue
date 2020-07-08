@@ -35,8 +35,9 @@
   </div>
 </template>
 <script>
-import commonApi from 'api/common';
 import electricityManageApi from 'api/electricityManage';
+import { floorsTree } from "utils/formsItem";
+import { meterColumnConfig } from '../config';
 
 let tableSendData = {
   pageNum: 1,
@@ -56,36 +57,13 @@ export default {
         ref: 'tree',
         highlightCurrent: true,
         accordion: true,
-        props: {
-          label: 'floor',
-          nodeKey: 'floorId',
-          value: 'floorId',
-          children: 'nodes'
-        }
+        props: floorsTree.props
       },
       treeData: [],
       tableOptions: {
         ref: 'table',
         data: [],
-        columnConfig: [
-          {
-            label: '编号',
-            prop: 'id',
-            hide: true
-          },
-          {
-            label: '电表名称',
-            prop: 'caption'
-          },
-          {
-            label: '电表编号',
-            prop: 'name'
-          },
-          {
-            label: '楼层',
-            prop: 'scaption'
-          }
-        ],
+        columnConfig: meterColumnConfig,
         uiConfig: {
           selection: true,
           height: 'auto'
@@ -108,7 +86,7 @@ export default {
     // 加载树数据
     fetchTree() {
       this.asideLoad = true;
-      commonApi.getAllFloorOfA3().then(res => {
+      floorsTree.dicUrl().then(res => {
         this.treeData = res;
         this.Tree.setCurrentKey(res[0][this.treeOptions.props.value]);
       }).finally(() => {
