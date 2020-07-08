@@ -1,0 +1,15 @@
+export default [{
+    path: '/maintenanceManage',
+    name: 'maintenanceManage',
+    meta: { title: '维保管理' },
+    component: () => import('@/pages/commonProject/coms/commonIndex'),
+    // component: () => import('@/pages/deviceManage'),
+    // redirect: '/devicemanage/deviceinfo',
+    children: [{
+        path: 'serviceAudit',
+        name: 'ServiceAudit',
+        meta: { title: '维修审核' },
+        component: () => import('@/pages/maintenanceManage/serviceAudit')
+    }]
+  }]
+  
