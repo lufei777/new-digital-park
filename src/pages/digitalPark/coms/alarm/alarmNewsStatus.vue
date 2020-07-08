@@ -1,7 +1,7 @@
 <template>
   <div class="alarm-news-status">
     <div class="my-chart">
-      <div class="alarm-news-header flex">
+      <div class="alarm-news-header flex" :class="isNorbulingkaScreen?'norbu-header':''">
         <span style="width:10%">序号</span>
         <span style="width:40%">事件源</span>
         <span>时间</span>
@@ -26,6 +26,7 @@
 
 <script>
 import CommonApi from "@/service/api/common";
+import {isNorbulingkaScreen} from "@/utils/project";
 export default {
   name: "alarmNewsStatus",
   props: ["moduleItem"],
@@ -33,6 +34,11 @@ export default {
     return {
       alarmNewsData: []
     };
+  },
+  computed:{
+    isNorbulingkaScreen(){
+      return isNorbulingkaScreen()
+    }
   },
   methods: {
     async getAlarmMessageList() {
@@ -95,6 +101,13 @@ export default {
         display: block;
         /*height: 50px;*/
         /*line-height: 50px;*/
+      }
+    }
+
+    .norbu-header{
+      background: rgba(22, 47, 88, 1);
+      span {
+        color: #01EAFE;
       }
     }
     .no-data {

@@ -38,17 +38,18 @@
         let legendData = res.list.map((item)=>item.name)
         let data={
           legendData:[],
-          series:{
+          series:[{
             type:'bar',
-            data:res.list,
+            data: res.list.map((item)=>item.value),
             barWidth:30
-          },
+          }],
           xAxis:legendData,
           xAxisUi:this.moduleItem.xAxisUi,
           yAxis:res.unit,
-          yMin:100,
+          yMin:10,
           yAxisUi:this.moduleItem.yAxisUi,
         }
+        console.log(data)
         ChartUtils.handleBarChart(myChart,data)
       },
     },

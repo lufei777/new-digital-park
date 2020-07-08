@@ -5,7 +5,7 @@ import StockOut from '../pages/stockManage/stockOut/index'
 import BatchStockIn from '../pages/stockManage/batchStockIn'
 import GoodsCheck from '../pages/stockManage/goodsCheck'
 export default [{
-    path: '/',
+    path: '/stockManage',
     redirect: '/stockInApply',
     meta: { title: '库存管理' },
     component: () => import('@/pages/commonProject/coms/commonIndex'),

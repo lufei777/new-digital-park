@@ -48,9 +48,7 @@ export default {
         moduleLogo: menuList.icon,
         handleSelect(key, keyPath, curDom) {
           _this.handleSelect(key, keyPath, curDom);
-        },
-        handleOpen(key, keyPath) {},
-        handleClose(...args) {}
+        }
       }
     };
   },
