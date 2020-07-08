@@ -47,7 +47,27 @@ export default {
   computed: {
     allMenuList() {
       return JSON.parse(localStorage.getItem("menuTree"))[0].childNode;
+    },
+    firstMenuId(){
+      return this.$route.query.firstMenuId
+    },
+    secondMenuId(){
+      return this.$route.query.secondMenuId
     }
+  },
+  watch:{
+    firstMenuId(){
+      if(this.firstMenuId && !this.specialRoute){
+        console.log("watch")
+        this.setMenuList()
+      }
+    },
+    secondMenuId(){
+      if(this.secondMenuId && !this.specialRoute){
+        console.log("watch")
+        this.setMenuList()
+      }
+    },
   },
   methods: {
     onClickSubmenu(item) {
@@ -55,7 +75,7 @@ export default {
         return;
       }
       Cookies.set("moduleType", 2);
-      this.setMenuList(item);
+      this.setMenu(item);
     },
     getMenuIndex(item) {
       return CommonFun.setMenuIndex(item,1);
@@ -63,40 +83,45 @@ export default {
     onClickLastMenu(item) {
       if (this.specialRoute) {
         //瀑布流
-        this.setMenuList(item);
+        this.setMenu(item);
       } else {
         CommonFun.loadPage(item);
       }
     },
-    setMenuList(item) {
-      let secondMenu={}
+    setMenu(item) {
+      //菜单目前都存为2级菜单，沿用之前逻辑使用level判断
+      //待产品确定菜单管理设计后再更改判断依据
+
       if (item.level == 2) {
         this.$store.commit("digitalPark/menuList", item);
         this.normalShortcutList();
       } else {
-        let firstMenu = this.allMenuList.find(first => {
-          return first.id == item.firstMenuId;
+        this.setMenuList(item)
+       /* let firstMenu = this.allMenuList.find(first => {
+          return first.id == this.firstMenuId;
         });
         secondMenu = firstMenu.childNode.find(second => {
           return second.id == item.secondMenuId;
         });
         let menuTmp={}
-        //菜单：如果二级是客户端类概览页且点击的子集为是跳网页，则不存全部菜单
+    /!*    //菜单：如果二级是客户端类概览页且点击的子集为是跳网页，则不存全部菜单
         if(secondMenu.clientType==1 && item.clientType!=1 && item.level==3){
           menuTmp = item
         }else if(secondMenu.clientType==1 && item.clientType!=1 && item.level!=3){
           menuTmp = this.findNode(secondMenu,item,secondMenu)
         }else {
           menuTmp = secondMenu
-        }
+        }*!/
+        menuTmp = secondMenu
         this.$store.commit("digitalPark/menuList",menuTmp);
 
-        //快接入口菜单：概览类非二级菜单的快捷入口设置
+       /!* //快接入口菜单：概览类非二级菜单的快捷入口设置
         if (secondMenu.clientType == 1) {
           localStorage.setItem("shortcutList", JSON.stringify(secondMenu.childNode));
         } else {
           this.normalShortcutList();
-        }
+        }*!/
+        this.normalShortcutList();*/
       }
       CommonFun.loadPage(item);
     },
@@ -123,6 +148,18 @@ export default {
         });
       });
       localStorage.setItem("shortcutList", JSON.stringify(shortcutList));
+    },
+    setMenuList(item){
+      // console.log(this.firstMenuId,this.secondMenuId)
+      let secondMenu={}
+      let firstMenu = this.allMenuList.find(first => {
+        return first.id == (this.firstMenuId || item.firstMenuId);
+      });
+      secondMenu = firstMenu.childNode.find(second => {
+        return second.id == (this.secondMenuId || item.secondMenuId);
+      });
+      this.$store.commit("digitalPark/menuList",secondMenu);
+      this.normalShortcutList();
     }
   },
   mounted() {

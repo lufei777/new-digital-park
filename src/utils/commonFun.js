@@ -2154,11 +2154,12 @@ class commonFun {
   //设置菜单index
   setMenuIndex(item, from) {
     //from 1->代表是渲染菜单的时候，使用item本身；不传则为点击的时候，找到item的最子集
-    let arr = ['defaultPage', 'digitalPark/dashboardHomePage', 'stockInApply']
+    let arr = {'defaultPage':{}, 'digitalPark/dashboardHomePage':{}, 'stockInApply':{}};
     let flag = false
     if (item.routeAddress) {
-      arr.map((str) => {
+      Object.keys(arr).map((str) => {
         if (item.routeAddress.indexOf(str) != -1) {
+          arr[item.routeAddress]=item;
           flag = true
         }
       })
