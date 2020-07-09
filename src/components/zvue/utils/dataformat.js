@@ -199,14 +199,23 @@ export const getSearchType = (column, component = false) => {
  */
 let count = 0;
 export const calcCount = (ele, spanDefault = 12, init = false) => {
+    /**
+     * count  // 当前行已分配span
+     * spanAll // 当前行总span
+     */
     if (init) count = 0;
     const spanAll = 24;
+    // 每次循环都要计算当前行已分配span
     count = count + (ele.span || spanDefault) + (ele.offset || 0);
     if (count === spanAll) {
+        // 如果 已分配span 等于 总span，则当前行分配完毕，重置count为0
         count = 0;
     } else if (count > spanAll) {
+        // 如果 已分配span 大于 总span，则说明另起一行，则需要重置 已分配span
         count = 0 + (ele.span || spanDefault) + (ele.offset || 0);
     } else if (ele.row && count !== spanAll) {
+        // 如果有row属性，并且 已分配span 不等于 总span，既当前行span没有分配完毕
+        // 则分配ele剩余count，并且重置 已分配span
         ele.count = spanAll - count;
         count = 0;
     }

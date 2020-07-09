@@ -7,13 +7,19 @@ import router from "./router/index";
 import Vuex from "vuex";
 import store from "./vuex/store";
 
+// 权限指令 用于校验角色权限
+import directive from '@/directive';
+Vue.use(directive);
+
+// 权限校验方法 用于校验角色页面权限
+import { checkPermission } from 'utils/permission';
+Vue.prototype.checkPermission = checkPermission;
+
 import LangEN from "./utils/lang/en.js";
 import LangZH from "./utils/lang/zh.js";
 
 // 获取项目
 import { getProjectName } from "./utils/project";
-//打印插件
-import Print from 'vue-print-nb'
 
 // ElementUi
 import ElementUI from "element-ui";
@@ -27,8 +33,11 @@ Vue.use(ElementUI, {
     )
   }
 });
-// 打印插件注册
-Vue.use(Print)
+
+//打印插件
+import Print from 'vue-print-nb';
+Vue.use(Print);
+
 // 自适应表格列
 import AFTableColumn from "af-table-column";
 Vue.use(AFTableColumn);
