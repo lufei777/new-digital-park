@@ -3,6 +3,8 @@ import store from '@/vuex/store';
 import { IsCZClient } from '@/utils/auth';
 import router from '@/router'
 import CommonFun from '@/utils/commonFun'
+import {isYDScreen, isNorbulingkaScreen} from "@/utils/project";
+
 class commonLargeHeader {
 
   onClickLogoutBtn(){
@@ -28,12 +30,11 @@ class commonLargeHeader {
         ]
       })
     );
-    if(this.flag=='ydHeader'){
-      store.commit("digitalPark/activeMenuIndex","@/html/alarm/alarm_index.html")
+    store.commit("digitalPark/activeMenuIndex","@/html/alarm/alarm_index.html")
+    if(isYDScreen()){
       store.commit("digitalPark/largeScreenIframeSrc",
         window.top.location.origin + '/#/vibe-web?updateId=' + _.uniqueId())
     }else{
-      store.commit("digitalPark/activeMenuIndex", '@/html/alarm/alarm_index.html')
       router.push("/vibe-web");
     }
   }
@@ -50,17 +51,21 @@ class commonLargeHeader {
     }
    store.commit("digitalPark/menuList", item)
    store.commit('digitalPark/activeMenuIndex',CommonFun.setMenuIndex(item))
-    if(curMenu.routeAddress.indexOf('@')!=-1){
-     store.commit("digitalPark/largeScreenIframeSrc",
-        window.top.location.origin+'/#/vibe-web?updateId='+_.uniqueId())
+    if(isYDScreen()){
+      if(curMenu.routeAddress.indexOf('@')!=-1){
+        store.commit("digitalPark/largeScreenIframeSrc",
+          window.top.location.origin+'/#/vibe-web?updateId='+_.uniqueId())
+      }else{
+        store.commit("digitalPark/largeScreenIframeSrc",window.top.location.origin+'/#'+item.routeAddress)
+      }
     }else{
-     store.commit("digitalPark/largeScreenIframeSrc",window.top.location.origin+'/#'+item.routeAddress)
+     CommonFun.loadPage(curMenu)
     }
   }
 
    onClickUserConfigure(val) { //点击用户
-    if (val == 3) {
-      //如果是客户端
+    console.log("user-config")
+    if (val == 3) {  //退出
       if (IsCZClient()) {
         goBackClientLogin();
       }
@@ -69,25 +74,39 @@ class commonLargeHeader {
       })
       // 清空菜单列表
      store.commit("digitalPark/activeMenuIndex", "");
+    } else if(val==4){  //最小化
+      if (IsCZClient()) {
+        minimizeWindow();
+      }
     } else {
       this.setSystemMenu()
       if (val == 1) {
        store.commit("digitalPark/activeMenuIndex", "/personalInformation")
-       store.commit("digitalPark/largeScreenIframeSrc",window.top.location.origin+'/#'+'/personalInformation')
+        if(isYDScreen()){
+          store.commit("digitalPark/largeScreenIframeSrc",window.top.location.origin+'/#'+'/personalInformation')
+        }else{
+          router.push("/personalInformation")
+        }
       } else if (val == 2) {
        store.commit("digitalPark/activeMenuIndex", "/modifyPassword")
-       store.commit("digitalPark/largeScreenIframeSrc",window.top.location.origin+'/#'+'/modifyPassword')
+        if(isYDScreen()){
+          store.commit("digitalPark/largeScreenIframeSrc",window.top.location.origin+'/#'+'/modifyPassword')
+        }else{
+          router.push("/modifyPassword")
+        }
       }
     }
   }
 
   setSystemMenu() {
     let menuTree = JSON.parse(localStorage.getItem("menuTree"));
+    console.log("menuTree",menuTree)
     let firstLevelTree = menuTree[0].childNode.find(
-      item => item.name == "基础功能"
+      item => (item.name == "基础功能" || item.name=='园区管理')
     );
+    console.log("fitst",firstLevelTree)
     let secondLevelTree = firstLevelTree.childNode.find(
-      item => item.name == "系统管理"
+      item => (item.name == "系统管理"|| item.name=='园区管理')
     );
    store.commit("digitalPark/menuList", secondLevelTree)
   }

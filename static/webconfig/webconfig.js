@@ -15,7 +15,7 @@ window.__CZ_SYSTEM = '';
  * ''  不是大屏状态
  * 'normal'     通用大屏
  * ydCity  伊甸城
- * norbulingka  伊甸城
+ * norbulingka  罗布林卡
  */
 window.__CZ_LargeScreen = ''
 
