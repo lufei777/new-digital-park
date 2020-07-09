@@ -12,7 +12,7 @@
       <el-select v-model="statusId" placeholder="请选择">
         <el-option
           v-for="(item,index ) in statusTypeList"
-          :key="item.index"
+          :key="index"
           :label="item.label"
           :value="item.status"
         ></el-option>

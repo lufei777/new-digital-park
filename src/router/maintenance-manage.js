@@ -10,6 +10,11 @@ export default [{
         name: 'ServiceAudit',
         meta: { title: '维修审核' },
         component: () => import('@/pages/maintenanceManage/serviceAudit')
+    },{
+        path: 'addMaintenance',
+        name: 'AddMaintenance',
+        meta: { title: '维修审核' },
+        component: () => import('@/pages/maintenanceManage/addMaintenance')
     }]
   }]
   
