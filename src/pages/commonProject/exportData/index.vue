@@ -1,7 +1,7 @@
 <template>
   <div class="export-data">
-    <NavOperator :showGoBack="true" class="nav-operator" />
-    <el-dialog :visible.sync="dialogTableVisible">
+    <el-dialog :visible.sync="dialogTableVisible" :show-close="false" :close-on-click-modal="false">
+      <NavOperator v-show="false"/>
       <z-form
         :ref="exportDataForm.ref"
         :options="exportDataForm"
@@ -254,6 +254,7 @@ export default {
   mounted() {
     this.getAssetAllTree();
     this.inquire();
+    console.log(this.exportShow)
   },
   created() {
     CommonApi.getAssetAllTree({
@@ -272,9 +273,6 @@ export default {
 .export-data {
   // width: 100%;
   // height: 100%;
-  .nav-operator {
-    display: none;
-  }
   .el-dialog {
     width: 95%;
   }
