@@ -55,4 +55,9 @@ export default [{
   path:'/historyVideo',
   name:'HistoryVideo',
   component:()=>import("@/pages/digitalPark/clientOverView/historyVideo")
+},{
+  path: '/messageInfoDetail',
+  name: 'MessageInfoDetail',
+  meta:{title:'信息详情'},
+  component: () => import('@/pages/messageManage/publish/messageInfoDetail')
 }]

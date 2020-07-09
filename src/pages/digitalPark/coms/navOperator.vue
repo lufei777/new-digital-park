@@ -166,34 +166,8 @@ export default {
     },
     async onClickUserConfigure(val) { //点击用户
       Cookies.set('moduleType', this.cookieModuleType)
-      // 退出
-      if (val == 3) {
-        //如果是客户端
-        if (IsCZClient()) {
-          window.goBackClientLogin && window.goBackClientLogin();
-        } 
-        // 清除登录信息
-        this.$store.dispatch('user/logout').then(() => {
-          if(!IsCZClient()){
-            this.$router.push("/login");
-          }
-        })
-        // 清空菜单列表
-        this.$store.commit("digitalPark/activeMenuIndex", "");
-      } else if(val==4){
-        if (IsCZClient()) {
-          minimizeWindow();
-        }
-      }else{
-        this.setSystemMenu()
-        if (val == 1) {
-          this.$store.commit("digitalPark/activeMenuIndex", "/personalInformation")
-          this.$router.push("/personalInformation")
-        } else if (val == 2) {
-          this.$store.commit("digitalPark/activeMenuIndex", "/modifyPassword")
-          this.$router.push("/modifyPassword")
-        }
-      }
+
+      CommonLargeHeader.onClickUserConfigure(val)
     },
     onClickSetup(val) { //点击设置
       Cookies.set('moduleType', this.cookieModuleType)
@@ -224,7 +198,7 @@ export default {
       let secondLevelTree = firstLevelTree.childNode.find(
         item => item.name == "系统管理"
       );
-      // localStorage.setItem("menuList", JSON.stringify(secondLevelTree));
+
       this.$store.commit("digitalPark/menuList", secondLevelTree)
     },
     onClickGoBack() { //点击返回首页
@@ -253,7 +227,8 @@ export default {
       CommonLargeHeader.loadNews()
     },
     goToWebPage(item, obj) {
-      //如果只有第一个参数，渲染的menu就是此对象的childNode；
+      CommonLargeHeader.goToWebPage(item,obj)
+   /*   //如果只有第一个参数，渲染的menu就是此对象的childNode；
       //如果有第二个参数,渲染的menu就是当前点击的子菜单所在的二级菜单，obj为当前点击的子菜单
       item = JSON.parse(item)
       let curMenu = item
@@ -263,19 +238,19 @@ export default {
           curMenu = obj
         }
       }
-      // console.log("item",item,obj,curMenu)
-      // console.log("itemfanfeifei", item)
       this.$store.commit("digitalPark/menuList", item)
-      CommonFun.loadPage(curMenu)
+      CommonFun.loadPage(curMenu)*/
     },
     async getAlarmList() {
-      let res = await CommonApi.getAlarmMessageList({
+      let res = await CommonLargeHeader.getAlarmList()
+      this.alarmListCount = res
+    /*  let res = await CommonApi.getAlarmMessageList({
         pageNum: 1,
         start: '',
         end: '',
         pageCount: 10,
       })
-      this.alarmListCount = res.total>99?'99+':res.total
+      this.alarmListCount = res.total>99?'99+':res.total*/
     },
     //三维跳导出数据页面
     exportShow(spaceId,deviceId){

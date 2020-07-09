@@ -1,6 +1,6 @@
 export default [{
         path: '/message',
-        name: 'CommonIndex',
+        // name: 'CommonIndex',
         // redirect:'/message/device',
         meta:{title:'信息发布'},
         component: () => import('@/pages/commonProject/coms/commonIndex'),
@@ -30,10 +30,4 @@ export default [{
           meta:{title:'素材管理'},
           component: () => import('@/pages/messageManage/materialManage')
         }],
-    },{
-      path: '/messageInfoDetail',
-      name: 'MessageInfoDetail',
-      meta:{title:'信息详情'},
-      component: () => import('@/pages/messageManage/publish/messageInfoDetail')
-    }
-]
+    }]
