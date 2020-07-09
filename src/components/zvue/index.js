@@ -88,26 +88,5 @@ if (typeof window !== 'undefined' && window.Vue) {
 export default {
     author: 'lxh',
     version: '1.5',
-    install,
-    Table,
-    Cascader,
-    Checkbox,
-    Date,
-    Input,
-    InputNumber,
-    Radio,
-    Select,
-    Slider,
-    Switch,
-    Time,
-    Tree,
-    Upload,
-    Group,
-    Form,
-    VeLine,
-    VeBar,
-    VeHistogram,
-    VePie,
-    VeRing,
-    vcharts
+    install
 }

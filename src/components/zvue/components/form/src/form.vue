@@ -53,7 +53,10 @@
                   :offset="column.offset || 0"
                   :push="column.push || 0"
                   :pull="column.pull || 0"
-                  :xs="24"
+                  :xs="{span:column.span < 24 ? 24 : column.span,offset:0}"
+                  :sm="{span:column.span < 12 ? 12 : column.span,offset:0}"
+                  :md="column.span < 8 ? 8 : column.span"
+                  :lg="column.span || itemSpanDefault"
                   v-show="vaildData(!column.hide,true)"
                   v-if="vaildDisplay(column)"
                   :style="{
@@ -184,7 +187,10 @@
                   :key="cindex"
                   tag="div"
                   style="display:inline-block;height:42px;"
-                  :span="column.count"
+                  :xs="0"
+                  :sm="column.count > 8 ? 0 : column.count"
+                  :md="column.count > 12 ? 8 : column.count"
+                  :lg="column.count"
                   v-if="column.row && column.span!==24 && column.count"
                 ></el-col>
               </template>
@@ -296,6 +302,15 @@ export default {
     this.dataFormat();
 
     this.$root._zForm = this;
+  },
+  mounted() {
+    /* setTimeout(() => {
+      if (this.options.menuBtn === false) {
+        const wrap = document.querySelector('.zvue-form-wrapper');
+        const zGroup = wrap.querySelectorAll('.z-group');
+        console.log("mounted -> zGroup", zGroup)
+      }
+    }, 0); */
   },
   methods: {
     deepClone,
@@ -796,6 +811,10 @@ export default {
   }
   .clearfix:after {
     clear: both;
+  }
+  // 折叠面板去除padding-bottom
+  .el-collapse-item__content {
+    padding-bottom: 0;
   }
 }
 // 下拉树的样式调整

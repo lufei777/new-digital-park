@@ -16,19 +16,21 @@
     </div>
     <div v-loading="loading" class="zvue-table-body">
       <el-table
-        highlight-current-row
-        header-row-class-name="zvue-table-header"
-        cell-class-name="zvue-table-cell"
         ref="dataBaseTable"
+        highlight-current-row
+        :header-row-class-name="headerRowClassName"
+        :header-row-style="tableOption.headerRowStyle"
+        :row-class-name="tableOption.rowClassName"
+        :cell-class-name="cellClassName"
         :row-key="rowKey"
         :lazy="tableOption.lazy"
         :tree-props="tableOption.treeProps || {children: 'children', hasChildren: 'hasChildren'}"
         :load="_treeLoad"
         :expand-row-keys="tableOption.expandRowKeys || expandList"
         :default-expand-all="tableOption.defaultExpandAll"
-        :row-style="config.rowStyle"
-        :cell-style="config.cellStyle"
-        :header-cell-style="config.headerCellStyle"
+        :row-style="tableOption.rowStyle || config.rowStyle"
+        :cell-style="tableOption.cellStyle || config.cellStyle"
+        :header-cell-style="tableOption.headerCellStyle || config.headerCellStyle"
         :key="key"
         :data="tableShowData"
         :height="tableHeight"
@@ -36,6 +38,7 @@
         :show-header="tableOption.showHeader"
         :show-summary="tableOption.showSummary"
         :summary-method="_tableSummaryMethod"
+        :span-method="_tableSpanMethod"
         @current-change="_currentChange"
         @expand-change="_expandChagne"
         @row-click="rowClick"
@@ -228,7 +231,8 @@ export default {
       type: Boolean,
       default: false
     },
-    summaryMethod: Function
+    summaryMethod: Function,
+    spanMethod: Function,
   },
   provide() {
     return {
@@ -561,6 +565,10 @@ export default {
       }
       this.sumsList = sums;
       return sums;
+    },
+    //合并行
+    _tableSpanMethod(param) {
+      if (typeof this.spanMethod === "function") return this.spanMethod(param);
     },
     //树懒加载
     _treeLoad(tree, treeNode, resolve) {
@@ -1042,6 +1050,26 @@ export default {
     },
     sumColumnList() {
       return this.tableOption.sumColumnList || [];
+    },
+    cellClassName() {
+      const defaultClass = 'zvue-table-cell';
+      if (typeof this.tableOption.cellClassName === 'function') {
+        return this.tableOption.cellClassName;
+      }
+      if (typeof this.tableOption.cellClassName === 'string') {
+        return `${this.tableOption.cellClassName} ${defaultClass}`;
+      }
+      return defaultClass;
+    },
+    headerRowClassName() {
+      const defaultClass = 'zvue-table-header';
+      if (typeof this.tableOption.headerRowClassName === 'function') {
+        return this.tableOption.headerRowClassName;
+      }
+      if (typeof this.tableOption.headerRowClassName === 'string') {
+        return `${this.tableOption.headerRowClassName} ${defaultClass}`;
+      }
+      return defaultClass;
     }
   },
   watch: {

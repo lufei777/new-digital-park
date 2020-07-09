@@ -119,7 +119,7 @@ export default {
     columnConfig: {
       type: Array,
       required: true,
-      default: []
+      default: () => []
     }
   },
   components: { formTemp, multiHeaderColumn, zImg },
