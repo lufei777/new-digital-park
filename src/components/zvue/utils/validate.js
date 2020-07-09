@@ -32,15 +32,14 @@ export const validatenull = (val) => {
     }
 
     return false;
-    return _.isEmpty(value) &&
+    /* return _.isEmpty(value) &&
         !_.isNumber(value) &&
         !_.isDate(value) &&
         !_.isBoolean(value) &&
-        !_.isFunction(value);
+        !_.isFunction(value); */
 }
 
-export const asyncValidator = (rules, form, option = { firstFields: true }) =>
-    new Promise((resolve, reject) => {
+export const asyncValidator = (rules, form, option = { firstFields: true }) => new Promise((resolve, reject) => {
         const schema = new Schema(rules);
         schema.validate(form, option, errors => {
             if (errors) {

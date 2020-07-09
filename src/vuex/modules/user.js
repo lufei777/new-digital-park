@@ -1,6 +1,7 @@
 import SystemManageApi from "@/service/api/systemManage";
 import { removeMenuTree } from 'utils/project';
 import { setToken, getToken, removeToken, setUserInfo, getUserInfo, removeUserInfo } from '@/utils/auth';
+import { removeRoles, removePageRoles } from 'utils/permission';
 
 const state = {
   token: getToken(),
@@ -57,6 +58,10 @@ const actions = {
         removeUserInfo();
         // 清空菜单信息
         removeMenuTree();
+        // 清空用户权限
+        removeRoles();
+        // 清空当前页面用户权限
+        removePageRoles();
         resolve();
       }).catch(err => reject(reject));
     })

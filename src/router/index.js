@@ -46,10 +46,7 @@ let publicRouters = [].concat(
   vibeWeb,
   DigitalParkRouter,
   ExportData,
-  SystemManage,
-  
-  Norbulingka,
-  LeaseManage
+  SystemManage
 )
 
 // 数字园区 私有模块
@@ -87,9 +84,12 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
       next({ path: '/' });
     } else {
+      // 通过校验后
+      // 首页跳转其他页面，需要缓存首页
       if(from.path === '/digitalPark/homePage'){
         from.meta.keepAlive = true;
       }
+      // 此处通过路由的params.keepAlive控制首页是否刷新
       if(typeof to.params.keepAlive === 'boolean'){
         to.meta.keepAlive = to.params.keepAlive;
       }
@@ -103,9 +103,7 @@ router.beforeEach((to, from, next) => {
       next({ path: '/login' });
     }
   }
-  // if (to.path != '/vibe-web') {
-  //   store.commit('digitalPark/activeMenuIndex', to.path);
-  // }
+
   //客户端关闭视频
   window.closeVideoWin && window.closeVideoWin();
 
