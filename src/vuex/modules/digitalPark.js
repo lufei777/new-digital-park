@@ -1,6 +1,7 @@
 import Cookies from 'js-cookie';
 import DigitalParkApi from "@/service/api/digitalPark";
 import { setMenuTree, getMenuTree } from "utils/project";
+import { setRoles, setPageRoles, getPageRoles } from 'utils/permission';
 
 const state = {
   dragFlag: true,
@@ -14,7 +15,9 @@ const state = {
   privateRouters: [],  // 模块列表
   largeScreenIframeSrc: '',
   contentHeight: '',
-  homeKeepAliveFlag:true   //控制瀑布流页的缓存/刷新
+  roles: [],
+  pageRoles: getPageRoles() || {},
+  homeKeepAliveFlag: true   //控制瀑布流页的缓存/刷新
 }
 
 const mutations = {
@@ -56,6 +59,15 @@ const mutations = {
   homeKeepAliveFlag(state, data) {
     state.homeKeepAliveFlag = data
   },
+  roles(state, payload) {
+    state.roles.length = 0;
+    state.roles = state.roles.concat(payload);
+    setRoles(state.roles);
+  },
+  pageRoles(state, { path, roles }) {
+    state.pageRoles = Object.assign({}, state.pageRoles, { [path]: roles });
+    setPageRoles(state.pageRoles);
+  }
 }
 
 const getters = {
@@ -79,6 +91,11 @@ const actions = {
         reject(err)
       })
     })
+  },
+  setPageRoles({ commit }, { routeAddress: path }) {
+    /* setTimeout(() => {
+      commit('pageRoles', { path, roles: ['admin'] });
+    }, 5000); */
   }
 }
 
