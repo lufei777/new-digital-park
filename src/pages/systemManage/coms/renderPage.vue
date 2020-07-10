@@ -71,7 +71,7 @@
   export default {
     name: 'RenderPage',
     components: {
-      Tree
+      Tree,
     },
     props: ["fromFlag"], // fromFlag 1:用户管理  2:空间管理  3：机构管理
     data() {
@@ -374,7 +374,7 @@
 </script>
 
 <style lang="less" scoped>
-  @import './less/index.less';
-  @import './../commonProject/less/dataDetailRow.less';
+  @import '../less/index.less';
+  @import '../../commonProject/less/dataDetailRow.less';
 
 </style>

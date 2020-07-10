@@ -34,6 +34,34 @@ export default {
     },
     specialRoute: {}
   },
+  computed:{
+    queryIdObj(){
+      return this.$route.query
+    },
+  },
+  watch:{
+    queryIdObj(){
+      if(this.queryIdObj){
+        this.setMenuList()
+      }
+    },
+  },
+  methods:{
+    setMenuList(item){
+      // console.log(this.firstMenuId,this.secondMenuId)
+      let secondMenu={}
+      let firstMenu = this.allMenuList.find(first => {
+        console.log(this.queryIdObj.firstMenuId)
+        return first.id == (this.queryIdObj.firstMenuId);
+      });
+      console.log("fis",firstMenu)
+      secondMenu = firstMenu.childNode.find(second => {
+        return second.id == (this.queryIdObj.secondMenuId);
+      });
+      this.$store.commit("digitalPark/menuList",secondMenu);
+      // this.normalShortcutList();
+    }
+  },
   mounted() {}
 };
 </script>

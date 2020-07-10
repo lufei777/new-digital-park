@@ -48,26 +48,29 @@ export default {
     allMenuList() {
       return JSON.parse(localStorage.getItem("menuTree"))[0].childNode;
     },
-    firstMenuId(){
-      return this.$route.query.firstMenuId
-    },
-    secondMenuId(){
-      return this.$route.query.secondMenuId
+    // firstMenuId(){
+    //   return this.$route.query.firstMenuId
+    // },
+    // secondMenuId(){
+    //   return this.$route.query.secondMenuId
+    // },
+    queryIdObj(){
+      return this.$route.query
     }
   },
   watch:{
-    firstMenuId(){
-      if(this.firstMenuId && !this.specialRoute){
+    queryIdObj(){
+      if(this.queryIdObj && !this.specialRoute){
         console.log("watch")
         this.setMenuList()
       }
     },
-    secondMenuId(){
-      if(this.secondMenuId && !this.specialRoute){
-        console.log("watch")
-        this.setMenuList()
-      }
-    },
+    // secondMenuId(){
+    //   if(this.secondMenuId && !this.specialRoute){
+    //     console.log("watch")
+    //     this.setMenuList()
+    //   }
+    // },
   },
   methods: {
     onClickSubmenu(item) {
@@ -153,10 +156,12 @@ export default {
       // console.log(this.firstMenuId,this.secondMenuId)
       let secondMenu={}
       let firstMenu = this.allMenuList.find(first => {
-        return first.id == (this.firstMenuId || item.firstMenuId);
+        console.log(this.queryIdObj.firstMenuId)
+        return first.id == (this.queryIdObj.firstMenuId || item.firstMenuId);
       });
+      console.log("fis",firstMenu)
       secondMenu = firstMenu.childNode.find(second => {
-        return second.id == (this.secondMenuId || item.secondMenuId);
+        return second.id == (this.queryIdObj.secondMenuId || item.secondMenuId);
       });
       this.$store.commit("digitalPark/menuList",secondMenu);
       this.normalShortcutList();
