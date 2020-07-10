@@ -17,11 +17,12 @@
       <el-dialog
         title="分配权限"
         :visible.sync="showModal"
-        width="50%"
+        width="85%"
         custom-class="per-modal"
       >
         <el-scrollbar wrap-class="scrollbar-wrapper">
-          <PermissionTree fromFlag="1" />
+          <!--<PermissionTree fromFlag="1" />-->
+          <RenderPage :from-flag="4" :hide-btn="true"/>
         </el-scrollbar>
         <span slot="footer" class="dialog-footer">
           <el-button @click="showModal = false">取 消</el-button>
@@ -48,11 +49,12 @@
   import SystemManageApi from '@/service/api/systemManage'
   import {mapState} from 'vuex'
   import PermissionTree from '../coms/permissionTree'
-
+  import RenderPage from '../coms/renderPage'
   export default {
     name: 'RoleManage',
     components: {
-      PermissionTree
+      PermissionTree,
+      RenderPage
     },
     data() {
       return {
@@ -176,8 +178,13 @@
     }
 
     .per-modal {
+      margin-top:20px !important;
       .el-dialog__body{
-        height:550px;
+        height:700px;
+      }
+      .system-tree-box{
+        left:8.5%;
+        height:700px !important;
       }
     }
 

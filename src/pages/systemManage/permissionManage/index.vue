@@ -1,16 +1,18 @@
 <template>
   <div class="permission-manage panel-container">
-    <PermissionTree />
+    <RenderPage :from-flag="4"/>
   </div>
 
 </template>
 
 <script>
   import PermissionTree from '../coms/permissionTree'
+  import RenderPage from '../coms/renderPage'
   export default {
     name: 'menuManage',
     components: {
-      PermissionTree
+      PermissionTree,
+      RenderPage
     },
     props: [],
     data() {
