@@ -21,11 +21,12 @@
             type="primary"
             @click="bulkDel(selectedData)"
           >批量删除</el-button>
+          <el-button :size="size" type="primary">修改电表用途</el-button>
         </template>
-        <template slot="operation" slot-scope="{size,row}">
-          <el-button :size="size" type="text" @click="propertyEdit({row})">编辑</el-button>
-          <el-button :size="size" type="text" @click="propertyDel({row})">删除</el-button>
-          <el-button :size="size" type="text" @click="propertyDetail({row})">详情</el-button>
+        <template slot="operation" slot-scope="{row}">
+          <el-button type="text" @click="propertyEdit({row})">编辑</el-button>
+          <el-button type="text" @click="propertyDel({row})">删除</el-button>
+          <el-button type="text" @click="propertyDetail({row})">详情</el-button>
         </template>
       </z-table>
     </div>
@@ -84,7 +85,7 @@ export default {
           width: 250
         },
         serverMode: {
-          url: electricityManageApi.selectReadMeterRecord,
+          url: electricityManageApi.getChargeDetailsList,
           data: {
             pageNum: 1,
             pageSize: 10
@@ -112,10 +113,7 @@ export default {
             label: "电表名称",
             prop: "monitorName"
           },
-          {
-            ...useType,
-            cell: true,
-          },
+          useType,
           {
             label: "倍率",
             prop: "mulPower"
@@ -173,7 +171,7 @@ export default {
       });
     },
     deleteRow(ids) {
-      electricityManageApi.deleteReadMeterRecord(ids).then(res => {
+      electricityManageApi.deleteElecPrice(ids).then(res => {
         this.refreshTable();
       });
     },

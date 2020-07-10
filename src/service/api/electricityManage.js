@@ -196,11 +196,19 @@ export default new class {
 
   /**
    * 根据电表id获取电表信息
-   * int monitor  
+   *  monitor  int
    */
   @url('/oaApi/readMeter/getElecMeterInfo')
-  @post
+  @get
   getElecMeterInfo() { }
+
+  /**
+   * 根据电表id删除电表
+   *  int array
+   */
+  @url('/oaApi/readMeter/deleteReadMeterRecord')
+  @post
+  deleteReadMeterRecord() { }
 
   /***********  用电收费明细  ************ */
   /**
@@ -213,6 +221,6 @@ export default new class {
    * String tenantNumber 租户编号
    */
   @url('/oaApi/readMeter/getChargeDetailsList')
-  @post
+  @get
   getChargeDetailsList() { }
 }

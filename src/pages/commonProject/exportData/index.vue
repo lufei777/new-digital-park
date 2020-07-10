@@ -1,7 +1,7 @@
 <template>
   <div class="export-data">
-    <NavOperator :showGoBack="true" class="nav-operator" />
-    <el-dialog :visible.sync="dialogTableVisible">
+    <el-dialog :visible.sync="dialogTableVisible" :show-close="false" :close-on-click-modal="false">
+      <NavOperator v-show="false" />
       <z-form
         :ref="exportDataForm.ref"
         :options="exportDataForm"
@@ -41,7 +41,10 @@ export default {
       dateType: "month",
       model: {
         curDateType: 2,
-        deviceId: 106434136
+        startTime: moment(
+          new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000 * 1)
+        ).format("YYYY-MM"),
+        lastTime: moment(new Date()).format("YYYY-MM")
       },
       exportDataForm: {
         ref: "exportDataForm",
@@ -145,6 +148,16 @@ export default {
         page: this.page,
         selectType: this.model.curDateType
       };
+    },
+    paramId() {
+      return this.$route.query;
+    }
+  },
+  watch: {
+    paramId() {
+      this.model.spaceId = this.paramId.spaceId;
+      this.model.deviceId = this.paramId.deviceId;
+      this.inquire();
     }
   },
   methods: {
@@ -162,7 +175,6 @@ export default {
         dicData: res
       });
     },
-
     async probeHistoryValue() {
       let formatTypeStartTime = "";
       let formatTypeLastTime = "";
@@ -231,6 +243,13 @@ export default {
       }
     },
     inquire() {
+      // this.$route.replace({
+      //   path: "ExportData",
+      //   query: {
+      //     spaceId: this.model.spaceId,
+      //     deviceId: this.model.deviceId
+      //   }
+      // });
       this.probeHistoryValue();
     },
     handleCurrentChange(value) {
@@ -252,6 +271,8 @@ export default {
     resetChange() {}
   },
   mounted() {
+    this.model.spaceId = this.paramId.spaceId;
+    this.model.deviceId = this.paramId.deviceId;
     this.getAssetAllTree();
     this.inquire();
   },
@@ -272,9 +293,6 @@ export default {
 .export-data {
   // width: 100%;
   // height: 100%;
-  .nav-operator {
-    display: none;
-  }
   .el-dialog {
     width: 95%;
   }

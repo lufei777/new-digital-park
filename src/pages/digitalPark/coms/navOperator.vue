@@ -258,7 +258,7 @@ export default {
        this.$router.push({
           name: "ExportData",
           query: {
-            spaceId: spaceId?deviceId:"",
+            spaceId: spaceId?spaceId:"",
             deviceId: deviceId?deviceId:""
           }
         });

@@ -750,14 +750,22 @@ export const electricityManageDic = {
     }
   ],
   // 审核状态
-  /* status: [
+  status: [
     {
-      label: '收费',
+      label: '待审核',
       value: 2
     },
     {
-      label: '自用',
+      label: '已录入',
       value: 1
+    },
+    {
+      label: '审核通过',
+      value: 3
+    },
+    {
+      label: '驳回',
+      value: 4
     }
-  ], */
+  ],
 }
