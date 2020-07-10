@@ -19,13 +19,13 @@
         <el-main style="padding:0px;">
           <div class="panel">
             <z-table :load="load" :ref="tableOptions.ref" :options="tableOptions">
-              <template #custom-top="{size,selectedData}">
+              <template #custom-top="{size,selectedData,currentRowData}">
                 <el-button
-                  :disabled="!selectedData.length"
+                  :disabled="selection ? !selectedData.length : !Object.keys(currentRowData).length"
                   :size="size"
                   type="primary"
-                  @click="binding(selectedData)"
-                >绑定</el-button>
+                  @click="confirm(selectedData,currentRowData)"
+                >确定</el-button>
               </template>
             </z-table>
           </div>
@@ -46,7 +46,10 @@ let tableSendData = {
 
 export default {
   props: {
-    tenantId: Number
+    selection: {
+      type: Boolean,
+      default: true
+    }
   },
   data() {
     return {
@@ -65,7 +68,7 @@ export default {
         data: [],
         columnConfig: meterColumnConfig,
         uiConfig: {
-          selection: true,
+          selection: this.selection,
           height: 'auto'
         }
       },
@@ -117,13 +120,8 @@ export default {
       this.fetchDeviceList({ spaceId: data.floorId });
     },
     // 点表绑定
-    binding(selectedData) {
-      electricityManageApi.bindingTenantOfElec({}, {
-        id: this.tenantId,
-        monitors: selectedData.map(item => item.id).join(',')
-      }).then(res => {
-        this.$emit('success')
-      })
+    confirm(selectedData, currentRowData) {
+      this.$emit('confirm', this.selection ? selectedData : currentRowData)
     }
   }
 }
