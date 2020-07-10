@@ -78,7 +78,7 @@
     },
     // fromFlag 1:用户管理  2:空间管理  3：机构管理  4:权限管理
     // hideBtn true/false  角色管理分配权限时隐藏按钮
-    props: ["fromFlag","hideBtn",'onClickSureAssignBtn'],
+    props: ["fromFlag","hideBtn"],
     data() {
       let config = this.getConfig()
       let searchParams = this.setParams()
@@ -121,7 +121,8 @@
     },
     computed: {
       ...mapState({
-        menuIsCollapse: state => state.digitalPark.menuIsCollapse
+        menuIsCollapse: state => state.digitalPark.menuIsCollapse,
+        permissionIds: state => state.digitalPark.permissionIds
       }),
       nameLabel(){
         return this.fromFlag==2?'工程用名':'机构简称'
@@ -175,8 +176,8 @@
         } else if (this.fromFlag == 2) {
           config = {
             treeProps:{
-                label: 'text',
-                children: 'nodes'
+              label: 'text',
+              children: 'nodes'
             },
             delConfig: {
               api: CommonApi.deleteSpace,
@@ -211,14 +212,14 @@
             selection:true,
             serverUrl:SystemManageApi.getDeptList,
             columnConfig:  [{
-                label: '编号',
-                prop: 'id'
-              },{
-                label: '机构简称',
-                prop: 'name'
-              }, {
-                label: '机构全称',
-                prop: 'abbr'
+              label: '编号',
+              prop: 'id'
+            },{
+              label: '机构简称',
+              prop: 'name'
+            }, {
+              label: '机构全称',
+              prop: 'abbr'
             }],
           }
         }else if(this.fromFlag == 4){
@@ -324,6 +325,9 @@
         this.$refs[this.tableConfig.ref].setCurrentPage(1)
         this.tableConfig.serverMode.data = {...this.searchParams, ...pageInfo}
         this.$refs[this.tableConfig.ref].refreshTable()
+        if(this.fromFlag==4 && this.hideBtn == true){
+          this.setPermission()
+        }
       },
       onClickMultiDelBtn() {
         let tmp = this.$refs[this.tableConfig.ref].getSelectedData()
@@ -402,28 +406,41 @@
       },
       onSelectionChange(selection){
         /*
-           pType 0：只读权限 1:写权限
-           若勾选写权限，则必须勾选读权限
+          pType 0：只读权限 1:写权限
+          若勾选写权限，则必须勾选读权限
         */
-         let writePermission = selection.find((item)=>{
-           return item.pType==1
-         })
+        const Table = this.$refs[this.tableConfig.ref];
+        let writePermission = selection.find((item)=>{
+          return item.pType==1
+        })
         if(writePermission){
-          const Table = this.$refs[this.tableConfig.ref];
-          let readPermissionIndex = Table.allData.findIndex((item)=>{
+          let readPermissionIndex = Table.allData.find((item)=>{
             return item.pType==0
           })
-          console.log("readPermissionIndex",readPermissionIndex)
           if(readPermissionIndex!=-1){
             Table.toggleSelection(readPermissionIndex,true)
-            // Table.Table.toggleRowSelection(Table.tableShowData[readPermissionIndex],true)
           }
         }
       },
       getAssignList() {
         let tmp = this.$refs[this.tableConfig.ref].selectedData
+        // console.log("tmp",tmp)
         return tmp
-        // let
+      },
+      setPermission(){
+        //已有权限回显
+        console.log(this.$refs[this.tableConfig.ref].allData);
+        this.$refs[this.tableConfig.ref].allData.map((item,index)=>{
+          console.log("1")
+          let flag = this.permissionIds.findIndex((per)=>{
+             console.log("teim",item,per)
+              return item.id==per
+          })
+          if(flag!=-1){
+            debugger
+            this.$refs[this.tableConfig.ref].toggleSelection(index,true)
+          }
+        })
       }
     },
     async created() {

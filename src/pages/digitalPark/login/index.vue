@@ -67,7 +67,7 @@ export default {
     },
     title() {
       return getLargeScreenName() != '' ? Title[getLargeScreenName()] :
-        (getProjectTitle() || '数字园区综合管理平台');
+        (getProjectTitle() || 'Timeloit智慧园区综合管控服务平台');
     },
     isLargeScreen() {
       return getLargeScreenName() != ''

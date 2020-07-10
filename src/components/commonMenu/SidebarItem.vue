@@ -159,7 +159,6 @@ export default {
         console.log(this.queryIdObj.firstMenuId)
         return first.id == (this.queryIdObj.firstMenuId || item.firstMenuId);
       });
-      console.log("fis",firstMenu)
       secondMenu = firstMenu.childNode.find(second => {
         return second.id == (this.queryIdObj.secondMenuId || item.secondMenuId);
       });

@@ -23,9 +23,9 @@
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <!--<PermissionTree fromFlag="1" />-->
           <RenderPage
-              :from-flag="4"
-              :hide-btn="true"
-              ref="renderPage"
+            :from-flag="4"
+            :hide-btn="true"
+            ref="renderPage"
           />
         </el-scrollbar>
         <span slot="footer" class="dialog-footer">
@@ -54,6 +54,7 @@
   import {mapState} from 'vuex'
   import PermissionTree from '../coms/permissionTree'
   import RenderPage from '../coms/renderPage'
+
   export default {
     name: 'RoleManage',
     components: {
@@ -104,7 +105,8 @@
           },
           tableMethods: {},
         },
-        showModal: false
+        showModal: false,
+        curRoleId: 0,
       }
     },
     computed: {
@@ -149,12 +151,28 @@
       async getPermissionList() {
         let res = await SystemManageApi.getPermissionList()
       },
-      assignPermission(){
+      assignPermission(row) {
         this.showModal = true
+        row.permissionIds=[10001,10004]
+        this.curRoleId = row.id
+        // this.permissionIds = row.permissionIds || []
+        this.$store.commit("digitalPark/permissionIds",row.permissionIds)
       },
-      onClickSureAssignBtn(){
+      async onClickSureAssignBtn() {
         let tmp = this.$refs.renderPage.getAssignList()
-        console.log("tmp",tmp)
+        let idArr = tmp.map((item => item.id))
+        let params = {
+          roleId: this.curRoleId,
+          permissionIds: idArr.join(",")
+        }
+        // console.log("params",params)
+        await SystemManageApi.assignPermission(params)
+        this.$message({
+          type: 'success',
+          message: '分配成功！'
+        })
+        this.showModal = false
+        this.$refs[this.tableConfig.ref].refreshTable()
       }
     },
     created() {
@@ -186,13 +204,15 @@
     }
 
     .per-modal {
-      margin-top:20px !important;
-      .el-dialog__body{
-        height:700px;
+      margin-top: 20px !important;
+
+      .el-dialog__body {
+        height: 700px;
       }
-      .system-tree-box{
-        left:8.5%;
-        height:700px !important;
+
+      .system-tree-box {
+        left: 8.5%;
+        height: 700px !important;
       }
     }
 
