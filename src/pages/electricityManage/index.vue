@@ -30,7 +30,7 @@ export default {
             },
             {
               id: "122",
-              name: "租户用电明细",
+              name: "电表维护",
               routeAddress: "/electricitymanage/tenantelectricitymeter",
             },
             {
@@ -55,7 +55,7 @@ export default {
         {
           id: "14",
           name: "用电收费明细",
-          routeAddress: "/chargeelectricityDetail"
+          routeAddress: "/electricitymanage/chargeelectricityDetail"
         }
       ]
     };

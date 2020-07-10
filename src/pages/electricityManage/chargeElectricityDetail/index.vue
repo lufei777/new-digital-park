@@ -13,7 +13,7 @@
 
     <div class="table panel">
       <z-table :ref="tableOptions.ref" :options="tableOptions">
-        <template slot="custom-top" slot-scope="{size,selectedData}">
+        <!-- <template slot="custom-top" slot-scope="{size,selectedData}">
           <el-button :size="size" type="primary" @click="addedProperty">新增</el-button>
           <el-button
             :disabled="!selectedData.length"
@@ -22,22 +22,29 @@
             @click="bulkDel(selectedData)"
           >批量删除</el-button>
           <el-button :size="size" type="primary">修改电表用途</el-button>
-        </template>
+        </template>-->
         <template slot="operation" slot-scope="{row}">
-          <el-button type="text" @click="propertyEdit({row})">编辑</el-button>
-          <el-button type="text" @click="propertyDel({row})">删除</el-button>
           <el-button type="text" @click="propertyDetail({row})">详情</el-button>
+          <el-button type="text" @click="checkDetailDialog = true,checkDetailModel.id = row.id">生成账单</el-button>
         </template>
       </z-table>
     </div>
+    <el-dialog
+      title="审核收费明细"
+      :visible.sync="checkDetailDialog"
+      width="30%"
+      @close="checkDetailModel = {}"
+    >
+      <z-form v-model="checkDetailModel" :options="checkDetailForm" @submit="checkDetail"></z-form>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { electricityManageDic } from "@/utils/dictionary";
 import electricityManageApi from 'api/electricityManage';
 import commonFun from "@/utils/commonFun.js";
-import { status, useType } from '../config';
 
+const { detailsStatus } = electricityManageDic;
 const dateValueFormat = "yyyy-MM-dd";
 let tableSendData = {
   pageNum: 1,
@@ -47,21 +54,13 @@ let tableSendData = {
 export default {
   data() {
     return {
+      checkDetailDialog: false,
       tenantElecId: '',
       model: {},
       formOptions: {
         ref: "Form",
         menuBtn: false,
         forms: [
-          {
-            ...status,
-            span: 5
-          },
-          {
-            prop: 'monitorNum',
-            label: "电表号",
-            span: 5
-          },
           {
             type: 'date',
             label: "年度月份",
@@ -70,11 +69,26 @@ export default {
             span: 5
           },
           {
+            prop: 'monitorNum',
+            label: "客户名称",
+            span: 5
+          },
+          {
+            prop: 'contractNumber',
+            label: "合同编号",
+            span: 5
+          },
+          {
+            prop: 'contractType',
+            label: "合同状态",
+            span: 5
+          },
+          {
             prop: "btn",
-            span: 9,
+            span: 4,
             noModel: true,
             formslot: true,
-            width: 55
+            width: 20
           }
         ]
       },
@@ -82,7 +96,7 @@ export default {
         ref: "Table",
         customTop: true,
         operation: {
-          width: 250
+          width: 150
         },
         serverMode: {
           url: electricityManageApi.getChargeDetailsList,
@@ -92,7 +106,11 @@ export default {
           }
         },
         columnConfig: [
-          status,
+          {
+            prop: 'detailsStatus',
+            label: '审核状态',
+            dicData: detailsStatus
+          },
           {
             label: "年度",
             prop: "year"
@@ -102,40 +120,39 @@ export default {
             prop: "month"
           },
           {
-            label: "抄表日期",
-            prop: "readTime"
+            label: "客户名称",
+            prop: "tenantName"
           },
           {
-            label: "电表号",
-            prop: "monitorNum"
+            label: "合同编号",
+            prop: "contractNumber"
+          },
+          /* {
+            label: "合同状态",
+            prop: "contractStatus"
+          }, */
+          {
+            label: "合同终止日期",
+            prop: "expireTime"
           },
           {
-            label: "电表名称",
-            prop: "monitorName"
-          },
-          useType,
-          {
-            label: "倍率",
-            prop: "mulPower"
-          },
-          {
-            label: "上次表示数",
-            prop: "lastIndication"
-          },
-          {
-            label: "本次表示数",
-            prop: "indication"
-          },
-          {
-            label: "抄表见量",
-            prop: "diffNum"
-          },
-          {
-            label: "月用见量",
+            label: "办公月电量合计",
             prop: "useElecMonth"
           },
           {
-            label: "备注",
+            label: "办公月电费合计",
+            prop: "elecFees"
+          },
+          {
+            label: "月工日",
+            prop: "diffNum"
+          },
+          {
+            label: "分摊电费合计(元)",
+            prop: "useElecMonth2"
+          },
+          {
+            label: "电费合计(元)",
             prop: "remarks"
           }
         ],
@@ -144,6 +161,30 @@ export default {
           selection: true,
           showIndex: true
         }
+      },
+      checkDetailModel: {},
+      checkDetailForm: {
+        itemSpan: 24,
+        forms: [
+          {
+            type: 'radio',
+            prop: 'detailsStatus',
+            label: '审核结果',
+            dicData: detailsStatus,
+            rules: {
+              required: true
+            },
+            defaultValue: 2
+          },
+          {
+            type: 'textarea',
+            prop: 'examineIdea',
+            label: '审核意见',
+            rules: {
+              required: true
+            }
+          }
+        ]
       }
     };
   },
@@ -162,57 +203,19 @@ export default {
     clearForm() {
       this.Form.resetForm();
     },
-    addedProperty({ row }) {
-      this.$router.push({
-        name: "meterreadrecordsadd",
-        query: {
-          flag: 'add'
-        }
-      });
-    },
-    deleteRow(ids) {
-      electricityManageApi.deleteElecPrice(ids).then(res => {
-        this.refreshTable();
-      });
-    },
-    bulkDel(selectedData) {
-      if (!selectedData.length) {
-        commonFun.deleteTip(this, false, "请选择数据");
-        return;
-      }
-      let ids = selectedData.map(item => item.id);
-      commonFun.deleteTip(
-        this,
-        true,
-        "确定要删除吗?",
-        () => {
-          this.deleteRow(ids);
-        },
-        () => { }
-      );
-    },
-    propertyDel({ row }) {
-      commonFun.deleteTip(
-        this,
-        true,
-        "确定要删除吗?",
-        () => {
-          this.deleteRow([row.id]);
-        },
-        () => { }
-      );
-    },
-    propertyEdit({ row }) {
-      this.$router.push({
-        name: "meterreadrecordsadd",
-        query: { id: row.id, flag: "edit", row: JSON.stringify(row) }
-      });
-    },
     propertyDetail({ row }) {
       this.$router.push({
         name: "meterreadrecordsadd",
         query: { id: row.id, flag: "detail", row: JSON.stringify(row) }
       });
+    },
+    checkDetail(model, done) {
+      electricityManageApi.useElecExamine(model).then(res => {
+        console.log("checkDetail -> res", res)
+        this.checkDetailDialog = false;
+      }).finally(() => {
+        done()
+      })
     },
     refreshTable() {
       this.Table.refreshTable();

@@ -63,24 +63,14 @@ export default {
             label: "结束时间",
             prop: "endTime",
             valueFormat: dateValueFormat,
-            span: 6,
-            pickerOptions: {
-              disabledDate: (time) => {
-                let date = this.model.startTime;
-                if (date) {
-                  return time.getTime() < new Date(date).getTime();
-                } else {
-                  return !date;
-                }
-              }
-            }
+            span: 6
           },
           {
             prop: "btn",
             span: 12,
             noModel: true,
             formslot: true,
-            width: 55
+            width: 20
           }
         ]
       },
@@ -88,7 +78,7 @@ export default {
         ref: "Table",
         customTop: true,
         operation: {
-          width: 250
+          width: 150
         },
         serverMode: {
           url: electricityManageApi.selectElecPriceList,

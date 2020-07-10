@@ -25,7 +25,7 @@ import { meterColumnConfig } from '../config';
 const apiConfig = {
   add: {
     title: "新增电价维护信息",
-    api: electricityManageApi.addReadMeterRecord
+    api: electricityManageApi.setElecPrice
   },
   edit: {
     title: "编辑电价维护信息",
@@ -39,7 +39,7 @@ const apiConfig = {
     }
   }
 };
-const dateValueFormat = "yyyy-MM-dd HH:mm:ss";
+const dateValueFormat = "yyyy-MM-dd";
 let tableSendData = {
   pageNum: 1,
   pageSize: 10
@@ -64,6 +64,25 @@ export default {
             valueFormat: dateValueFormat,
             rules: {
               required: true
+            }
+          },
+          {
+            type: 'date',
+            label: "结束日期",
+            prop: "endTime",
+            valueFormat: dateValueFormat,
+            rules: {
+              required: true
+            },
+            pickerOptions: {
+              disabledDate: (time) => {
+                let date = this.model.startTime;
+                if (date) {
+                  return time.getTime() < new Date(date).getTime();
+                } else {
+                  return !date;
+                }
+              }
             }
           },
           {

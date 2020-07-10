@@ -52,6 +52,15 @@ export default new class {
   bindingTenantOfElec() { }
 
   /**
+   * 解绑电表接口
+   * @param Integer id   租户用电id
+   * @param List<Integer> monitors  电表
+   */
+  @url('/oaApi/useElec/relieveTenantOfElec')
+  @post
+  relieveTenantOfElec() { }
+
+  /**
    * 绑定电表获取电表列表
    * @param Integer spaceId  空间id
    */
@@ -223,4 +232,15 @@ export default new class {
   @url('/oaApi/readMeter/getChargeDetailsList')
   @get
   getChargeDetailsList() { }
+
+  /**
+   * 用电收费审核生成账单
+   * Integer id 
+   * Integer detailsStatus  2:通过 3：驳回
+   * String examineIdea 审核意见
+   */
+  @url('/oaApi/examineElec/useElecExamine')
+  @get
+  useElecExamine() { }
+
 }
