@@ -314,25 +314,33 @@ export default {
      * 内部使用方法
      */
     _tableInit(reload) {
-      //服务器模式处理
-      // console.log(this.currentPage, this.pageSize);
-      if (this.isServerMode) {
-        this._loadServerMode(this.isServerMode.data);
-      } else {
-        //如果是刷新表格，如果data为空，说明是在外部使用ajax请求数据，则出现加载动画，3秒后加载动画关闭
-        //  || !this.options.data || this.options.data.length === 0
-        if (reload) {
-          this.loading = true;
-          setTimeout(() => {
-            this.loading = false;
-          }, 2000);
+      return new Promise((resolve, reject) => {
+        //服务器模式处理
+        // console.log(this.currentPage, this.pageSize);
+        if (this.isServerMode) {
+          this._loadServerMode(this.isServerMode.data).then((res) => {
+            resolve(res)
+          }).catch(err => {
+            reject(err);
+          })
+        } else {
+          //如果是刷新表格，如果data为空，说明是在外部使用ajax请求数据，则出现加载动画，3秒后加载动画关闭
+          //  || !this.options.data || this.options.data.length === 0
+          if (reload) {
+            this.loading = true;
+            setTimeout(() => {
+              this.loading = false;
+            }, 2000);
+          }
+
+          if (!this.options.data) this.options.data = [];
+
+          this._setTableData(this.options.data);
+          this.setTotal(this.options.data.length);
+
+          resolve({ data: this.options.data, total: this.options.data.length })
         }
-
-        if (!this.options.data) this.options.data = [];
-
-        this._setTableData(this.options.data);
-        this.setTotal(this.options.data.length);
-      }
+      })
     },
     // 检索
     _getFilterTableData() {
@@ -402,25 +410,31 @@ export default {
     },
     // 加载服务端数据
     _loadServerMode(data) {
-      let _this = this;
-      //加载中开始
-      this.loading = true;
+      return new Promise((resolve, reject) => {
+        let _this = this;
+        //加载中开始
+        this.loading = true;
 
-      let serverMode = this.isServerMode;
-      let url = this.isServerMode.url;
-      this._axios({
-        mehtod: this.isServerMode.type,
-        url: url,
-        data: data
-      })
-        .then(res => {
-          this._setTableData(res[this.listKey]);
-          this.setTotal(res[this.totalKey]);
+        let serverMode = this.isServerMode;
+        let url = this.isServerMode.url;
+        this._axios({
+          mehtod: this.isServerMode.type,
+          url: url,
+          data: data
         })
-        .finally(() => {
-          //加载中结束
-          this.loading = false;
-        });
+          .then(res => {
+            this._setTableData(res[this.listKey]);
+            this.setTotal(res[this.totalKey]);
+            resolve(res);
+          })
+          .catch(err => {
+            reject(err);
+          })
+          .finally(() => {
+            //加载中结束
+            this.loading = false;
+          });
+      })
     },
     // AXIOS
     _axios({ mehtod = "get", url = "", data = {} }) {
@@ -926,10 +940,12 @@ export default {
     },
     //refresh
     refreshTable() {
-      this._tableInit(true);
-      this.doLayout();
-      // 清空多选数据
-      this.selectedData = [];
+      return new Promise((resolve, reject) => {
+        this._tableInit(true).then(res => resolve(res)).catch(err => reject(err));
+        this.doLayout();
+        // 清空多选数据
+        this.selectedData = [];
+      })
     },
     //搜索指定的属性配置
     findColumnIndex(prop) {
