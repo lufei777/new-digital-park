@@ -148,14 +148,14 @@ export default {
           // prop: "operation",
           // label: "操作",
           // fixed: "right",
-          width: 400
+          width: 300
         },
         uiConfig: {
           height: "auto",
           selection: true,
           showIndex: {
             label: "编号",
-            width: 250,
+            width: 150,
             align: "left"
           },
           pagination: {

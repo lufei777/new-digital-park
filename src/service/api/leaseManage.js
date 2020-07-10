@@ -125,9 +125,31 @@ export default new class {
 	@get
 	tenantList() {}
 
-	// 合同编号 
-	
+	// 合同编号
+
 	@url('/oaApi/month/bill/queryContractByNumber')
 	@get
 	queryContractByNumber() {}
+
+
+	// 租赁月账单审核列表
+	/**
+	 * 	pageNum  int 页码
+		pageSize int 记录数
+		billNumber String 账单编号（可填）
+		tenantName String 租户名称（可填）
+	 * 
+	 * */
+	@url('/oaApi/month/bill/querySumStatContract')
+	@get
+	querySumStatContract() {}
+
+
+	// 租赁月账单审核查看 /oaApi/month/bill/queryMonthBillList
+	/**
+	 * billNumber String 账单编号（必填）
+	*/
+	@url('/oaApi/month/bill/queryMonthBillList')
+	@get
+	queryMonthBillList() {}
 }();

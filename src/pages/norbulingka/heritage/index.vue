@@ -412,6 +412,7 @@ export default {
       if(info.openHeight==null){
         info.openHeight=undefined
       }
+      localStorage.setItem('INFO',JSON.stringify(info))
       this.$router.push({
         path: "/addeditdetail",
         query: { flag: true, mark: "detail"}
