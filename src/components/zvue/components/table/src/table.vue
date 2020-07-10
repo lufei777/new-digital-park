@@ -745,7 +745,7 @@ export default {
 
       let row = this.tableShowData[index];
       let column = this.columnConfig[index];
-      this.Table.setCurrentRow(row);
+      this.$refs.dataBaseTable.setCurrentRow(row);
       this.$emit("row-click", row, column);
     },
     //多选选择当前项
@@ -773,14 +773,14 @@ export default {
               : selectedArr;
             if (!row) continue;
 
-            this.Table.toggleRowSelection(row, rowSelected);
+            this.$refs.dataBaseTable.toggleRowSelection(row, rowSelected);
           }
         } else {
           const row = typeof rowsIndex === 'number'
             ? this.tableShowData[rowsIndex]
             : rowsIndex;
 
-          this.Table.toggleRowSelection(row, selectedArr);
+          this.$refs.dataBaseTable.toggleRowSelection(row, selectedArr);
         }
       } else {
         this.clearSelection();
@@ -788,7 +788,7 @@ export default {
     },
     //多选切换全选状态
     toggleAllSelection() {
-      this.Table.toggleAllSelection();
+      this.$refs.dataBaseTable.toggleAllSelection();
     },
     //用于可展开表格与树形表格
     toggleRowExpansion(rowsIndex, expanded) {
@@ -808,14 +808,14 @@ export default {
               : rowsIndex[index];
             if (!row) continue;
 
-            this.Table.toggleRowExpansion(row, curRowExpanded);
+            this.$refs.dataBaseTable.toggleRowExpansion(row, curRowExpanded);
           }
         } else {
           const row = typeof rowsIndex === 'number'
             ? this.tableShowData[rowsIndex]
             : rowsIndex;
 
-          this.Table.toggleRowExpansion(row, expanded);
+          this.$refs.dataBaseTable.toggleRowExpansion(row, expanded);
         }
       } else {
         // 此处关联着options.expandRowKyes，改变都改变
@@ -877,21 +877,21 @@ export default {
     },
     //多选清除选择项
     clearSelection() {
-      this.Table.clearSelection();
+      this.$refs.dataBaseTable.clearSelection();
     },
     //重新布局
     doLayout() {
-      this.Table.doLayout();
+      this.$refs.dataBaseTable.doLayout();
       this.key++;
     },
     // 清除排序
     clearSort() {
-      this.Table.clearSort();
+      this.$refs.dataBaseTable.clearSort();
       this.tableData = this.allData;
     },
     // 清除过滤
     clearFilter(columnKey) {
-      this.Table.clearFilter(columnKey);
+      this.$refs.dataBaseTable.clearFilter(columnKey);
     },
 
     /**
@@ -961,9 +961,6 @@ export default {
     }
   },
   computed: {
-    Table() {
-      return this.$refs.dataBaseTable;
-    },
     columnConfig: {
       get() {
         if (this.options.columnConfig) {
