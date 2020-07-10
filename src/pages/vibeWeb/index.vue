@@ -20,7 +20,7 @@ import Sidebar from "./menu/SideBar";
 import NavOperator from "../digitalPark/coms/navOperator";
 import myIframe from "./iframe";
 import CommonFun from "utils/commonFun";
-
+import { mapState } from 'vuex'
 export default {
   name: "CommonIndexLayout",
   components: {
@@ -38,19 +38,45 @@ export default {
       iframeConfig: {
         src: iframeSrc.split("@")[1]
       },
-      menuList: menuList.childNode,
-      menuConfig: {
+      // menuList: menuList.childNode,
+      // menuConfig: {
+      //   bgColor: "#394562",
+      //   textColor: "#B7BAC4",
+      //   isCollapse: false,
+      //   activeIndex: iframeSrc,
+      //   moduleName: menuList.name,
+      //   moduleLogo: menuList.icon,
+      //   handleSelect(key, keyPath, curDom) {
+      //     _this.handleSelect(key, keyPath, curDom);
+      //   },
+      //   handleClose(){},
+      //   handleOpen(){}
+      // }
+    };
+  },
+  computed:{
+    ...mapState({
+      menuData: state => state.digitalPark.menuList
+    }),
+    menuList(){
+      return this.menuData.childNode
+    },
+    menuConfig(){
+      let _this = this
+      return {
         bgColor: "#394562",
         textColor: "#B7BAC4",
         isCollapse: false,
-        activeIndex: iframeSrc,
-        moduleName: menuList.name,
-        moduleLogo: menuList.icon,
+        // activeIndex: iframeSrc,
+        moduleName: this.menuData.name,
+        moduleLogo: this.menuData.icon,
         handleSelect(key, keyPath, curDom) {
           _this.handleSelect(key, keyPath, curDom);
-        }
+        },
+        handleClose(){},
+        handleOpen(){}
       }
-    };
+    }
   },
   methods: {
     onClickCollapseBtn() {
@@ -80,18 +106,6 @@ export default {
             keyPath[0].substring(0, keyPath[0].lastIndexOf("/")) + keyPath[1];
         }
       }
-      //应急预案和总体评估的备份type参数
-      // if (key == '@/html/docms/index.html?openid=emergency') {
-      //   localStorage.setItem('backupType', 4)
-      // } else if (key == '@/html/docms/index.html?openid=assess') {
-      //   localStorage.setItem('backupType', 5)
-      // }
-      // this.$store.commit("digitalPark/activeMenuIndex", key);
-      // if (key.indexOf("@") != -1) {
-      //   this.iframeConfig.src = key.replace("@", "");
-      // } else {
-      //   this.$router.push(key);
-      // }
       if (key.indexOf("@") != -1) {
         this.iframeConfig.src = key.replace("@", "");
       }
@@ -99,13 +113,6 @@ export default {
     }
   },
   mounted() {
-    if (Cookies.get("activeMenuIndex").indexOf("/personalInformation") != -1) {
-      this.$router.push("/personalInformation");
-    } else if (
-      Cookies.get("activeMenuIndex").indexOf("/modifyPassword") != -1
-    ) {
-      this.$router.push("/modifyPassword");
-    }
   }
 };
 </script>

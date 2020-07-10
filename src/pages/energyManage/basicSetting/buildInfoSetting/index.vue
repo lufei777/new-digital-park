@@ -35,7 +35,7 @@
           <el-button type="text" @click="deleteRow(row,$index)">删除</el-button>
         </template>
         <template slot="spaceId" slot-scope="{isEdit,row,column,size,disabled}">
-           <z-input
+           <z-input-tree
              v-if="isEdit"
              type="tree"
              v-model="row[column.prop]"

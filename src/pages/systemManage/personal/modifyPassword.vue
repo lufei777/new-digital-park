@@ -3,7 +3,7 @@
     <div class="form-box">
       <z-form :ref="formData.ref" :options="formData" v-model="formModel" @submit="submit">
         <template slot="menuBtn" slot-scope="scope">
-          <el-button @click="goBack(scope)" v-if="!isyd">返回</el-button>
+          <el-button @click="goBack(scope)" v-if="!(isYDScreen || isNorbulingkaScreen)">返回</el-button>
         </template>
       </z-form>
     </div>
@@ -12,7 +12,7 @@
 
 <script>
 import SystemManageApi from "@/service/api/systemManage";
-import {isYDScreen} from "@/utils/project";
+import {isYDScreen, isNorbulingkaScreen} from "@/utils/project";
 export default {
   name: "ModifyPassword",
   data() {
@@ -83,8 +83,11 @@ export default {
     };
   },
   computed:{
-    isyd(){
+    isYDScreen(){
       return isYDScreen()
+    },
+    isNorbulingkaScreen(){
+      return isNorbulingkaScreen()
     }
   },
   methods: {

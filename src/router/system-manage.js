@@ -84,6 +84,6 @@ export default [{
   },{
     path: '/permissionManage',
     component: ()=>import('@/pages/systemManage/permissionManage/index'),
-    meta: { title: '菜单管理' },
+    meta: { title: '权限管理' },
   }]
 }]

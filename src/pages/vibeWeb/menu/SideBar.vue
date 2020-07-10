@@ -123,26 +123,13 @@ export default {
     },
     onClickItemShortcut(item){
       this.$store.commit("digitalPark/activeMenuIndex","");
-      if(commonFun.loadClientPage(item)){
-        return ;
-      }else{
-        this.$store.commit("digitalPark/menuList",item);
-        // commonFun.loadPage(item)
-        if (item.routeAddress) {
-          if (item.routeAddress.indexOf("@") != -1) {
-            Cookies.set('activeMenuIndex', item.routeAddress)
-            if(this.$route.path=="/vibe-web"){
-              location.reload()
-            }else{
-              this.$router.push('/vibe-web')
-            }
-          } else {
-            this.$router.push(item.routeAddress);
-          }
-        } else {
-          this.$router.push("/digitalPark/defaultPage");
-        }
-      }
+      this.$store.commit("digitalPark/menuList",item);
+      // if(item.routeAddress.indexOf("@") != -1){
+      //   if(this.$route.path=="/vibe-web") {
+      //     location.reload()
+      //   }
+      // }
+      commonFun.loadPage(item)
     },
   },
   mounted() {

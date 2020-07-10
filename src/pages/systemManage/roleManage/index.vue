@@ -9,10 +9,30 @@
         <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
           <el-button type="text" @click="editRow(row)">编辑</el-button>
           <el-button type="text" @click="deleteRow(row)">删除</el-button>
-          <el-button type="text" @click="rowClick(row)">分配权限</el-button>
+          <el-button type="text" @click="assignPermission(row)">分配权限</el-button>
           <!--<el-button type="text" @click="assignUser(row)">分配用户</el-button>-->
         </template>
       </z-table>
+
+      <el-dialog
+        title="分配权限"
+        :visible.sync="showModal"
+        width="85%"
+        custom-class="per-modal"
+      >
+        <el-scrollbar wrap-class="scrollbar-wrapper">
+          <!--<PermissionTree fromFlag="1" />-->
+          <RenderPage
+            :from-flag="4"
+            :hide-btn="true"
+            ref="renderPage"
+          />
+        </el-scrollbar>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="showModal = false">取 消</el-button>
+          <el-button type="primary" @click="onClickSureAssignBtn">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
     <!--<div class="item-row-detail-table radius-shadow">-->
     <!--<table>-->
@@ -32,10 +52,15 @@
   import CommonFun from '@/utils/commonFun'
   import SystemManageApi from '@/service/api/systemManage'
   import {mapState} from 'vuex'
+  import PermissionTree from '../coms/permissionTree'
+  import RenderPage from '../coms/renderPage'
 
   export default {
     name: 'RoleManage',
-    components: {},
+    components: {
+      PermissionTree,
+      RenderPage
+    },
     data() {
       return {
         curRole: {},
@@ -71,15 +96,17 @@
             // }
           ],
           btnConfig: [],
-          operation:{
-            width:250
+          operation: {
+            width: 250
           },
           uiConfig: {
             height: "auto",
             // selection: true,
           },
           tableMethods: {},
-        }
+        },
+        showModal: false,
+        curRoleId: 0,
       }
     },
     computed: {
@@ -91,9 +118,9 @@
       onClickAddBtn() {
         this.$router.push('/addRole')
       },
-      onClickMultiDelBtn(){
+      onClickMultiDelBtn() {
         let tmp = this.$refs[this.tableConfig.ref].getSelectedData()
-        this.deleteId = tmp.map((item)=>item.id).join(",")
+        this.deleteId = tmp.map((item) => item.id).join(",")
         CommonFun.deleteTip(this, this.deleteId, '至少选择一条数据！', this.sureDelete)
       },
       editRow(data) {
@@ -113,23 +140,46 @@
         });
         this.$refs[this.tableConfig.ref].refreshTable()
       },
-      assignUser(){
-        this.$router.push("/userManage?from=assignUser")
+      assignUser() {
+        // this.$router.push("/userManage?from=assignUser")
       },
-      setTableData(){
+      setTableData() {
         this.tableConfig.serverMode.data = {
-          userId:this.userInfo.id
+          userId: this.userInfo.id
         }
       },
-      async getPermissionList(){
+      async getPermissionList() {
         let res = await SystemManageApi.getPermissionList()
+      },
+      assignPermission(row) {
+        this.showModal = true
+        row.permissionIds=[10001,10004]
+        this.curRoleId = row.id
+        // this.permissionIds = row.permissionIds || []
+        this.$store.commit("digitalPark/permissionIds",row.permissionIds)
+      },
+      async onClickSureAssignBtn() {
+        let tmp = this.$refs.renderPage.getAssignList()
+        let idArr = tmp.map((item => item.id))
+        let params = {
+          roleId: this.curRoleId,
+          permissionIds: idArr.join(",")
+        }
+        // console.log("params",params)
+        await SystemManageApi.assignPermission(params)
+        this.$message({
+          type: 'success',
+          message: '分配成功！'
+        })
+        this.showModal = false
+        this.$refs[this.tableConfig.ref].refreshTable()
       }
     },
-    created(){
+    created() {
       this.setTableData()
     },
     mounted() {
-      this.getPermissionList()
+      // this.getPermissionList()
     },
   }
 </script>
@@ -142,7 +192,7 @@
       padding: 20px;
       background: @white;
       margin-bottom: 20px;
-    }*
+    }
 
     .operator-box {
       background: @white;
@@ -150,6 +200,19 @@
 
       .el-button {
         margin-left: 20px;
+      }
+    }
+
+    .per-modal {
+      margin-top: 20px !important;
+
+      .el-dialog__body {
+        height: 700px;
+      }
+
+      .system-tree-box {
+        left: 8.5%;
+        height: 700px !important;
       }
     }
 

@@ -3,7 +3,7 @@
     <div class="form-box">
       <z-form :ref="formData.ref" :options="formData" v-model="formModel" @submit="submit">
         <template slot="menuBtn" slot-scope="scope">
-          <el-button @click="goBack(scope)" v-if="!isyd">返回</el-button>
+          <el-button @click="goBack(scope)" v-if="!(isYDScreen || isNorbulingkaScreen)">返回</el-button>
         </template>
       </z-form>
     </div>
@@ -14,7 +14,7 @@
 import { validatePhoneNumber, validMail } from 'utils/validate.js';
 import SystemManageApi from '@/service/api/systemManage'
 import { CommonDic } from '@/utils/dictionary'
-import {isYDScreen} from "@/utils/project";
+import {isYDScreen, isNorbulingkaScreen} from "@/utils/project";
 import { mapState } from 'vuex'
 export default {
   name: 'PersonalInformation',
@@ -25,7 +25,7 @@ export default {
       formData: {
         ref: "formRef",
         size: "medium",
-        menuPosition: "left",
+        menuPosition: "center",
         emptyBtn: false,
         forms: [
           {
@@ -88,8 +88,11 @@ export default {
     }
   },
   computed: {
-    isyd(){
+    isYDScreen(){
       return isYDScreen()
+    },
+    isNorbulingkaScreen(){
+      return isNorbulingkaScreen()
     }
   },
   watch: {
