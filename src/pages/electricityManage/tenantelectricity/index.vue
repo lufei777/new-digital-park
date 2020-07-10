@@ -25,19 +25,34 @@
         <template slot="operation" slot-scope="{row}">
           <el-button type="text" @click="propertyDetail({row})">详情</el-button>
           <el-button type="text" @click="propertyEdit({row})">编辑</el-button>
-          <el-button type="text" @click="propertyDel({row})">删除</el-button>
           <el-button type="text" @click="bindingMeter({row})">电表绑定</el-button>
+          <el-button type="text" @click="unbinding({row})">电表解绑</el-button>
         </template>
       </z-table>
     </div>
     <el-dialog
-      title="绑定点表"
+      title="绑定电表"
       destroy-on-close
       :style="{height:'100%'}"
       :visible.sync="bindingMeterDialog"
       width="80%"
     >
       <select-meter @confirm="bindingSuccess"></select-meter>
+    </el-dialog>
+    <el-dialog
+      title="解绑电表"
+      destroy-on-close
+      :style="{height:'100%'}"
+      :visible.sync="unbindingMeterDialog"
+      width="30%"
+      @close="unbindingModel = {}"
+    >
+      <z-form
+        v-model="unbindingModel"
+        :ref="unbindingForm.ref"
+        :options="unbindingForm"
+        @submit="unbindingSubmit"
+      ></z-form>
     </el-dialog>
   </div>
 </template>
@@ -60,6 +75,7 @@ export default {
   },
   data() {
     return {
+      unbindingMeterDialog: false,
       bindingMeterDialog: false,
       tenantElecId: '',
       model: {},
@@ -68,7 +84,7 @@ export default {
         menuPosition: "right",
         menuBtn: false,
         forms: [
-          {
+          /* {
             type: 'table',
             label: "合同编号",
             prop: "contractNumber",
@@ -94,8 +110,8 @@ export default {
               label: 'contractNumber',
               value: 'contractNumber'
             }
-          },
-          {
+          }, */
+          /* {
             type: 'table',
             label: "租户名称",
             prop: "tenantNumber",
@@ -125,13 +141,22 @@ export default {
               label: 'tenantName',
               value: 'tenantNumber'
             }
+          }, */
+          {
+            label: "合同编号",
+            prop: "contractNumber",
+            span: 6
+          },
+          {
+            label: "租户名称",
+            prop: "tenantNumber",
+            span: 6
           },
           {
             prop: "btn",
-            span: 6,
             noModel: true,
             formslot: true,
-            width: 55
+            width: 20
           }
         ]
       },
@@ -185,6 +210,31 @@ export default {
           selection: true,
           showIndex: true
         }
+      },
+      unbindingModel: {},
+      unbindingForm: {
+        ref: 'unbindingForm',
+        itemSpan: 24,
+        emptyBtn: false,
+        forms: [
+          {
+            label: '客户名称',
+            prop: 'tenantName',
+            textMode: true,
+            row: true
+          },
+          {
+            label: '电表号',
+            prop: 'monitors',
+            type: 'select',
+            multiple: true,
+            props: {
+              label: 'monitorName',
+              value: 'monitor'
+            },
+            dicData: []
+          }
+        ]
       }
     };
   },
@@ -271,6 +321,28 @@ export default {
         monitors: selectedData.map(item => item.id).join(',')
       }).then(res => {
         this.bindingMeterDialog = false;
+        this.refreshTable();
+      })
+    },
+    unbinding({ row: { elecMeter, tenantName, id } }) {
+      if (elecMeter && elecMeter.length) {
+        this.unbindingMeterDialog = true;
+        this.unbindingModel = { tenantName, id };
+        this.$nextTick(() => {
+          this.$refs[this.unbindingForm.ref].setColumnByProp('monitors', {
+            dicData: elecMeter
+          })
+        })
+      } else {
+        this.$message.warning('未绑定电表');
+      }
+    },
+    unbindingSubmit(model, done) {
+      model.monitors = model.monitors.join(',');
+      electricityManageApi.relieveTenantOfElec({}, model).then(res => {
+        this.unbindingMeterDialog = false;
+      }).finally(() => {
+        done();
         this.refreshTable();
       })
     }

@@ -83,7 +83,7 @@ export default {
             span: 5,
             noModel: true,
             formslot: true,
-            width: 55
+            width: 20
           }
         ]
       },

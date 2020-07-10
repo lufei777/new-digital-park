@@ -55,9 +55,7 @@
             @input="modelInput($event,scopeRow.row,col)"
           ></form-temp>
           <template v-else>
-            <span
-              v-if="['array'].includes(col.type)"
-            >{{_detailData(getValueByPath(scopeRow.row, col.prop),col).join(' | ')}}</span>
+            <span v-if="['array'].includes(col.type)">{{_detailData(scopeRow,col)}}</span>
             <span v-else-if="['url'].includes(col.type)">
               <el-link
                 type="primary"
@@ -140,13 +138,18 @@ export default {
       // console.log("isEdit", row, column, row.$cellEdit && column.cell);
       return !!(row.$cellEdit && column.cell);
     },
-    _detailData(list, { dataType, props: { label } }) {
+    _detailData({ row }, col) {
+      let { prop, dataType, props: { label } } = col
+      let list = this.getValueByPath(row, prop);
+      let res = EMPTY_VALUE;
+
       if (!Array.isArray(list) && ["string", "number"].includes(dataType)) {
-        return list.split(",");
-      } else if (Array.isArray(list)) {
-        return list.map(item => item[label]);
+        res = list.split(",").join(' | ');
+      } else if (Array.isArray(list) && list.length) {
+        res = list.map(item => item[label]).join(' | ');
       }
-      return list;
+
+      return res;
     },
     // 由于slot-scope和formatter不能共存只能如此
     _columnFormatter(scopeRow, currentColumn) {
