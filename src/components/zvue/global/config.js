@@ -12,10 +12,13 @@ export default {
     align: 'left',
     headerAlign: 'left',
     customTopPosition: 'right',
-    indexLabel: "序号",
     expandWidth: 60,
     expandFixed: 'left',
+    indexLabel: "序号",
     sumText: '合 计',
+    saveBtnText: '保 存',
+    editBtnText: '编 辑',
+    cancelBtnText: '取 消',
     // 默认log
     LOG: {
         error: {

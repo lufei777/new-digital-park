@@ -12,6 +12,8 @@
         :allData="allData"
         :tableShowData="tableShowData"
         :selectedData="selectedData"
+        :currentRowData="currentRowData"
+        :lastCurrentRowData="lastCurrentRowData"
       ></slot>
     </div>
     <div v-loading="loading" class="zvue-table-body">
@@ -126,7 +128,7 @@
               type="text"
               :size="controlSize"
               @click.stop="rowCanel(scopeRow.row,scopeRow.$index)"
-            >取 消</el-button>
+            >{{parentOption.cancelBtnText || config.cancelBtnText}}</el-button>
             <!-- 操作列的slot -->
             <slot
               v-if="vaildData(tableOption.operation,!!$scopedSlots.operation)"
@@ -582,7 +584,9 @@ export default {
      * 以下行编辑
      */
     _editBtnText(row, index) {
-      return row.$cellEdit === true ? "保 存" : "编 辑";
+      return row.$cellEdit === true ?
+        (this.parentOption.saveBtnText || this.config.saveBtnText) :
+        (this.parentOption.editBtnText || this.config.editBtnText);
     },
     formRulesInit() {
       this.propOption.forEach(ele => {

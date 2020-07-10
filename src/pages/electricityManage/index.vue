@@ -51,6 +51,11 @@ export default {
               routeAddress: "/electricitymanage/meterreadrecords",
             }
           ]
+        },
+        {
+          id: "14",
+          name: "用电收费明细",
+          routeAddress: "/chargeelectricityDetail"
         }
       ]
     };
