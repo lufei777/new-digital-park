@@ -761,12 +761,12 @@ export default {
        * rowsIndex为  [0,2,5]形式的行标号 或 [row,row,row] 或 0 或 row
        * selectedArr为 [true,false] 或 true 形式的boolean数组，表明对应行选中与否
        */
-      if (rowsIndex) {
+      if (typeof rowsIndex !== 'undefined') {
         // 如果选中状态时数组
         if (Array.isArray(rowsIndex)) {
           for (let index = 0; index < rowsIndex.length; index++) {
             const row = typeof rowsIndex[index] === 'number'
-              ? this.tableShowData[rowsIndex[index] - 1]
+              ? this.tableShowData[rowsIndex[index]]
               : rowsIndex[index];
             const rowSelected = Array.isArray(selectedArr)
               ? selectedArr[index]
@@ -777,7 +777,7 @@ export default {
           }
         } else {
           const row = typeof rowsIndex === 'number'
-            ? this.tableShowData[rowsIndex[index] - 1]
+            ? this.tableShowData[rowsIndex]
             : rowsIndex;
 
           this.Table.toggleRowSelection(row, selectedArr);
@@ -797,14 +797,14 @@ export default {
         return;
       }
 
-      if (rowsIndex) {
+      if (typeof rowsIndex !== 'undefined') {
         if (Array.isArray(rowsIndex)) {
           for (let index = 0; index < rowsIndex.length; index++) {
             const curRowExpanded = Array.isArray(expanded)
               ? expanded[index]
               : expanded;
             const row = typeof rowsIndex[index] === 'number'
-              ? this.tableShowData[rowsIndex[index] - 1]
+              ? this.tableShowData[rowsIndex[index]]
               : rowsIndex[index];
             if (!row) continue;
 
@@ -812,7 +812,7 @@ export default {
           }
         } else {
           const row = typeof rowsIndex === 'number'
-            ? this.tableShowData[rowsIndex - 1]
+            ? this.tableShowData[rowsIndex]
             : rowsIndex;
 
           this.Table.toggleRowExpansion(row, expanded);
