@@ -78,7 +78,7 @@
     },
     // fromFlag 1:用户管理  2:空间管理  3：机构管理  4:权限管理
     // hideBtn true/false  角色管理分配权限时隐藏按钮
-    props: ["fromFlag","hideBtn"],
+    props: ["fromFlag","hideBtn",'onClickSureAssignBtn'],
     data() {
       let config = this.getConfig()
       let searchParams = this.setParams()
@@ -92,7 +92,7 @@
         },
         searchParams: searchParams,
         tableConfig: {
-          ref: "tableRef",
+          ref: "renderPageTable",
           serverMode: {
             url: config.serverUrl,
             data: {...pageInfo}
@@ -409,14 +409,21 @@
            return item.pType==1
          })
         if(writePermission){
-          let readPermissionIndex = this.$refs[this.tableConfig.ref].allData.findIndex((item)=>{
+          const Table = this.$refs[this.tableConfig.ref];
+          let readPermissionIndex = Table.allData.findIndex((item)=>{
             return item.pType==0
           })
           console.log("readPermissionIndex",readPermissionIndex)
           if(readPermissionIndex!=-1){
-            this.$refs[this.tableConfig.ref].toggleSelection(readPermissionIndex,true)
+            Table.toggleSelection(readPermissionIndex,true)
+            // Table.Table.toggleRowSelection(Table.tableShowData[readPermissionIndex],true)
           }
         }
+      },
+      getAssignList() {
+        let tmp = this.$refs[this.tableConfig.ref].selectedData
+        return tmp
+        // let
       }
     },
     async created() {

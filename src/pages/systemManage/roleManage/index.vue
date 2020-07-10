@@ -22,11 +22,15 @@
       >
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <!--<PermissionTree fromFlag="1" />-->
-          <RenderPage :from-flag="4" :hide-btn="true"/>
+          <RenderPage
+              :from-flag="4"
+              :hide-btn="true"
+              ref="renderPage"
+          />
         </el-scrollbar>
         <span slot="footer" class="dialog-footer">
           <el-button @click="showModal = false">取 消</el-button>
-          <el-button type="primary" @click="showModal = false">确 定</el-button>
+          <el-button type="primary" @click="onClickSureAssignBtn">确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -147,6 +151,10 @@
       },
       assignPermission(){
         this.showModal = true
+      },
+      onClickSureAssignBtn(){
+        let tmp = this.$refs.renderPage.getAssignList()
+        console.log("tmp",tmp)
       }
     },
     created() {
