@@ -4,10 +4,13 @@
       class="panel"
       v-if="billArr"
     >
-     <div class="top">
+      <div class="top">
         <span style="margin:10px;display:block">账单摘要</span>
-        <el-button type='text' @click="goback()">返回</el-button>
-     </div>
+        <el-button
+          type='text'
+          @click="goback()"
+        >返回</el-button>
+      </div>
       <!-- 表格部分 -->
       <div class="form">
         <!-- 左 -->
@@ -183,7 +186,7 @@ export default {
         this.billdetailArr = newarr;
         if (Object.values(this.billdetailArr).length === 0) {
           this.off = false;
-        } 
+        }
       }
 
       console.log(" this.billArr", this.billArr);

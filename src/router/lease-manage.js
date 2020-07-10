@@ -81,7 +81,7 @@ export default [
 				name: 'billReview',
 				meta: { title: '租赁月账单审核' },
 				component: () => import('../pages/leaseManage/billReview/index.vue'),
-				// redirect: '/auditing',
+				// redirect: '/cansee',
 				// children: [
 				// 	// 租赁月账单审核==>待审核
 				// 	{
@@ -98,6 +98,12 @@ export default [
 				// 		component: () => import('../pages/leaseManage/billReview/checked.vue')
 				// 	}
 				// ]
+			},
+			{
+				path: '/cansee',
+				name: 'cansee',
+				meta: { title: '查看' },
+				component: () => import('../pages/leaseManage/billReview/see.vue'),
 			},
 
 			//

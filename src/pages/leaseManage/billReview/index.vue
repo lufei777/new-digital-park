@@ -18,34 +18,59 @@
               :disabled="obj.disabled"
               type="primary"
               @click="onClickSearchBtn(obj)"
-            >查询</el-button>
+            >搜索</el-button>
             <el-button
               :disabled="obj.disabled"
               @click="clearForm(obj)"
-            >重置</el-button>
+            >清除</el-button>
           </div>
         </template>
       </z-form>
     </div>
 
-    <div class="lease-contract-table panel">
-      <!-- <div class="nav">
-        <el-menu
-          class="el-menu-demo"
-          :default-active="$route.path"
-          mode="horizontal"
-          @select="handleSelect"
-          router
+    <div class="lease-contract-table panel" id='printTest'>
+      <!-- 已审核表格 -->
+
+      <z-table
+        :ref="leaseContractTable.ref" 
+        :options="leaseContractTable"
+      >
+        <template
+          slot="custom-top"
+          slot-scope="obj"
         >
-          <el-menu-item index="/auditing">待审核</el-menu-item>
-          <el-menu-item index="/checked">已审核</el-menu-item>
-        </el-menu>
-        <router-view></router-view>
-      </div> -->
-      <!-- 按钮 -->
-      <div class="btn_top">
-        <span>已审核</span> <span>待审核</span>
-      </div>
+          <div class="operator-box flex-row-reverse">
+            <!-- <el-button
+              :size="obj.size"
+              type="primary"
+              @click="generate(obj)"
+            >生成</el-button> -->
+            <el-button
+              :size="obj.size"
+              type="primary"
+              @click="exportFile()"
+            >导出</el-button>
+            <el-button
+              :size="obj.size"
+              type="primary"
+              v-print='"#printTest"'
+            >打印</el-button>
+            <el-button
+              :size="obj.size"
+              type="primary"
+            >批量审核</el-button>
+          </div>
+        </template>
+
+        <template
+          slot="operation"
+          slot-scope="obj"
+        >
+          <el-button type="text" @click="canSee(obj)">查看</el-button>
+          <el-button type="text">审核</el-button>
+        </template>
+      </z-table>
+
     </div>
   </div>
 </template>
@@ -53,15 +78,22 @@
 <script>
 import LeaseManageApi from "@/service/api/leaseManage";
 import CommonFun from "@/utils/commonFun";
+//导入字典
+import { LeaseManageDic } from "../../../utils/dictionary";
 let pageInfo = {
   pageNum: 1,
   pageSize: 10
 };
+// 审核状态的定义
+
 export default {
-  name: "monthrentalbill",
+  name: "billReview",
   data() {
     let _this = this;
     return {
+      // 控制已审核和待审核显示的开关
+      open: true,
+      off: false,
       model: {},
       leaseContractForm: {
         ref: "leaseContractForm",
@@ -82,85 +114,60 @@ export default {
           //  租户
           {
             label: "租户",
-            type: "date",
+            type: "input",
             span: 6,
-            prop: "billTime",
-            valueFormat: "yyyy-MM-dd",
-            format: "yyyy-MM-dd"
+            prop: "tenantName"
+            // valueFormat: "yyyy-MM-dd",
+            // format: "yyyy-MM-dd"
+          },
+          // 审核状态
+          {
+            label: "审核状态",
+            type: "select",
+            span: 6,
+            prop: "billStatus",
+            dicData: LeaseManageDic.checkStatus
           },
           {
             prop: "btn",
             span: 6,
             pull: 6,
+            // offset: 4,
             formslot: true
             // width: 20
           }
         ]
       },
-      tabels: [
-        {
-          leaseContractTable: {
-            ref: "leaseContractTable1",
-            customTop: true,
-            serverMode: {
-              url: LeaseManageApi.queryMonthBillList,
-              data: pageInfo
-            },
-            propsHttp: {
-              list: "data",
-              total: "total",
-              pageSize: "pageSize",
-              pageNum: "pageNum"
-            },
-            operation: {
-              width: 200
-            },
-            props: {
-              rowKey: "contractId"
-            },
-            data: [],
-            columnConfig: [],
-            uiConfig: {
-              height: "auto", //"", //高度
-              selection: true, //是否多选
-              showIndex: {
-                width: 50
-              }
-            }
-          }
+
+      leaseContractTable: {
+        ref: "tb1",
+        customTop: true,
+        serverMode: {
+          url: LeaseManageApi.querySumStatContract,
+          data: pageInfo
         },
-        {
-          leaseContractTable: {
-            ref: "leaseContractTable",
-            customTop: true,
-            serverMode: {
-              url: LeaseManageApi.queryMonthBillList,
-              data: pageInfo
-            },
-            propsHttp: {
-              list: "data",
-              total: "total",
-              pageSize: "pageSize",
-              pageNum: "pageNum"
-            },
-            operation: {
-              width: 200
-            },
-            props: {
-              rowKey: "contractId"
-            },
-            data: [],
-            columnConfig: [],
-            uiConfig: {
-              height: "auto", //"", //高度
-              selection: true, //是否多选
-              showIndex: {
-                width: 50
-              }
-            }
+        propsHttp: {
+          list: "data",
+          total: "total",
+          pageSize: "pageSize",
+          pageNum: "pageNum"
+        },
+        operation: {
+          width: 200
+        },
+        props: {
+          rowKey: "contractId"
+        },
+        data: [],
+        columnConfig: [],
+        uiConfig: {
+          height: "auto", //"", //高度
+          selection: true, //是否多选
+          showIndex: {
+            width: 50
           }
         }
-      ],
+      },
       currentPage: 1,
       contractIds: ""
     };
@@ -174,10 +181,13 @@ export default {
     }
   },
   methods: {
-    handleSelect(key, keyPath) {
-      // console.log(key, keyPath);
+    canSee(obj){
+      console.log('obj.row',obj.row)
+      let path ={path:'/cansee',query:{flag:'detail',billNumber:obj.row.billNumber}}
+      this.$router.push(path)
     },
     submit(model, hide) {
+      console.log("model", model);
       hide();
       this.leaseContractTable.serverMode.data = Object.assign(
         _.cloneDeep(pageInfo),
@@ -189,41 +199,38 @@ export default {
     clearForm(...args) {
       this.$refs[this.leaseContractForm.ref].resetForm();
     },
+    // 导出/oaApi/month/bill/exportMonthBillExamine
+    exportFile() {
+      let url = "/oaApi/month/bill/exportMonthBillExamine";
+      let params = "";
+      let arr = this.$refs[this.leaseContractTable.ref].getSelectedData();
+      let stockRecordIds = arr.length ? arr.map(item => item.id) : "";
+      for (let key in this.leaseContractTable.serverMode.data) {
+        if (key != pageInfo) {
+          params +=
+            key + "=" + this.leaseContractTable.serverMode.data[key] + "&";
+        }
+      }
+      params += "stockRecordIds=" + stockRecordIds;
+      CommonFun.exportMethod({ url, params });
+    },
+    // 已审核
     async contractList() {
       let labelList = [
         { label: "租赁月账单编号", prop: "billNumber" },
-        { label: "租户", prop: "tenantName" },
+        { label: "审核状态", prop: "billStatus" },
         { label: "合同名称", prop: "contractName" },
-        { label: "账期", prop: "billTime" },
-        { label: "收费项目数", prop: "chargeItems" },
-        { label: "账单金额合计(元)", prop: "billTotalAmount" },
-        { label: "账单状态", prop: "billStatus" },
-        { label: "本次冲抵额(元)", prop: "offsset" },
-        {
-          label: "租户类型",
-          prop: "tenant",
-          type: "select",
-          props: {
-            label: "name",
-            value: "id"
-          }
-        }
+        { label: "年度", prop: "year" },
+        { label: "月份", prop: "month" },
+        { label: "租户名称", prop: "tenantName" },
+
+        { label: "合同面积", prop: "houseArea" },
+        { label: "账单金额合计(元)", prop: "sumCost" },
+        { label: "本次冲抵额(元)", prop: "offsset" }
       ];
       this.leaseContractTable.columnConfig = labelList;
-      //   let res = await LeaseManageApi.contractList({
-      //     pageNum: this.currentPage,
-      //     pageSize: 10
-      //   });
-      //   if (res && res.list) {
-      //     this.leaseContractTable.data = res.list;
-      //     this.leaseContractTable.uiConfig.pagination.total = res.total;
-      //   }
     },
-    // 生成
-    generate(obj) {
-      console.log(obj);
-      this.$router.push({ path: "/recordedtaile", query: { ...obj.row } });
-    },
+
     // 搜索
     onClickSearchBtn(...args) {
       this.Form.submit();
@@ -231,19 +238,6 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val;
       this.contractList();
-    },
-    showDeleteTip() {
-      CommonFun.deleteTip(
-        this,
-        this.contractIds,
-        "请至少选择一条信息！",
-        this.sureDelete,
-        this.cancelDelete
-      );
-    },
-    // 新增
-    addContract() {
-      this.$router.push({ path: "addmothly" });
     },
     deleteRow(billNumber) {
       LeaseManageApi.deleteMonthBill({ billNumber: billNumber }).then(res => {
@@ -271,16 +265,17 @@ export default {
   },
   created() {
     this.$nextTick(() => {
-      this.$refs[this.leaseContractTable.ref].setColumnByProp("tenant", {
-        dicData: [
-          { label: "内租户", value: 1 },
-          { label: "外租户", value: 2 }
-        ]
-      });
+      // this.$refs[this.leaseContractTable.ref].setColumnByProp("tenant", {
+      //   dicData: [
+      //     { label: "内租户", value: 1 },
+      //     { label: "外租户", value: 2 }
+      //   ]
+      // });
     });
   },
   mounted() {
     this.contractList();
+    // this.tabelList()
   }
 };
 </script>
@@ -297,7 +292,7 @@ export default {
     background: @white;
     padding: 20px;
     .btn_top {
-      // font-size: 0;
+      margin-bottom: 10px;
       span {
         display: inline-block;
         //  border-radius: 6px;
@@ -306,7 +301,6 @@ export default {
         background-color: rgb(160, 209, 250);
       }
     }
-
     .operator-box {
       background: @white;
       .el-button {
@@ -317,8 +311,5 @@ export default {
   // .el-input {
   //   width: 180px!important;
   // }
-}
-.nav {
-  margin-bottom: 15px;
 }
 </style>
