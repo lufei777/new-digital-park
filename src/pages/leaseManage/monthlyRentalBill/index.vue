@@ -197,10 +197,10 @@ export default {
           label: "租户类型",
           prop: "tenant",
           type: "select",
-          props: {
-            label: "name",
-            value: "id"
-          }
+          dicData: [
+            { label: "内租户", value: 1 },
+            { label: "外租户", value: 2 }
+          ]
         }
       ];
       this.leaseContractTable.columnConfig = labelList;
@@ -216,7 +216,10 @@ export default {
     // 生成
     generate(obj) {
       console.log(obj);
-      this.$router.push({ path: "/recordedtaile", query: { ...obj.row } });
+      this.$router.push({
+        path: "/recordedtaile",
+        query: { billNumber: obj.row.billNumber }
+      });
     },
     // 搜索
     onClickSearchBtn(...args) {
@@ -264,14 +267,6 @@ export default {
     }
   },
   created() {
-    this.$nextTick(() => {
-      this.$refs[this.leaseContractTable.ref].setColumnByProp("tenant", {
-        dicData: [
-          { label: "内租户", value: 1 },
-          { label: "外租户", value: 2 }
-        ]
-      });
-    });
   },
   mounted() {
     this.contractList();
