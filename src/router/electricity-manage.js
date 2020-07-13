@@ -59,6 +59,12 @@ export default [{
       name: 'chargeelectricitydetail',
       meta: { title: '用电收费明细' },
       component: () => import('@/pages/electricityManage/chargeElectricityDetail'),
+    },
+    {
+      path: 'electricityMonthlyBill',
+      name: 'electricityMonthlyBill',
+      meta: { title: '用电月账单' },
+      component: () => import('@/pages/electricityManage/electricityMonthlyBill'),
     }
   ],
 }]
