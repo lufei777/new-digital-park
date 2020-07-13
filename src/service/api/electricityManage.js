@@ -243,4 +243,25 @@ export default new class {
   @get
   useElecExamine() { }
 
+  /**
+   * 用电月账单
+   * Integer pageNum 
+   * Integer pageSize 
+   * Integer year 年份 非必填
+   * Integer month 月 非必填          
+   * Integer number  显示月份 非必填
+   */
+  @url('/oaApi/readMeter/getElecDetailsMonthList')
+  @get
+  getElecDetailsMonthList() { }
+
+  /**
+   * 打印用电月账单
+   * Integer year 年份 非必填
+   * Integer month 月 非必填          
+   * Integer number  显示月份 非必填
+   */
+  @url('/oaApi/readMeter/exportElecDetailsMonthList')
+  @get
+  exportElecDetailsMonthList() { }
 }

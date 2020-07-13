@@ -56,6 +56,11 @@ export default {
           id: "14",
           name: "用电收费明细",
           routeAddress: "/electricitymanage/chargeelectricityDetail"
+        },
+        {
+          id: "15",
+          name: "用电月账单",
+          routeAddress: "/electricitymanage/electricityMonthlyBill"
         }
       ]
     };

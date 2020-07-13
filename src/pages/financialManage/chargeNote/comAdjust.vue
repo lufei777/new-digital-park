@@ -30,7 +30,10 @@
           :offset='9'
         >
           <!-- <el-button type='primary'>确认提交</el-button> -->
-          <el-button type='danger' @click="close">关闭</el-button>
+          <el-button
+            type='danger'
+            @click="close"
+          >关闭</el-button>
         </el-col>
       </el-row>
     </div>
@@ -55,6 +58,9 @@ export default {
       test: "",
       model: {},
       arr: null,
+      off:false,
+      noticeNumber: "",
+      contractNumber:'',
       tableOptions: {
         ref: "tabel",
         border: true,
@@ -72,12 +78,14 @@ export default {
         //   data: ""
         // },
         data: [],
+        showSummary: true,
+        sumColumnList: [{ name: "updateAmount", type: "sum" }],
         columnConfig: [
           { label: "收费通知单类型", prop: "noticeType" },
           { label: "收费项目编码", prop: "costProjectCode" },
           { label: "收费项目", prop: "costProjectName" },
           { label: "核定金额", prop: "approvedAmount" },
-          { label: "调整金额", prop: "updateAmount", cell: true },
+          { label: "调整金额", prop: "updateAmount", cell: true,type:'number' },
           { label: "应收金额", prop: "receivableAmount" }
         ],
         uiConfig: {
@@ -98,12 +106,15 @@ export default {
     resetChange() {},
     rowUpdate(model, index, done) {
       // debugger;
+      console.log("model", model);
+      model = Object.assign(model, { contractNumber:this.contractNumber });
       FinacialManageApi.updateCost(model)
         .then(res => {
           this.$message({
             type: "success",
             message: "编辑成功！"
           });
+          this.$emit("offDailog");
           // this.getTableData();
         })
         .finally(res => {
@@ -116,13 +127,18 @@ export default {
       console.log();
     },
     // 关闭
-    close(){
-        console.log('获取父亲中的值')
-        this.$emit('offDailog')
+    close() {
+      console.log("获取父亲中的值");
+      this.$emit("offDailog");
     },
     setTabelData() {
-      this.arr = this.adjust;
-      this.$refs[this.tableOptions.ref].setData(this.adjust.chargeNoticeVos);
+      this.model = this.adjust;
+      // this.noticeNumber = this.adjust.noticeNumber;
+      this.contractNumber = this.adjust.contractNumber
+      // console.log("adjust", this.adjust);
+      // this.arr = this.adjust;
+      // console.log("model", this.model);
+      this.$refs[this.tableOptions.ref].setData(this.model.chargeNoticeVos);
     }
   },
   created() {

@@ -2,8 +2,8 @@ export default [{
   path: '/electricitymanage',
   name: 'electricitymanage',
   meta: { title: '用电管理' },
-  // component: () => import('@/pages/commonProject/coms/commonIndex'),
-  component: () => import('@/pages/electricityManage'),
+  component: () => import('@/pages/commonProject/coms/commonIndex'),
+  // component: () => import('@/pages/electricityManage'),
   redirect: '/electricitymanage/tenantelectricity',
   children: [
     {
@@ -59,6 +59,12 @@ export default [{
       name: 'chargeelectricitydetail',
       meta: { title: '用电收费明细' },
       component: () => import('@/pages/electricityManage/chargeElectricityDetail'),
+    },
+    {
+      path: 'electricityMonthlyBill',
+      name: 'electricityMonthlyBill',
+      meta: { title: '用电月账单' },
+      component: () => import('@/pages/electricityManage/electricityMonthlyBill'),
     }
   ],
 }]

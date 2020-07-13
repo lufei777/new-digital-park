@@ -1,7 +1,24 @@
 <template>
   <!-- 收费 -->
       <div class='panel-container'>
-    <div class="box">
+    <el-row>
+      <el-col
+        :span="6"
+        :offset="18"
+      >
+        <el-button
+          type="info"
+          plain
+          @click="close"
+        >关闭</el-button>
+        <el-button
+          type="info"
+          plain
+          v-print="'#printTest'"
+        >打印</el-button>
+      </el-col>
+    </el-row>
+    <div class="box" id="printTest">
       <h2 align='center'>中钢国际广场收费通知单</h2>
       <p><span>账期：</span>{{2019.09}}</p>
       <!-- 表格上方的4个信息展示 -->
@@ -9,18 +26,18 @@
         <div class="top">
           <div class="item">
             <div class="item_left">
-              <span>客户名称：</span>{{123}}
+              <span>客户名称：</span>{{print.tenantName}}
             </div>
             <div class="item_left">
-              <span>通知单号：</span>{{123}}
+              <span>通知单号：</span>{{print.noticeNumber}}
             </div>
           </div>
           <div class="item">
             <div class="item_left">
-              <span>合同编号：</span>{{2589}}
+              <span>合同编号：</span>{{print.contractNumber}}
             </div>
             <div class="item_left">
-              <span>发单时间：</span>{{20200709}}
+              <span>发单时间：</span>{{print.billTime}}
             </div>
           </div>
         </div>
@@ -34,7 +51,7 @@
       <div class="sum">
         <div class="sum_item"><span>上次预付款:</span>{{2555}}￥</div>
         <div class="sum_item"><span>本次扣款额:</span>{{2555}}￥</div>
-        <div class="sum_item"><span>合计:</span>{{2555}}￥</div>
+        <div class="sum_item"></div>
       </div>
       <!-- 说明部分 -->
       <div class="instructions">
@@ -66,14 +83,15 @@
 
 <script>
 export default {
-  props:{
-    print:{
-      type:Object
+  props: {
+    print: {
+      type: Object
     }
   },
   data() {
     return {
       model: {},
+      list: null,
       tableOptions: {
         ref: "tabel",
         border: true,
@@ -116,11 +134,13 @@ export default {
           //   bz: "收费"
           // }
         ],
+        showSummary: true,
+        sumColumnList: [{ name: "receivableAmount", type: "sum" }],
         columnConfig: [
-          { label: "收费项目", prop: "chargeItem" },
+          { label: "收费项目", prop: "costProjectName" },
           { label: "起始日期", prop: "startTime" },
           { label: "截止日期", prop: "endTime" },
-          { label: "应收金额", prop: "chargeMoney" },
+          { label: "应收金额", prop: "receivableAmount" },
           { label: "备注", prop: "bz" }
         ],
         uiConfig: {
@@ -194,12 +214,22 @@ export default {
       }
     };
   },
-  methods:{
-      submit(model,hide){},
-      resetChange(){}
+  methods: {
+    submit(model, hide) {},
+    close(){
+      this.$emit('comprint')
+    },
+    resetChange() {},
+    // 获取父组件传递过来的值
+    getProps() {
+      this.model = this.print;
+      this.$nextTick(() => {
+        this.$refs[this.tableOptions.ref].setData(this.print.chargeNoticeVos);
+      });
+    }
   },
-  created(){
-    this.model = this.print
+  created() {
+    this.getProps();
   }
 };
 </script>

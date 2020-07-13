@@ -13,30 +13,12 @@
 
     <div class="table panel">
       <z-table :ref="tableOptions.ref" :options="tableOptions">
-        <!-- <template slot="custom-top" slot-scope="{size,selectedData}">
-          <el-button :size="size" type="primary" @click="addedProperty">新增</el-button>
-          <el-button
-            :disabled="!selectedData.length"
-            :size="size"
-            type="primary"
-            @click="bulkDel(selectedData)"
-          >批量删除</el-button>
-          <el-button :size="size" type="primary">修改电表用途</el-button>
-        </template>-->
-        <template slot="operation" slot-scope="{row}">
-          <el-button type="text" @click="propertyDetail({row})">详情</el-button>
-          <el-button type="text" @click="checkDetailDialog = true,checkDetailModel.id = row.id">生成账单</el-button>
+        <template slot="custom-top" slot-scope="{size}">
+          <el-button :size="size" type="primary" @click="print">打印</el-button>
+          <el-button :size="size" type="primary" @click="bulkExport">导出</el-button>
         </template>
       </z-table>
     </div>
-    <el-dialog
-      title="审核收费明细"
-      :visible.sync="checkDetailDialog"
-      width="30%"
-      @close="checkDetailModel = {}"
-    >
-      <z-form v-model="checkDetailModel" :options="checkDetailForm" @submit="checkDetail"></z-form>
-    </el-dialog>
   </div>
 </template>
 <script>
@@ -44,7 +26,7 @@ import { ElectricityManageDic } from "@/utils/dictionary";
 import electricityManageApi from 'api/electricityManage';
 import commonFun from "@/utils/commonFun.js";
 
-import { status } from '../config';
+const { detailsStatus } = ElectricityManageDic;
 const dateValueFormat = "yyyy-MM-dd";
 let tableSendData = {
   pageNum: 1,
@@ -54,8 +36,6 @@ let tableSendData = {
 export default {
   data() {
     return {
-      checkDetailDialog: false,
-      tenantElecId: '',
       model: {},
       formOptions: {
         ref: "Form",
@@ -77,18 +57,32 @@ export default {
             span: 5
           },
           {
-            prop: 'contractNumber',
-            label: "合同编号",
-            span: 5
-          },
-          {
-            prop: 'tenantNumber',
-            label: "租户编号",
+            type: 'select',
+            prop: 'number',
+            label: "显示月度数",
+            dicData: [
+              {
+                label: '显示3个月',
+                value: 1
+              },
+              {
+                label: '显示6个月',
+                value: 2
+              },
+              {
+                label: '显示9个月',
+                value: 3
+              },
+              {
+                label: '显示12个月',
+                value: 4
+              }
+            ],
             span: 5
           },
           {
             prop: "btn",
-            span: 4,
+            span: 9,
             noModel: true,
             formslot: true,
             width: 20
@@ -98,11 +92,8 @@ export default {
       tableOptions: {
         ref: "Table",
         customTop: true,
-        operation: {
-          width: 150
-        },
         serverMode: {
-          url: electricityManageApi.getChargeDetailsList,
+          url: electricityManageApi.getElecDetailsMonthList,
           data: {
             pageNum: 1,
             pageSize: 10
@@ -110,54 +101,27 @@ export default {
         },
         columnConfig: [
           {
-            ...status,
-            prop: 'detailsStatus',
-            label: '审核状态'
-          },
-          {
-            label: "年度",
-            prop: "year"
-          },
-          {
-            label: "月份",
-            prop: "month"
+            label: 'id',
+            prop: 'id',
+            hide: true
           },
           {
             label: "租户名称",
             prop: "tenantName"
           },
           {
+            label: "租户编号",
+            prop: "tenantNumber",
+            width: 150
+          },
+          {
             label: "合同编号",
             prop: "contractNumber",
             width: 200
           },
-          /* {
-            label: "合同状态",
-            prop: "contractStatus"
-          }, */
           {
-            label: "合同终止日期",
-            prop: "expireTime"
-          },
-          {
-            label: "办公月电量合计",
-            prop: "useElecMonth"
-          },
-          {
-            label: "办公月电费合计",
-            prop: "elecFees"
-          },
-          {
-            label: "月工日",
-            prop: "diffNum"
-          },
-          {
-            label: "分摊电费合计(元)",
-            prop: "useElecMonth2"
-          },
-          {
-            label: "电费合计(元)",
-            prop: "remarks"
+            label: "核定金额(元)",
+            prop: "billAmount"
           }
         ],
         uiConfig: {
@@ -165,30 +129,6 @@ export default {
           selection: true,
           showIndex: true
         }
-      },
-      checkDetailModel: {},
-      checkDetailForm: {
-        itemSpan: 24,
-        forms: [
-          {
-            ...status,
-            type: 'radio',
-            prop: 'detailsStatus',
-            label: '审核结果',
-            rules: {
-              required: true
-            },
-            valueDefault: 2
-          },
-          {
-            type: 'textarea',
-            prop: 'examineIdea',
-            label: '审核意见',
-            rules: {
-              required: true
-            }
-          }
-        ]
       }
     };
   },
@@ -207,6 +147,17 @@ export default {
     clearForm() {
       this.Form.resetForm();
     },
+    // 打印
+    print() { },
+    bulkExport() {
+      // 导出
+      commonFun.exportMethod(
+        {
+          url: '/oaApi/readMeter/exportElecDetailsMonthList',
+          params: this.model
+        }
+      )
+    },
     propertyDetail({ row }) {
       this.$router.push({
         name: "meterreadrecordsadd",
@@ -215,8 +166,8 @@ export default {
     },
     checkDetail(model, done) {
       electricityManageApi.useElecExamine(model).then(res => {
+        console.log("checkDetail -> res", res)
         this.checkDetailDialog = false;
-        this.refreshTable();
       }).finally(() => {
         done()
       })
