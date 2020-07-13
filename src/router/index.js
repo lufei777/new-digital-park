@@ -40,14 +40,16 @@ import DeviceManage from './device-manage'; 										// 设备管理
 // import PropertyErpsystem from './property-erpsyetem'            // 物业ERP系统
 import ElectricityManage from './electricity-manage'; 										// 用电管理
 import MaintenanceManage from './maintenance-manage';           //维保管理
-import FinancialManage from './financial-manage'
+import FinancialManage from './financial-manage'                //财务管理
 
 // 数字园区 公共模块
 let publicRouters = [].concat(
   vibeWeb,
   DigitalParkRouter,
   ExportData,
-  SystemManage
+  SystemManage,
+  Norbulingka,
+  MonitoringAlarm
 )
 
 // 数字园区 私有模块

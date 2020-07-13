@@ -553,7 +553,6 @@ export const taskType = {
 		}
 	]
 };
-
 // 预警报警
 export const WarningAlerm = {
 	// 报警级别

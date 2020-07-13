@@ -82,7 +82,7 @@
           <!--  收费  -->
           <com-charge :charge='charge' v-if="sf" @comcharge='offDailog' ></com-charge>
           <!-- 打印 -->
-          <com-print :print='print' v-if="dy" ></com-print>
+          <com-print :print='print' v-if="dy" @comprint='offDailog' ></com-print>
           <!-- 开票 -->
           <com-invoice :invoice ='invoice' v-if="kp"></com-invoice>
 
@@ -118,6 +118,7 @@
           >开票</el-button>
           <el-button
             type="text"
+            v-if="off"
             @click="chargemoney(obj)"
           >收费</el-button>
           <el-button
@@ -209,6 +210,7 @@ export default {
   data() {
     return {
       title:'测试',
+      off:true,
       show:false,
       dialogTableVisible: false,
       btnList: [],
@@ -340,7 +342,14 @@ export default {
     // adjust 关闭窗口
     offDailog(val){
       console.log('val',val)
-      this.show = false
+      this.show = false;
+      // if(val===false){
+      //   this.off = false
+      // }
+     if(val !== 'undefined'){
+        this.onClickSearchBtn();
+     }
+      
     },
     // 自定义显示列
     testCustomTopObj(scopeObj) {

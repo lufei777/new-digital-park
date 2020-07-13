@@ -48,6 +48,7 @@ export default {
   },
   data() {
     return {
+      off:false,
       model: {},
       formOptions: {
         ref: "form",
@@ -281,7 +282,7 @@ export default {
     // 确认，
     canSure() {
       this.Form.submit();
-      this.$emit("comcharge");
+      this.$emit("comcharge",this.off);
     },
     // 取消
     cancel() {
