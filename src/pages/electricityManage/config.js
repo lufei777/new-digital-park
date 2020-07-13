@@ -1,4 +1,4 @@
-import { electricityManageDic } from 'utils/dictionary';
+import { ElectricityManageDic } from 'utils/dictionary';
 
 export let meterColumnConfig = [
   {
@@ -25,7 +25,7 @@ export let status = {
   prop: "status",
   label: "数据状态",
   type: 'select',
-  dicData: electricityManageDic.status
+  dicData: ElectricityManageDic.status
 }
 
 // 电表用途
@@ -33,5 +33,5 @@ export let useType = {
   prop: "useType",
   label: "电表用途",
   type: 'select',
-  dicData: electricityManageDic.useType
+  dicData: ElectricityManageDic.useType
 }
