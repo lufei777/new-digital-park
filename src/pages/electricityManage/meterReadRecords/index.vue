@@ -32,7 +32,7 @@
   </div>
 </template>
 <script>
-import { electricityManageDic } from "@/utils/dictionary";
+import { ElectricityManageDic } from "@/utils/dictionary";
 import electricityManageApi from 'api/electricityManage';
 import commonFun from "@/utils/commonFun.js";
 import { status, useType } from '../config';
@@ -102,15 +102,18 @@ export default {
           },
           {
             label: "抄表日期",
-            prop: "readTime"
+            prop: "readTime",
+            width: 100
           },
           {
             label: "电表号",
-            prop: "monitorNum"
+            prop: "monitorNum",
+            width: 150
           },
           {
             label: "电表名称",
-            prop: "monitorName"
+            prop: "monitorName",
+            width: 150
           },
           {
             ...useType,

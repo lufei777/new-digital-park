@@ -32,7 +32,7 @@
   </div>
 </template>
 <script>
-import { electricityManageDic } from "@/utils/dictionary";
+import { ElectricityManageDic } from "@/utils/dictionary";
 import commonApi from "api/common";
 import electricityManageApi from 'api/electricityManage';
 import commonFun from "@/utils/commonFun.js";

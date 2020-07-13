@@ -1,13 +1,13 @@
 <template>
   <div class="about-me panel-container">
     <div class="common-tree-box radius-shadow">
-      <Tree :tree-list="taskData" :tree-config="taskTreeConfig"></Tree>
+      <Tree :tree-list="taskTypeData" :tree-config="taskTreeConfig"></Tree>
     </div>
     <div class="right-content panel-container">
       <CommonSelect @showSelectParams="updateSelectParams" :taskTypes="taskTypesList" />
       <el-tabs type="border-card" v-model="taskActiveName" @tab-click="handleClick" class="panel">
         <el-tab-pane
-          v-for="(item,index) in tabTypeList"
+          v-for="(item,index) in taskTabsList"
           :label="item.text"
           :name="item.name"
           :key="index"
@@ -19,9 +19,15 @@
             </div>
             <z-table :ref="tableData.ref" :options="tableData">
               <template slot="operation" slot-scope="obj">
-                <el-button type="text" @click="editRow(obj)">详情</el-button>
+                <el-button
+                  type="text"
+                  v-for="(item,index) in obj.row.ownBtnList"
+                  :key="index"
+                  @click="item.event(obj)"
+                >{{item.text}}</el-button>
+                <!-- <el-button type="text" @click="editRow(obj)">详情</el-button>
                 <el-button type="text" @click="deleteRow(obj)" v-if="deleteRowShow">删除</el-button>
-                <el-button type="text" @click="taskPosition(obj)">定位</el-button>
+                <el-button type="text" @click="taskPosition(obj)">定位</el-button>-->
                 <!-- window.parent.FindAssetLocation -->
               </template>
             </z-table>
@@ -38,7 +44,12 @@ import Tree from "../../components/tree/index";
 import CommonSelect from "../taskManage/coms/commonSelect";
 import TaskManageApi from "../../service/api/taskManage";
 import CommonFun from "../../utils/commonFun";
-
+import {
+  StockDic,
+  TaskTypeDic,
+  TaskTabsDic,
+  TaskDic
+} from "@/utils/dictionary";
 export default {
   name: "AboutMe",
   components: {
@@ -96,62 +107,30 @@ export default {
         { label: "处理中", value: "2", status: "3" },
         { label: "已完成", value: "0", status: "4" },
         { label: "已挂起", value: "0", status: "5" }
-      ]
+      ],
+      taskTypeData: TaskTypeDic.taskType,
+      taskTabsList: TaskTabsDic.taskTabs,
+      taskTypeStatus:''
     };
   },
   computed: {
     ...mapState({
       menuIsCollapse: state => state.digitalPark.menuIsCollapse
     }),
-    taskData() {
-      return [
-        {
-          value: 1,
-          label: "巡检任务",
-          nodes: []
-        },
-        {
-          value: 2,
-          label: "维修任务",
-          nodes: []
-        },
-        {
-          value: 3,
-          label: "保养任务",
-          nodes: []
-        },
-        {
-          value: 4,
-          label: "流程任务",
-          nodes: []
-        },
-        {
-          value: 5,
-          label: "审批任务",
-          nodes: []
-        },
-        {
-          value: 6,
-          label: "其他任务",
-          nodes: []
-        }
-      ];
-    },
-    tabTypeList() {
-      return [
-        {
-          text: "全部",
-          name: "frist"
-        },
-        {
-          text: "我发起的",
-          name: "second"
-        },
-        {
-          text: "我收到的",
-          name: "third"
-        }
-      ];
+    commonBtn() {
+      let _this = this;
+      if (this.taskActiveName == "second") {
+        return [
+          { id: 0, text: "详情", event: _this.editRow },
+          { id: 1, text: "定位", event: _this.taskPosition },
+          { id: 2, text: "删除", event: _this.deleteRow }
+        ];
+      } else {
+        return [
+          { id: 0, text: "详情", event: _this.editRow },
+          { id: 1, text: "定位", event: _this.taskPosition }
+        ];
+      }
     }
   },
   methods: {
@@ -168,12 +147,30 @@ export default {
         { label: "工单描述", prop: "description" },
         { label: "创建时间", prop: "beginTime" },
         { label: "预计结束时间", prop: "endTime" },
-        { label: "优先级", prop: "urgent" },
+        {
+          label: "优先级",
+          prop: "urgent",
+          formatter: function(row) {
+            return TaskDic.urgentStatus[row.urgent];
+          }
+        },
         { label: "状态", prop: "taskStatus" },
         { label: "创建人", prop: "founderName" },
         { label: "处理人", prop: "username" },
-        { label: "地点", prop: "officeLocation" },
-        { label: "补录", prop: "isSupplementText" },
+        {
+          label: "地点",
+          prop: "officeLocation",
+          formatter: function(row) {
+            return TaskDic.locationStatus[row.officeLocation];
+          }
+        },
+        {
+          label: "补录",
+          prop: "isSupplement",
+          formatter: function(row) {
+            return TaskDic.supplementStatus[row.isSupplement];
+          }
+        },
         { label: "设备点位", prop: "caption" }
       ];
       this.tableData.columnConfig = labelList;
@@ -190,85 +187,107 @@ export default {
       if (res && res.list) {
         res.list.map((item, ind) => {
           this.deviceId = item.deviceId;
+          let btnTmp = [];
+          let arr = [];
           if (this.taskActiveName == "third") {
-            switch (item.status) {
-              case "2":
-                item.taskStatus = "待接";
-                break;
-              case "3":
-                item.taskStatus = "处理中";
-                break;
-              case "4":
-                item.taskStatus = "已完成";
-                break;
-              case "5":
-                item.taskStatus = "挂单中";
-                break;
-              default:
-                item.taskStatus = "";
-                break;
+            if (item.status == 2) {
+              btnTmp = [
+                { id: 3, text: "接单", event: this.acceptClick },
+                { id: 4, text: "退单", event: this.returnClick }
+              ];
+            } else if (item.status == 3) {
+              btnTmp = [
+                { id: 4, text: "转派", event: this.turnSendClick },
+                { id: 5, text: "挂起", event: this.hangClick },
+                { id: 6, text: "完成", event: this.completeClick }
+              ];
+            } else if (item.status == 5) {
+              btnTmp = [
+                { id: 7, text: "解除挂起", event: this.cancelHoldClick }
+              ];
+            } else {
+              btnTmp = [];
             }
+
+            item.taskStatus = TaskDic.sendTaskStatus[item.status];
+          } else if (this.taskActiveName == "second") {
+            if (item.status == 1) {
+              btnTmp = [
+                { id: 3, text: "派单", event: this.sendClick },
+                { id: 4, text: "关闭", event: this.closeClick }
+              ];
+            } else if (item.status == 2) {
+              btnTmp = [
+                { id: 4, text: "撤回", event: this.withdrawClick },
+                { id: 5, text: "关闭", event: this.closeClick }
+              ];
+            } else if (item.status == 3) {
+              btnTmp = [{ id: 4, text: "关闭", event: this.closeClick }];
+            } else if (item.status == 5) {
+              btnTmp = [{ id: 7, text: "关闭", event: this.closeClick }];
+            } else {
+              btnTmp = [];
+              // this.commonBtn.pop()
+            }
+            item.taskStatus = TaskDic.acceptTaskStatus[item.status];
           } else {
-            switch (item.status) {
-              case "1":
-                item.taskStatus = "待派";
-                break;
-              case "2":
-                item.taskStatus = "已派";
-                break;
-              case "3":
-                item.taskStatus = "处理中";
-                break;
-              case "4":
-                item.taskStatus = "已完成";
-                break;
-              case "5":
-                item.taskStatus = "挂单中";
-                break;
-              default:
-                item.taskStatus = "";
-                break;
-            }
+            btnTmp = [];
           }
-          item.typeText =
-            item.type == "1"
-              ? "巡检"
-              : item.type == "2"
-              ? "审批"
-              : item.type == "3"
-              ? "调试"
-              : "其他";
-
-          item.urgent =
-            item.urgent == "1"
-              ? "正常"
-              : item.urgent == "2"
-              ? "重要"
-              : item.urgent == "3"
-              ? "紧急"
-              : "";
-
-          item.officeLocation =
-            item.officeLocation == 0
-              ? "公司"
-              : item.officeLocation == 1
-              ? "现场"
-              : "";
-
-          item.isSupplementText =
-            item.isSupplement == "1"
-              ? "正常"
-              : item.isSupplement == "0"
-              ? "补录"
-              : "正常";
+          arr = btnTmp.concat(this.commonBtn);
+          item.ownBtnList = arr;
         });
-
         this.tableData.data = res.list;
         this.tableData.uiConfig.pagination.total = res.total;
       } else {
         this.tableData.data = [];
         this.tableData.uiConfig.pagination.total = res.total;
       }
+    },
+    async dealTask() {
+      let res = await TaskManageApi.dealTask({
+        id: this.taskId,
+        taskType: this.taskTypeStatus,
+        designatorId: this.model.designatorId,
+        reason: this.model.reason,
+        taskPicList: this.model.taskPicList
+      });
+      this.toastMessage(res);
+    },
+    acceptClick(row) {
+      console.log("接单",row);
+      
+      this.taskId = row.row.id;
+      this.taskTypeStatus = 1
+    },
+    returnClick() {
+      this.taskId = row.row.id;
+      this.taskTypeStatus = 4
+      console.log("退单");
+    },
+    turnSendClick() {
+      this.taskId = row.row.id;
+      this.taskTypeStatus = 3
+      console.log("转派");
+    },
+    hangClick() {
+      this.taskId = row.row.id;
+      this.taskTypeStatus = 5
+      console.log("挂起");
+    },
+    completeClick() {
+      console.log("完成");
+    },
+    cancelHoldClick() {
+      console.log("解除挂起");
+    },
+    sendClick() {
+      console.log("派单");
+    },
+    closeClick() {
+      console.log("关闭");
+    },
+    withdrawClick() {
+      console.log("撤回");
     },
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -322,8 +341,9 @@ export default {
       // window.parent.FindAssetLocation()
       if (val.row.deviceId && val.row.type == "设备") {
         //  window.FindAssetLocation && window.FindAssetLocation(val.row.deviceId +'')
-        window.FindAssetLocation?window.FindAssetLocation(val.row.deviceId + ""):
-        window.parent.FindAssetLocation(val.row.deviceId + "");
+        window.FindAssetLocation
+          ? window.FindAssetLocation(val.row.deviceId + "")
+          : window.parent.FindAssetLocation(val.row.deviceId + "");
       } else {
         this.$message({
           type: "warning",
@@ -392,7 +412,7 @@ export default {
       this.deleteRowShow = false;
     }
     this.taskList();
-    this.taskTreeConfig.defaultExpandedkeys = [this.taskData[0].value];
+    this.taskTreeConfig.defaultExpandedkeys = [this.taskTypeData[0].value];
     this.fixTree();
     $(window).resize(() => {
       this.fixTree();

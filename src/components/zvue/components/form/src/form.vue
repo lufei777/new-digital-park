@@ -49,13 +49,11 @@
               <template v-for="(column, cindex) in group.forms">
                 <el-col
                   :key="column.prop"
-                  :span="column.span || itemSpanDefault"
-                  :offset="column.offset || 0"
                   :push="column.push || 0"
                   :pull="column.pull || 0"
                   :xs="{span:column.span < 24 ? 24 : column.span,offset:0}"
                   :sm="{span:column.span < 12 ? 12 : column.span,offset:0}"
-                  :md="column.span < 8 ? 8 : column.span"
+                  :md="{span:column.span < 8 ? 8 : column.span,offset:column.offset || 0}"
                   :lg="column.span || itemSpanDefault"
                   v-show="vaildData(!column.hide,true)"
                   v-if="vaildDisplay(column)"
@@ -291,7 +289,6 @@ export default {
     };
   },
   created() {
-    // console.log("form create");
     //初始化字典
     this.columnOption.forEach(ele => {
       this.handleLoadDic(ele).then(res => {
@@ -300,7 +297,6 @@ export default {
     });
     // 初始化表单
     this.dataFormat();
-
     this.$root._zForm = this;
   },
   mounted() {

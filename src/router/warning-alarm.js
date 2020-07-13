@@ -27,8 +27,8 @@ export default [
 		path: '/warningAlarm',
 		name: 'warningalarm',
 		meta: { title: '预警报警' },
-		// component: () => import('@/pages/commonProject/coms/commonIndex'),
-		component: () => import('@/pages/warningAlarm/index.vue'),
+		component: () => import('@/pages/commonProject/coms/commonIndex'),
+		// component: () => import('@/pages/warningAlarm/index.vue'),
 		redirect: '/warningAlarm/monitorAlarm',
 		children: [
 			// 监控报警信息================================================================

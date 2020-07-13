@@ -87,7 +87,7 @@ export const LeaseManageDic = {
 		}
 	],
 	// 审核状态
-	checkStatus: [ { label: '已审核', value: 2 }, { label: '待审核', value: 1 } ]
+	checkStatus: [{ label: '已审核', value: 2 }, { label: '待审核', value: 1 }]
 };
 
 export const StockDic = {
@@ -163,9 +163,9 @@ export const PersonalManageDic = {
 		}
 	],
 	// 户口类型
-	residenceType: [ { label: '城市', value: '1' }, { label: '农村', value: '2' } ],
+	residenceType: [{ label: '城市', value: '1' }, { label: '农村', value: '2' }],
 	// 婚姻状况
-	maritalStatus: [ { label: '已婚', value: '1' }, { label: '未婚', value: '2' } ],
+	maritalStatus: [{ label: '已婚', value: '1' }, { label: '未婚', value: '2' }],
 	// 政治面貌
 	politicalStatus: [
 		{ label: '中共党员', value: '0' },
@@ -255,7 +255,7 @@ export const PersonalManageDic = {
 // 收支管理
 export const RevenueExpendManageDic = {
 	// 审核类型
-	examineType: [ { label: '待审核', value: 0 }, { label: '通过', value: 1 }, { label: '驳回', value: 2 } ],
+	examineType: [{ label: '待审核', value: 0 }, { label: '通过', value: 1 }, { label: '驳回', value: 2 }],
 	// 审核状态
 	examineState: [
 		{ label: '待审核', value: 0 },
@@ -264,23 +264,23 @@ export const RevenueExpendManageDic = {
 		{ label: '审核中', value: 3 }
 	],
 	// 费用名称
-	moduleId: [ { label: '租赁', value: 0 }, { label: '服务费', value: 1 }, { label: '专利费', value: 2 } ],
+	moduleId: [{ label: '租赁', value: 0 }, { label: '服务费', value: 1 }, { label: '专利费', value: 2 }],
 	// 资金状态
-	moneyState: [ { label: '未到账', value: 0 }, { label: '已到账', value: 1 }, { label: '已逾期', value: 2 } ],
+	moneyState: [{ label: '未到账', value: 0 }, { label: '已到账', value: 1 }, { label: '已逾期', value: 2 }],
 	//  收费类型
-	tradeType: [ { label: '现金', value: 0 }, { label: '转账', value: 1 } ],
+	tradeType: [{ label: '现金', value: 0 }, { label: '转账', value: 1 }],
 	// 收支和指出对应的不同名称
 	fields: {
-		receivMoney: [ '应收金额', '支出金额' ],
-		recordName: [ '收入名称', '支出名称' ],
-		moduleId: [ '收入类型', '支出类型' ],
-		payName: [ '收款方', '支付方' ],
-		incomeTime: [ '入账日期', '支出日期' ]
+		receivMoney: ['应收金额', '支出金额'],
+		recordName: ['收入名称', '支出名称'],
+		moduleId: ['收入类型', '支出类型'],
+		payName: ['收款方', '支付方'],
+		incomeTime: ['入账日期', '支出日期']
 	},
 	// 收支和指出对应的不同title
 	titles: {
-		add: [ '发起收费', '发起支出' ],
-		edit: [ '编辑收费', '编辑支出' ]
+		add: ['发起收费', '发起支出'],
+		edit: ['编辑收费', '编辑支出']
 	}
 };
 
@@ -389,7 +389,7 @@ export const parkingManageDic = {
 };
 
 export const BooleanDic = {
-	isOrNot: [ { label: '是', value: '1' }, { label: '否', value: '2' } ]
+	isOrNot: [{ label: '是', value: '1' }, { label: '否', value: '2' }]
 };
 
 //导出数据
@@ -553,7 +553,6 @@ export const taskType = {
 		}
 	]
 };
-
 // 预警报警
 export const WarningAlerm = {
 	// 报警级别
@@ -566,7 +565,7 @@ export const WarningAlerm = {
 	],
 	// 报警状态
 	// Alarm status
-	alarmStatus: [ { label: '未处理', value: 1 }, { label: '已处理', value: 2 } ],
+	alarmStatus: [{ label: '未处理', value: 1 }, { label: '已处理', value: 2 }],
 	// 子系统
 	// subsystem
 	subSystem: [
@@ -577,16 +576,16 @@ export const WarningAlerm = {
 	],
 	// 设备类型
 	// device type
-	deviceType: [ { label: '门禁', value: 1 }, { label: '温湿度传感器', value: 2 } ],
+	deviceType: [{ label: '门禁', value: 1 }, { label: '温湿度传感器', value: 2 }],
 	// 报警类型
 	// Alarm type
-	alarmType: [ { label: '通讯故障', value: 2 }, { label: '设备运行报警', value: 3 }, { label: '其他类型报警', value: 4 } ],
+	alarmType: [{ label: '通讯故障', value: 2 }, { label: '设备运行报警', value: 3 }, { label: '其他类型报警', value: 4 }],
 	// 录入类型
 	// Input type
-	inputType: [ { label: '点表导入', value: 1 }, { label: '手动录入', value: 2 } ],
+	inputType: [{ label: '点表导入', value: 1 }, { label: '手动录入', value: 2 }],
 	// 处理人员
 	// handling person
-	handingPerson: [ { label: '张三', value: 1 }, { label: '李四', value: 2 }, { label: '王五', value: 3 } ],
+	handingPerson: [{ label: '张三', value: 1 }, { label: '李四', value: 2 }, { label: '王五', value: 3 }],
 	// 设备名称
 	// devicename
 	deviceName: [
@@ -602,16 +601,16 @@ export const WarningAlerm = {
 		{ label: '3#会议室温监测', value: 3 }
 	],
 	// 处理组名称
-	grounpName: [ { label: '安保部处理组A', value: 1 }, { label: '安保部处理组B', value: 2 }, { label: '安保部处理组C', value: 3 } ],
+	grounpName: [{ label: '安保部处理组A', value: 1 }, { label: '安保部处理组B', value: 2 }, { label: '安保部处理组C', value: 3 }],
 	// 点位类型
 	// Point type
-	pointType: [ { label: '温度监测', value: 1 }, { label: '湿度监测', value: 2 } ],
+	pointType: [{ label: '温度监测', value: 1 }, { label: '湿度监测', value: 2 }],
 	// 抑制
 	// restrain
-	restrain: [ { label: '抑制', value: 1 }, { label: '不抑制', value: 2 } ],
+	restrain: [{ label: '抑制', value: 1 }, { label: '不抑制', value: 2 }],
 	// 通知方式
 	// way of notification
-	notificationWay: [ { label: '短信', value: 1 }, { label: '语音', value: 2 }, { label: '弹框', value: 3 } ],
+	notificationWay: [{ label: '短信', value: 1 }, { label: '语音', value: 2 }, { label: '弹框', value: 3 }],
 	// 通知组
 	notificationGrounp: [
 		{ label: '环境/严重/处理组A', value: 1 },
@@ -619,7 +618,7 @@ export const WarningAlerm = {
 		{ label: '环境/严重/处理组C', value: 3 }
 	],
 	// 弹框类型
-	dialogType: [ { label: '自动关闭', value: 1 }, { label: '手动关闭', value: 2 } ],
+	dialogType: [{ label: '自动关闭', value: 1 }, { label: '手动关闭', value: 2 }],
 	// 通知人员=== 》处理人员
 	// 时间设置
 	timeSetting: [
@@ -640,7 +639,7 @@ export const WarningAlerm = {
 	],
 	// 弹窗的启用禁用
 	// Enable disable
-	enableDisAble: [ { label: '启用', value: 1 }, { label: '禁用', value: 2 } ],
+	enableDisAble: [{ label: '启用', value: 1 }, { label: '禁用', value: 2 }],
 	// 报警应答弹框复选框
 	alarmResponse: [
 		{ label: '设备调试', value: 1 },
@@ -649,7 +648,7 @@ export const WarningAlerm = {
 		{ label: '其他', value: 4 }
 	],
 	// 优先级
-	priority: [ { label: '正常', value: 1 }, { label: '重要', value: 2 }, { label: '紧急', value: 3 } ]
+	priority: [{ label: '正常', value: 1 }, { label: '重要', value: 2 }, { label: '紧急', value: 3 }]
 };
 
 // 罗布林卡
@@ -730,3 +729,109 @@ export const SystemDic = {
     1:'写权限'
   }
 };
+
+// 用电管理
+export const ElectricityManageDic = {
+	// 电表用途
+	useType: [
+		{
+			label: '收费',
+			value: 2
+		},
+		{
+			label: '自用',
+			value: 1
+		}
+	],
+	// 用电收费账单状态
+	// 审核状态
+	status: [
+		{
+			label: '待审核',
+			value: 1
+		},
+		{
+			label: '通过',
+			value: 2
+		},
+		{
+			label: '驳回',
+			value: 3
+		}
+	],
+}
+
+export const TaskTypeDic = {
+	taskType: [{
+		value: 1,
+		label: "巡检任务",
+		nodes: []
+	},
+	{
+		value: 2,
+		label: "维修任务",
+		nodes: []
+	},
+	{
+		value: 3,
+		label: "保养任务",
+		nodes: []
+	},
+	{
+		value: 4,
+		label: "流程任务",
+		nodes: []
+	},
+	{
+		value: 5,
+		label: "审批任务",
+		nodes: []
+	},
+	{
+		value: 6,
+		label: "其他任务",
+		nodes: []
+	}]
+}
+export const TaskTabsDic = {
+	taskTabs: [{
+		text: "全部",
+		name: "frist"
+	},
+	{
+		text: "我发起的",
+		name: "second"
+	},
+	{
+		text: "我收到的",
+		name: "third"
+	}]
+}
+export const TaskDic = {
+	sendTaskStatus: {
+		2: "待接",
+		3: "处理中",
+		4: "已完成",
+		5: "挂单中",
+	},
+	acceptTaskStatus: {
+		1: "待派",
+		2: "已派",
+		3: "处理中",
+		4: "已完成",
+		5: "挂单中",
+	},
+	urgentStatus: {
+		1: "正常",
+		2: "重要",
+		3: "紧急",
+	},
+	locationStatus: {
+		0: '公司',
+		1: '现场'
+	},
+	supplementStatus: {
+		0: '补录',
+		1: '正常'
+	}
+}
