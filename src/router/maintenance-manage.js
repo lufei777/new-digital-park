@@ -1,5 +1,5 @@
 export default [{
-    path: '/maintenanceManage',
+    path: '/',
     name: 'maintenanceManage',
     meta: { title: '维保管理' },
     component: () => import('@/pages/commonProject/coms/commonIndex'),
