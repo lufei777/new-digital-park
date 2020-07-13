@@ -819,19 +819,37 @@ export const TaskDic = {
 		2: "已派",
 		3: "处理中",
 		4: "已完成",
-		5: "挂单中",
+		5: "挂单中"
 	},
-	urgentStatus: {
-		1: "正常",
-		2: "重要",
-		3: "紧急",
+
+	urgentStatus: [{
+		value: "1",
+		label: '正常'
 	},
-	locationStatus: {
-		0: '公司',
-		1: '现场'
+	{
+		value: "2",
+		label: '重要'
 	},
-	supplementStatus: {
-		0: '补录',
-		1: '正常'
-	}
+	{
+		value: "3",
+		label: '紧急'
+	}],
+
+	locationStatus: [{
+		value: 0,
+		label: '公司'
+	},
+	{
+		value: 1,
+		label: '现场'
+	}],
+
+	supplementStatus: [{
+		value: 0,
+		label: '补录'
+	},
+	{
+		value: 1,
+		label: '正常'
+	}],
 }
