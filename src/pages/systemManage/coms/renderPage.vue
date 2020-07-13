@@ -324,10 +324,11 @@
       getData() {
         this.$refs[this.tableConfig.ref].setCurrentPage(1)
         this.tableConfig.serverMode.data = {...this.searchParams, ...pageInfo}
-        this.$refs[this.tableConfig.ref].refreshTable()
-        if(this.fromFlag==4 && this.hideBtn == true){
-          this.setPermission()
-        }
+        this.$refs[this.tableConfig.ref].refreshTable().then(()=>{
+          if(this.fromFlag==4 && this.hideBtn == true){
+            this.setPermission()
+          }
+        })
       },
       onClickMultiDelBtn() {
         let tmp = this.$refs[this.tableConfig.ref].getSelectedData()
@@ -403,8 +404,10 @@
         }
       },
       onSelectCheckBox(selection,row){
+        console.log("select",selection,row)
       },
       onSelectionChange(selection){
+        console.log("selection",selection)
         /*
           pType 0：只读权限 1:写权限
           若勾选写权限，则必须勾选读权限
@@ -429,16 +432,14 @@
       },
       setPermission(){
         //已有权限回显
-        console.log(this.$refs[this.tableConfig.ref].allData);
+        let tmpArr = []
         this.$refs[this.tableConfig.ref].allData.map((item,index)=>{
-          console.log("1")
-          let flag = this.permissionIds.findIndex((per)=>{
-             console.log("teim",item,per)
+          let arr = this.permissionIds.filter((per)=>{
               return item.id==per
           })
           if(flag!=-1){
-            debugger
-            this.$refs[this.tableConfig.ref].toggleSelection(index,true)
+            console.log("index",index)
+            // this.$refs[this.tableConfig.ref].toggleSelection(index,true)
           }
         })
       }

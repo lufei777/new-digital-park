@@ -86,7 +86,6 @@ const actions = {
       DigitalParkApi.getMenuTree({
         language: Cookies.get("lang")
       }).then(menuTree => {
-        menuTree[0].name = 'Timeloit智慧园区综合管控服务平台'
         commit('setMenuTree', menuTree);
         // 设置到localStorage
         setMenuTree(menuTree);

@@ -153,10 +153,8 @@
       },
       assignPermission(row) {
         this.showModal = true
-        row.permissionIds=[10001,10004]
         this.curRoleId = row.id
-        // this.permissionIds = row.permissionIds || []
-        this.$store.commit("digitalPark/permissionIds",row.permissionIds)
+        this.$store.commit("digitalPark/permissionIds",row.permissionIds || [])
       },
       async onClickSureAssignBtn() {
         let tmp = this.$refs.renderPage.getAssignList()
