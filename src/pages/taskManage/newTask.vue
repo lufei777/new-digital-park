@@ -355,7 +355,25 @@ export default {
       return this.$route.query;
     }
   },
+
   created() {
+    let taskStatusDic = {
+      compltete: {
+        status: 4,
+        button: {
+          submitBack: { text: "返回", id: null }
+        }
+      },
+      sendTask: {
+        status: 1,
+        button: {
+          submitSend: { text: "派单", id: "" },
+          submitClose: { text: "关闭", id: "" },
+          submitBack: { text: "返回", id: null }
+        }
+      },
+
+    };
     this.newTaskForm = {
       ...this.newTaskForm,
       ...this.$route.query.extraOptions

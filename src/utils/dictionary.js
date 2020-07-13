@@ -761,3 +761,78 @@ export const electricityManageDic = {
     }
   ], */
 }
+
+export const TaskTypeDic = {
+  taskType: [{
+    value: 1,
+    label: "巡检任务",
+    nodes: []
+  },
+  {
+    value: 2,
+    label: "维修任务",
+    nodes: []
+  },
+  {
+    value: 3,
+    label: "保养任务",
+    nodes: []
+  },
+  {
+    value: 4,
+    label: "流程任务",
+    nodes: []
+  },
+  {
+    value: 5,
+    label: "审批任务",
+    nodes: []
+  },
+  {
+    value: 6,
+    label: "其他任务",
+    nodes: []
+  }]
+}
+export const TaskTabsDic = {
+  taskTabs: [{
+    text: "全部",
+    name: "frist"
+  },
+  {
+    text: "我发起的",
+    name: "second"
+  },
+  {
+    text: "我收到的",
+    name: "third"
+  }]
+}
+export const TaskDic = {
+  sendTaskStatus: {
+    2: "待接",
+    3: "处理中",
+    4: "已完成",
+    5: "挂单中",
+  },
+  acceptTaskStatus: {
+    1: "待派",
+    2: "已派",
+    3: "处理中",
+    4: "已完成",
+    5: "挂单中",
+  },
+  urgentStatus: {
+    1: "正常",
+    2: "重要",
+    3: "紧急",
+  },
+  locationStatus: {
+    0: '公司',
+    1: '现场'
+  },
+  supplementStatus: {
+    0: '补录',
+    1: '正常'
+  }
+}
