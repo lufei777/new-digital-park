@@ -18,7 +18,7 @@
 <script>
 import electricityManageApi from 'api/electricityManage';
 import leaseManageApi from 'api/leaseManage';
-import { electricityManageDic } from "utils/dictionary";
+import { ElectricityManageDic } from "utils/dictionary";
 import { floorsTree } from "utils/formsItem";
 import { meterColumnConfig } from '../config';
 import { useType } from '../config';

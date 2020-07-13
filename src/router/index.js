@@ -48,8 +48,7 @@ let publicRouters = [].concat(
   DigitalParkRouter,
   ExportData,
   SystemManage,
-  Norbulingka,
-  MonitoringAlarm
+  MaintenanceManage
 )
 
 // 数字园区 私有模块
