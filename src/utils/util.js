@@ -61,3 +61,40 @@ export const formatRoutes = (flatmenupaths, routes) => {
     }
   }).filter(item => item);
 }
+
+// json转换成url 上参数
+export function jsonToUrlString(data = {}) {
+  let param = function (obj) {
+    let query = ''
+    let name, value, fullSubName, subName, subValue, innerObj, i
+    for (name in obj) {
+      value = obj[name]
+      if (value instanceof Array) {
+        for (i = 0; i < value.length; ++i) {
+          subValue = value[i]
+          fullSubName = name + '[]'
+          innerObj = {}
+          innerObj[fullSubName] = subValue
+          query += param(innerObj) + '&'
+        }
+      } else if (value instanceof Object) {
+        for (subName in value) {
+          subValue = value[subName]
+          fullSubName = name + '[' + subName + ']'
+          innerObj = {}
+          innerObj[fullSubName] = subValue
+          query += param(innerObj) + '&'
+        }
+      } else if (value !== undefined && value !== null) {
+        query += encodeURIComponent(name) + '=' + encodeURIComponent(value) + '&'
+      }
+    }
+    return query.length ? query.substr(0, query.length - 1) : query
+  }
+  // 加上token
+  //  data.accessToken = window.UserConst.accessToken
+  // data.userId = store.get("ClassRoomUser") && store.get("ClassRoomUser").userId
+  // 增加 去缓存时间戳
+  data.noCache = new Date().getTime()
+  return data.toString() === '[object Object]' ? param(data) : data
+}

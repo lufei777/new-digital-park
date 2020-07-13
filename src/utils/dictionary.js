@@ -734,7 +734,12 @@ export const ElectricityManageDic = {
 		}
 	],
 	// 用电收费账单状态
-	detailsStatus: [
+	// 审核状态
+	status: [
+		{
+			label: '待审核',
+			value: 1
+		},
 		{
 			label: '通过',
 			value: 2
@@ -742,25 +747,6 @@ export const ElectricityManageDic = {
 		{
 			label: '驳回',
 			value: 3
-		}
-	],
-	// 审核状态
-	status: [
-		{
-			label: '待审核',
-			value: 2
-		},
-		{
-			label: '已录入',
-			value: 0
-		},
-		{
-			label: '审核通过',
-			value: 3
-		},
-		{
-			label: '驳回',
-			value: 4
 		}
 	],
 }
