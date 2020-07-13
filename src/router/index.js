@@ -72,7 +72,6 @@ let privateRouters = [].concat(
   Norbulingka,
   DeviceManage,
   ElectricityManage,
-  MaintenanceManage,
   FinancialManage
 )
 store.commit('digitalPark/setPrivateRouters', privateRouters);
