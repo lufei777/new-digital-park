@@ -47,7 +47,8 @@ let publicRouters = [].concat(
   vibeWeb,
   DigitalParkRouter,
   ExportData,
-  SystemManage
+  SystemManage,
+  MaintenanceManage
 )
 
 // 数字园区 私有模块
