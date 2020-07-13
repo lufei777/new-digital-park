@@ -36,7 +36,7 @@ class SystemManage {
   @get
   logOut() {}
 
-  //获取部门+人员
+    //获取部门+人员
   @url("/oaApi/dept/treeUser")
   @get
   getDeptUserTree() {}
@@ -121,9 +121,9 @@ class SystemManage {
   @post
   editMenu(){}
 
-  @url("/user-service/permission/permissionList")
-  @get
-  getPermissionList(){}
+  // @url("/user-service/permission/permissionList")
+  // @get
+  // getPermissionList(){}
 
   @url("/user-service/permission/permissionTree")
   @get
@@ -136,6 +136,26 @@ class SystemManage {
   @url("/user-service/permission/assignPermissions")
   @get
   assignPermission(){}
+
+  @url("/user-service/permission/permissionDetail")
+  @get
+  getPermissionDetail(){}
+
+  @url("/user-service/permission/editPermission")
+  @post
+  editPermission(){}
+
+  @url("/user-service/permission/addPermission")
+  @post
+  addPermission(){}
+
+  @url("/user-service/permission/removePermission")
+  @get
+  deletePermission(){}
+
+  @url("/user-service/permission/childList")
+  @get
+  getChildList(){}
 }
 
 export default new SystemManage()

@@ -18,7 +18,7 @@ const state = {
   roles: [],
   pageRoles: getPageRoles() || {},
   homeKeepAliveFlag: true,   //控制瀑布流页的缓存/刷新
-  permissionIds:[]  //所选角色的权限列表
+  permissionIdsList:[]  //所选角色的权限列表
 }
 
 const mutations = {
@@ -69,8 +69,8 @@ const mutations = {
     state.pageRoles = Object.assign({}, state.pageRoles, { [path]: roles });
     setPageRoles(state.pageRoles);
   },
-  permissionIds(state, data) {
-    state.permissionIds = data
+  permissionIdsList(state, data) {
+    state.permissionIdsList = data
   },
 }
 

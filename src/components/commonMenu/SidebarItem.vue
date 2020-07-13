@@ -60,8 +60,8 @@ export default {
   },
   watch:{
     queryIdObj(){
-      if(this.queryIdObj && !this.specialRoute){
-        console.log("watch")
+      if(this.queryIdObj.firstMenuId && !this.specialRoute){
+        // console.log("watch")
         this.setMenuList()
       }
     },
@@ -156,7 +156,7 @@ export default {
       // console.log(this.firstMenuId,this.secondMenuId)
       let secondMenu={}
       let firstMenu = this.allMenuList.find(first => {
-        console.log(this.queryIdObj.firstMenuId)
+        // console.log(this.queryIdObj.firstMenuId)
         return first.id == (this.queryIdObj.firstMenuId || item.firstMenuId);
       });
       secondMenu = firstMenu.childNode.find(second => {
