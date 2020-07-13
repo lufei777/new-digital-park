@@ -40,11 +40,11 @@
   </div>
 </template>
 <script>
-import { electricityManageDic } from "@/utils/dictionary";
+import { ElectricityManageDic } from "@/utils/dictionary";
 import electricityManageApi from 'api/electricityManage';
 import commonFun from "@/utils/commonFun.js";
 
-const { detailsStatus } = electricityManageDic;
+const { detailsStatus } = ElectricityManageDic;
 const dateValueFormat = "yyyy-MM-dd";
 let tableSendData = {
   pageNum: 1,

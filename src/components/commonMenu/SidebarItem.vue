@@ -54,13 +54,13 @@ export default {
     // secondMenuId(){
     //   return this.$route.query.secondMenuId
     // },
-    queryIdObj(){
+    queryIdObj() {
       return this.$route.query
     }
   },
-  watch:{
-    queryIdObj(){
-      if(this.queryIdObj && !this.specialRoute){
+  watch: {
+    queryIdObj() {
+      if (this.queryIdObj && !this.specialRoute) {
         console.log("watch")
         this.setMenuList()
       }
@@ -81,7 +81,7 @@ export default {
       this.setMenu(item);
     },
     getMenuIndex(item) {
-      return CommonFun.setMenuIndex(item,1);
+      return CommonFun.setMenuIndex(item, 1);
     },
     onClickLastMenu(item) {
       if (this.specialRoute) {
@@ -100,45 +100,45 @@ export default {
         this.normalShortcutList();
       } else {
         this.setMenuList(item)
-       /* let firstMenu = this.allMenuList.find(first => {
-          return first.id == this.firstMenuId;
-        });
-        secondMenu = firstMenu.childNode.find(second => {
-          return second.id == item.secondMenuId;
-        });
-        let menuTmp={}
-    /!*    //菜单：如果二级是客户端类概览页且点击的子集为是跳网页，则不存全部菜单
-        if(secondMenu.clientType==1 && item.clientType!=1 && item.level==3){
-          menuTmp = item
-        }else if(secondMenu.clientType==1 && item.clientType!=1 && item.level!=3){
-          menuTmp = this.findNode(secondMenu,item,secondMenu)
-        }else {
-          menuTmp = secondMenu
-        }*!/
-        menuTmp = secondMenu
-        this.$store.commit("digitalPark/menuList",menuTmp);
-
-       /!* //快接入口菜单：概览类非二级菜单的快捷入口设置
-        if (secondMenu.clientType == 1) {
-          localStorage.setItem("shortcutList", JSON.stringify(secondMenu.childNode));
-        } else {
-          this.normalShortcutList();
-        }*!/
-        this.normalShortcutList();*/
+        /* let firstMenu = this.allMenuList.find(first => {
+           return first.id == this.firstMenuId;
+         });
+         secondMenu = firstMenu.childNode.find(second => {
+           return second.id == item.secondMenuId;
+         });
+         let menuTmp={}
+     /!*    //菜单：如果二级是客户端类概览页且点击的子集为是跳网页，则不存全部菜单
+         if(secondMenu.clientType==1 && item.clientType!=1 && item.level==3){
+           menuTmp = item
+         }else if(secondMenu.clientType==1 && item.clientType!=1 && item.level!=3){
+           menuTmp = this.findNode(secondMenu,item,secondMenu)
+         }else {
+           menuTmp = secondMenu
+         }*!/
+         menuTmp = secondMenu
+         this.$store.commit("digitalPark/menuList",menuTmp);
+ 
+        /!* //快接入口菜单：概览类非二级菜单的快捷入口设置
+         if (secondMenu.clientType == 1) {
+           localStorage.setItem("shortcutList", JSON.stringify(secondMenu.childNode));
+         } else {
+           this.normalShortcutList();
+         }*!/
+         this.normalShortcutList();*/
       }
       CommonFun.loadPage(item);
     },
-    findNode(menu, obj,secondMenu) {
+    findNode(menu, obj, secondMenu) {
       //menu起始是二级菜单,返回的是第三层
       menu.childNode.map(child => {
         if (child.id == obj.id) {
-          if(obj.level==4){
+          if (obj.level == 4) {
             this.findMenu = menu;
-          }else{
-            this.findNode(secondMenu,menu,secondMenu);
+          } else {
+            this.findNode(secondMenu, menu, secondMenu);
           }
         } else {
-          this.findNode(child,obj,secondMenu);
+          this.findNode(child, obj, secondMenu);
         }
       });
       return this.findMenu;
@@ -152,18 +152,19 @@ export default {
       });
       localStorage.setItem("shortcutList", JSON.stringify(shortcutList));
     },
-    setMenuList(item){
-      // console.log(this.firstMenuId,this.secondMenuId)
-      let secondMenu={}
-      let firstMenu = this.allMenuList.find(first => {
-        console.log(this.queryIdObj.firstMenuId)
-        return first.id == (this.queryIdObj.firstMenuId || item.firstMenuId);
-      });
-      secondMenu = firstMenu.childNode.find(second => {
-        return second.id == (this.queryIdObj.secondMenuId || item.secondMenuId);
-      });
-      this.$store.commit("digitalPark/menuList",secondMenu);
-      this.normalShortcutList();
+    setMenuList(item) {
+      const { firstMenuId, secondMenuId } = this.queryIdObj;
+      if (item || (firstMenuId && secondMenuId)) {
+        let secondMenu = {}
+        let firstMenu = this.allMenuList.find(first => {
+          return first.id == (firstMenuId || item.firstMenuId);
+        });
+        secondMenu = firstMenu.childNode.find(second => {
+          return second.id == (secondMenuId || item.secondMenuId);
+        });
+        this.$store.commit("digitalPark/menuList", secondMenu);
+        this.normalShortcutList();
+      }
     }
   },
   mounted() {
