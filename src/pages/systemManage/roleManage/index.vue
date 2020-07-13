@@ -19,6 +19,7 @@
         :visible.sync="showModal"
         width="85%"
         custom-class="per-modal"
+        v-if="showModal"
       >
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <!--<PermissionTree fromFlag="1" />-->
@@ -111,7 +112,8 @@
     },
     computed: {
       ...mapState({
-        userInfo: state => state.user.userInfo
+        userInfo: state => state.user.userInfo,
+        permissionIdsList: state => state.digitalPark.permissionIdsList
       })
     },
     methods: {
@@ -148,24 +150,22 @@
           userId: this.userInfo.id
         }
       },
-      async getPermissionList() {
-        let res = await SystemManageApi.getPermissionList()
-      },
       assignPermission(row) {
         this.showModal = true
-        row.permissionIds=[10001,10004]
         this.curRoleId = row.id
-        // this.permissionIds = row.permissionIds || []
-        this.$store.commit("digitalPark/permissionIds",row.permissionIds)
+        // row.permissionIdsList = [10001,10004]  //测试
+        this.$store.commit("digitalPark/permissionIdsList",row.permissionIdsList || [])
       },
       async onClickSureAssignBtn() {
+        // console.log(this.permissionIdsList)
         let tmp = this.$refs.renderPage.getAssignList()
-        let idArr = tmp.map((item => item.id))
+        let arr = this.permissionIdsList.concat(tmp.map((item)=>item.id))
+        this.$store.commit("digitalPark/permissionIdsList",arr)
         let params = {
           roleId: this.curRoleId,
-          permissionIds: idArr.join(",")
+          permissionIds: arr.join(",")
         }
-        // console.log("params",params)
+        console.log("params",params)
         await SystemManageApi.assignPermission(params)
         this.$message({
           type: 'success',
@@ -179,7 +179,6 @@
       this.setTableData()
     },
     mounted() {
-      // this.getPermissionList()
     },
   }
 </script>

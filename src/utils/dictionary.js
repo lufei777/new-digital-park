@@ -703,21 +703,31 @@ export const TaskpriorityType = {
 };
 
 export const SystemDic = {
-	isHidden: [
-		{
+	isHidden: [{
 			label: '隐藏',
 			value: 1
-		},
-		{
+		},{
 			label: '可见',
 			value: 0
-		}
-	],
+	}],
 
 	hiddenStatus: {
 		1: '隐藏',
 		0: '可见'
-	}
+	},
+
+  pType: [{
+    label: '读权限',
+    value: 0
+  },{
+    label: '写权限',
+    value: 1
+  }],
+
+	pTypeStatus:{
+	  0:'读权限',
+    1:'写权限'
+  }
 };
 
 // 用电管理
