@@ -55,7 +55,7 @@
                   :pull="column.pull || 0"
                   :xs="{span:column.span < 24 ? 24 : column.span,offset:0}"
                   :sm="{span:column.span < 12 ? 12 : column.span,offset:0}"
-                  :md="column.span < 8 ? 8 : column.span"
+                  :md="{span:column.span < 8 ? 8 : column.span,offset:column.offset || 0}"
                   :lg="column.span || itemSpanDefault"
                   v-show="vaildData(!column.hide,true)"
                   v-if="vaildDisplay(column)"
