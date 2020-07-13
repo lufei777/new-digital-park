@@ -1,3 +1,5 @@
+import { electricityManageDic } from 'utils/dictionary';
+
 export let meterColumnConfig = [
   {
     label: '编号',
@@ -17,3 +19,19 @@ export let meterColumnConfig = [
     prop: 'scaption'
   }
 ]
+
+// 数据状态
+export let status = {
+  prop: "status",
+  label: "数据状态",
+  type: 'select',
+  dicData: electricityManageDic.status
+}
+
+// 电表用途
+export let useType = {
+  prop: "useType",
+  label: "电表用途",
+  type: 'select',
+  dicData: electricityManageDic.useType
+}

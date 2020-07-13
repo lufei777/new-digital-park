@@ -1,7 +1,13 @@
 <template>
       <div class='panel-container'>
-    <div class="panel">
-      <span style="margin:10px;display:block">账单摘要</span>
+    <div
+      class="panel"
+      v-if="billArr"
+    >
+     <div class="top">
+        <span style="margin:10px;display:block">账单摘要</span>
+        <el-button type='text' @click="goback()">返回</el-button>
+     </div>
       <!-- 表格部分 -->
       <div class="form">
         <!-- 左 -->
@@ -24,7 +30,7 @@
         </div>
         <!-- 右 -->
         <div class="right">
-          <div class="top"><span>租户面积：</span>{{billArr.housearea}}</div>
+          <div class="top"><span>租户面积：</span>{{billArr.houseArea}}</div>
           <div class="mid"><span>账单金额合计：</span>{{billArr.billTotalAmount}} 元</div>
           <div class="bottom"><span>核定金额：</span>{{billArr.approvedAmount}} 元</div>
         </div>
@@ -41,7 +47,7 @@
             <tr>
               <th
                 v-for="(item ,index) in headList"
-                :key='headList'
+                :key='index'
               >{{ item }}</th>
             </tr>
           </thead>
@@ -50,8 +56,20 @@
             <tr
               v-for="(item) in billdetailArr"
               :key='item.id'
+              v-if="off"
+              v-cloak
             >
-              <td v-for="i in item">{{i}}</td>
+              <td
+                v-for="i,idex in item"
+                :key='idex'
+              >{{i}}</td>
+            </tr>
+            <tr
+              style="text-align:center !important;font-weight:bold;height:30px;line-height:30px;"
+              v-else
+              v-cloak
+            >
+              暂无数据!
             </tr>
           </tbody>
         </table>
@@ -62,14 +80,17 @@
 </template>
 
 <script>
+import LeaseManageApi from "@/service/api/leaseManage";
+import CommonFun from "@/utils/commonFun";
 export default {
   data() {
     return {
+      id: "",
       // 账单摘要
       billArr: null,
       // 账单明细
       billdetailArr: [],
-      // 表格的标题
+      off: true,
       headList: [
         "序号",
         "科目类型",
@@ -79,38 +100,112 @@ export default {
         "冲抵金额(元)",
         "备注"
       ],
-      
+      tableList: [
+        {
+          id: 1,
+          type: "测试",
+          start: "2012",
+          end: "",
+          money: "1250",
+          cdmoney: "200",
+          bz: "测试数据"
+        },
+        {
+          id: 2,
+          type: "测试",
+          start: "2012",
+          end: "2020",
+          money: "1250",
+          cdmoney: "200",
+          bz: "测试数据"
+        },
+        {
+          id: 3,
+          type: "",
+          start: "2012",
+          end: "2020",
+          money: "1250",
+          cdmoney: "200",
+          bz: "测试数据"
+        },
+        {
+          id: 4,
+          type: "测试",
+          start: "2012",
+          end: "2020",
+          money: "1250",
+          cdmoney: "200",
+          bz: "测试数据"
+        },
+        {
+          id: 5,
+          type: "测试",
+          start: "2012",
+          end: "",
+          money: "1250",
+          cdmoney: "200",
+          bz: "测试数据"
+        },
+        {
+          id: 6,
+          type: "",
+          start: "2012",
+          end: "2020",
+          money: "1250",
+          cdmoney: "200",
+          bz: ""
+        }
+      ]
     };
   },
-  methods: {},
-  created() {
-    let arr = this.$route.query;
-    // 账单摘要
-    this.billArr = arr;
-    // 账单明细
-    let count = 1
-    let newarr =[]
-    arr.oaDetails.forEach(item => {
-      newarr.push({
-        id: count++ ,
-        subjectType: item.subjectType,
-        startTime: item.startTime,
-        endTime:item.endTime,
-        billAmount:item.billAmount,
-        offset:item.offset,
-        codeName:item.codeName
+  methods: {
+    async tabledata() {
+      let { data } = await LeaseManageApi.queryMonthBillList({
+        billNumber: this.id
       });
-    });
-    this.billdetailArr = newarr;
+      //   debugger;
+      console.log("数据", data[0]);
+      this.billArr = data[0];
+      let count = 1;
+      let newarr = [];
+      if (Object.values(data[0].oaDetails).length !== 0) {
+        data[0].oaDetails.forEach(item => {
+          newarr.push({
+            id: count++,
+            subjectType: item.subjectType,
+            startTime: item.startTime,
+            endTime: item.endTime,
+            billAmount: item.billAmount,
+            offset: item.offset,
+            codeName: item.codeName
+          });
+        });
+        this.billdetailArr = newarr;
+        if (Object.values(this.billdetailArr).length === 0) {
+          this.off = false;
+        } 
+      }
 
-    console.log('billdetailArr',this.billdetailArr);
+      console.log(" this.billArr", this.billArr);
+    },
+    // 返回
+    goback(){
+      this.$router.back()
+    }
   },
-  mounted() {}
+  created() {
+    this.id = this.$route.query.billNumber;
+    this.tabledata();
+  }
 };
 </script>
 
 <style lang="less"  scoped>
 .panel {
+  .top{
+    display: flex;
+    justify-content: space-between;
+  }
   .form {
     width: 100%;
     height: auto;
@@ -128,18 +223,42 @@ export default {
         border-bottom: 1px solid #ccc;
         // padding: 5px 0;
         padding-left: 8px;
+        height: 40px;
+        line-height: 40px;
+        text-align: left;
+        span {
+          font-weight: bold;
+          font-size: 18px;
+          color: black;
+        }
       }
       .mid {
         border-bottom: 1px solid #ccc;
         // padding: 5px 0;
         padding-left: 8px;
         display: flex;
+        height: 40px;
+        line-height: 40px;
+        text-align: left;
+        span {
+          font-weight: bold;
+          font-size: 18px;
+          color: black;
+        }
       }
       .bottom {
         // padding: 5px 0;
         padding-left: 8px;
         display: flex;
         vertical-align: middle;
+        height: 40px;
+        line-height: 40px;
+        text-align: left;
+        span {
+          font-weight: bold;
+          font-size: 18px;
+          color: black;
+        }
       }
       .mid_left,
       .mid_right {
@@ -161,14 +280,22 @@ export default {
     width: 100%;
     height: auto;
     table {
+      //   border: 1px solid #ccc;
       width: 100%;
       thead {
         // border: 1px solid #cccccc;
         width: 100%;
         tr {
+          height: 60px;
+          line-height: 60px;
+          text-align: center;
           width: 100%;
+          //   border: 1px solid #ccc;
           th {
+            // border: 1px solid black;
             width: 14.28%;
+            color: black;
+            font-size: 18px;
           }
           //   th:nth-of-type(1){
           //       width:30px;
@@ -176,11 +303,20 @@ export default {
         }
       }
       tbody {
-        td {
+        tr {
+          height: 30px;
+          line-height: 30px;
           text-align: center;
+          td {
+            // border: 1px solid #ccc;
+            text-align: center;
+          }
         }
       }
     }
   }
+}
+[v-cloak] {
+  display: none;
 }
 </style>

@@ -32,7 +32,7 @@
         <el-option
           v-for="oitem in group[groupsKey]"
           :disabled="oitem[disabledKey]"
-          :key="validatenull(oitem[valueKey]) || getLabelText(oitem)"
+          :key="validatenull(oitem[valueKey]) ? oitem[valueKey] : getLabelText(oitem)"
           :label="getLabelText(oitem)"
           :value="oitem[valueKey]"
         >
@@ -44,7 +44,7 @@
       <el-option
         v-for="oitem in visibleDic"
         :disabled="oitem[disabledKey]"
-        :key="validatenull(oitem[valueKey]) || getLabelText(oitem)"
+        :key="validatenull(oitem[valueKey]) ? oitem[valueKey] : getLabelText(oitem)"
         :label="getLabelText(oitem)"
         :value="oitem[valueKey]"
       >
@@ -88,7 +88,7 @@ export default {
     },
     collapseTags: {
       type: Boolean,
-      default: true
+      default: false
     },
     limit: {
       type: Number,

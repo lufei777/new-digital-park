@@ -2049,6 +2049,7 @@ class commonFun {
     //激活菜单
     store.commit("digitalPark/activeMenuIndex", this.setMenuIndex(item))
     localStorage.setItem('moduleId', this.getLastItem(item).id)
+    item = this.getLastItem(item)
     if (item.routeAddress) {
       //客户端
       if (this.loadClientPage(item)) {
@@ -2066,16 +2067,24 @@ class commonFun {
           store.commit("digitalPark/largeScreenIframeSrc",
             window.top.location.origin + '/#/vibe-web?updateId=' + _.uniqueId())
         } else {
-          router.push('/vibe-web')
+          // router.push(`/vibe-web?id=${this.getLastItem(item).id}`)
+          router.push({
+            path: '/vibe-web',
+            query: {
+              firstMenuId: item.firstMenuId,
+              secondMenuId: item.secondMenuId,
+              id:item.id
+            }
+          });
         }
       } else {
         //新项目
         if (largeScreenFlag) {
           store.commit("digitalPark/largeScreenIframeSrc", window.top.location.origin + '/#' + item.routeAddress)
         } else {
-          if (item?.childNode?.length) {
-            item = this.getLastItem(item);
-          }
+          // if (item?.childNode?.length) {
+          //   item = this.getLastItem(item);
+          // }
           router.push({
             path: item.routeAddress.trim(),
             query: {

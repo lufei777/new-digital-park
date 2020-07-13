@@ -12,6 +12,8 @@
         :allData="allData"
         :tableShowData="tableShowData"
         :selectedData="selectedData"
+        :currentRowData="currentRowData"
+        :lastCurrentRowData="lastCurrentRowData"
       ></slot>
     </div>
     <div v-loading="loading" class="zvue-table-body">
@@ -126,7 +128,7 @@
               type="text"
               :size="controlSize"
               @click.stop="rowCanel(scopeRow.row,scopeRow.$index)"
-            >取 消</el-button>
+            >{{parentOption.cancelBtnText || config.cancelBtnText}}</el-button>
             <!-- 操作列的slot -->
             <slot
               v-if="vaildData(tableOption.operation,!!$scopedSlots.operation)"
@@ -312,25 +314,33 @@ export default {
      * 内部使用方法
      */
     _tableInit(reload) {
-      //服务器模式处理
-      // console.log(this.currentPage, this.pageSize);
-      if (this.isServerMode) {
-        this._loadServerMode(this.isServerMode.data);
-      } else {
-        //如果是刷新表格，如果data为空，说明是在外部使用ajax请求数据，则出现加载动画，3秒后加载动画关闭
-        //  || !this.options.data || this.options.data.length === 0
-        if (reload) {
-          this.loading = true;
-          setTimeout(() => {
-            this.loading = false;
-          }, 2000);
+      return new Promise((resolve, reject) => {
+        //服务器模式处理
+        // console.log(this.currentPage, this.pageSize);
+        if (this.isServerMode) {
+          this._loadServerMode(this.isServerMode.data).then((res) => {
+            resolve(res)
+          }).catch(err => {
+            reject(err);
+          })
+        } else {
+          //如果是刷新表格，如果data为空，说明是在外部使用ajax请求数据，则出现加载动画，3秒后加载动画关闭
+          //  || !this.options.data || this.options.data.length === 0
+          if (reload) {
+            this.loading = true;
+            setTimeout(() => {
+              this.loading = false;
+            }, 2000);
+          }
+
+          if (!this.options.data) this.options.data = [];
+
+          this._setTableData(this.options.data);
+          this.setTotal(this.options.data.length);
+
+          resolve({ data: this.options.data, total: this.options.data.length })
         }
-
-        if (!this.options.data) this.options.data = [];
-
-        this._setTableData(this.options.data);
-        this.setTotal(this.options.data.length);
-      }
+      })
     },
     // 检索
     _getFilterTableData() {
@@ -400,25 +410,31 @@ export default {
     },
     // 加载服务端数据
     _loadServerMode(data) {
-      let _this = this;
-      //加载中开始
-      this.loading = true;
+      return new Promise((resolve, reject) => {
+        let _this = this;
+        //加载中开始
+        this.loading = true;
 
-      let serverMode = this.isServerMode;
-      let url = this.isServerMode.url;
-      this._axios({
-        mehtod: this.isServerMode.type,
-        url: url,
-        data: data
-      })
-        .then(res => {
-          this._setTableData(res[this.listKey]);
-          this.setTotal(res[this.totalKey]);
+        let serverMode = this.isServerMode;
+        let url = this.isServerMode.url;
+        this._axios({
+          mehtod: this.isServerMode.type,
+          url: url,
+          data: data
         })
-        .finally(() => {
-          //加载中结束
-          this.loading = false;
-        });
+          .then(res => {
+            this._setTableData(res[this.listKey]);
+            this.setTotal(res[this.totalKey]);
+            resolve(res);
+          })
+          .catch(err => {
+            reject(err);
+          })
+          .finally(() => {
+            //加载中结束
+            this.loading = false;
+          });
+      })
     },
     // AXIOS
     _axios({ mehtod = "get", url = "", data = {} }) {
@@ -582,7 +598,9 @@ export default {
      * 以下行编辑
      */
     _editBtnText(row, index) {
-      return row.$cellEdit === true ? "保 存" : "编 辑";
+      return row.$cellEdit === true ?
+        (this.parentOption.saveBtnText || this.config.saveBtnText) :
+        (this.parentOption.editBtnText || this.config.editBtnText);
     },
     formRulesInit() {
       this.propOption.forEach(ele => {
@@ -741,7 +759,7 @@ export default {
 
       let row = this.tableShowData[index];
       let column = this.columnConfig[index];
-      this.Table.setCurrentRow(row);
+      this.$refs.dataBaseTable.setCurrentRow(row);
       this.$emit("row-click", row, column);
     },
     //多选选择当前项
@@ -757,26 +775,26 @@ export default {
        * rowsIndex为  [0,2,5]形式的行标号 或 [row,row,row] 或 0 或 row
        * selectedArr为 [true,false] 或 true 形式的boolean数组，表明对应行选中与否
        */
-      if (rowsIndex) {
+      if (typeof rowsIndex !== 'undefined') {
         // 如果选中状态时数组
         if (Array.isArray(rowsIndex)) {
           for (let index = 0; index < rowsIndex.length; index++) {
             const row = typeof rowsIndex[index] === 'number'
-              ? this.tableShowData[rowsIndex[index] - 1]
+              ? this.tableShowData[rowsIndex[index]]
               : rowsIndex[index];
             const rowSelected = Array.isArray(selectedArr)
               ? selectedArr[index]
               : selectedArr;
             if (!row) continue;
 
-            this.Table.toggleRowSelection(row, rowSelected);
+            this.$refs.dataBaseTable.toggleRowSelection(row, rowSelected);
           }
         } else {
           const row = typeof rowsIndex === 'number'
-            ? this.tableShowData[rowsIndex[index] - 1]
+            ? this.tableShowData[rowsIndex]
             : rowsIndex;
 
-          this.Table.toggleRowSelection(row, selectedArr);
+          this.$refs.dataBaseTable.toggleRowSelection(row, selectedArr);
         }
       } else {
         this.clearSelection();
@@ -784,7 +802,7 @@ export default {
     },
     //多选切换全选状态
     toggleAllSelection() {
-      this.Table.toggleAllSelection();
+      this.$refs.dataBaseTable.toggleAllSelection();
     },
     //用于可展开表格与树形表格
     toggleRowExpansion(rowsIndex, expanded) {
@@ -793,25 +811,25 @@ export default {
         return;
       }
 
-      if (rowsIndex) {
+      if (typeof rowsIndex !== 'undefined') {
         if (Array.isArray(rowsIndex)) {
           for (let index = 0; index < rowsIndex.length; index++) {
             const curRowExpanded = Array.isArray(expanded)
               ? expanded[index]
               : expanded;
             const row = typeof rowsIndex[index] === 'number'
-              ? this.tableShowData[rowsIndex[index] - 1]
+              ? this.tableShowData[rowsIndex[index]]
               : rowsIndex[index];
             if (!row) continue;
 
-            this.Table.toggleRowExpansion(row, curRowExpanded);
+            this.$refs.dataBaseTable.toggleRowExpansion(row, curRowExpanded);
           }
         } else {
           const row = typeof rowsIndex === 'number'
-            ? this.tableShowData[rowsIndex - 1]
+            ? this.tableShowData[rowsIndex]
             : rowsIndex;
 
-          this.Table.toggleRowExpansion(row, expanded);
+          this.$refs.dataBaseTable.toggleRowExpansion(row, expanded);
         }
       } else {
         // 此处关联着options.expandRowKyes，改变都改变
@@ -873,21 +891,21 @@ export default {
     },
     //多选清除选择项
     clearSelection() {
-      this.Table.clearSelection();
+      this.$refs.dataBaseTable.clearSelection();
     },
     //重新布局
     doLayout() {
-      this.Table.doLayout();
+      this.$refs.dataBaseTable.doLayout();
       this.key++;
     },
     // 清除排序
     clearSort() {
-      this.Table.clearSort();
+      this.$refs.dataBaseTable.clearSort();
       this.tableData = this.allData;
     },
     // 清除过滤
     clearFilter(columnKey) {
-      this.Table.clearFilter(columnKey);
+      this.$refs.dataBaseTable.clearFilter(columnKey);
     },
 
     /**
@@ -922,10 +940,12 @@ export default {
     },
     //refresh
     refreshTable() {
-      this._tableInit(true);
-      this.doLayout();
-      // 清空多选数据
-      this.selectedData = [];
+      return new Promise((resolve, reject) => {
+        this._tableInit(true).then(res => resolve(res)).catch(err => reject(err));
+        this.doLayout();
+        // 清空多选数据
+        this.selectedData = [];
+      })
     },
     //搜索指定的属性配置
     findColumnIndex(prop) {
@@ -957,9 +977,6 @@ export default {
     }
   },
   computed: {
-    Table() {
-      return this.$refs.dataBaseTable;
-    },
     columnConfig: {
       get() {
         if (this.options.columnConfig) {

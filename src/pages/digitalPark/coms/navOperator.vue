@@ -202,6 +202,7 @@ export default {
       this.$store.commit("digitalPark/menuList", secondLevelTree)
     },
     onClickGoBack() { //点击返回首页
+     console.log("backtohome",isNorbulingkaScreen())
       if(isNorbulingkaScreen()){
         this.$router.push("/largeSizeScreen");
       }else if (Cookies.get("moduleType") == 2) {

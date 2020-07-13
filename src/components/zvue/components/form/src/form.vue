@@ -355,7 +355,7 @@ export default {
       ) {
         if (currentRules.required) {
           currentRules.message = `必填，请填写${item.label}`;
-          currentRules.trigger ? "" : (currentRules.trigger = `change`);
+          currentRules.trigger ? "" : (currentRules.trigger = `blur`);
         }
       }
     },
@@ -463,7 +463,7 @@ export default {
       }
     },
     clearValidate() {
-      this.Form.clearValidate();
+      this.$refs[this.formRef].clearValidate();
     },
     /**
      * 清空表单字段
@@ -500,7 +500,7 @@ export default {
     validate(callback) {
       if (!callback) {
         return new Promise((resolve, reject) => {
-          this.Form.validate(valid => {
+          this.$refs[this.formRef].validate(valid => {
             if (valid) {
               resolve(valid);
             } else {
@@ -510,7 +510,7 @@ export default {
           });
         });
       } else {
-        this.Form.validate(valid => {
+        this.$refs[this.formRef].validate(valid => {
           if (!valid) {
             this.$message.warning("表单未填写完整，请检查后再提交");
           }
@@ -661,9 +661,6 @@ export default {
     },
     optionsDisabled() {
       return this.options.disabled;
-    },
-    Form() {
-      return this.$refs[this.formRef];
     },
     textMode() {
       return this.options.textMode;

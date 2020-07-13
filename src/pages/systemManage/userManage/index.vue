@@ -6,7 +6,7 @@
 
 <script>
 
-  import RenderPage from '../renderPage'
+  import RenderPage from '../coms/renderPage'
   export default {
     name: 'UserManage',
     components: {

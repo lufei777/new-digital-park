@@ -5,7 +5,7 @@
       <Tree :tree-list="treeList" :tree-config="treeConfig"/>
     </div>
     <div class="right-content  panel-container">
-      <div class="choose-box flex-align radius-shadow panel">
+      <div class="choose-box flex-align radius-shadow panel" v-if="fromFlag!=4">
         <div class="item-group flex-align-center">
           <label>编号：</label>
           <el-input v-model="searchParams.id"/>
@@ -40,13 +40,16 @@
         </div>
       </div>
       <div class="table-wrapper radius-shadow panel">
-        <div class="operator-btn-box flex-row-reverse">
+        <div class="operator-btn-box flex-row-reverse" v-if="!hideBtn">
           <el-button type="primary" @click="onClickExportBtn" v-if="fromFlag==1">导出</el-button>
           <el-button type="primary" @click="onClickMultiDelBtn"  v-if="fromFlag==3">删除</el-button>
           <el-button type="primary" @click="onClickAddBtn">添加</el-button>
         </div>
-        <z-table :ref="tableConfig.ref" :options="tableConfig">
-          <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
+        <z-table :ref="tableConfig.ref" :options="tableConfig"
+                 @select="onSelectCheckBox"
+                 @selection-change="onSelectionChange"
+        >
+          <template slot="operation" slot-scope="{scopeRow:{$index,row}}" v-if="!hideBtn">
             <el-button type="text" @click="editRow(row)">编辑</el-button>
             <el-button type="text" @click="deleteRow(row)">删除</el-button>
             <el-button type="text" @click="assignRole(row)" v-if="fromFlag==1">分配角色</el-button>
@@ -71,9 +74,11 @@
   export default {
     name: 'RenderPage',
     components: {
-      Tree
+      Tree,
     },
-    props: ["fromFlag"], // fromFlag 1:用户管理  2:空间管理  3：机构管理
+    // fromFlag 1:用户管理  2:空间管理  3：机构管理  4:权限管理
+    // hideBtn true/false  角色管理分配权限时隐藏按钮
+    props: ["fromFlag","hideBtn"],
     data() {
       let config = this.getConfig()
       let searchParams = this.setParams()
@@ -87,7 +92,7 @@
         },
         searchParams: searchParams,
         tableConfig: {
-          ref: "tableRef",
+          ref: "renderPageTable",
           serverMode: {
             url: config.serverUrl,
             data: {...pageInfo}
@@ -105,6 +110,7 @@
           uiConfig: {
             height: "auto",
             selection: config.selection,
+            pagination:config.pagination==false?false:true
           },
           customTop: true,
           tableMethods: {},
@@ -115,7 +121,8 @@
     },
     computed: {
       ...mapState({
-        menuIsCollapse: state => state.digitalPark.menuIsCollapse
+        menuIsCollapse: state => state.digitalPark.menuIsCollapse,
+        permissionIds: state => state.digitalPark.permissionIds
       }),
       nameLabel(){
         return this.fromFlag==2?'工程用名':'机构简称'
@@ -169,8 +176,8 @@
         } else if (this.fromFlag == 2) {
           config = {
             treeProps:{
-                label: 'text',
-                children: 'nodes'
+              label: 'text',
+              children: 'nodes'
             },
             delConfig: {
               api: CommonApi.deleteSpace,
@@ -205,14 +212,38 @@
             selection:true,
             serverUrl:SystemManageApi.getDeptList,
             columnConfig:  [{
-                label: '编号',
-                prop: 'id'
-              },{
-                label: '机构简称',
-                prop: 'name'
-              }, {
-                label: '机构全称',
-                prop: 'abbr'
+              label: '编号',
+              prop: 'id'
+            },{
+              label: '机构简称',
+              prop: 'name'
+            }, {
+              label: '机构全称',
+              prop: 'abbr'
+            }],
+          }
+        }else if(this.fromFlag == 4){
+          config = {
+            treeProps:{
+              label: 'name',
+              children: 'childNode'
+            },
+            delConfig: {
+              api: SystemManageApi.deleteDept,
+              paramKey: 'deptIds'
+            },
+            selection:true,
+            pagination:false,
+            serverUrl:SystemManageApi.getPermissionById,
+            columnConfig:  [{
+              label: '编号',
+              prop: 'id'
+            },{
+              label: '权限名称',
+              prop: 'name'
+            }, {
+              label: '描述',
+              prop: 'perDesc'
             }],
           }
         }
@@ -220,7 +251,7 @@
       },
       setParams(){
         let params = {}
-        if(this.fromFlag==1){   //1:用户管理  2:空间管理  3：机构管理
+        if(this.fromFlag==1){   //1:用户管理  2:空间管理  3：机构管理  4:权限管理
           params = {
             id: '',
             loginId: '',
@@ -241,6 +272,10 @@
             abbr:'',
             parent:''
           }
+        }else if(this.fromFlag==4){
+          params = {
+            menuId:''
+          }
         }
         return params
       },
@@ -252,7 +287,6 @@
           this.searchParams.department = this.treeList[0].id
         }
 
-        // this.onClickSearchBtn()
       },
       async getAssetAllTree() {
         this.treeList = await CommonApi.getAssetAllTree({
@@ -260,6 +294,11 @@
           locationRoot: 1
         })
         this.treeConfig.defaultExpandedkeys = [this.treeList && this.treeList[0].id]
+      },
+      async getPermissionTree() {
+        // let treeList = await SystemManageApi.getPermissionTree()
+        this.treeList = await SystemManageApi.getPermissionTree()
+        this.treeConfig.defaultExpandedkeys = [this.treeList[0].id]
       },
       onClickTreeNodeCallBack(val) {
         //需要分开赋值，否则后台接口会报错
@@ -269,6 +308,9 @@
           this.searchParams.parentId = val.id
         }else if(this.fromFlag==3){
           this.searchParams.parent = val.id
+        }else if(this.fromFlag==4){
+          this.searchParams.menuId = val.id
+          this.getData()
         }
       },
       onClickSearchBtn() {
@@ -283,6 +325,9 @@
         this.$refs[this.tableConfig.ref].setCurrentPage(1)
         this.tableConfig.serverMode.data = {...this.searchParams, ...pageInfo}
         this.$refs[this.tableConfig.ref].refreshTable()
+        if(this.fromFlag==4 && this.hideBtn == true){
+          this.setPermission()
+        }
       },
       onClickMultiDelBtn() {
         let tmp = this.$refs[this.tableConfig.ref].getSelectedData()
@@ -353,7 +398,49 @@
           await this.getDeptTree()
         }else if(this.fromFlag==2){
           await this.getAssetAllTree()
+        }else if(this.fromFlag==4){
+          await this.getPermissionTree()
         }
+      },
+      onSelectCheckBox(selection,row){
+      },
+      onSelectionChange(selection){
+        /*
+          pType 0：只读权限 1:写权限
+          若勾选写权限，则必须勾选读权限
+        */
+        const Table = this.$refs[this.tableConfig.ref];
+        let writePermission = selection.find((item)=>{
+          return item.pType==1
+        })
+        if(writePermission){
+          let readPermissionIndex = Table.allData.find((item)=>{
+            return item.pType==0
+          })
+          if(readPermissionIndex!=-1){
+            Table.toggleSelection(readPermissionIndex,true)
+          }
+        }
+      },
+      getAssignList() {
+        let tmp = this.$refs[this.tableConfig.ref].selectedData
+        // console.log("tmp",tmp)
+        return tmp
+      },
+      setPermission(){
+        //已有权限回显
+        console.log(this.$refs[this.tableConfig.ref].allData);
+        this.$refs[this.tableConfig.ref].allData.map((item,index)=>{
+          console.log("1")
+          let flag = this.permissionIds.findIndex((per)=>{
+             console.log("teim",item,per)
+              return item.id==per
+          })
+          if(flag!=-1){
+            debugger
+            this.$refs[this.tableConfig.ref].toggleSelection(index,true)
+          }
+        })
       }
     },
     async created() {
@@ -374,7 +461,7 @@
 </script>
 
 <style lang="less" scoped>
-  @import './less/index.less';
-  @import './../commonProject/less/dataDetailRow.less';
+  @import '../less/index.less';
+  @import '../../commonProject/less/dataDetailRow.less';
 
 </style>

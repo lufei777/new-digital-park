@@ -128,6 +128,14 @@ class SystemManage {
   @url("/user-service/permission/permissionTree")
   @get
   getPermissionTree(){}
+
+  @url("/user-service/permission/permissionsById")
+  @get
+  getPermissionById(){}
+
+  @url("/user-service/permission/assignPermissions")
+  @get
+  assignPermission(){}
 }
 
 export default new SystemManage()

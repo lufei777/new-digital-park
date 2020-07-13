@@ -53,7 +53,7 @@
         <el-carousel-item v-for="item in fileList" :key="item.url">
           <img v-if="dialogImgType" width="100%" :src="item.url" alt="item.url" />
         </el-carousel-item>
-      </el-carousel> -->
+      </el-carousel>-->
     </el-dialog>
   </div>
 </template>
@@ -242,7 +242,7 @@ export default {
       }
       this.$message.success("上传成功");
       this.setVal();
-      
+
       if (typeof this.uploadSuccess === 'function') {
         this.uploadSuccess(file, this.column);
       }
