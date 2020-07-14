@@ -364,7 +364,7 @@ export default {
     },
     clearForm(obj) {
       // 获取顶部form表单
-      var zForm = this.$refs[this.setForms[0].formData.ref];
+      var zForm = this.$refs[this.formData.ref];
       // 单击重置按钮时候，重置表单 方法在已经封装好的文档中  名称：resetForm
       zForm.resetForm();
       // console.log(zForm)
@@ -462,7 +462,7 @@ export default {
       return this.$refs[this.tableData.ref];
     },
     Form() {
-      return this.$refs[this.setForms[0].formData.ref];
+      return this.$refs[this.formData.ref];
     }
   }
 };

@@ -38,8 +38,6 @@ export default {
     props:['relationIds'],
   data() {
     return {
-      // 拼接的relationIds
-      relationIds: "",
       // 保存的查询条件
       condition: {},
       // 开启表单的懒加载
