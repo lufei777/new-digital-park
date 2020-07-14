@@ -703,21 +703,31 @@ export const TaskpriorityType = {
 };
 
 export const SystemDic = {
-	isHidden: [
-		{
+	isHidden: [{
 			label: '隐藏',
 			value: 1
-		},
-		{
+		},{
 			label: '可见',
 			value: 0
-		}
-	],
+	}],
 
 	hiddenStatus: {
 		1: '隐藏',
 		0: '可见'
-	}
+	},
+
+  pType: [{
+    label: '读权限',
+    value: 0
+  },{
+    label: '写权限',
+    value: 1
+  }],
+
+	pTypeStatus:{
+	  0:'读权限',
+    1:'写权限'
+  }
 };
 
 // 用电管理
@@ -734,7 +744,12 @@ export const ElectricityManageDic = {
 		}
 	],
 	// 用电收费账单状态
-	detailsStatus: [
+	// 审核状态
+	status: [
+		{
+			label: '待审核',
+			value: 1
+		},
 		{
 			label: '通过',
 			value: 2
@@ -742,25 +757,6 @@ export const ElectricityManageDic = {
 		{
 			label: '驳回',
 			value: 3
-		}
-	],
-	// 审核状态
-	status: [
-		{
-			label: '待审核',
-			value: 2
-		},
-		{
-			label: '已录入',
-			value: 0
-		},
-		{
-			label: '审核通过',
-			value: 3
-		},
-		{
-			label: '驳回',
-			value: 4
 		}
 	],
 }
@@ -823,19 +819,37 @@ export const TaskDic = {
 		2: "已派",
 		3: "处理中",
 		4: "已完成",
-		5: "挂单中",
+		5: "挂单中"
 	},
-	urgentStatus: {
-		1: "正常",
-		2: "重要",
-		3: "紧急",
+
+	urgentStatus: [{
+		value: "1",
+		label: '正常'
 	},
-	locationStatus: {
-		0: '公司',
-		1: '现场'
+	{
+		value: "2",
+		label: '重要'
 	},
-	supplementStatus: {
-		0: '补录',
-		1: '正常'
-	}
+	{
+		value: "3",
+		label: '紧急'
+	}],
+
+	locationStatus: [{
+		value: 0,
+		label: '公司'
+	},
+	{
+		value: 1,
+		label: '现场'
+	}],
+
+	supplementStatus: [{
+		value: 0,
+		label: '补录'
+	},
+	{
+		value: 1,
+		label: '正常'
+	}],
 }

@@ -141,8 +141,7 @@
           <div class="flex-align-between table-tip-box">
             <div class="table-tip">当日现场工单</div>
           </div>
-          <z-table :ref="officeLocationTable.ref" :options="officeLocationTable">
-          </z-table>
+          <z-table :ref="officeLocationTable.ref" :options="officeLocationTable"></z-table>
         </div>
       </div>
       <!-- 工单排名 -->
@@ -156,8 +155,7 @@
             <div class="table-tip">工单排名</div>
             <el-button type="primary" @click="onClickExportBtn">导出表格</el-button>
           </div>
-          <z-table :ref="tableData.ref" :options="tableData">
-          </z-table>
+          <z-table :ref="tableData.ref" :options="tableData"></z-table>
         </div>
       </div>
       <!-- <CommonSelect /> -->
@@ -390,13 +388,14 @@ export default {
       let color = ["#4DA1FF", "#83D587", "#FFCE33", "#FF7B8C"];
       let titleText = "工单类型统计";
       let seriesData = [];
-      res.values && res.values.map(item => {
-        var itemObj = {
-          value: item.taskNum,
-          name: item.name
-        };
-        seriesData.push(itemObj);
-      });
+      res.values &&
+        res.values.map(item => {
+          var itemObj = {
+            value: item.taskNum,
+            name: item.name
+          };
+          seriesData.push(itemObj);
+        });
       let data = {
         legendData,
         seriesData,
@@ -431,9 +430,11 @@ export default {
     },
     async getDepartmentTree() {
       let res = await SystemManage.getDepartmentTree();
-      this.deptList = res[0].childNode;
-      this.deptValue = res[0].childNode[0].id;
-      this.deptSelectName = res[0].childNode[0].name;
+      if (res) {
+        this.deptList = res[0].childNode;
+        this.deptValue = res[0].childNode[0].id;
+        this.deptSelectName = res[0].childNode[0].name;
+      }
     },
     deptTypeChange(val) {
       this.deptValue = val;
@@ -909,7 +910,7 @@ export default {
     }
   }
   .officeLocation-table {
-     margin-bottom: 20px!important;
+    margin-bottom: 20px !important;
   }
 }
 </style>

@@ -4,6 +4,7 @@ export default {
     paginationSlotName: "tablePagination",
     editBtn: false,
     calcelBtn: true,
+    border: false,
     rowStyle: { height: '50px' },
     cellStyle: { padding: '0px' },
     headerCellStyle: { padding: '0px', height: '50px' },

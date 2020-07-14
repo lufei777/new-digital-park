@@ -20,6 +20,7 @@
       <el-table
         ref="dataBaseTable"
         highlight-current-row
+        :border="tableOption.border || config.border"
         :header-row-class-name="headerRowClassName"
         :header-row-style="tableOption.headerRowStyle"
         :row-class-name="tableOption.rowClassName"

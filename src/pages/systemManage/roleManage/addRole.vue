@@ -50,7 +50,14 @@
               prop: "caption",
               span: 24,
               rules: {}
-            }
+            },
+            {
+              type: "textarea",
+              label: "角色权限",
+              prop: "permissionNameList",
+              span: 24,
+              disabled:true,
+            },
           ]
         },
       };
@@ -84,6 +91,7 @@
         let res = await SystemManageApi.getRoleDetail({
           roleId: this.roleId
         })
+        res.permissionNameList =(res.permissionList || []).map((item)=>item.name).join("、")
         this.formModel = res
       }
     },

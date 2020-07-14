@@ -85,5 +85,15 @@ export default [{
     path: '/permissionManage',
     component: ()=>import('@/pages/systemManage/permissionManage/index'),
     meta: { title: '权限管理' },
-  }]
+    // children:[{
+    //   path: '/addPermission',
+    //   component: ()=>import('@/pages/systemManage/permissionManage/addPermission'),
+    //   meta: { title: '权限编辑' },
+    // }]
+  },
+    {
+      path: '/addPermission',
+      component: ()=>import('@/pages/systemManage/permissionManage/addPermission'),
+      meta: { title: '权限编辑' },
+    }]
 }]

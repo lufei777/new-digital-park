@@ -4,6 +4,7 @@ import store from '@/vuex/store';
 import { getToken, IsCZClient } from './auth';
 import { AssetState } from './dictionary';
 const Message = require("element-ui").Message
+import { jsonToUrlString } from 'utils/util';
 class commonFun {
   menuData = {
     "id": 1,
@@ -2015,12 +2016,18 @@ class commonFun {
 
   //导出
   exportMethod(data) {
-    axios({
+    let params = '';
+    if (typeof data.params === 'object') {
+      params = jsonToUrlString(data.params);
+    } else if (typeof data.params === 'string') {
+      params = data.params;
+    }
+    return axios({
       headers: {
         'X-SSO-Token': getToken()
       },
       method: "get",
-      url: `${data.url}${data.params ? '?' + data.params : ''}`,
+      url: `${data.url}${params ? '?' + params : ''}`,
       responseType: 'blob',
     }).then((res) => {
       const link = document.createElement('a')
@@ -2073,7 +2080,7 @@ class commonFun {
             query: {
               firstMenuId: item.firstMenuId,
               secondMenuId: item.secondMenuId,
-              id:item.id
+              id: item.id
             }
           });
         }
@@ -2163,12 +2170,12 @@ class commonFun {
   //设置菜单index
   setMenuIndex(item, from) {
     //from 1->代表是渲染菜单的时候，使用item本身；不传则为点击的时候，找到item的最子集
-    let arr = {'defaultPage':{}, 'digitalPark/dashboardHomePage':{}, 'stockInApply':{}};
+    let arr = { 'defaultPage': {}, 'digitalPark/dashboardHomePage': {}, 'stockInApply': {} };
     let flag = false
     if (item.routeAddress) {
       Object.keys(arr).map((str) => {
         if (item.routeAddress.indexOf(str) != -1) {
-          arr[item.routeAddress]=item;
+          arr[item.routeAddress] = item;
           flag = true
         }
       })
