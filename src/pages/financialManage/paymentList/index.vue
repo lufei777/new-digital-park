@@ -262,7 +262,7 @@ export default {
     // 修改
     adjust(obj) {
       this.$router.push({
-        path: "/changedetail",
+        path: "/finacialmanage/changedetail",
         query: { flag: "edit", noticeNumber: obj.row.noticeNumber }
       });
     },
@@ -298,7 +298,7 @@ export default {
     canDetails(obj) {
       let noticeNumber = obj.row.noticeNumber;
       this.$router.push({
-        path: "/changedetail",
+        path: "/finacialmanage/changedetail",
         query: { flag: "detail", noticeNumber: noticeNumber }
       });
     }

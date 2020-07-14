@@ -25,9 +25,9 @@ export default new class {
     addInvoiceContact() {}
     
     // 收费  ===
-    @url('/oaApi/finance/manager/addBillChargeContact')
+    @url('/oaApi/finance/manager/addInvoiceContact')
 	@post
-    addBillChargeContact() {}
+    addInvoiceContact() {}
 
 	// 作废  /finance/manager/delBillChargeContact
 

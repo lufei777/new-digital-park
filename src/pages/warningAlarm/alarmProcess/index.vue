@@ -187,7 +187,7 @@ export default {
     resetChange() {},
     getCleaningList() {
       // 来自CommonFun的模拟数据源 let res = CommonFun.alarmGrounp;
-      let res = CommonFun.alarmGrounp;
+      // let res = CommonFun.alarmGrounp;
       let labelList = [
         { label: "子系统",     prop: "subSystem" },
         { label: "报警级别",   prop: "alarmLevel" },
@@ -195,7 +195,7 @@ export default {
         { label: "处理人员",   prop: "handingPerson" }
       ];
       this.tableData.columnConfig = labelList;
-      this.tableData.data = res;
+      // this.tableData.data = res;
     },
     batchDels() {},
     addTenant() {},

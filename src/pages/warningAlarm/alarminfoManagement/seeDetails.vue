@@ -41,7 +41,7 @@
 
         <!-- 派单对话框 -->
         <!-- 对话框 -->
-        <!-- 应答对话框 -->
+        <!-- 应答对话框 :visible.sync="dialogFormVisible"-->
         <el-dialog
           :visible.sync="dialogFormVisible"
           :show-close='false'
@@ -54,9 +54,9 @@
               <el-button @click="closeDialog()">关闭</el-button>
             </div>
 
-            <!-- 应答表单 -->
+            <!-- 应答表单 v-if="!dis" -->
             <z-form
-              v-if="!dis"
+             v-if="!dis"
               v-model="model"
               :ref="setForms[1].formData.ref"
               :options="setForms[1].formData"
@@ -77,7 +77,7 @@
               </template>
             </z-form>
 
-            <!-- 派单的表单 -->
+            <!-- 派单的表单 v-if="dis" -->
             <z-form
               v-if="dis"
               v-model="model"
@@ -130,8 +130,12 @@ const handingPerson = WarningAlerm.handingPerson;
 const alarmStatus = WarningAlerm.alarmStatus;
 // 报警类型
 const alarmType = WarningAlerm.alarmType;
+import ComDialog from '../alarmRules/com-eldialog'
 export default {
   name: "seeDetails",
+  components:{
+    'com-eldiolog':ComDialog
+  },
   data() {
     return {
       // 传过来的信息
@@ -434,9 +438,9 @@ export default {
     if (query.flag) {
       this.model = { ...query };
       this.setForms[0].formData.textMode = true;
-      if (query.mark) {
-        this.open();
-      }
+      // if (query.mark === 'response') {
+      //   this.open();
+      // }
     } else {
       this.model = { ...query };
     }

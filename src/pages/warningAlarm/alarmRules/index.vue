@@ -4,8 +4,8 @@
     <!-- 上半部分 -->
     <div class="condition-box radius-shadow">
       <z-form
-        :ref="setForms[0].formData.ref"
-        :options="setForms[0].formData"
+        :ref="formData.ref"
+        :options="formData"
         v-model="model"
         @submit="submit"
         @reset-change="resetChange"
@@ -40,30 +40,7 @@
           </el-button>
         </div>
         <!-- 弹出框中的表单 -->
-        <z-form
-          :ref="setForms[1].formData.ref"
-          :options="setForms[1].formData"
-          v-model="model"
-          @submit="submit"
-          @reset-change="resetChange"
-        >
-          <template
-            slot="btn"
-            slot-scope="obj"
-          >
-            <div>
-              <el-button
-                :disabled="obj.disabled"
-                type="primary"
-                @click="onClickSureBtn(obj)"
-              >确认</el-button>
-              <el-button
-                :disabled="obj.disabled"
-                @click="clearForm1(obj)"
-              >重置</el-button>
-            </div>
-          </template>
-        </z-form>
+        <com-eldiolog @off='closeDialog' :relationIds = 'relationIds'></com-eldiolog>
       </el-dialog>
     </div>
 
@@ -116,6 +93,7 @@
         </template>
       </z-table>
     </div>
+    
   </div>
 </template>
 
@@ -124,6 +102,7 @@
 import warningAlarm from "@/service/api/warningAlarm";
 // 导入配置的字典====根据需要导入自己的配置
 import CommonFun from "@/utils/commonFun";
+import ComDialog from './com-eldialog'
 //导入字典中的定义的字段
 import { WarningAlerm } from "utils/dictionary";
 // 报警级别
@@ -142,6 +121,9 @@ const inputType = WarningAlerm.inputType;
 const notificationWay = WarningAlerm.notificationWay;
 export default {
   name: "areaManage",
+  components:{
+    'com-eldiolog':ComDialog
+  },
   data() {
     return {
       // 拼接的relationIds
@@ -154,143 +136,93 @@ export default {
       dialogFormVisible: false,
       model: {},
       // 配置两个表单一个是基本的另一个是弹出框中的表单
-      setForms: [
-        // 页面显示的表单，
-        {
-          formData: {
-            ref: "formData",
-            labelWidth: "100",
-            size: "medium",
-            menuPosition: "right",
-            menuBtn: false,
-            // labelPosition: "left",
-            forms: [
-              // 报警级别
-              {
-                type: "select",
-                label: "报警级别",
-                prop: "eventRank",
-                span: 5,
-                dicUrl: warningAlarm.geteventRanks,
-                dicMethod: "get",
-                props: {
-                  label: "rankName",
-                  value: "rankId"
-                }
-              },
-              //   子系统
-              {
-                type: "select",
-                label: "子系统",
-                span: 5,
-                offset: 1,
-                disabled: true,
-                tip: "暂时未提供",
-                tipPlacement: "right",
-                prop: "system",
-                dicData: subSystem
-              },
-              //   设备类型
-              {
-                type: "cascader",
-                label: "设备类型",
-                span: 5,
-                offset: 1,
-                // prop: "catalogId",
-                prop: "parentCatalogId",
-                dicUrl: warningAlarm.getItemsTree,
-                dicQuery: { catalogId: "2002" },
-                props: {
-                  label: "text",
-                  value: "id",
-                  children: "nodes"
-                }
-                // dicData: deviceType
-              },
-              //   报警名称=====>设备名称
-              {
-                type: "input",
-                label: "设备名称",
-                prop: "parentCaption",
-                // disabled:true,
-                placeholder: "请输入关键字",
-                clearable: true,
-                span: 5,
-                offset: 1
-              },
-              //  录入类型
-              {
-                type: "select",
-                label: "录入类型",
-                prop: "removed",
-                span: 5,
-                tip: "暂时未提供",
-                tipPlacement: "right",
-                disabled: true,
-                minRows: 0,
-                dicData: inputType
-              },
-              {
-                prop: "btn",
-                span: 6,
-                pull: 2,
-                offset: 13,
-                formslot: true
-                // width: "34px"
-              }
-            ]
+
+      // 页面显示的表单，
+
+      formData: {
+        ref: "formData",
+        labelWidth: "100",
+        size: "medium",
+        menuPosition: "right",
+        menuBtn: false,
+        // labelPosition: "left",
+        forms: [
+          // 报警级别
+          {
+            type: "select",
+            label: "报警级别",
+            prop: "eventRank",
+            span: 5,
+            // dicUrl: warningAlarm.geteventRanks,
+            // dicMethod: "get",
+            props: {
+              label: "rankName",
+              value: "rankId"
+            }
+          },
+          //   子系统
+          {
+            type: "select",
+            label: "子系统",
+            span: 5,
+            offset: 1,
+            disabled: true,
+            tip: "暂时未提供",
+            tipPlacement: "right",
+            prop: "system",
+            dicData: subSystem
+          },
+          //   设备类型
+          {
+            type: "cascader",
+            label: "设备类型",
+            span: 5,
+            offset: 1,
+            // prop: "catalogId",
+            prop: "parentCatalogId",
+            dicUrl: warningAlarm.getItemsTree,
+            dicQuery: { catalogId: "2002" },
+            props: {
+              label: "text",
+              value: "id",
+              children: "nodes"
+            }
+            // dicData: deviceType
+          },
+          //   报警名称=====>设备名称
+          {
+            type: "input",
+            label: "设备名称",
+            prop: "parentCaption",
+            // disabled:true,
+            placeholder: "请输入关键字",
+            clearable: true,
+            span: 5,
+            offset: 1
+          },
+          //  录入类型
+          {
+            type: "select",
+            label: "录入类型",
+            prop: "removed",
+            span: 5,
+            tip: "暂时未提供",
+            tipPlacement: "right",
+            disabled: true,
+            minRows: 0,
+            dicData: inputType
+          },
+          {
+            prop: "btn",
+            span: 6,
+            pull: 2,
+            offset: 13,
+            formslot: true
+            // width: "34px"
           }
-        },
-        // 弹出框的表单
-        {
-          formData: {
-            ref: "formData2",
-            labelWidth: "100",
-            size: "medium",
-            menuPosition: "right",
-            menuBtn: false,
-            // labelPosition: "left",
-            forms: [
-              // 报警级别
-              {
-                type: "select",
-                label: "报警级别",
-                prop: "eventRank",
-                span: 12,
-                offset: 6,
-                row: true,
-                // dicData: alarmLevel
-                dicUrl: warningAlarm.geteventRanks,
-                dicMethod: "get",
-                props: {
-                  label: "rankName",
-                  value: "rankId"
-                }
-              },
-              // 通知方式 select
-              {
-                type: "select",
-                label: "通知方式",
-                prop: "notify",
-                span: 12,
-                offset: 6,
-                row: true,
-                tip:'字段暂时没有传',
-                tipPlacement:"right",
-                dicData: notificationWay
-              },
-              {
-                prop: "btn",
-                span: 18,
-                pull: 2,
-                offset: 8,
-                formslot: true
-                // width: "34px"
-              }
-            ]
-          }
-        }
-      ],
+        ]
+      },
+
       tableData: {
         ref: "Table",
         customTop: true,
@@ -330,6 +262,10 @@ export default {
   },
 
   methods: {
+    closeDialog(){
+      this.dialogFormVisible= false,
+       this.getTableData({}, { page: 1, rows: 10 });
+    },
     // 表格中的删除按钮
     propertyDel(obj) {
       console.log(obj);
@@ -417,38 +353,6 @@ export default {
     closeDiolog() {
       this.dialogFormVisible = false;
     },
-    // 批量编辑的确认按钮
-    onClickSureBtn(obj) {
-      this.$refs[this.setForms[1].formData.ref].getFormModel(res => {
-        console.log(res);
-        if (Object.keys(res).length === 0) {
-          this.$message({
-            message: "未选择任何操作",
-            type: "warning"
-          });
-        } else {
-          // 批量编辑的接口
-          warningAlarm
-            .updateAssetEventRank({
-              rankId: res.eventRank,
-              ids: this.relationIds
-            })
-            .then(res => {
-              if (res) {
-                // 修改成功后进行提示
-                this.$message({
-                  message: "修改成功！",
-                  type: "success"
-                });
-                // 关闭弹窗
-                this.dialogFormVisible = false;
-                //刷新页面
-                this.getTableData({}, { page: 1, rows: 10 });
-              }
-            });
-        }
-      });
-    },
     submit() {},
     resetChange() {},
     clearForm1() {
@@ -478,8 +382,19 @@ export default {
           label: "报警级别",
           prop: "eventRank.rankName"
         },
-        { label: "通知方式", prop: "notify" },
-        { label: "录入类型", prop: "removed" }
+        {
+          label: "通知方式",
+          prop: "notify"
+        },
+        {
+          label: "录入类型",
+          prop: "removed",
+          type: "select",
+          dicData: [
+            { label: "手动", value: 1 },
+            { label: "自动", value: 0 }
+          ]
+        }
       ];
       this.tableData.columnConfig = labelList;
       // this.tableData.data = res;

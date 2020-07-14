@@ -40,6 +40,7 @@
 // import { Row } from "element-ui";
 import FinacialManageApi from "@/service/api/financialManage";
 import commonFun from "@/utils/commonFun.js";
+import { watch } from 'fs';
 export default {
   props: {
     charge: {
@@ -50,6 +51,8 @@ export default {
     return {
       off:false,
       model: {},
+      // 收费总金额
+      receivableAmount:Number,
       formOptions: {
         ref: "form",
         menuPosition: "right",
@@ -151,7 +154,8 @@ export default {
           },
           // 未收费金额
           {
-            type: "input",
+            type: "number",
+            minRows:0,
             label: "未收费金额",
             span: 8,
             prop: "amountNotCharged",
@@ -179,11 +183,17 @@ export default {
           },
           // 收费方式
           {
-            type: "input",
+            type: "select",
             label: "收费方式",
             span: 8,
             prop: "collectionType",
             // disabled: true
+            dicData:[
+              {label:'支付宝',value:1},
+              {label:'银行汇款',value:2},
+              {label:'手机转账',value:3},
+
+            ],
             rules: {
               required: true,
               trigger: "change"
@@ -191,7 +201,9 @@ export default {
           },
           // 收费金额
           {
-            type: "input",
+            type: "number",
+            minRows:0,
+            maxRows:Number(this.receivableAmount),
             label: "收费金额",
             span: 8,
             append: "元",
@@ -263,7 +275,7 @@ export default {
   computed: {
     Form() {
       return this.$refs[this.formOptions.ref];
-    }
+    },
   },
   methods: {
     submit(model, done) {
@@ -272,7 +284,9 @@ export default {
           this.$message({
             type: "success",
             message: "添加成功！"
+            
           });
+           this.$emit("comcharge",this.off);
         })
         .finally(res => {
           done();
@@ -282,21 +296,45 @@ export default {
     // 确认，
     canSure() {
       this.Form.submit();
-      this.$emit("comcharge",this.off);
+     
     },
     // 取消
     cancel() {
       // this.$emit("adjust", false);
       // console.log("父亲", this.$parent);
       this.$emit("comcharge");
+    },
+    totalSum(a,b){
+      return a-b
     }
   },
   created() {
     this.model = { ...this.charge };
+    this.model.collectionMoney = this.charge.receivableAmount
+    this.receivableAmount = this.charge.receivableAmount;
     console.log("this.charge", this.model);
+    this.$nextTick(()=> {
+      this.$refs[this.formOptions.ref].setColumnByProp('collectionMoney',{
+        maxRows:this.charge.receivableAmount
+      })
+    })
   },
   mounted() {
     console.log("this.charge", this.charge);
+    
+  },
+  watch:{
+      'model.collectionMoney':{
+        handler(newVal,oldVal){
+          if(newVal!==oldVal){
+           var cc=  this.totalSum(this.model.receivableAmount,newVal)
+          //  console.log(cc)
+            this.model.amountNotCharged = cc
+          }
+        },
+        deep:true,
+        immediate:true,
+      }
   }
 };
 </script>
