@@ -106,13 +106,21 @@ export default {
             hide: true
           },
           {
+            label: "年份",
+            prop: "year"
+          },
+          {
+            label: "月份",
+            prop: "month"
+          },
+          {
             label: "租户名称",
             prop: "tenantName"
           },
           {
             label: "租户编号",
             prop: "tenantNumber",
-            width: 150
+            width: 200
           },
           {
             label: "合同编号",

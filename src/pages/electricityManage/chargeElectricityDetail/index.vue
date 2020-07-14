@@ -137,7 +137,8 @@ export default {
           }, */
           {
             label: "合同终止日期",
-            prop: "expireTime"
+            prop: "expireTime",
+            width: 100
           },
           {
             label: "办公月电量合计",
