@@ -56,7 +56,8 @@ export default {
   },
   computed:{
     ...mapState({
-      menuData: state => state.digitalPark.menuList
+      menuData: state => state.digitalPark.menuList,
+      activeMenuIndex: state => state.digitalPark.activeMenuIndex
     }),
     menuList(){
       return this.menuData.childNode
@@ -75,6 +76,13 @@ export default {
         },
         handleClose(){},
         handleOpen(){}
+      }
+    }
+  },
+  watch:{
+    activeMenuIndex(){
+      this.iframeConfig = {
+        src: this.activeMenuIndex.split("@")[1]
       }
     }
   },
@@ -99,16 +107,16 @@ export default {
     },
     loadPage(key, keyPath,item) {
       // 如果key没有值，则默认keyPath第一个
-      if (key.length === 0) {
-        key = keyPath[0];
-        if (keyPath.length > 1 && keyPath[1].length != 0) {
-          key =
-            keyPath[0].substring(0, keyPath[0].lastIndexOf("/")) + keyPath[1];
-        }
-      }
-      if (key.indexOf("@") != -1) {
-        this.iframeConfig.src = key.replace("@", "");
-      }
+      // if (key.length === 0) {
+      //   key = keyPath[0];
+      //   if (keyPath.length > 1 && keyPath[1].length != 0) {
+      //     key =
+      //       keyPath[0].substring(0, keyPath[0].lastIndexOf("/")) + keyPath[1];
+      //   }
+      // }
+      // if (key.indexOf("@") != -1) {
+      //   this.iframeConfig.src = key.replace("@", "");
+      // }
       CommonFun.loadPage(item)
     }
   },

@@ -116,6 +116,7 @@ export default {
       this.showShortcutList = !this.showShortcutList;
     },
     onClickItemShortcut(item) {
+      this.showShortcutList=false
       this.$store.commit("digitalPark/activeMenuIndex", "");
       this.$store.commit("digitalPark/menuList", item);
       commonFun.loadPage(item)

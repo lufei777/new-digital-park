@@ -122,13 +122,14 @@ export default {
       this.showShortcutList = !this.showShortcutList;
     },
     onClickItemShortcut(item){
-      this.$store.commit("digitalPark/activeMenuIndex","");
-      this.$store.commit("digitalPark/menuList",item);
+      // this.$store.commit("digitalPark/activeMenuIndex","");
       // if(item.routeAddress.indexOf("@") != -1){
       //   if(this.$route.path=="/vibe-web") {
       //     location.reload()
       //   }
       // }
+      this.$store.commit("digitalPark/menuList",item);
+      this.showShortcutList=false
       commonFun.loadPage(item)
     },
   },

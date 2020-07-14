@@ -7,7 +7,7 @@ import AddRole from '../pages/systemManage/roleManage/addRole'
 import PersonalInformation from '../pages/systemManage/personal/personalInformation'
 import ModifyPassword from '../pages/systemManage/personal/modifyPassword'
 export default [{
-  path: '/tmpRouter',
+  path: '/systemManage',
   redirect: '/userManage',
   component: () => import('@/pages/commonProject/coms/commonIndex'),
   meta: { title: '系统管理' },

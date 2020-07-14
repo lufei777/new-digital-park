@@ -3,6 +3,7 @@ import DigitalParkApi from "@/service/api/digitalPark";
 import { setMenuTree, getMenuTree } from "utils/project";
 import { setRoles, setPageRoles, getPageRoles } from 'utils/permission';
 
+let repeatRouteList = ['defaultPage', 'digitalPark/dashboardHomePage', 'stockInApply']
 const state = {
   dragFlag: true,
   menuIsCollapse: false,
@@ -18,7 +19,8 @@ const state = {
   roles: [],
   pageRoles: getPageRoles() || {},
   homeKeepAliveFlag: true,   //控制瀑布流页的缓存/刷新
-  permissionIdsList:[]  //所选角色的权限列表
+  permissionIdsList:[],  //所选角色的权限列表
+  repeatRouteList:repeatRouteList  //重复路由
 }
 
 const mutations = {
@@ -72,11 +74,18 @@ const mutations = {
   permissionIdsList(state, data) {
     state.permissionIdsList = data
   },
+  repeatRouteList(state, data) {
+    state.repeatRouteList = data
+  },
 }
 
 const getters = {
   getMenuList(state) {
     return state.menuList
+  },
+
+  getRepeatRouteList(state){
+    return state.repeatRouteList
   }
 }
 
