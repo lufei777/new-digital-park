@@ -31,16 +31,15 @@
                 <!-- window.parent.FindAssetLocation -->
               </template>
             </z-table>
-            <el-dialog title :visible.sync="dialogFormFlag" width="85%" custom-class="per-modal">
-              <OperationPopup />
-              <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormFlag = false">取 消</el-button>
-                <el-button type="primary" @click="onClickSureAssignBtn">确 定</el-button>
-              </span>
-            </el-dialog>
           </div>
         </el-tab-pane>
       </el-tabs>
+      <OperationPopup
+        @dialogParams="dialogParams"
+        :dialogFormFlag="dialogFormFlag"
+        :showFormFlag="showFormFlag"
+        @closeDialog="closeDialog"
+      />
     </div>
   </div>
 </template>
@@ -123,7 +122,13 @@ export default {
       designatorId: "",
       reason: "",
       taskPicList: [],
-      dialogFormFlag: false
+      dialogFormFlag: false,
+      paramsDialog: {
+        designatorId: "",
+        reason: "",
+        taskPicList: []
+      },
+      showFormFlag: 1
     };
   },
   computed: {
@@ -268,21 +273,31 @@ export default {
     },
     async dealTask() {
       let res = await TaskManageApi.dealTask({
-        id: this.taskId,
-        taskType: this.taskTypeStatus,
-        designatorId: this.designatorId,
-        reason: this.reason,
-        taskPicList: this.taskPicList
+        ...this.paramsDialog,
+        ...{
+          id: this.taskId,
+          taskType: this.taskTypeStatus
+        }
       });
       if (res) {
         this.toastMessage(res);
+        this.dialogFormFlag = false;
         this.taskList();
       }
+    },
+    dialogParams(data, hide) {
+      console.log("data", data);
+      this.paramsDialog = data;
+      this.dealTask();
+    },
+    closeDialog(val) {
+      this.dialogFormFlag = val;
     },
     acceptClick(row) {
       console.log("接单", row);
       this.taskId = row.row.id;
       this.taskTypeStatus = 1;
+      this.toastSure("接单", this.dealTask);
     },
     returnClick() {
       this.taskId = row.row.id;
@@ -292,23 +307,36 @@ export default {
     turnSendClick(row) {
       this.taskId = row.row.id;
       this.taskTypeStatus = 3;
-      this.dialogFormFlag = !this.dialogFormFlag;
+      this.dialogFormFlag = true;
       console.log("转派");
     },
-    hangClick() {
-      this.taskId = row.row.id;
+    hangClick({ row }) {
+      this.taskId = row.id;
       this.taskTypeStatus = 5;
+      this.toastSure("挂起", this.dealTask);
       console.log("挂起");
     },
     completeClick() {
+      this.dialogFormFlag = true;
       console.log("完成");
     },
-    cancelHoldClick() {
-      this.taskId = row.row.id;
+    cancelHoldClick({ row }) {
+      this.taskId = row.id;
       this.taskTypeStatus = 3;
-      console.log("解除挂起");
+      this.toastSure("解除挂起", this.cancelHoldEvent);
+    },
+    async cancelHoldEvent() {
+      let res = await TaskManageApi.getCancelHold({
+        id: this.taskId
+      });
+      if (res) {
+        this.toastMessage(res);
+        this.taskList();
+      }
     },
     sendClick(row) {
+      this.dialogFormFlag = true;
+      this.showFormFlag = 1;
       console.log("派单");
     },
     closeClick() {
