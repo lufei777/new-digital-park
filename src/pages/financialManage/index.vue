@@ -47,11 +47,11 @@ export default {
   },
   data() {
     let localStorageMenuData = {
-    //   name: "罗布林卡二期",
+      //   name: "罗布林卡二期",
       childNode: [
         {
           name: "收费通知单",
-          routeAddress: "/finacialmanage",
+          routeAddress: "/finacialmanage"
           // childNode: [
           //   {
           //     name:'调整',
@@ -83,7 +83,7 @@ export default {
           name: "收款联系单",
           routeAddress: "/paymentlist",
           childNode: []
-        },
+        }
         // {
         //   name: "日常巡查",
         //   routeAddress: "/routininspections",
@@ -126,7 +126,7 @@ export default {
   mounted() {
     console.log(1);
     document.title = this.menuData.name;
-  }
+  },
 };
 </script>
 

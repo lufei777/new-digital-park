@@ -49,6 +49,8 @@ export default {
   data() {
     return {
       model: {},
+      // 收费总金额
+      totalMoney:Number,
       formOptions: {
         ref: "form",
         menuPosition: "right",
@@ -140,7 +142,7 @@ export default {
             type: "input",
             label: "已收费金额",
             span: 8,
-            prop: "amountCharged",
+            prop: "receivedAmount",
             offset: 4,
             disabled: true,
             rules: {
@@ -150,7 +152,8 @@ export default {
           },
           // 未收费金额
           {
-            type: "input",
+            type: "number",
+            minRows:0,
             label: "未收费金额",
             span: 8,
             prop: "amountNotCharged",
@@ -178,11 +181,17 @@ export default {
           },
           // 收费方式
           {
-            type: "input",
+            type: "select",
             label: "收费方式",
             span: 8,
             prop: "collectionType",
             // disabled: true
+            dicData:[
+              {label:'支付宝',value:1},
+              {label:'银行汇款',value:2},
+              {label:'手机转账',value:3},
+
+            ],
             rules: {
               required: true,
               trigger: "change"
@@ -190,7 +199,9 @@ export default {
           },
           // 收费金额
           {
-            type: "input",
+            type: "number",
+            minRows:0,
+            maxRows:Number(this.totalMoney),
             label: "收费金额",
             span: 8,
             append: "元",
@@ -239,7 +250,7 @@ export default {
           {
             type: "textarea",
             label: "说明",
-            span: 12,
+            span: 16,
             prop: "remark",
             offset: 4,
             maxlength: 255,
@@ -252,14 +263,17 @@ export default {
           {
             prop: "btn",
             formslot: true,
-            span: 6,
-            offset: 9
+            span: 10,
+            offset: 6
           }
         ]
       }
     };
   },
   methods: {
+    totalSum(a, b) {
+      return a - b;
+    },
     goBack() {
       this.$router.back();
     },
@@ -284,7 +298,9 @@ export default {
     setTabledata(id) {
       FinacialManageApi.selectBillChargeContact({ noticeNumber: id }).then(
         res => {
-          console.log("res.data", res.data);
+          // console.log("res.data",  res.data[0]);
+          this.totalMoney = res.data[0].receivableAmount
+          console.log("this.totalMoney", this.totalMoney);
           this.model = { ...res.data[0] };
         }
       );
@@ -301,6 +317,25 @@ export default {
       if (flag === "detail") {
         this.formOptions.textMode = true;
       }
+    }
+    // this.$nextTick(() => {
+    //   this.$refs[this.formOptions.ref].setColumnByProp("collectionMoney", {
+    //     maxRows: this.totalMoney
+    //   });
+    // });
+  },
+
+  watch: {
+    "model.collectionMoney": {
+      handler(newVal, oldVal) {
+        if (newVal !== oldVal) {
+          var cc = this.totalSum(this.model.receivableAmount, newVal);
+          //  console.log(cc)
+          this.model.amountNotCharged = cc;
+        }
+      },
+      deep: true,
+      immediate: true
     }
   }
 };
