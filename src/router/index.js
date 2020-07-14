@@ -54,7 +54,7 @@ let publicRouters = [].concat(
 
 // 数字园区 私有模块
 let privateRouters = [].concat(
-  AssetManage,
+  AssetManage, 
   EnergyRouter,
   LeaseManage,
   CleaningManage,
