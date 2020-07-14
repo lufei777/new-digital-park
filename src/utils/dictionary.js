@@ -747,11 +747,11 @@ export const TaskpriorityType = {
 
 export const SystemDic = {
 	isHidden: [{
-			label: '隐藏',
-			value: 1
-		},{
-			label: '可见',
-			value: 0
+		label: '隐藏',
+		value: 1
+	}, {
+		label: '可见',
+		value: 0
 	}],
 
 	hiddenStatus: {
@@ -759,18 +759,18 @@ export const SystemDic = {
 		0: '可见'
 	},
 
-  pType: [{
-    label: '读权限',
-    value: 0
-  },{
-    label: '写权限',
-    value: 1
-  }],
+	pType: [{
+		label: '读权限',
+		value: 0
+	}, {
+		label: '写权限',
+		value: 1
+	}],
 
-	pTypeStatus:{
-	  0:'读权限',
-    1:'写权限'
-  }
+	pTypeStatus: {
+		0: '读权限',
+		1: '写权限'
+	}
 };
 
 // 用电管理
@@ -791,17 +791,21 @@ export const ElectricityManageDic = {
 	status: [
 		{
 			label: '待审核',
-			value: 1
-		},
-		{
-			label: '通过',
-			value: 2
+			value: 0
 		},
 		{
 			label: '驳回',
+			value: 1
+		},
+		{
+			label: '已录入',
+			value: 2
+		},
+		{
+			label: '通过',
 			value: 3
 		}
-	],
+	]
 }
 
 export const TaskTypeDic = {

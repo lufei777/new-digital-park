@@ -2,8 +2,8 @@ export default [{
   path: '/electricitymanage',
   name: 'electricitymanage',
   meta: { title: '用电管理' },
-  component: () => import('@/pages/commonProject/coms/commonIndex'),
-  // component: () => import('@/pages/electricityManage'),
+  // component: () => import('@/pages/commonProject/coms/commonIndex'),
+  component: () => import('@/pages/electricityManage'),
   redirect: '/electricitymanage/tenantelectricity',
   children: [
     {
