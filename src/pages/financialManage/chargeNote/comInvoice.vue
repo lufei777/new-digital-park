@@ -37,7 +37,9 @@
 </template>
 
 <script>
-// import { Row } from "element-ui";
+// 导入接口
+import FinacialManageApi from "@/service/api/financialManage";
+import commonFun from "@/utils/commonFun.js";
 export default {
   props: {
     invoice: {
@@ -141,10 +143,10 @@ export default {
             prop: "amountCharged",
             offset: 4,
             disabled: true,
-            rules: {
-              required: true,
-              trigger: "change"
-            }
+            // rules: {
+            //   required: true,
+            //   trigger: "change"
+            // }
           },
           // 未收费金额
           {
@@ -166,7 +168,7 @@ export default {
             type: "input",
             label: "开票科目",
             span: 8,
-            prop: "collectionContent",
+            prop: "invoiceSubject",
             offset: 4,
             // disabled: true
             rules: {
@@ -176,24 +178,29 @@ export default {
           },
           // 开票金额
           {
-            type: "input",
+            type: "number",
             label: "开票金额",
+            minRows:0,
             span: 8,
-            prop: "collectionType",
+            prop: "invoiceMoney",
             // disabled: true
             rules: {
               required: true,
-              trigger: "change"
+              trigger: "blur"
             }
           },
           // 收款情况
           {
-            type: "input",
+            type: "select",
             label: "收款情况",
             span: 8,
             append: "元",
-            prop: "collectionMoney",
+            prop: "costStatus",
             offset: 4,
+            dicData: [
+              { label: "是", value: 1 },
+              { label: "否", value: 2 }
+            ],
             // disabled: true
             rules: {
               required: true,
@@ -201,17 +208,17 @@ export default {
             }
           },
           // 银行回执单号
-        //   {
-        //     type: "input",
-        //     label: "银行回执单号",
-        //     span: 8,
-        //     prop: "bankCode",
-        //     // disabled: true
-        //     rules: {
-        //       required: true,
-        //       trigger: "change"
-        //     }
-        //   },
+          //   {
+          //     type: "input",
+          //     label: "银行回执单号",
+          //     span: 8,
+          //     prop: "bankCode",
+          //     // disabled: true
+          //     rules: {
+          //       required: true,
+          //       trigger: "change"
+          //     }
+          //   },
           // 虚线
           {
             prop: "line",
@@ -257,11 +264,28 @@ export default {
       }
     };
   },
+  computed:{
+    Form(){
+      return this.$refs[this.formOptions.ref]
+    }
+  },
   methods: {
-    submit(model, hide) {},
+    submit(model, done) {
+      FinacialManageApi.addInvoiceContact(model).then(res=> {
+          this.$message({
+            type:'success',
+            message:'开票成功！'
+          })
+          this.$router.back()
+      }).finally(()=> {
+        done()
+      })
+    },
     resetChange() {},
     // 确认，
-    canSure() {},
+    canSure() {
+      this.Form.submit()
+    },
     // 取消
     cancel() {
       this.$emit("adjust", false);
@@ -269,7 +293,7 @@ export default {
     }
   },
   created() {
-    this.model = {...this.invoice};
+    this.model = { ...this.invoice };
     console.log("this.invoice", this.model);
   },
   mounted() {

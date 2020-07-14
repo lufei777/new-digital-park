@@ -85,7 +85,7 @@ export default {
           { label: "收费项目编码", prop: "costProjectCode" },
           { label: "收费项目", prop: "costProjectName" },
           { label: "核定金额", prop: "approvedAmount" },
-          { label: "调整金额", prop: "updateAmount", cell: true,type:'number' },
+          { label: "调整金额", prop: "updateAmount", cell: true,type:'number', minRows:0,},
           { label: "应收金额", prop: "receivableAmount" }
         ],
         uiConfig: {

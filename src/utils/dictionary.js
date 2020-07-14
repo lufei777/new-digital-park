@@ -517,6 +517,49 @@ export const Title = {
 	[ProjectName.YDCity]: '伊甸城BIM运管平台',
 	[ProjectName.NORBULINGKA]: '罗布林卡世界文化遗产监测预警平台'
 };
+export const electricityManageDic = {
+	// 电表用途
+	useType: [
+		{
+			label: '收费',
+			value: 2
+		},
+		{
+			label: '自用',
+			value: 1
+		}
+	],
+	// 用电收费账单状态
+	detailsStatus: [
+		{
+			label: '通过',
+			value: 2
+		},
+		{
+			label: '驳回',
+			value: 3
+		}
+	],
+	// 审核状态
+	status: [
+		{
+			label: '待审核',
+			value: 2
+		},
+		{
+			label: '已录入',
+			value: 0
+		},
+		{
+			label: '审核通过',
+			value: 3
+		},
+		{
+			label: '驳回',
+			value: 4
+		}
+	]
+};
 
 //任务概览任务类型
 export const taskType = {
@@ -819,19 +862,37 @@ export const TaskDic = {
 		2: "已派",
 		3: "处理中",
 		4: "已完成",
-		5: "挂单中",
+		5: "挂单中"
 	},
-	urgentStatus: {
-		1: "正常",
-		2: "重要",
-		3: "紧急",
+
+	urgentStatus: [{
+		value: "1",
+		label: '正常'
 	},
-	locationStatus: {
-		0: '公司',
-		1: '现场'
+	{
+		value: "2",
+		label: '重要'
 	},
-	supplementStatus: {
-		0: '补录',
-		1: '正常'
-	}
+	{
+		value: "3",
+		label: '紧急'
+	}],
+
+	locationStatus: [{
+		value: 0,
+		label: '公司'
+	},
+	{
+		value: 1,
+		label: '现场'
+	}],
+
+	supplementStatus: [{
+		value: 0,
+		label: '补录'
+	},
+	{
+		value: 1,
+		label: '正常'
+	}],
 }

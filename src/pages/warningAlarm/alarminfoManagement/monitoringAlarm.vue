@@ -93,6 +93,11 @@ const subSystem = WarningAlerm.subSystem;
 const deviceType = WarningAlerm.deviceType;
 // 报警类型
 const alarmType = WarningAlerm.alarmType;
+
+let pageInfo={
+  pageNum:1,
+  pageSize:10
+}
 export default {
   name: "warningAlarm",
   data() {
@@ -277,8 +282,9 @@ export default {
     },
     // '重置' 按钮
     clearForm(obj) {
-      var zform = this.$refs[this.formData.ref];
-      zform.resetForm();
+      // var zform = this.$refs[this.formData.ref];
+      // zform.resetForm();
+      this.Form.resetForm()
     },
     // '应答',按钮
     propertyEdit(obj) {

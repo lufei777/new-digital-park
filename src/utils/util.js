@@ -30,7 +30,7 @@ export const formatRoutes = (flatmenupaths, routes) => {
       return route;
     }
     // 进行递归处理children
-    if (route.children && route.children.length) {
+    /* if (route.children && route.children.length) {
       // 拼接子路由path，防止没有 / 的path
       route.children = route.children.map(item => {
         if (!item.path.startsWith('/')) {
@@ -58,7 +58,7 @@ export const formatRoutes = (flatmenupaths, routes) => {
         return route;
       }
       return false;
-    }
+    } */
   }).filter(item => item);
 }
 

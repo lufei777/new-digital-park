@@ -391,7 +391,7 @@ export default {
           },
           {
             prop: 'btn',
-            notModel: true,
+            noModel: true,
             formslot: true,
             width: 54,
             span: 24
@@ -400,79 +400,6 @@ export default {
       },
       // 监测器信息表单
       deviceInfoModel: {},
-      // 设备信息默认表单
-      deviceInfoForms: [
-        {
-          label: 'id',
-          prop: 'id',
-          hide: true
-        },
-        {
-          label: '监测器类别',
-          prop: 'kind',
-          type: 'select',
-          dicData: AssetKind,
-          disabled: true,
-        },
-        {
-          "label": "标题",
-          "prop": "caption",
-          rules: {
-            required: true
-          }
-        },
-        {
-          "label": "名称",
-          "prop": "name",
-          rules: {
-            required: true,
-            validator: validNotChinese
-          }
-        },
-        {
-          label: '监测间隔',
-          prop: 'time_interval',
-          appendSlot: "time_interval_appendSlot",
-          rules: {
-            required: true
-          }
-        },
-        {
-          label: '分类',
-          prop: 'catalogId',
-          type: 'select',
-          dicUrl: deviceManageApi.queryMonitorCatalogId,
-          dicQuery: {
-            catalog: 2001
-          },
-          props: {
-            label: 'name',
-            value: 'id'
-          },
-          rules: {
-            required: true
-          }
-        },
-        {
-          label: '服务',
-          prop: 'source',
-          type: 'select',
-          props: {
-            label: 'text',
-            value: 'id'
-          }
-        },
-        {
-          label: '结果转换表达式',
-          prop: 'transform',
-          width: 115
-        },
-        {
-          label: '警告条件表达式',
-          prop: 'warn_cond',
-          width: 115
-        }
-      ],
       // 信息其余表单
       deviceInfoExtraForms: [],
       deviceInfoForm: {
@@ -480,7 +407,81 @@ export default {
         itemSpan: 8,
         width: '95%',
         labelWidth: 110,
-        forms: []
+        forms: [
+          {
+            label: 'id',
+            prop: 'id',
+            hide: true
+          },
+          {
+            label: '监测器类别',
+            prop: 'kind',
+            type: 'select',
+            dicData: AssetKind,
+            disabled: true,
+          },
+          {
+            "label": "标题",
+            "prop": "caption",
+            rules: {
+              required: true
+            }
+          },
+          {
+            "label": "名称",
+            "prop": "name",
+            rules: [{
+              required: true,
+              trigger: 'blur'
+            }, {
+              trigger: 'change',
+              validator: validNotChinese
+            }]
+          },
+          {
+            label: '监测间隔',
+            prop: 'time_interval',
+            appendSlot: "time_interval_appendSlot",
+            rules: {
+              required: true
+            }
+          },
+          {
+            label: '分类',
+            prop: 'catalogId',
+            type: 'select',
+            dicUrl: deviceManageApi.queryMonitorCatalogId,
+            dicQuery: {
+              catalog: 2001
+            },
+            props: {
+              label: 'name',
+              value: 'id'
+            },
+            rules: {
+              required: true
+            }
+          },
+          {
+            label: '服务',
+            prop: 'source',
+            type: 'select',
+            props: {
+              label: 'text',
+              value: 'id'
+            }
+          },
+          {
+            label: '结果转换表达式',
+            prop: 'transform',
+            width: 115
+          },
+          {
+            label: '警告条件表达式',
+            prop: 'warn_cond',
+            width: 115
+          }
+        ]
       },
 
       // 详情
@@ -801,7 +802,7 @@ export default {
       })
 
       // 添加额外的forms属性
-      this.deviceInfoForm.forms = this.deviceInfoForms.concat(extraForms);
+      this.deviceInfoForm.forms = this.deviceInfoForm.forms.concat(extraForms);
     },
     //Form Data形式传递参数
     _axiosFormData(url, data, method = 'post') {

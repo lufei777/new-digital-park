@@ -47,7 +47,9 @@ let publicRouters = [].concat(
   vibeWeb,
   DigitalParkRouter,
   ExportData,
-  SystemManage
+  SystemManage,
+  FinancialManage
+
 )
 
 // 数字园区 私有模块
@@ -72,7 +74,6 @@ let privateRouters = [].concat(
   Norbulingka,
   DeviceManage,
   ElectricityManage,
-  MaintenanceManage,
   FinancialManage
 )
 store.commit('digitalPark/setPrivateRouters', privateRouters);

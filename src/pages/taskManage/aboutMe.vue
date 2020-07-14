@@ -31,6 +31,13 @@
                 <!-- window.parent.FindAssetLocation -->
               </template>
             </z-table>
+            <el-dialog title :visible.sync="dialogFormFlag" width="85%" custom-class="per-modal">
+              <OperationPopup />
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormFlag = false">取 消</el-button>
+                <el-button type="primary" @click="onClickSureAssignBtn">确 定</el-button>
+              </span>
+            </el-dialog>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -42,6 +49,7 @@
 import { mapState } from "vuex";
 import Tree from "../../components/tree/index";
 import CommonSelect from "../taskManage/coms/commonSelect";
+import OperationPopup from "../taskManage/coms/operationPopup";
 import TaskManageApi from "../../service/api/taskManage";
 import CommonFun from "../../utils/commonFun";
 import {
@@ -54,7 +62,8 @@ export default {
   name: "AboutMe",
   components: {
     Tree,
-    CommonSelect
+    CommonSelect,
+    OperationPopup
   },
   data() {
     let _this = this;
@@ -110,7 +119,11 @@ export default {
       ],
       taskTypeData: TaskTypeDic.taskType,
       taskTabsList: TaskTabsDic.taskTabs,
-      taskTypeStatus:''
+      taskTypeStatus: "",
+      designatorId: "",
+      reason: "",
+      taskPicList: [],
+      dialogFormFlag: false
     };
   },
   computed: {
@@ -123,7 +136,7 @@ export default {
         return [
           { id: 0, text: "详情", event: _this.editRow },
           { id: 1, text: "定位", event: _this.taskPosition },
-          { id: 2, text: "删除", event: _this.deleteRow }
+          { id: 2, text: "关闭", event: _this.closeClick }
         ];
       } else {
         return [
@@ -139,7 +152,9 @@ export default {
       this.commonParams = params;
       this.taskList();
     },
+    onClickSureAssignBtn() {},
     async taskList() {
+      let _this = this;
       let labelList = [
         { label: "工单编号", prop: "taskNumber" },
         { label: "工单名称", prop: "taskName" },
@@ -150,9 +165,8 @@ export default {
         {
           label: "优先级",
           prop: "urgent",
-          formatter: function(row) {
-            return TaskDic.urgentStatus[row.urgent];
-          }
+          type: "select",
+          dicData: TaskDic.urgentStatus
         },
         { label: "状态", prop: "taskStatus" },
         { label: "创建人", prop: "founderName" },
@@ -160,16 +174,14 @@ export default {
         {
           label: "地点",
           prop: "officeLocation",
-          formatter: function(row) {
-            return TaskDic.locationStatus[row.officeLocation];
-          }
+          type: "select",
+          dicData: TaskDic.locationStatus
         },
         {
           label: "补录",
           prop: "isSupplement",
-          formatter: function(row) {
-            return TaskDic.supplementStatus[row.isSupplement];
-          }
+          type: "select",
+          dicData: TaskDic.supplementStatus
         },
         { label: "设备点位", prop: "caption" }
       ];
@@ -214,26 +226,28 @@ export default {
             if (item.status == 1) {
               btnTmp = [
                 { id: 3, text: "派单", event: this.sendClick },
-                { id: 4, text: "关闭", event: this.closeClick }
+                { id: 4, text: "删除", event: this.deleteRow }
               ];
             } else if (item.status == 2) {
               btnTmp = [
                 { id: 4, text: "撤回", event: this.withdrawClick },
-                { id: 5, text: "关闭", event: this.closeClick }
+                { id: 5, text: "删除", event: this.deleteRow }
               ];
             } else if (item.status == 3) {
-              btnTmp = [{ id: 4, text: "关闭", event: this.closeClick }];
+              btnTmp = [{ id: 4, text: "删除", event: this.deleteRow }];
             } else if (item.status == 5) {
-              btnTmp = [{ id: 7, text: "关闭", event: this.closeClick }];
+              // btnTmp = [{ id: 7, text: "删除", event: this.deleteRow }];
             } else {
               btnTmp = [];
               // this.commonBtn.pop()
             }
             item.taskStatus = TaskDic.acceptTaskStatus[item.status];
           } else {
+            item.taskStatus = TaskDic.acceptTaskStatus[item.status];
             btnTmp = [];
           }
           arr = btnTmp.concat(this.commonBtn);
+          // arr = this.commonBtn.concat(btnTmp);
           item.ownBtnList = arr;
         });
         this.tableData.data = res.list;
@@ -243,51 +257,92 @@ export default {
         this.tableData.uiConfig.pagination.total = res.total;
       }
     },
+    toastMessage(res) {
+      if (res) {
+        this.$message({
+          showClose: true,
+          message: res,
+          type: "success"
+        });
+      }
+    },
     async dealTask() {
       let res = await TaskManageApi.dealTask({
         id: this.taskId,
         taskType: this.taskTypeStatus,
-        designatorId: this.model.designatorId,
-        reason: this.model.reason,
-        taskPicList: this.model.taskPicList
+        designatorId: this.designatorId,
+        reason: this.reason,
+        taskPicList: this.taskPicList
       });
-      this.toastMessage(res);
+      if (res) {
+        this.toastMessage(res);
+        this.taskList();
+      }
     },
     acceptClick(row) {
-      console.log("接单",row);
-      
+      console.log("接单", row);
       this.taskId = row.row.id;
-      this.taskTypeStatus = 1
+      this.taskTypeStatus = 1;
     },
     returnClick() {
       this.taskId = row.row.id;
-      this.taskTypeStatus = 4
+      this.taskTypeStatus = 4;
       console.log("退单");
     },
-    turnSendClick() {
+    turnSendClick(row) {
       this.taskId = row.row.id;
-      this.taskTypeStatus = 3
+      this.taskTypeStatus = 3;
+      this.dialogFormFlag = !this.dialogFormFlag;
       console.log("转派");
     },
     hangClick() {
       this.taskId = row.row.id;
-      this.taskTypeStatus = 5
+      this.taskTypeStatus = 5;
       console.log("挂起");
     },
     completeClick() {
       console.log("完成");
     },
     cancelHoldClick() {
+      this.taskId = row.row.id;
+      this.taskTypeStatus = 3;
       console.log("解除挂起");
     },
-    sendClick() {
+    sendClick(row) {
       console.log("派单");
     },
     closeClick() {
       console.log("关闭");
     },
-    withdrawClick() {
+    withdrawClick(row) {
+      this.taskId = row.row.id;
+      this.taskTypeStatus = 2;
+      this.toastSure("撤回", this.dealTask);
       console.log("撤回");
+    },
+    toastSure(message, event) {
+      this.$confirm(`确定要${message}吗?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          event && event();
+        })
+        .catch(err => {
+          if (err === "cancel" || err === "close") {
+            this.$message({
+              type: "info",
+              message: `已取消${message}`
+            });
+          } else {
+            this.$message({
+              type: "error",
+              message: "出错,请在控制台查看错误信息"
+            });
+            console.error(err);
+          }
+        });
     },
     handleCurrentChange(val) {
       this.currentPage = val;
