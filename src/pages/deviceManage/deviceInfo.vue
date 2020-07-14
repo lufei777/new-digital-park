@@ -261,7 +261,7 @@ export default {
           },
           {
             prop: 'btn',
-            notModel: true,
+            noModel: true,
             formslot: true,
             width: 54,
             span: 5
@@ -362,7 +362,7 @@ export default {
           },
           {
             prop: 'btn',
-            notModel: true,
+            noModel: true,
             formslot: true,
             width: 54,
             span: 24
@@ -372,219 +372,218 @@ export default {
       // 设备信息表单
       deviceInfoModel: {},
       // 设备信息默认表单
-      deviceInfoForms: [
-        {
-          label: 'id',
-          prop: 'id',
-          hide: true
-        },
-        {
-          "label": "标题",
-          "prop": "caption",
-          rules: {
-            required: true
-          }
-        },
-        {
-          "label": "名称",
-          "prop": "name",
-          rules: {
-            required: true,
-            validator: validNotChinese
-          }
-        },
-        {
-          "label": "设备制造日期",
-          "prop": "production_date",
-          type: "date",
-          format: "yyyy-MM-dd",
-          valueFormat: "yyyy-MM-dd",
-          rules: {
-            required: true
-          },
-        },
-        {
-          "label": "设备采购日期",
-          "prop": "purchase_date",
-          type: "datetime",
-          format: "yyyy-MM-dd HH:mm:ss",
-          valueFormat,
-          tip: '选择制造日期后，再填写此项',
-          rules: {
-            required: true
-          },
-          pickerOptions: {
-            disabledDate: (time) => {
-              let date = this.deviceInfoModel.production_date;
-              if (date) {
-                return time.getTime() < new Date(date).getTime();
-              } else {
-                return !date;
-              }
-            }
-          }
-        },
-        {
-          "label": "设备保修日期",
-          "prop": "warranty_date",
-          type: "date",
-          format: "yyyy-MM-dd",
-          valueFormat: "yyyy-MM-dd",
-          tip: '选择制造日期后，再填写此项',
-          pickerOptions: {
-            disabledDate: (time) => {
-              let date = this.deviceInfoModel.production_date;
-              if (date) {
-                return time.getTime() < new Date(date).getTime();
-              } else {
-                return !date;
-              }
-            }
-          }
-        },
-        {
-          "label": "设备启用日期",
-          "prop": "enabing_date",
-          type: "date",
-          format: "yyyy-MM-dd",
-          valueFormat: "yyyy-MM-dd",
-          tip: '选择采购日期后，再填写此项',
-          pickerOptions: {
-            disabledDate: (time) => {
-              let date = this.deviceInfoModel.purchase_date;
-              if (date) {
-                return time.getTime() < new Date(date).getTime();
-              } else {
-                return !date;
-              }
-            }
-          }
-        },
-        {
-          "label": "型号规格",
-          "prop": "specification"
-        },
-        {
-          "label": "资产类型",
-          "prop": "models"
-        },
-        {
-          "label": "增加方式",
-          "prop": "increse_way"
-        },
-        {
-          "label": "国际编码",
-          "prop": "international_code"
-        },
-        {
-          "label": "详情配置",
-          "prop": "detail_config"
-        },
-        // TODO
-        // NOTE 使用部门 保管人员 的prop会导致错误
-        {
-          "label": "使用部门",
-          "prop": "using_department",
-          type: "select",
-          defaultValue: "",
-          dicUrl: deviceManageApi.deptList,
-          props: {
-            value: 'id',
-            label: 'name'
-          }
-        },
-        {
-          "label": "使用状态",
-          "prop": "using_state"
-        },
-        {
-          "label": "生产厂家",
-          "prop": "vendor"
-        },
-        {
-          "label": "保管人员",
-          "prop": "keepers",
-          type: "select",
-          defaultValue: "",
-          dicUrl: deviceManageApi.userNameList,
-          props: {
-            value: 'id',
-            label: 'text'
-          },
-          defaultValue: userInfo.id
-        },
-        {
-          "label": "数量",
-          "prop": "quantity",
-          type: 'number',
-          minRows: 0
-        },
-        {
-          "label": "单价",
-          "prop": "price",
-          type: 'number',
-          minRows: 0,
-          precision: 2
-        },
-        {
-          "label": "单位",
-          "prop": "deviceUnit",
-          rules: {
-            validator: (rule, value, callback) => {
-              if (typeof value === 'number') {
-                callback(new Error('不能是数字'))
-              } else {
-                callback();
-              }
-            }
-          }
-        },
-        {
-          "label": "金额",
-          "prop": "amount",
-          minRows: 0,
-          precision: 2
-        },
-        {
-          "label": "维修间隔月",
-          "prop": "maintenance_interval"
-        },
-        {
-          "label": "使用年限",
-          "prop": "use_year",
-          type: 'number',
-          minRows: 0
-        },
-        {
-          "label": "原值",
-          "prop": "original_value",
-          type: 'number'
-        },
-        {
-          "label": "残值",
-          "prop": "salvage_value",
-          type: 'number'
-        },
-        {
-          "label": "残值率",
-          "prop": "salvage",
-          type: 'number'
-        },
-        {
-          "label": "折旧方法",
-          "prop": "depreciation_method"
-        },
-        {
-          "label": "描述",
-          "prop": "memo"
-        }
-      ],
       deviceInfoForm: {
         ref: 'deviceInfoForm',
         itemSpan: 8,
         width: '90%',
         labelWidth: 110,
-        forms: []
+        forms: [
+          {
+            label: 'id',
+            prop: 'id',
+            hide: true
+          },
+          {
+            "label": "标题",
+            "prop": "caption",
+            rules: {
+              required: true
+            }
+          },
+          {
+            "label": "名称",
+            "prop": "name",
+            rules: {
+              required: true,
+              validator: validNotChinese
+            }
+          },
+          {
+            "label": "设备制造日期",
+            "prop": "production_date",
+            type: "date",
+            format: "yyyy-MM-dd",
+            valueFormat: "yyyy-MM-dd",
+            rules: {
+              required: true
+            },
+          },
+          {
+            "label": "设备采购日期",
+            "prop": "purchase_date",
+            type: "datetime",
+            format: "yyyy-MM-dd HH:mm:ss",
+            valueFormat,
+            tip: '选择制造日期后，再填写此项',
+            rules: {
+              required: true
+            },
+            pickerOptions: {
+              disabledDate: (time) => {
+                let date = this.deviceInfoModel.production_date;
+                if (date) {
+                  return time.getTime() < new Date(date).getTime();
+                } else {
+                  return !date;
+                }
+              }
+            }
+          },
+          {
+            "label": "设备保修日期",
+            "prop": "warranty_date",
+            type: "date",
+            format: "yyyy-MM-dd",
+            valueFormat: "yyyy-MM-dd",
+            tip: '选择制造日期后，再填写此项',
+            pickerOptions: {
+              disabledDate: (time) => {
+                let date = this.deviceInfoModel.production_date;
+                if (date) {
+                  return time.getTime() < new Date(date).getTime();
+                } else {
+                  return !date;
+                }
+              }
+            }
+          },
+          {
+            "label": "设备启用日期",
+            "prop": "enabing_date",
+            type: "date",
+            format: "yyyy-MM-dd",
+            valueFormat: "yyyy-MM-dd",
+            tip: '选择采购日期后，再填写此项',
+            pickerOptions: {
+              disabledDate: (time) => {
+                let date = this.deviceInfoModel.purchase_date;
+                if (date) {
+                  return time.getTime() < new Date(date).getTime();
+                } else {
+                  return !date;
+                }
+              }
+            }
+          },
+          {
+            "label": "型号规格",
+            "prop": "specification"
+          },
+          {
+            "label": "资产类型",
+            "prop": "models"
+          },
+          {
+            "label": "增加方式",
+            "prop": "increse_way"
+          },
+          {
+            "label": "国际编码",
+            "prop": "international_code"
+          },
+          {
+            "label": "详情配置",
+            "prop": "detail_config"
+          },
+          // TODO
+          // NOTE 使用部门 保管人员 的prop会导致错误
+          {
+            "label": "使用部门",
+            "prop": "using_department",
+            type: "select",
+            defaultValue: "",
+            dicUrl: deviceManageApi.deptList,
+            props: {
+              value: 'id',
+              label: 'name'
+            }
+          },
+          {
+            "label": "使用状态",
+            "prop": "using_state"
+          },
+          {
+            "label": "生产厂家",
+            "prop": "vendor"
+          },
+          {
+            "label": "保管人员",
+            "prop": "keepers",
+            type: "select",
+            defaultValue: "",
+            dicUrl: deviceManageApi.userNameList,
+            props: {
+              value: 'id',
+              label: 'text'
+            },
+            defaultValue: userInfo.id
+          },
+          {
+            "label": "数量",
+            "prop": "quantity",
+            type: 'number',
+            minRows: 0
+          },
+          {
+            "label": "单价",
+            "prop": "price",
+            type: 'number',
+            minRows: 0,
+            precision: 2
+          },
+          {
+            "label": "单位",
+            "prop": "deviceUnit",
+            rules: {
+              validator: (rule, value, callback) => {
+                if (typeof value === 'number') {
+                  callback(new Error('不能是数字'))
+                } else {
+                  callback();
+                }
+              }
+            }
+          },
+          {
+            "label": "金额",
+            "prop": "amount",
+            minRows: 0,
+            precision: 2
+          },
+          {
+            "label": "维修间隔月",
+            "prop": "maintenance_interval"
+          },
+          {
+            "label": "使用年限",
+            "prop": "use_year",
+            type: 'number',
+            minRows: 0
+          },
+          {
+            "label": "原值",
+            "prop": "original_value",
+            type: 'number'
+          },
+          {
+            "label": "残值",
+            "prop": "salvage_value",
+            type: 'number'
+          },
+          {
+            "label": "残值率",
+            "prop": "salvage",
+            type: 'number'
+          },
+          {
+            "label": "折旧方法",
+            "prop": "depreciation_method"
+          },
+          {
+            "label": "描述",
+            "prop": "memo"
+          }
+        ]
       },
       // 信息其余表单
       deviceInfoExtraForms: [],
@@ -1105,7 +1104,7 @@ export default {
       })
 
       // 添加额外的forms属性
-      this.deviceInfoForm.forms = this.deviceInfoForms.concat(extraForms);
+      this.deviceInfoForm.forms = this.deviceInfoForm.forms.concat(extraForms);
     },
     //Form Data形式传递参数
     _axiosFormData(url, data, method = 'post') {

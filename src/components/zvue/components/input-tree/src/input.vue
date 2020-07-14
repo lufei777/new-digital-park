@@ -36,7 +36,7 @@
           :default-checked-keys="defaultCheckedKeys?defaultCheckedKeys:keysList"
           :default-expand-all="defaultExpandAll"
           @check="checkChange"
-          @node-click.self="handleNodeClick"
+          @node-click="handleNodeClick"
           :icon-class="iconClass"
         >
           <template #default="{ data }">

@@ -61,7 +61,6 @@ export default {
   watch: {
     queryIdObj() {
       if (this.queryIdObj && !this.specialRoute) {
-        console.log("watch")
         this.setMenuList()
       }
     },
