@@ -47,23 +47,6 @@
         }
       }
       return {
-        rules: {
-          login_id:[{ required: true, message: '请输入用户名', trigger: 'blur' },
-                    { min: 4, message: '至少输入4个字符', trigger: 'blur' }],
-          name:[{ required: true, message: '请输入姓名', trigger: 'blur' },
-                { min: 4, message: '至少输入4个字符', trigger: 'blur' }],
-          password:[{ required: true, message: '请输入密码', trigger: 'blur' },
-                    { min: 5, message: '至少输入5个字符', trigger: 'blur' }],
-          re_password:[{ required: true, message: '请输入密码', trigger: 'blur' },
-                      { min: 5, message: '至少输入5个字符', trigger: 'blur' },
-                      { validator: checkRePwd, trigger: 'blur' }],
-          phone:[{ required: true, message: '请输入手机号', trigger: 'blur' },
-                 { validator: checkPhone, trigger: 'blur' }],
-          mail:[{ validator: checkMail, trigger: 'blur' }],
-        },
-        // roleList:[],
-        showDialog:false,
-        departmentList:[],
         formModel: {},
         formConfig: {
           ref: "formRef",

@@ -41,15 +41,13 @@ import DeviceManage from './device-manage'; 										// 设备管理
 import ElectricityManage from './electricity-manage'; 										// 用电管理
 import MaintenanceManage from './maintenance-manage';           //维保管理
 import FinancialManage from './financial-manage'                //财务管理
-
 // 数字园区 公共模块
 let publicRouters = [].concat(
   vibeWeb,
   DigitalParkRouter,
   ExportData,
   SystemManage,
-  FinancialManage
-
+  FinancialManage,
 )
 
 // 数字园区 私有模块

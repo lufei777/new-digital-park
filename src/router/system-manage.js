@@ -82,18 +82,20 @@ export default [{
     component: ()=>import('@/pages/systemManage/menuManage/addMenu'),
     meta: { title: '菜单管理' },
   },{
-    path: '/permissionManage',
-    component: ()=>import('@/pages/systemManage/permissionManage/index'),
+    path: '/permissionTmpRouter',
+    component: ()=>import('@/pages/commonProject/coms/tmpRouterBox'),
     meta: { title: '权限管理' },
-    // children:[{
-    //   path: '/addPermission',
-    //   component: ()=>import('@/pages/systemManage/permissionManage/addPermission'),
-    //   meta: { title: '权限编辑' },
-    // }]
-  },
-    {
+    children:[{
+      path: '/permissionManage',
+      component: ()=>import('@/pages/systemManage/permissionManage/index'),
+    },{
       path: '/addPermission',
       component: ()=>import('@/pages/systemManage/permissionManage/addPermission'),
       meta: { title: '权限编辑' },
     }]
+  },{
+    path: '/digitalPark/defaultPage',
+    component: ()=>import('@/pages/commonProject/defaultPage/index'),
+    meta: { title: '建设中' },
+  }]
 }]

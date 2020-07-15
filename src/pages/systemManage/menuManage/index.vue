@@ -25,6 +25,7 @@
       <div class="flex-row-reverse operator-btn-box">
         <el-button type="primary" @click="onClickExportBtn">导出</el-button>
         <el-button type="primary" @click="onClickImportBtn">导入</el-button>
+        <el-button type="primary" @click="onClickAddBtn">新增</el-button>
         <el-button type="primary" @click="onClickFoldBtn">{{foldText}}</el-button>
       </div>
       <z-table :ref="tableConfig.ref" :options="tableConfig" >
@@ -112,6 +113,9 @@
       },
       editRow(row) {
         this.$router.push(`/addMenu?menuId=${row.id}`)
+      },
+      onClickAddBtn(){
+        // this.$router.push(`/addMenu`)
       },
       deleteRow(row) {
       },

@@ -1,5 +1,6 @@
 <template>
   <div class="add-per panel-container radius-shadow">
+    <ModuleTip :text="moduleText"/>
     <div class="form-box">
       <z-form :ref="formConfig.ref" :options="formConfig"
               v-model="formModel" @submit="submit"
@@ -15,10 +16,12 @@
 <script>
   import {SystemDic} from "@/utils/dictionary";
   import SystemManageApi from '@/service/api/systemManage'
-
+  import ModuleTip from '@/pages/commonProject/coms/moduleTip'
   export default {
     name: 'AddPermission',
-    components: {},
+    components: {
+      ModuleTip
+    },
     props: [],
     data() {
       let _this = this
@@ -102,6 +105,9 @@
       },
       api() {
         return this.perId?'editPermission':'addPermission'
+      },
+      moduleText(){
+        return this.perId?'编辑权限':'添加权限'
       }
     },
     watch: {},

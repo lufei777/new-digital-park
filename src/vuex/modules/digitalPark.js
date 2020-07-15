@@ -1,8 +1,8 @@
 import Cookies from 'js-cookie';
 import DigitalParkApi from "@/service/api/digitalPark";
+import SystemManageApi from "@/service/api/systemManage";
 import { setMenuTree, getMenuTree } from "utils/project";
 import { setRoles, setPageRoles, getPageRoles } from 'utils/permission';
-
 let repeatRouteList = ['defaultPage', 'digitalPark/dashboardHomePage', 'stockInApply']
 const state = {
   dragFlag: true,
@@ -17,10 +17,11 @@ const state = {
   largeScreenIframeSrc: '',
   contentHeight: '',
   roles: [],
-  pageRoles: getPageRoles() || {},
+  pageRoles: getPageRoles() || {}, //页面权限
   homeKeepAliveFlag: true,   //控制瀑布流页的缓存/刷新
   permissionIdsList:[],  //所选角色的权限列表
-  repeatRouteList:repeatRouteList  //重复路由
+  repeatRouteList:repeatRouteList,  //重复路由
+  moduleInfo:{}
 }
 
 const mutations = {
@@ -77,6 +78,10 @@ const mutations = {
   repeatRouteList(state, data) {
     state.repeatRouteList = data
   },
+  moduleInfo(state, data){
+    state.moduleInfo = data
+    localStorage.setItem("moduleInfo", JSON.stringify(data))
+  }
 }
 
 const getters = {
@@ -95,6 +100,8 @@ const actions = {
       DigitalParkApi.getMenuTree({
         language: Cookies.get("lang")
       }).then(menuTree => {
+        menuTree[0].childNode[0].childNode[1].childNode[0].routeAddress='/digitalPark/defaultPage'
+
         commit('setMenuTree', menuTree);
         // 设置到localStorage
         setMenuTree(menuTree);
@@ -105,10 +112,27 @@ const actions = {
       })
     })
   },
-  setPageRoles({ commit }, { routeAddress: path }) {
+  setPageRoles({ commit }) {
     /* setTimeout(() => {
       commit('pageRoles', { path, roles: ['admin'] });
     }, 5000); */
+
+    let path = state.moduleInfo.routeAddress
+    state.repeatRouteList.map((item)=>{
+      if(item.indexOf(path)!=-1){
+        path = state.moduleInfo.id + path
+      }
+    })
+    return new Promise((resolve, reject) => {
+      SystemManageApi.getPermissionById({
+        menuId : state.moduleInfo.id
+      }).then(permissionList => {
+        commit('pageRoles', {path,roles:permissionList});
+        resolve(permissionList)
+      }).catch(err => {
+        reject(err)
+      })
+    })
   }
 }
 

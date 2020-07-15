@@ -17,25 +17,24 @@ class commonLargeHeader {
   }
 
   loadNews(flag) {  //点击消息
-    localStorage.setItem(
-      "menuList",
-      JSON.stringify({
-        name: "消息管理",
-        childNode: [
-          {
-            id: '1',
-            name: "预警报警列表",
-            routeAddress: "@/html/alarm/alarm_index.html"
-          }
-        ]
-      })
-    );
-    store.commit("digitalPark/activeMenuIndex","@/html/alarm/alarm_index.html")
+    store.commit("digitalPark/menuList",{
+      name: "消息管理",
+      id:100000,
+      childNode: [
+        {
+          id: 100001,
+          name: "预警报警列表",
+          routeAddress: "/warningAlarm"
+        }
+      ]
+    })
+
+    store.commit("digitalPark/activeMenuIndex","/warningAlarm")
     if(isYDScreen()){
       store.commit("digitalPark/largeScreenIframeSrc",
-        window.top.location.origin + '/#/vibe-web?updateId=' + _.uniqueId())
+        window.top.location.origin+'/#'+item.routeAddress)
     }else{
-      router.push("/vibe-web");
+      router.push("/warningAlarm");
     }
   }
 

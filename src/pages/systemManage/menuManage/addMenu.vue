@@ -131,7 +131,7 @@
               label: "菜单路径",
               prop: "routeAddress",
               span: 24,
-              disabled: true
+              // disabled: true
             },
             {
               type: "radio",

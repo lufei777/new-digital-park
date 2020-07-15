@@ -49,32 +49,34 @@
       allMenuList() {
         return JSON.parse(localStorage.getItem("menuTree"))[0].childNode;
       },
-      firstMenuId(){
-        return this.$route.query.firstMenuId
-      },
-      secondMenuId(){
-        return this.$route.query.secondMenuId
-      },
-      menuModuleId(){
-        return this.$route.query.menuModuleId
-      },
-      ...mapState({
-        repeatRouteList : state => state.digitalPark.repeatRouteList
-      }),
+      // firstMenuId(){
+      //   console.log("fasdfafasfasfds")
+      //   return this.$route.query.firstMenuId
+      // },
+      // secondMenuId(){
+      //   return this.$route.query.secondMenuId
+      // },
+      // menuModuleId(){
+      //   return this.$route.query.menuModuleId
+      // },
+      // ...mapState({
+      //   repeatRouteList : state => state.digitalPark.repeatRouteList
+      // }),
     },
     watch: {
-      firstMenuId() {
-        console.log("this.first",this.firstMenuId)
-        if (this.firstMenuId && !this.specialRoute) {
-          this.setMenuList()
-        }
-      },
-      secondMenuId(){
-        console.log("this.secpmd",this.secondMenuId)
-        if (this.secondMenuId && !this.specialRoute) {
-          this.setMenuList()
-        }
-      }
+      // firstMenuId(...args) {
+      //   console.log("ar",...args)
+      //   if (this.firstMenuId && !this.specialRoute) {
+      //     console.log("11111111")
+      //     this.setMenuList()
+      //   }
+      // },
+      // secondMenuId(){
+      //   if (this.secondMenuId && !this.specialRoute) {
+      //     console.log("22222222")
+      //     this.setMenuList()
+      //   }
+      // }
     },
     methods: {
       onClickSubmenu(item) {
@@ -117,28 +119,14 @@
         localStorage.setItem("shortcutList", JSON.stringify(shortcutList));
       },
       setMenuList(item) {
-
         let secondMenu = {}
         let firstMenu = this.allMenuList.find(first => {
-          return first.id == (this.firstMenuId || item.firstMenuId);
+          return first.id == item.firstMenuId;
         });
         secondMenu = firstMenu.childNode.find(second => {
-          return second.id == (this.secondMenuId || item.secondMenuId);
+          return second.id == item.secondMenuId;
         });
         this.$store.commit("digitalPark/menuList", secondMenu);
-        let activeMenuIndex = this.$route.path
-        if (this.$route.path == '/vibe-web') {
-          let node = this.findNode(secondMenu.childNode,'id')
-          activeMenuIndex = node.routeAddress
-        } else {
-          this.repeatRouteList.map((item)=>{
-            if (this.$route.path.indexOf(item) != -1) {
-              let node = this.findNode(secondMenu.childNode,'route')
-              activeMenuIndex = node.id + node.routeAddress
-            }
-          })
-        }
-        this.$store.commit("digitalPark/activeMenuIndex",activeMenuIndex);
       },
       findNode(menu,flag){
         for(let i=0;i<menu.length;i++){

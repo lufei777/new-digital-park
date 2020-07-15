@@ -69,7 +69,8 @@ export default {
     return {
       showShortcutList: false,
       temporarilyHidden: false,
-      activeTmp: ''
+      activeTmp: '',
+      curNode:{}
     };
   },
   computed: {
@@ -87,16 +88,35 @@ export default {
       return JSON.parse(localStorage.getItem('shortcutList'))
     },
     ...mapState({
-      activeMenuIndexVuex: state => state.digitalPark.activeMenuIndex
+      activeMenuIndexVuex: state => state.digitalPark.activeMenuIndex,
+      repeatRouteList : state => state.digitalPark.repeatRouteList
     }),
     isyd() {
       return isYDScreen()
-    }
+    },
+    menuParentId(){
+      return {
+        firstMenuId:this.$route.query.firstMenuId,
+        secondMenuId:this.$route.query.secondMenuId
+      }
+    },
+    menuModuleId(){
+      return this.$route.query.menuModuleId
+    },
+    allMenuList() {
+      return JSON.parse(localStorage.getItem("menuTree"))[0].childNode;
+    },
   },
   watch: {
     isCollapse() {
       if (this.isCollapse) {
         this.showShortcutList = false;
+      }
+    },
+    menuParentId(...args) {
+      // console.log("menuParentId change",args)
+      if (this.menuParentId.firstMenuId && !this.menuConfig.specialRoute) {
+        this.setMenuList()
       }
     },
   },
@@ -120,6 +140,44 @@ export default {
       this.$store.commit("digitalPark/activeMenuIndex", "");
       this.$store.commit("digitalPark/menuList", item);
       commonFun.loadPage(item)
+    },
+    setMenuList() {
+      // console.log("setMenuList")
+      let secondMenu = {}
+      let firstMenu = this.allMenuList.find(first => {
+        return first.id == this.menuParentId.firstMenuId;
+      });
+      secondMenu = firstMenu.childNode.find(second => {
+        return second.id == this.menuParentId.secondMenuId;
+      });
+      this.$store.commit("digitalPark/menuList", secondMenu);
+      let activeMenuIndex = this.$route.path
+      if (this.$route.path == '/vibe-web') {
+        let node = this.findNode(secondMenu.childNode,'id')
+        activeMenuIndex = node.routeAddress
+      } else {
+        this.repeatRouteList.map((item)=>{
+          if (this.$route.path.indexOf(item) != -1) {
+            let node = this.findNode(secondMenu.childNode,'route')
+            activeMenuIndex = node.id + node.routeAddress
+          }
+        })
+      }
+      this.$store.commit("digitalPark/activeMenuIndex",activeMenuIndex);
+    },
+    findNode(menu,flag){
+      for(var i=0;i<menu.length;i++){
+        let item = menu[i]
+        let tmp = flag=='id'?item.id==this.menuModuleId:item.routeAddress==this.$route.path
+        // console.log(item,flag,this.menuModuleId,item.id==this.menuModuleId)
+        if(tmp){
+          this.curNode = item
+        }else{
+          if(item.childNode.length){
+            this.findNode(item.childNode,flag)
+          }
+        }
+      }
     }
   },
   mounted() {

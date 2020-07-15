@@ -2055,13 +2055,14 @@ class commonFun {
     window.closeVideoWin && window.closeVideoWin()
     window.closeClientPage && window.closeClientPage()
 
-    //激活菜单存储
-    store.commit("digitalPark/activeMenuIndex", this.setMenuIndex(item))
-
     //item 转换为当前点击的菜单的第一个最子级菜单（因为只有最子级有页面）
     item = this.getLastItem(item)
 
-    localStorage.setItem('moduleId', item.id)
+    //存储激活菜单
+    store.commit("digitalPark/activeMenuIndex", this.setMenuIndex(item))
+
+    //存储当前点击的模块信息
+    store.commit("digitalPark/moduleInfo", item)
 
     if (item.routeAddress) {
       //客户端
@@ -2096,6 +2097,7 @@ class commonFun {
           store.commit("digitalPark/largeScreenIframeSrc",
             window.top.location.origin + '/#' + item.routeAddress)
         } else {
+          store.dispatch('digitalPark/setPageRoles')
           router.push({
             path: item.routeAddress.trim(),
             query: {
@@ -2174,10 +2176,7 @@ class commonFun {
   //设置菜单index
   setMenuIndex(item, from) {
     //from 1->代表是渲染菜单的时候，使用item本身；不传则为点击的时候，找到item的最子集
-    // let arr = { 'defaultPage': {}, 'digitalPark/dashboardHomePage': {}, 'stockInApply': {} };
-    // console.log("store",store.getters["digitalPark/getRepeatRouteList"])
     let arr = store.getters["digitalPark/getRepeatRouteList"]
-    // let arr =['defaultPage', 'digitalPark/dashboardHomePage', 'stockInApply']
     let flag = false
     if (item.routeAddress) {
       arr.map((str) => {
