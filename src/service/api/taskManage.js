@@ -45,7 +45,7 @@ class taskManageApi {
 
     //完成
     @url("/oaApi/task/completeTask")
-    @get
+    @post
     completeTask() { }
 
     //工单流转情况记录查询

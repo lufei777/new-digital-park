@@ -1,5 +1,5 @@
 <template>
-  <div class="about-me panel-container">
+  <div class="about-me">
     <div class="common-tree-box radius-shadow">
       <Tree :tree-list="taskTypeData" :tree-config="taskTreeConfig"></Tree>
     </div>
@@ -34,13 +34,15 @@
           </div>
         </el-tab-pane>
       </el-tabs>
-      <OperationPopup
-        @dialogParams="dialogParams"
-        :dialogFormFlag="dialogFormFlag"
-        :showFormFlag="showFormFlag"
-        @closeDialog="closeDialog"
-      />
     </div>
+    <OperationPopup
+      ref="operationPopup"
+      @dialogParams="dialogParams"
+      :dialogFormShow="dialogFormShow"
+      :specialFormShow="specialFormShow"
+      :dialogTitle="dialogTitle"
+      @closeDialog="closeDialog"
+    />
   </div>
 </template>
 
@@ -122,13 +124,14 @@ export default {
       designatorId: "",
       reason: "",
       taskPicList: [],
-      dialogFormFlag: false,
+      dialogFormShow: false,
       paramsDialog: {
         designatorId: "",
         reason: "",
         taskPicList: []
       },
-      showFormFlag: 1
+      specialFormShow: 0,
+      dialogTitle: "标题"
     };
   },
   computed: {
@@ -230,16 +233,16 @@ export default {
           } else if (this.taskActiveName == "second") {
             if (item.status == 1) {
               btnTmp = [
-                { id: 3, text: "派单", event: this.sendClick },
-                { id: 4, text: "删除", event: this.deleteRow }
+                { id: 3, text: "派单", event: this.sendClick }
+                // { id: 4, text: "删除", event: this.deleteRow }
               ];
             } else if (item.status == 2) {
               btnTmp = [
-                { id: 4, text: "撤回", event: this.withdrawClick },
-                { id: 5, text: "删除", event: this.deleteRow }
+                { id: 4, text: "撤回", event: this.withdrawClick }
+                // { id: 5, text: "删除", event: this.deleteRow }
               ];
             } else if (item.status == 3) {
-              btnTmp = [{ id: 4, text: "删除", event: this.deleteRow }];
+              // btnTmp = [{ id: 4, text: "删除", event: this.deleteRow }];
             } else if (item.status == 5) {
               // btnTmp = [{ id: 7, text: "删除", event: this.deleteRow }];
             } else {
@@ -281,44 +284,69 @@ export default {
       });
       if (res) {
         this.toastMessage(res);
-        this.dialogFormFlag = false;
+        this.dialogFormShow = false;
         this.taskList();
       }
     },
-    dialogParams(data, hide) {
+    async dialogParams(data, hide) {
       console.log("data", data);
       this.paramsDialog = data;
-      this.dealTask();
+      if (this.specialFormShow == 5) {
+        await this.sureDelete();
+      } else if (this.specialFormShow == 4) {
+        await TaskManageApi.completeTask({
+          ...this.paramsDialog,
+          ...{
+            id: this.taskId
+          }
+        }).then(res => {
+          if (res) {
+            this.toastMessage(res);
+            this.dialogFormShow = false;
+            this.taskList();
+          }
+        });
+      } else {
+        await this.dealTask();
+      }
+      this.$refs.operationPopup.resetFormFunc();//调用子组件重置表单方法
+      hide();
     },
     closeDialog(val) {
-      this.dialogFormFlag = val;
+      this.dialogFormShow = val;
     },
-    acceptClick(row) {
-      console.log("接单", row);
-      this.taskId = row.row.id;
+    acceptClick({ row }) {
+      this.taskId = row.id;
       this.taskTypeStatus = 1;
       this.toastSure("接单", this.dealTask);
     },
-    returnClick() {
-      this.taskId = row.row.id;
+    returnClick({ row }) {
+      this.taskId = row.id;
       this.taskTypeStatus = 4;
-      console.log("退单");
+      this.dialogFormShow = true;
+      this.specialFormShow = 2;
+      this.dialogTitle = "退单原因";
     },
-    turnSendClick(row) {
-      this.taskId = row.row.id;
+    turnSendClick({ row }) {
+      this.taskId = row.id;
       this.taskTypeStatus = 3;
-      this.dialogFormFlag = true;
+      this.dialogFormShow = true;
+      this.specialFormShow = 3;
+      this.dialogTitle = "转派工单";
       console.log("转派");
     },
     hangClick({ row }) {
       this.taskId = row.id;
       this.taskTypeStatus = 5;
-      this.toastSure("挂起", this.dealTask);
-      console.log("挂起");
+      this.dialogFormShow = true;
+      this.specialFormShow = 7;
+      this.dialogTitle = "挂起工单";
     },
-    completeClick() {
-      this.dialogFormFlag = true;
-      console.log("完成");
+    completeClick({ row }) {
+      this.taskId = row.id;
+      this.dialogFormShow = true;
+      this.specialFormShow = 4;
+      this.dialogTitle = "完成工单";
     },
     cancelHoldClick({ row }) {
       this.taskId = row.id;
@@ -335,11 +363,17 @@ export default {
       }
     },
     sendClick(row) {
-      this.dialogFormFlag = true;
-      this.showFormFlag = 1;
+      this.taskId = row.id;
+      this.dialogFormShow = true;
+      this.specialFormShow = 1;
+      this.dialogTitle = "派单";
       console.log("派单");
     },
-    closeClick() {
+    closeClick({ row }) {
+      this.taskId = row.id;
+      this.dialogFormShow = true;
+      this.specialFormShow = 5;
+      this.dialogTitle = "关闭工单";
       console.log("关闭");
     },
     withdrawClick(row) {
@@ -392,32 +426,22 @@ export default {
       }
       this.taskList();
     },
-    showDeleteTip() {
-      CommonFun.deleteTip(
-        this,
-        this.taskId,
-        "请至少选择一条任务！",
-        this.sureDelete,
-        this.cancelDelete
-      );
-    },
     async sureDelete() {
-      await TaskManageApi.closeTask({
-        taskId: this.taskId
+      let res = await TaskManageApi.closeTask({
+        ...this.paramsDialog,
+        ...{
+          taskId: this.taskId
+        }
       });
-      this.$message({
-        type: "success",
-        message: "删除成功!"
-      });
-      this.taskId = "";
-      this.taskList();
-    },
-    cancelDelete() {
-      this.taskId = "";
+      if (res) {
+        this.toastMessage(res);
+        this.dialogFormShow = false;
+        this.taskList();
+      }
     },
     deleteRow(val) {
       this.taskId = val.scopeRow.row.id;
-      this.showDeleteTip();
+      this.toastSure("删除", this.sureDelete);
     },
     taskPosition(val) {
       console.log("val", val);
@@ -505,7 +529,9 @@ export default {
 </script>
 
 <style lang="less">
+@import "../commonProject/less/popupStyle.less";
 .about-me {
+  height: 100%;
   .el-tabs {
     // height: 100%;
     border: none;
