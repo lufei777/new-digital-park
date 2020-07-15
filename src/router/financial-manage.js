@@ -41,19 +41,37 @@ export default [
 			{
 				path: 'paymentlist',
 				name: 'paymentlist',
-				meta: { title: '收款联系单' },
+				meta: { title: '收费联系单' },
 				component: () => import('../pages/financialManage/paymentList/index.vue')
 			},
 			// 收款联系单的修改和详情
 			{
-				path:'changedetail',
-				name:'changedetail',
-				component:() => import('../pages/financialManage/paymentList/public.vue')
+				path: 'changedetail',
+				name: 'changedetail',
+				component: () => import('../pages/financialManage/paymentList/public.vue')
 			},
 			{
-				path:'moban',
-				name:'moban',
-				component:() => import('../pages/financialManage/paymentList/mobu.vue')
+				path: 'moban',
+				name: 'moban',
+				component: () => import('../pages/financialManage/paymentList/mobu.vue')
+			},
+			{
+				path: 'makeinvoice',
+				name: 'makeinvoice',
+				meta: { title: '开票联系单' },
+				component: () => import('../pages/financialManage/MakeInvoice/index.vue')
+			},
+			// 打印
+			{
+				path: 'printinvoice',
+				name: 'printinvoice',
+				component: () => import('../pages/financialManage/MakeInvoice/prinTtable.vue')
+			},
+			// 详情和编辑
+			{
+				path: 'invoicedetail',
+				name: 'invoicedetail',
+				component: () => import('../pages/financialManage/MakeInvoice/detailEdit.vue')
 			}
 		]
 	}

@@ -100,6 +100,12 @@ export default [
 				// ]
 			},
 			{
+				path:'/batchreview',
+				name:'batchreview',
+				mate:{title:'批量审核'},
+				component:()=> import('../pages/leaseManage/billReview/batchreview.vue')
+			},
+			{
 				path: '/cansee',
 				name: 'cansee',
 				meta: { title: '查看' },
