@@ -1,6 +1,6 @@
 <template>
   <div class="export-data">
-    <el-dialog :visible.sync="dialogTableVisible" :show-close="false" :close-on-click-modal="false">
+    <el-dialog :visible.sync="dialogTableVisible" :show-close="false" :close-on-click-modal="false" :top="dialogTop">
       <NavOperator v-show="false" />
       <z-form
         :ref="exportDataForm.ref"
@@ -16,7 +16,7 @@
           </div>
         </template>
       </z-form>
-      <div class="tenant-manage-table panel">
+      <div class="tenant-manage-table">
         <z-table :ref="exportDataTable.ref" :options="exportDataTable"></z-table>
       </div>
     </el-dialog>
@@ -35,6 +35,7 @@ export default {
   },
   name: "ExportData",
   data() {
+    let _this = this;
     return {
       dialogTableVisible: true,
       dialogFormVisible: false,
@@ -135,8 +136,7 @@ export default {
       },
       page: 1,
       selectTypeValue: 2,
-      formatTypeStartTime: "",
-      formatTypeLastTime: ""
+      dialogTop:"15vh"
     };
   },
   computed: {
@@ -176,43 +176,26 @@ export default {
       });
     },
     async probeHistoryValue() {
-      let formatTypeStartTime = "";
-      let formatTypeLastTime = "";
-      if (this.model.startTime) {
-        formatTypeStartTime =
-          this.dateType == "year"
-            ? this.model.startTime.substring(0, this.model.startTime.length - 6)
-            : this.dateType == "month"
-            ? this.model.startTime.substring(0, this.model.startTime.length - 3)
-            : this.model.startTime;
-      }
-      if (this.model.lastTime) {
-        formatTypeLastTime =
-          this.dateType == "year"
-            ? this.model.lastTime.substring(0, this.model.lastTime.length - 6)
-            : this.dateType == "month"
-            ? this.model.lastTime.substring(0, this.model.lastTime.length - 3)
-            : this.model.lastTime;
-      }
       let selectType;
-      if (formatTypeStartTime == "" && formatTypeStartTime == "") {
+      if (this.model.startTime == "" && this.model.lastTime == "") {
         selectType = "0";
       } else {
         selectType = this.model.curDateType;
       }
-      let res = await CommonApi.getProbeHistoryValue({
-        deviceId: this.model.deviceId,
-        startTime: formatTypeStartTime,
-        lastTime: formatTypeLastTime,
-        page: this.page,
-        selectType: selectType
-      });
+      let res = await CommonApi.getProbeHistoryValue(this.commonParams);
       if (res && res.value) {
+        console.log("res",res)
+        if(res.total>=10){
+          this.dialogTop = '60px'
+        }
         let tmp = [];
         var title = res.title;
         res.value.map(item => {
           let obj = {};
           title.map((tit, index) => {
+            if (tit.indexOf(".") != -1) {
+              tit = tit.split(".").join("");
+            }
             obj[tit] = item[index];
           });
           tmp.push(obj);
@@ -230,9 +213,13 @@ export default {
           if (Object.keys(title).length > 14) {
             widthSet = 110;
           }
+          let tmpProp = title[key];
+          if (title[key].indexOf(".") != -1) {
+            tmpProp = title[key].split(".").join("");
+          }
           columnConfig.push({
             label: title[key],
-            prop: title[key],
+            prop: tmpProp,
             width: widthSet
           });
         }
@@ -243,13 +230,6 @@ export default {
       }
     },
     inquire() {
-      // this.$route.replace({
-      //   path: "ExportData",
-      //   query: {
-      //     spaceId: this.model.spaceId,
-      //     deviceId: this.model.deviceId
-      //   }
-      // });
       this.probeHistoryValue();
     },
     handleCurrentChange(value) {
@@ -274,7 +254,9 @@ export default {
     this.model.spaceId = this.paramId.spaceId;
     this.model.deviceId = this.paramId.deviceId;
     this.getAssetAllTree();
-    this.inquire();
+    if(JSON.stringify(this.paramId) != "{}"){
+      this.inquire();
+    }
   },
   created() {
     CommonApi.getAssetAllTree({
