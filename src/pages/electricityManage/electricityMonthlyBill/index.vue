@@ -130,6 +130,10 @@ export default {
           {
             label: "核定金额(元)",
             prop: "billAmount"
+          },
+          {
+            label: "创建时间",
+            prop: "creatTime"
           }
         ],
         uiConfig: {

@@ -327,7 +327,7 @@ export default {
         if (this.propOption.hasOwnProperty(key)) {
           const item = this.propOption[key];
 
-          if (item.rules && item.disabled !== false && item.display !== false) {
+          if (item.rules && item.disabled !== true && item.display !== false) {
             let currentRules = item.rules;
             // 添加进rules
             if (Array.isArray(currentRules)) {
