@@ -53,7 +53,7 @@
             :column="col"
             :disabled="col.disabled"
             :readonly="col.readonly"
-            :clearable="vaildBoolean(column.clearable,true)"
+            :clearable="vaildBoolean(col.clearable,true)"
             :isEdit="cellEditFlag(scopeRow.row,col)"
             :dic="DIC[col.prop]"
           ></slot>

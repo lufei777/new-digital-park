@@ -41,7 +41,7 @@
             :size="controlSize"
             :column="col"
             :readonly="col.readonly"
-            :clearable="vaildBoolean(column.clearable,true)"
+            :clearable="vaildBoolean(col.clearable,true)"
             :disabled="col.disabled"
             :isEdit="cellEditFlag(scopeRow.row,col)"
             :dic="DIC[col.prop]"
