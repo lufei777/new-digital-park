@@ -660,7 +660,7 @@ export default {
           billingDays: this.model.billingDays,
           payCountWay: this.model.payCountWay,
           payCycle: this.model.payCycle,
-          costType: 1,
+          costType: 9,
           contractNumber: this.model.contractNumber,
           id: this.rentId
         },
@@ -671,7 +671,7 @@ export default {
           billingDays: this.model.billingDays2,
           payCountWay: this.model.payCountWay2,
           payCycle: this.model.payCycle2,
-          costType: 2,
+          costType: 10,
           contractNumber: this.model.contractNumber,
           id: this.propertyId
         },
@@ -682,7 +682,7 @@ export default {
           billingDays: this.model.billingDays3,
           payCountWay: this.model.payCountWay3,
           payCycle: this.model.payCycle3,
-          costType: 3,
+          costType: 11,
           contractNumber: this.model.contractNumber,
           id: this.cleaningId
         }
