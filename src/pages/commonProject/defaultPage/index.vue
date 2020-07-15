@@ -37,6 +37,7 @@
     overflow: hidden;
     img{
       width:100%;
+      height:859px;
       /*height:100%;*/
     }
     .go-back{

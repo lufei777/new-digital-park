@@ -21,9 +21,8 @@
     }
   }
 </script>
-<style lang="less">
+<style lang="less" scoped>
   .module-tip-com{
-    padding:20px 0;
     .icon{
       height:16px;
       border-left:4px solid @mainBgColor;
@@ -31,7 +30,7 @@
       border-radius: 2px;
     }
     .text{
-      color:@mainBgColor;
+    /*  color:@mainBgColor;*/
     }
   }
 </style>

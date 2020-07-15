@@ -47,6 +47,7 @@
         </div>
         <z-table :ref="tableConfig.ref" :options="tableConfig"
                  @select="onSelectCheckBox"
+                 @select-all="onSelectAllCheckBox"
                  @selection-change="onSelectionChange"
         >
           <template slot="operation" slot-scope="{scopeRow:{$index,row}}" v-if="!hideBtn">
@@ -89,7 +90,8 @@
           treeProps: config.treeProps,
           onClickTreeNodeCallBack: this.onClickTreeNodeCallBack,
           defaultExpandedkeys: [],
-          currentKey: ''
+          currentKey: '',
+          expandOnClickNode:false
         },
         searchParams: searchParams,
         tableConfig: {
@@ -118,7 +120,8 @@
         },
         deleteId: '',
         delConfig: config.delConfig,
-        curTreeNode: {}
+        curTreeNode: {},
+        userCheckFlag:false  //true：是用户点击的 false：程序回显
       }
     },
     computed: {
@@ -266,7 +269,7 @@
             loginId: '',
             mail: '',
             phone: '',
-            department: 1,
+            department: '',
           }
         } else if (this.fromFlag == 2) {
           params = {
@@ -292,10 +295,9 @@
         this.treeList = await SystemManageApi.getDepartmentTree()
         this.treeConfig.defaultExpandedkeys = [this.treeList[0].id]
         if (this.fromFlag == 1) {
-          this.treeConfig.currentKey = this.treeList[0].id
-          this.searchParams.department = this.treeList[0].id
+          // this.treeConfig.currentKey = this.treeList[0].id
+          // this.searchParams.department = this.treeList[0].id
         }
-
       },
       async getAssetAllTree() {
         this.treeList = await CommonApi.getAssetAllTree({
@@ -311,7 +313,7 @@
       },
       onClickTreeNodeCallBack(val) {
         //需要分开赋值，否则后台接口会报错
-        //1:用户管理  2:空间管理  3：机构管理
+        //1:用户管理  2:空间管理  3：机构管理 4:权限管理
         if (this.fromFlag == 1) {
           this.searchParams.department = val.id
         } else if (this.fromFlag == 2) {
@@ -321,6 +323,7 @@
         } else if (this.fromFlag == 4) {
           this.curTreeNode = val
           let selectData = this.$refs[this.tableConfig.ref].selectedData.map((item) => item.id)
+          // console.log(this.permissionIdsList)
           let tmp = this.permissionIdsList.concat(selectData)
           this.$store.commit('digitalPark/permissionIdsList', tmp)
           // console.log("this.",this.$refs[this.tableConfig.ref].allData)
@@ -421,47 +424,55 @@
           await this.getPermissionTree()
         }
       },
-      async onSelectCheckBox(selection, row) {
+       onSelectCheckBox(selection, row) {
+        this.userCheckFlag=true
+      },
+      onSelectAllCheckBox(){
+        this.userCheckFlag=true
+      },
+      async onSelectionChange(selection) {
+        // console.log("selection",selection)
         let permissionIds = this.permissionIdsList
-        if (this.curTreeNode.childNode && this.curTreeNode.childNode.length) {
+        // console.log(this.curTreeNode,selection.length)
+        //如果勾选的是父节点,则同步勾选/取消勾选子节点
+        if (this.curTreeNode.childNode && this.curTreeNode.childNode.length && this.userCheckFlag) {
           let res = await SystemManageApi.getChildList({
             parentId: this.curTreeNode.id
           })
+          res.push(this.$refs[this.tableConfig.ref].allData[0].id)
           let tmp = []
           if (selection.length) {
-            tmp = permissionIds.concat(res).concat(row.id)
+            tmp = [...new Set(permissionIds.concat(res))]
           } else {
-            permissionIds.map((item,index)=>{
-              res.map((id)=>{
-                if(item == id){
+            console.log(permissionIds,res)
+            res.map((item)=>{
+              permissionIds.map((per,index)=>{
+                if(item==per){
                   permissionIds.splice(index,1)
                 }
               })
             })
+            permissionIds.splice()
             tmp = permissionIds
           }
-          console.log("tmp111",tmp)
+          console.log("tmp",tmp)
           this.$store.commit('digitalPark/permissionIdsList',tmp)
-        }
-      },
-      onSelectionChange(selection) {
-        // console.log("selection",selection)
-        /*
-          pType 0：只读权限 1:写权限
-          若勾选写权限，则必须勾选读权限
-        */
-        const Table = this.$refs[this.tableConfig.ref];
-        let writePermission = selection.find((item) => {
-          return item.pType == 1
-        })
-        if (writePermission) {
-          let readPermissionIndex = Table.allData.find((item) => {
-            return item.pType == 0
+        }else{
+          //pType 0：只读权限 1:写权限   若勾选写权限，则必须勾选读权限
+          const Table = this.$refs[this.tableConfig.ref];
+          let writePermission = selection.find((item) => {
+            return item.pType == 1
           })
-          if (readPermissionIndex != -1) {
-            Table.toggleSelection(readPermissionIndex, true)
+          if (writePermission) {
+            let readPermissionIndex = Table.allData.find((item) => {
+              return item.pType == 0
+            })
+            if (readPermissionIndex != -1) {
+              Table.toggleSelection(readPermissionIndex, true)
+            }
           }
         }
+
       },
       getAssignList() {
         let tmp = this.$refs[this.tableConfig.ref].selectedData
@@ -475,6 +486,7 @@
             return item.id == per
           })
           if (flag != -1) {
+            this.userCheckFlag=false
             this.$refs[this.tableConfig.ref].toggleSelection(index, true)
             permissionIds.splice(flag, 1)
           }

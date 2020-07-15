@@ -103,7 +103,8 @@ export default {
               this.selectMeterDialog = true;
             },
             rules: {
-              required: true
+              required: true,
+              trigger: 'change'
             }
           },
           {
@@ -139,6 +140,7 @@ export default {
             }
           },
           {
+            type: 'number',
             prop: 'lastIndication',
             label: "上次表示数",
             rules: {
@@ -146,22 +148,37 @@ export default {
             }
           },
           {
+            type: 'number',
             prop: 'indication',
             label: "本次表示数",
+            change: ({ value }) => {
+              if (value > this.model.lastIndication) {
+                this.model.diffNum = value - this.model.lastIndication
+              } else {
+                this.model.diffNum = 0
+              }
+            },
             rules: {
               required: true
             }
           },
           {
+            type: 'number',
             prop: 'diffNum',
             label: "抄表见量",
+            disabled: true,
             rules: {
               required: true
+            },
+            change: ({ value }) => {
+              this.model.useElecMonth = value * this.model.mulPower;
             }
           },
           {
+            type: 'number',
             prop: 'useElecMonth',
             label: "月用电量",
+            disabled: true,
             rules: {
               required: true
             }

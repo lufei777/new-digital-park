@@ -22,6 +22,10 @@
         :align="col.align || parentOption.align || config.align"
         :header-align="col.headerAlign || parentOption.headerAlign || config.headerAlign"
         :render-header="col.renderHeader"
+        filter-placement="bottom-end"
+        :filters="_handleFilters(col)"
+        :filter-method="col.filter? _handleFiltersMethod : undefined"
+        :filter-multiple="vaildBoolean(col.filterMultiple,true)"
       >
         <template v-if="col.headerSlot" slot="header">
           <slot :name="`${col.prop}Header`" :column="col"></slot>
@@ -36,6 +40,8 @@
             :row="scopeRow.row"
             :size="controlSize"
             :column="col"
+            :readonly="col.readonly"
+            :clearable="vaildBoolean(col.clearable,true)"
             :disabled="col.disabled"
             :isEdit="cellEditFlag(scopeRow.row,col)"
             :dic="DIC[col.prop]"
@@ -49,6 +55,8 @@
             :dic="DIC[col.prop]"
             :upload-before="col.uploadBefore"
             :upload-after="col.uploadAfter"
+            :readonly="col.readonly"
+            :clearable="vaildBoolean(column.clearable,true)"
             :disabled="col.disabled"
             :textMode="col.textMode"
             @click.native.stop
@@ -101,7 +109,7 @@ import { detail } from "../../utils/detail";
 import { validatenull } from "../../utils/validate";
 import { deepClone, vaildBoolean } from "../../utils/util";
 import formTemp from "../formtemp";
-import { DIC_SPLIT, EMPTY_VALUE } from "../../global/variable";
+import { DIC_PROPS, DIC_SPLIT, EMPTY_VALUE } from "../../global/variable";
 import multiHeaderColumn from './multiHeaderColumn';
 import zImg from './z-img';
 
@@ -211,6 +219,33 @@ export default {
       let parentObj = this.getPropByPath(model, prop).o;
       parentObj[prop.split('.').pop()] = value;
     },
+    //表格筛选逻辑
+    _handleFiltersMethod(value, row, column) {
+      const columnNew = this.columnConfig.filter(
+        ele => ele.prop === column.property
+      )[0];
+      if (typeof columnNew.filtersMethod === "function") {
+        return columnNew.filtersMethod(value, row, columnNew);
+      } else {
+        return row[columnNew.prop] === value;
+      }
+    },
+    //表格筛选字典
+    _handleFilters(column) {
+      if (column.filter !== true) return undefined;
+      if (this.validatenull(column.dicFilters)) {
+        let list = [];
+        (this.DIC[column.prop] || []).forEach(ele => {
+          const props = column.props || this.tableOption.props || {};
+          list.push({
+            text: ele[props.label || DIC_PROPS.label],
+            value: ele[props.value || DIC_PROPS.value]
+          });
+        });
+        return list;
+      }
+      return column.dicFilters;
+    }
   }
 };
 </script>
