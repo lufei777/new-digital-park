@@ -11,6 +11,12 @@ import store from "./vuex/store";
 import directive from '@/directive';
 Vue.use(directive);
 
+// 全局过滤器
+import * as filters from './filters';
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
+
 // 权限校验方法 用于校验角色页面权限
 import { checkPermission } from 'utils/permission';
 Vue.prototype.checkPermission = checkPermission;

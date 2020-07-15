@@ -247,6 +247,7 @@ export default {
       this.$router.push({ name: "bulkimporthouseproperty" });
     },
     propertyDetail({ scopeRow: { $index, row: model, _self } }) {
+      console.log(model)
       // 为了区分messageId和userId，做的处理
       model["messageId"] = model.id;
 

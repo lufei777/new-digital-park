@@ -48,7 +48,8 @@ export default {
   computed: {
     ...mapState({
       menuTree: state => state.digitalPark.menuTree[0].childNode,
-      menuData: state => state.digitalPark.menuList
+      menuData: state => state.digitalPark.menuList,
+      menuIsCollapse: state => state.digitalPark.menuIsCollapse,
     }),
     routePathFlag(){
       return this.$route.path=='/vibe-web'?true:false
@@ -56,24 +57,19 @@ export default {
   },
   methods: {
     onClickCollapseBtn() {
-      this.menuConfig.isCollapse = !this.menuConfig.isCollapse;
       this.$store.commit(
         "digitalPark/menuIsCollapse",
-        this.menuConfig.isCollapse
+        !this.menuConfig.isCollapse
       );
     },
-    /* normalShortcutList() {
-      let shortcutList = [];
-      this.menuTree.map(item => {
-        item.childNode.map(child => {
-          shortcutList.push(child);
-        });
-      });
-      localStorage.setItem("shortcutList", JSON.stringify(shortcutList));
-    } */
   },
   mounted() {
     document.title = this.menuData.name;
+  },
+  watch: {
+    menuIsCollapse(val) {
+      this.menuConfig.isCollapse = val;
+    }
   }
 };
 </script>
