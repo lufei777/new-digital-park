@@ -17,6 +17,7 @@
           :default-checked-keys="treeConfig.defaultCheckedKeys"
           :filter-node-method="filterNode"
           :current-node-key="treeConfig.currentKey"
+          :expand-on-click-node="expandOnClickNode"
           @node-click="onClickNode"
           @check="handleCheck"
           :highlight-current="highlight"
@@ -53,6 +54,9 @@
       highlight(){
         return this.treeConfig.highlight==false?false:true
       },
+      expandOnClickNode(){
+        return this.treeConfig.expandOnClickNode==false?false:true
+      }
     },
     watch:{
       searchText(val) {

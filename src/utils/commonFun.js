@@ -1,10 +1,12 @@
 import router from '@/router'
 import axios from 'axios'
 import store from '@/vuex/store';
-import { getToken, IsCZClient } from './auth';
-import { AssetState } from './dictionary';
+import {getToken, IsCZClient} from './auth';
+import {AssetState} from './dictionary';
+
 const Message = require("element-ui").Message
-import { jsonToUrlString } from 'utils/util';
+import {jsonToUrlString} from 'utils/util';
+
 class commonFun {
   menuData = {
     "id": 1,
@@ -1044,37 +1046,37 @@ class commonFun {
     recorder: "程琳",
     remark: "公司需要"
   },
-  {
-    id: 5,
-    applicationName: "绿植采购",
-    purchaseType: "公司内部采购",
-    purchaseSum: "500元",
-    purchaseStatus: "待采购",
-    reportTime: "2019-12-01",
-    purchasePeople: "程琳",
-    recorder: "程琳",
-    remark: "装修需要"
-  }, {
-    id: 6,
-    applicationName: "鼠标采购",
-    purchaseType: "公司内部采购",
-    purchaseSum: "100元",
-    purchaseStatus: "待采购",
-    reportTime: "2019-12-01",
-    purchasePeople: "程琳",
-    recorder: "程琳",
-    remark: "员工需要"
-  }, {
-    id: 7,
-    applicationName: "卫生纸采购",
-    purchaseType: "公司内部采购",
-    purchaseSum: "500元",
-    purchaseStatus: "待采购",
-    reportTime: "2019-12-01",
-    purchasePeople: "程琳",
-    recorder: "程琳",
-    remark: "公司需要"
-  }]
+    {
+      id: 5,
+      applicationName: "绿植采购",
+      purchaseType: "公司内部采购",
+      purchaseSum: "500元",
+      purchaseStatus: "待采购",
+      reportTime: "2019-12-01",
+      purchasePeople: "程琳",
+      recorder: "程琳",
+      remark: "装修需要"
+    }, {
+      id: 6,
+      applicationName: "鼠标采购",
+      purchaseType: "公司内部采购",
+      purchaseSum: "100元",
+      purchaseStatus: "待采购",
+      reportTime: "2019-12-01",
+      purchasePeople: "程琳",
+      recorder: "程琳",
+      remark: "员工需要"
+    }, {
+      id: 7,
+      applicationName: "卫生纸采购",
+      purchaseType: "公司内部采购",
+      purchaseSum: "500元",
+      purchaseStatus: "待采购",
+      reportTime: "2019-12-01",
+      purchasePeople: "程琳",
+      recorder: "程琳",
+      remark: "公司需要"
+    }]
 
   purchaseOrderData = [{
     id: 1,
@@ -1470,22 +1472,22 @@ class commonFun {
     contractTime: '2020-01-12'
 
   },
-  {
-    id: 2,
-    billNumber: 'ZD-190225132201',
-    billName: '中钢B座用电账单',
-    billStatus: '待审核',
-    tenantName: '程琳',
-    contractTime: '2020-02-12'
-  },
-  {
-    id: 3,
-    billNumber: 'ZD-190225135221',
-    billName: '中钢C座用电账单',
-    billStatus: '已审核',
-    tenantName: '程琳',
-    contractTime: '2019-02-01'
-  }]
+    {
+      id: 2,
+      billNumber: 'ZD-190225132201',
+      billName: '中钢B座用电账单',
+      billStatus: '待审核',
+      tenantName: '程琳',
+      contractTime: '2020-02-12'
+    },
+    {
+      id: 3,
+      billNumber: 'ZD-190225135221',
+      billName: '中钢C座用电账单',
+      billStatus: '已审核',
+      tenantName: '程琳',
+      contractTime: '2019-02-01'
+    }]
 
   messageDevice = [{
     id: 'TradeCode21',
@@ -2031,7 +2033,7 @@ class commonFun {
       responseType: 'blob',
     }).then((res) => {
       const link = document.createElement('a')
-      let blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+      let blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
       link.style.display = 'none'
       link.href = URL.createObjectURL(blob)
       link.download = decodeURIComponent(res.headers['content-disposition']) //下载后文件名
@@ -2053,10 +2055,15 @@ class commonFun {
     window.closeVideoWin && window.closeVideoWin()
     window.closeClientPage && window.closeClientPage()
 
-    //激活菜单
-    store.commit("digitalPark/activeMenuIndex", this.setMenuIndex(item))
-    localStorage.setItem('moduleId', this.getLastItem(item).id)
+    //item 转换为当前点击的菜单的第一个最子级菜单（因为只有最子级有页面）
     item = this.getLastItem(item)
+
+    //存储激活菜单
+    store.commit("digitalPark/activeMenuIndex", this.setMenuIndex(item))
+
+    //存储当前点击的模块信息
+    store.commit("digitalPark/moduleInfo", item)
+
     if (item.routeAddress) {
       //客户端
       if (this.loadClientPage(item)) {
@@ -2080,18 +2087,17 @@ class commonFun {
             query: {
               firstMenuId: item.firstMenuId,
               secondMenuId: item.secondMenuId,
-              id: item.id
+              menuModuleId: item.id
             }
           });
         }
       } else {
         //新项目
         if (largeScreenFlag) {
-          store.commit("digitalPark/largeScreenIframeSrc", window.top.location.origin + '/#' + item.routeAddress)
+          store.commit("digitalPark/largeScreenIframeSrc",
+            window.top.location.origin + '/#' + item.routeAddress)
         } else {
-          // if (item?.childNode?.length) {
-          //   item = this.getLastItem(item);
-          // }
+          store.dispatch('digitalPark/setPageRoles')
           router.push({
             path: item.routeAddress.trim(),
             query: {
@@ -2170,12 +2176,11 @@ class commonFun {
   //设置菜单index
   setMenuIndex(item, from) {
     //from 1->代表是渲染菜单的时候，使用item本身；不传则为点击的时候，找到item的最子集
-    let arr = { 'defaultPage': {}, 'digitalPark/dashboardHomePage': {}, 'stockInApply': {} };
+    let arr = store.getters["digitalPark/getRepeatRouteList"]
     let flag = false
     if (item.routeAddress) {
-      Object.keys(arr).map((str) => {
+      arr.map((str) => {
         if (item.routeAddress.indexOf(str) != -1) {
-          arr[item.routeAddress] = item;
           flag = true
         }
       })
@@ -2208,16 +2213,17 @@ class commonFun {
         show: true,
         title: type,
         icon: 'path://M512 72c59.4 0 117 11.6 171.2 34.5 52.4 22.2 99.4 53.9 139.9 94.3 40.4 40.4 72.2 87.5 94.3 139.9C940.4 395 952 452.6 952 512s-11.6 117-34.5 171.2c-22.2 52.4-53.9 99.4-94.3 139.9-40.4 40.4-87.5 72.2-139.9 94.3C629 940.4 571.4 952 512 952s-117-11.6-171.2-34.5c-52.4-22.2-99.4-53.9-139.9-94.3-40.4-40.4-72.2-87.5-94.3-139.9C83.6 629 72 571.4 72 512s11.6-117 34.5-171.2c22.2-52.4 53.9-99.4 94.3-139.9 40.4-40.4 87.5-72.2 139.9-94.3C395 83.6 452.6 72 512 72m0-72C229.2 0 0 229.2 0 512s229.2 512 512 512 512-229.2 512-512S794.8 0 512 0z m0 640c-22.1 0-40-17.9-40-40V231c0-22.1 17.9-40 40-40s40 17.9 40 40v369c0 22.1-17.9 40-40 40z m-45 109a45 45 0 1 0 90 0 45 45 0 1 0-90 0z',
-        onclick() { }
+        onclick() {
+        }
       }
     }
     const tooltip = {
       assetStateTip: {
         show: true,
         backgroundColor: '#222',
-        textStyle: { fontSize: 12, },
+        textStyle: {fontSize: 12,},
         extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);', // 自定义的 CSS 样式
-        formatter: ({ title }) => {
+        formatter: ({title}) => {
           let template = '<div class="chart-tip">';
           for (const key in AssetState) {
             if (AssetState.hasOwnProperty(key)) {
@@ -2238,7 +2244,7 @@ class commonFun {
       }
     }
     return {
-      feature: { [`my${type}`]: feature[type] },
+      feature: {[`my${type}`]: feature[type]},
       tooltip: tooltip[type]
     }
   }
@@ -2265,4 +2271,5 @@ class commonFun {
   }
 
 }
+
 export default new commonFun()

@@ -67,7 +67,7 @@ export default {
     },
     title() {
       return getLargeScreenName() != '' ? Title[getLargeScreenName()] :
-        (getProjectTitle() || '数字园区综合管理平台');
+        (getProjectTitle() || '信智联综合管控平台');
     },
     isLargeScreen() {
       return getLargeScreenName() != ''
