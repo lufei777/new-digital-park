@@ -1,4 +1,3 @@
-import DefaultPage from '../pages/commonProject/defaultPage'
 import AssetLedger from '../pages/assetManage/assetLedger'
 import MyAsset from '../pages/assetManage/myAsset'
 
@@ -44,11 +43,6 @@ export default [{
     name: 'AssetLedger',
     component: AssetLedger,
     meta: { title: "资产台账" },
-  },{
-    path: '/digitalPark/defaultPage',
-    // name: 'DefaultPage',
-    component: DefaultPage,
-    meta: { title: "建设中" },
   },{
     path: '/assetUseTmpRouter',
     // name: 'TmpRouter',

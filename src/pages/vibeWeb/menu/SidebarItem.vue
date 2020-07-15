@@ -38,28 +38,34 @@ export default {
     queryIdObj(){
       return this.$route.query
     },
+    allMenuList() {
+      return JSON.parse(localStorage.getItem("menuTree"))[0].childNode;
+    },
   },
   watch:{
     queryIdObj(){
-      if(this.queryIdObj){
+      if(this.queryIdObj.firstMenuId){
+        console.log("id change2")
         this.setMenuList()
       }
     },
   },
   methods:{
-    setMenuList(item){
-      // console.log(this.firstMenuId,this.secondMenuId)
+    setMenuList(){
+
       let secondMenu={}
       let firstMenu = this.allMenuList.find(first => {
         console.log(this.queryIdObj.firstMenuId)
         return first.id == (this.queryIdObj.firstMenuId);
       });
-      console.log("fis",firstMenu)
+
       secondMenu = firstMenu.childNode.find(second => {
         return second.id == (this.queryIdObj.secondMenuId);
       });
       this.$store.commit("digitalPark/menuList",secondMenu);
-      // this.normalShortcutList();
+
+      let myIframe = document.getElementById("myIframe");
+      // let activeMenuIndex = myIframe.src.split("vibe")[1]
     }
   },
   mounted() {}

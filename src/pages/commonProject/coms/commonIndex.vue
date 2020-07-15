@@ -10,7 +10,8 @@
       <NavOperator :style="obj.style" class="asset-nav-operator" :showGoBack="true" />
     </template>
     <template slot="content">
-      <router-view></router-view>
+      <router-view v-if="!routePathFlag"></router-view>
+      <myIframe v-if="routePathFlag" />
     </template>
   </commonIndexLayout>
 </template>
@@ -22,7 +23,7 @@ import commonIndexLayout from "./commonIndexLayout";
 import Sidebar from "@/components/commonMenu/SideBar";
 import BreadCrumb from "@/components/breadCrumb";
 import NavOperator from "../../digitalPark/coms/navOperator";
-
+import myIframe from "../../vibeWeb/iframe/index";
 export default {
   name: "commonIndex",
   props: [],
@@ -30,7 +31,8 @@ export default {
     commonIndexLayout,
     Sidebar,
     BreadCrumb,
-    NavOperator
+    NavOperator,
+    myIframe
   },
   data() {
     let localStorageMenuData = JSON.parse(localStorage.menuList);
@@ -48,7 +50,10 @@ export default {
       menuTree: state => state.digitalPark.menuTree[0].childNode,
       menuData: state => state.digitalPark.menuList,
       menuIsCollapse: state => state.digitalPark.menuIsCollapse,
-    })
+    }),
+    routePathFlag(){
+      return this.$route.path=='/vibe-web'?true:false
+    }
   },
   methods: {
     onClickCollapseBtn() {

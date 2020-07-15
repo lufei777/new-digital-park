@@ -5,12 +5,13 @@
 </template>
 <script>
 // http://localhost:8090/vibe-web/html/deviceMeter/deviceMeter_index.html
+import {mapState} from 'vuex'
 export default {
   props: {
-    iframeConfig: {
-      type: Object,
-      reqiured: true
-    }
+    // iframeConfig: {
+    //   type: Object,
+    //   reqiured: true
+    // }
   },
   data() {
     return {};
@@ -27,13 +28,20 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      activeMenuIndex: state => state.digitalPark.activeMenuIndex
+    }),
+    iframeConfig(){
+      return {
+        src: this.activeMenuIndex.split("@")[1]
+      }
+    },
     computedSrc() {
       if (this.iframeConfig.src === "digitalPark/defaultPage") {
         return `${window.top.location.host}/#/${this.iframeConfig.src}`;
       }
-
       return `${window.top.location.origin}/vibe${this.iframeConfig.src}`;
-    }
+    },
   }
 };
 </script>
