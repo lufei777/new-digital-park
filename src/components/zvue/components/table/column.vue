@@ -40,6 +40,8 @@
             :row="scopeRow.row"
             :size="controlSize"
             :column="col"
+            :readonly="col.readonly"
+            :clearable="vaildBoolean(column.clearable,true)"
             :disabled="col.disabled"
             :isEdit="cellEditFlag(scopeRow.row,col)"
             :dic="DIC[col.prop]"
@@ -53,6 +55,8 @@
             :dic="DIC[col.prop]"
             :upload-before="col.uploadBefore"
             :upload-after="col.uploadAfter"
+            :readonly="col.readonly"
+            :clearable="vaildBoolean(column.clearable,true)"
             :disabled="col.disabled"
             :textMode="col.textMode"
             @click.native.stop
