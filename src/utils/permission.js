@@ -1,5 +1,4 @@
 import store from '@/vuex/store'
-import _ from 'lodash';
 
 /**
  * @param {Array} value
@@ -26,7 +25,6 @@ export function checkPermission(value, pageRoles = store.getters && store.getter
       return permissionRoles.includes(role)
     })
 
-    console.log("checkPermission -> hasPermission", hasPermission)
     if (!hasPermission) {
       return false
     }

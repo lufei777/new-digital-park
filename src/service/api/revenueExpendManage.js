@@ -66,7 +66,7 @@ export default new class {
   @url('/oaApi/record/updateRecord')
   @post
   updateRecord() { }
-  
+
   /**
    * 删除资金
    * ["SZ-229311847654752256","SZ-229311847654752258"]
@@ -74,4 +74,19 @@ export default new class {
   @url('/oaApi/record/deleteRecord')
   @post
   deleteRecord() { }
+
+  /**
+   * 获取收费列表
+   * pageNum=1&pageSize=10&code=1
+   */
+  @url('/oaApi/record/getIncomeRecordList')
+  @get
+  getIncomeRecordList() { }
+  
+  /**
+   * 获取所欲收费类型编码
+   */
+  @url('/oaApi/finance/manager/getNoticeType')
+  @get
+  getNoticeType() { }
 }

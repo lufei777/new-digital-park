@@ -254,10 +254,10 @@ export default {
       this.setVal();
     },
     handleError(msg) {
-      console.error(new Error(msg));
-      this.$message.error(typeof msg === "string" ? msg : "上传失败");
       if (typeof this.uploadError === 'function') {
-        this.uploadError(error, this.column);
+        this.uploadError(msg, this.column);
+      } else {
+        this.$message.error(typeof msg === "string" ? msg : "上传失败");
       }
     },
     delete(file) {

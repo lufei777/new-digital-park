@@ -300,11 +300,17 @@ export default {
     this.$root._zForm = this;
   },
   mounted() {
+    // 意图消除表单最后一行的margin-bottom，但是由于form会根据屏幕改变布局，并不知道最后一行是谁，因此无法消除。
     /* setTimeout(() => {
-      if (this.options.menuBtn === false) {
+      if (this.parentOption.menuBtn === false) {
         const wrap = document.querySelector('.zvue-form-wrapper');
         const zGroup = wrap.querySelectorAll('.z-group');
-        console.log("mounted -> zGroup", zGroup)
+        zGroup.forEach(curGroup => {
+          const curCol = curGroup.querySelectorAll('.el-col');
+          const lastCol = curCol[curCol.length - 1];
+          const elFormItem = lastCol.querySelectorAll('.el-form-item');
+          elFormItem.forEach(item => item.style.marginBottom = '0px')
+        });
       }
     }, 0); */
   },
@@ -326,8 +332,8 @@ export default {
       for (const key in this.propOption) {
         if (this.propOption.hasOwnProperty(key)) {
           const item = this.propOption[key];
-
-          if (item.rules && item.disabled !== false && item.display !== false) {
+          // 如果禁用或者不渲染，则不加入校验规则
+          if (item.rules && item.disabled !== true && item.display !== false) {
             let currentRules = item.rules;
             // 添加进rules
             if (Array.isArray(currentRules)) {
