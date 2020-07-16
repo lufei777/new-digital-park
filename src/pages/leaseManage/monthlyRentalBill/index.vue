@@ -70,7 +70,7 @@
             @click="generate(obj)"
           >生成</el-button>
           <!-- 根据更改租赁月账单中添加审核和批量审核 -->
-          <el-button type='text'>审核</el-button>
+          <el-button type='text' @click="Review()">审核</el-button>
         </template>
       </z-table>
     </div>
@@ -151,20 +151,7 @@ export default {
         props: {
           rowKey: "contractId"
         },
-        data: [
-          {
-            billNumber: "1",
-            tenantName: "测试",
-            contractName: "contractName",
-            billTime: "billTime",
-            chargeItems: "chargeItems",
-            billTotalAmount:'billTotalAmount',
-            billStatus:'billStatus',
-            offsset:'offsset',
-            tenant:'tenant'
-
-          }
-        ],
+        data: [ ],
         columnConfig: [],
         uiConfig: {
           height: "auto", //"", //高度
@@ -187,9 +174,12 @@ export default {
     }
   },
   methods: {
+    // 批量审核
     batchReview(){
-
+      this.$router.push('/monthbillbatchreview')
     },
+    // 审核
+    Review(){this.$router.push('/monthbillbatchreview')},
     submit(model, hide) {
       hide();
       this.leaseContractTable.serverMode.data = Object.assign(
