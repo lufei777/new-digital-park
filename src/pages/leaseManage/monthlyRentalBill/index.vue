@@ -38,11 +38,12 @@
           slot-scope="obj"
         >
           <div class="operator-box flex-row-reverse">
-            <!-- <el-button
+            <el-button
               :size="obj.size"
               type="primary"
-              @click="generate(obj)"
-            >生成</el-button> -->
+              @click="batchReview(obj)"
+              :disabled='!obj.selectedData.length'
+            >批量审核</el-button>
             <el-button
               :size="obj.size"
               type="primary"
@@ -68,6 +69,8 @@
             type="text"
             @click="generate(obj)"
           >生成</el-button>
+          <!-- 根据更改租赁月账单中添加审核和批量审核 -->
+          <el-button type='text'>审核</el-button>
         </template>
       </z-table>
     </div>
@@ -143,12 +146,25 @@ export default {
           pageNum: "pageNum"
         },
         operation: {
-          width: 200
+          width: 250
         },
         props: {
           rowKey: "contractId"
         },
-        data: [],
+        data: [
+          {
+            billNumber: "1",
+            tenantName: "测试",
+            contractName: "contractName",
+            billTime: "billTime",
+            chargeItems: "chargeItems",
+            billTotalAmount:'billTotalAmount',
+            billStatus:'billStatus',
+            offsset:'offsset',
+            tenant:'tenant'
+
+          }
+        ],
         columnConfig: [],
         uiConfig: {
           height: "auto", //"", //高度
@@ -171,6 +187,9 @@ export default {
     }
   },
   methods: {
+    batchReview(){
+
+    },
     submit(model, hide) {
       hide();
       this.leaseContractTable.serverMode.data = Object.assign(
@@ -266,8 +285,7 @@ export default {
       });
     }
   },
-  created() {
-  },
+  created() {},
   mounted() {
     this.contractList();
   }
