@@ -105,7 +105,7 @@
 <script>
 import TaskManageApi from "../../service/api/taskManage";
 import { mapState } from "vuex";
-import { TaskpriorityType, TaskofficeLocationType } from "@/utils/dictionary";
+import { TaskManageDic, TaskofficeLocationType } from "@/utils/dictionary";
 export default {
   name: "NewTask",
   data() {
@@ -203,7 +203,7 @@ export default {
             clearable: true,
             offset: 2,
             span: 10,
-            dicData: TaskpriorityType.priorityType,
+            dicData: TaskManageDic.priorityType,
             rules: {
               required: true,
               message: "请选择优先级",
