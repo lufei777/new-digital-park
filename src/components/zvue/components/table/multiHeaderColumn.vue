@@ -68,7 +68,7 @@
             :upload-after="col.uploadAfter"
             :disabled="col.disabled"
             :readonly="col.readonly"
-            :clearable="vaildBoolean(column.clearable,true)"
+            :clearable="vaildBoolean(col.clearable,true)"
             :textMode="col.textMode"
             @click.native.stop
             @input="modelInput($event,scopeRow.row,col)"

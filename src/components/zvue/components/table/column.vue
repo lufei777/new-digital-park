@@ -42,7 +42,7 @@
             :column="col"
             :readonly="col.readonly"
             :clearable="vaildBoolean(col.clearable,true)"
-            :disabled="col.disabled"
+            :disabled="vaildBoolean(col.disabled,scopeRow.row.$btnDisabled)"
             :isEdit="cellEditFlag(scopeRow.row,col)"
             :dic="DIC[col.prop]"
           ></slot>
@@ -56,8 +56,8 @@
             :upload-before="col.uploadBefore"
             :upload-after="col.uploadAfter"
             :readonly="col.readonly"
-            :clearable="vaildBoolean(column.clearable,true)"
-            :disabled="col.disabled"
+            :clearable="vaildBoolean(col.clearable,true)"
+            :disabled="vaildBoolean(col.disabled,scopeRow.row.$btnDisabled)"
             :textMode="col.textMode"
             @click.native.stop
             @input="modelInput($event,scopeRow.row,col)"
