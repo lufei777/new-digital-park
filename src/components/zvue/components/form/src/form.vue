@@ -64,7 +64,7 @@
                 >
                   <el-form-item
                     :class="[column.label === false ? 'zvue-form-item_emptylabel' : '']"
-                    :label="column.label"
+                    :label="column.label === false ? '' : column.label"
                     :prop="column.prop"
                     :required="column.required"
                     :error="column.error"
