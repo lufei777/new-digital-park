@@ -1,7 +1,6 @@
 import SystemManageApi from "@/service/api/systemManage";
 import { removeMenuTree } from 'utils/project';
 import { setToken, getToken, removeToken, setUserInfo, getUserInfo, removeUserInfo } from '@/utils/auth';
-import { removeRoles, removePageRoles } from 'utils/permission';
 
 const state = {
   token: getToken(),
@@ -47,21 +46,14 @@ const actions = {
     })
   },
   // 退出登录
-  logout({ commit }) {
+  logout({ commit, dispatch }) {
     return new Promise(async (resolve, reject) => {
       await SystemManageApi.logOut().then(_ => {
-        commit('setToken', '');
-        commit('setUserInfo', {});
-        // 清除token
-        removeToken();
-        // 清除用户信息
-        removeUserInfo();
-        // 清空菜单信息
+        // 清空用户信息、token、权限
+        dispatch('resetToken');
+        // 清空菜单树
         removeMenuTree();
-        // 清空用户权限
-        removeRoles();
-        // 清空当前页面用户权限
-        removePageRoles();
+
         resolve();
       }).catch(err => reject(reject));
     })
@@ -73,6 +65,10 @@ const actions = {
       commit('setUserInfo', {});
       removeToken();
       removeUserInfo();
+
+      commit('digitalPark/resetPageRoles', {}, { root: true });
+      commit('digitalPark/resetRoles', [], { root: true });
+
       resolve();
     })
   }
