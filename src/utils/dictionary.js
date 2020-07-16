@@ -561,41 +561,6 @@ export const electricityManageDic = {
 	]
 };
 
-//任务概览任务类型
-export const taskType = {
-	taskData: [
-		{
-			value: 1,
-			label: '巡检任务',
-			nodes: []
-		},
-		{
-			value: 2,
-			label: '维修任务',
-			nodes: []
-		},
-		{
-			value: 3,
-			label: '保养任务',
-			nodes: []
-		},
-		{
-			value: 4,
-			label: '流程任务',
-			nodes: []
-		},
-		{
-			value: 5,
-			label: '审批任务',
-			nodes: []
-		},
-		{
-			value: 6,
-			label: '其他任务',
-			nodes: []
-		}
-	]
-};
 // 预警报警
 export const WarningAlerm = {
 	// 报警级别
@@ -728,23 +693,6 @@ export const TaskofficeLocationType = {
 	]
 };
 
-export const TaskpriorityType = {
-	priorityType: [
-		{
-			value: '1',
-			label: '正常'
-		},
-		{
-			value: '2',
-			label: '重要'
-		},
-		{
-			value: '3',
-			label: '紧急'
-		}
-	]
-};
-
 export const SystemDic = {
 	isHidden: [{
 		label: '隐藏',
@@ -807,8 +755,20 @@ export const ElectricityManageDic = {
 		}
 	]
 }
-
-export const TaskTypeDic = {
+//任务管理
+export const TaskManageDic = {
+	taskTabs: [{
+		text: "全部",
+		name: "frist"
+	},
+	{
+		text: "我发起的",
+		name: "second"
+	},
+	{
+		text: "我收到的",
+		name: "third"
+	}],
 	taskType: [{
 		value: 1,
 		label: "巡检任务",
@@ -838,23 +798,7 @@ export const TaskTypeDic = {
 		value: 6,
 		label: "其他任务",
 		nodes: []
-	}]
-}
-export const TaskTabsDic = {
-	taskTabs: [{
-		text: "全部",
-		name: "frist"
-	},
-	{
-		text: "我发起的",
-		name: "second"
-	},
-	{
-		text: "我收到的",
-		name: "third"
-	}]
-}
-export const TaskDic = {
+	}],
 	sendTaskStatus: {
 		2: "待接",
 		3: "处理中",
@@ -868,7 +812,6 @@ export const TaskDic = {
 		4: "已完成",
 		5: "挂单中"
 	},
-
 	urgentStatus: [{
 		value: "1",
 		label: '正常'
@@ -881,7 +824,6 @@ export const TaskDic = {
 		value: "3",
 		label: '紧急'
 	}],
-
 	locationStatus: [{
 		value: 0,
 		label: '公司'
@@ -890,7 +832,6 @@ export const TaskDic = {
 		value: 1,
 		label: '现场'
 	}],
-
 	supplementStatus: [{
 		value: 0,
 		label: '补录'
@@ -899,4 +840,42 @@ export const TaskDic = {
 		value: 1,
 		label: '正常'
 	}],
+	priorityType: [
+		{
+			value: '1',
+			label: '正常'
+		},
+		{
+			value: '2',
+			label: '重要'
+		},
+		{
+			value: '3',
+			label: '紧急'
+		}
+	]
+}
+//维保管理
+export const MaintenanceManageDic = {
+	maintenanceStatus: [{
+		value: "1",
+		label: '高低压变配电系统'
+	},
+	{
+		value: "2",
+		label: '消防系统配电设备'
+	},
+	{
+		value: "3",
+		label: '给排水系统配电设备'
+	}],
+
+	payWayStatus: [{
+		value: "1",
+		label: '月结'
+	},
+	{
+		value: "2",
+		label: '实时结账'
+	}]
 }
