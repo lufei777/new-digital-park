@@ -171,7 +171,7 @@ import CommonSelect from "../taskManage/coms/commonSelect";
 import TaskManageApi from "../../service/api/taskManage";
 import SystemManage from "../../service/api/systemManage";
 import ChartUtils from "@/utils/chartUtils";
-import { taskType } from "@/utils/dictionary";
+import { TaskManageDic } from "@/utils/dictionary";
 export default {
   name: "TaskOverview",
   components: {
@@ -255,7 +255,7 @@ export default {
     })
   },
   created() {
-    this.taskTypeData = taskType.taskData;
+    this.taskTypeData = TaskManageDic.taskType;
   },
   methods: {
     onClickTreeNodeCallBack() {},
@@ -689,7 +689,7 @@ export default {
     this.getTaskStatus();
     this.createCharts();
     this.getTaskNumRanking();
-    this.taskTreeConfig.defaultExpandedkeys = [taskType.taskData[0].value];
+    this.taskTreeConfig.defaultExpandedkeys = [TaskManageDic.taskType[0].value];
   }
 };
 </script>

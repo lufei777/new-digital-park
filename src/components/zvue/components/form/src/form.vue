@@ -63,14 +63,15 @@
                   }"
                 >
                   <el-form-item
-                    :class="[validatenull(column.label)?'zvue-form-item_emptylabel' : '']"
-                    :label="column.label"
+                    :class="[column.label === false ? 'zvue-form-item_emptylabel' : '']"
+                    :label="column.label === false ? '' : column.label"
                     :prop="column.prop"
                     :required="column.required"
                     :error="column.error"
                     :show-message="column.showMessage"
                     :inline-message="column.inlineMessage"
                     :size="column.size || controlSize"
+                    :style="column.style || parentOption.elFormItemStyle"
                     :label-width="setPx(column.width,validatenull(parentOption.labelWidth) ? 90 : parentOption.labelWidth)"
                   >
                     <!-- 自定义label -->
@@ -562,10 +563,20 @@ export default {
     // get
     // 获取表单验证后的整个model
     getFormModel(cb) {
-      if (cb) {
+      return new Promise((resolve, reject) => {
         this.validate(valid => {
           if (valid) {
-            cb(
+            if (typeof cb === 'function') {
+              cb(
+                filterDefaultParams(
+                  this.model,
+                  this.modelTranslate,
+                  this.parentOption.translate,
+                  this.noModelFileds
+                )
+              );
+            }
+            resolve(
               filterDefaultParams(
                 this.model,
                 this.modelTranslate,
@@ -577,24 +588,7 @@ export default {
             console.error("验证失败，请检查表单");
           }
         });
-      } else {
-        return new Promise((resolve, reject) => {
-          this.validate(valid => {
-            if (valid) {
-              resolve(
-                filterDefaultParams(
-                  this.model,
-                  this.modelTranslate,
-                  this.parentOption.translate,
-                  this.noModelFileds
-                )
-              );
-            } else {
-              console.error("验证失败，请检查表单");
-            }
-          });
-        });
-      }
+      });
     },
     getGroupByProp(prop) {
       let groups = this.options.group;
@@ -814,6 +808,10 @@ export default {
   // 折叠面板去除padding-bottom
   .el-collapse-item__content {
     padding-bottom: 0;
+  }
+  // 空label没有margin-left
+  .zvue-form-item_emptylabel > .el-form-item__content {
+    margin-left: 0 !important;
   }
 }
 // 下拉树的样式调整

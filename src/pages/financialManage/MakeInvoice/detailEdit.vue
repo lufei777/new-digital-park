@@ -1,55 +1,56 @@
 <template>
   <!-- 收费 -->
-      <div class='panel-container' id='printTest'>
+      <div class='panel-container'>
     <!-- 底部 -->
-    <!-- <div class="panel"> -->
-    <z-form
-      :ref="formOptions.ref"
-      :options="formOptions"
-      v-model="model"
-      @submit="submit"
-      @reset-change="resetChange"
-    >
-      <template slot="rentLine">
-        <h3 style="border:1px dashed #999"></h3>
-      </template>
-      <template slot="line">
-        <h3 style="border:1px dashed #999"></h3>
-      </template>
-      <template
-        slot="btn"
-        slot-scope="obj"
+    <div class="panel">
+      <z-form
+        :ref="formOptions.ref"
+        :options="formOptions"
+        v-model="model"
+        @submit="submit"
+        @reset-change="resetChange"
       >
-        <div>
-          <!--   v-print="'#printTest'" -->
-          <el-button
-            size='mini'
-            type='primary'
-            @click="canSure"   
-          >确认提交并打印</el-button>
-          <el-button @click="cancel()">取消</el-button>
-        </div>
-      </template>
-    </z-form>
-    <!-- </div> -->
+        <template slot="rentLine">
+          <h3 style="border:1px dashed #999"></h3>
+        </template>
+        <template slot="line">
+          <h3 style="border:1px dashed #999"></h3>
+        </template>
+        <template
+          slot="btn"
+          slot-scope="obj"
+        >
+          <div>
+            <!-- <div v-if='$route.query.flag ==="edit"'> -->
+            <el-button
+              v-if='$route.query.flag ==="edit"'
+              @click="canSave"
+              size='mini'
+              type='primary'
+            >确认修改</el-button>
+            <!-- </div> -->
+            <el-button @click="goBack()">返回</el-button>
+          </div>
+        </template>
+      </z-form>
+    </div>
   </div>
 
   </div>
 </template>
 
 <script>
-// 导入接口
+// import { Row } from "element-ui";
 import FinacialManageApi from "@/service/api/financialManage";
 import commonFun from "@/utils/commonFun.js";
+
+//
 export default {
-  props: {
-    invoice: {
-      type: Object
-    }
-  },
   data() {
     return {
       model: {},
+      // 收费总金额
+      totalMoney: Number,
       formOptions: {
         ref: "form",
         menuPosition: "right",
@@ -77,11 +78,8 @@ export default {
             label: "收费部门",
             span: 8,
             prop: "costDept",
-            // disabled: true
-            rules: {
-              required: true,
-              trigger: "change"
-            }
+            disabled: true,
+
           },
           // 合同编号
           {
@@ -113,7 +111,7 @@ export default {
           // 付款单位全称
           {
             type: "input",
-            label: "付款单位全称",
+            label: "付款单位名称",
             span: 8,
             prop: "payerName"
             // disabled: true
@@ -136,27 +134,48 @@ export default {
             append: "元",
             disabled: true
           },
-          // 已收费金额
+          // 开票金额
           {
             type: "input",
-            label: "已收费金额",
+            label: "开票金额",
             span: 8,
-            prop: "amountCharged",
+            prop: "invoiceMoney",
             offset: 4,
+            append: "元",
             disabled: true,
+            rules: {
+              required: true
+            }
             // rules: {
             //   required: true,
             //   trigger: "change"
             // }
           },
-          // 未收费金额
+          // 开票科目
           {
-            type: "input",
-            label: "未收费金额",
+            type: "select",
+            minRows: 0,
+            label: "开票科目",
             span: 8,
-            prop: "amountNotCharged",
-            disabled: true
+            prop: "invoiceSubject",
+            dicData: [
+              { label: "测试1", value: 1 },
+              { label: "测试2", value: 2 },
+              { label: "测试3", value: 3 }
+            ],
+            rules: {
+              required: true
+            }
+            // disabled: true
           },
+        //   //   付款单位
+        //   {
+        //     type: "input",
+        //     label: "付款单位",
+        //     span: 8,
+        //     offset: 4,
+        //     prop: "6"
+        //   },
           // 虚线
           {
             prop: "rentLine",
@@ -164,62 +183,32 @@ export default {
             span: 18,
             formslot: true
           },
-          // 开票科目
+          // 已开票金额
           {
             type: "input",
-            label: "开票科目",
+            label: "已开票金额",
             span: 8,
-            prop: "invoiceSubject",
+            prop: "incoiceAmount",
             offset: 4,
-            // disabled: true
-            rules: {
-              required: true,
-              trigger: "change"
-            }
-          },
-          // 开票金额
-          {
-            type: "number",
-            label: "开票金额",
-            minRows:0,
-            span: 8,
-            prop: "invoiceMoney",
-            // disabled: true
-            rules: {
-              required: true,
-              trigger: "blur"
-            }
-          },
-          // 收款情况
-          {
-            type: "select",
-            label: "收款情况",
-            span: 8,
+            disabled: true,
             append: "元",
-            prop: "costStatus",
-            offset: 4,
-            dicData: [
-              { label: "是", value: 1 },
-              { label: "否", value: 2 }
-            ],
-            // disabled: true
             rules: {
-              required: true,
-              trigger: "change"
+              required: true
             }
           },
-          // 银行回执单号
-          //   {
-          //     type: "input",
-          //     label: "银行回执单号",
-          //     span: 8,
-          //     prop: "bankCode",
-          //     // disabled: true
-          //     rules: {
-          //       required: true,
-          //       trigger: "change"
-          //     }
-          //   },
+          // 未开票金额
+          {
+            type: "input",
+            label: "未开票金额",
+            span: 8,
+            prop: "incoiceNotAmount",
+            disabled: true,
+            append: "元",
+            rules: {
+              required: true
+            }
+          },
+
           // 虚线
           {
             prop: "line",
@@ -245,7 +234,7 @@ export default {
           {
             type: "textarea",
             label: "说明",
-            span: 12,
+            span: 16,
             prop: "remark",
             offset: 4,
             maxlength: 255,
@@ -265,42 +254,72 @@ export default {
       }
     };
   },
-  computed:{
-    Form(){
-      return this.$refs[this.formOptions.ref]
-    }
-  },
   methods: {
+    totalSum(a, b) {
+      return a - b;
+    },
+    goBack() {
+      this.$router.back();
+    },
     submit(model, done) {
-      FinacialManageApi.addInvoiceContact(model).then(res=> {
+      FinacialManageApi.updateInvoiceContact(model)
+        .then(res => {
           this.$message({
-            type:'success',
-            message:'开票成功！'
-          })
-          // this.$router.back()
-          this.$emit('cominvoice')
-      }).finally(()=> {
-        done()
-      })
+            type: "success",
+            message: "修改成功！"
+          });
+          this.$router.back();
+        })
+        .finally(res => {
+          done();
+        });
+    },
+    canSave() {
+      this.$refs[this.formOptions.ref].submit();
     },
     resetChange() {},
-    // 确认，
-    canSure() {
-      this.Form.submit()
-    },
-    // 取消
-    cancel() {
-      this.$emit("adjust", false);
-      console.log("父亲", this.$parent);
+    // 页面显示的数据
+    setTabledata(id) {
+      FinacialManageApi.selectInvoiceContact({ noticeNumber: id }).then(res => {
+        // console.log("res.data",  res.data[0]);
+        this.totalMoney = res.data[0].receivableAmount;
+        console.log("this.totalMoney", this.totalMoney);
+        this.model = { ...res.data[0] };
+      });
     }
   },
   created() {
-    this.model = { ...this.invoice };
-    console.log("this.invoice", this.model);
+    var noticeNumber = this.$route.query.noticeNumber;
+    var query = this.$route.query;
+    if (Object.keys(this.$route.query).length !== 0) {
+      let { flag, noticeNumber } = this.$route.query;
+      if (noticeNumber) {
+        this.setTabledata(noticeNumber);
+      }
+      if (flag === "detail") {
+        this.formOptions.textMode = true;
+      }
+    }
+    // this.$nextTick(() => {
+    //   this.$refs[this.formOptions.ref].setColumnByProp("collectionMoney", {
+    //     maxRows: this.totalMoney
+    //   });
+    // });
   },
-  mounted() {
-    console.log("this.charge", this.invoice);
-  }
+
+//   watch: {
+//     "model.collectionMoney": {
+//       handler(newVal, oldVal) {
+//         if (newVal !== oldVal) {
+//           var cc = this.totalSum(this.model.receivableAmount, newVal);
+//           //  console.log(cc)
+//           this.model.amountNotCharged = cc;
+//         }
+//       },
+//       deep: true,
+//       immediate: true
+//     }
+//   }
 };
 </script>
 

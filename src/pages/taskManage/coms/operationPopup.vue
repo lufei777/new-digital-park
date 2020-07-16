@@ -1,9 +1,9 @@
 <template>
-  <div class="add-role">
+  <div class="add-role popup-style" v-show="dialogFormShow">
     <el-dialog
-      title
-      :visible.sync="dialogFormFlag"
-      width="85%"
+      :title="dialogTitle"
+      :visible.sync="dialogFormShow"
+      width="30%"
       custom-class="per-modal"
       :before-close="dialogClose"
     >
@@ -20,14 +20,14 @@
 import SystemManageApi from "@/service/api/systemManage";
 import TaskManageApi from "@/service/api/taskManage";
 export default {
-  props: ["dialogParams", "dialogFormFlag", "showFormFlag"],
+  props: ["dialogParams", "dialogFormShow", "specialFormShow", "dialogTitle"],
   data() {
     let _this = this;
     return {
       formModel: {},
       formConfig: {
         ref: "formRef",
-        labelWidth: "120",
+        labelWidth: "90",
         labelPosition: "right",
         menuPosition: "left",
         emptyBtn: false,
@@ -37,6 +37,7 @@ export default {
             label: "部门",
             prop: "department",
             showAllLevels: false,
+            display: false,
             props: {
               label: "name",
               value: "id",
@@ -54,6 +55,7 @@ export default {
             label: "指派",
             prop: "designatorId",
             placeholder: "请输入",
+            display: false,
             clearable: true,
             props: {
               label: "name",
@@ -63,8 +65,7 @@ export default {
             rules: {
               required: true,
               trigger: "change"
-            },
-            change: function(value) {}
+            }
           },
           {
             type: "textarea",
@@ -73,8 +74,8 @@ export default {
             span: 24,
             rules: {
               required: true,
-              message: "请输入描述",
-              trigger: "blur"
+              trigger: "change",
+              message: "请输入描述"
             }
           },
           {
@@ -86,12 +87,6 @@ export default {
             action: "/oaApi/image/upload",
             accept: ["jpg", "jpeg", "png"],
             disabled: false,
-            display:true,
-            rules: {
-              required: true,
-              message: "请选择图片",
-              trigger: "blur"
-            },
             props: {
               label: "fileName",
               value: "fileUrl"
@@ -104,18 +99,60 @@ export default {
           }
         ]
       },
-      valueData: ""
+      valueData: "",
+      flag: ""
     };
+  },
+  watch: {
+    dialogFormShow(val) {
+      if (val) {
+        this.deptTreeList();
+        this.$nextTick(() => {
+          if (this.specialFormShow == 1) {
+            this.$refs["formRef"].setColumnByProp("reason", {
+              display: false
+            });
+            this.$refs["formRef"].setColumnByProp("taskPicList", {
+              display: false
+            });
+          } else {
+            this.$refs["formRef"].setColumnByProp("reason", {
+              display: true
+            });
+            this.$refs["formRef"].setColumnByProp("taskPicList", {
+              display: true
+            });
+          }
+          if (this.specialFormShow == 3 || this.specialFormShow == 1) {
+            this.$refs["formRef"].setColumnByProp("department", {
+              display: true
+            });
+            this.$refs["formRef"].setColumnByProp("designatorId", {
+              display: true
+            });
+          } else {
+            this.$refs["formRef"].setColumnByProp("department", {
+              display: false
+            });
+            this.$refs["formRef"].setColumnByProp("designatorId", {
+              display: false
+            });
+          }
+        });
+      }
+    }
   },
   computed: {},
   methods: {
     async submit(model, hide) {
-      console.log("hide", hide());
-      this.$emit("dialogParams", model);
-      // this.dialogParams(model, hide);
+      this.$emit("dialogParams", model, hide);
     },
     goBack() {
+      this.resetFormFunc();
       this.$emit("closeDialog", false);
+    },
+    resetFormFunc() {
+      this.$refs[this.formConfig.ref].resetForm();
     },
     async changelistBy({ value }) {
       let valueData;
@@ -132,7 +169,7 @@ export default {
       });
     },
     dialogClose(done) {
-      this.$refs[this.formConfig.ref].resetForm();
+      this.resetFormFunc();
       this.$nextTick(() => {
         this.$emit("closeDialog", false);
       });
@@ -144,24 +181,9 @@ export default {
       });
     }
   },
-  watch: {
-    dialogFormFlag(val) {
-      if (val) {
-        this.deptTreeList();
-      }
-      if(val && this.showFormFlag==1) {
-        this.$refs[this.formConfig.ref].setColumnByProp("taskPicList", {
-          display: false
-        });
-      }
-    },
-  },
-  created() {
-    
-  },
-  mounted() {
-    console.log(this.showFormFlag,this.dialogFormFlag)
-  }
+
+  created() {},
+  mounted() {}
 };
 </script>
 
@@ -171,8 +193,8 @@ export default {
   background: @white;
 
   .el-form {
-    width: 50%;
-    margin: 30px auto;
+    // width: 50%;
+    // margin: 30px auto;
   }
 }
 </style>

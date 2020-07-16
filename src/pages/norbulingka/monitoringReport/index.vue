@@ -242,9 +242,9 @@ export default {
       //   console.log(obj);
     },
     searchData(params) {
-      norbulingka.queryRelicEvaluationByPage({ params }).then(res => {
-        this.Tables.refreshTable();
-        this.getTableData({ ...this.condition });
+      norbulingka.queryRelicEvaluationByPage({page: 1, rows: 10, ...params }).then(res => {
+        // this.Tables.refreshTable();
+        this.getTableData({page: 1, rows: 10, ...this.condition });
       });
     },
     // 搜索

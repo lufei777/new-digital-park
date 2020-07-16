@@ -78,13 +78,29 @@
           :modal='true'
         >
           <!-- 调整 -->
-          <com-adjust :adjust='adjust'  v-if="tz" @offDailog='offDailog'></com-adjust>
+          <com-adjust
+            :adjust='adjust'
+            v-if="tz"
+            @offDailog='offDailog'
+          ></com-adjust>
           <!--  收费  -->
-          <com-charge :charge='charge' v-if="sf" @comcharge='offDailog' ></com-charge>
+          <com-charge
+            :charge='charge'
+            v-if="sf"
+            @comcharge='offDailog'
+          ></com-charge>
           <!-- 打印 -->
-          <com-print :print='print' v-if="dy" @comprint='offDailog' ></com-print>
+          <com-print
+            :print='print'
+            v-if="dy"
+            @comprint='offDailog'
+          ></com-print>
           <!-- 开票 -->
-          <com-invoice :invoice ='invoice' v-if="kp"></com-invoice>
+          <com-invoice
+            :invoice='invoice'
+            v-if="kp"
+            @cominvoice='offDailog'
+          ></com-invoice>
 
         </el-dialog>
       </div>
@@ -114,11 +130,12 @@
           >调整</el-button>
           <el-button
             type="text"
+            v-if="obj.row.billStatus===1"
             @click="makeinvoice(obj)"
           >开票</el-button>
           <el-button
             type="text"
-            v-if="off"
+            v-if="obj.row.costStatus==1"
             @click="chargemoney(obj)"
           >收费</el-button>
           <el-button
@@ -161,25 +178,25 @@ export default {
   },
   data() {
     return {
-      title:'测试',
-      off:true,
-      show:false,
+      title: "测试",
+      off: true,
+      show: false,
       dialogTableVisible: false,
       btnList: [],
       loading: false,
       // 调整
-      adjust:{},
+      adjust: {},
       // 开票
-      invoice:{},
+      invoice: {},
       // 打印,
-      print:null,
+      print: null,
       // 收费
-      charge:null,
+      charge: null,
       //控制显示
-      tz:false,
-      dy:false,
-      sf:false,
-      kp:false,
+      tz: false,
+      dy: false,
+      sf: false,
+      kp: false,
       model: {},
       formOptions: {
         ref: "form",
@@ -292,16 +309,15 @@ export default {
   },
   methods: {
     // adjust 关闭窗口
-    offDailog(val){
-      console.log('val',val)
+    offDailog(val) {
+      console.log("val", val);
       this.show = false;
       // if(val===false){
       //   this.off = false
       // }
-     if(val !== 'undefined'){
+      if (val !== "undefined") {
         this.onClickSearchBtn();
-     }
-      
+      }
     },
     // 自定义显示列
     testCustomTopObj(scopeObj) {
@@ -345,7 +361,7 @@ export default {
           type: "select",
           props: {
             label: "codeName",
-            value: "code"
+            value: "id"
           }
         },
         { label: "收费通知单号", prop: "noticeNumber" },
@@ -386,43 +402,31 @@ export default {
     },
     // 调整
     canadjust(obj) {
-      console.log("调整",obj.row);
-      this.adjust = obj.row
-      this.show = true
-      this.sf =false,
-      this.tz = true,
-      this.dy= false,
-      this.kp = false
+      console.log("调整", obj.row);
+      this.adjust = obj.row;
+      this.show = true;
+      (this.sf = false), (this.tz = true), (this.dy = false), (this.kp = false);
     },
     // 开票
     makeinvoice(obj) {
-      console.log("开票",obj.row);
-      this.invoice = obj.row
-      this.show = true
-      this.sf =false,
-      this.tz = false,
-      this.dy= false,
-      this.kp = true
+      console.log("开票", obj.row);
+      this.invoice = obj.row;
+      this.show = true;
+      (this.sf = false), (this.tz = false), (this.dy = false), (this.kp = true);
     },
     // 收费
     chargemoney(obj) {
-      console.log("收费",obj.row);
-      this.charge = obj.row
-      this.show = true
-       this.sf =true,
-      this.tz = false,
-      this.dy= false,
-      this.kp = false
+      console.log("收费", obj.row);
+      this.charge = obj.row;
+      this.show = true;
+      (this.sf = true), (this.tz = false), (this.dy = false), (this.kp = false);
     },
     // 打印
     canprint(obj) {
-      console.log("打印",obj.row);
-      this.print = obj.row
-      this.show = true
-       this.sf =false,
-      this.tz = false,
-      this.dy= true,
-      this.kp = false
+      console.log("打印", obj.row);
+      this.print = obj.row;
+      this.show = true;
+      (this.sf = false), (this.tz = false), (this.dy = true), (this.kp = false);
     }
   },
   computed: {

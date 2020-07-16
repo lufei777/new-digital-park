@@ -1,6 +1,6 @@
 <template>
-  <div class="add-tenant-manage">
-    <div class="condition-box radius-shadow">
+  <div class="add-tenant-manage panel-container">
+    <div class="condition-box panel">
       <div class="tenant-box">
         <z-form
           :ref="addTenantManageForm.ref"
@@ -277,7 +277,7 @@ export default {
   //   width: 60%;
   // }
   .condition-box {
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
     background: @white;
     padding: 20px;
     // background: pink;

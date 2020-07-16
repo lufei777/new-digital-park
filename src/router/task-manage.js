@@ -5,8 +5,8 @@ import WaitTask from '../pages/taskManage/waitTask'
 import AlreadyTask from '../pages/taskManage/alreadyTask'
 import AboutMe from '../pages/taskManage/aboutMe'
 export default [{
-    path: '/',
-    redirect: '/warehouseManage',
+    path: '/taskManage',
+    redirect: '/taskOverview',
     meta: { title: '任务管理' },
     component: () => import('@/pages/commonProject/coms/commonIndex'),
     children: [{

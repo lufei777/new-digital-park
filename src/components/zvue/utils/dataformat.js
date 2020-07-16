@@ -66,9 +66,9 @@ export const getPlaceholder = function (column, type, isDisabled) {
     }
     if (validatenull(placeholder)) {
         if (['select', 'checkbox', 'cascader', 'radio', 'tree'].includes(column.type)) {
-            return `请选择 ${label}`;
+            return `请选择 ${label ? label : ''}`;
         } else {
-            return `请输入 ${label}`;
+            return `请输入 ${label ? label : ''}`;
         }
     }
 
