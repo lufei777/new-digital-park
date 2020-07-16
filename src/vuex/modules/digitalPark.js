@@ -2,7 +2,7 @@ import Cookies from 'js-cookie';
 import DigitalParkApi from "@/service/api/digitalPark";
 import SystemManageApi from "@/service/api/systemManage";
 import { setMenuTree, getMenuTree } from "utils/project";
-import { setRoles, setPageRoles, getPageRoles } from 'utils/permission';
+import { setRoles, setPageRoles, getPageRoles, removeRoles, removePageRoles } from 'utils/permission';
 let repeatRouteList = ['defaultPage', 'digitalPark/dashboardHomePage', 'stockInApply']
 const state = {
   dragFlag: true,
@@ -19,9 +19,9 @@ const state = {
   roles: [],
   pageRoles: getPageRoles() || {}, //页面权限
   homeKeepAliveFlag: true,   //控制瀑布流页的缓存/刷新
-  permissionIdsList:[],  //所选角色的权限列表
-  repeatRouteList:repeatRouteList,  //重复路由
-  moduleInfo:{}
+  permissionIdsList: [],  //所选角色的权限列表
+  repeatRouteList: repeatRouteList,  //重复路由
+  moduleInfo: {}
 }
 
 const mutations = {
@@ -68,9 +68,17 @@ const mutations = {
     state.roles = state.roles.concat(payload);
     setRoles(state.roles);
   },
+  resetRoles(state) {
+    state.roles = [];
+    removeRoles();
+  },
   pageRoles(state, { path, roles }) {
     state.pageRoles = Object.assign({}, state.pageRoles, { [path]: roles });
     setPageRoles(state.pageRoles);
+  },
+  resetPageRoles(state) {
+    state.pageRoles = {};
+    removePageRoles();
   },
   permissionIdsList(state, data) {
     state.permissionIdsList = data
@@ -78,7 +86,7 @@ const mutations = {
   repeatRouteList(state, data) {
     state.repeatRouteList = data
   },
-  moduleInfo(state, data){
+  moduleInfo(state, data) {
     state.moduleInfo = data
     localStorage.setItem("moduleInfo", JSON.stringify(data))
   }
@@ -89,7 +97,7 @@ const getters = {
     return state.menuList
   },
 
-  getRepeatRouteList(state){
+  getRepeatRouteList(state) {
     return state.repeatRouteList
   }
 }
@@ -116,16 +124,16 @@ const actions = {
     }, 5000); */
 
     let path = state.moduleInfo.routeAddress
-    state.repeatRouteList.map((item)=>{
-      if(item.indexOf(path)!=-1){
+    state.repeatRouteList.map((item) => {
+      if (item.indexOf(path) != -1) {
         path = state.moduleInfo.id + path
       }
     })
     return new Promise((resolve, reject) => {
       SystemManageApi.getPermissionById({
-        menuId : state.moduleInfo.id
+        menuId: state.moduleInfo.id
       }).then(permissionList => {
-        commit('pageRoles', {path,roles:permissionList});
+        commit('pageRoles', { path, roles: permissionList });
         resolve(permissionList)
       }).catch(err => {
         reject(err)
