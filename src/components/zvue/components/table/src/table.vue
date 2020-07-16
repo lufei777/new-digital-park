@@ -668,7 +668,7 @@ export default {
         this.tableShowData.splice(index, 1);
         return;
       }
-      this.$set(row, '$cellEdit', false);
+      // this.$set(row, '$cellEdit', false);
       // 行编辑状态重设
       this.rowCancelSaveCurStatus(row, index);
       // 编辑取消事件
@@ -706,19 +706,17 @@ export default {
       });
     },
     rowEditSaveCurStatus(row, index) {
-      // row.$cellEdit = true;
-      // this.$set(this.tableShowData, index, row);
       //缓冲行数据
-      // this.formCascaderList[index] = this.deepClone(row);
+      this.formCascaderList[index] = this.deepClone(row);
       setTimeout(() => {
         this.formIndexList.push(index);
       }, 1000);
     },
     rowCancelSaveCurStatus(row, index) {
       // 将编辑状态改变
-      // this.formCascaderList[index].$cellEdit = false;
+      this.formCascaderList[index].$cellEdit = false;
       // 重新设置回行数据
-      // this.$set(this.tableShowData, index, this.formCascaderList[index]);
+      this.$set(this.tableShowData, index, this.formCascaderList[index]);
 
       this.formIndexList.splice(this.formIndexList.indexOf(index), 1);
     },
