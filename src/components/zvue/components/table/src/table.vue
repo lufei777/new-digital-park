@@ -298,9 +298,10 @@ export default {
       this.options.uiConfig.pagination = {};
     }
 
-    this._tableInit();
+    this._tableInit().then(_ => {
+      this._dataIndexInit();
+    })
     this.handleLoadDic();
-    // this._dataIndexInit();
   },
   mounted() {
     this.$nextTick(() => {
@@ -1155,7 +1156,7 @@ export default {
     //动态监测tableConfig.data的改变，有可能外部ajax改变data值
     "options.data"(val) {
       this._setTableData(val);
-      // this._dataIndexInit();
+      this._dataIndexInit();
     },
     tableData(newVal, oldVal) {
       if (newVal instanceof Array) {
