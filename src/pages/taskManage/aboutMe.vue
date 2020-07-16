@@ -55,9 +55,7 @@ import TaskManageApi from "../../service/api/taskManage";
 import CommonFun from "../../utils/commonFun";
 import {
   StockDic,
-  TaskTypeDic,
-  TaskTabsDic,
-  TaskDic
+  TaskManageDic
 } from "@/utils/dictionary";
 export default {
   name: "AboutMe",
@@ -118,8 +116,8 @@ export default {
         { label: "已完成", value: "0", status: "4" },
         { label: "已挂起", value: "0", status: "5" }
       ],
-      taskTypeData: TaskTypeDic.taskType,
-      taskTabsList: TaskTabsDic.taskTabs,
+      taskTypeData: TaskManageDic.taskType,
+      taskTabsList: TaskManageDic.taskTabs,
       taskTypeStatus: "",
       designatorId: "",
       reason: "",
@@ -174,7 +172,7 @@ export default {
           label: "优先级",
           prop: "urgent",
           type: "select",
-          dicData: TaskDic.urgentStatus
+          dicData: TaskManageDic.urgentStatus
         },
         { label: "状态", prop: "taskStatus" },
         { label: "创建人", prop: "founderName" },
@@ -183,13 +181,13 @@ export default {
           label: "地点",
           prop: "officeLocation",
           type: "select",
-          dicData: TaskDic.locationStatus
+          dicData: TaskManageDic.locationStatus
         },
         {
           label: "补录",
           prop: "isSupplement",
           type: "select",
-          dicData: TaskDic.supplementStatus
+          dicData: TaskManageDic.supplementStatus
         },
         { label: "设备点位", prop: "caption" }
       ];
@@ -229,7 +227,7 @@ export default {
               btnTmp = [];
             }
 
-            item.taskStatus = TaskDic.sendTaskStatus[item.status];
+            item.taskStatus = TaskManageDic.sendTaskStatus[item.status];
           } else if (this.taskActiveName == "second") {
             if (item.status == 1) {
               btnTmp = [
@@ -249,9 +247,9 @@ export default {
               btnTmp = [];
               // this.commonBtn.pop()
             }
-            item.taskStatus = TaskDic.acceptTaskStatus[item.status];
+            item.taskStatus = TaskManageDic.acceptTaskStatus[item.status];
           } else {
-            item.taskStatus = TaskDic.acceptTaskStatus[item.status];
+            item.taskStatus = TaskManageDic.acceptTaskStatus[item.status];
             btnTmp = [];
           }
           arr = btnTmp.concat(this.commonBtn);
