@@ -100,8 +100,6 @@ const actions = {
       DigitalParkApi.getMenuTree({
         language: Cookies.get("lang")
       }).then(menuTree => {
-        menuTree[0].childNode[0].childNode[1].childNode[0].routeAddress='/digitalPark/defaultPage'
-
         commit('setMenuTree', menuTree);
         // 设置到localStorage
         setMenuTree(menuTree);

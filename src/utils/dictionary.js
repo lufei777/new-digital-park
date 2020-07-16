@@ -513,7 +513,7 @@ export const ProjectName = {
 
 // 根据项目显示不同的title
 export const Title = {
-	[ProjectName.ZG]: '中钢大厦数字建筑运管平台',
+	[ProjectName.ZG]: '中钢国际广场信息化运管平台',
 	[ProjectName.YDCity]: '伊甸城BIM运管平台',
 	[ProjectName.NORBULINGKA]: '罗布林卡世界文化遗产监测预警平台'
 };
@@ -770,7 +770,7 @@ export const SystemDic = {
 	pTypeStatus: {
 		0: '读权限',
 		1: '写权限'
-	}
+	},
 };
 
 // 用电管理

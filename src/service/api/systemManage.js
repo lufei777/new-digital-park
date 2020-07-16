@@ -121,6 +121,10 @@ class SystemManage {
   @post
   editMenu(){}
 
+  @url("/user-service/menu/removeMenu")
+  @get
+  deleteMenu(){}
+
   // @url("/user-service/permission/permissionList")
   // @get
   // getPermissionList(){}

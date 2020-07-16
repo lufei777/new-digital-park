@@ -2119,7 +2119,7 @@ class commonFun {
       return false;
     }
 
-    if (item.name == "物业系统") {
+    if (item.name == "经营管理") {
       this.invokeClientMethod('goToZGManage');
       return true;
     }
