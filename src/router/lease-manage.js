@@ -61,7 +61,7 @@ export default [
 				meta: { title: '租赁月账单' },
 				component: () => import('@/pages/leaseManage/monthlyRentalBill/')
 			},
-			//租赁月账单中的 租赁月账单的审核
+			//租赁月账单中的 租赁月账单的 审核+批量审核
 			{
 				path:'/monthbillbatchreview',
 				name:'monthbillbatchreview',
