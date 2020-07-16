@@ -25,9 +25,9 @@ export default new class {
     addInvoiceContact() {}
     
     // 收费  ===
-    @url('/oaApi/finance/manager/addInvoiceContact')
+    @url('/oaApi/finance/manager/addBillChargeContact')
 	@post
-    addInvoiceContact() {}
+    addBillChargeContact() {}
 
 	// 作废  /finance/manager/delBillChargeContact
 
@@ -45,4 +45,22 @@ export default new class {
 	@url('/oaApi/finance/manager/updateBillChargeContact')
 	@post
 	updateBillChargeContact() {}
+
+	//开票联系单的=================================
+	// 作废
+	@url('/oaApi/finance/manager/delInvoiceContact')
+	@post
+	delInvoiceContact() {}
+
+	// 表格数据
+	@url('/oaApi/finance/manager/selectInvoiceContact')
+	@get
+	selectInvoiceContact() {}
+
+	// 修改开票联系单  /finance/manager/updateInvoiceContact
+	@url('/oaApi/finance/manager/updateInvoiceContact')
+	@post
+	updateInvoiceContact() {}
+
+
 }();

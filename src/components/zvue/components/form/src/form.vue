@@ -63,14 +63,15 @@
                   }"
                 >
                   <el-form-item
-                    :class="[validatenull(column.label)?'zvue-form-item_emptylabel' : '']"
-                    :label="column.label"
+                    :class="[column.label === false ? 'zvue-form-item_emptylabel' : '']"
+                    :label="column.label === false ? '' : column.label"
                     :prop="column.prop"
                     :required="column.required"
                     :error="column.error"
                     :show-message="column.showMessage"
                     :inline-message="column.inlineMessage"
                     :size="column.size || controlSize"
+                    :style="column.style || parentOption.elFormItemStyle"
                     :label-width="setPx(column.width,validatenull(parentOption.labelWidth) ? 90 : parentOption.labelWidth)"
                   >
                     <!-- 自定义label -->

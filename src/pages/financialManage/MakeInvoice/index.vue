@@ -57,7 +57,9 @@
           class="el"
           id='printTest'
         >
-          <com-moban :content='content'></com-moban>
+
+          <com-print :content='content'></com-print>
+          <!-- <com-moban :content='content'></com-moban> -->
         </div>
       </el-dialog>
 
@@ -69,14 +71,15 @@
           slot="operation"
           slot-scope="obj"
         >
+        <!-- disabled='true' -->
           <el-button
             type="text"
             @click="adjust(obj)"
           >修改</el-button>
           <el-button
             type="text"
-            v-if="obj.row.flagDel===1"
             @click="canInvalid(obj)"
+            v-if="obj.row.flagDel===1"
           >作废</el-button>
           <el-button
             type="text"
@@ -98,20 +101,21 @@ import FinacialManageApi from "@/service/api/financialManage";
 import commonFun from "@/utils/commonFun.js";
 // 字典配置
 import * as Dictonary from "@/utils/dictionary";
-import Vue from "vue";
-import Moban from "./mobu";
+import PrinTable from "./prinTtable";
 let pageInfo = {
   pageNum: 1,
   pageSize: 10
 };
 
 export default {
-  name: "chargeNote",
+  name: "makeinvoice",
   components: {
-    "com-moban": Moban
+    "com-print": PrinTable
   },
   data() {
     return {
+      // 设置按钮是否禁用
+      disabled:false,
       content: null,
       dialogTableVisible: false,
       btnList: [],
@@ -122,12 +126,13 @@ export default {
         menuPosition: "right",
         menuBtn: false,
         labelWidth: "100",
+       
         forms: [
-          //收款单流水
+          //{ label: "开票单流水号", prop: "invoiceCode" },
           {
             type: "input",
-            prop: "collectionCode",
-            label: "收款单流水号",
+            prop: "invoiceCode",
+            label: "开票单流水号",
             span: 6
           },
           //是否作废
@@ -138,18 +143,18 @@ export default {
             offset: 1,
             span: 6,
             dicData: [
-              { label: "是", value: 2 },
-              { label: "否", value: 1 }
+              { label: "否", value: 1 },
+              { label: "是", value: 2 }
             ]
           },
-          //  { label: "办理时间", prop: "createTime" valueFormat: "yyyy-MM-dd",valueFormat:'timestamp', },
+          //  { label: "办理时间", prop: "createTime" },
           {
             type: "date",
             prop: "createTime",
             label: "办理时间",
             span: 6,
-            format: "yyyy-MM-dd",
             valueFormat: "yyyy-MM-dd",
+            format: "yyyy-MM-dd",
             offset: 1,
             row: true
           },
@@ -178,7 +183,7 @@ export default {
           width: 200
         },
         serverMode: {
-          url: FinacialManageApi.selectBillChargeContact,
+          url: FinacialManageApi.selectInvoiceContact,
           data: pageInfo
         },
         propsHttp: {
@@ -192,6 +197,7 @@ export default {
         uiConfig: {
           height: "auto",
           // 是否多选
+          // width:150,
           selection: false,
           //   是否显示索引
           showIndex: true
@@ -240,7 +246,7 @@ export default {
     //表格列配置项
     async setTabelList() {
       let list = [
-        { label: "收款单流水号", prop: "collectionCode" },
+        { label: "开票单流水号", prop: "invoiceCode" },
         {
           label: "是否作废",
           prop: "flagDel",
@@ -250,28 +256,14 @@ export default {
             { label: "是", value: 2 }
           ]
         },
+        {label:'通知单类型',prop:'1'},
         { label: "收费通知单号", prop: "noticeNumber" },
         { label: "办理时间", prop: "createTime" },
         { label: "合同编号", prop: "contractNumber" },
-        { label: "收款内容", prop: "collectionContent" },
         { label: "付款单位全称", prop: "payerName" },
-        {
-          label: "收费方式",
-          prop: "collectionType",
-          type: "select",
-          dicData: [
-            { label: "支付宝", value: 1 },
-            { label: "支票", value: 2 },
-            { label: "转账", value: 3 },
-            { label: "承兑汇票", value: 4 },
-            { label: "现金", value: 5 },
-            { label: "银行卡", value: 6 },
-            { label: "微信", value: 7 }
-          ]
-        },
-        { label: "收费金额", prop: "collectionMoney" },
+        { label: "开票科目", prop: "invoiceSubject" },
         { label: "经办人", prop: "operator" },
-        { label: "银行回执单号", prop: "bankCode" },
+        { label: "开票金额(元)", prop: "invoiceMoney" },
         { label: "简要说明", prop: "remark" }
       ];
       this.tableOptions.columnConfig = list;
@@ -279,7 +271,7 @@ export default {
     // 修改
     adjust(obj) {
       this.$router.push({
-        path: "/finacialmanage/changedetail",
+        path: "/finacialmanage/invoicedetail",
         query: { flag: "edit", noticeNumber: obj.row.noticeNumber }
       });
     },
@@ -290,20 +282,21 @@ export default {
       this.dialogTableVisible = true;
     },
     // 作废的公共方法
-    deleteRow(flagDel, noticeNumber) {
-      FinacialManageApi.delBillChargeContact({
-        flagDel: flagDel,
-        noticeNumber: noticeNumber
-      }).then(res => {
+    deleteRow(flagDel,noticeNumber) {
+      FinacialManageApi.delInvoiceContact({ flagDel: flagDel,noticeNumber:noticeNumber}).then(res => {
         this.Table.refreshTable();
         // this.
       });
     },
     // 作废
     canInvalid(obj) {
-      console.log("obj.row", obj.row);
+      console.log('obj',obj)
+      var dis = obj.row.flagDel
+      // if(dis === 2){
+      //   this.disabled = true
+      // }
       var flagDel = obj.row.flagDel;
-      var noticeNumber = obj.row.noticeNumber;
+      var noticeNumber = obj.row.noticeNumber
       this.$confirm("确认作废吗？", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -313,15 +306,15 @@ export default {
           type: "success",
           message: "已经作废!"
         });
-        this.deleteRow(flagDel, noticeNumber);
+        this.deleteRow(flagDel,noticeNumber);
       });
     },
     // 详情
     canDetails(obj) {
       let noticeNumber = obj.row.noticeNumber;
       this.$router.push({
-        path: "/finacialmanage/changedetail",
-        query: { flag: "detail", noticeNumber: noticeNumber }
+        path: "/finacialmanage/invoicedetail",
+        query: { flag: "detail", noticeNumber: obj.row.noticeNumber }
       });
     }
   },

@@ -190,9 +190,12 @@ export default {
             // disabled: true
             dicData:[
               {label:'支付宝',value:1},
-              {label:'银行汇款',value:2},
-              {label:'手机转账',value:3},
-
+              {label:'支票',value:2},
+              {label:'转账',value:3},
+              {label:'承兑汇票',value:4},
+              {label:'现金',value:5},
+              {label:'银行卡',value:6},
+              {label:'微信',value:7},
             ],
             rules: {
               required: true,
@@ -283,7 +286,7 @@ export default {
         .then(res => {
           this.$message({
             type: "success",
-            message: "添加成功！"
+            message: "收费成功！"
             
           });
            this.$emit("comcharge",this.off);

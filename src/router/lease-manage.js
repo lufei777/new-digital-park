@@ -61,6 +61,14 @@ export default [
 				meta: { title: '租赁月账单' },
 				component: () => import('@/pages/leaseManage/monthlyRentalBill/')
 			},
+			//租赁月账单中的 租赁月账单的审核
+			{
+				path:'/monthbillbatchreview',
+				name:'monthbillbatchreview',
+				meta:{title:'审核'},
+				component:()=> import('@/pages/leaseManage/monthlyRentalBill/monthBatchRivew.vue')
+			},
+
 			// 租赁月账单模板
 			{
 				path: '/addmothly',
@@ -77,6 +85,7 @@ export default [
 
 			// 租赁月账单审核
 			{
+				// 经过协商后租赁月账单审核添加到租赁月账单中，
 				path: '/billReview',
 				name: 'billReview',
 				meta: { title: '租赁月账单审核' },
@@ -98,6 +107,12 @@ export default [
 				// 		component: () => import('../pages/leaseManage/billReview/checked.vue')
 				// 	}
 				// ]
+			},
+			{
+				path:'/batchreview',
+				name:'batchreview',
+				mate:{title:'批量审核'},
+				component:()=> import('../pages/leaseManage/billReview/batchreview.vue')
 			},
 			{
 				path: '/cansee',
