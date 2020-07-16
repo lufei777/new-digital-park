@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="panel-container">
     <div class="panel">
       <span class="tip frist-tip flex-align">
         <span class="icon"></span>
