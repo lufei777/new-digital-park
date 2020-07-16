@@ -115,30 +115,33 @@
             <el-input v-model="searchVal" :size="controlSize" placeholder="检索" />
           </template>
           <!-- 按钮 -->
-          <template #default="scopeRow">
+          <template #default="{row,$index,column}">
             <!-- 编辑按钮 -->
             <el-button
               type="text"
               :size="controlSize"
-              @click.stop="rowCell(scopeRow.row,scopeRow.$index)"
+              :disabled="row.$btnDisabled"
+              @click.stop="rowCell(row,$index)"
               v-if="vaildBoolean(tableOption.editBtn,config.editBtn)"
-            >{{_editBtnText(scopeRow.row,scopeRow.index)}}</el-button>
+            >{{_editBtnText(row)}}</el-button>
             <!-- 取消按钮 -->
             <el-button
-              v-if="scopeRow.row.$cellEdit && vaildBoolean(tableOption.calcelBtn,config.calcelBtn)"
+              v-if="row.$cellEdit && vaildBoolean(tableOption.calcelBtn,config.calcelBtn)"
               type="text"
               :size="controlSize"
-              @click.stop="rowCanel(scopeRow.row,scopeRow.$index)"
+              :disabled="row.$btnDisabled"
+              @click.stop="rowCanel(row,$index)"
             >{{parentOption.cancelBtnText || config.cancelBtnText}}</el-button>
             <!-- 操作列的slot -->
             <slot
               v-if="vaildData(tableOption.operation,!!$scopedSlots.operation)"
               :name="config.operationSlotName"
-              :scopeRow="scopeRow"
-              :row="scopeRow.row"
-              :column="scopeRow.column"
-              :index="scopeRow.$index"
-              :isEdit="vaildBoolean(scopeRow.row.$cellEdit,false)"
+              :scopeRow="{row,$index,column}"
+              :row="row"
+              :column="column"
+              :index="$index"
+              :isEdit="vaildBoolean(row.$cellEdit,false)"
+              :disabled="row.$btnDisabled"
               :size="controlSize"
             ></slot>
             <!-- 基础模式，如删除，编辑。参数为scopeRow -->
@@ -149,7 +152,7 @@
                 :size="btn.size || controlSize"
                 type="text"
                 :key="btn.label"
-                @click.stop="btn.handler(scopeRow)"
+                @click.stop="btn.handler({row,$index,column})"
               >
                 <i v-if="btn.icon" :class="btn.icon"></i>
                 {{btn.label}}
@@ -160,7 +163,7 @@
                 :size="btn.size || controlSize"
                 :key="btn.label"
                 :dropDown="btn"
-                :carryData="scopeRow"
+                :carryData="{row,$index,column}"
                 :style="{display:'inline-block'}"
               />
             </template>
@@ -297,7 +300,7 @@ export default {
 
     this._tableInit();
     this.handleLoadDic();
-    this._dataIndexInit();
+    // this._dataIndexInit();
   },
   mounted() {
     this.$nextTick(() => {
@@ -598,7 +601,7 @@ export default {
     /**
      * 以下行编辑
      */
-    _editBtnText(row, index) {
+    _editBtnText(row) {
       return row.$cellEdit === true ?
         (this.parentOption.saveBtnText || this.config.saveBtnText) :
         (this.parentOption.editBtnText || this.config.editBtnText);
@@ -665,51 +668,59 @@ export default {
         this.tableShowData.splice(index, 1);
         return;
       }
-      this.formCascaderList[index].$cellEdit = false;
-      //设置行数据
-      this.$set(this.tableShowData, index, this.formCascaderList[index]);
-
-      this.formIndexList.splice(this.formIndexList.indexOf(index), 1);
-
+      this.$set(row, '$cellEdit', false);
+      // 行编辑状态重设
+      this.rowCancelSaveCurStatus(row, index);
       // 编辑取消事件
       this.$emit("row-edit-cancel", row, index);
     },
     // 单元格编辑
     rowCellEdit(row, index) {
-      row.$cellEdit = true;
-      this.$set(this.tableShowData, index, row);
-      //缓冲行数据
-      this.formCascaderList[index] = this.deepClone(row);
-
+      this.$set(row, '$cellEdit', true);
+      // 行编辑状态保存
+      this.rowEditSaveCurStatus(row, index);
       // 编辑事件
       this.$emit("row-edit", row, index);
-
+    },
+    //单元格更新
+    rowCellUpdate(row, index) {
+      this.asyncValidator(this.formCellRules, row).then(res => {
+        this.$set(row, '$btnDisabled', true);
+        this.$emit(
+          "row-update",
+          row,
+          index,
+          () => {
+            /* row.$cellEdit = false;
+            this.$set(this.tableShowData, index, row); */
+            this.$set(row, '$cellEdit', false);
+            this.$set(row, '$btnDisabled', false);
+          },
+          () => {
+            this.$set(row, '$btnDisabled', false);
+          }
+        );
+      }).catch(errors => {
+        errors[0].message = `第${index + 1}行：${errors[0].message}`;
+        this.$message.warning(errors[0]);
+      });
+    },
+    rowEditSaveCurStatus(row, index) {
+      // row.$cellEdit = true;
+      // this.$set(this.tableShowData, index, row);
+      //缓冲行数据
+      // this.formCascaderList[index] = this.deepClone(row);
       setTimeout(() => {
         this.formIndexList.push(index);
       }, 1000);
     },
-    //单元格更新
-    rowCellUpdate(row, index) {
-      this.btnDisabled = true;
-      this.asyncValidator(this.formCellRules, row)
-        .then(res => {
-          this.$emit(
-            "row-update",
-            row,
-            index,
-            () => {
-              row.$cellEdit = false;
-              this.$set(this.tableShowData, index, row);
-            },
-            () => {
-              this.btnDisabled = false;
-            }
-          );
-        })
-        .catch(errors => {
-          errors[0].message = `第${index + 1}行：${errors[0].message}`;
-          this.$message.warning(errors[0]);
-        });
+    rowCancelSaveCurStatus(row, index) {
+      // 将编辑状态改变
+      // this.formCascaderList[index].$cellEdit = false;
+      // 重新设置回行数据
+      // this.$set(this.tableShowData, index, this.formCascaderList[index]);
+
+      this.formIndexList.splice(this.formIndexList.indexOf(index), 1);
     },
 
     /**
@@ -1146,7 +1157,7 @@ export default {
     //动态监测tableConfig.data的改变，有可能外部ajax改变data值
     "options.data"(val) {
       this._setTableData(val);
-      this._dataIndexInit();
+      // this._dataIndexInit();
     },
     tableData(newVal, oldVal) {
       if (newVal instanceof Array) {
