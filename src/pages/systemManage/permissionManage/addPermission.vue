@@ -17,6 +17,24 @@
   import {SystemDic} from "@/utils/dictionary";
   import SystemManageApi from '@/service/api/systemManage'
   import ModuleTip from '@/pages/commonProject/coms/moduleTip'
+
+  let  permissionFlag = [{
+      label:'查看',
+      value:'look',
+      type:'0' //代表是读权限下的
+    },{
+      label:'添加',
+      value:'add',
+      type:'1', //代表是写权限下的
+    },{
+      label:'编辑',
+      value:'edit',
+      type:'1',
+    },{
+      label:'删除',
+      value:'remove',
+      type:'1',
+    }]
   export default {
     name: 'AddPermission',
     components: {
@@ -43,6 +61,17 @@
           emptyBtn: false,
           forms: [
             {
+              type: "input",
+              label: "权限名称",
+              prop: "name",
+              span: 24,
+              rules: {
+                required: true,
+                message: "请输入菜单名称",
+                trigger: "blur"
+              }
+            },
+            {
               type: "tree",
               label: "所属模块",
               prop: "menuId",
@@ -60,23 +89,27 @@
               }
             },
             {
-              type: "input",
-              label: "权限名称",
-              prop: "name",
-              span: 24,
-              rules: {
-                required: true,
-                message: "请输入菜单名称",
-                trigger: "blur"
-              }
-            },
-            {
               type: "radio",
               label: "权限类型",
               prop: "pType",
               span: 24,
               dicData: SystemDic.pType,
               valueDefault:0,
+              props: {
+                label: "label",
+                value: "value",
+              },
+              rules:{
+                validator: checkPType,
+                trigger: 'change'
+              }
+            },
+            {
+              type: "select",
+              label: "权限标识",
+              prop: "permissionFlag",
+              span: 12,
+              dicData: permissionFlag,
               props: {
                 label: "label",
                 value: "value",

@@ -189,7 +189,7 @@ export default {
       let color = "#fff";
       try {
         backgroundImage =
-          `url(${require((`../../../../static/image/digitalPark/${item.productBgUrl}.png`))})`;
+          `url(${item.productBgUrl})`;
         // "url(" + require("../../../../static/image/digitalPark/" + item.productBgUrl + ".png") + ")";
       } catch (error) {
         color = "#000"
