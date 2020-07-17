@@ -35,9 +35,7 @@ export default {
     myIframe
   },
   data() {
-    let localStorageMenuData = JSON.parse(localStorage.menuList);
     return {
-      // menuData: localStorageMenuData,
       menuConfig: {
         bgColor: "#394562",
         textColor: "#B7BAC4",
@@ -64,7 +62,7 @@ export default {
     },
   },
   mounted() {
-    document.title = this.menuData.name;
+    document.title = this.menuData?.name || '';
   },
   watch: {
     menuIsCollapse(val) {
