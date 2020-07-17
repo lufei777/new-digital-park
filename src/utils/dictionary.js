@@ -513,7 +513,7 @@ export const ProjectName = {
 
 // 根据项目显示不同的title
 export const Title = {
-	[ProjectName.ZG]: '中钢大厦数字建筑运管平台',
+	[ProjectName.ZG]: '中钢国际广场信息化运管平台',
 	[ProjectName.YDCity]: '伊甸城BIM运管平台',
 	[ProjectName.NORBULINGKA]: '罗布林卡世界文化遗产监测预警平台'
 };
@@ -812,6 +812,7 @@ export const TaskManageDic = {
 		4: "已完成",
 		5: "挂单中"
 	},
+
 	urgentStatus: [{
 		value: "1",
 		label: '正常'
@@ -857,7 +858,7 @@ export const TaskManageDic = {
 }
 //维保管理
 export const MaintenanceManageDic = {
-	maintenanceStatus: [{
+	maintenanceType: [{
 		value: "1",
 		label: '高低压变配电系统'
 	},
@@ -877,5 +878,57 @@ export const MaintenanceManageDic = {
 	{
 		value: "2",
 		label: '实时结账'
+	}],
+
+	payRadio: [{
+		value: "0",
+		label: '全部'
+	},{
+		value: "1",
+		label: '收费任务'
+	},
+	{
+		value: "2",
+		label: '免费任务'
+	}],
+
+	taskStatus:[{
+		value: "0",
+		label: '全部'
+	},{
+		value: "1",
+		label: '待派单'
+	},
+	{
+		value: "2",
+		label: '待接单'
+	},
+	{
+		value: "3",
+		label: '处理中'
+	},
+	{
+		value: "4",
+		label: '挂起中'
+	},
+	{
+		value: "5",
+		label: '待审核'
+	},
+	{
+		value: "6",
+		label: '已完成'
+	},
+	{
+		value: "7",
+		label: '审核不通过'
+	},
+	{
+		value: "8",
+		label: '已退回'
+	},
+	{
+		value: "9",
+		label: '已关闭'
 	}]
 }

@@ -111,7 +111,7 @@
     </el-drawer>
     <el-drawer
       title="监控采集新增"
-      size="50%"
+      size="80%"
       destroy-on-close
       :append-to-body="true"
       :visible.sync="innerDrawer"
@@ -126,7 +126,7 @@
         >
           <template #time_interval_appendSlot="{disabled,size}">
             <el-select
-              style="width:60px !important;"
+              style="width:90px !important;"
               :disabled="disabled"
               :size="size"
               v-model="deviceInfoModel.unit"
@@ -146,7 +146,7 @@
 
 <script>
 import CommonFun from 'utils/commonFun'
-import { AssetType, AssetKind } from 'utils/dictionary';
+import { AssetType, AssetKind, AssetState } from 'utils/dictionary';
 import commonApi from 'api/common';
 import deviceManageApi from 'api/deviceManage';
 import { validNotChinese } from 'utils/validate';
@@ -283,7 +283,10 @@ export default {
         columnConfig: [
           {
             label: '状态',
-            prop: 'state'
+            prop: 'state',
+            formatter: ({ state }) => {
+              return AssetState[state].valueStr;
+            }
           },
           {
             label: '编号',
@@ -295,7 +298,7 @@ export default {
           },
           {
             label: '分类',
-            prop: 'kind'
+            prop: 'kindStr'
           },
           {
             label: '名称',
@@ -369,7 +372,7 @@ export default {
               this.addModel.typeName = "";
               deviceManageApi.assetTypeList({ id: value }).then(res => {
                 this.$refs[this.deviceTypeForm.ref].setColumnByProp('typeName', {
-                  dicData: res
+                  dicData: res instanceof Array ? res : []
                 })
               })
             }
@@ -498,7 +501,10 @@ export default {
           },
           {
             label: '状态',
-            prop: 'state'
+            prop: 'state',
+            formatter: (row, value) => {
+              return AssetState[value].valueStr;
+            }
           },
           {
             label: '标题',
@@ -510,7 +516,7 @@ export default {
           },
           {
             label: '分类',
-            prop: 'kind'
+            prop: 'kindStr'
           },
           {
             label: '服务',
@@ -526,10 +532,7 @@ export default {
           },
           {
             label: '监测值',
-            prop: 'value',
-            formatter: (row, value) => {
-              return getValueUnit(row.unit, value);
-            }
+            prop: 'value'
           },
           {
             label: '描述',

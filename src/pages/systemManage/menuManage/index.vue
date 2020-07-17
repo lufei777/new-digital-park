@@ -31,7 +31,7 @@
       <z-table :ref="tableConfig.ref" :options="tableConfig" >
         <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
           <el-button type="text" @click="editRow(row)">编辑</el-button>
-          <!--<el-button type="text" @click="deleteRow(row)">删除</el-button>-->
+          <el-button type="text" @click="deleteRow(row)">删除</el-button>
         </template>
       </z-table>
     </div>
@@ -43,10 +43,7 @@
   import SystemManageApi from '@/service/api/systemManage'
   import {SystemDic} from "@/utils/dictionary";
   import CommonFun from '@/utils/commonFun'
-  let searchParams = {
-    name:'',
-    isHidden:null
-  }
+
   export default {
     name: 'menuManage',
     components: {},
@@ -95,7 +92,10 @@
           customTop: true,
           tableMethods: {},
         },
-        searchParams:searchParams,
+        searchParams:{
+          name:'',
+          isHidden:null
+        },
         hiddenDic:SystemDic.isHidden,
         isExpand:false
       }
@@ -109,15 +109,28 @@
     methods: {
       async getMenuList() {
         let res = await SystemManageApi.getMenuList(this.searchParams)
-        this.tableConfig.data = res[0].childNode
+        this.tableConfig.data = res[0]&&res[0].childNode || []
       },
       editRow(row) {
         this.$router.push(`/addMenu?menuId=${row.id}`)
       },
       onClickAddBtn(){
-        // this.$router.push(`/addMenu`)
+        this.$router.push(`/addMenu`)
       },
-      deleteRow(row) {
+      deleteRow(data) {
+        this.deleteId = data.id
+        CommonFun.deleteTip(this, this.deleteId, '至少选择一条数据！', this.sureDelete)
+      },
+      async sureDelete() {
+        await SystemManageApi.deleteMenu({
+         menuIds: this.deleteId,
+        })
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+        this.$store.commit('digitalPark/homeKeepAliveFlag',false)
+        this.getMenuList()
       },
       onClickExportBtn() {
         let url = '/user-service/menu/exportMenu'
@@ -134,7 +147,10 @@
         this.getMenuList()
       },
       onClickResetBtn(){
-        this.searchParams = searchParams
+        this.searchParams = {
+          name:'',
+          isHidden:null
+        }
         this.getMenuList()
       },
       onClickImportBtn(){},

@@ -300,6 +300,11 @@ export default {
 
     this._tableInit().then(_ => {
       this._dataIndexInit();
+      // 数据加载完成
+      this.$emit('onloadeddata', this);
+    }).catch((err) => {
+      // 数据未加载完成，报错
+      this.$emit('unloadeddata', err, this);
     })
     this.handleLoadDic();
   },
@@ -690,29 +695,35 @@ export default {
     },
     //单元格更新
     rowCellUpdate(row, index) {
-      this.asyncValidator(this.formCellRules, row).then(res => {
-        this.$set(row, '$btnDisabled', true);
-        // 返回参数
-        const cbParams = [row, index,
-          () => {
-            /* row.$cellEdit = false;
-            this.$set(this.tableShowData, index, row); */
-            this.$set(row, '$cellEdit', false);
-            this.$set(row, '$btnDisabled', false);
-            this.formCascaderList[index] = row;
-          }, () => {
-            this.$set(row, '$btnDisabled', false);
-          }
-        ]
+      return new Promise((resolve, reject) => {
+        this.asyncValidator(this.formCellRules, row).then(res => {
+          this.$set(row, '$btnDisabled', true);
 
-        this.$emit("row-update", ...cbParams);
-        // 通过promise返回
-      }).catch(errors => {
-        setTimeout(() => {
-          errors[0].message = `第${index + 1}行：${errors[0].message}`;
-          this.$message.warning(errors[0]);
-        }, 0);
-      });
+          // 返回参数
+          const cbParams = [row, index,
+            () => {
+              /* row.$cellEdit = false;
+              this.$set(this.tableShowData, index, row); */
+              this.$set(row, '$cellEdit', false);
+              this.$set(row, '$btnDisabled', false);
+              this.formCascaderList[index] = row;
+            }, () => {
+              this.$set(row, '$btnDisabled', false);
+            }
+          ]
+
+          this.$emit("row-update", ...cbParams);
+
+          resolve(...cbParams)
+          // 通过promise返回
+        }).catch(errors => {
+          setTimeout(() => {
+            errors[0].message = `第${index + 1}行：${errors[0].message}`;
+            this.$message.warning(errors[0]);
+          }, 0);
+          reject(errors)
+        });
+      })
     },
     rowEditSaveCurStatus(row, index) {
       //缓冲行数据
