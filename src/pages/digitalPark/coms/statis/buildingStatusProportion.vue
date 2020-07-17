@@ -16,7 +16,9 @@ export default {
   },
   methods: {
     async getDeviceStatusList() {
-      let res = await Common.getMonitorState();
+      let res = await Common.getMonitorState({
+        moduleId:JSON.parse(localStorage.moduleInfo).id
+      });
       this.createPieCharts(res);
     },
     createPieCharts(res) {

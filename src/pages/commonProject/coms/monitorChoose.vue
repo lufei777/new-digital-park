@@ -110,7 +110,8 @@
     methods: {
       async getMonitorTree() {
         let res = await CommonApi.getMonitorTree({
-          flag: "total"
+          flag: "total",
+          moduleId:JSON.parse(localStorage.moduleInfo).id
         });
         this.treeModalConfig.treeList = res;
         this.treeModalConfig.treeConfig.defaultExpandedkeys = [res[0].id]
@@ -160,7 +161,9 @@
         this.onClickHandleBtnCallback && this.onClickHandleBtnCallback(params)
       },
       async setDefaultNode() {
-        let res = await CommonApi.getDefaultNode()
+        let res = await CommonApi.getDefaultNode({
+           moduleId:JSON.parse(localStorage.moduleInfo).id
+        })
         this.monitor1 = {id: res.monitorIds[0], text: res.captions[0]}
         this.monitor2 = {id: res.monitorIds[1], text: res.captions[1]}
       },

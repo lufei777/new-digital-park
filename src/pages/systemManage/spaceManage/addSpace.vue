@@ -104,7 +104,8 @@
       async getAssetAllTree(){
         let res = await CommonApi.getAssetAllTree({
           flag: 'space',
-          locationRoot: 1
+          locationRoot: 1,
+          moduleId:JSON.parse(localStorage.moduleInfo).id
         })
         this.$refs[this.formConfig.ref].setColumnByProp("parentId", {
           dicData:res
