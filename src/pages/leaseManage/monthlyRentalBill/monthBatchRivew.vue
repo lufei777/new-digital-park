@@ -20,18 +20,27 @@
           slot-scope="obj"
         >
           <div class="operator-box flex-row-reverse">
-              <!-- :disabled='!obj.selectedData.length' -->
-            <el-button
+            <!-- :disabled='!obj.selectedData.length' -->
+            <!-- <el-button
               :size="obj.size"
               type="primary"
               @click="batchReview(obj)"
+            > 批量审核</el-button> -->
+            <el-button
+              :size="obj.size"
+              type="primary"
+              @click="batchPass(obj)"
+              :disabled='!obj.selectedData.length'
             >批量通过</el-button>
             <el-button
               :size="obj.size"
               type="primary"
               @click="goback(obj)"
             >返回</el-button>
-            <el-button>提交</el-button>
+            <el-button
+              @click="batchSubmit(obj)"
+              :disabled='!obj.selectedData.length'
+            > 提交</el-button>
           </div>
         </template>
 
@@ -63,14 +72,15 @@ export default {
   data() {
     let _this = this;
     return {
+      ids: "",
       model: {},
       leaseContractTable: {
         ref: "leaseContractTable",
         customTop: true,
-        editBtn: true,
+        editBtn: false,
         serverMode: {
-          url: LeaseManageApi.queryMonthBillList,
-          data: pageInfo
+          url: LeaseManageApi.queryNeedExamineDate,
+          data: { ids: this.ids }
         },
         propsHttp: {
           list: "data",
@@ -105,37 +115,77 @@ export default {
   },
   methods: {
     rowUpdate(model, index, done) {
-      console.log("保存", model, index,done);
+      console.log("保存", model, index, done);
     },
     // 表格中的编辑
-    rowEdit(model, index,done) {
-      console.log("编辑", model, index,done);
+    rowEdit(model, index, done) {
+      console.log("编辑", model, index, done);
     },
     // 表格中的取消编辑
     rowEditCancel(model, index) {
       console.log("取消编辑", model, index);
     },
+    //批量通过
+    batchPass({ selectedData }) {
+      console.log("selectedData", selectedData);
+      selectedData.forEach(curRow => {
+        // curRow.cell = false
+        curRow.edit = 1;
+        this.Table.rowCellEdit(curRow, curRow.$index);
+      });
+    },
+    tabelrowCellEdit() {
+        let arr = this.allData;
+    //   let arr = this.$refs[this.leaseContractTable.ref].allData;
+        // arr = 
+      console.log("arr", arr);
+    },
     // 批量审核
-    batchReview() {
-    //   this.$router.push("/monthbillbatchreview");
-        this.Table.$cellEdit= true
+    batchReview(obj) {
+      // this.Table.$cellEdit= true
+      console.log("obj", obj.selectedData);
+      obj.selectedData.forEach(item => {
+        // rowCell(row,index){
+        //     this.$cellEdit= true
+        // };
+        // item.$cellEdit = true;
+        console.log("item", item.$index);
+      });
+    },
+    // 提交 { selectedData }
+    batchSubmit(obj) {
+      console.log("obj", obj);
+      //   LeaseManageApi.useMonthBillExamine(selectedData).then(res => {
+      //     this.$message({
+      //       type: "success",
+      //       message: "提交成功！"
+      //     });
+      //   });
+
+      // let arr = selectedData
+      // arr = arr.push(selectedData);
+      //   let http = new Promise();
+      //   http.all(selectedData).then(()=> {
+      //       LeaseManageApi.useMonthBillExamine(selectedData).then(res=>{
+      //           this.$message({
+      //               type:'success',
+      //               message:'提交成功！'
+      //           })
+      //       })
+      //   })
+      //   let tp = Promise.all(selectedData);
+      //   tp.then(res => {
+      //     this.$message({
+      //       type: "success",
+      //       message: "提交成功！"
+      //     });
+      //   });
     },
     // 审核
     Review() {
       this.$router.push("/monthbillbatchreview");
     },
-    submit(model, hide) {
-      hide();
-      this.leaseContractTable.serverMode.data = Object.assign(
-        _.cloneDeep(pageInfo),
-        model
-      );
-      this.$refs[this.leaseContractTable.ref].refreshTable();
-    },
     resetChange() {},
-    clearForm(...args) {
-      this.$refs[this.leaseContractForm.ref].resetForm();
-    },
     async contractList() {
       let labelList = [
         { label: "租赁月账单编号", prop: "billNumber" },
@@ -157,18 +207,17 @@ export default {
         },
         {
           label: "审核结果",
-          prop: "2",
+          prop: "statusName",
           type: "select",
           cell: true,
           dicData: [
-            { label: "已通过", value: 1 },
-            { label: "未通过", value: 2 },
-            { label: "已审核", value: 3 },
-            { label: "已驳回", value: 4 }
+            { label: "通过", value: 1 },
+            { label: "驳回", value: 2 }
           ]
         },
         {
           label: "审核意见",
+          prop: "detailsIdea",
           type: "input",
           cell: true,
           width: 300
@@ -183,63 +232,17 @@ export default {
       //     this.leaseContractTable.data = res.list;
       //     this.leaseContractTable.uiConfig.pagination.total = res.total;
       //   }
-    },
-    // 生成
-    generate(obj) {
-      console.log(obj);
-      this.$router.push({
-        path: "/recordedtaile",
-        query: { billNumber: obj.row.billNumber }
-      });
-    },
-    // 搜索
-    onClickSearchBtn(...args) {
-      this.Form.submit();
-    },
-    handleCurrentChange(val) {
-      this.currentPage = val;
-      this.contractList();
-    },
-    showDeleteTip() {
-      CommonFun.deleteTip(
-        this,
-        this.contractIds,
-        "请至少选择一条信息！",
-        this.sureDelete,
-        this.cancelDelete
-      );
-    },
-    // 新增
-    goback() {
-      this.$router.back();
-    },
-    deleteRow(billNumber) {
-      LeaseManageApi.deleteMonthBill({ billNumber: billNumber }).then(res => {
-        this.Table.refreshTable();
-        // this.
-      });
-    },
-    // 更新
-    editRow() {},
-    // 作废
-    delRow(obj) {
-      var billNumber = obj.row.billNumber;
-      this.$confirm("确认作废吗？", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(res => {
-        this.$message({
-          type: "success",
-          message: "删除成功!"
-        });
-        this.deleteRow(billNumber);
-      });
     }
   },
-  created() {},
+  created() {
+    this.ids = this.$route.query.ids;
+  },
   mounted() {
     this.contractList();
+    this.$refs[this.leaseContractTable.ref].setCurrentPage(1);
+    this.leaseContractTable.serverMode.data = { ids: this.ids };
+    this.$refs[this.leaseContractTable.ref].refreshTable();
+    
   }
 };
 </script>
