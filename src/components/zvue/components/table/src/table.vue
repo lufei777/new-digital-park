@@ -300,6 +300,11 @@ export default {
 
     this._tableInit().then(_ => {
       this._dataIndexInit();
+      // 数据加载完成
+      this.$emit('onloadeddata', this);
+    }).catch((err) => {
+      // 数据未加载完成，报错
+      this.$emit('unloadeddata', err, this);
     })
     this.handleLoadDic();
   },
