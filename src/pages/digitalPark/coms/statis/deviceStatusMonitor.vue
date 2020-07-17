@@ -46,7 +46,9 @@ export default {
   methods:{
     async getMonitorState(){
       this.getProgressWidth = 75
-      let res = await CommonApi.getMonitorState();
+      let res = await CommonApi.getMonitorState({
+        moduleId:JSON.parse(localStorage.moduleInfo).id
+      });
       // let res = {
       //   values: [
       //     {

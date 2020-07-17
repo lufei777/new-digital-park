@@ -168,7 +168,8 @@ export default {
     },
     async getAssetAllTree() {
       let res = await CommonApi.getQueryDeviceBySpaceId({
-        spaceId: 1
+        spaceId: 1,
+        moduleId:JSON.parse(localStorage.moduleInfo).id
       });
 
       this.$refs[this.exportDataForm.ref].setColumnByProp("deviceId", {
@@ -261,7 +262,8 @@ export default {
   created() {
     CommonApi.getAssetAllTree({
       flag: "space",
-      locationRoot: 1
+      locationRoot: 1,
+      moduleId:JSON.parse(localStorage.moduleInfo).id
     }).then(res => {
       this.$refs[this.exportDataForm.ref].setColumnByProp("spaceId", {
         dicData: res

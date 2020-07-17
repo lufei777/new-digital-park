@@ -166,7 +166,8 @@
       async getAssetAllTree(){
         let res =  await CommonApi.getAssetAllTree({
           flag: "device",
-          locationRoot: 1
+          locationRoot: 1,
+          moduleId:JSON.parse(localStorage.moduleInfo).id
         })
         this.spaceList = res
       },
