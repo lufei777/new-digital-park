@@ -735,6 +735,16 @@ export const ElectricityManageDic = {
 		}
 	],
 	// 用电收费账单状态
+	checkStatus: [
+		{
+			label: '通过',
+			value: 1
+		},
+		{
+			label: '驳回',
+			value: 2
+		}
+	],
 	// 审核状态
 	status: [
 		{
@@ -742,16 +752,20 @@ export const ElectricityManageDic = {
 			value: 0
 		},
 		{
-			label: '驳回',
+			label: '已审核',
 			value: 1
 		},
 		{
-			label: '已录入',
+			label: '已驳回',
 			value: 2
 		},
 		{
-			label: '通过',
+			label: '审核中',
 			value: 3
+		},
+		{
+			label: '已录入',
+			value: 4
 		}
 	]
 }
@@ -883,7 +897,7 @@ export const MaintenanceManageDic = {
 	payRadio: [{
 		value: "0",
 		label: '全部'
-	},{
+	}, {
 		value: "1",
 		label: '收费任务'
 	},
@@ -892,10 +906,10 @@ export const MaintenanceManageDic = {
 		label: '免费任务'
 	}],
 
-	taskStatus:[{
+	taskStatus: [{
 		value: "0",
 		label: '全部'
-	},{
+	}, {
 		value: "1",
 		label: '待派单'
 	},

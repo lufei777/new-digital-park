@@ -12,7 +12,11 @@
     </template>
 
     <template slot="table">
-      <z-table :ref="tableData.ref" :options="tableData">
+      <z-table
+        :ref="tableData.ref"
+        :options="tableData"
+        :selectable="row => isLauncher(row) && row.examineState === 0"
+      >
         <template slot="custom-top" slot-scope="{size,selectedData}">
           <el-button :size="size" type="primary" @click="launchcharge">{{launchField}}</el-button>
           <el-button :size="size" type="primary" @click="entryRecord">录入</el-button>
@@ -182,9 +186,6 @@ export default {
           size: "small",
           height: "auto", //"", //高度
           selection: true //是否多选
-        },
-        tableMethods: {
-          selectable: row => this.isLauncher(row) && row.examineState === 0
         }
       }
     };
