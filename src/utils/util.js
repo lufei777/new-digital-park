@@ -1,7 +1,7 @@
 // 根据后台返回的路由获取拍平后的路由
-export const flatMenus = (menu, menus, menupaths) => {
-  let flatmenus = menus || [];
-  let flatmenupaths = menupaths || [];
+export const flatMenus = (menu = {}, menus = [], menupaths = []) => {
+  let flatmenus = menus;
+  let flatmenupaths = menupaths;
   // 挑选字段
   let { id, icon, name, routeAddress: path, clientType } = menu;
   // 放入集合
