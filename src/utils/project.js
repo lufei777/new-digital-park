@@ -48,7 +48,7 @@ export const isNorbulingkaScreen = () => {
 
 // 菜单项
 const MenuTreeKey = 'menuTree';
-export const setMenuTree = (menuTree) => {
+export const setMenuTree = (menuTree = []) => {
   return localStorage.setItem(MenuTreeKey, JSON.stringify(menuTree));
 }
 export const getMenuTree = () => {
