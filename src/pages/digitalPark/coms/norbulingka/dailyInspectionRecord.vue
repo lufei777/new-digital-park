@@ -10,20 +10,20 @@
         <span>维护类型</span>
         <span>巡检人员</span>
         <span>日期</span>
-        <span>处理结果</span>
+        <!--<span>处理结果</span>-->
       </div>
       <ul class="daily-list-ul">
         <li v-for="(item,index) in list" :key="index" class="item-task flex"
             :class="moduleItem.type!=2?'':'task-li'">
           <span>{{index+1}}</span>
-          <el-tooltip class="item" effect="dark" :content="item.typeStr" placement="top">
+          <el-tooltip class="item" effect="dark" :content="item.checkTypeMessage" placement="top">
             <span>{{item.checkTypeMessage}}</span>
           </el-tooltip>
           <span>{{item.person}}</span>
           <el-tooltip class="item" effect="dark" :content="item.date" placement="top">
             <span>{{item.date}}</span>
           </el-tooltip>
-          <span>{{item.result}}</span>
+          <!--<span>{{item.result}}</span>-->
         </li>
       </ul>
     </div>
@@ -113,15 +113,19 @@
       }
 
       span:nth-child(1) {
-        width: 15%;
+        width: 20%;
+      }
+
+      span:nth-child(2) {
+        width: 30%;
       }
 
       span:nth-child(3) {
-        width: 23%;
+        width: 20%;
       }
 
       span:nth-child(4) {
-        width: 22%;
+        width: 30%;
       }
     }
 
@@ -142,21 +146,20 @@
         height: 30px;
         line-height: 30px;
       }
-
       span:nth-child(1) {
-        width: 15%;
+        width: 20%;
+      }
+
+      span:nth-child(2) {
+        width: 30%;
       }
 
       span:nth-child(3) {
-        width: 23%;
+        width: 20%;
       }
 
-      /*span:nth-child(3){*/
-      /*width:22%;*/
-      /*}*/
-
       span:nth-child(4) {
-        width: 22%;
+        width: 30%;
       }
     }
   }

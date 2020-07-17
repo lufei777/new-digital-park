@@ -53,6 +53,14 @@ export default {
     }),
     routePathFlag(){
       return this.$route.path=='/vibe-web'?true:false
+    },
+  },
+  watch: {
+    menuIsCollapse(val) {
+      this.menuConfig.isCollapse = val;
+    },
+    menuData(){
+      document.title = this.menuData.name;
     }
   },
   methods: {
@@ -66,11 +74,6 @@ export default {
   mounted() {
     document.title = this.menuData.name;
   },
-  watch: {
-    menuIsCollapse(val) {
-      this.menuConfig.isCollapse = val;
-    }
-  }
 };
 </script>
 

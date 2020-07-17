@@ -26,6 +26,11 @@ export default {
       let hasDefaultPage = false;
       this.breadcrumb.length = 0;
       // 从路由中获取matched
+      console.log(this.$route.matched)
+      let vibe = this.$route.matched.find(item=>item.path=='/vibe-web')
+      if(vibe){
+        this.breadcrumb=[]
+      }
       this.$route.matched.forEach((route, index) => {
         if (route.meta.title) {
           if (route.path == "/digitalPark/defaultPage") hasDefaultPage = true;
