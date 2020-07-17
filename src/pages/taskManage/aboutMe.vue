@@ -19,15 +19,15 @@
             </div>
             <z-table :ref="tableData.ref" :options="tableData">
               <template slot="operation" slot-scope="obj">
-                <el-button
+                <!-- <el-button
                   type="text"
                   v-for="(item,index) in obj.row.ownBtnList"
                   :key="index"
                   @click="item.event(obj)"
-                >{{item.text}}</el-button>
-                <!-- <el-button type="text" @click="editRow(obj)">详情</el-button>
+                >{{item.text}}</el-button> -->
+                <el-button type="text" @click="editRow(obj)">详情</el-button>
                 <el-button type="text" @click="deleteRow(obj)" v-if="deleteRowShow">删除</el-button>
-                <el-button type="text" @click="taskPosition(obj)">定位</el-button>-->
+                <el-button type="text" @click="taskPosition(obj)">定位</el-button>
                 <!-- window.parent.FindAssetLocation -->
               </template>
             </z-table>
@@ -527,7 +527,6 @@ export default {
 </script>
 
 <style lang="less">
-@import "../commonProject/less/popupStyle.less";
 .about-me {
   height: 100%;
   .el-tabs {

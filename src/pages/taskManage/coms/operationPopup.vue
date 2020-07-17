@@ -1,10 +1,11 @@
 <template>
-  <div class="add-role popup-style" v-show="dialogFormShow">
+  <div class="add-role" v-show="dialogFormShow">
     <el-dialog
+      v-dialogDrag
       :title="dialogTitle"
       :visible.sync="dialogFormShow"
       width="30%"
-      custom-class="per-modal"
+      custom-class="popup-style"
       :before-close="dialogClose"
     >
       <z-form :ref="formConfig.ref" :options="formConfig" v-model="formModel" @submit="submit">
@@ -17,7 +18,6 @@
 </template>
 
 <script>
-import SystemManageApi from "@/service/api/systemManage";
 import TaskManageApi from "@/service/api/taskManage";
 export default {
   props: ["dialogParams", "dialogFormShow", "specialFormShow", "dialogTitle"],
@@ -52,7 +52,7 @@ export default {
           },
           {
             type: "select",
-            label: "指派",
+            label: "接单人",
             prop: "designatorId",
             placeholder: "请输入",
             display: false,
