@@ -25,12 +25,18 @@
         </template>-->
         <template slot="operation" slot-scope="{row}">
           <el-button type="text" @click="propertyDetail({row})">详情</el-button>
-          <el-button type="text" @click="checkDetailDialog = true,checkDetailModel.id = row.id">生成账单</el-button>
+          <template v-if="hasCheck(row.detailsStatus)">
+            <el-button
+              type="text"
+              @click="checkDetailDialog = true,checkDetailModel.id = row.id"
+            >生成账单</el-button>
+          </template>
         </template>
       </z-table>
     </div>
     <el-dialog
-      title="审核收费明细"
+      v-dialogDrag
+      title="收费明细审核"
       :visible.sync="checkDetailDialog"
       width="30%"
       @close="checkDetailModel = {}"
@@ -43,8 +49,9 @@
 import { ElectricityManageDic } from "@/utils/dictionary";
 import electricityManageApi from 'api/electricityManage';
 import commonFun from "@/utils/commonFun.js";
+import props from '../common/props';
 
-import { status } from '../config';
+import { status, checkStatus } from '../config';
 const dateValueFormat = "yyyy-MM-dd";
 let tableSendData = {
   pageNum: 1,
@@ -52,6 +59,7 @@ let tableSendData = {
 };
 
 export default {
+  mixins: [props()],
   data() {
     return {
       checkDetailDialog: false,
@@ -172,10 +180,9 @@ export default {
         itemSpan: 24,
         forms: [
           {
-            ...status,
+            ...checkStatus,
             type: 'radio',
             prop: 'detailsStatus',
-            label: '审核结果',
             rules: {
               required: true
             },

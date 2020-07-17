@@ -12,7 +12,11 @@
     </div>
 
     <div class="table panel">
-      <z-table :ref="tableOptions.ref" :options="tableOptions">
+      <z-table
+        :ref="tableOptions.ref"
+        :options="tableOptions"
+        :selectable="row => isCurrentUser(row.operator) && hasRejected(row.status)"
+      >
         <template slot="custom-top" slot-scope="{size,selectedData}">
           <el-button :size="size" type="primary" @click="addedProperty">新增</el-button>
           <el-button
@@ -23,19 +27,42 @@
           >批量删除</el-button>
         </template>
         <template slot="operation" slot-scope="{size,row}">
-          <el-button :size="size" type="text" @click="propertyEdit({row})">编辑</el-button>
-          <el-button :size="size" type="text" @click="propertyDel({row})">删除</el-button>
+          <!-- 发起人不能编辑，删除 -->
+          <template v-if="isCurrentUser(row.operator)">
+            <!-- 驳回后，发起人才可删除编辑 -->
+            <template v-if="hasRejected(row.status)">
+              <el-button :size="size" type="text" @click="propertyEdit({row})">编辑</el-button>
+              <el-button :size="size" type="text" @click="propertyDel({row})">删除</el-button>
+            </template>
+          </template>
+          <!-- 审核人 -->
+          <template v-else>
+            <!-- 待审核才有审核 -->
+            <template v-if="hasCheck(row.status)">
+              <el-button :size="size" type="text" @click="propertyCheck({row})">审核</el-button>
+            </template>
+          </template>
           <el-button :size="size" type="text" @click="propertyDetail({row})">详情</el-button>
         </template>
       </z-table>
     </div>
+
+    <el-dialog
+      v-dialogDrag
+      title="抄表记录审核"
+      :visible.sync="checkDialog"
+      width="30%"
+      @close="checkModel = {}"
+    >
+      <z-form v-model="checkModel" :options="checkFormOptions" @submit="checkSubmit"></z-form>
+    </el-dialog>
   </div>
 </template>
 <script>
-import { ElectricityManageDic } from "@/utils/dictionary";
 import electricityManageApi from 'api/electricityManage';
 import commonFun from "@/utils/commonFun.js";
-import { status, useType } from '../config';
+import { status, useType, checkStatus } from '../config';
+import props from '../common/props';
 
 const dateValueFormat = "yyyy-MM-dd";
 let tableSendData = {
@@ -44,6 +71,7 @@ let tableSendData = {
 };
 
 export default {
+  mixins: [props()],
   data() {
     return {
       tenantElecId: '',
@@ -81,7 +109,7 @@ export default {
         ref: "Table",
         customTop: true,
         operation: {
-          width: 250
+          width: 200
         },
         serverMode: {
           url: electricityManageApi.selectReadMeterRecord,
@@ -149,6 +177,29 @@ export default {
           selection: true,
           showIndex: true
         }
+      },
+      checkDialog: false,
+      checkModel: {},
+      checkFormOptions: {
+        itemSpan: 24,
+        forms: [
+          {
+            ...checkStatus,
+            type: 'radio',
+            rules: {
+              required: true
+            },
+            valueDefault: 2
+          },
+          {
+            type: 'textarea',
+            prop: 'examineIdea',
+            label: '审核意见',
+            rules: {
+              required: true
+            }
+          }
+        ]
       }
     };
   },
@@ -219,8 +270,20 @@ export default {
         query: { id: row.id, flag: "detail", row: JSON.stringify(row) }
       });
     },
+    propertyCheck({ row }) {
+      this.checkModel.recordId = row.recordId;
+      this.checkDialog = true;
+    },
+    checkSubmit(model, done) {
+      electricityManageApi.readMeterToExamine(model).then(res => {
+        this.checkDialog = false;
+        this.refreshTable();
+      }).finally(() => {
+        done();
+      })
+    },
     refreshTable() {
-      this.Table.refreshTable();
+      return this.Table.refreshTable();
     }
   },
   computed: {
