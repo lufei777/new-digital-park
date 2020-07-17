@@ -21,7 +21,6 @@ export default {
 
 <style lang="less">
 .add-maintenance {
-  background: pink;
-  height: 100%;
+  // height: 100%;
 }
 </style>

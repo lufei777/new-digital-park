@@ -657,7 +657,7 @@ export default {
     anotherSubmit() {
       if (
         this.taskId.acceptStatus == 3 &&
-        !this.newTaskForm.forms[10].display
+        !this.newTaskForm.forms[12].display
       ) {
         this.$refs[this.newTaskForm.ref].setColumnByProp("reason", {
           display: true,
@@ -674,7 +674,7 @@ export default {
         return;
       } else if (
         this.taskId.acceptStatus == 2 &&
-        !this.newTaskForm.forms[10].display
+        !this.newTaskForm.forms[12].display
       ) {
         this.taskTypeStatus = 4;
         this.$refs[this.newTaskForm.ref].setColumnByProp("reason", {
@@ -934,11 +934,12 @@ export default {
 <style lang="less">
 .new-task {
   .new-task-box {
-    padding: 40px 0;
-    width: 50%;
+    // padding: 40px 0;
+    width: 60%;
     // background: pink;
     // margin-top: 20px;
-    margin-left: 25%;
+    // margin-left: 25%;
+     margin: 40px auto;
   }
   .flow-detail-title {
     height: 50px;
