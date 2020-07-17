@@ -197,6 +197,7 @@ export default {
       if (this.noDetailHandler && ![this.column.props || this.props].lazy) {
         let obj = {};
         setValueByPath(obj, this.column.prop, this.text)
+
         displayValue = detail(obj, this.column, this.column.props, this.dic);
 
         displayValue instanceof Array ? displayValue = displayValue.join(DIC_SPLIT) : '';

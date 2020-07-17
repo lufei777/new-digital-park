@@ -5,7 +5,7 @@
       <Tree :tree-list="treeList" :tree-config="treeConfig"/>
     </div>
     <div class="right-content  panel-container">
-      <div class="choose-box flex-align radius-shadow panel" v-if="fromFlag!=4">
+      <div class="flex-align radius-shadow panel" v-if="fromFlag!=4">
         <div class="item-group flex-align-center">
           <label>编号：</label>
           <el-input v-model="searchParams.id"/>

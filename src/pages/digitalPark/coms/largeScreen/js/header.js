@@ -101,11 +101,11 @@ class commonLargeHeader {
     let menuTree = JSON.parse(localStorage.getItem("menuTree"));
     console.log("menuTree",menuTree)
     let firstLevelTree = menuTree[0].childNode.find(
-      item => (item.name == "基础功能" || item.name=='园区管理')
+      item => (item.name == "基础功能")
     );
     console.log("fitst",firstLevelTree)
     let secondLevelTree = firstLevelTree.childNode.find(
-      item => (item.name == "系统管理"|| item.name=='园区管理')
+      item => (item.name == "系统管理")
     );
    store.commit("digitalPark/menuList", secondLevelTree)
   }

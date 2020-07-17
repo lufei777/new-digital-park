@@ -535,9 +535,10 @@ export default {
     if (Object.keys(this.$route.query).length !== 0) {
       let params = this.$route.params;
       let flag = this.$route.query.flag;
-      let model = JSON.parse(this.$route.query.model);
+      let model = this.$route.query.model;
       // 传递过来的数据
       if (!_.isEmpty(model)) {
+        model = JSON.parse(model);
         this.pageConfig = apiConfig[flag];
         this.model = { ...this.model, ...model };
 

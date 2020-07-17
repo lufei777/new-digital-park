@@ -21,7 +21,7 @@ import revenueExpendManageApi from 'api/revenueExpendManage';
 import { code } from '../config';
 
 const {
-  getIncomeRecordList, /** 表格列表 */
+  getIncomeRecordList:getListApi, /** 表格列表 */
   getNoticeType/** 收费类型编码 */
 } = revenueExpendManageApi;
 let tableSendData = {
@@ -69,7 +69,7 @@ export default {
         ref: "Table",
         customTop: true,
         serverMode: {
-          url: getIncomeRecordList,
+          url: getListApi,
           data: tableSendData
         },
         columnConfig: [

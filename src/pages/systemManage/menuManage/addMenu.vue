@@ -5,15 +5,10 @@
               v-model="formModel" @submit="submit"
       >
         <template slot="icon" slot-scope="scope">
-          <i v-if="formModel.icon" class="iconfont" :class="formModel.icon"></i>
-          <span v-if="!formModel.icon">--</span>
-        </template>
-        <template slot="productBgUrl" slot-scope="scope">
-          <img v-if='formModel.productBgUrl'
-               :src="'../../../../static/image/digitalPark/'+formModel.productBgUrl+'.png'"
-               alt=""
-          />
-          <span v-if="!formModel.productBgUrl">--</span>
+          <div>
+            <el-input type="text" v-model="formModel.icon" class="icon-input"/>
+            <i class="iconfont" :class="formModel.icon"></i>
+          </div>
         </template>
         <template slot="menuBtn" slot-scope="scope">
           <el-button @click="goBack(scope)">返回</el-button>
@@ -24,7 +19,7 @@
 </template>
 
 <script>
-  import {SystemDic} from "@/utils/dictionary";
+  import {SystemDic,CommonDic} from "@/utils/dictionary";
   import SystemManageApi from '@/service/api/systemManage'
 
   export default {
@@ -101,7 +96,7 @@
               type: "tree",
               label: "上层菜单",
               prop: "pid",
-              valueDefault: '0',
+              // valueDefault: '0',
               span: 24,
               dicData: [],
               props: {
@@ -149,12 +144,37 @@
               span: 24,
             },
             {
-              // type: "upload",
-              // listType: "picture-img",
-              label: '背景图',
-              prop: 'productBgUrl',
-              formslot: true,
+              type: "radio",
+              label: '是否显示在功能模块',
+              prop: 'status',
+              valueDefault: 1,
+              dicData: [
+                {
+                  label: '是',
+                  value: 2
+                },
+                {
+                  label: '否',
+                  value: 1
+                }
+              ],
+              change:_this.onStatusChange,
               span: 24,
+            },
+            {
+              type: "upload",
+              listType: "picture-img",
+              label: "背景图",
+              prop: 'productBgUrl',
+              action: "/oaApi/image/upload",
+              accept: ["jpg", "jpeg", "png"],
+              propsHttp: {
+                name: "fileName",
+                url: "fileUrl",
+                res: "data"
+              },
+              span: 24,
+              hide:true
             },
           ]
         },
@@ -167,7 +187,7 @@
         return this.$route.query.menuId
       },
       api() {
-        return 'editMenu'
+        return this.menuId?'editMenu':'addMenu'
       }
     },
     watch: {},
@@ -179,7 +199,6 @@
         let res = await SystemManageApi.getMenuDetail({
           menuId: this.menuId
         })
-        res.routeAddress = res.routeAddress ? res.routeAddress : '--'
         this.formModel = res
       },
       async submit(model, hide) {
@@ -217,21 +236,41 @@
       },
       onClickParentNode(val) {
         this.curParentMenu = val
+      },
+      onStatusChange(data){
+        if(data.value==1){
+          this.$refs[this.formConfig.ref].setColumnByProp("productBgUrl", {
+            hide: true
+          });
+        }else{
+          this.$refs[this.formConfig.ref].setColumnByProp("productBgUrl", {
+            hide: false
+          });
+        }
+      },
+      async getData(){
+        if (!this.menuId) {
+          await this.getMenuList()
+        } else if (this.menuId) {
+          await this.getMenuDetail()
+          if (this.formModel.level == 1) {
+            this.$refs[this.formConfig.ref].setColumnByProp("pid", {
+              hide: true
+            });
+            this.$refs[this.formConfig.ref].setColumnByProp("status", {
+              hide: true
+            });
+            this.$refs[this.formConfig.ref].setColumnByProp("routeAddress", {
+              disabled: true
+            });
+          } else {
+            await this.getMenuList()
+          }
+        }
       }
     },
     async mounted() {
-      if (!this.menuId) {
-        await this.getMenuList()
-      } else if (this.menuId) {
-        await this.getMenuDetail()
-        if (this.formModel.level == 1) {
-          this.$refs[this.formConfig.ref].setColumnByProp("pid", {
-            hide: true
-          });
-        } else {
-          await this.getMenuList()
-        }
-      }
+      this.getData()
     }
   }
 </script>
@@ -245,6 +284,18 @@
     .form-box {
       width: 50%;
       margin: 0 auto;
+    }
+    .zvue-form-wrapper .zvue-form-upload .picture-list .el-upload {
+      border: none;
+    }
+
+    /deep/ .zvue-form-wrapper .zvue-form-upload .avatar {
+      width: 250px;
+      /*height:100%;*/
+    }
+    .icon-input{
+      width:50%;
+      margin-right: 20px;
     }
   }
 </style>

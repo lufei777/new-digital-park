@@ -298,9 +298,10 @@ export default {
       this.options.uiConfig.pagination = {};
     }
 
-    this._tableInit();
+    this._tableInit().then(_ => {
+      this._dataIndexInit();
+    })
     this.handleLoadDic();
-    // this._dataIndexInit();
   },
   mounted() {
     this.$nextTick(() => {
@@ -664,46 +665,60 @@ export default {
     },
     //行取消
     rowCanel(row, index) {
-      if (this.validatenull(row[this.rowKey])) {
-        this.tableShowData.splice(index, 1);
-        return;
+      if (row.$cellEdit) {
+        if (this.validatenull(row[this.rowKey])) {
+          this.tableShowData.splice(index, 1);
+          return;
+        }
+        // this.$set(row, '$cellEdit', false);
+        // 行编辑状态重设
+        this.rowCancelSaveCurStatus(row, index);
+        // 编辑取消事件
+        this.$emit("row-edit-cancel", row, index);
       }
-      // this.$set(row, '$cellEdit', false);
-      // 行编辑状态重设
-      this.rowCancelSaveCurStatus(row, index);
-      // 编辑取消事件
-      this.$emit("row-edit-cancel", row, index);
     },
     // 单元格编辑
     rowCellEdit(row, index) {
-      this.$set(row, '$cellEdit', true);
-      // 行编辑状态保存
-      this.rowEditSaveCurStatus(row, index);
-      // 编辑事件
-      this.$emit("row-edit", row, index);
+      if (!(row.$cellEdit === true)) {
+        row.$cellEdit = true;
+        this.$set(this.tableShowData, index, row);
+        // 行编辑状态保存
+        this.rowEditSaveCurStatus(row, index);
+        // 编辑事件
+        this.$emit("row-edit", row, index);
+      }
     },
     //单元格更新
     rowCellUpdate(row, index) {
-      this.asyncValidator(this.formCellRules, row).then(res => {
-        this.$set(row, '$btnDisabled', true);
-        this.$emit(
-          "row-update",
-          row,
-          index,
-          () => {
-            /* row.$cellEdit = false;
-            this.$set(this.tableShowData, index, row); */
-            this.$set(row, '$cellEdit', false);
-            this.$set(row, '$btnDisabled', false);
-          },
-          () => {
-            this.$set(row, '$btnDisabled', false);
-          }
-        );
-      }).catch(errors => {
-        errors[0].message = `第${index + 1}行：${errors[0].message}`;
-        this.$message.warning(errors[0]);
-      });
+      return new Promise((resolve, reject) => {
+        this.asyncValidator(this.formCellRules, row).then(res => {
+          this.$set(row, '$btnDisabled', true);
+
+          // 返回参数
+          const cbParams = [row, index,
+            () => {
+              /* row.$cellEdit = false;
+              this.$set(this.tableShowData, index, row); */
+              this.$set(row, '$cellEdit', false);
+              this.$set(row, '$btnDisabled', false);
+              this.formCascaderList[index] = row;
+            }, () => {
+              this.$set(row, '$btnDisabled', false);
+            }
+          ]
+
+          this.$emit("row-update", ...cbParams);
+
+          resolve(...cbParams)
+          // 通过promise返回
+        }).catch(errors => {
+          setTimeout(() => {
+            errors[0].message = `第${index + 1}行：${errors[0].message}`;
+            this.$message.warning(errors[0]);
+          }, 0);
+          reject(errors)
+        });
+      })
     },
     rowEditSaveCurStatus(row, index) {
       //缓冲行数据
@@ -713,12 +728,19 @@ export default {
       }, 1000);
     },
     rowCancelSaveCurStatus(row, index) {
+      let cacheRow = this.formCascaderList[index];
+      // 如果没有缓存数据，则为当前行数据
+      if (!cacheRow) {
+        cacheRow = this.tableShowData[index];
+      }
       // 将编辑状态改变
-      this.formCascaderList[index].$cellEdit = false;
+      cacheRow.$cellEdit = false;
       // 重新设置回行数据
-      this.$set(this.tableShowData, index, this.formCascaderList[index]);
+      this.$set(this.tableShowData, index, cacheRow);
 
       this.formIndexList.splice(this.formIndexList.indexOf(index), 1);
+
+      this.clearSelection();
     },
 
     /**
@@ -1155,7 +1177,7 @@ export default {
     //动态监测tableConfig.data的改变，有可能外部ajax改变data值
     "options.data"(val) {
       this._setTableData(val);
-      // this._dataIndexInit();
+      this._dataIndexInit();
     },
     tableData(newVal, oldVal) {
       if (newVal instanceof Array) {
