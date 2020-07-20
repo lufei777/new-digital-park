@@ -39,7 +39,8 @@ export default {
         pageNum: 1,
         pageCount:5,
         start: "",
-        end: ""
+        end: "",
+        moduleId:JSON.parse(localStorage.moduleInfo).id
       });
       if (res) {
         this.tableData = res.rows;

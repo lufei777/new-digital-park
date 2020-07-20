@@ -306,7 +306,8 @@
       async getAssetAllTree() {
         this.treeList = await CommonApi.getAssetAllTree({
           flag: 'space',
-          locationRoot: 1
+          locationRoot: 1,
+          moduleId:JSON.parse(localStorage.moduleInfo).id
         })
         this.treeConfig.defaultExpandedkeys = [this.treeList && this.treeList[0].id]
       },

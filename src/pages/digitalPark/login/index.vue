@@ -122,7 +122,7 @@ export default {
       // 获取用户信息
       this.$store.dispatch('user/getUserInfo').then(()=>{
         // 获取菜单并规划菜单
-        this.$store.dispatch('digitalPark/getMenus').then(res => {
+        this.$store.dispatch('digitalPark/getMenus').then((res=[]) => {
           // 活后台返回菜单拍平path
           let flat = flatMenus(res[0]);
           // 将私有路由进行拆分 验证

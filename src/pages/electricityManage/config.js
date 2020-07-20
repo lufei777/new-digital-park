@@ -35,3 +35,11 @@ export let useType = {
   type: 'select',
   dicData: ElectricityManageDic.useType
 }
+
+// 审核状态 
+export let checkStatus = {
+  prop: "status",
+  label: "审核结果",
+  type: 'select',
+  dicData: ElectricityManageDic.checkStatus
+}

@@ -23,7 +23,8 @@
           spaceId: 1,
           type: 2002,
           catalogIds: 2001,
-          flag: 'device'
+          flag: 'device',
+          moduleId:JSON.parse(localStorage.moduleInfo).id
         })
         res.list.rows.map(async(item,index)=>{
           if(index<4){

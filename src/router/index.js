@@ -48,7 +48,7 @@ let publicRouters = [].concat(
   ExportData,
   SystemManage,
   FinancialManage,
-  taskManage,
+  ElectricityManage
 )
 
 // 数字园区 私有模块

@@ -152,4 +152,20 @@ export default new class {
 	@url('/oaApi/month/bill/queryMonthBillList')
 	@get
 	queryMonthBillList() {}
+
+
+	// 查询需要审核的数据  审核+批量审核
+	/**
+	 * ids:id
+	 * */ 
+	@url('/oaApi/month/bill/queryNeedExamineDate')
+	@get
+	queryNeedExamineDate() { }
+
+
+	// 批量审核 + 提交 /examineMonthBill/useMonthBillExamine
+	@url('/oaApi/examineMonthBill/useMonthBillExamine')
+	@post
+	useMonthBillExamine() { }
+
 }();

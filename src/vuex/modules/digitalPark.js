@@ -109,7 +109,7 @@ const actions = {
       DigitalParkApi.getMenuTree({
         language: Cookies.get("lang"),
         userId:userInfo.id
-      }).then(menuTree => {
+      }).then((menuTree =[]) => {
         commit('setMenuTree', menuTree);
         // 设置到localStorage
         setMenuTree(menuTree);

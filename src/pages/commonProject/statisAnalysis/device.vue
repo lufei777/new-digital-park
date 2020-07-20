@@ -47,7 +47,9 @@ export default {
   },
   methods: {
     async getMonitorState() {
-      let res = await CommonApi.getMonitorState();
+      let res = await CommonApi.getMonitorState({
+        moduleId:JSON.parse(localStorage.moduleInfo).id
+      });
       this.createColumnEcharts(res);
       this.createPieEcharts(res);
 
