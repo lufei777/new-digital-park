@@ -129,7 +129,7 @@
           type: 'success',
           message: '删除成功!'
         });
-        this.$store.commit('digitalPark/homeKeepAliveFlag',false)
+        CommonFun.setHomeKeepAliveFlag()
         this.getMenuList()
       },
       onClickExportBtn() {

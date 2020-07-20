@@ -16,5 +16,20 @@ export default [{
     name:'CategoryReport',
     component:CategoryReport,
     meta:{title:'分项能耗报表'}
+  },{
+    path:'/elecReport',
+    name:'ElecReport',
+    component:()=>import('@/pages/commonProject/dataReport/elecReport'),
+    meta:{title:'用电报表'}
+  },{
+    path:'/waterReport',
+    name:'WaterReport',
+    component:()=>import('@/pages/commonProject/dataReport/waterReport'),
+    meta:{title:'用水报表'}
+  },{
+    path:'/coldReport',
+    name:'ColdReport',
+    component:()=>import('@/pages/commonProject/dataReport/coldReport'),
+    meta:{title:'用冷报表'}
   }]
 }]

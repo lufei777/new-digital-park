@@ -5,6 +5,7 @@
 <script>
   import DataReport from './dataReport'
   export default {
+
     name: 'ColdReport',
     components: {
       DataReport

@@ -21,7 +21,7 @@
 <script>
   import {SystemDic,CommonDic} from "@/utils/dictionary";
   import SystemManageApi from '@/service/api/systemManage'
-
+  import CommonFun from '@/utils/commonFun'
   export default {
     name: 'AddMenu',
     components: {},
@@ -210,7 +210,7 @@
             });
             this.$router.push('/menuManage')
             this.$store.dispatch('digitalPark/getMenus')
-            this.$store.commit('digitalPark/homeKeepAliveFlag',false)
+            CommonFun.setHomeKeepAliveFlag()
           })
           .finally(msg => {
             hide();

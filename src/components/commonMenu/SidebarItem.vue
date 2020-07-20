@@ -132,7 +132,7 @@
         for(let i=0;i<menu.length;i++){
           let item = menu[i]
           let tmp = flag=='id'?item.id==this.menuModuleId:item.routeAddress==this.$route.path
-          console.log(item,this.menuModuleId,item.id==this.menuModuleId)
+          // console.log(item,this.menuModuleId,item.id==this.menuModuleId)
           if(tmp){
             return item
           }else{

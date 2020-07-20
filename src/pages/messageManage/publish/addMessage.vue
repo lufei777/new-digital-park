@@ -25,7 +25,7 @@
   import MessageManageApi from "@/service/api/messageManage";
   import {isYDScreen} from "@/utils/project";
   import moment from 'moment'
-
+  import CommonFun from '@/utils/commonFun'
   export default {
     name: "AddMessage",
     data() {
@@ -245,7 +245,7 @@
             });
         }
         this.$router.push("/publishManage")
-        this.$store.commit('digitalPark/homeKeepAliveFlag',false)
+        CommonFun.setHomeKeepAliveFlag()
       },
       goBack() {
         history.go(-1)

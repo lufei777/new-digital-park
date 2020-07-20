@@ -91,7 +91,7 @@
           onClickTreeNodeCallBack: this.onClickTreeNodeCallBack,
           defaultExpandedkeys: [],
           currentKey: '',
-          expandOnClickNode:false
+          expandOnClickNode: false
         },
         searchParams: searchParams,
         tableConfig: {
@@ -121,13 +121,15 @@
         deleteId: '',
         delConfig: config.delConfig,
         curTreeNode: {},
-        userCheckFlag:false  //true：是用户点击的 false：程序回显
+        userCheckFlag: false,  //true：是用户点击的  false：程序回显
+        curPerList: []  //所选不是最子级模块时，存储当前模块下所有子级权限。用于取消全部子级时，父级权限同步取消
       }
     },
     computed: {
       ...mapState({
         menuIsCollapse: state => state.digitalPark.menuIsCollapse,
-        permissionIdsList: state => state.digitalPark.permissionIdsList
+        permissionIdsList: state => state.digitalPark.permissionIdsList,
+        userInfo: state => state.user.userInfo
       }),
       nameLabel() {
         return this.fromFlag == 2 ? '工程用名' : '机构简称'
@@ -292,7 +294,9 @@
         return params
       },
       async getDeptTree() {
-        this.treeList = await SystemManageApi.getDepartmentTree()
+        this.treeList = await SystemManageApi.getDepartmentTree({
+          userId: this.userInfo.id
+        })
         this.treeConfig.defaultExpandedkeys = [this.treeList[0].id]
         if (this.fromFlag == 1) {
           // this.treeConfig.currentKey = this.treeList[0].id
@@ -308,7 +312,7 @@
       },
       async getPermissionTree() {
         // let treeList = await SystemManageApi.getPermissionTree()
-        this.treeList = await SystemManageApi.getPermissionTree()
+        this.treeList = await SystemManageApi.getPermissionTree({})
         this.treeConfig.defaultExpandedkeys = [this.treeList[0].id]
       },
       onClickTreeNodeCallBack(val) {
@@ -322,13 +326,8 @@
           this.searchParams.parent = val.id
         } else if (this.fromFlag == 4) {
           this.curTreeNode = val
-          let selectData = this.$refs[this.tableConfig.ref].selectedData.map((item) => item.id)
-          // console.log(this.permissionIdsList)
-          let tmp = this.permissionIdsList.concat(selectData)
-          this.$store.commit('digitalPark/permissionIdsList', tmp)
-          // console.log("this.",this.$refs[this.tableConfig.ref].allData)
           this.searchParams.menuId = val.id
-          this.getData()
+          this.setCheckedPermission()
         }
       },
       onClickSearchBtn() {
@@ -344,7 +343,7 @@
         this.tableConfig.serverMode.data = {...this.searchParams, ...pageInfo}
         this.$refs[this.tableConfig.ref].refreshTable().then(() => {
           if (this.fromFlag == 4 && this.hideBtn == true) {
-            this.setPermission()
+            this.setHadPermission()
           }
         })
       },
@@ -424,75 +423,137 @@
           await this.getPermissionTree()
         }
       },
-       onSelectCheckBox(selection, row) {
-        this.userCheckFlag=true
+      onSelectAllCheckBox(selection) {
+        // console.log('select-all', this.userCheckFlag)
+        this.userCheckFlag = true
+        this.handleCheck(selection)
       },
-      onSelectAllCheckBox(){
-        this.userCheckFlag=true
+      onSelectCheckBox(selection, row) {
+        // console.log("select", this.userCheckFlag)
+        this.userCheckFlag = true
+        this.handleCheck(selection)
       },
-      async onSelectionChange(selection) {
-        // console.log("selection",selection)
-        let permissionIds = this.permissionIdsList
-        // console.log(this.curTreeNode,selection.length)
-        //如果勾选的是父节点,则同步勾选/取消勾选子节点
+      async handleCheck(selection) {
         if (this.curTreeNode.childNode && this.curTreeNode.childNode.length && this.userCheckFlag) {
+          let permissionIds = this.permissionIdsList
           let res = await SystemManageApi.getChildList({
             parentId: this.curTreeNode.id
           })
           res.push(this.$refs[this.tableConfig.ref].allData[0].id)
           let tmp = []
+          console.log(selection.length)
           if (selection.length) {
             tmp = [...new Set(permissionIds.concat(res))]
           } else {
-            console.log(permissionIds,res)
-            res.map((item)=>{
-              permissionIds.map((per,index)=>{
-                if(item==per){
-                  permissionIds.splice(index,1)
+            console.log(permissionIds, res)
+            res.map((item) => {
+              permissionIds.map((per, index) => {
+                if (item == per) {
+                  permissionIds.splice(index, 1)
                 }
               })
             })
             permissionIds.splice()
             tmp = permissionIds
           }
-          console.log("tmp",tmp)
-          this.$store.commit('digitalPark/permissionIdsList',tmp)
-        }else{
-          //pType 0：只读权限 1:写权限   若勾选写权限，则必须勾选读权限
-          const Table = this.$refs[this.tableConfig.ref];
-          let writePermission = selection.find((item) => {
-            return item.pType == 1
+          // console.log("tmp", tmp)
+          this.$store.commit('digitalPark/permissionIdsList', tmp)
+        }
+      },
+      async onSelectionChange(selection) {
+        //如果勾选的是父节点,则同步勾选/取消勾选子节点
+        //pType 0：只读权限 1:写权限   若勾选写权限，则必须勾选读权限
+        const Table = this.$refs[this.tableConfig.ref];
+        let writePermission = selection.find((item) => {
+          return item.pType == 1
+        })
+        if (writePermission) {
+          let readPermissionIndex = Table.allData.find((item) => {
+            return item.pType == 0
           })
-          if (writePermission) {
-            let readPermissionIndex = Table.allData.find((item) => {
-              return item.pType == 0
-            })
-            if (readPermissionIndex != -1) {
-              Table.toggleSelection(readPermissionIndex, true)
-            }
+          if (readPermissionIndex != -1) {
+            Table.toggleSelection(readPermissionIndex, true)
           }
         }
-
       },
       getAssignList() {
         let tmp = this.$refs[this.tableConfig.ref].selectedData
         return tmp
       },
-      setPermission() {
-        //已有权限回显
+      async setHadPermission() {
+        //从接口拿到的已有权限+已经勾选的回显
+
         let permissionIds = this.permissionIdsList
+
+
         this.$refs[this.tableConfig.ref].allData.map((item, index) => {
           let flag = permissionIds.findIndex((per) => {
             return item.id == per
           })
+          console.log("flag",flag,index)
+
           if (flag != -1) {
-            this.userCheckFlag=false
+            this.userCheckFlag = false
             this.$refs[this.tableConfig.ref].toggleSelection(index, true)
             permissionIds.splice(flag, 1)
           }
         })
+
+        //如果切到的是父级模块，子级有勾选则父级勾选，子级全都没有勾选，则父级不勾选。
+        if (this.curTreeNode.childNode && this.curTreeNode.childNode.length) {
+
+          let res = await SystemManageApi.getChildList({
+            parentId: this.curTreeNode.id
+          })
+
+          //判断是否有勾选任意子级
+          let obj;
+          for(let i=0;i<res.length;i++){
+            obj = permissionIds.find((per) => {
+                return res[i]==per
+            })
+            if(obj){
+              break ;
+            }
+          }
+          console.log("obg",obj)
+
+          let data = this.$refs[this.tableConfig.ref].selectedData
+          if (data.length && !obj) {
+            //父级是勾选状态但权限列表没有勾选任意子级
+            let index = permissionIds.findIndex((per) => {
+              return per==data[0].id
+            })
+            permissionIds.splice(index,1)
+            this.userCheckFlag = false
+            this.$refs[this.tableConfig.ref].toggleSelection(0, false)
+          }else if(!data.length && obj){
+            //父级不是勾选状态但有勾选任意子级
+            this.$refs[this.tableConfig.ref].toggleSelection(0, true)
+          }
+
+        }
+
+
         this.$store.commit('digitalPark/permissionIdsList', permissionIds)
-      }
+        // console.log("petmission",permissionIds)
+      },
+      async setCheckedPermission() {
+        //左侧模块变化后，存储在上一个模块所选择的权限
+        let selectData = this.$refs[this.tableConfig.ref].selectedData.map((item) => item.id)
+        let tmp = this.permissionIdsList.concat(selectData)
+        this.$store.commit('digitalPark/permissionIdsList', tmp)
+
+        //存储当前模块所有子级权限
+        if (this.curTreeNode.childNode && this.curTreeNode.childNode.length) {
+          let res = await SystemManageApi.getChildList({
+            parentId: this.curTreeNode.id
+          })
+          this.curPerList = res
+        }
+        this.getData()
+      },
+
     },
     async created() {
       await this.initTree()

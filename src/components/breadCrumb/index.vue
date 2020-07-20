@@ -26,7 +26,7 @@ export default {
       let hasDefaultPage = false;
       this.breadcrumb.length = 0;
       // 从路由中获取matched
-      console.log(this.$route.matched)
+      // console.log(this.$route.matched)
       let vibe = this.$route.matched.find(item=>item.path=='/vibe-web')
       if(vibe){
         this.breadcrumb=[]

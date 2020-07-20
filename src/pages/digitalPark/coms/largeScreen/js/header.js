@@ -84,10 +84,12 @@ class commonLargeHeader {
       if (IsCZClient()) {
         goBackClientLogin();
       }
+
+     store.commit("digitalPar")
      store.dispatch('user/logout').then(() => {
         router.push("/login");
       })
-      // 清空菜单列表
+     CommonFun.setHomeKeepAliveFlag()
      store.commit("digitalPark/activeMenuIndex", "");
     } else if(val==4){  //最小化
       if (IsCZClient()) {
