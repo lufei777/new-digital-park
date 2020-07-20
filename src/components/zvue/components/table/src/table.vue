@@ -70,7 +70,7 @@
           fixed="left"
           type="selection"
           :width="config.selectionWidth"
-          :selectable="tableMethods.selectable"
+          :selectable="_selectable"
           align="center"
         ></el-table-column>
 
@@ -239,6 +239,7 @@ export default {
     },
     summaryMethod: Function,
     spanMethod: Function,
+    selectable: Function
   },
   provide() {
     return {
@@ -246,7 +247,6 @@ export default {
     };
   },
   data() {
-    let _this = this;
     return {
       config,
       selectedData: [], //表格当前多选数据
@@ -298,10 +298,10 @@ export default {
       this.options.uiConfig.pagination = {};
     }
 
-    this._tableInit().then(_ => {
+    this._tableInit().then(res => {
       this._dataIndexInit();
       // 数据加载完成
-      this.$emit('onloadeddata', this);
+      this.$emit('onloadeddata', res, this);
     }).catch((err) => {
       // 数据未加载完成，报错
       this.$emit('unloadeddata', err, this);
@@ -421,7 +421,6 @@ export default {
     // 加载服务端数据
     _loadServerMode(data) {
       return new Promise((resolve, reject) => {
-        let _this = this;
         //加载中开始
         this.loading = true;
 
@@ -488,7 +487,7 @@ export default {
       this.tableHeight = _height - 20;
     },
     _dataIndexInit() {
-      //初始化序列的参数
+      //初始化序列的参数 在外部拿到数据后，可以通过$index来进行 行编辑 函数调用
       (this.isServerMode ? this.tableShowData : this.tableData).forEach(
         (ele, index) => {
           if (ele.$cellEdit) {
@@ -533,7 +532,7 @@ export default {
       if (this.parentOption.expandOne) {
         this.toggleRowExpansion();
         if (expandedRows.length) {
-          (this.parentOption?.expandRowKeys || this.expandList).push(row[this.rowKey]);
+          (this.parentOption ? this.parentOption.expandRowKeys : this.expandList).push(row[this.rowKey]);
         }
       } else if (this._typeOf(expandedRows) === 'Array') {
         this.expandList = [...expandedRows];
@@ -593,8 +592,8 @@ export default {
       return sums;
     },
     //合并行
-    _tableSpanMethod(param) {
-      if (typeof this.spanMethod === "function") return this.spanMethod(param);
+    _tableSpanMethod(...args) {
+      if (typeof this.spanMethod === "function") return this.spanMethod(...args);
     },
     //树懒加载
     _treeLoad(tree, treeNode, resolve) {
@@ -602,6 +601,11 @@ export default {
         tree.children = data;
         resolve(data);
       })
+    },
+    // 当前行是否可多选
+    _selectable(...args) {
+      if (typeof this.selectable === 'function') return this.selectable(...args);
+      return true;
     },
 
     /**

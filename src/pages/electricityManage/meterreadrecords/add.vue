@@ -26,20 +26,25 @@
   </div>
 </template>
 <script>
+import { ElectricityManageDic } from "@/utils/dictionary";
 import electricityManageApi from 'api/electricityManage';
 import selectMeter from '../common/selectMeter';
 import { useType } from '../config';
 
+const { checkStatus } = ElectricityManageDic;
 const apiConfig = {
   add: {
+    flag: 'add',
     title: "抄表记录新增",
     api: electricityManageApi.addReadMeterRecord
   },
   edit: {
+    flag: 'edit',
     title: "抄表记录编辑",
-    api: electricityManageApi.updateElecPrice
+    api: electricityManageApi.updateReadMeterRecord
   },
   detail: {
+    flag: 'detail',
     title: "抄表记录查看",
     extraOptions: {
       textMode: true,
@@ -196,12 +201,50 @@ export default {
             prop: "remarks"
           }
         ]
-      }
+      },
+      detailOptions: [
+        {
+          prop: 'recordPersonList',
+          label: '审核人',
+          type: "dynamic",
+          span: 24,
+          textMode: true,
+          children: {
+            size: "small",
+            align: "center",
+            headerAlign: "center",
+            columnConfig: [
+              {
+                label: "审核人",
+                prop: "examineName"
+              },
+              {
+                label: "审核结果",
+                prop: "examineType",
+                type: 'switch',
+                displayAs: 'switch',
+                dicData: checkStatus
+              },
+              {
+                label: "审核时间",
+                prop: "examineTime"
+              },
+              {
+                label: "审核意见",
+                prop: "examineIdea"
+              }
+            ]
+          },
+        }
+      ]
     };
   },
   computed: {
     Form() {
       return this.$refs[this.formOptions.ref]
+    },
+    isDetail() {
+      return this.pageConfig.flag === 'detail';
     }
   },
   created() {
@@ -217,6 +260,10 @@ export default {
         ...this.formOptions,
         ...this.pageConfig.extraOptions
       };
+    }
+
+    if(this.isDetail){
+      this.formOptions.forms = this.formOptions.forms.concat(this.detailOptions)
     }
   },
   methods: {
