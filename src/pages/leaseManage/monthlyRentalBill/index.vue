@@ -32,6 +32,7 @@
       <z-table
         :ref="leaseContractTable.ref"
         :options="leaseContractTable"
+        :selectable="row => isCurrentUser(row.operator) && hasRejected(row.status)"
       >
         <template
           slot="custom-top"
@@ -65,15 +66,22 @@
             type="text"
             @click="delRow(obj)"
           >作废</el-button>
-          <el-button
-            type="text"
-            @click="generate(obj)"
-          >生成</el-button>
+
           <!-- 根据更改租赁月账单中添加审核和批量审核 -->
-          <el-button
-            type='text'
-            @click="Review(obj)"
-          >审核</el-button>
+          <template v-if="hasCheck(obj.row.status)">
+            <el-button
+              type='text'
+              v-if="obj.row.billStatus!==1 && obj.row.billStatus!==2 "
+              @click="Review(obj)"
+            >审核</el-button>
+            <el-button
+              type="text"
+              v-if="obj.row.billStatus===1 || obj.row.billStatus===2 "
+              @click="generate(obj)"
+            >生成</el-button>
+          </template>
+
+          <el-button type='text'>审核记录</el-button>
         </template>
       </z-table>
     </div>
@@ -83,6 +91,8 @@
 <script>
 import LeaseManageApi from "@/service/api/leaseManage";
 import CommonFun from "@/utils/commonFun";
+import { ElectricityManageDic } from "@/utils/dictionary";
+const { status } = ElectricityManageDic;
 let pageInfo = {
   pageNum: 1,
   pageSize: 10
@@ -174,18 +184,32 @@ export default {
     },
     Table() {
       return this.$refs[this.leaseContractTable.ref];
+    },
+    // 前用户
+    userInfo() {
+      return this.$store.getters.userInfo;
     }
   },
   methods: {
+    // 是否审核
+    hasCheck(val) {
+      return status[0].value === val || status[3].value === val;
+    },
+    // 是否驳回
+    hasRejected(val) {
+      return status[2].value === val;
+    },
+    // 是否是当前用户
+    isCurrentUser(operatorId) {
+      return this.userInfo.id === operatorId;
+    },
     // 批量审核
     batchReview({ selectedData }) {
       let str = "";
       selectedData.forEach(item => {
         str += item.id + ",";
       });
-
       str = str.substr(0, str.length - 1);
-      console.log("item", str);
       this.$router.push({ path: "/monthbillbatchreview", query: { ids: str } });
     },
     // 审核
@@ -215,7 +239,17 @@ export default {
         { label: "账期", prop: "billTime" },
         { label: "收费项目数", prop: "chargeItems" },
         { label: "账单金额合计(元)", prop: "billTotalAmount" },
-        { label: "账单状态", prop: "billStatus" },
+        {
+          label: "账单状态",
+          prop: "billStatus",
+          type: "select",
+          dicData: [
+            { label: "待审核", value: 0 },
+            { label: "已审核", value: 1 },
+            { label: "已驳回", value: 2 },
+            { label: "审核中", value: 3 }
+          ]
+        },
         { label: "本次冲抵额(元)", prop: "offsset" },
         {
           label: "租户类型",
