@@ -147,6 +147,7 @@
         })
         this.curId = ''
         this.$refs[this.tableConfig.ref].refreshTable()
+        CommonFun.setHomeKeepAliveFlag()
       },
       onClickEditBtn(row){
         this.$router.push(`/addMessage?id=${row.id}`)

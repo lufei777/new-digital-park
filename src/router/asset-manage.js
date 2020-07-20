@@ -1,5 +1,5 @@
 import AssetLedger from '../pages/assetManage/assetLedger'
-import MyAsset from '../pages/assetManage/myAsset'
+import MyAsset from '../pages/assetManage/myAsset/myAsset'
 
 export default [{
   path: '/assetManage',
@@ -51,7 +51,7 @@ export default [{
     children:[{
       path: '/todoList',
       name: 'TodoList',
-      component:  () => import('@/pages/assetManage/assetOperator/myTodo/todoList'),
+      component:  () => import('@/pages/assetManage/assetOperator/todoList'),
       meta: { title: "我的待办" },
     },{
       path: '/assetUse',

@@ -102,7 +102,8 @@
               rules:{
                 validator: checkPType,
                 trigger: 'change'
-              }
+              },
+              change:_this.onPTypeChange
             },
             {
               type: "select",
@@ -129,7 +130,7 @@
           ]
         },
         menuList: [],
-        lastNodeFlag:false
+        lastNodeFlag:false,
       }
     },
     computed: {
@@ -180,18 +181,31 @@
             hide();
           });
       },
+      async getPermissionFlagList(){
+        let res = await SystemManageApi.getPermissionFlagList({
+          type:this.formModel.pType
+        })
+        this.$refs[this.formConfig.ref].setColumnByProp("permissionFlag", {
+          dicData:res
+        });
+      },
+      onPTypeChange(obj){
+        this.formModel.pType = obj.value
+        this.getPermissionFlagList()
+      }
     },
     async mounted() {
      if (this.perId) {
         await this.getPermissionDetail()
-       this.$refs[this.formConfig.ref].setColumnByProp("menuId", {
+        this.$refs[this.formConfig.ref].setColumnByProp("menuId", {
          disabled:true
        });
        this.$refs[this.formConfig.ref].setColumnByProp("pType", {
          disabled:true
        });
-      }
+     }
      this.getPermissionTree()
+     this.getPermissionFlagList()
     }
   }
 </script>

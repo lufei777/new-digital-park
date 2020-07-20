@@ -153,13 +153,13 @@ export default {
       this.$store.commit("digitalPark/menuList", secondMenu);
       let activeMenuIndex = this.$route.path
       if (this.$route.path == '/vibe-web') {
-        let node = this.findNode(secondMenu.childNode,'id')
-        activeMenuIndex = node.routeAddress
+       this.findNode(secondMenu.childNode,'id')
+        activeMenuIndex = this.curNode.routeAddress
       } else {
         this.repeatRouteList.map((item)=>{
           if (this.$route.path.indexOf(item) != -1) {
-            let node = this.findNode(secondMenu.childNode,'route')
-            activeMenuIndex = node.id + node.routeAddress
+            this.findNode(secondMenu.childNode,'route')
+            activeMenuIndex = this.curNode.id + this.curNode.routeAddress
           }
         })
       }

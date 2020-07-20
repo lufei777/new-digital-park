@@ -216,41 +216,15 @@ export default {
       }
       this.$store.commit("digitalPark/activeMenuIndex", "")
     },
-    /* async getUserInfo() {
-      let res = await SystemManageApi.getUserInfo();
-      this.userInfo = res
-      localStorage.setItem("userInfo", JSON.stringify(this.userInfo));
-      this.$store.commit("digitalPark/updateUserInfo", false);
-      this.setUserInfo(res)
-    }, */
     loadNews() {
       CommonLargeHeader.loadNews()
     },
     goToWebPage(item, obj) {
       CommonLargeHeader.goToWebPage(item,obj)
-   /*   //如果只有第一个参数，渲染的menu就是此对象的childNode；
-      //如果有第二个参数,渲染的menu就是当前点击的子菜单所在的二级菜单，obj为当前点击的子菜单
-      item = JSON.parse(item)
-      let curMenu = item
-      if (obj) {
-        obj = JSON.parse(obj)
-        if(!(obj.name=="概览" && obj.clientType==1)){
-          curMenu = obj
-        }
-      }
-      this.$store.commit("digitalPark/menuList", item)
-      CommonFun.loadPage(curMenu)*/
     },
     async getAlarmList() {
       let res = await CommonLargeHeader.getAlarmList()
       this.alarmListCount = res
-    /*  let res = await CommonApi.getAlarmMessageList({
-        pageNum: 1,
-        start: '',
-        end: '',
-        pageCount: 10,
-      })
-      this.alarmListCount = res.total>99?'99+':res.total*/
     },
     //三维跳导出数据页面
     exportShow(spaceId,deviceId){

@@ -75,6 +75,7 @@ import AssetManageApi from "../../../../service/api/assetManage";
 import CommonTable from "../../../../components/commonTable";
 import TreeModal from "../../../../components/treeModal";
 import CommonFun from "../../../../utils/commonFun";
+import { mapState } from 'vuex'
 export default {
   name: "AssetMaintenance",
   components: {
@@ -195,8 +196,6 @@ export default {
           {label:'资产类型',prop:'typeName'}]
           this.assetsTableConfig.data=res.list
           this.assetsTableConfig.uiConfig.pagination.total=res.total
-          // this.$refs[this.assetsTableConfig.ref].setPaginationTotal(res.total)
-          console.log("total",this.assetsTableConfig.uiConfig.pagination.total,res.total)
           this.loading=false
       },
     onClickSearchBtn(){

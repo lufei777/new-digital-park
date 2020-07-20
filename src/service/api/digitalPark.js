@@ -2,11 +2,11 @@ import {get, post, url,del,put} from '../axios/ApiDecorator'
 
 class DigitalParkApi {
 
-  @url('/oaApi/menu/productList')
+  @url('/user-service/menu/productList')
   @get
   getProductList(){}
 
-  @url('/oaApi/menu/tree')
+  @url('/user-service/menu/tree')
   @get
   getMenu(){}
 
@@ -15,7 +15,7 @@ class DigitalParkApi {
   @get
   getModulesByType(){}
 
-  @url('/oaApi/menu/tree')
+  @url('/user-service/menu/tree')
   @get
   getMenuTree(){}
 
