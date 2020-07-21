@@ -6,6 +6,55 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "8044081",
+      "name": "标签",
+      "font_class": "biaoqian",
+      "unicode": "e6ad",
+      "unicode_decimal": 59053
+    },
+    {
+      "icon_id": "7949357",
+      "name": "警告",
+      "font_class": "jinggao",
+      "unicode": "e6ac",
+      "unicode_decimal": 59052
+    },
+    {
+      "icon_id": "5367005",
+      "name": "对",
+      "font_class": "dui",
+      "unicode": "e6ab",
+      "unicode_decimal": 59051
+    },
+    {
+      "icon_id": "4021003",
+      "name": "机械装置",
+      "font_class": "jixiezhuangzhi",
+      "unicode": "e6aa",
+      "unicode_decimal": 59050
+    },
+    {
+      "icon_id": "12108350",
+      "name": "视角选择",
+      "font_class": "shijiaoxuanze",
+      "unicode": "e94c",
+      "unicode_decimal": 59724
+    },
+    {
+      "icon_id": "5757606",
+      "name": "考勤",
+      "font_class": "kaoqin",
+      "unicode": "e7a4",
+      "unicode_decimal": 59300
+    },
+    {
+      "icon_id": "14727019",
+      "name": "伊甸城1.0",
+      "font_class": "yidiancheng10",
+      "unicode": "e6a9",
+      "unicode_decimal": 59049
+    },
+    {
       "icon_id": "14726887",
       "name": "伊甸城LOGO",
       "font_class": "yidianchengLOGO",
