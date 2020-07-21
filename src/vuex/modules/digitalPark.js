@@ -129,11 +129,11 @@ const actions = {
     let roleIds = userInfo.rlist.map((item)=>item.id).join(",")
 
     let path = state.moduleInfo.routeAddress
-    state.repeatRouteList.map((item) => {
-      if (item.indexOf(path) != -1) {
-        path = state.moduleInfo.id + path
-      }
-    })
+    // state.repeatRouteList.map((item) => {
+    //   if (item.indexOf(path) != -1) {
+    //     path = state.moduleInfo.id + path
+    //   }
+    // })
 
     return new Promise((resolve, reject) => {
       SystemManageApi.getPermissionById({
@@ -146,7 +146,8 @@ const actions = {
         reject(err)
       })
     })
-  }
+  },
+
 }
 
 export default {

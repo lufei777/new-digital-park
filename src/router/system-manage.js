@@ -1,4 +1,4 @@
-import OperatorLog from '../pages/systemManage/operatorLog'
+import OperatorLog from '../pages/systemManage/operatorLog/operatorLog'
 import TmpRouter from '../pages/commonProject/coms/tmpRouterBox'
 import AddSpace from '../pages/systemManage/spaceManage/addSpace'
 import AddUser from '../pages/systemManage/userManage/addUser'
