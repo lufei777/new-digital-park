@@ -1,16 +1,15 @@
 <template>
-  <div class="add-per panel-container radius-shadow">
-    <ModuleTip :text="moduleText"/>
-    <div class="form-box">
-      <z-form :ref="formConfig.ref" :options="formConfig"
-              v-model="formModel" @submit="submit"
-      >
-        <template slot="menuBtn" slot-scope="scope">
-          <el-button @click="goBack(scope)">返回</el-button>
-        </template>
-      </z-form>
+    <div class="add-per">
+      <div class="form-box">
+        <z-form :ref="formConfig.ref" :options="formConfig"
+                v-model="formModel" @submit="submit"
+        >
+          <template slot="menuBtn" slot-scope="scope">
+            <el-button @click="goBack(scope)">返回</el-button>
+          </template>
+        </z-form>
+      </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -18,29 +17,12 @@
   import SystemManageApi from '@/service/api/systemManage'
   import ModuleTip from '@/pages/commonProject/coms/moduleTip'
 
-  let  permissionFlag = [{
-      label:'查看',
-      value:'look',
-      type:'0' //代表是读权限下的
-    },{
-      label:'添加',
-      value:'add',
-      type:'1', //代表是写权限下的
-    },{
-      label:'编辑',
-      value:'edit',
-      type:'1',
-    },{
-      label:'删除',
-      value:'remove',
-      type:'1',
-    }]
   export default {
     name: 'AddPermission',
     components: {
       ModuleTip
     },
-    props: [],
+    props: ['hideModal'],
     data() {
       let _this = this
 
@@ -61,17 +43,6 @@
           emptyBtn: false,
           forms: [
             {
-              type: "input",
-              label: "权限名称",
-              prop: "name",
-              span: 24,
-              rules: {
-                required: true,
-                message: "请输入菜单名称",
-                trigger: "blur"
-              }
-            },
-            {
               type: "tree",
               label: "所属模块",
               prop: "menuId",
@@ -89,6 +60,17 @@
               }
             },
             {
+              type: "input",
+              label: "权限名称",
+              prop: "name",
+              span: 24,
+              rules: {
+                required: true,
+                message: "请输入菜单名称",
+                trigger: "blur"
+              }
+            },
+            {
               type: "radio",
               label: "权限类型",
               prop: "pType",
@@ -102,18 +84,20 @@
               rules:{
                 validator: checkPType,
                 trigger: 'change'
-              }
+              },
+              change:_this.onPTypeChange
             },
             {
               type: "select",
               label: "权限标识",
               prop: "permissionFlag",
               span: 12,
-              dicData: permissionFlag,
+              dicData: [],
               props: {
                 label: "label",
                 value: "value",
               },
+              clearable:false,
               rules:{
                 validator: checkPType,
                 trigger: 'change'
@@ -129,7 +113,7 @@
           ]
         },
         menuList: [],
-        lastNodeFlag:false
+        lastNodeFlag:false,
       }
     },
     computed: {
@@ -146,7 +130,8 @@
     watch: {},
     methods: {
       goBack() {
-        history.go(-1)
+        // history.go(-1)
+        this.hideModal && this.hideModal()
       },
       async getPermissionDetail() {
         let res = await SystemManageApi.getPermissionDetail({
@@ -174,24 +159,37 @@
               type: "success",
               message: res
             });
-            this.$router.push('./permissionManage')
+            this.hideModal && this.hideModal()
           })
           .finally(msg => {
             hide();
           });
       },
+      async getPermissionFlagList(){
+        let res = await SystemManageApi.getPermissionFlagList({
+          type:this.formModel.pType
+        })
+        this.$refs[this.formConfig.ref].setColumnByProp("permissionFlag", {
+          dicData:res
+        });
+      },
+      onPTypeChange(obj){
+        this.formModel.pType = obj.value
+        this.getPermissionFlagList()
+      }
     },
     async mounted() {
      if (this.perId) {
         await this.getPermissionDetail()
-       this.$refs[this.formConfig.ref].setColumnByProp("menuId", {
+        this.$refs[this.formConfig.ref].setColumnByProp("menuId", {
          disabled:true
        });
        this.$refs[this.formConfig.ref].setColumnByProp("pType", {
          disabled:true
        });
-      }
+     }
      this.getPermissionTree()
+     this.getPermissionFlagList()
     }
   }
 </script>
@@ -203,7 +201,7 @@
     box-sizing: border-box;
 
     .form-box {
-      width: 50%;
+      width: 80%;
       margin: 0 auto;
     }
   }

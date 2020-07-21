@@ -2250,25 +2250,9 @@ class commonFun {
     }
   }
 
-  setMenuList(item) {
-    if (!item.routeAddress) {
-      Message({
-        type: 'warning',
-        message: '该模块还未配置路由~'
-      })
-      return false;
-    }
-    let menuTree = JSON.parse(localStorage.getItem("menuTree"))
-    let firstMenu = menuTree[0].childNode.find(first => {
-      return first.id == item.firstMenuId;
-    });
-
-    let secondMenu = firstMenu && firstMenu.childNode.find(second => {
-      return second.id == item.secondMenuId;
-    });
-    let menuTmp = secondMenu || {}
-    store.commit("digitalPark/menuList", menuTmp);
-    return true
+  //设置首页刷新
+  setHomeKeepAliveFlag(){
+    store.commit('digitalPark/homeKeepAliveFlag',false)
   }
 
 }

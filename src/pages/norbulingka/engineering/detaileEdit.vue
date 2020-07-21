@@ -253,6 +253,7 @@ export default {
             prop: "planReport",
             type: "upload",
             action: "/oaApi/image/upload",
+            accept: ["jpg", "jpeg", "png", "docx"],
             // listType:'picture-card',
             dataType: "string",
             propsHttp: {
@@ -318,6 +319,7 @@ export default {
             offset: 1,
             row: true,
             // listType:'picture-card',
+            accept: ["jpg", "jpeg", "png", "docx"],
             dataType: "string",
             propsHttp: {
               name: "fileName",
@@ -472,6 +474,7 @@ export default {
             span: 6,
             offset: 1,
             dataType: "string",
+            accept: ["jpg", "jpeg", "png", "docx",'pdf'],
             propsHttp: {
               name: "fileName",
               url: "fileUrl",
@@ -584,22 +587,20 @@ export default {
   created() {
     // console.log(parmars);
 
-    
-      var parmars = this.$route.query;
-      let info = JSON.parse(sessionStorage.getItem('PROJECT'))
-      console.log('1222',parmars);
-      if (parmars.mark ==='detail') {
-        this.formData.textMode = true;
-        this.title = _.cloneDeep(topTitle[parmars.mark].title);
-        this.model = { ...info };
-      } else {
-        this.model = { ...info };
-        this.title = _.cloneDeep(topTitle[parmars.mark].title);
-      }
-      if(parmars.mark==='add'){
-        this.model ={}
-      }
-   
+    var parmars = this.$route.query;
+    let info = JSON.parse(sessionStorage.getItem("PROJECT"));
+    console.log("1222", parmars);
+    if (parmars.mark === "detail") {
+      this.formData.textMode = true;
+      this.title = _.cloneDeep(topTitle[parmars.mark].title);
+      this.model = { ...info };
+    } else {
+      this.model = { ...info };
+      this.title = _.cloneDeep(topTitle[parmars.mark].title);
+    }
+    if (parmars.mark === "add") {
+      this.model = {};
+    }
   }
 };
 </script>

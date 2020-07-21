@@ -136,7 +136,8 @@ export default {
   computed: {
     ...mapState({
       dragFlag: state => state.digitalPark.dragFlag,
-      menuTree:state => state.digitalPark.menuTree
+      menuTree:state => state.digitalPark.menuTree,
+      userInfo:state => state.user.userInfo
     }),
     isydSystem() {
       return window.__CZ_SYSTEM=='ydCity' ;
@@ -210,7 +211,8 @@ export default {
     },
     async getProductList() {
       let res = await DigitalParkApi.getProductList({
-        language: Cookies.get("lang")
+        language: Cookies.get("lang"),
+        userId: this.userInfo.id
       });
       this.productList = res;
     },

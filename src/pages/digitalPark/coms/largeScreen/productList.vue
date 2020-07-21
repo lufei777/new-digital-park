@@ -45,7 +45,8 @@
         return isYDScreen()
       },
       ...mapState({
-        largeScreenIframeSrc: state => state.digitalPark.largeScreenIframeSrc
+        largeScreenIframeSrc: state => state.digitalPark.largeScreenIframeSrc,
+        userInfo: state => state.user.userInfo
       }),
       smallyd() {
         return document.body.offsetWidth < 2560 ? true : false
@@ -63,7 +64,8 @@
     methods: {
       async getProductList() {
         let res = await DigitalParkApi.getProductList({
-          language: Cookies.get('lang')
+          language: Cookies.get('lang'),
+          userId:this.userInfo.userId
         })
         // $(".fixed-pro-item").css({
         //   height:$(".product-list").height()/3

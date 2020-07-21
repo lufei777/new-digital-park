@@ -70,7 +70,7 @@
           fixed="left"
           type="selection"
           :width="config.selectionWidth"
-          :selectable="tableMethods.selectable"
+          :selectable="_selectable"
           align="center"
         ></el-table-column>
 
@@ -239,6 +239,7 @@ export default {
     },
     summaryMethod: Function,
     spanMethod: Function,
+    selectable: Function
   },
   provide() {
     return {
@@ -591,8 +592,8 @@ export default {
       return sums;
     },
     //合并行
-    _tableSpanMethod(param) {
-      if (typeof this.spanMethod === "function") return this.spanMethod(param);
+    _tableSpanMethod(...args) {
+      if (typeof this.spanMethod === "function") return this.spanMethod(...args);
     },
     //树懒加载
     _treeLoad(tree, treeNode, resolve) {
@@ -600,6 +601,11 @@ export default {
         tree.children = data;
         resolve(data);
       })
+    },
+    // 当前行是否可多选
+    _selectable(...args) {
+      if (typeof this.selectable === 'function') return this.selectable(...args);
+      return true;
     },
 
     /**

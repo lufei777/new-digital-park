@@ -151,7 +151,7 @@ export default {
         customTop: true,
         serverMode: {
           url: LeaseManageApi.querySumStatContract,
-          data: pageInfo
+          data:{...pageInfo}
         },
         propsHttp: {
           list: "data",

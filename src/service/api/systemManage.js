@@ -160,6 +160,10 @@ class SystemManage {
   @url("/user-service/permission/childList")
   @get
   getChildList(){}
+
+  @url("/user-service/permission/permissionFlag")
+  @get
+  getPermissionFlagList(){}
 }
 
 export default new SystemManage()

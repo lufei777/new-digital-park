@@ -28,6 +28,7 @@
             > 批量审核</el-button> -->
             <el-button
               :size="obj.size"
+              v-if="obj.allData.length >=2 "
               type="primary"
               @click="batchPass(obj)"
               :disabled='!obj.selectedData.length'
@@ -39,7 +40,7 @@
             >返回</el-button>
             <el-button
               @click="batchSubmit(obj)"
-              :disabled='!obj.selectedData.length'
+              :disabled='!obj.selectedData.length '
             > 提交</el-button>
           </div>
         </template>
@@ -63,6 +64,8 @@
 <script>
 import LeaseManageApi from "@/service/api/leaseManage";
 import CommonFun from "@/utils/commonFun";
+import { ElectricityManageDic } from "@/utils/dictionary";
+const { status } = ElectricityManageDic;
 let pageInfo = {
   pageNum: 1,
   pageSize: 10
@@ -72,12 +75,13 @@ export default {
   data() {
     let _this = this;
     return {
-      ids: "",
+      off: true,
       model: {},
       leaseContractTable: {
         ref: "leaseContractTable",
         customTop: true,
         editBtn: false,
+
         serverMode: {
           url: LeaseManageApi.queryNeedExamineDate,
           data: { ids: this.ids }
@@ -111,9 +115,38 @@ export default {
   computed: {
     Table() {
       return this.$refs[this.leaseContractTable.ref];
-    }
+    },
+    ids() {
+      return this.$route.query.ids;
+    },
+    // 当前用户
+    // userInfo() {
+    //   return this.$store.getters.userInfo;
+    // }
   },
   methods: {
+    // // 是否审核
+    // hasCheck(val) {
+    //   return status[0].value === val || status[3].value === val;
+    // },
+    // // 是否驳回
+    // hasRejected(val) {
+    //   return status[2].value === val;
+    // },
+    // // 是否是当前用户
+    // isCurrentUser(operatorId) {
+    //   return this.userInfo.id === operatorId;
+    // },
+    goback() {
+      this.$router.back();
+    },
+    loadeddata(data) {
+      // console.log("data", data);
+      data.data.forEach(curRow => {
+        this.Table.rowCellEdit(curRow, curRow.$index);
+      });
+    },
+
     rowUpdate(model, index, done) {
       console.log("保存", model, index, done);
     },
@@ -127,17 +160,29 @@ export default {
     },
     //批量通过
     batchPass({ selectedData }) {
-      console.log("selectedData", selectedData);
-      selectedData.forEach(curRow => {
-        // curRow.cell = false
-        curRow.edit = 1;
-        this.Table.rowCellEdit(curRow, curRow.$index);
+      // console.log("selectedData", selectedData);
+      this.Table.setColumnByProp("examineResult", {
+        disabled: true
       });
+      selectedData.forEach(curRow => {
+        // this.Table.setColumnByProp("statusName", {
+        //   disabled: true
+        // });
+        // curRow.cell = false
+        curRow.examineResult = 1;
+        // this.Table.rowCellEdit(curRow, curRow.$index);
+      });
+
+      // this.$nextTick(() => {
+
+      // });
     },
     tabelrowCellEdit() {
-        let arr = this.allData;
-    //   let arr = this.$refs[this.leaseContractTable.ref].allData;
-        // arr = 
+      // let arr = this.allData;
+      //   let arr = this.$refs[this.leaseContractTable.ref].allData;
+      // arr =
+      // arr =
+      // arr =
       console.log("arr", arr);
     },
     // 批量审核
@@ -153,33 +198,20 @@ export default {
       });
     },
     // 提交 { selectedData }
-    batchSubmit(obj) {
-      console.log("obj", obj);
-      //   LeaseManageApi.useMonthBillExamine(selectedData).then(res => {
-      //     this.$message({
-      //       type: "success",
-      //       message: "提交成功！"
-      //     });
-      //   });
-
-      // let arr = selectedData
-      // arr = arr.push(selectedData);
-      //   let http = new Promise();
-      //   http.all(selectedData).then(()=> {
-      //       LeaseManageApi.useMonthBillExamine(selectedData).then(res=>{
-      //           this.$message({
-      //               type:'success',
-      //               message:'提交成功！'
-      //           })
-      //       })
-      //   })
-      //   let tp = Promise.all(selectedData);
-      //   tp.then(res => {
-      //     this.$message({
-      //       type: "success",
-      //       message: "提交成功！"
-      //     });
-      //   });
+    batchSubmit({ tableShowData }) {
+      let res = [];
+      tableShowData.forEach(curRow => {
+        res.push(this.Table.rowCellUpdate(curRow, curRow.$index));
+      });
+      Promise.all(res).then(res => {
+        LeaseManageApi.useMonthBillExamine(tableShowData).then(res => {
+          this.$message({
+            type: "success",
+            message: "已提交审核结果！"
+          });
+          this.$router.back();
+        });
+      });
     },
     // 审核
     Review() {
@@ -194,7 +226,15 @@ export default {
         { label: "账期", prop: "billTime" },
         { label: "收费项目数", prop: "chargeItems" },
         { label: "账单金额合计(元)", prop: "billTotalAmount" },
-        { label: "账单状态", prop: "billStatus" },
+        {
+          label: "账单状态",
+          prop: "billStatus",
+          type: "select",
+          dicData: [
+            { label: "通过", value: 1 },
+            { label: "未通过", value: 2 }
+          ]
+        },
         { label: "本次冲抵额(元)", prop: "offsset" },
         {
           label: "租户类型",
@@ -207,7 +247,7 @@ export default {
         },
         {
           label: "审核结果",
-          prop: "statusName",
+          prop: "examineResult",
           type: "select",
           cell: true,
           dicData: [
@@ -234,15 +274,15 @@ export default {
       //   }
     }
   },
-  created() {
-    this.ids = this.$route.query.ids;
-  },
+  created() {},
   mounted() {
     this.contractList();
+
     this.$refs[this.leaseContractTable.ref].setCurrentPage(1);
     this.leaseContractTable.serverMode.data = { ids: this.ids };
-    this.$refs[this.leaseContractTable.ref].refreshTable();
-    
+    this.$refs[this.leaseContractTable.ref].refreshTable().then(res => {
+      this.loadeddata(res);
+    });
   }
 };
 </script>

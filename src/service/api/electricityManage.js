@@ -202,6 +202,19 @@ export default new class {
   @url('/oaApi/readMeter/addReadMeterRecord')
   @post
   addReadMeterRecord() { }
+  @url('/oaApi/readMeter/updateReadMeterRecord')
+  @post
+  updateReadMeterRecord() { }
+
+  /**
+   * 抄表记录审核
+   * recordId=YDCB-269929290743676928
+   * status=2
+   * examineIdea=驳回
+   */
+  @url('/oaApi/examineElec/readMeterToExamine')
+  @get
+  readMeterToExamine() { }
 
   /**
    * 根据电表id获取电表信息

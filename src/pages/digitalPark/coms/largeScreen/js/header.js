@@ -17,24 +17,40 @@ class commonLargeHeader {
   }
 
   loadNews(flag) {  //点击消息
-    store.commit("digitalPark/menuList",{
-      name: "消息管理",
-      id:100000,
-      childNode: [
-        {
-          id: 100001,
-          name: "预警报警列表",
-          routeAddress: "/warningAlarm"
-        }
-      ]
-    })
-
-    store.commit("digitalPark/activeMenuIndex","/warningAlarm")
-    if(isYDScreen()){
-      store.commit("digitalPark/largeScreenIframeSrc",
-        window.top.location.origin+'/#'+item.routeAddress)
+    if(isNorbulingkaScreen()){
+      store.commit("digitalPark/menuList",{
+          name: "消息管理",
+          id:100000,
+          childNode: [
+            {
+              id: 100001,
+              name: "预警报警列表",
+              routeAddress: "@/html/alarm/alarm_index.html"
+            }
+          ]
+        })
+      store.commit("digitalPark/activeMenuIndex","@/html/alarm/alarm_index.html")
+      router.push('/vibe-web')
     }else{
-      router.push("/warningAlarm");
+      store.commit("digitalPark/menuList",{
+        name: "消息管理",
+        id:100000,
+        childNode: [
+          {
+            id: 100001,
+            name: "预警报警列表",
+            routeAddress: "/warningAlarm"
+          }
+        ]
+      })
+
+      store.commit("digitalPark/activeMenuIndex","/warningAlarm")
+      if(isYDScreen()){
+        store.commit("digitalPark/largeScreenIframeSrc",
+          window.top.location.origin+'/#'+item.routeAddress)
+      }else{
+        router.push("/warningAlarm");
+      }
     }
   }
 
@@ -71,7 +87,7 @@ class commonLargeHeader {
      store.dispatch('user/logout').then(() => {
         router.push("/login");
       })
-      // 清空菜单列表
+     CommonFun.setHomeKeepAliveFlag()
      store.commit("digitalPark/activeMenuIndex", "");
     } else if(val==4){  //最小化
       if (IsCZClient()) {
@@ -99,11 +115,11 @@ class commonLargeHeader {
 
   setSystemMenu() {
     let menuTree = JSON.parse(localStorage.getItem("menuTree"));
-    console.log("menuTree",menuTree)
+    // console.log("menuTree",menuTree)
     let firstLevelTree = menuTree[0].childNode.find(
       item => (item.name == "基础功能")
     );
-    console.log("fitst",firstLevelTree)
+    // console.log("fitst",firstLevelTree)
     let secondLevelTree = firstLevelTree.childNode.find(
       item => (item.name == "系统管理")
     );

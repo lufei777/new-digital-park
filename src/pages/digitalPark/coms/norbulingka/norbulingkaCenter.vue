@@ -24,7 +24,7 @@
 <script>
   import DigitalParkApi from '@/service/api/digitalPark'
   import CommonFun from '@/utils/commonFun'
-
+  import {mapState} from 'vuex'
   export default {
     name: 'norbulingkaCenter',
     components: {},
@@ -35,12 +35,17 @@
         activeIndex: -1
       }
     },
-    computed: {},
+    computed: {
+      ...mapState({
+        userInfo:state => state.user.userInfo
+      })
+    },
     watch: {},
     methods: {
       async getProductList() {
         let res = await DigitalParkApi.getProductList({
-          language: Cookies.get('lang')
+          language: Cookies.get('lang'),
+          userId: this.userInfo.id
         })
         res.map((item) => {
           item.clickFlag = false

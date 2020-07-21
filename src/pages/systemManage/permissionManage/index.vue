@@ -12,7 +12,7 @@
     name: 'menuManage',
     components: {
       PermissionTree,
-      RenderPage
+      RenderPage,
     },
     props: [],
     data() {

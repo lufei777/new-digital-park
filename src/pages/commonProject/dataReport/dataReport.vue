@@ -1,7 +1,7 @@
 <template>
   <div class="data-report">
     <div class="flex-align choose-box radius-shadow">
-      <div class="block small-select">
+      <div class="block small-select"  v-if="fromFlag==1">
         <span class="choose-tip">能耗类型：</span>
         <el-select v-model="curEnergy" placeholder="请选择">
           <el-option v-for="item in energyList" :key="item.id" :label="item.name" :value="item.id">
@@ -58,7 +58,6 @@
       id:'daily'
   }]
 
-  let curSystem  = window.__CZ_SYSTEM
   let energyList = isZG()?[{
       name:'电',
       id:'electricity'
@@ -74,9 +73,13 @@
   },{
     name:'热',
     id:'gas'
+  },{
+    name:'冷',
+    id:'cold'
   }]
   export default {
     name: 'DataReport',
+    props:['fromFlag'], //fromFlag 1：分项报表 2：用电报表 3：用水报表 4：用冷报表
     components: {
     },
     data () {
@@ -84,8 +87,6 @@
         curDateType:isZG()?'daily':'monthly',
         dateTypeList:dateTypeList,
         pickerType:isZG()?'date':'month',
-        // startTime:moment(new Date(new Date().getTime()-28*24*60*60*1000*11)).format('YYYY-MM'),
-        // endTime:moment(new Date(new Date().getTime()-30*24*60*60*1000*10)).format('YYYY-MM'),
         startTime:isZG()?moment().startOf('month').format("YYYY-MM-DD"):"2019-01",
         endTime:isZG()?moment().format('YYYY-MM-DD'):"2019-04",
         energyList:energyList,
@@ -102,22 +103,20 @@
           // start:this.startTime,
           // end:this.endTime,
           type:this.curDateType,
-          catalog:this.curEnergy,
+          catalog:this.catalog,
           parentSpace:1,
-          exec:this.$route.path=='/spaceReport'?2:1
+          exec:this.fromFlag==1?1:2   // 1：空间能耗 2：分项能耗
         }
+      },
+      catalog(){
+        return this.fromFlag==1?this.curEnergy:this.fromFlag==2?'electricity':
+               this.fromFlag==3?'water':'cold'
       }
     },
     methods: {
       handleDateTypeChange(value){
         this.pickerType=value=='year'?'year':value=='monthly'?"month":'date'
         this.valueFormat=value=='year'?'YYYY':value=='monthly'?"YYYY-MM":'YYYY-MM-DD'
-      },
-      async getEnergyListAll(){
-        this.energyList = await CommonApi.getEnergyListAll({
-          catalogId:2200
-        })
-        this.curEnergy= this.energyList[0].id
       },
       async onClickLookBtn(){
         this.tableData = await CommonApi.previewReportData(this.commonParams)

@@ -105,9 +105,11 @@ const getters = {
 const actions = {
   getMenus: ({ commit }, payload) => {
     return new Promise((resolve, reject) => {
+      let userInfo = JSON.parse(localStorage.getItem("userInfo"))
       DigitalParkApi.getMenuTree({
-        language: Cookies.get("lang")
-      }).then((menuTree = []) => {
+        language: Cookies.get("lang"),
+        userId:userInfo.id
+      }).then((menuTree =[]) => {
         commit('setMenuTree', menuTree);
         // 设置到localStorage
         setMenuTree(menuTree);
@@ -123,15 +125,20 @@ const actions = {
       commit('pageRoles', { path, roles: ['admin'] });
     }, 5000); */
 
+    let userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    let roleIds = userInfo.rlist.map((item)=>item.id).join(",")
+
     let path = state.moduleInfo.routeAddress
-    state.repeatRouteList.map((item) => {
-      if (item.indexOf(path) != -1) {
-        path = state.moduleInfo.id + path
-      }
-    })
+    // state.repeatRouteList.map((item) => {
+    //   if (item.indexOf(path) != -1) {
+    //     path = state.moduleInfo.id + path
+    //   }
+    // })
+
     return new Promise((resolve, reject) => {
       SystemManageApi.getPermissionById({
-        menuId: state.moduleInfo.id
+        menuId: state.moduleInfo.id,
+        roleIds: roleIds
       }).then(permissionList => {
         commit('pageRoles', { path, roles: permissionList });
         resolve(permissionList)
@@ -139,7 +146,8 @@ const actions = {
         reject(err)
       })
     })
-  }
+  },
+
 }
 
 export default {
