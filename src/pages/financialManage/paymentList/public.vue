@@ -11,10 +11,12 @@
         @reset-change="resetChange"
       >
         <template slot="rentLine">
-          <h3 style="border:1px dashed #999"></h3>
+          <!-- <h3 style="border:1px dashed #999"></h3> -->
+            <el-divider></el-divider>
         </template>
         <template slot="line">
-          <h3 style="border:1px dashed #999"></h3>
+          <!-- <h3 style="border:1px dashed #999"></h3> -->
+            <el-divider></el-divider>
         </template>
         <template
           slot="btn"

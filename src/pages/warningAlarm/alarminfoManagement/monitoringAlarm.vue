@@ -94,10 +94,10 @@ const deviceType = WarningAlerm.deviceType;
 // 报警类型
 const alarmType = WarningAlerm.alarmType;
 
-let pageInfo={
-  pageNum:1,
-  pageSize:10
-}
+let pageInfo = {
+  pageNum: 1,
+  pageSize: 10
+};
 export default {
   name: "warningAlarm",
   data() {
@@ -155,7 +155,7 @@ export default {
             label: "设备类型",
             type: "cascader",
             span: 5,
-            offset:1,
+            offset: 1,
             clearable: true,
             // commonApi.getEnergyListAll  '/vibe-web/getItemsTree',
             prop: "catalogId",
@@ -172,7 +172,7 @@ export default {
             type: "select",
             label: "报警类型",
             span: 5,
-            offset:1,
+            offset: 1,
             prop: "state",
             dicData: alarmType
           },
@@ -260,17 +260,33 @@ export default {
         console.log(res);
         res.eventRank = { rankId: res.eventRank };
         // res.catalogId = res.catalogId[1]
-        if(res.catalogId && res.catalogId.length>=2 ){
-          res.catalogId = res.catalogId[res.catalogId.length-1]
-        }       
+        if (res.catalogId && res.catalogId.length >= 2) {
+          res.catalogId = res.catalogId[res.catalogId.length - 1];
+        }
         that.queryArry = { ...res };
         that.fetchTableList({ ...res }, { rows: 10, page: 1 });
       });
     },
     // 表格中的关闭
-    propertyClose(obj){ },
+    propertyClose(obj) {},
     // 表格中的 '定位' 按钮
-    propertyLocation(obj){ },
+    propertyLocation(obj) {
+      // debugger
+      console.log("obj", obj.row);
+      // 在客户端展示===》调用的是客户端的方法
+      // obj.row.deviceId && obj.row.type == "设备")
+      if (obj.row.deviceId ) {
+        //  window.FindAssetLocation && window.FindAssetLocation(val.row.deviceId +'')
+        window.FindAssetLocation
+          ? window.FindAssetLocation(obj.row.deviceId + "")
+          : window.parent.FindAssetLocation(obj.row.deviceId + "");
+      } else {
+        this.$message({
+          type: "warning",
+          message: "没有可定位的设备!"
+        });
+      }
+    },
     // '查看' 按钮
     propertyDetail(obj) {
       // console.log('当前行的信息',obj.row)
@@ -284,7 +300,7 @@ export default {
     clearForm(obj) {
       // var zform = this.$refs[this.formData.ref];
       // zform.resetForm();
-      this.Form.resetForm()
+      this.Form.resetForm();
     },
     // '应答',按钮
     propertyEdit(obj) {
@@ -329,7 +345,7 @@ export default {
         {
           label: "设备类型",
           prop: "catalogId",
-          type:'select',
+          type: "select",
           props: {
             label: "text",
             value: "id",
@@ -369,26 +385,27 @@ export default {
     this.getCleaningList();
   },
   created() {
-    // 报警级别
-    warningAlarm.geteventRanks().then(res => {
-      this.Form.setColumnByProp("eventRank", {
-        dicData: res
+    this.$nextTick(() => {
+      // 报警级别
+      warningAlarm.geteventRanks().then(res => {
+        this.Form.setColumnByProp("eventRank", {
+          dicData: res
+        });
+        this.Table.setColumnByProp("eventRank", {
+          dicData: res
+        });
       });
-      this.Table.setColumnByProp("eventRank", {
-        dicData: res
+      // 设备类型
+      warningAlarm.getItemsTree({ catalogId: "2002" }).then(res => {
+        // console.table(res)
+        this.Form.setColumnByProp("catalogId", {
+          dicData: res
+        });
+        this.Table.setColumnByProp("catalogId", {
+          dicData: res
+        });
       });
     });
-    // 设备类型
-    warningAlarm.getItemsTree({ catalogId: "2002"}).then(res => {
-      // console.table(res)
-      this.Form.setColumnByProp("catalogId",{
-        dicData: res
-      })
-      this.Table.setColumnByProp("catalogId", {
-        dicData: res
-      });
-
-    })
     this.fetchTableList();
   }
 };
