@@ -159,6 +159,7 @@ export default {
             type: "number",
             prop: "lastPrepay",
             label: "账单金额合计",
+            disabled:true,
             minRows: 0,
             span: 8,
              offset: 4,
@@ -218,7 +219,7 @@ export default {
             type: "success",
             message: "增加成功！"
           });
-          this.$router.back();
+          this.$router.push("monthlyrentalbill");
         })
         .finally(() => {
           done();

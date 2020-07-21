@@ -29,10 +29,12 @@
     </div>
 
     <div class="lease-contract-table panel">
+      <!-- isCurrentUser(row.operator) && -->
+      <!-- row =>isCurrentUser(row.operator) && hasRejected(row.billStatus) -->
       <z-table
         :ref="leaseContractTable.ref"
         :options="leaseContractTable"
-        :selectable="row => isCurrentUser(row.operator) && hasRejected(row.status)"
+        :selectable="row =>!isCurrentUser(row.operator) && hasCheck(row.billStatus)"
       >
         <template
           slot="custom-top"
@@ -40,6 +42,7 @@
         >
           <div class="operator-box flex-row-reverse">
             <el-button
+              v-if=""
               :size="obj.size"
               type="primary"
               @click="batchReview(obj)"
@@ -68,17 +71,35 @@
           >作废</el-button>
 
           <!-- 根据更改租赁月账单中添加审核和批量审核 -->
-          <template v-if="hasCheck(obj.row.status)">
+          <!-- 审核的 v-if="obj.row.billStatus!==1 && obj.row.billStatus!==2 " -->
+          <!-- 生成的  v-if="obj.row.billStatus===1 || obj.row.billStatus===2 "-->
+          <!-- <template v-if="hasCheck(obj.row.billStatus) && !isCurrentUser(obj.row.operator)">
             <el-button
               type='text'
-              v-if="obj.row.billStatus!==1 && obj.row.billStatus!==2 "
               @click="Review(obj)"
             >审核</el-button>
+          </template>
+          <template  v-if="!hasCheck(obj.row.billStatus) && !hasRejected(obj.row.billStatus)"> 
             <el-button
-              type="text"
-              v-if="obj.row.billStatus===1 || obj.row.billStatus===2 "
+              type="text"             
               @click="generate(obj)"
             >生成</el-button>
+          </template> -->
+
+          <!-- ================================================================== -->
+          <template v-if="!hasRejected(obj.row.billStatus) ">
+            <template v-if="hasCheck(obj.row.billStatus) && !isCurrentUser(obj.row.operator) ">
+              <el-button
+                type='text'
+                @click="Review(obj)"
+              >审核</el-button>
+            </template>
+            <template v-if="hasGenerate(obj.row.billStatus)">
+              <el-button
+                type="text"
+                @click="generate(obj)"
+              >生成</el-button>
+            </template>
           </template>
 
           <el-button type='text'>审核记录</el-button>
@@ -91,8 +112,8 @@
 <script>
 import LeaseManageApi from "@/service/api/leaseManage";
 import CommonFun from "@/utils/commonFun";
-import { ElectricityManageDic } from "@/utils/dictionary";
-const { status } = ElectricityManageDic;
+import { LeaseManageDic } from "@/utils/dictionary";
+const { billStatus } = LeaseManageDic;
 let pageInfo = {
   pageNum: 1,
   pageSize: 10
@@ -150,7 +171,9 @@ export default {
         customTop: true,
         serverMode: {
           url: LeaseManageApi.queryMonthBillList,
-          data: pageInfo
+          data: {
+            ...pageInfo
+          }
         },
         propsHttp: {
           list: "data",
@@ -191,17 +214,42 @@ export default {
     }
   },
   methods: {
+    // 生成
+    hasGenerate(val) {
+      return billStatus[1].value === val;
+    },
     // 是否审核
     hasCheck(val) {
-      return status[0].value === val || status[3].value === val;
+      // 待审核
+      return billStatus[0].value === val;
+      // return billStatus[0].value === val || billStatus[3].value === val;
+    },
+    hasChecking(val) {
+      return billStatus[0].value === val || billStatus[3].value === val;
+    },
+    // 待审核和已审核
+    hasReviewed(val) {
+      let off = false;
+      if (billStatus[0].value === val || billStatus[3].value === val) {
+        off = true;
+      }
+      console.log("off", off);
+      return off;
+      // return billStatus[0].value === val || billStatus[3].value === val;
     },
     // 是否驳回
     hasRejected(val) {
-      return status[2].value === val;
+      // 已驳回
+      return billStatus[2].value === val;
     },
     // 是否是当前用户
     isCurrentUser(operatorId) {
+      // console.log("this.userInfo", this.userInfo);
       return this.userInfo.id === operatorId;
+    },
+    // 是否具有审核权限
+    isReview() {
+      // if(this.userInfo.id ===this.userInfo.)
     },
     // 批量审核
     batchReview({ selectedData }) {
@@ -243,12 +291,7 @@ export default {
           label: "账单状态",
           prop: "billStatus",
           type: "select",
-          dicData: [
-            { label: "待审核", value: 0 },
-            { label: "已审核", value: 1 },
-            { label: "已驳回", value: 2 },
-            { label: "审核中", value: 3 }
-          ]
+          dicData: billStatus
         },
         { label: "本次冲抵额(元)", prop: "offsset" },
         {
@@ -307,7 +350,9 @@ export default {
       });
     },
     // 更新
-    editRow() {},
+    editRow(obj) {
+      console.log("obj.row", obj.row);
+    },
     // 作废
     delRow(obj) {
       var billNumber = obj.row.billNumber;
