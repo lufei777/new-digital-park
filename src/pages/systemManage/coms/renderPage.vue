@@ -39,6 +39,7 @@
           <el-button @click="onClickResetBtn">重置</el-button>
         </div>
       </div>
+      <!--<AddModal :show-modal="showModal" v-if="showModal" />-->
       <div class="table-wrapper radius-shadow panel">
         <div class="operator-btn-box flex-row-reverse" v-if="!hideBtn">
           <el-button type="primary" @click="onClickExportBtn" v-if="fromFlag==1">导出</el-button>
@@ -72,11 +73,12 @@
   import Tree from '@/components/tree/index'
   import SystemManageApi from '@/service/api/systemManage'
   import {SystemDic} from "@/utils/dictionary";
-
+  import AddModal from './addModal'
   export default {
     name: 'RenderPage',
     components: {
       Tree,
+      AddModal
     },
     // fromFlag 1:用户管理  2:空间管理  3：机构管理  4:权限管理
     // hideBtn true/false  角色管理分配权限时隐藏按钮
@@ -122,7 +124,8 @@
         delConfig: config.delConfig,
         curTreeNode: {},
         userCheckFlag: false,  //true：是用户点击的  false：程序回显
-        curPerList: []  //所选不是最子级模块时，存储当前模块下所有子级权限。
+        curPerList: [],  //所选不是最子级模块时，存储当前模块下所有子级权限。
+        showModal:false
       }
     },
     computed: {
@@ -133,7 +136,7 @@
       }),
       nameLabel() {
         return this.fromFlag == 2 ? '工程用名' : '机构简称'
-      }
+      },
     },
     methods: {
       getConfig() {
@@ -364,7 +367,16 @@
           url = `/addDept?deptId=${id}`
         } else if (this.fromFlag == 4) {
           url = `/addPermission?perId=${id}`
+          this.showModal=true
         }
+        // let idStr = 'perId'
+        // this.$router.replace({
+        //   url:this.$route.path,
+        //   query:{
+        //     ...this.$route.query,
+        //     ...{[idStr]:id}
+        //   }
+        // })
         this.$router.push(url)
       },
       onClickExportBtn() {
