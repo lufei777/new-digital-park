@@ -11,7 +11,6 @@
       <z-table
         :ref="leaseContractTable.ref"
         :options="leaseContractTable"
-        :selectable="row => isCurrentUser(row.operator) && hasRejected(row.status)"
         @row-update="rowUpdate"
         @row-edit="rowEdit"
         @row-edit-cancel="rowEditCancel"
@@ -41,7 +40,7 @@
             >返回</el-button>
             <el-button
               @click="batchSubmit(obj)"
-              :disabled='obj.allData.length > 1'
+              :disabled='!obj.selectedData.length '
             > 提交</el-button>
           </div>
         </template>
@@ -120,24 +119,24 @@ export default {
     ids() {
       return this.$route.query.ids;
     },
-    // 前用户
-    userInfo() {
-      return this.$store.getters.userInfo;
-    }
+    // 当前用户
+    // userInfo() {
+    //   return this.$store.getters.userInfo;
+    // }
   },
   methods: {
-    // 是否审核
-    hasCheck(val) {
-      return status[0].value === val || status[3].value === val;
-    },
-    // 是否驳回
-    hasRejected(val) {
-      return status[2].value === val;
-    },
-    // 是否是当前用户
-    isCurrentUser(operatorId) {
-      return this.userInfo.id === operatorId;
-    },
+    // // 是否审核
+    // hasCheck(val) {
+    //   return status[0].value === val || status[3].value === val;
+    // },
+    // // 是否驳回
+    // hasRejected(val) {
+    //   return status[2].value === val;
+    // },
+    // // 是否是当前用户
+    // isCurrentUser(operatorId) {
+    //   return this.userInfo.id === operatorId;
+    // },
     goback() {
       this.$router.back();
     },
@@ -162,7 +161,7 @@ export default {
     //批量通过
     batchPass({ selectedData }) {
       // console.log("selectedData", selectedData);
-      this.Table.setColumnByProp("billStatus", {
+      this.Table.setColumnByProp("examineResult", {
         disabled: true
       });
       selectedData.forEach(curRow => {
@@ -170,7 +169,7 @@ export default {
         //   disabled: true
         // });
         // curRow.cell = false
-        curRow.billStatus = 1;
+        curRow.examineResult = 1;
         // this.Table.rowCellEdit(curRow, curRow.$index);
       });
 

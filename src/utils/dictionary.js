@@ -87,7 +87,14 @@ export const LeaseManageDic = {
 		}
 	],
 	// 审核状态
-	checkStatus: [{ label: '已审核', value: 2 }, { label: '待审核', value: 1 }]
+	checkStatus: [{ label: '已审核', value: 2 }, { label: '待审核', value: 1 }],
+	// 月账单中的账单状态
+	billStatus:[
+		{ label: "待审核", value: 0 },
+		{ label: "已审核", value: 1 },
+		{ label: "已驳回", value: 2 },
+		{ label: "审核中", value: 3 }
+	]
 };
 
 export const StockDic = {
@@ -560,6 +567,7 @@ export const electricityManageDic = {
 		}
 	]
 };
+
 
 // 预警报警
 export const WarningAlerm = {
