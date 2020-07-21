@@ -821,18 +821,73 @@ export const TaskManageDic = {
 		label: "其他任务",
 		nodes: []
 	}],
-	sendTaskStatus: {
+	acceptTaskStatusDic: [{
+		value: 2,
+		label: "待接"
+	},
+	{
+		value: 3,
+		label: "处理中"
+	},
+	{
+		value: 4,
+		label: "已完成"
+	},
+	{
+		value: 5,
+		label: "挂单中"
+	},
+	{
+		value: 6,
+		label: "已关闭"
+	},
+	{
+		value: 7,
+		label: "草稿"
+	}],
+	sendTaskStatusDic: [{
+		value: "1",
+		label: "待派"
+	},
+	{
+		value: "2",
+		label: "已派"
+	},
+	{
+		value: "3",
+		label: "处理中"
+	},
+	{
+		value: "4",
+		label: "已完成"
+	},
+	{
+		value: "5",
+		label: "挂单中"
+	},
+	{
+		value: "6",
+		label: "已关闭"
+	}, {
+		value: "7",
+		label: "草稿"
+	}],
+	acceptTaskStatus: {
 		2: "待接",
 		3: "处理中",
 		4: "已完成",
 		5: "挂单中",
+		6: "已关闭",
+		7: "草稿"
 	},
-	acceptTaskStatus: {
+	sendTaskStatus: {
 		1: "待派",
 		2: "已派",
 		3: "处理中",
 		4: "已完成",
-		5: "挂单中"
+		5: "挂单中",
+		6: "已关闭",
+		7: "草稿"
 	},
 
 	urgentStatus: [{
@@ -894,11 +949,11 @@ export const MaintenanceManageDic = {
 	}],
 
 	payWayStatus: [{
-		value: "1",
+		value: "0",
 		label: '月结'
 	},
 	{
-		value: "2",
+		value: "1",
 		label: '实时结账'
 	}],
 

@@ -19,15 +19,15 @@
             </div>
             <z-table :ref="tableData.ref" :options="tableData">
               <template slot="operation" slot-scope="obj">
-                <!-- <el-button
+                <el-button
                   type="text"
                   v-for="(item,index) in obj.row.ownBtnList"
                   :key="index"
                   @click="item.event(obj)"
-                >{{item.text}}</el-button> -->
-                <el-button type="text" @click="editRow(obj)">详情</el-button>
+                >{{item.text}}</el-button>
+                <!-- <el-button type="text" @click="editRow(obj)">详情</el-button>
                 <el-button type="text" @click="deleteRow(obj)" v-if="deleteRowShow">删除</el-button>
-                <el-button type="text" @click="taskPosition(obj)">定位</el-button>
+                <el-button type="text" @click="taskPosition(obj)">定位</el-button>-->
                 <!-- window.parent.FindAssetLocation -->
               </template>
             </z-table>
@@ -47,16 +47,24 @@
 </template>
 
 <script>
+let objFlag = {
+  1: { name: "派单", api: TaskManageApi.taskDispatch, status: "" },
+  2: { name: "撤回", api: TaskManageApi.dealTask, status: 2 },
+  3: { name: "关闭", api: TaskManageApi.closeTask, status: 2 },
+  4: { name: "挂起", api: TaskManageApi.dealTask, status: 5 },
+  5: { name: "转派", api: TaskManageApi.dealTask, status: 3 },
+  6: { name: "解除挂起", api: TaskManageApi.getCancelHold },
+  7: { name: "完成", api: TaskManageApi.completeTask },
+  8: { name: "接单", api: TaskManageApi.dealTask, status: 3 },
+  8: { name: "退单", api: TaskManageApi.dealTask, status: 4 }
+};
 import { mapState } from "vuex";
 import Tree from "../../components/tree/index";
 import CommonSelect from "../taskManage/coms/commonSelect";
 import OperationPopup from "../taskManage/coms/operationPopup";
 import TaskManageApi from "../../service/api/taskManage";
 import CommonFun from "../../utils/commonFun";
-import {
-  StockDic,
-  TaskManageDic
-} from "@/utils/dictionary";
+import { StockDic, TaskManageDic } from "@/utils/dictionary";
 export default {
   name: "AboutMe",
   components: {
@@ -81,7 +89,9 @@ export default {
           children: "nodes"
         },
         showSearch: true,
-        defaultExpandedkeys: []
+        currentKey: "",
+        defaultExpandedkeys: [],
+        onClickTreeNodeCallBack: this.onClickTreeNode,
       },
       tableData: {
         ref: "tableData",
@@ -128,8 +138,9 @@ export default {
         reason: "",
         taskPicList: []
       },
-      specialFormShow: 0,
-      dialogTitle: "标题"
+      specialFormShow: 1,
+      dialogTitle: "",
+      apiFlag: ""
     };
   },
   computed: {
@@ -150,6 +161,12 @@ export default {
           { id: 1, text: "定位", event: _this.taskPosition }
         ];
       }
+    }
+  },
+  watch: {
+    apiFlag(val) {
+      this.dialogTitle = objFlag[val].name;
+      this.apiConfig = objFlag[val].api;
     }
   },
   methods: {
@@ -227,7 +244,7 @@ export default {
               btnTmp = [];
             }
 
-            item.taskStatus = TaskManageDic.sendTaskStatus[item.status];
+            item.taskStatus = TaskManageDic.acceptTaskStatus[item.status];
           } else if (this.taskActiveName == "second") {
             if (item.status == 1) {
               btnTmp = [
@@ -247,9 +264,9 @@ export default {
               btnTmp = [];
               // this.commonBtn.pop()
             }
-            item.taskStatus = TaskManageDic.acceptTaskStatus[item.status];
+            item.taskStatus = TaskManageDic.sendTaskStatus[item.status];
           } else {
-            item.taskStatus = TaskManageDic.acceptTaskStatus[item.status];
+            item.taskStatus = TaskManageDic.sendTaskStatus[item.status];
             btnTmp = [];
           }
           arr = btnTmp.concat(this.commonBtn);
@@ -273,11 +290,11 @@ export default {
       }
     },
     async dealTask() {
-      let res = await TaskManageApi.dealTask({
+      let res = await objFlag[this.apiFlag].api({
         ...this.paramsDialog,
         ...{
           id: this.taskId,
-          taskType: this.taskTypeStatus
+          taskType: objFlag[this.apiFlag].status
         }
       });
       if (res) {
@@ -287,98 +304,66 @@ export default {
       }
     },
     async dialogParams(data, hide) {
-      console.log("data", data);
       this.paramsDialog = data;
-      if (this.specialFormShow == 5) {
-        await this.sureDelete();
-      } else if (this.specialFormShow == 4) {
-        await TaskManageApi.completeTask({
-          ...this.paramsDialog,
-          ...{
-            id: this.taskId
-          }
-        }).then(res => {
-          if (res) {
-            this.toastMessage(res);
-            this.dialogFormShow = false;
-            this.taskList();
-          }
-        });
-      } else {
-        await this.dealTask();
-      }
-      this.$refs.operationPopup.resetFormFunc();//调用子组件重置表单方法
+      await this.dealTask();
+      this.$refs.operationPopup.resetFormFunc(); //调用子组件重置表单方法
       hide();
     },
     closeDialog(val) {
       this.dialogFormShow = val;
     },
     acceptClick({ row }) {
+      this.apiFlag = 8;
       this.taskId = row.id;
       this.taskTypeStatus = 1;
       this.toastSure("接单", this.dealTask);
     },
     returnClick({ row }) {
-      this.taskId = row.id;
-      this.taskTypeStatus = 4;
-      this.dialogFormShow = true;
-      this.specialFormShow = 2;
-      this.dialogTitle = "退单原因";
-    },
-    turnSendClick({ row }) {
-      this.taskId = row.id;
-      this.taskTypeStatus = 3;
-      this.dialogFormShow = true;
-      this.specialFormShow = 3;
-      this.dialogTitle = "转派工单";
-      console.log("转派");
-    },
-    hangClick({ row }) {
-      this.taskId = row.id;
-      this.taskTypeStatus = 5;
-      this.dialogFormShow = true;
-      this.specialFormShow = 7;
-      this.dialogTitle = "挂起工单";
-    },
-    completeClick({ row }) {
-      this.taskId = row.id;
-      this.dialogFormShow = true;
-      this.specialFormShow = 4;
-      this.dialogTitle = "完成工单";
-    },
-    cancelHoldClick({ row }) {
-      this.taskId = row.id;
-      this.taskTypeStatus = 3;
-      this.toastSure("解除挂起", this.cancelHoldEvent);
-    },
-    async cancelHoldEvent() {
-      let res = await TaskManageApi.getCancelHold({
-        id: this.taskId
-      });
-      if (res) {
-        this.toastMessage(res);
-        this.taskList();
-      }
-    },
-    sendClick(row) {
+      this.apiFlag = 9;
       this.taskId = row.id;
       this.dialogFormShow = true;
       this.specialFormShow = 1;
-      this.dialogTitle = "派单";
-      console.log("派单");
     },
-    closeClick({ row }) {
+    turnSendClick({ row }) {
+      this.apiFlag = 5;
       this.taskId = row.id;
       this.dialogFormShow = true;
-      this.specialFormShow = 5;
-      this.dialogTitle = "关闭工单";
-      console.log("关闭");
+      this.specialFormShow = 3;
+    },
+    hangClick({ row }) {
+      this.apiFlag = 4;
+      this.taskId = row.id;
+      this.dialogFormShow = true;
+      this.specialFormShow = 1;
+    },
+    completeClick({ row }) {
+      this.apiFlag = 7;
+      this.taskId = row.id;
+      this.dialogFormShow = true;
+      this.specialFormShow = 1;
+    },
+    cancelHoldClick({ row }) {
+      this.apiFlag = 6;
+      this.taskId = row.id;
+      this.taskTypeStatus = 1;
+      this.toastSure("解除挂起", this.dealTask);
+    },
+    sendClick({ row }) {
+      this.apiFlag = 1;
+      this.taskId = row.id;
+      this.dialogFormShow = true;
+      this.specialFormShow = 2;
+    },
+    closeClick({ row }) {
+      this.apiFlag = 3;
+      this.taskId = row.id;
+      this.dialogFormShow = true;
+      this.specialFormShow = 1;
     },
     withdrawClick(row) {
+      this.apiFlag = 2;
       this.taskId = row.row.id;
-      this.taskTypeStatus = 2;
       this.toastSure("撤回", this.dealTask);
-      console.log("撤回");
     },
     toastSure(message, event) {
       this.$confirm(`确定要${message}吗?`, "提示", {
@@ -423,19 +408,6 @@ export default {
         this.deleteRowShow = true;
       }
       this.taskList();
-    },
-    async sureDelete() {
-      let res = await TaskManageApi.closeTask({
-        ...this.paramsDialog,
-        ...{
-          taskId: this.taskId
-        }
-      });
-      if (res) {
-        this.toastMessage(res);
-        this.dialogFormShow = false;
-        this.taskList();
-      }
     },
     deleteRow(val) {
       this.taskId = val.scopeRow.row.id;
@@ -503,6 +475,9 @@ export default {
       $(".common-tree-box").css({
         height: $(document).height() - 110 + "px"
       });
+    },
+    onClickTreeNode(val){
+      console.log(val)
     }
   },
   mounted() {
@@ -517,7 +492,8 @@ export default {
       this.deleteRowShow = false;
     }
     this.taskList();
-    this.taskTreeConfig.defaultExpandedkeys = [this.taskTypeData[0].value];
+    this.taskTreeConfig.currentKey = this.taskTypeData[1].value;
+    // this.taskTreeConfig.defaultExpandedkeys = [this.taskTypeData[0].value];
     this.fixTree();
     $(window).resize(() => {
       this.fixTree();

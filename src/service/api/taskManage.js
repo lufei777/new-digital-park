@@ -31,7 +31,7 @@ class taskManageApi {
     listBy() { }
 
     @url("/oaApi/task/close")
-    @get
+    @post
     closeTask() { }
 
     @url("/oaApi/task/detail")
@@ -101,6 +101,9 @@ class taskManageApi {
     @post
     getCancelHold() { }
 
+    @url('/oaApi/task/dispatch')
+    @post
+    taskDispatch() { }
 }
 
 export default new taskManageApi()
