@@ -84,8 +84,6 @@ class commonLargeHeader {
       if (IsCZClient()) {
         goBackClientLogin();
       }
-
-     store.commit("digitalPar")
      store.dispatch('user/logout').then(() => {
         router.push("/login");
       })
@@ -117,11 +115,11 @@ class commonLargeHeader {
 
   setSystemMenu() {
     let menuTree = JSON.parse(localStorage.getItem("menuTree"));
-    console.log("menuTree",menuTree)
+    // console.log("menuTree",menuTree)
     let firstLevelTree = menuTree[0].childNode.find(
       item => (item.name == "基础功能")
     );
-    console.log("fitst",firstLevelTree)
+    // console.log("fitst",firstLevelTree)
     let secondLevelTree = firstLevelTree.childNode.find(
       item => (item.name == "系统管理")
     );

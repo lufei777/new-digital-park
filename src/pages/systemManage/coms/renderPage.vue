@@ -122,7 +122,7 @@
         delConfig: config.delConfig,
         curTreeNode: {},
         userCheckFlag: false,  //true：是用户点击的  false：程序回显
-        curPerList: []  //所选不是最子级模块时，存储当前模块下所有子级权限。用于取消全部子级时，父级权限同步取消
+        curPerList: []  //所选不是最子级模块时，存储当前模块下所有子级权限。
       }
     },
     computed: {
@@ -534,10 +534,7 @@
           }
 
         }
-
-
         this.$store.commit('digitalPark/permissionIdsList', permissionIds)
-        // console.log("petmission",permissionIds)
       },
       async setCheckedPermission() {
         //左侧模块变化后，存储在上一个模块所选择的权限
@@ -565,10 +562,6 @@
       $(window).resize(() => {
         this.fixTree()
       })
-      // if (this.fromFlag == 'assignUser') {
-      //   this.tableConfig.operation = false
-      //   this.tableConfig.btnConfig = false
-      // }
     }
   }
 </script>

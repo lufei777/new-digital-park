@@ -1,7 +1,7 @@
 import SystemManageApi from "@/service/api/systemManage";
 import { removeMenuTree } from 'utils/project';
 import { setToken, getToken, removeToken, setUserInfo, getUserInfo, removeUserInfo } from '@/utils/auth';
-
+import store from '@/vuex/store';
 const state = {
   token: getToken(),
   userInfo: getUserInfo() || {}
@@ -40,6 +40,7 @@ const actions = {
     return new Promise(async (resolve, reject) => {
       let userInfo = await SystemManageApi.getUserInfo().catch(err => reject(reject));
       commit('setUserInfo', userInfo);
+      store.commit("digitalPark/roles",userInfo.rlist)
       setUserInfo(userInfo);
       // 将信息返回
       resolve(userInfo);

@@ -20,16 +20,16 @@
       <div class="asset-table panel">
         <div class="operator-btn-box flex-row-reverse">
           <el-button type="primary" @click="onClickImportExcel">批量导入</el-button>
-          <el-button type="primary" @click="onMultiDel">批量删除</el-button>
+          <el-button type="primary" @click="onMultiDel" v-if="checkPermission(['remove'])">批量删除</el-button>
 
-          <el-button type="primary" @click="onMultiEdit">批量编辑</el-button>
-          <el-button type="primary" @click="onClickAddBtn">新建</el-button>
+          <el-button type="primary" @click="onMultiEdit"  v-if="checkPermission(['edit'])">批量编辑</el-button>
+          <el-button type="primary" @click="onClickAddBtn" v-if="checkPermission(['add'])">新建</el-button>
         </div>
 
         <z-table :ref="assetsTableConfig.ref" :options="assetsTableConfig">
           <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
-            <el-button type="text" @click="rowClick(row)">编辑</el-button>
-            <el-button type="text" @click="deleteRow(row)">删除</el-button>
+            <el-button type="text" @click="rowClick(row)" v-if="checkPermission(['edit'])">编辑</el-button>
+            <el-button type="text" @click="deleteRow(row)" v-if="checkPermission(['remove'])">删除</el-button>
           </template>
         </z-table>
       </div>
@@ -75,6 +75,7 @@ import AssetManageApi from "../../../../service/api/assetManage";
 import CommonTable from "../../../../components/commonTable";
 import TreeModal from "../../../../components/treeModal";
 import CommonFun from "../../../../utils/commonFun";
+import { checkPermission } from '@/utils/permission'
 import { mapState } from 'vuex'
 export default {
   name: "AssetMaintenance",
@@ -158,9 +159,11 @@ export default {
       },
     };
   },
-  computed:{
-  },
+  computed:{},
   methods: {
+    checkPermission(val){
+      return checkPermission(val)
+    },
     switchHide(col) {
       let tableRefs = this.$refs;
       if (col.hide) {

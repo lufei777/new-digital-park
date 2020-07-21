@@ -6,10 +6,10 @@ import store from '@/vuex/store'
  * @returns {Boolean}
  */
 export function checkPermission(value, pageRoles = store.getters && store.getters.pageRoles) {
+
   if (value && value instanceof Array && value.length > 0) {
     const permissionRoles = value;
     let roles = pageRoles;
-
     // 如果只是对象，则校验当前页面权限，否则是校验用户角色权限
     // 获取当前hash路由
     if (typeof roles === 'object' && !(roles instanceof Array)) {
@@ -21,7 +21,8 @@ export function checkPermission(value, pageRoles = store.getters && store.getter
     }
 
     // 从pageRoles中去除当前路由的roles
-    const hasPermission = (roles || []).some(role => {
+    let list = (roles.list|| []).map(item => item.permissionFlag)
+    const hasPermission = list.some(role => {
       return permissionRoles.includes(role)
     })
 
@@ -40,12 +41,15 @@ export function checkPermission(value, pageRoles = store.getters && store.getter
  * @param {Array} roles
  */
 const rolesKey = 'roles';
+
 export function setRoles(roles) {
   sessionStorage.setItem(rolesKey, JSON.stringify(roles));
 }
+
 export function getRoles() {
   return JSON.parse(rolesKey.getItem(pageRolesKey));
 }
+
 export function removeRoles() {
   sessionStorage.removeItem(rolesKey);
 }
@@ -55,12 +59,15 @@ export function removeRoles() {
  * @param {Array} roles
  */
 const pageRolesKey = 'pageRoles';
+
 export function setPageRoles(roles) {
   sessionStorage.setItem(pageRolesKey, JSON.stringify(roles));
 }
+
 export function getPageRoles() {
   return JSON.parse(sessionStorage.getItem(pageRolesKey));
 }
+
 export function removePageRoles() {
   sessionStorage.removeItem(pageRolesKey);
 }
