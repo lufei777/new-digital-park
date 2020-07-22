@@ -1,5 +1,9 @@
 <template>
-  <div class="zvue-form-upload" v-loading.lock="loading" :style="[uploadStyle]">
+  <div
+    class="zvue-form-upload"
+    v-loading.lock="loading"
+    :style="[uploadStyle]"
+  >
     <el-upload
       :class="{'picture-list':listType=='picture-img','el-upload_disabled':allDisabled}"
       :action="action"
@@ -25,8 +29,15 @@
         <i class="el-icon-plus"></i>
       </template>
       <template v-else-if="listType=='picture-img'">
-        <img v-if="imgUrl" :src="imgUrl" class="avatar" />
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        <img
+          v-if="imgUrl"
+          :src="imgUrl"
+          class="avatar"
+        />
+        <i
+          v-else
+          class="el-icon-plus avatar-uploader-icon"
+        ></i>
       </template>
       <template v-else-if="drag">
         <i class="el-icon-upload"></i>
@@ -36,13 +47,29 @@
         </div>
       </template>
       <template v-else>
-        <el-button size="small" type="primary">{{buttonText}}</el-button>
+        <el-button
+          size="small"
+          type="primary"
+        >{{buttonText}}</el-button>
       </template>
-      <div v-if="!onlyButton" slot="tip" class="el-upload__tip">{{tip}}</div>
+      <div
+        v-if="!onlyButton"
+        slot="tip"
+        class="el-upload__tip"
+      >{{tip}}</div>
     </el-upload>
-    <el-dialog append-to-body :modal-append-to-body="false" :visible.sync="dialogVisible">
+    <el-dialog
+      append-to-body
+      :modal-append-to-body="false"
+      :visible.sync="dialogVisible"
+    >
       <div class="avue-dialog">
-        <img v-if="dialogImgType" width="100%" :src="dialogImageUrl" alt />
+        <img
+          v-if="dialogImgType"
+          width="100%"
+          :src="dialogImageUrl"
+          alt
+        />
       </div>
       <!-- <el-carousel
         :autoplay="false"
@@ -197,15 +224,15 @@ export default {
       return {};
     },
     allDisabled() {
-      return this.textMode ? true : this.disabled
+      return this.textMode ? true : this.disabled;
     },
     resultList() {
-      return this.autoUpload ? this.text : this.insideFileList
+      return this.autoUpload ? this.text : this.insideFileList;
     }
   },
-  created() { },
+  created() {},
   watch: {},
-  mounted() { },
+  mounted() {},
   methods: {
     validatenull,
     handleClick() {
@@ -219,7 +246,12 @@ export default {
         this.show(file);
       }
       if (typeof this.change === "function")
-        this.change({ value: this.resultList, column: this.column, file, fileList });
+        this.change({
+          value: this.resultList,
+          column: this.column,
+          file,
+          fileList
+        });
     },
     handleSuccess(file) {
       // 如果不自动上传，则将计算url
@@ -229,21 +261,21 @@ export default {
 
       if (this.isArray || this.isString) {
         this.text.push(file[this.urlKey]);
-        this.insideFileList.push(file.raw)
+        this.insideFileList.push(file.raw);
       } else if (this.isPictureImg) {
         this.text.unshift(file[this.urlKey]);
-        this.insideFileList.unshift(file.raw)
+        this.insideFileList.unshift(file.raw);
       } else {
         let obj = {};
         obj[this.labelKey] = file[this.nameKey];
         obj[this.valueKey] = file[this.urlKey];
         this.text.push(obj);
-        this.insideFileList.push(file.raw)
+        this.insideFileList.push(file.raw);
       }
       this.$message.success("上传成功");
       this.setVal();
 
-      if (typeof this.uploadSuccess === 'function') {
+      if (typeof this.uploadSuccess === "function") {
         this.uploadSuccess(file, this.column);
       }
     },
@@ -254,7 +286,7 @@ export default {
       this.setVal();
     },
     handleError(msg) {
-      if (typeof this.uploadError === 'function') {
+      if (typeof this.uploadError === "function") {
         this.uploadError(msg, this.column);
       } else {
         this.$message.error(typeof msg === "string" ? msg : "上传失败");
@@ -398,7 +430,7 @@ export default {
       }
     },
     setVal() {
-      let res = '';
+      let res = "";
       let result = this.resultList;
 
       if (this.isString) {
@@ -414,9 +446,7 @@ export default {
     },
     handleExceed(files, fileList) {
       this.$message.warning(
-        `当前限制选择 ${this.limit} 个文件，本次选择了 ${
-        files.length
-        } 个文件，共上传了 ${fileList.length} 个文件`
+        `当前限制选择 ${this.limit} 个文件，本次选择了 ${files.length} 个文件，共上传了 ${fileList.length} 个文件`
       );
     },
     handlePictureCardPreview(file) {
@@ -432,7 +462,9 @@ export default {
         }
         return;
       } else {
-        this.initialIndex = this.fileList.map(item => item.url).indexOf(file.url);
+        this.initialIndex = this.fileList
+          .map(item => item.url)
+          .indexOf(file.url);
         this.dialogImgType = true;
         this.dialogVisible = true;
       }

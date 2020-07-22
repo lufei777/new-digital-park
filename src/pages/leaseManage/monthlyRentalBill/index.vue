@@ -286,7 +286,7 @@ export default {
         { label: "合同名称", prop: "contractName" },
         { label: "账期", prop: "billTime" },
         { label: "收费项目数", prop: "chargeItems" },
-        { label: "账单金额合计(元)", prop: "billTotalAmount" },
+        // { label: "账单金额合计(元)", prop: "billTotalAmount" },
         {
           label: "账单状态",
           prop: "billStatus",
