@@ -3,6 +3,13 @@
       <div class='panel-container'>
     <!-- 底部 -->
     <!-- <div class="panel"> -->
+    <div
+      class="world"
+      style="font-weight:bold;padding-left:20px;"
+    >
+      收费
+    </div>
+    <el-divider></el-divider>
     <z-form
       :ref="formOptions.ref"
       :options="formOptions"
@@ -11,10 +18,12 @@
       @reset-change="resetChange"
     >
       <template slot="rentLine">
-        <h3 style="border:1px dashed #999"></h3>
+        <!-- <h3 style="border:1px dashed #999"></h3> -->
+        <el-divider></el-divider>
       </template>
       <template slot="line">
-        <h3 style="border:1px dashed #999"></h3>
+        <!-- <h3 style="border:1px dashed #999"></h3> -->
+        <el-divider></el-divider>
       </template>
       <template
         slot="btn"
@@ -40,7 +49,7 @@
 // import { Row } from "element-ui";
 import FinacialManageApi from "@/service/api/financialManage";
 import commonFun from "@/utils/commonFun.js";
-import { watch } from 'fs';
+import { watch } from "fs";
 export default {
   props: {
     charge: {
@@ -49,10 +58,12 @@ export default {
   },
   data() {
     return {
-      off:false,
+      off: false,
       model: {},
       // 收费总金额
-      receivableAmount:Number,
+      receivableAmount: Number,
+      // 未收费金额
+      notCharged:Number,
       formOptions: {
         ref: "form",
         menuPosition: "right",
@@ -118,8 +129,8 @@ export default {
             type: "input",
             label: "付款单位全称",
             span: 8,
-            prop: "payerName"
-            // disabled: true
+            prop: "payerName",
+            disabled: true,
           },
           // 收费期
           {
@@ -155,7 +166,7 @@ export default {
           // 未收费金额
           {
             type: "number",
-            minRows:0,
+            minRows: 0,
             label: "未收费金额",
             span: 8,
             prop: "amountNotCharged",
@@ -188,14 +199,14 @@ export default {
             span: 8,
             prop: "collectionType",
             // disabled: true
-            dicData:[
-              {label:'支付宝',value:1},
-              {label:'支票',value:2},
-              {label:'转账',value:3},
-              {label:'承兑汇票',value:4},
-              {label:'现金',value:5},
-              {label:'银行卡',value:6},
-              {label:'微信',value:7},
+            dicData: [
+              { label: "支付宝", value: 1 },
+              { label: "支票", value: 2 },
+              { label: "转账", value: 3 },
+              { label: "承兑汇票", value: 4 },
+              { label: "现金", value: 5 },
+              { label: "银行卡", value: 6 },
+              { label: "微信", value: 7 }
             ],
             rules: {
               required: true,
@@ -205,8 +216,8 @@ export default {
           // 收费金额
           {
             type: "number",
-            minRows:0,
-            maxRows:Number(this.receivableAmount),
+            minRows: 0,
+            // maxRows: '',
             label: "收费金额",
             span: 8,
             append: "元",
@@ -278,7 +289,7 @@ export default {
   computed: {
     Form() {
       return this.$refs[this.formOptions.ref];
-    },
+    }
   },
   methods: {
     submit(model, done) {
@@ -287,9 +298,8 @@ export default {
           this.$message({
             type: "success",
             message: "收费成功！"
-            
           });
-           this.$emit("comcharge",this.off);
+          this.$emit("comcharge", this.off);
         })
         .finally(res => {
           done();
@@ -299,7 +309,6 @@ export default {
     // 确认，
     canSure() {
       this.Form.submit();
-     
     },
     // 取消
     cancel() {
@@ -307,38 +316,40 @@ export default {
       // console.log("父亲", this.$parent);
       this.$emit("comcharge");
     },
-    totalSum(a,b){
-      return a-b
+    totalSum(a, b) {
+      return a - b;
     }
   },
   created() {
     this.model = { ...this.charge };
-    this.model.collectionMoney = this.charge.receivableAmount
-    this.receivableAmount = this.charge.receivableAmount;
+    // this.model.collectionMoney = this.charge.receivableAmount;
+    // this.model.collectionMoney = this.charge.receivableAmount;
+
+    // this.notCharged = this.charge.amountNotCharged;
     console.log("this.charge", this.model);
-    this.$nextTick(()=> {
-      this.$refs[this.formOptions.ref].setColumnByProp('collectionMoney',{
-        maxRows:this.charge.receivableAmount
-      })
-    })
+    this.$nextTick(() => {
+      this.$refs[this.formOptions.ref].setColumnByProp("collectionMoney", {
+        maxRows: this.charge.amountNotCharged
+      });
+    });
   },
   mounted() {
     console.log("this.charge", this.charge);
-    
   },
-  watch:{
-      'model.collectionMoney':{
-        handler(newVal,oldVal){
-          if(newVal!==oldVal){
-           var cc=  this.totalSum(this.model.receivableAmount,newVal)
-          //  console.log(cc)
-            this.model.amountNotCharged = cc
-          }
-        },
-        deep:true,
-        immediate:true,
-      }
-  }
+  // watch: {
+  //   "model.collectionMoney": {
+  //     handler(newVal, oldVal) {
+  //       if (newVal !== oldVal) {
+  //         var cc = this.totalSum(this.model.receivableAmount, newVal);
+  //         //  console.log(cc)
+  //         this.model.amountNotCharged = cc;
+  //         this.model.receivedAmount =newVal
+  //       }
+  //     },
+  //     deep: true,
+  //     immediate: true
+  //   }
+  // }
 };
 </script>
 

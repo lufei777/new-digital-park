@@ -235,7 +235,7 @@ export default {
                 },
                 nodeClick: (data, node, $tree) => {
                   this.catalogs = [];
-                  this.getIdsByNode(this.catalogs, node);
+                  this.getIdsByNode(this.catalogs, data, 'id');
                 }
               },
               {
@@ -256,7 +256,7 @@ export default {
                 },
                 nodeClick: (data, node, $tree) => {
                   this.spaceIds = [];
-                  this.getIdsByNode(this.spaceIds, node);
+                  this.getIdsByNode(this.spaceIds, data, 'floorId');
                 }
               }
             ]
@@ -826,11 +826,11 @@ export default {
       })
     },
     //根据node获取ids
-    getIdsByNode(arr, node, childrenKey = 'childNodes', idKey = 'id') {
+    getIdsByNode(arr, node, idKey = 'id', childrenKey = 'nodes') {
       arr.push(node[idKey]);
       if (node[childrenKey] && Object.prototype.toString.call(node[childrenKey]) === '[object Array]') {
         node[childrenKey].forEach((item) => {
-          this.getIdsByNode(arr, item, idKey);
+          this.getIdsByNode(arr, item, idKey, childrenKey);
         });
       }
     }

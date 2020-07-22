@@ -76,6 +76,7 @@
         <el-dialog
           :visible.sync="show"
           :modal='true'
+          custom-class='popup-style'
         >
           <!-- 调整 -->
           <com-adjust
@@ -124,18 +125,22 @@
           slot="operation"
           slot-scope="obj"
         >
+        <!--   v-if="!obj.row.billStatus===2 && !obj.row.costStatus===2" -->
           <el-button
+             v-if="obj.row.billStatus!==2 || obj.row.costStatus!==2" 
             type="text"
             @click="canadjust(obj)"
           >调整</el-button>
+
           <el-button
             type="text"
-            v-if="obj.row.billStatus===1"
+            v-if="obj.row.billStatus!==2"
             @click="makeinvoice(obj)"
           >开票</el-button>
+
           <el-button
             type="text"
-            v-if="obj.row.costStatus==1"
+            v-if="obj.row.costStatus!==2"
             @click="chargemoney(obj)"
           >收费</el-button>
           <el-button
@@ -205,16 +210,16 @@ export default {
         labelWidth: "100",
         forms: [
           // 通知单类型
-          {
-            type: "select",
-            label: "通知单类型",
-            span: 6,
-            prop: "noticeType",
-            props: {
-              label: "codeName",
-              value: "code"
-            }
-          },
+          // {
+          //   type: "select",
+          //   label: "通知单类型",
+          //   span: 6,
+          //   prop: "noticeType",
+          //   props: {
+          //     label: "codeName",
+          //     value: "code"
+          //   }
+          // },
           //年
           {
             type: "year",
@@ -355,27 +360,28 @@ export default {
     //表格列配置项
     async setTabelList() {
       let list = [
-        {
-          label: "通知单类型",
-          prop: "noticeType",
-          type: "select",
-          props: {
-            label: "codeName",
-            value: "id"
-          }
-        },
-        { label: "收费通知单号", prop: "noticeNumber" },
-        { label: "收费项目编号", prop: "costProjectCode" },
-        { label: "合同编号", prop: "contractNumber" },
+        // {
+        //   label: "通知单类型",
+        //   prop: "noticeType",
+        //   type: "select",
+        //   props: {
+        //     label: "codeName",
+        //     value: "id"
+        //   }
+        // },
+        { label: "收费通知单号", prop: "noticeNumber" ,width:250},
+        // { label: "收费项目编号", prop: "costProjectCode" },
+        { label: "合同编号", prop: "contractNumber" ,width:200},
         { label: "合同名称", prop: "contractName" },
         { label: "付款单位名称", prop: "payerName" },
         {
           label: "开票状态",
-          prop: "billingStatus",
+          prop: "billStatus",
           type: "select",
           dicData: [
-            { label: "已开票", value: 1 },
-            { label: "未开票", value: 2 }
+            { label: "未开票", value: 1 },
+            { label: "已开票", value: 2 },
+            { label: "未全开", value: 3 },
           ]
         },
         {
@@ -383,11 +389,12 @@ export default {
           prop: "costStatus",
           type: "select",
           dicData: [
-            { label: "已收费", value: 1 },
-            { label: "待收费", value: 2 }
+            { label: "未收费", value: 1 },
+            { label: "已收费", value: 2 },
+            { label: "未全收", value: 3 },
           ]
         },
-        { label: "操作时间", prop: "useTime" },
+        { label: "操作时间", prop: "createTime", width:100},
         { label: "年度", prop: "year" },
         { label: "月份", prop: "month" },
         { label: "核定金额(元)", prop: "approvedAmount" },
@@ -438,14 +445,16 @@ export default {
     }
   },
   created() {
-    FinacialManageApi.getNoticeType().then(res => {
-      this.$refs[this.formOptions.ref].setColumnByProp("noticeType", {
-        dicData: res
-      });
-      this.$refs[this.tableOptions.ref].setColumnByProp("noticeType", {
-        dicData: res
-      });
-    });
+    // 通知单类型
+    // FinacialManageApi.getNoticeType().then(res => {
+    //   // console.log('res',res)
+    //   this.$refs[this.formOptions.ref].setColumnByProp("noticeType", {
+    //     dicData: res
+    //   });
+    //   this.$refs[this.tableOptions.ref].setColumnByProp("noticeType", {
+    //     dicData: res
+    //   });
+    // });
   },
   mounted() {
     this.setTabelList();
@@ -459,22 +468,5 @@ export default {
     margin: 10px 2px;
   }
 }
-// .sf{
-//   p{
-//     padding:8px 0;
-//     text-align: center;
-//     background-color:lightblue;
-//   }
-//   .top{
-//     height: auto;
-//     .one{
-//       display:flex;
-//       justify-content: space-between;
-//       .left{
-//         height: auto;
-//       }
 
-//     }
-//   }
-// }
 </style>
