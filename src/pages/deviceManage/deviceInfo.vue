@@ -40,7 +40,7 @@
               :options="tableOptions"
               @row-click="deviceRowClick"
             >
-              <template #custom-top="{selectedData,size}">
+              <template #custom-top="{selectedData,allSelectedData,size}">
                 <div>
                   <el-button :size="size" type="primary" @click="add">新增</el-button>
                   <z-upload
@@ -60,9 +60,9 @@
                   >批量删除</el-button>
                   <el-button
                     :size="size"
-                    :disabled="!selectedData.length"
+                    :disabled="!allSelectedData.length"
                     type="primary"
-                    @click="bulkExport(selectedData)"
+                    @click="bulkExport(allSelectedData)"
                   >批量导出</el-button>
                 </div>
               </template>
@@ -243,7 +243,7 @@ export default {
             prop: "spaceId",
             clearable: true,
             width: 100,
-            span: 6,
+            span: 5,
             props: {
               label: "floor",
               value: "floorId",
@@ -256,15 +256,15 @@ export default {
             },
             nodeClick: (data, node, $tree) => {
               this.spaceIds = [];
-              this.getIdsByNode(this.spaceIds, node);
+              this.getIdsByNode(this.spaceIds, data, 'floorId');
             }
           },
           {
+            width: 20,
             prop: 'btn',
             noModel: true,
             formslot: true,
-            width: 54,
-            span: 5
+            span: 6
           }
         ]
       },
@@ -310,6 +310,7 @@ export default {
           }
         ],
         uiConfig: {
+          multiSelection: true,
           selection: true,
           height: 'auto',
           pagination: {
@@ -778,7 +779,7 @@ export default {
     },
     // 查询列表发送的数据
     deviceListParam() {
-      let { spaceId, ...model } = this.model;
+      let { spaceId, btn, ...model } = this.model;
       let res = { assetVo: Object.assign({ kind: DEVICE.text }, model) }
       if (this.catalogs.length) {
         res.catalogs = this.catalogs
@@ -820,18 +821,21 @@ export default {
     },
     // 加载设备列表
     fetchDeviceList(page) {
-      this.load = true;
-      deviceManageApi.searchDevices(
-        this.deviceListParam,
-        { page: page || this.Table.currentPage }
-      ).then(res => {
-        this.load = false;
-        this.Table.setData(res.rows);
-        this.Table.setTotal(res.total);
-        // 默认选中第一个
-        this.Table.setCurrentRow(0);
-      }).finally(() => {
-        this.load = false;
+      return new Promise((resolve, reject) => {
+        this.load = true;
+        deviceManageApi.searchDevices(
+          this.deviceListParam,
+          { page: page || this.Table.currentPage }
+        ).then(res => {
+          this.load = false;
+          this.Table.setData(res.rows);
+          this.Table.setTotal(res.total);
+          // 默认选中第一个
+          this.Table.setCurrentRow(0);
+          resolve(res);
+        }, err => reject(err)).finally(() => {
+          this.load = false;
+        })
       })
     },
     // 上方表单搜索
@@ -842,7 +846,7 @@ export default {
     // 左侧设备树点击
     nodeClick(data, node) {
       this.catalogs = [];
-      this.getIdsByNode(this.catalogs, node);
+      this.getIdsByNode(this.catalogs, data);
       this.fetchDeviceList();
     },
     // 设备树取消选择
@@ -861,7 +865,7 @@ export default {
     },
     // 设备列表翻页
     handlePagination(pageSize, currentPage, $table) {
-      this.fetchDeviceList(currentPage);
+      return this.fetchDeviceList(currentPage);
     },
 
     /**
@@ -1124,11 +1128,11 @@ export default {
     /**
      * 根据node获取ids
      */
-    getIdsByNode(arr, node, childrenKey = 'childNodes', idKey = 'id') {
+    getIdsByNode(arr, node, idKey = 'id', childrenKey = 'nodes') {
       arr.push(node[idKey]);
       if (node[childrenKey] && Object.prototype.toString.call(node[childrenKey]) === '[object Array]') {
         node[childrenKey].forEach((item) => {
-          this.getIdsByNode(arr, item, childrenKey, idKey);
+          this.getIdsByNode(arr, item, idKey, childrenKey);
         });
       }
     }
