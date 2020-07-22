@@ -124,8 +124,8 @@ export default {
             type: "input",
             label: "付款单位全称",
             span: 8,
-            prop: "payerName"
-            // disabled: true
+            prop: "payerName",
+            disabled: true
           },
           // 收费期
           {

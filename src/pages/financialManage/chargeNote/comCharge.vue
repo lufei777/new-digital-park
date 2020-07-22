@@ -62,6 +62,8 @@ export default {
       model: {},
       // 收费总金额
       receivableAmount: Number,
+      // 未收费金额
+      notCharged:Number,
       formOptions: {
         ref: "form",
         menuPosition: "right",
@@ -127,8 +129,8 @@ export default {
             type: "input",
             label: "付款单位全称",
             span: 8,
-            prop: "payerName"
-            // disabled: true
+            prop: "payerName",
+            disabled: true,
           },
           // 收费期
           {
@@ -215,7 +217,7 @@ export default {
           {
             type: "number",
             minRows: 0,
-            maxRows: Number(this.receivableAmount),
+            // maxRows: '',
             label: "收费金额",
             span: 8,
             append: "元",
@@ -320,32 +322,34 @@ export default {
   },
   created() {
     this.model = { ...this.charge };
-    this.model.collectionMoney = this.charge.receivableAmount;
-    this.receivableAmount = this.charge.receivableAmount;
+    // this.model.collectionMoney = this.charge.receivableAmount;
+    // this.model.collectionMoney = this.charge.receivableAmount;
+
+    // this.notCharged = this.charge.amountNotCharged;
     console.log("this.charge", this.model);
     this.$nextTick(() => {
       this.$refs[this.formOptions.ref].setColumnByProp("collectionMoney", {
-        maxRows: this.charge.receivableAmount
+        maxRows: this.charge.amountNotCharged
       });
     });
   },
   mounted() {
     console.log("this.charge", this.charge);
   },
-  watch: {
-    "model.collectionMoney": {
-      handler(newVal, oldVal) {
-        if (newVal !== oldVal) {
-          var cc = this.totalSum(this.model.receivableAmount, newVal);
-          //  console.log(cc)
-          this.model.amountNotCharged = cc;
-          this.model.receivedAmount =newVal
-        }
-      },
-      deep: true,
-      immediate: true
-    }
-  }
+  // watch: {
+  //   "model.collectionMoney": {
+  //     handler(newVal, oldVal) {
+  //       if (newVal !== oldVal) {
+  //         var cc = this.totalSum(this.model.receivableAmount, newVal);
+  //         //  console.log(cc)
+  //         this.model.amountNotCharged = cc;
+  //         this.model.receivedAmount =newVal
+  //       }
+  //     },
+  //     deep: true,
+  //     immediate: true
+  //   }
+  // }
 };
 </script>
 
