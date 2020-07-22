@@ -270,7 +270,7 @@ export default {
       this.getAssetList();
     },
     showDeleteTip() {
-      CommonFun.deleteTip(this, this.curAssetIds, "请至少选择一条资产！", this.sureDelete,this.cancelDelete);
+      CommonFun.confirmTip(this.curAssetIds, "请至少选择一条资产！", '确定要删除吗？',this.sureDelete,this.cancelDelete);
     },
     async sureDelete() {
       console.log(this.curAssetIds);

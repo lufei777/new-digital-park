@@ -162,13 +162,13 @@ export default {
     },
     bulkDel({ selectedData }) {
       if (!selectedData.length) {
-        commonFun.deleteTip(this, false, "请选择数据");
+        commonFun.confirmTip(false, "请选择数据");
         return;
       }
       let ids = selectedData.map(item => item.tenantId).join(",")
-      commonFun.deleteTip(
-        this,
+      commonFun.confirmTip(
         true,
+        "",
         "确定要删除吗?",
         () => {
           this.deleteRow(ids);
@@ -200,9 +200,9 @@ export default {
       });
     },
     delRow({ scopeRow: { $index, row, _self } }) {
-      commonFun.deleteTip(
-        this,
+      commonFun.confirmTip(
         true,
+        "",
         "确定要删除吗?",
         () => {
           this.deleteRow(row.tenantId);

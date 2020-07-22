@@ -126,7 +126,7 @@ const actions = {
     }, 5000); */
 
     let userInfo = JSON.parse(localStorage.getItem('userInfo'))
-    let roleIds = userInfo.rlist.map((item)=>item.id).join(",")
+    let roleIds = (userInfo.rlist || []).map((item)=>item.id).join(",")
 
     let path = state.moduleInfo.routeAddress
     // state.repeatRouteList.map((item) => {

@@ -5,6 +5,9 @@ import {getToken, IsCZClient} from './auth';
 import {AssetState} from './dictionary';
 
 const Message = require("element-ui").Message
+const MessageBox = require("element-ui").MessageBox
+
+// const Confirm = require("element-ui").Confirm
 import {jsonToUrlString} from 'utils/util';
 
 class commonFun {
@@ -1982,18 +1985,23 @@ class commonFun {
     }
   }
 
-  //this,删除的id,没有id时的提示信息，点击确定的回调函数
-  deleteTip(that, deleteId, msgTip, sureCallBack, cancelCallBack,totalMessage) {
-    if (!deleteId) {
-      that.$message({
+
+  /*
+    flag 是否满足提示条件，
+    msgTip 不满足时的提示信息
+    confirmTip  确认框内的提示信息
+    sureCallBack/cancelCallBack 点击确定/取消的回调函数
+  */
+  confirmTip(flag, msgTip, confirmTip, sureCallBack, cancelCallBack) {
+    if (!flag && flag!=0) {
+      Message({
         type: 'warning',
         message: msgTip,
         duration: 1000
       });
       return;
     }
-    let popMessage = totalMessage?totalMessage:'删除'
-    that.$confirm(`确定要${popMessage}吗?`, '提示', {
+    MessageBox.confirm(confirmTip, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
@@ -2001,13 +2009,13 @@ class commonFun {
       sureCallBack && sureCallBack();
     }).catch((err) => {
       if (err === 'cancel' || err === 'close') {
-        that.$message({
+        Message({
           type: 'info',
-          message: `已取消${popMessage}`,
+          message: `已取消操作`,
         });
         cancelCallBack && cancelCallBack();
       } else {
-        that.$message({
+        Message({
           type: 'error',
           message: '出错,请在控制台查看错误信息',
         });

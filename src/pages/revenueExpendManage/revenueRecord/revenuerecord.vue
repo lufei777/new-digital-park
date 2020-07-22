@@ -268,7 +268,7 @@ export default {
     },
     bulkDel(selectedData) {
       /* if (!selectedData.length) {
-        commonFun.deleteTip(this, false, "请选择数据");
+        commonFun.confirmTip(this, false, "请选择数据");
         return;
       } */
 
@@ -276,9 +276,9 @@ export default {
         return item.recordId;
       });
 
-      commonFun.deleteTip(
-        this,
+      commonFun.confirmTip(
         true,
+        "",
         "确定要删除吗?",
         () => {
           revenueExpendApi.deleteRecord(ids).then(res => {

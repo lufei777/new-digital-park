@@ -132,10 +132,10 @@
       onClickMultiDelBtn(){
         let tmp = this.$refs[this.tableConfig.ref].getSelectedData()
         this.curId = tmp.map((item)=>item.id).join(",")
-        CommonFun.deleteTip(this, this.curId, "请至少选择一条信息！", this.sureDelete);
+        CommonFun.confirmTip(this.curId, "请至少选择一条信息！",'确定要删除吗？',this.sureDelete);
       },
       showDeleteTip() {
-        CommonFun.deleteTip(this, this.curId, "请至少选择一条信息！", this.sureDelete);
+        CommonFun.confirmTip(this.curId, "请至少选择一条信息！",'确定要删除吗？',this.sureDelete);
       },
       async sureDelete(){
         await MessageManageApi.delRelease({

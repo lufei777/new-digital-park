@@ -163,13 +163,13 @@ export default {
     },
     bulkDel(selectedData) {
       if (!selectedData.length) {
-        commonFun.deleteTip(this, false, "请选择数据");
+        commonFun.confirmTip(false, "请选择数据");
         return;
       }
       let ids = selectedData.map(item => item.id);
-      commonFun.deleteTip(
-        this,
+      commonFun.confirmTip(
         true,
+        "",
         "确定要删除吗?",
         () => {
           this.deleteRow(ids);
@@ -178,9 +178,9 @@ export default {
       );
     },
     propertyDel({ row }) {
-      commonFun.deleteTip(
-        this,
+      commonFun.confirmTip(
         true,
+        "",
         "确定要删除吗?",
         () => {
           this.deleteRow([row.id]);

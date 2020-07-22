@@ -115,7 +115,7 @@ export default {
       this.$router.push(`/addCollect?id=${data.id}`)
     },
     showDeleteTip() {
-      CommonFun.deleteTip(this, this.deviceId, "请至少选择一条设备！", this.sureDelete,this.cancelDelete);
+      CommonFun.confirmTip(this.deviceId, "请至少选择一条设备！", '确定要删除吗?',this.sureDelete,this.cancelDelete);
     },
     async sureDelete() {
       console.log(this.deviceId);
