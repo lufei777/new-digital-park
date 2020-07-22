@@ -1993,7 +1993,7 @@ class commonFun {
     sureCallBack/cancelCallBack 点击确定/取消的回调函数
   */
   confirmTip(flag, msgTip, confirmTip, sureCallBack, cancelCallBack) {
-    if (!flag && flag!=0) {
+    if (!flag) {
       Message({
         type: 'warning',
         message: msgTip,

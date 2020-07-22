@@ -21,7 +21,7 @@ export function checkPermission(value, pageRoles = store.getters && store.getter
     }
 
     // 从pageRoles中去除当前路由的roles
-    let list = (roles.list|| []).map(item => item.permissionFlag)
+    let list = (roles && roles.list|| []).map(item => item.permissionFlag)
     const hasPermission = list.some(role => {
       return permissionRoles.includes(role)
     })

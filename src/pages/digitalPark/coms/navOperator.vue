@@ -1,7 +1,7 @@
 <template>
   <div class="digital-nav-operator flex-align" v-if="!isydScreen">
     <span class="nav-right-item long-text" v-if="showGoBack" @click="onClickGoBack">
-      <span style="color:#008DEA">
+      <span class="go-back-home">
         <i class="iconfont iconshouye"></i>&nbsp;返回首页
       </span>
       <el-divider direction="vertical"></el-divider>
@@ -313,6 +313,9 @@ export default {
     background: #dbdbdb;
     border-radius: 50%;
     margin-left: 10px;
+  }
+  .go-back-home{
+    color:#008DEA;
   }
 }
 @media screen and (min-width: 1280px) and(max-width: 1415px) {

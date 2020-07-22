@@ -83,7 +83,7 @@
       async getAssetTypeList(){
         let res = await AssetManageApi.getAssetTypeTree()
         this.typeTree=res
-        this.defaultExpandedKey=[res[0].id]
+        this.defaultExpandedKey=[res[0] && res[0].id]
         this.curType=res[0]
         this.getAttributeByType()
       },

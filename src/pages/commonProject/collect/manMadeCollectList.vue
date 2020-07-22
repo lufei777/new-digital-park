@@ -115,6 +115,7 @@ export default {
       this.$router.push(`/addCollect?id=${data.id}`)
     },
     showDeleteTip() {
+      console.log(this.deviceId)
       CommonFun.confirmTip(this.deviceId, "请至少选择一条设备！", '确定要删除吗?',this.sureDelete,this.cancelDelete);
     },
     async sureDelete() {
@@ -137,8 +138,7 @@ export default {
       this.showDeleteTip()
     },
      onMultiDel(){
-      this.deviceId=this.$refs['collectTable'].getSelectedData().length &&
-      this.$refs['collectTable'].getSelectedData().map((item)=>item.id).join(",")
+      this.deviceId = this.$refs['collectTable'].getSelectedData().map((item)=>item.id).join(",")
       this.showDeleteTip()
     },
     onClickAddBtn() {
