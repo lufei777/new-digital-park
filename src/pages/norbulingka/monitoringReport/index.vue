@@ -322,7 +322,7 @@ export default {
     // 查看
     propertyDetail(obj) {
       // 文件预览的实现
-      console.log("查看",obj);
+      // console.log("查看",obj);
       var a = obj.row.path;
       var b = obj.row.originName;
       // http://localhost:8080/oaApi/file/preview/1.docx
