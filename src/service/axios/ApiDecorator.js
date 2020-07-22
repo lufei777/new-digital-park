@@ -47,10 +47,25 @@ function put(target, name, descriptor) {
   });
 }
 
+function patch(target, name, descriptor) {
+  return send(target, name, descriptor, function (args, urlArgs = {}) {
+
+    let url = descriptor.url;
+
+    urlArgs = Object.values(urlArgs);
+    if (urlArgs.length) {
+      url += '/' + urlArgs.join('/');
+    }
+    return axios.patch(url + '?' + DoApi.jsonUrlFormat({}), DoApi.doJson(args));
+  });
+}
+
+
 export {
   get,
   url,
   post,
   del,
-  put
+  put,
+  patch
 }

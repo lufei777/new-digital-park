@@ -133,7 +133,7 @@ export default {
             rules: {
               required: true,
               message: "请输入工单名称",
-              trigger: "change"
+              trigger: "blur"
             }
           },
           {
@@ -537,21 +537,22 @@ export default {
       let res = await TaskManageApi.findTempTask({
         delFlag: 2
       });
-      if (res && localStorage.getItem("judgeOperation") == 1) {
-        if (res.deptId) {
-          this.changelistBy(res.deptId);
+
+      if (res.data && localStorage.getItem("judgeOperation") == 1) {
+        if (res.data.deptId) {
+          this.changelistBy(res.data.deptId);
         }
-        this.model.department = res.deptId;
-        this.model.taskType = res.type;
-        this.model.urgent = res.urgent;
-        this.TempTaskId = res.id;
-        this.model.taskName = res.taskName;
-        this.model.beginTime = res.beginTime;
-        this.model.endTime = res.endTime;
-        this.model.designatorId = res.designatorId;
-        this.designatorName = res.designatorName;
-        this.model.description = res.description;
-        this.model.taskPicList = res.taskPics;
+        this.model.department = res.data.deptId;
+        this.model.taskType = res.data.type;
+        this.model.urgent = res.data.urgent;
+        this.TempTaskId = res.data.id;
+        this.model.taskName = res.data.taskName;
+        this.model.beginTime = res.data.beginTime;
+        this.model.endTime = res.data.endTime;
+        this.model.designatorId = res.data.designatorId;
+        this.designatorName = res.data.designatorName;
+        this.model.description = res.data.description;
+        this.model.taskPicList = res.data.taskPics;
       }
     },
     async dealTask() {

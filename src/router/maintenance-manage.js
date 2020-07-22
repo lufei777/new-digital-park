@@ -10,15 +10,30 @@ export default [{
         meta: { title: '维修单管理' },
         component: () => import('@/pages/maintenanceManage/maintenanceManage')
     },{
-        path: '/serviceAudit',
-        name: 'ServiceAudit',
-        meta: { title: '维修审核' },
-        component: () => import('@/pages/maintenanceManage/serviceAudit')
-    },{
         path: '/addMaintenance',
         name: 'AddMaintenance',
-        meta: { title: '维修审核' },
+        meta: { title: '新增维修' },
         component: () => import('@/pages/maintenanceManage/addMaintenance')
+    },{
+        path: '/auditList',
+        name: 'AuditList',
+        meta: { title: '维修单审核' },
+        component: () => import('@/pages/maintenanceManage/auditList')
+    },{
+        path: '/maintenanceAudit',
+        name: 'MaintenanceAudit',
+        meta: { title: '新增审核' },
+        component: () => import('@/pages/maintenanceManage/maintenanceAudit')
+    },{
+        path: '/maintenanceDetail',
+        name: 'MaintenanceDetail',
+        meta: { title: '维修单详情' },
+        component: () => import('@/pages/maintenanceManage/maintenanceDetail')
+    },{
+        path: '/workHoursStatistics',
+        name: 'WorkHoursStatistics',
+        meta: { title: '工时统计' },
+        component: () => import('@/pages/maintenanceManage/workHoursStatistics')
     }]
   }]
   

@@ -1983,7 +1983,7 @@ class commonFun {
   }
 
   //this,删除的id,没有id时的提示信息，点击确定的回调函数
-  deleteTip(that, deleteId, msgTip, sureCallBack, cancelCallBack) {
+  deleteTip(that, deleteId, msgTip, sureCallBack, cancelCallBack,totalMessage) {
     if (!deleteId) {
       that.$message({
         type: 'warning',
@@ -1992,7 +1992,8 @@ class commonFun {
       });
       return;
     }
-    that.$confirm('确定要删除吗?', '提示', {
+    let popMessage = totalMessage?totalMessage:'删除'
+    that.$confirm(`确定要${popMessage}吗?`, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
@@ -2002,7 +2003,7 @@ class commonFun {
       if (err === 'cancel' || err === 'close') {
         that.$message({
           type: 'info',
-          message: '已取消删除',
+          message: `已取消${popMessage}`,
         });
         cancelCallBack && cancelCallBack();
       } else {

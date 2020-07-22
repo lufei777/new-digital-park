@@ -1,20 +1,34 @@
 <template>
   <div class="add-maintenance panel-container">
-    <PublicAddMaintenance />
+    <CommonAddMaintenance :showBoxShadow="true" />
   </div>
 </template>
 
 <script>
-import PublicAddMaintenance from "./coms/publicAddMaintenance";
+import CommonAddMaintenance from "./coms/commonAddMaintenance";
+import MaintenanceManage from "@/service/api/maintenance-manage";
 export default {
   name: "AddMaintenance",
   components: {
-    PublicAddMaintenance
+    CommonAddMaintenance
   },
   data() {
-    return {};
+    return {
+      addParams: {}
+    };
   },
-  methods: {},
+  methods: {
+    getAddParams(params) {
+      this.addParams = params;
+      console.log("params", params);
+      this.add();
+    },
+    async add() {
+      let res = await MaintenanceManage.addRepairs(this.addParams);
+      console.log("res", res);
+    },
+   
+  },
   mounted() {}
 };
 </script>
