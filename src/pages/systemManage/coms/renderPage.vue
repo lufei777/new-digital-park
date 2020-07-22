@@ -45,6 +45,7 @@
           <el-button type="primary" @click="onClickExportBtn" v-if="fromFlag==1">导出</el-button>
           <el-button type="primary" @click="onClickMultiDelBtn" v-if="fromFlag==3 || fromFlag==4">删除</el-button>
           <el-button type="primary" @click="onClickAddBtn">添加</el-button>
+          <el-button type="primary" @click="onClickAddDefaultBtn">添加默认权限</el-button>
         </div>
         <z-table :ref="tableConfig.ref" :options="tableConfig"
                  @select="onSelectCheckBox"
@@ -369,15 +370,18 @@
           url = `/addPermission?perId=${id}`
           this.showModal=true
         }
-        // let idStr = 'perId'
-        // this.$router.replace({
-        //   url:this.$route.path,
-        //   query:{
-        //     ...this.$route.query,
-        //     ...{[idStr]:id}
-        //   }
-        // })
+        let idStr = 'perId'
+        this.$router.replace({
+          url:this.$route.path,
+          query:{
+            ...this.$route.query,
+            ...{[idStr]:id}
+          }
+        })
         this.$router.push(url)
+      },
+      onClickAddDefaultBtn(){
+        CommonFun.deleteTip(this, true, '至少选择一条数据！', this.sureDelete)
       },
       onClickExportBtn() {
         let url = '/user-service/user/exportRecord'
@@ -546,13 +550,13 @@
           }
 
         }
-        this.$store.commit('digitalPark/permissionIdsList', permissionIds)
+        this.$store.commit('digitalPark/permissionIdsList', [...new Set(permissionIds)])
       },
       async setCheckedPermission() {
         //左侧模块变化后，存储在上一个模块所选择的权限
         let selectData = this.$refs[this.tableConfig.ref].selectedData.map((item) => item.id)
         let tmp = this.permissionIdsList.concat(selectData)
-        this.$store.commit('digitalPark/permissionIdsList', tmp)
+        this.$store.commit('digitalPark/permissionIdsList', [...new Set(tmp)])
 
         //存储当前模块所有子级权限
         if (this.curTreeNode.childNode && this.curTreeNode.childNode.length) {

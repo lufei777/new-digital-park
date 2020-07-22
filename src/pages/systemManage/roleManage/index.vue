@@ -159,7 +159,7 @@
       async onClickSureAssignBtn() {
         // console.log(this.permissionIdsList)
         let tmp = this.$refs.renderPage.getAssignList()
-        let arr = this.permissionIdsList.concat(tmp.map((item)=>item.id))
+        let arr = [...new Set(this.permissionIdsList.concat(tmp.map((item)=>item.id)))]
         this.$store.commit("digitalPark/permissionIdsList",arr)
         let params = {
           roleId: this.curRoleId,
