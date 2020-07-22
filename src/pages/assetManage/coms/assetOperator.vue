@@ -239,7 +239,7 @@ export default {
     },
     deleteRow(row) {
       // this.tableConfig.data.splice(index, 1);
-      // CommonFun.deleteTip(this,true,"确定要删除吗")
+      // CommonFun.confirmTip(this,true,"确定要删除吗")
       this.deleteId = row.id;
       this.deleteAssetUseDetail();
     },

@@ -123,14 +123,14 @@
       onClickMultiDelBtn() {
         let tmp = this.$refs[this.tableConfig.ref].getSelectedData()
         this.deleteId = tmp.map((item) => item.id).join(",")
-        CommonFun.deleteTip(this, this.deleteId, '至少选择一条数据！', this.sureDelete)
+        CommonFun.confirmTip(this.deleteId, '至少选择一条数据！','确定要删除吗？',this.sureDelete)
       },
       editRow(data) {
         this.$router.push(`/addRole?roleId=${data.id}`)
       },
       deleteRow(data) {
         this.deleteId = data.id
-        CommonFun.deleteTip(this, this.deleteId, '至少选择一条数据！', this.sureDelete)
+        CommonFun.confirmTip(this.deleteId, '至少选择一条数据！','确定要删除吗？',this.sureDelete)
       },
       async sureDelete() {
         await SystemManageApi.deleteRole({

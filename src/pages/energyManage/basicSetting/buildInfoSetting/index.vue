@@ -308,7 +308,7 @@
           return;
         }
         // console.log("tmp", tmp)
-        CommonFun.deleteTip(this,true,'确定要删除吗？',()=>this.sureMulDelete(tmp))
+        CommonFun.confirmTip(true,'','确定要删除吗？',()=>this.sureMulDelete(tmp))
       },
       onClickAddBtn(){
         if(!this.checkCanEdit()) return ;
@@ -357,7 +357,7 @@
       },
       deleteRow(row,index){
         this.deleteArr=[row.spaceId]
-        CommonFun.deleteTip(this,true,'确定要删除吗？',()=>this.sureDelete(row,index))
+        CommonFun.confirmTip(true,'','确定要删除吗？',()=>this.sureDelete(row,index))
       },
       async sureDelete(row,index){
         if(!row.flag){

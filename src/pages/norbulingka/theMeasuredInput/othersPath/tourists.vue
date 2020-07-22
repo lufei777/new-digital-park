@@ -284,7 +284,7 @@ export default {
         str = str + item.id + ",";
       });
       let ids = str;
-      // CommonFun.deleteTip(this, ids, "至少选择一条数据", this.deleteRow);
+      // CommonFun.confirmTip(this, ids, "至少选择一条数据", this.deleteRow);
       this.delRowData(ids);
     },
     // 删除

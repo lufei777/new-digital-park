@@ -99,7 +99,7 @@
         this.showAdd=true
       },
       showDeleteTip(){
-        CommonFun.deleteTip(this,this.delAttrIds,'请至少选择一个资产类型属性！',this.sureDelete)
+        CommonFun.confirmTip(this.delAttrIds,'请至少选择一个资产类型属性！',this.sureDelete)
       },
       async sureDelete(){
         await AssetManageApi.delAssetTypeAttr({

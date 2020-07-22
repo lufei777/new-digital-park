@@ -355,7 +355,7 @@
       onClickMultiDelBtn() {
         let tmp = this.$refs[this.tableConfig.ref].getSelectedData()
         this.deleteId = tmp.map((item) => item.id).join(",")
-        CommonFun.deleteTip(this, this.deleteId, '至少选择一条数据！', this.sureDelete)
+        CommonFun.confirmTip(this.deleteId, '至少选择一条数据！','确定要删除吗？',this.sureDelete)
       },
       onClickAddBtn(data) {
         let id = data.id || ''
@@ -381,7 +381,15 @@
         this.$router.push(url)
       },
       onClickAddDefaultBtn(){
-        CommonFun.deleteTip(this, true, '至少选择一条数据！', this.sureDelete)
+        CommonFun.confirmTip(true,'','此操作将会添加所有模块的查看权限，确定要添加吗?', this.sureAddDefault)
+      },
+      async sureAddDefault(){
+        await SystemManageApi.setDefaultPermission().then(()=> {
+          this.$message({
+            type: 'success',
+            message: '添加成功'
+          })
+        })
       },
       onClickExportBtn() {
         let url = '/user-service/user/exportRecord'
@@ -396,7 +404,7 @@
       },
       deleteRow(data) {
         this.deleteId = data.id
-        CommonFun.deleteTip(this, this.deleteId, '至少选择一条数据！', this.sureDelete)
+        CommonFun.confirmTip(this.deleteId, '至少选择一条数据！', '确定要删除吗？',this.sureDelete)
       },
       async sureDelete() {
         await this.delConfig.api({

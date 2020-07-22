@@ -206,10 +206,10 @@ export default {
       }
     },
     showDeleteTip() {
-      CommonFun.deleteTip(
-        this,
+      CommonFun.confirmTip(
         this.taskId,
         "请至少选择一条任务！",
+        "确定要删除吗？",
         this.sureDelete,
         this.cancelDelete
       );
