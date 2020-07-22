@@ -1242,7 +1242,7 @@ export default {
             this.$emit("handle-pagination", newVal.pageSize, newVal.currentPage, this);
 
             // 是否跨页多选
-            if (this.uiConfig.multiSelection && this.selectedData.length) {
+            if (this.uiConfig.multiSelection) {
               // 将当前页选中数据缓存
               this.prevSelectedData[oldVal.currentPage] = this.selectedData;
             }
