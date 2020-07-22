@@ -14,6 +14,7 @@
         :selectedData="selectedData"
         :currentRowData="currentRowData"
         :lastCurrentRowData="lastCurrentRowData"
+        :allSelectedData="allSelectedData"
       ></slot>
     </div>
     <div v-loading="loading" class="zvue-table-body">
@@ -249,6 +250,7 @@ export default {
   data() {
     return {
       config,
+      prevSelectedData: [], //表格当前多选数据
       selectedData: [], //表格当前多选数据
       allData: [], //保存数组原始数据，用来复原数据
       tableData: [], //表格传入数据，用作分页使用
@@ -385,38 +387,46 @@ export default {
     },
     // 获取分页数据
     _getPatinationData() {
-      let currentPage = this.currentPage;
-      let pageSize = this.pageSize;
-      let paginationConfig = this.uiConfig.pagination;
+      return new Promise((resolve, reject) => {
+        let currentPage = this.currentPage;
+        let pageSize = this.pageSize;
+        let paginationConfig = this.uiConfig.pagination;
 
-      if (paginationConfig) {
-        //如果采用服务端分页模式
-        if (this.isServerMode) {
-          this._loadServerMode(
-            Object.assign(this.isServerMode.data, {
-              [this.pageSizeKey]: pageSize,
-              [this.pageNumKey]: currentPage
+        if (paginationConfig) {
+          //如果采用服务端分页模式
+          if (this.isServerMode) {
+            this._loadServerMode(
+              Object.assign(this.isServerMode.data, {
+                [this.pageSizeKey]: pageSize,
+                [this.pageNumKey]: currentPage
+              })
+            ).then(res => {
+              resolve(res)
+            }).catch(err => {
+              reject(err)
             })
-          );
-        } else {
-          //如果不是服务器模式
-          // 如果tableData.length >= total，说明allData是全部数据，使用tableData分页即可
-          if (this.tableData.length >= this.uiConfig.pagination.total) {
-            let currentIndex = currentPage * pageSize;
-            this.tableShowData = this.tableData.slice(
-              currentIndex - pageSize,
-              currentIndex
-            );
           } else {
-            // 否则直接显示设置数据
-            this.tableShowData = this.tableData;
+            //如果不是服务器模式
+            // 如果tableData.length >= total，说明allData是全部数据，使用tableData分页即可
+            if (this.tableData.length >= this.uiConfig.pagination.total) {
+              let currentIndex = currentPage * pageSize;
+              this.tableShowData = this.tableData.slice(
+                currentIndex - pageSize,
+                currentIndex
+              );
+            } else {
+              // 否则直接显示设置数据
+              this.tableShowData = this.tableData;
+            }
+            resolve();
           }
+        } else {
+          this.tableShowData = this.tableData;
+          resolve();
         }
-      } else {
-        this.tableShowData = this.tableData;
-      }
-
-      this.searchVal = "";
+        // 重置搜索数据
+        this.searchVal = "";
+      })
     },
     // 加载服务端数据
     _loadServerMode(data) {
@@ -606,6 +616,22 @@ export default {
     _selectable(...args) {
       if (typeof this.selectable === 'function') return this.selectable(...args);
       return true;
+    },
+    // 反选之前在当前页选中的项
+    _setPrevSelectedData() {
+      // 因为直接用prevSelectedData值，不能进行反选，所以
+      // 将rowKey取出来再从tableShowData中取值反选
+      const currentPageSelectedData = this.prevSelectedData[this.currentPage];
+      if (currentPageSelectedData) {
+        let prevSelectedRowKeys = currentPageSelectedData.map(item => item[this.rowKey]);
+
+        let prevSelected = this.tableShowData.filter(
+          (item, index) =>
+            prevSelectedRowKeys.includes(item[this.rowKey])
+        )
+
+        this.toggleSelection(prevSelected, true);
+      }
     },
 
     /**
@@ -956,6 +982,24 @@ export default {
     getSelectedData() {
       return this.selectedData;
     },
+    // 表格全部选中数据
+    getAllSelectedData() {
+      /* if (!this.prevSelectedData.length) {
+        return this.selectedData;
+      } else {
+        return this.prevSelectedData.reduce(
+          (prev, cur, curIndex) => {
+            if (curIndex === this.currentPage) {
+              prev = prev.concat(this.selectedData)
+            } else {
+              this._typeOf(cur) === 'Array' ? prev = prev.concat(cur) : prev
+            }
+            return prev;
+          }, []
+        );
+      } */
+      return this.allSelectedData;
+    },
     //set
     // 设置表格数据
     setData(data) {
@@ -1128,6 +1172,30 @@ export default {
         return `${this.tableOption.headerRowClassName} ${defaultClass}`;
       }
       return defaultClass;
+    },
+    // 表格全部选中数据
+    // 此处反显时执行次数太多，后期如果有性能问题，改为方法获取
+    allSelectedData() {
+      // 是否跨页多选
+      if (this.uiConfig.multiSelection) {
+        let res = [];
+        if (!this.prevSelectedData.length) {
+          res = this.selectedData;
+        } else {
+          return this.prevSelectedData.reduce(
+            (prev, cur, curIndex) => {
+              if (curIndex === this.currentPage) {
+                prev = prev.concat(this.selectedData)
+              } else {
+                this._typeOf(cur) === 'Array' ? prev = prev.concat(cur) : prev
+              }
+              return prev;
+            }, res
+          );
+        }
+        return res;
+      }
+      return [];
     }
   },
   watch: {
@@ -1170,15 +1238,33 @@ export default {
           //为防止在极短的时间内重复请求
           clearTimeout(paginationTimer);
           paginationTimer = setTimeout(() => {
-            // 如果有handler，则拦截分页方法。为了兼容服务端自己写请求数据方法
-            if (this.uiConfig.pagination.handler) {
-              this.uiConfig.pagination.handler(newVal.pageSize, newVal.currentPage, this);
-              return;
-            }
             // 触发pagination方法
             this.$emit("handle-pagination", newVal.pageSize, newVal.currentPage, this);
+
+            // 是否跨页多选
+            if (this.uiConfig.multiSelection && this.selectedData.length) {
+              // 将当前页选中数据缓存
+              this.prevSelectedData[oldVal.currentPage] = this.selectedData;
+            }
+
+            // 如果有handler，则拦截分页方法。为了兼容服务端自己写请求数据方法
+            if (this.uiConfig.pagination.handler) {
+              this.uiConfig.pagination.handler(newVal.pageSize, newVal.currentPage, this).then(_ => {
+                // 是否跨页多选
+                if (this.uiConfig.multiSelection) {
+                  this._setPrevSelectedData();
+                }
+              })
+              return;
+            }
+
             // 加载分页
-            this._getPatinationData();
+            this._getPatinationData().then(_ => {
+              // 是否跨页多选
+              if (this.uiConfig.multiSelection) {
+                this._setPrevSelectedData();
+              }
+            })
           }, 0);
         }
       }

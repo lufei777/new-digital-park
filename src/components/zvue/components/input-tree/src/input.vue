@@ -127,9 +127,8 @@ export default {
         // 空值会触发select的change
         if (this.validatenull(value)) {
           this.clearHandle();
-        } else {
-          this.handleChange(value);
         }
+        this.handleChange(value);
       },
     },
     dic() {
