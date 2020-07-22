@@ -133,11 +133,9 @@ export default {
     },
     setTabelData() {
       this.model = this.adjust;
-      // this.noticeNumber = this.adjust.noticeNumber;
+
       this.contractNumber = this.adjust.contractNumber
-      // console.log("adjust", this.adjust);
-      // this.arr = this.adjust;
-      // console.log("model", this.model);
+
       this.$refs[this.tableOptions.ref].setData(this.model.chargeNoticeVos);
     }
   },
@@ -147,10 +145,6 @@ export default {
     });
   },
   mounted() {
-    // this.$nextTick(() => {
-    //   this.test = adjust
-    //   console.log("adjust", this.test);
-    // });
   }
 };
 </script>

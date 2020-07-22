@@ -63,11 +63,6 @@
 
       <!-- 底部 -->
       <div class="footer">
-        <!-- <div class="footer_item"><span>制表人:</span>{{1}}</div>
-        <div class="footer_item"><span>审核人:</span>{{1}}</div>
-        <div class="footer_item"><span>签发人:</span>{{1}}</div>
-        <div class="footer_item"><span>接收人:</span>{{1}}</div>
-        <div class="footer_item"><span>接受日期:</span>{{20200709}}</div> -->
         <z-form
           :ref="formOptions.ref"
           :options="formOptions"
@@ -105,34 +100,7 @@ export default {
         //   data: ""
         // },
         data: [
-          // {
-          //   chargeItem: 5,
-          //   startTime: "2020-07-09",
-          //   endTime: "2020-09-10",
-          //   chargeMoney: "1500￥",
-          //   bz: "收费"
-          // },
-          // {
-          //   chargeItem: 5,
-          //   startTime: "2020-07-09",
-          //   endTime: "2020-09-10",
-          //   chargeMoney: "1500￥",
-          //   bz: "收费"
-          // },
-          // {
-          //   chargeItem: 5,
-          //   startTime: "2020-07-09",
-          //   endTime: "2020-09-10",
-          //   chargeMoney: "1500￥",
-          //   bz: "收费"
-          // },
-          // {
-          //   chargeItem: 5,
-          //   startTime: "2020-07-09",
-          //   endTime: "2020-09-10",
-          //   chargeMoney: "1500￥",
-          //   bz: "收费"
-          // }
+
         ],
         showSummary: true,
         sumColumnList: [{ name: "receivableAmount", type: "sum" }],

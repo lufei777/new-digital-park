@@ -369,9 +369,9 @@ export default {
         //     value: "id"
         //   }
         // },
-        { label: "收费通知单号", prop: "noticeNumber" },
+        { label: "收费通知单号", prop: "noticeNumber" ,width:250},
         // { label: "收费项目编号", prop: "costProjectCode" },
-        { label: "合同编号", prop: "contractNumber" },
+        { label: "合同编号", prop: "contractNumber" ,width:200},
         { label: "合同名称", prop: "contractName" },
         { label: "付款单位名称", prop: "payerName" },
         {
@@ -394,7 +394,7 @@ export default {
             { label: "未全收", value: 3 },
           ]
         },
-        { label: "操作时间", prop: "createTime" },
+        { label: "操作时间", prop: "createTime", width:100},
         { label: "年度", prop: "year" },
         { label: "月份", prop: "month" },
         { label: "核定金额(元)", prop: "approvedAmount" },
@@ -468,22 +468,5 @@ export default {
     margin: 10px 2px;
   }
 }
-// .sf{
-//   p{
-//     padding:8px 0;
-//     text-align: center;
-//     background-color:lightblue;
-//   }
-//   .top{
-//     height: auto;
-//     .one{
-//       display:flex;
-//       justify-content: space-between;
-//       .left{
-//         height: auto;
-//       }
 
-//     }
-//   }
-// }
 </style>
