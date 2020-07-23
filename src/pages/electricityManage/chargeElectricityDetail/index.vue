@@ -25,11 +25,9 @@
         </template>-->
         <template slot="operation" slot-scope="{row}">
           <el-button type="text" @click="propertyDetail({row})">详情</el-button>
+          <!-- @click="checkDetailDialog = true,checkDetailModel.id = row.id" -->
           <template v-if="hasCheck(row.detailsStatus)">
-            <el-button
-              type="text"
-              @click="checkDetailDialog = true,checkDetailModel.id = row.id"
-            >生成账单</el-button>
+            <el-button type="text" @click="checkDetail({...row,detailsStatus:1})">生成账单</el-button>
           </template>
         </template>
       </z-table>
@@ -226,7 +224,7 @@ export default {
         this.checkDetailDialog = false;
         this.refreshTable();
       }).finally(() => {
-        done()
+        done && done();
       })
     },
     refreshTable() {

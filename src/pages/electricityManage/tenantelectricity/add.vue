@@ -143,7 +143,10 @@ export default {
             label: '用电量所占比例',
             prop: 'proportion',
             type: 'number',
-            append: '%'
+            append: '%',
+            rules: {
+              required: true
+            }
           }
         ]
       },
