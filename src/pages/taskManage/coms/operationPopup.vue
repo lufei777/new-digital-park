@@ -10,7 +10,7 @@
       :before-close="dialogClose"
     >
       <el-scrollbar wrap-class="scrollbar-wrapper">
-        <z-form :ref="formConfig.ref" :options="formConfig" v-model="formModel" @submit="submit">
+        <z-form :ref="formConfig.ref" :options="formConfig" v-model="model" @submit="submit">
           <template slot="menuBtn" slot-scope="scope">
             <el-button @click="goBack(scope)">取消</el-button>
           </template>
@@ -34,12 +34,14 @@ export default {
     "dialogWidth",
     "formGroupShow",
     "repairsId",
-    "dialogTop"
+    "dialogTop",
+    "specialFormShow2"
   ],
   data() {
     let _this = this;
     return {
       formModel: {},
+      model: {},
       formConfig: {
         ref: "formRef",
         labelWidth: "90",
@@ -85,6 +87,30 @@ export default {
                 rules: {
                   required: true,
                   trigger: "blur"
+                }
+              },
+              {
+                type: "datetime",
+                label: "开始时间",
+                prop: "task.beginTime",
+                valueFormat: "yyyy-MM-dd HH:mm:ss",
+                clearable: true,
+                span: 24,
+                rules: {
+                  required: true,
+                  trigger: "change"
+                }
+              },
+              {
+                type: "datetime",
+                label: "结束时间",
+                prop: "task.endTime",
+                valueFormat: "yyyy-MM-dd HH:mm:ss",
+                clearable: true,
+                span: 24,
+                rules: {
+                  required: true,
+                  trigger: "change"
                 }
               },
               {
@@ -316,56 +342,46 @@ export default {
       if (val) {
         this.deptTreeList();
         this.$nextTick(() => {
-          // if (this.specialFormShow == 1) {
-          //   this.$refs["formRef"].setColumnByProp("reason", {
-          //     display: false
-          //   });
-          //   this.$refs["formRef"].setColumnByProp("taskPicList", {
-          //     display: false
-          //   });
-          // } else {
-            this.$refs["formRef"].setColumnByProp("reason", {
-              display: this.specialFormShow == 1 || this.specialFormShow == 3
-            });
-            this.$refs["formRef"].setColumnByProp("taskPicList", {
-              display: this.specialFormShow == 1 || this.specialFormShow == 3
-            });
-          // }
-          // if (this.specialFormShow == 3 || this.specialFormShow == 1) {
-            this.$refs["formRef"].setColumnByProp("department", {
-              display: this.specialFormShow == 2 || this.specialFormShow == 3
-            });
-            this.$refs["formRef"].setColumnByProp("designatorId", {
-              display: this.specialFormShow == 2 || this.specialFormShow == 3
-            });
-          // } else {
-          //   this.$refs["formRef"].setColumnByProp("department", {
-          //     display: false
-          //   });
-          //   this.$refs["formRef"].setColumnByProp("designatorId", {
-          //     display: false
-          //   });
-          // }
+          this.$refs["formRef"].setColumnByProp("reason", {
+            display: this.specialFormShow == 1 || this.specialFormShow == 3
+          });
+          this.$refs["formRef"].setColumnByProp("taskPicList", {
+            display: this.specialFormShow == 1 || this.specialFormShow == 3
+          });
 
-          // if (this.formGroupShow == "repairs") {
-            // this.$refs["formRef"].getGroupByProp("group1").display = this.specialFormShow =4;
-            this.$refs["formRef"].getGroupByProp("group2").display = this.specialFormShow == 4;
-            this.$refs["formRef"].getGroupByProp("group3").display = this.specialFormShow == 4;
-            this.$refs["formRef"].getGroupByProp("group4").display = this.specialFormShow == 4;
-          // }
+          this.$refs["formRef"].setColumnByProp("department", {
+            display: this.specialFormShow == 2 || this.specialFormShow == 3
+          });
+          this.$refs["formRef"].setColumnByProp("designatorId", {
+            display: this.specialFormShow == 2 || this.specialFormShow == 3
+          });
+          console.log("specialFormShow2",this.specialFormShow2)
+          this.$refs["formRef"].setColumnByProp("task.endTime", {
+            display: this.specialFormShow == 1 && this.specialFormShow2 == 6
+          });
+          this.$refs["formRef"].setColumnByProp("task.beginTime", {
+            display: this.specialFormShow == 1 && this.specialFormShow2 == 6
+          });
+
+          this.$refs["formRef"].getGroupByProp("group1").display =
+            this.specialFormShow != 4;
+          this.$refs["formRef"].getGroupByProp("group2").display =
+            this.specialFormShow == 4;
+          this.$refs["formRef"].getGroupByProp("group3").display =
+            this.specialFormShow == 4;
+          this.$refs["formRef"].getGroupByProp("group4").display =
+            this.specialFormShow == 4;
+
+          if (this.specialFormShow == 4) {
+            this.detailRepairs();
+          }
         });
-      }
-    },
-    formGroupShow(val) {
-      if (val == "repairs") {
-        this.detailRepairs();
       }
     }
   },
   computed: {},
   methods: {
     async submit(model, hide) {
-      console.log("model", model);
       this.$emit("dialogParams", model, hide);
     },
     onLinkRadioChange(obj) {
@@ -414,6 +430,7 @@ export default {
         {},
         { id: this.repairsId }
       );
+      this.model = res;
     }
   },
 

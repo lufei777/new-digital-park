@@ -767,7 +767,7 @@ export default {
         this.tenantId = res.tenantId;
         if (res.oaContractDetails) {
           res.oaContractDetails.map(item => {
-            if (item.costType == 1) {
+            if (item.costType == 9) {
               this.model.monthPrice = item.monthPrice;
               this.model.billingMonths = item.billingMonths;
               this.model.dayPrice = item.dayPrice;
@@ -776,7 +776,7 @@ export default {
               this.model.payCycle = item.payCycle;
               this.model.contractNumber = item.contractNumber;
               this.rentId = item.id;
-            } else if (item.costType == 2) {
+            } else if (item.costType == 10) {
               this.model.monthPrice2 = item.monthPrice;
               this.model.billingMonths2 = item.billingMonths;
               this.model.dayPrice2 = item.dayPrice;

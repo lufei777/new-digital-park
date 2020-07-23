@@ -10,7 +10,7 @@
       >
         <template slot="menuBtn">
           <el-button @click="save">保存</el-button>
-          <el-button @click="back">取消</el-button>
+          <el-button @click="back" v-show="!showBoxShadow">取消</el-button>
         </template>
       </z-form>
     </div>
@@ -22,6 +22,14 @@ let tableSendData = {
   pageNum: 1,
   pageSize: 10
 };
+const apiConfig = {
+  add: {
+    api: MaintenanceManage.addRepairs
+  },
+  edit: {
+    api: MaintenanceManage.updateRepairs
+  }
+};
 import { mapState } from "vuex";
 import { validateTelephoneNumber } from "@/utils/validate.js";
 import { MaintenanceManageDic, TaskManageDic } from "@/utils/dictionary.js";
@@ -31,7 +39,7 @@ import leaseManageApi from "@/service/api/leaseManage";
 import MaintenanceManage from "@/service/api/maintenance-manage";
 export default {
   name: "PublicAddMaintenance",
-  props: ["showBoxShadow", "closeDialogModel"],
+  props: ["showBoxShadow", "closeDialogModel", "paramsObj"],
   data() {
     let _this = this;
     return {
@@ -97,7 +105,11 @@ export default {
                 prop: "repairType",
                 clearable: true,
                 span: 8,
-                dicData: MaintenanceManageDic.maintenanceType
+                props: {
+                  label: "typeName",
+                  value: "id"
+                }
+                // dicData: MaintenanceManageDic.maintenanceType
               },
               {
                 type: "table",
@@ -134,7 +146,7 @@ export default {
                   // 查询合同详情，只有合同详情中有空间信息
                   leaseManageApi.contractDetail({ contractId }).then(res => {
                     const detail = _.pick(res, ["tenantName"]);
-                    console.log("detail", detail);
+                    this.model.tenantName = detail.tenantName;
                     // this.model = { ...this.model, ...detail };
                   });
                 }
@@ -212,7 +224,8 @@ export default {
                 type: "upload",
                 listType: "picture-card",
                 label: "上传图片",
-                prop: "task.taskPicList",
+                prop: "task.taskPics",
+                dataType: "array",
                 span: 24,
                 action: "/oaApi/image/upload",
                 accept: ["jpg", "jpeg", "png"],
@@ -264,7 +277,7 @@ export default {
                   required: true,
                   trigger: "blur"
                 },
-                'change': _this.onLinkRadioChange
+                change: _this.onLinkRadioChange
               },
               {
                 type: "select",
@@ -290,7 +303,7 @@ export default {
               {
                 type: "cascader",
                 label: "部门",
-                prop: "department",
+                prop: "designatorDepartment",
                 showAllLevels: false,
                 props: {
                   label: "name",
@@ -335,11 +348,41 @@ export default {
             ]
           }
         ]
-      }
+      },
+      deptId: ""
     };
   },
   computed: {
     ...mapState("user", ["userInfo"])
+  },
+  // watch:{
+  //   paramsObj(){
+  //     debugger
+  //   }
+  // },
+  watch: {
+    // paramsObj: {
+    //   deep: true,
+    //   handler: val => {
+    //     console.log(val, 99999999999999999);
+    //     if (val.id) {
+    //       _this.detailRepairs();
+    //     } else {
+    //       _this.$refs[this.addMaintenanceForm.ref].resetForm();
+    //     }
+    //   }
+    // },
+    paramsObj: {
+      handler(newName, oldName) {
+        if (this.paramsObj.id) {
+          this.detailRepairs();
+        } else {
+          this.$refs[this.addMaintenanceForm.ref].resetForm();
+        }
+      },
+      // immediate: true,
+      deep: true
+    }
   },
   methods: {
     resetChange() {},
@@ -353,22 +396,13 @@ export default {
       });
     },
     async submit(model, hide) {
-      // if (this.pageConfig.flag === "edit" && this.hasId()) {
-      //   // 更新信息
-      //   this.updateInfo(model, hide);
-      // } else {
-      //   this.addMaintenance(model, hide);
-      // }
-      // console.log("params",model)
-      // this.$parent.getAddParams && this.$parent.getAddParams('add',model, hide);
       this.addRepairs(model, hide);
     },
     async addRepairs(model, hide) {
-      await MaintenanceManage.addRepairs({
-        ...model
-      })
+      model.task.id = this.paramsObj.id;
+      apiConfig[this.paramsObj.apiFlag]
+        .api(model)
         .then(res => {
-          console.log("res", res);
           if (res) {
             this.$message({
               type: "success",
@@ -401,7 +435,21 @@ export default {
         this.addRepairs(this.model);
       }
     },
-    back() {},
+    async detailRepairs() {
+      let res = await MaintenanceManage.detailRepairs(
+        {},
+        { id: this.paramsObj.id }
+      );
+      this.deptId = res.designatorDepartment;
+      this.model = res;
+      this.getListBy();
+    },
+    back() {
+      if (!this.paramsObj.id) {
+        this.$refs[this.addMaintenanceForm.ref].resetForm();
+      }
+      this.closeDialogModel(false);
+    },
     addMaintenance() {},
     async changelistBy({ value }) {
       let valueData;
@@ -410,8 +458,12 @@ export default {
       } else {
         valueData = value;
       }
+      this.deptId = valueData;
+      this.getListBy();
+    },
+    async getListBy() {
       let res = await TaskManageApi.listBy({
-        deptId: valueData
+        deptId: this.deptId
       });
       this.$refs["formRef"].setColumnByProp("task.designatorId", {
         dicData: res
@@ -429,8 +481,14 @@ export default {
     });
 
     TaskManageApi.deptTreeList().then(res => {
-      this.$refs["formRef"].setColumnByProp("department", {
+      this.$refs["formRef"].setColumnByProp("designatorDepartment", {
         dicData: res[0].childNode
+      });
+    });
+
+    TaskManageApi.getTaskTypeList().then(res => {
+      this.$refs["formRef"].setColumnByProp("repairType", {
+        dicData: res
       });
     });
   },
@@ -439,6 +497,10 @@ export default {
       display: this.model.charge == 1
     });
     this.model.createBy = this.userInfo.name;
+    if (this.paramsObj.id) {
+      this.detailRepairs();
+    }
+    console.log("id", this.paramsObj);
   }
 };
 </script>
