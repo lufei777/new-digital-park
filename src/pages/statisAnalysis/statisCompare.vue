@@ -24,9 +24,9 @@
 </template>
 
 <script>
-  import MonitorChoose from '../coms/monitorChoose'
-  import CommonApi from '../../../service/api/common'
-  import ChartUtils from '../../../utils/chartUtils'
+  import MonitorChoose from '../commonProject/coms/monitorChoose'
+  import CommonApi from '../../service/api/common'
+  import ChartUtils from '../../utils/chartUtils'
 
   export default {
     name: 'StatisCompare',

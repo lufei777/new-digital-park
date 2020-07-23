@@ -234,10 +234,10 @@ export default {
       this.contractList();
     },
     showDeleteTip() {
-      CommonFun.deleteTip(
-        this,
+      CommonFun.confirmTip(
         this.contractIds,
         "请至少选择一条信息！",
+        "确定要删除吗？",
         this.sureDelete,
         this.cancelDelete
       );

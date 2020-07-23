@@ -164,6 +164,11 @@ class SystemManage {
   @url("/user-service/permission/permissionFlag")
   @get
   getPermissionFlagList(){}
+
+  //一键设置所有菜单查看权限
+  @url("/user-service/permission/saveBatch")
+  @get
+  setDefaultPermission(){}
 }
 
 export default new SystemManage()

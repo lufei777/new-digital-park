@@ -44,6 +44,7 @@
 import norbulingka from "@/service/api/norbulingka";
 // 字典配置
 import { Norbulingka } from "utils/dictionary";
+import { log } from "util";
 const topTitle = {
   add: {
     title: "添加 保护工程"
@@ -325,6 +326,9 @@ export default {
               name: "fileName",
               url: "fileUrl",
               res: "data"
+            },
+            preview: file => {
+              console.log("file", file);
             }
           },
           // 是否上报世界遗产中心：	isReport
@@ -474,7 +478,7 @@ export default {
             span: 6,
             offset: 1,
             dataType: "string",
-            accept: ["jpg", "jpeg", "png", "docx",'pdf'],
+            accept: ["jpg", "jpeg", "png", "docx", "pdf"],
             propsHttp: {
               name: "fileName",
               url: "fileUrl",
@@ -533,16 +537,6 @@ export default {
   methods: {
     submit(model, done) {
       let parmas = model;
-      // let str = "";
-      // if (
-      //   parmas.relateElement &&
-      //   Object.values(parmas.relateElement).length >= 1
-      // ) {
-      //   parmas.relateElement.forEach(item => {
-      //     str = str + item + ",";
-      //   });
-      // }
-      // parmas.relateElement = str;
       norbulingka
         .insertWithFileProtectProject(parmas)
         .then(res => {

@@ -341,10 +341,10 @@ export default {
       this.apiFlag = 4;
       this.repairsId = row.id;
       this.taskTypeStatus = 2;
-      CommonFun.deleteTip(
-        this,
+      CommonFun.confirmTip(
         this.repairsId,
         "请至少选择一条资产！",
+        "确定要删除吗？",
         this.dealTask,
         () => {},
         "撤销"

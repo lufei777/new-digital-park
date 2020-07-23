@@ -45,6 +45,7 @@
           <el-button type="primary" @click="onClickExportBtn" v-if="fromFlag==1">导出</el-button>
           <el-button type="primary" @click="onClickMultiDelBtn" v-if="fromFlag==3 || fromFlag==4">删除</el-button>
           <el-button type="primary" @click="onClickAddBtn">添加</el-button>
+          <el-button type="primary" @click="onClickAddDefaultBtn">添加默认权限</el-button>
         </div>
         <z-table :ref="tableConfig.ref" :options="tableConfig"
                  @select="onSelectCheckBox"
@@ -354,7 +355,7 @@
       onClickMultiDelBtn() {
         let tmp = this.$refs[this.tableConfig.ref].getSelectedData()
         this.deleteId = tmp.map((item) => item.id).join(",")
-        CommonFun.deleteTip(this, this.deleteId, '至少选择一条数据！', this.sureDelete)
+        CommonFun.confirmTip(this.deleteId, '至少选择一条数据！','确定要删除吗？',this.sureDelete)
       },
       onClickAddBtn(data) {
         let id = data.id || ''
@@ -369,15 +370,26 @@
           url = `/addPermission?perId=${id}`
           this.showModal=true
         }
-        // let idStr = 'perId'
-        // this.$router.replace({
-        //   url:this.$route.path,
-        //   query:{
-        //     ...this.$route.query,
-        //     ...{[idStr]:id}
-        //   }
-        // })
+        let idStr = 'perId'
+        this.$router.replace({
+          url:this.$route.path,
+          query:{
+            ...this.$route.query,
+            ...{[idStr]:id}
+          }
+        })
         this.$router.push(url)
+      },
+      onClickAddDefaultBtn(){
+        CommonFun.confirmTip(true,'','此操作将会添加所有模块的查看权限，确定要添加吗?', this.sureAddDefault)
+      },
+      async sureAddDefault(){
+        await SystemManageApi.setDefaultPermission().then(()=> {
+          this.$message({
+            type: 'success',
+            message: '添加成功'
+          })
+        })
       },
       onClickExportBtn() {
         let url = '/user-service/user/exportRecord'
@@ -392,7 +404,7 @@
       },
       deleteRow(data) {
         this.deleteId = data.id
-        CommonFun.deleteTip(this, this.deleteId, '至少选择一条数据！', this.sureDelete)
+        CommonFun.confirmTip(this.deleteId, '至少选择一条数据！', '确定要删除吗？',this.sureDelete)
       },
       async sureDelete() {
         await this.delConfig.api({
@@ -546,13 +558,13 @@
           }
 
         }
-        this.$store.commit('digitalPark/permissionIdsList', permissionIds)
+        this.$store.commit('digitalPark/permissionIdsList', [...new Set(permissionIds)])
       },
       async setCheckedPermission() {
         //左侧模块变化后，存储在上一个模块所选择的权限
         let selectData = this.$refs[this.tableConfig.ref].selectedData.map((item) => item.id)
         let tmp = this.permissionIdsList.concat(selectData)
-        this.$store.commit('digitalPark/permissionIdsList', tmp)
+        this.$store.commit('digitalPark/permissionIdsList', [...new Set(tmp)])
 
         //存储当前模块所有子级权限
         if (this.curTreeNode.childNode && this.curTreeNode.childNode.length) {

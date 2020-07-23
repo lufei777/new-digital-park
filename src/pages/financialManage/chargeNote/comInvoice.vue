@@ -3,6 +3,13 @@
       <div class='panel-container' id='printTest'>
     <!-- 底部 -->
     <!-- <div class="panel"> -->
+    <div
+      class="world"
+      style="font-weight:bold;padding-left:20px;"
+    >
+      开票
+    </div>
+    <el-divider></el-divider>
     <z-form
       :ref="formOptions.ref"
       :options="formOptions"
@@ -11,10 +18,12 @@
       @reset-change="resetChange"
     >
       <template slot="rentLine">
-        <h3 style="border:1px dashed #999"></h3>
+        <!-- <h3 style="border:1px dashed #999"></h3> -->
+        <el-divider></el-divider>
       </template>
       <template slot="line">
-        <h3 style="border:1px dashed #999"></h3>
+        <!-- <h3 style="border:1px dashed #999"></h3> -->
+        <el-divider></el-divider>
       </template>
       <template
         slot="btn"
@@ -25,7 +34,7 @@
           <el-button
             size='mini'
             type='primary'
-            @click="canSure"   
+            @click="canSure"
           >确认提交并打印</el-button>
           <el-button @click="cancel()">取消</el-button>
         </div>
@@ -115,8 +124,8 @@ export default {
             type: "input",
             label: "付款单位全称",
             span: 8,
-            prop: "payerName"
-            // disabled: true
+            prop: "payerName",
+            disabled: true
           },
           // 收费期
           {
@@ -143,7 +152,7 @@ export default {
             span: 8,
             prop: "amountCharged",
             offset: 4,
-            disabled: true,
+            disabled: true
             // rules: {
             //   required: true,
             //   trigger: "change"
@@ -181,7 +190,7 @@ export default {
           {
             type: "number",
             label: "开票金额",
-            minRows:0,
+            minRows: 0,
             span: 8,
             prop: "invoiceMoney",
             // disabled: true
@@ -265,41 +274,43 @@ export default {
       }
     };
   },
-  computed:{
-    Form(){
-      return this.$refs[this.formOptions.ref]
+  computed: {
+    Form() {
+      return this.$refs[this.formOptions.ref];
     }
   },
   methods: {
     submit(model, done) {
-      FinacialManageApi.addInvoiceContact(model).then(res=> {
+      FinacialManageApi.addInvoiceContact(model)
+        .then(res => {
           this.$message({
-            type:'success',
-            message:'开票成功！'
-          })
+            type: "success",
+            message: "开票成功！"
+          });
           // this.$router.back()
-          this.$emit('cominvoice')
-      }).finally(()=> {
-        done()
-      })
+          this.$emit("cominvoice");
+        })
+        .finally(() => {
+          done();
+        });
     },
     resetChange() {},
     // 确认，
     canSure() {
-      this.Form.submit()
+      this.Form.submit();
     },
     // 取消
     cancel() {
-      this.$emit("adjust", false);
-      console.log("父亲", this.$parent);
+      this.$emit("cominvoice", false);
+      // console.log("父亲", this.$parent);
     }
   },
   created() {
     this.model = { ...this.invoice };
-    console.log("this.invoice", this.model);
+    // console.log("this.invoice", this.model);
   },
   mounted() {
-    console.log("this.charge", this.invoice);
+    // console.log("this.charge", this.invoice);
   }
 };
 </script>

@@ -119,7 +119,7 @@
       },
       deleteRow(data) {
         this.deleteId = data.id
-        CommonFun.deleteTip(this, this.deleteId, '至少选择一条数据！', this.sureDelete)
+        CommonFun.confirmTip(this.deleteId, '至少选择一条数据！', '确定要删除吗？',this.sureDelete)
       },
       async sureDelete() {
         await SystemManageApi.deleteMenu({

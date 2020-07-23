@@ -75,6 +75,7 @@ export default new class {
   @post
   deleteRecord() { }
 
+  /***********  用电管理全部收费  ************ */
   /**
    * 获取收费列表
    * pageNum=1&pageSize=10&code=1
@@ -89,4 +90,14 @@ export default new class {
   @url('/oaApi/finance/manager/getNoticeType')
   @get
   getNoticeType() { }
+
+  /**
+   * 打印用电月账单
+   * id=104
+   * code=1
+   * startTime=2020-02-01
+   */
+  @url('/oaApi/incomeDetails/getIncomeDetailsElecId')
+  @get
+  getIncomeDetailsElecId() { }
 }

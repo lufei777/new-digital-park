@@ -146,8 +146,7 @@ export default {
         }
       },
       currentPage: 1,
-      contractIds: "",
-      searchObj: {}
+      contractIds: ""
     };
   },
   methods: {
@@ -177,11 +176,8 @@ export default {
       ];
       this.leaseContractTable.columnConfig = labelList;
       let res = await LeaseManageApi.contractList({
-        ...this.searchObj,
-        ...{
-          pageNum: this.currentPage,
-          pageSize: 10
-        }
+        pageNum: this.currentPage,
+        pageSize: 10
       });
       if (res && res.list) {
         this.leaseContractTable.data = res.list;
@@ -190,7 +186,6 @@ export default {
     },
     onClickSearchBtn(...args) {
       this.$refs[this.leaseContractForm.ref].getFormModel(res => {
-        this.searchObj = res;
         console.log("model", res);
       });
       console.log("搜索", ...args);
@@ -203,10 +198,10 @@ export default {
       this.contractList();
     },
     showDeleteTip() {
-      CommonFun.deleteTip(
-        this,
+      CommonFun.confirmTip(
         this.contractIds,
         "请至少选择一条信息！",
+        "确定要删除吗？",
         this.sureDelete,
         this.cancelDelete
       );

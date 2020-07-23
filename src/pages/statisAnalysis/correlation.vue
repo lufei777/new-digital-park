@@ -14,8 +14,8 @@
 
 <script>
   import {mapState} from 'vuex'
-  import MonitorChoose from '../coms/monitorChoose'
-  import CommonApi from '../../../service/api/common'
+  import MonitorChoose from '../commonProject/coms/monitorChoose'
+  import CommonApi from '../../service/api/common'
   export default {
     name: 'DeviceAnalysis',
     components: {

@@ -145,27 +145,27 @@ export default {
           },
 
           // 核定金额
-          {
-            type: "number",
-            prop: "approvedAmount",
-            label: "核定金额",
-            span: 8,
-            minRows: 0,
-            // offset: 4
-          },
+          // {
+          //   type: "number",
+          //   prop: "approvedAmount",
+          //   label: "核定金额",
+          //   span: 8,
+          //   minRows: 0,
+          //   // offset: 4
+          // },
 
           // 上次预付款余额
-          {
-            type: "number",
-            prop: "lastPrepay",
-            label: "账单金额合计",
-            disabled:true,
-            minRows: 0,
-            span: 8,
-             offset: 4,
-            // append: "（元）"
-            // offset:1,
-          },
+          // {
+          //   type: "number",
+          //   prop: "lastPrepay",
+          //   label: "账单金额合计",
+          //   disabled:true,
+          //   minRows: 0,
+          //   span: 8,
+          //    offset: 4,
+          //   // append: "（元）"
+          //   // offset:1,
+          // },
 
           // 账单状态
           // {

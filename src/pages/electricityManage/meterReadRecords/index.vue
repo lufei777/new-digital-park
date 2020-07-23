@@ -64,7 +64,6 @@ import commonFun from "@/utils/commonFun.js";
 import { status, useType, checkStatus } from '../config';
 import props from '../common/props';
 
-const dateValueFormat = "yyyy-MM-dd";
 let tableSendData = {
   pageNum: 1,
   pageSize: 10
@@ -90,15 +89,23 @@ export default {
             span: 5
           },
           {
-            type: 'date',
-            label: "年度月份",
-            prop: "endTime",
-            valueFormat: dateValueFormat,
+            type: 'year',
+            label: "年度",
+            prop: "year",
+            valueFormat: "yyyy",
+            span: 5
+          },
+          {
+            type: 'month',
+            label: "月份",
+            prop: "month",
+            format:'MM',
+            valueFormat: "MM",
             span: 5
           },
           {
             prop: "btn",
-            span: 9,
+            span: 4,
             noModel: true,
             formslot: true,
             width: 20
@@ -233,13 +240,13 @@ export default {
     },
     bulkDel(selectedData) {
       if (!selectedData.length) {
-        commonFun.deleteTip(this, false, "请选择数据");
+        commonFun.confirmTip(false, "请选择数据");
         return;
       }
       let ids = selectedData.map(item => item.id);
-      commonFun.deleteTip(
-        this,
+      commonFun.confirmTip(
         true,
+        "",
         "确定要删除吗?",
         () => {
           this.deleteRow(ids);
@@ -248,9 +255,9 @@ export default {
       );
     },
     propertyDel({ row }) {
-      commonFun.deleteTip(
-        this,
+      commonFun.confirmTip(
         true,
+        "",
         "确定要删除吗?",
         () => {
           this.deleteRow([row.id]);

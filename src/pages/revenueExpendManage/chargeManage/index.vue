@@ -1,5 +1,5 @@
 <template>
-  <div class="panel-container">
+  <div v-if="reload" class="panel-container">
     <div id="houseproperty-form" class="panel">
       <z-form :ref="formOptions.ref" :options="formOptions" v-model="model" @submit="submit">
         <template slot="btn" slot-scope="obj">
@@ -12,7 +12,11 @@
     </div>
 
     <div class="table panel">
-      <z-table :ref="tableOptions.ref" :options="tableOptions"></z-table>
+      <z-table :ref="tableOptions.ref" :options="tableOptions">
+        <template #operation="{size,row}">
+          <el-button :size="size" type="text" @click="getDetail(row)">详情</el-button>
+        </template>
+      </z-table>
     </div>
   </div>
 </template>
@@ -21,9 +25,11 @@ import revenueExpendManageApi from 'api/revenueExpendManage';
 import { code } from '../config';
 
 const {
-  getIncomeRecordList:getListApi, /** 表格列表 */
-  getNoticeType/** 收费类型编码 */
+  getIncomeRecordList: getListApi, /** 表格列表 */
+  getNoticeType,/** 收费类型编码 */
+  getIncomeDetailsElecId: getDetailsApi,/**收费详情 */
 } = revenueExpendManageApi;
+
 let tableSendData = {
   pageNum: 1,
   pageSize: 10
@@ -32,6 +38,7 @@ let tableSendData = {
 export default {
   data() {
     return {
+      reload: true,
       model: {},
       formOptions: {
         ref: "Form",
@@ -67,7 +74,7 @@ export default {
       },
       tableOptions: {
         ref: "Table",
-        customTop: true,
+        operation: true,
         serverMode: {
           url: getListApi,
           data: tableSendData
@@ -83,15 +90,13 @@ export default {
           },
           {
             label: "开始时间",
-            prop: "startTime"
+            prop: "startTime",
+            width: 100
           },
           {
             label: "结束时间",
-            prop: "endTime"
-          },
-          {
-            label: "电费",
-            prop: "codeName"
+            prop: "endTime",
+            width: 100
           },
           {
             label: "合同编号",
@@ -119,6 +124,9 @@ export default {
       }
     };
   },
+  created() {
+    this.tableOptions.serverMode.data = Object.assign({}, tableSendData, { code: this.code });
+  },
   mounted() {
     // 设置收费类型
     getNoticeType().then(res => {
@@ -145,33 +153,27 @@ export default {
     clearForm() {
       this.Form.resetForm();
     },
-    // 打印
-    bulkExport() {
-      // 导出
-      commonFun.exportMethod(
-        {
-          url: '/oaApi/readMeter/exportElecDetailsMonthList',
-          params: this.model
-        }
-      )
-    },
     propertyDetail({ row }) {
       this.$router.push({
         name: "meterreadrecordsadd",
         query: { id: row.id, flag: "detail", row: JSON.stringify(row) }
       });
     },
-    checkDetail(model, done) {
-      electricityManageApi.useElecExamine(model).then(res => {
-        console.log("checkDetail -> res", res)
-        this.checkDetailDialog = false;
-      }).finally(() => {
-        done()
+    getDetail({ id, code, startTime }) {
+      getDetailsApi({ id, code, startTime }).then(res => {
+        console.log("getDetail -> res", res)
       })
     },
     refreshTable() {
       this.Table.refreshTable();
-    }
+    },
+    reloadPage() {
+      this.reload = false;
+      this.$nextTick(() => {
+        this.model = {};
+        this.reload = true;
+      });
+    },
   },
   computed: {
     Form() {
@@ -179,6 +181,15 @@ export default {
     },
     Table() {
       return this.$refs[this.tableOptions.ref];
+    },
+    code() {
+      return this.$route.query.code || ''
+    }
+  },
+  watch: {
+    code(val) {
+      this.tableOptions.serverMode.data = Object.assign({}, tableSendData, { code: val });
+      this.reloadPage();
     }
   }
 };
