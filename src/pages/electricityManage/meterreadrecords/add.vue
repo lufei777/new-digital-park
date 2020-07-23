@@ -149,7 +149,8 @@ export default {
             prop: 'lastIndication',
             label: "上次表示数",
             rules: {
-              required: true
+              required: true,
+              trigger: 'blur'
             }
           },
           {
@@ -164,7 +165,8 @@ export default {
               }
             },
             rules: {
-              required: true
+              required: true,
+              trigger: 'blur'
             }
           },
           {
@@ -173,7 +175,8 @@ export default {
             label: "抄表见量",
             disabled: true,
             rules: {
-              required: true
+              required: true,
+              trigger: 'blur'
             },
             change: ({ value }) => {
               this.model.useElecMonth = value * this.model.mulPower;
@@ -185,7 +188,8 @@ export default {
             label: "月用电量",
             disabled: true,
             rules: {
-              required: true
+              required: true,
+              trigger: 'blur'
             }
           },
           {
@@ -262,7 +266,7 @@ export default {
       };
     }
 
-    if(this.isDetail){
+    if (this.isDetail) {
       this.formOptions.forms = this.formOptions.forms.concat(this.detailOptions)
     }
   },

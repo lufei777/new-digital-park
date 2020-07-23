@@ -99,10 +99,6 @@ export default {
             width: 100
           },
           {
-            label: "电费",
-            prop: "codeName"
-          },
-          {
             label: "合同编号",
             prop: "contractNumber",
             width: 200
