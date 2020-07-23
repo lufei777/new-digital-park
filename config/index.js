@@ -11,7 +11,7 @@ module.exports = {
 		proxyTable: [
 			{
 				context: ['/oaApi', '/user-service', '/vibe-web', '/norb-service'],
-				target:'http://192.168.1.50:8080' //预警报警调试用
+				target:'http://192.168.1.100:9001' //预警报警调试用
 				// target: 'http://192.168.1.57:8082' // 罗布林卡二期接口调试
 				// target: 'http://192.168.1.48:9001' 
 				// target: 'http://39.101.191.171:9003'
