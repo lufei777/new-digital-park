@@ -1,6 +1,6 @@
 <template>
   <div class="maintenance-manage">
-     <OperationPopup
+    <OperationPopup
       ref="operationPopup"
       @dialogParams="dialogParams"
       :dialogFormShow="dialogFormShow"
@@ -22,11 +22,17 @@
         top="30px"
         custom-class="per-modal popup-style"
         :before-close="dialogClose"
+        :close-on-click-modal="false"
       >
         <el-scrollbar wrap-class="scrollbar-wrapper">
-          <CommonAddMaintenance :showBoxShadow="false" :closeDialogModel="closeDialogModel" />
+          <CommonAddMaintenance
+            :showBoxShadow="false"
+            :closeDialogModel="closeDialogModel"
+            :paramsObj="paramsObj"
+          />
         </el-scrollbar>
       </el-dialog>
+
       <z-table :ref="tableConfig.ref" :options="tableConfig" class="panel">
         <template slot="custom-top" slot-scope="{size}">
           <el-button type="primary" :size="size" @click="onClickAddBtn()">新增维修</el-button>
@@ -47,10 +53,20 @@
 
 <script>
 let objFlag = {
-  1: { name: "派单", api: MaintenanceManage.dispatch, status: "" ,width:'50%'},
-  2: { name: "关闭", api: TaskManageApi.closeTask, status: 2 ,width:'30%'},
-  3: { name: "退回", api: MaintenanceManage.backRepair, status: 5,width:'30%' },
-  4: { name: "撤销", api: TaskManageApi.dealTask,status: 2 ,width:'30%'},
+  1: {
+    name: "派单",
+    api: MaintenanceManage.dispatch,
+    status: "",
+    width: "50%"
+  },
+  2: { name: "关闭", api: TaskManageApi.closeTask, status: 2, width: "30%" },
+  3: {
+    name: "退回",
+    api: MaintenanceManage.backRepair,
+    status: 5,
+    width: "30%"
+  },
+  4: { name: "撤销", api: TaskManageApi.dealTask, status: 2, width: "30%" }
 };
 import CommonAddMaintenance from "./coms/commonAddMaintenance";
 import CommonSearch from "./coms/commonSearch";
@@ -113,16 +129,18 @@ export default {
           },
           {
             label: "预约时间",
-            prop: "repairTime"
+            prop: "repairTime",
+            sortable: "custom"
           },
           {
             label: "派单时间",
-            prop: "startTime"
+            prop: "startTime",
+            sortable: "custom"
           }
         ],
         uiConfig: {
           height: "auto", //"", //高度
-          selection: true, //是否多选
+          selection: false, //是否多选
           showIndex: true,
           pagination: {
             //是否分页，分页是否自定义
@@ -132,6 +150,9 @@ export default {
               _this.handleCurrentChange(currentPage);
             }
           }
+        },
+        tableMethods: {
+          sortChange: _this.sortTable
         }
       },
       dialogVisible: false,
@@ -145,8 +166,14 @@ export default {
       repairsId: "",
       taskTypeStatus: "",
       paramsDialog: {},
-      apiFlag:"",
-      dialogWidth:'50%'
+      apiFlag: "",
+      dialogWidth: "50%",
+      paramsObj: {
+        id: "",
+        apiFlag: ""
+      },
+      orderType: "",
+      orderBy: ""
     };
   },
   watch: {
@@ -171,7 +198,9 @@ export default {
         ...this.selectParams,
         ...{
           pageSize: 10,
-          pageNum: this.currentPage
+          pageNum: this.currentPage,
+          orderType: this.orderType, //asc降序desc升序
+          orderBy: this.orderBy
         }
       });
       if (res && res.list) {
@@ -210,12 +239,20 @@ export default {
       this.selectParams = params;
       this.repairsList();
     },
+    sortTable(column) {
+      this.orderBy = column.prop;
+      this.orderType = column.order == "ascending" ? "asc" : "desc";
+      this.repairsList();
+    },
     handleCurrentChange(val) {
       this.currentPage = val;
       this.repairsList();
     },
     onClickAddBtn() {
+      this.paramsObj.id = "";
+      this.paramsObj.apiFlag = "add";
       this.dialogVisible = true;
+      // this.dialogVisible = false
     },
     dialogClose() {
       this.dialogVisible = false;
@@ -232,7 +269,12 @@ export default {
         }
       });
     },
-    editRow() {},
+    editRow(row) {
+      this.paramsObj.id = row.id;
+      this.paramsObj.apiFlag = "edit";
+      console.log("hahahhahah", this.paramsObj);
+      this.dialogVisible = true;
+    },
     async dealTask() {
       let res = await objFlag[this.apiFlag].api({
         ...this.paramsDialog,
@@ -280,12 +322,14 @@ export default {
       }
     },
     async backRepair() {
-      let res = await MaintenanceManage.backRepair({},{id:this.repairsId + '/back'});
-      if (res) {
-        this.toastMessage(res);
-        this.dialogFormShow = false;
-        this.repairsList();
-      }
+      let res = await MaintenanceManage.backRepair(
+        {},
+        { id: this.repairsId + "/back" }
+      );
+      console.log("res", res);
+      this.toastMessage(res);
+      this.dialogFormShow = false;
+      this.repairsList();
     },
     acceptClick(row) {
       this.apiFlag = 1;
@@ -312,7 +356,7 @@ export default {
       this.dialogFormShow = true;
       this.specialFormShow = 1;
     },
-    returnClick(row){
+    returnClick(row) {
       this.apiFlag = 3;
       this.repairsId = row.id;
       this.dialogFormShow = true;

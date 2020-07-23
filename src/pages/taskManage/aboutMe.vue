@@ -42,11 +42,13 @@
       :specialFormShow="specialFormShow"
       :dialogTitle="dialogTitle"
       @closeDialog="closeDialog"
+      :specialFormShow2="specialFormShow2"
     />
   </div>
 </template>
 
 <script>
+let completeApi = TaskManageApi.completeTask;
 let objFlag = {
   1: { name: "派单", api: TaskManageApi.taskDispatch, status: "" },
   2: { name: "撤回", api: TaskManageApi.dealTask, status: 2 },
@@ -54,15 +56,104 @@ let objFlag = {
   4: { name: "挂起", api: TaskManageApi.dealTask, status: 5 },
   5: { name: "转派", api: TaskManageApi.dealTask, status: 3 },
   6: { name: "解除挂起", api: TaskManageApi.getCancelHold },
-  7: { name: "完成", api: TaskManageApi.completeTask },
-  8: { name: "接单", api: TaskManageApi.dealTask, status: 3 },
-  8: { name: "退单", api: TaskManageApi.dealTask, status: 4 }
+  7: { name: "完成", api: completeApi, status: "" },
+  8: { name: "接单", api: TaskManageApi.dealTask, status: 1 },
+  9: { name: "退单", api: TaskManageApi.dealTask, status: 4 }
+};
+let commonTableList = [
+  { label: "工单编号", prop: "taskNumber" },
+  { label: "工单名称", prop: "taskName" },
+  { label: "工单类型", prop: "type" },
+  { label: "工单描述", prop: "description" },
+  { label: "创建时间", prop: "beginTime" },
+  { label: "预计结束时间", prop: "endTime" },
+  {
+    label: "优先级",
+    prop: "urgent",
+    type: "select",
+    dicData: TaskManageDic.urgentStatus
+  },
+  { label: "状态", prop: "taskStatus" },
+  { label: "创建人", prop: "founderName" },
+  { label: "处理人", prop: "username" },
+  {
+    label: "地点",
+    prop: "officeLocation",
+    type: "select",
+    dicData: TaskManageDic.locationStatus
+  },
+  {
+    label: "补录",
+    prop: "isSupplement",
+    type: "select",
+    dicData: TaskManageDic.supplementStatus
+  },
+  { label: "设备点位", prop: "caption" }
+];
+const modelType = {
+  1: {
+    name: "巡检任务",
+    api: TaskManageApi.taskList,
+    tableList: commonTableList
+  },
+  2: {
+    name: "维修任务",
+    api: MaintenanceManage.getRepairs,
+    tableList: [
+      { label: "工单编号", prop: "taskNumber" },
+      { label: "工单名称", prop: "taskName" },
+      { label: "关联设备", prop: "deviceName" },
+      { label: "维修地点", prop: "address" },
+      {
+        label: "任务状态",
+        prop: "status",
+        formatter: row => {
+          return TaskManageDic.sendTaskStatus[row.status];
+        }
+      },
+      {
+        label: "优先级",
+        prop: "urgent",
+        type: "select",
+        dicData: TaskManageDic.urgentStatus
+      },
+      { label: "报修人", prop: "repairPerson" },
+      { label: "联系电话", prop: "phone" },
+      { label: "派单人", prop: "designatorName" },
+      {
+        label: "预约时间",
+        prop: "repairTime"
+      },
+      { label: "设备点位", prop: "caption" }
+    ]
+  },
+  3: {
+    name: "保养任务",
+    api: TaskManageApi.taskList,
+    tableList: commonTableList
+  },
+  4: {
+    name: "流程任务",
+    api: TaskManageApi.taskList,
+    tableList: commonTableList
+  },
+  5: {
+    name: "审批任务",
+    api: TaskManageApi.taskList,
+    tableList: commonTableList
+  },
+  6: {
+    name: "其他任务",
+    api: TaskManageApi.taskList,
+    tableList: commonTableList
+  }
 };
 import { mapState } from "vuex";
 import Tree from "../../components/tree/index";
 import CommonSelect from "../taskManage/coms/commonSelect";
 import OperationPopup from "../taskManage/coms/operationPopup";
 import TaskManageApi from "../../service/api/taskManage";
+import MaintenanceManage from "@/service/api/maintenance-manage";
 import CommonFun from "../../utils/commonFun";
 import { StockDic, TaskManageDic } from "@/utils/dictionary";
 export default {
@@ -91,7 +182,7 @@ export default {
         showSearch: true,
         currentKey: "",
         defaultExpandedkeys: [],
-        onClickTreeNodeCallBack: this.onClickTreeNode,
+        onClickTreeNodeCallBack: this.onClickTreeNode
       },
       tableData: {
         ref: "tableData",
@@ -140,7 +231,10 @@ export default {
       },
       specialFormShow: 1,
       dialogTitle: "",
-      apiFlag: ""
+      apiFlag: "",
+      taskTableList: commonTableList,
+      taskTableApi: TaskManageApi.taskList,
+      specialFormShow2: ""
     };
   },
   computed: {
@@ -178,36 +272,7 @@ export default {
     onClickSureAssignBtn() {},
     async taskList() {
       let _this = this;
-      let labelList = [
-        { label: "工单编号", prop: "taskNumber" },
-        { label: "工单名称", prop: "taskName" },
-        { label: "工单类型", prop: "type" },
-        { label: "工单描述", prop: "description" },
-        { label: "创建时间", prop: "beginTime" },
-        { label: "预计结束时间", prop: "endTime" },
-        {
-          label: "优先级",
-          prop: "urgent",
-          type: "select",
-          dicData: TaskManageDic.urgentStatus
-        },
-        { label: "状态", prop: "taskStatus" },
-        { label: "创建人", prop: "founderName" },
-        { label: "处理人", prop: "username" },
-        {
-          label: "地点",
-          prop: "officeLocation",
-          type: "select",
-          dicData: TaskManageDic.locationStatus
-        },
-        {
-          label: "补录",
-          prop: "isSupplement",
-          type: "select",
-          dicData: TaskManageDic.supplementStatus
-        },
-        { label: "设备点位", prop: "caption" }
-      ];
+      let labelList = this.taskTableList;
       this.tableData.columnConfig = labelList;
       let params = {
         ...this.commonParams,
@@ -217,8 +282,12 @@ export default {
           type: this.taskType
         }
       };
-      let res = await TaskManageApi.taskList(params);
-      this.taskTypesList = res.taskTypes;
+
+      let res = await this.taskTableApi(params);
+      // let res = await TaskManageApi.taskList(params);
+      if (res.taskTypes) {
+        this.taskTypesList = res.taskTypes;
+      }
       if (res && res.list) {
         res.list.map((item, ind) => {
           this.deviceId = item.deviceId;
@@ -290,6 +359,7 @@ export default {
       }
     },
     async dealTask() {
+      console.log("objFlag[this.apiFlag]", objFlag, objFlag[this.apiFlag].api);
       let res = await objFlag[this.apiFlag].api({
         ...this.paramsDialog,
         ...{
@@ -476,8 +546,14 @@ export default {
         height: $(document).height() - 110 + "px"
       });
     },
-    onClickTreeNode(val){
-      console.log(val)
+    onClickTreeNode(val) {
+      this.taskTableList = modelType[val.value].tableList;
+      this.taskTableApi = modelType[val.value].api;
+      if (val.value == 2) {
+        completeApi = MaintenanceManage.finishTask;
+        this.specialFormShow2 = 6;
+      }
+      this.taskList();
     }
   },
   mounted() {
@@ -492,7 +568,7 @@ export default {
       this.deleteRowShow = false;
     }
     this.taskList();
-    this.taskTreeConfig.currentKey = this.taskTypeData[1].value;
+    this.taskTreeConfig.currentKey = this.taskTypeData[0].value;
     // this.taskTreeConfig.defaultExpandedkeys = [this.taskTypeData[0].value];
     this.fixTree();
     $(window).resize(() => {

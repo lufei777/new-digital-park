@@ -20,10 +20,14 @@ class maintenanceManage {
     @url('/oaApi/repair/profession')
     @patch
     dispatch() { }
-
+    
     @url('/oaApi/repair')
     @patch
     backRepair() { }
+
+    @url('/oaApi/repair/finish')
+    @patch
+    finishTask() { }
 }
 
 export default new maintenanceManage()

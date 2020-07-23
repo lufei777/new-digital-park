@@ -43,7 +43,7 @@ axios.interceptors.response.use(
 
     if (res.successful && res.code === '0') {
       // 如果没有则返回空对象
-      if(res.data===null){
+      if(!res.data){
         res.data = res.message
       }
       return (res || {}).data;

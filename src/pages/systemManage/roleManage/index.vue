@@ -18,7 +18,7 @@
         title="分配权限"
         :visible.sync="showModal"
         width="85%"
-        custom-class="per-modal"
+        custom-class="per-modal popup-style"
         v-if="showModal"
       >
         <el-scrollbar wrap-class="scrollbar-wrapper">

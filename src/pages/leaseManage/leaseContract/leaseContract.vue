@@ -146,7 +146,8 @@ export default {
         }
       },
       currentPage: 1,
-      contractIds: ""
+      contractIds: "",
+      searchObj: {}
     };
   },
   methods: {
@@ -176,8 +177,11 @@ export default {
       ];
       this.leaseContractTable.columnConfig = labelList;
       let res = await LeaseManageApi.contractList({
-        pageNum: this.currentPage,
-        pageSize: 10
+        ...this.searchObj,
+        ...{
+          pageNum: this.currentPage,
+          pageSize: 10
+        }
       });
       if (res && res.list) {
         this.leaseContractTable.data = res.list;
@@ -186,6 +190,7 @@ export default {
     },
     onClickSearchBtn(...args) {
       this.$refs[this.leaseContractForm.ref].getFormModel(res => {
+        this.searchObj = res;
         console.log("model", res);
       });
       console.log("搜索", ...args);
