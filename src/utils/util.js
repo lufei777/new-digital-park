@@ -98,3 +98,7 @@ export function jsonToUrlString(data = {}) {
   data.noCache = new Date().getTime()
   return data.toString() === '[object Object]' ? param(data) : data
 }
+
+// async/await返回处理
+// 使用：async () => { const [err,data] = await useAwait(Pomise); }
+export const useAwait = async (promise) => await promise.then(data => [null, data]).catch(err => [err, null])

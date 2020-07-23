@@ -38,9 +38,9 @@ const actions = {
   // 获取用户信息
   getUserInfo({ commit }) {
     return new Promise(async (resolve, reject) => {
-      let userInfo = await SystemManageApi.getUserInfo().catch(err => reject(reject));
+      let userInfo = await SystemManageApi.getUserInfo().catch(err => reject(err));
       commit('setUserInfo', userInfo);
-      store.commit("digitalPark/roles",userInfo.rlist)
+      store.commit("digitalPark/roles", userInfo.rlist)
       setUserInfo(userInfo);
       // 将信息返回
       resolve(userInfo);
@@ -56,7 +56,7 @@ const actions = {
         removeMenuTree();
 
         resolve();
-      }).catch(err => reject(reject));
+      }).catch(err => reject(err));
     })
   },
   // 重置token和用户信息
