@@ -27,15 +27,15 @@
 
     <div class="warehouse-manage-table panel">
       <div class="operator-btn-box flex-row-reverse">
-        <el-button type="primary" @click="onClickMultiDelBtn">批量删除</el-button>
+        <el-button type="primary" @click="onClickMultiDelBtn" v-if="checkPermission(['remove'])">批量删除</el-button>
         <!--<el-button  type="primary">导出</el-button>-->
         <!--<el-button  type="primary">导入</el-button>-->
-        <el-button type="primary" @click="onClickAddBtn">新增</el-button>
+        <el-button type="primary" @click="onClickAddBtn" v-if="checkPermission(['add'])">新增</el-button>
       </div>
       <z-table :ref="tableConfig.ref" :options="tableConfig">
         <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
-          <el-button type="text" @click="onClickEditBtn(row)">编辑</el-button>
-          <el-button type="text" @click="onClickDelBtn(row)">删除</el-button>
+          <el-button type="text" @click="onClickEditBtn(row)" v-if="checkPermission(['edit'])">编辑</el-button>
+          <el-button type="text" @click="onClickDelBtn(row)" v-if="checkPermission(['remove'])">删除</el-button>
         </template>
       </z-table>
     </div>
@@ -45,6 +45,8 @@
 <script>
   import MessageManageApi from "@/service/api/messageManage";
   import CommonFun from '@/utils/commonFun'
+  import { checkPermission } from '@/utils/permission'
+
   let pageInfo = {
     pageNum: 1,
     pageSize: 10
@@ -104,6 +106,9 @@
       }
     },
     methods: {
+      checkPermission(val){
+        return checkPermission(val)
+      },
       onClickAddBtn() {
         this.$router.push('/addMessage')
       },

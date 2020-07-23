@@ -40,7 +40,9 @@
         ></el-date-picker>
       </div>
       <el-button type="primary" @click="getList">查询</el-button>
-      <el-button type="primary" @click="exportList" v-if="tableData.total && tableData.total!=0">导出</el-button>
+      <el-button type="primary" @click="exportList"
+                 v-if="tableData.total && tableData.total!=0 && checkPermission(['export'])"
+      >导出</el-button>
     </div>
     <div class="tabulation panel">
       <div class="tab-title flex-align-between">
@@ -62,6 +64,7 @@
   import CommonFun from '../../../utils/commonFun'
   import {isZG} from '@/utils/project';
   import DiagnoseTrend from './diagnoseTrend'
+  import { checkPermission } from '@/utils/permission'
 
   export default {
     name: "EnergySavingSelect",
@@ -164,6 +167,9 @@
       },
     },
     methods: {
+      checkPermission(val){
+        return checkPermission(val)
+      },
       onTimeChange() {
       },
       async getEnergyList() {

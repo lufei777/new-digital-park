@@ -15,7 +15,9 @@
       <div class="table-box radius-shadow">
         <div class="flex-align-between table-tip-box">
           <div class="table-tip">{{tableTip}}</div>
-          <el-button type="primary" @click="onClickExportBtn" v-if="tableConfig.data.length">导出表格</el-button>
+          <el-button type="primary" @click="onClickExportBtn"
+                     v-if="tableConfig.data.length && checkPermission(['export'])"
+          >导出表格</el-button>
         </div>
         <z-table :ref="tableConfig.ref" :options="tableConfig"></z-table>
       </div>
@@ -32,7 +34,7 @@
   import ConditionSelect from '../../../components/conditionSelect'
   import ChartUtils from '../../../utils/chartUtils'
   import CommonFun from '../../../utils/commonFun'
-
+  import { checkPermission } from '@/utils/permission'
   export default {
     name: 'EnergyCommon',
     components: {
@@ -704,7 +706,10 @@
         $(".common-tree-box").css({
           height: ($(document).height() - 110) + 'px'
         })
-      }
+      },
+      checkPermission(val){
+        return checkPermission(val)
+      },
     },
     async mounted() {
       await this.getAllFloor()

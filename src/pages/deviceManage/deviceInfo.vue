@@ -42,8 +42,9 @@
             >
               <template #custom-top="{selectedData,allSelectedData,size}">
                 <div>
-                  <el-button :size="size" type="primary" @click="add">新增</el-button>
+                  <el-button :size="size" type="primary" @click="add" v-if="checkPermission(['add'])">新增</el-button>
                   <z-upload
+                    v-if="checkPermission(['import'])"
                     onlyButton
                     v-model="fileList"
                     buttonText="批量导入"
@@ -53,12 +54,14 @@
                     :uploadAfter="uploadAfter"
                   ></z-upload>
                   <el-button
+                    v-if="checkPermission(['remove'])"
                     :size="size"
                     :disabled="!selectedData.length"
                     type="primary"
                     @click="bulkDel(selectedData)"
                   >批量删除</el-button>
                   <el-button
+                    v-if="checkPermission(['export'])"
                     :size="size"
                     :disabled="!allSelectedData.length"
                     type="primary"
@@ -67,9 +70,9 @@
                 </div>
               </template>
               <template #operation="{row,column,index,isEdit,size}">
-                <el-button :size="size" type="text" @click="edit(row)">编辑</el-button>
-                <el-button :size="size" type="text" @click="location(row)">定位</el-button>
-                <el-button :size="size" type="text" @click="del(row)">删除</el-button>
+                <el-button :size="size" type="text" @click="edit(row)" v-if="checkPermission(['edit'])">编辑</el-button>
+                <el-button :size="size" type="text" @click="location(row)" v-if="checkPermission(['position'])">定位</el-button>
+                <el-button :size="size" type="text" @click="del(row)" v-if="checkPermission(['remove'])">删除</el-button>
               </template>
             </z-table>
           </div>
@@ -84,8 +87,9 @@
                 <z-table :options="deviceMaintainlTable">
                   <template #custom-top="{selectedData,size}">
                     <div>
-                      <el-button :size="size" type="primary" @click="addMaintain">添加维护</el-button>
+                      <el-button :size="size" type="primary" @click="addMaintain" v-if="checkPermission(['add'])">添加维护</el-button>
                       <el-button
+                        v-if="checkPermission(['remove'])"
                         :size="size"
                         :disabled="!selectedData.length"
                         type="primary"
@@ -94,7 +98,7 @@
                     </div>
                   </template>
                   <template #operation="{row}">
-                    <el-button type="text" @click="editMaintain(row)">修改</el-button>
+                    <el-button type="text" @click="editMaintain(row)" v-if="checkPermission(['edit'])">修改</el-button>
                   </template>
                 </z-table>
               </el-tab-pane>
@@ -179,6 +183,7 @@ import deviceManageApi from 'api/deviceManage';
 import { validNotChinese } from 'utils/validate';
 import { getUserInfo, IsCZClient } from 'utils/auth';
 const DEVICE = AssetType.DEVICE;
+import { checkPermission } from '@/utils/permission'
 // 新增设备
 let assetAddUrl = '/vibe-web/asset/assetAdd';
 // 编辑设备
@@ -1135,7 +1140,10 @@ export default {
           this.getIdsByNode(arr, item, idKey, childrenKey);
         });
       }
-    }
+    },
+    checkPermission(val){
+      return checkPermission(val)
+    },
   },
   watch: {
   },

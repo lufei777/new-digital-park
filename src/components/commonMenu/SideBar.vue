@@ -114,7 +114,7 @@ export default {
       }
     },
     menuParentId(...args) {
-      // console.log("menuParentId change",args)
+
       if (this.menuParentId.firstMenuId && !this.menuConfig.specialRoute) {
         this.setMenuList()
       }
@@ -208,9 +208,14 @@ export default {
     font-size: 14px;
     padding-left: 40px !important;
   }
+  /deep/ .el-submenu .el-menu .el-submenu .el-menu .el-submenu .el-menu .el-menu-item {
+    font-size: 14px;
+    padding-left: 60px !important;
+  }
   /deep/  .el-menu-demo {
     border-bottom: none !important;
   }
+
   .title {
     font-size: 24px;
     color: @white;

@@ -138,14 +138,14 @@ export default {
 };
 </script>
 <style lang="less">
-.common-menu {
+/*.common-menu {
   .el-menu-item,
   .el-submenu .el-submenu__title {
     font-size: 18px;
     height: 70px;
     line-height: 70px;
     .iconfont {
-      /*padding:0 10px;*/
+      !*padding:0 10px;*!
     }
   }
   .el-submenu .el-menu {
@@ -185,7 +185,7 @@ export default {
     bottom: -40px;
     left: -40px;
     z-index: 99;
-    /*padding:20px;*/
+    !*padding:20px;*!
     border:2px solid #2B5681;
     text-align: right;
     padding:15px 16px 0 0 ;
@@ -213,7 +213,7 @@ export default {
       }
     }
   }
-}
+}*/
 
 /*.sidebar-container .is-active {*/
 /*border-bottom: 2px solid red;*/

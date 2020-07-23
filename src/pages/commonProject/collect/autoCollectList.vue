@@ -34,7 +34,9 @@
     </div>
     <div class="table-box panel">
       <div class="operator-box">
-        <el-button type="primary" @click="handleExport" v-if="tableConfig.data.length">导出</el-button>
+        <el-button type="primary" @click="handleExport"
+                   v-if="tableConfig.data.length && checkPermission(['export'])"
+        >导出</el-button>
       </div>
       <z-table :ref="tableConfig.ref" :options="tableConfig" />
     </div>
@@ -44,7 +46,7 @@
 <script>
 import CommonApi from "../../../service/api/common";
 import CommonFun from "../../../utils/commonFun";
-
+import { checkPermission } from '@/utils/permission'
 export default {
   name: "AutoCollectList",
   data() {
@@ -79,6 +81,9 @@ export default {
     }
   },
   methods: {
+    checkPermission(val){
+      return checkPermission(val)
+    },
     onTimeChange(flag) {},
     async getAutoCollectList() {
       let params = {

@@ -32,6 +32,7 @@
       <div class="table-box radius-shadow">
         <div class="operator-box">
           <z-upload
+            v-if="checkPermission(['import'])"
             onlyButton
             v-model="fileList"
             buttonText="导入"
@@ -41,8 +42,8 @@
             :uploadAfter="uploadSuccess"
           ></z-upload>
           <!-- <el-button type="primary" class="" @click="onClickImportBtn">导入</el-button> -->
-          <el-button type="primary" icon="el-icon-delete" @click="onClickMultipleDelBtn">删除记录</el-button>
-          <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
+          <el-button type="primary"  @click="onClickMultipleDelBtn" v-if="checkPermission(['remove'])">删除</el-button>
+          <el-button type="primary"  @click="onClickAddBtn" v-if="checkPermission(['add'])">添加</el-button>
         </div>
         <z-table :ref="tableConfig.ref" :options="tableConfig"></z-table>
       </div>
@@ -85,6 +86,8 @@ import EditMeter from "./editMeter";
 import AddMeter from "./addMeter";
 import ImportMeter from "./importMeter";
 import Tree from "../../../components/tree/index";
+import { checkPermission } from '@/utils/permission'
+
 export default {
   name: "DeviceRecord",
   components: {
@@ -163,6 +166,9 @@ export default {
     })
   },
   methods: {
+    checkPermission(val){
+      return checkPermission(val)
+    },
     async getMeterTable() {
       let params = {
         catalogId: this.curEnergy,

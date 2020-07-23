@@ -17,7 +17,7 @@
     components: {
       AddPermission
     },
-    props: ['showModal'],
+    props: ['showModal','refreshMethod'],
     data() {
       return {}
     },
@@ -26,6 +26,7 @@
     methods: {
       onBeforeClose(){
         this.$parent.showModal = false
+        this.$parent.getData && this.$parent.getData()
       }
     },
     mounted() {

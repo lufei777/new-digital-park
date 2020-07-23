@@ -40,10 +40,11 @@
           slot-scope="{size,disabled,selectedData}"
         >
           <el-button
+            v-if="checkPermission(['add'])"
             @click="toNewInceased()"
             type="primary"
           >新建</el-button>
-          <el-button :disabled="!selectedData.length">导出</el-button>
+          <el-button :disabled="!selectedData.length"  v-if="checkPermission(['export'])">导出</el-button>
         </template>
 
         <template
@@ -81,6 +82,7 @@ import commonApi from "@/service/api/common";
 // import CommonFun from "@/utils/commonFun";
 // import CommonFun from "@/utils/commonFun";
 import { WarningAlerm } from "utils/dictionary";
+import { checkPermission } from '@/utils/permission'
 
 //导入字典中的定义的字段
 // 报警级别
@@ -379,7 +381,10 @@ export default {
         .finally(() => {
           this.tableLoad = false;
         });
-    }
+    },
+    checkPermission(val){
+      return checkPermission(val)
+    },
   },
   mounted() {
     this.getCleaningList();
@@ -423,4 +428,3 @@ export default {
   }
 }
 </style>
- 

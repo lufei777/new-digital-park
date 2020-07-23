@@ -39,7 +39,7 @@
           <el-button @click="onClickResetBtn">重置</el-button>
         </div>
       </div>
-      <!--<AddModal :show-modal="showModal" v-if="showModal" />-->
+      <AddModal :show-modal="showModal" v-if="showModal" />
       <div class="table-wrapper radius-shadow panel">
         <div class="operator-btn-box flex-row-reverse" v-if="!hideBtn">
           <el-button type="primary" @click="onClickExportBtn" v-if="fromFlag==1">导出</el-button>
@@ -378,7 +378,7 @@
             ...{[idStr]:id}
           }
         })
-        this.$router.push(url)
+        // this.$router.push(url)
       },
       onClickAddDefaultBtn(){
         CommonFun.confirmTip(true,'','此操作将会添加所有模块的查看权限，确定要添加吗?', this.sureAddDefault)

@@ -27,10 +27,15 @@
     </div>
     <div class="table-box panel">
       <div class="operator-box">
-        <el-button type="primary" icon="el-icon-delete" @click="onMultiDel">删除记录</el-button>
-        <el-button type="primary" icon="el-icon-plus" @click="onClickAddBtn">添加记录</el-button>
+        <el-button type="primary" @click="onMultiDel" v-if="checkPermission(['remove'])">删除</el-button>
+        <el-button type="primary" @click="onClickAddBtn" v-if="checkPermission(['add'])">添加</el-button>
       </div>
-      <z-table :ref="collectTableConfig.ref" :options="collectTableConfig"></z-table>
+      <z-table :ref="collectTableConfig.ref" :options="collectTableConfig">
+        <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
+          <el-button type="text" @click="tableEdit(row)" v-if="checkPermission(['edit'])">编辑</el-button>
+          <el-button type="text" @click="deleteRow(row)" v-if="checkPermission(['remove'])">删除</el-button>
+        </template>
+      </z-table>
     </div>
   </div>
 </template>
@@ -38,6 +43,8 @@
 <script>
 import CommonApi from "../../../service/api/common";
 import CommonFun from "../../../utils/commonFun";
+import { checkPermission } from '@/utils/permission'
+
 export default {
   name: "ManMadeCollectList",
   data() {
@@ -50,6 +57,7 @@ export default {
         ref: "collectTable",
         data: [],
         columnConfig: [],
+        operation:true,
         uiConfig: {
           height: "auto",
           selection: true,
@@ -60,34 +68,15 @@ export default {
             }
           }
         },
-        btnConfig: {
-          prop: "operation",
-          label: "操作",
-          fixed: "right",
-          width: 150,
-          btns: [
-            {
-              type: "basic",
-              label: "修改",
-              handler: function(data) {
-                _this.tableEdit(data.row);
-              }
-            },
-            {
-              type: "basic",
-              label: "删除",
-              handler: function(data) {
-                _this.deleteRow(data.row);
-              }
-            }
-          ]
-        },
         tableMethods: {}
       },
       deviceId: ""
     };
   },
   methods: {
+    checkPermission(val){
+      return checkPermission(val)
+    },
     onTimeChange(flag) {},
     async getManMadeCollectList() {
       let params = {

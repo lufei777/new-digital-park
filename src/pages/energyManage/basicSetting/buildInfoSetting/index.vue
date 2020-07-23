@@ -21,8 +21,8 @@
     <TreeModal :tree-modal-config="treeModalConfig"/>
     <div class="panel">
       <div class="operator-btn-box flex-row-reverse">
-        <el-button type="primary" @click="onClickMultiDelBtn">批量删除</el-button>
-        <el-button type="primary" @click="onClickAddBtn">新增</el-button>
+        <el-button type="primary" @click="onClickMultiDelBtn" v-if="checkPermission(['remove'])">批量删除</el-button>
+        <el-button type="primary" @click="onClickAddBtn" v-if="checkPermission(['add'])">新增</el-button>
       </div>
       <z-table class="custom-table"
                :ref="tableConfig.ref" :options="tableConfig"
@@ -32,7 +32,7 @@
       >
         <template slot="operation" slot-scope="{scopeRow:{$index,row}}">
           <!--<el-button type="text" @click="rowClick(row)">编辑</el-button>-->
-          <el-button type="text" @click="deleteRow(row,$index)">删除</el-button>
+          <el-button type="text" @click="deleteRow(row,$index)" v-if="checkPermission(['remove'])">删除</el-button>
         </template>
         <template slot="spaceId" slot-scope="{isEdit,row,column,size,disabled}">
            <z-input-tree
@@ -64,6 +64,8 @@
   import TreeModal from '@/components/treeModal/index'
   import CommonFun from '@/utils/commonFun'
   import zTree from '@/components/zvue/components/input/src/input'
+  import { checkPermission } from '@/utils/permission'
+
   let pageInfo = {
     pageCount: 10
   }
@@ -225,6 +227,9 @@
     },
     computed: {},
     methods: {
+      checkPermission(val){
+        return checkPermission(val)
+      },
       async getAllFloorOfA3() {
         let res = await CommonApi.getAllFloorOfA3()
         this.treeModalConfig.treeList = res

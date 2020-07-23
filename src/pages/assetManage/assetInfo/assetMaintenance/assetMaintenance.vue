@@ -76,7 +76,7 @@ import CommonTable from "../../../../components/commonTable";
 import TreeModal from "../../../../components/treeModal";
 import CommonFun from "../../../../utils/commonFun";
 import { checkPermission } from '@/utils/permission'
-import { mapState } from 'vuex'
+
 export default {
   name: "AssetMaintenance",
   components: {

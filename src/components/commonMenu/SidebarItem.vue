@@ -49,34 +49,8 @@
       allMenuList() {
         return JSON.parse(localStorage.getItem("menuTree"))[0].childNode;
       },
-      // firstMenuId(){
-      //   console.log("fasdfafasfasfds")
-      //   return this.$route.query.firstMenuId
-      // },
-      // secondMenuId(){
-      //   return this.$route.query.secondMenuId
-      // },
-      // menuModuleId(){
-      //   return this.$route.query.menuModuleId
-      // },
-      // ...mapState({
-      //   repeatRouteList : state => state.digitalPark.repeatRouteList
-      // }),
     },
     watch: {
-      // firstMenuId(...args) {
-      //   console.log("ar",...args)
-      //   if (this.firstMenuId && !this.specialRoute) {
-      //     console.log("11111111")
-      //     this.setMenuList()
-      //   }
-      // },
-      // secondMenuId(){
-      //   if (this.secondMenuId && !this.specialRoute) {
-      //     console.log("22222222")
-      //     this.setMenuList()
-      //   }
-      // }
     },
     methods: {
       onClickSubmenu(item) {
