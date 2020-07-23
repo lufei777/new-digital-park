@@ -118,25 +118,30 @@ export default {
         console.error(err);
       })
     },
-    loginSuccessCb() {
+    async loginSuccessCb() {
       // 获取用户信息
-      this.$store.dispatch('user/getUserInfo').then(()=>{
+      this.$store.dispatch('user/getUserInfo').then(() => {
         // 获取菜单并规划菜单
-        this.$store.dispatch('digitalPark/getMenus').then((res=[]) => {
-          // 活后台返回菜单拍平path
-          let flat = flatMenus(res[0]);
-          // 将私有路由进行拆分 验证
-          let routes = formatRoutes(flat.flatmenupaths, this.$store.getters.privateRouters);
-          // 添加进当前路由中
-          this.$router.$addRoutes(routes);
+        return this.$store.dispatch('digitalPark/getMenus');
+      }).then((res = []) => {
+        // 活后台返回菜单拍平path
+        let flat = flatMenus(res[0]);
+        // 将私有路由进行拆分 验证
+        let routes = formatRoutes(flat.flatmenupaths, this.$store.getters.privateRouters);
+        // 添加进当前路由中
+        this.$router.$addRoutes(routes);
 
-          //确保菜单存完以后再跳转
-          if (this.isLargeScreen) {
-            this.$router.push("/largeSizeScreen")
-          } else {
-            this.$router.push("/digitalPark/homePage")
-          }
-        })
+        //确保菜单存完以后再跳转
+        if (this.isLargeScreen) {
+          this.$router.push("/largeSizeScreen")
+        } else {
+          this.$router.push("/digitalPark/homePage")
+        }
+      }).catch((error) => {
+        this.$store.dispatch('user/resetToken');
+        console.error('login ->', error);
+        this.$message.error('登陆失败');
+        this.loading = false;
       })
     }
   },

@@ -41,11 +41,8 @@ export default {
       model: {},
       formData: {
         ref: "formData",
-        labelWidth: "100",
-        size: "medium",
-        menuPosition: "right",
         menuBtn: false,
-        // labelPosition: "left",
+        itemSpan: 6,
         forms: [
           {
             type: "input",
@@ -53,7 +50,6 @@ export default {
             prop: "reportName",
             placeholder: "请输入",
             clearable: true,
-            span: 4,
             minRows: 0
           },
           {
@@ -61,21 +57,14 @@ export default {
             label: "报表类型",
             prop: "reportType",
             placeholder: "请输入",
-            clearable: true,
-            span: 4
+            clearable: true
           },
           {
             type: "input",
             label: "上传类型",
             prop: "uploadType",
             placeholder: "请输入",
-            clearable: true,
-            span: 4
-          },
-          {
-            prop: "",
-            formslot: true,
-            span: 12
+            clearable: true
           },
           {
             type: "date",
@@ -83,7 +72,6 @@ export default {
             prop: "reportTime",
             placeholder: "选择日期时间",
             // clearable: true,
-            span: 4,
             format: "yyyy-MM-dd",
             valueFormat: "timestamp"
           },
@@ -91,13 +79,11 @@ export default {
             type: "input",
             label: "上传人",
             prop: "uploadpeople",
-            placeholder: "请输入",
-            span: 4
+            placeholder: "请输入"
           },
           {
+            label: false,
             prop: "btn",
-            span: 6,
-            pull: 4,
             formslot: true,
           }
         ]
@@ -127,11 +113,11 @@ export default {
           btns: [
             {
               label: "查看",
-              handler: function(row) {}
+              handler: function (row) { }
             },
             {
               label: "删除",
-              handler: function(row) {}
+              handler: function (row) { }
             }
           ]
         }
@@ -139,8 +125,8 @@ export default {
     };
   },
   methods: {
-    submit() {},
-    resetChange() {},
+    submit() { },
+    resetChange() { },
     onClickSearchBtn(...args) {
       this.$refs[this.formData.ref].getFormModel(res => {
         console.log("model", res);
@@ -163,8 +149,8 @@ export default {
       this.tableData.columnConfig = labelList;
       this.tableData.data = res;
     },
-    batchDels() {},
-    addTenant() {}
+    batchDels() { },
+    addTenant() { }
   },
   mounted() {
     this.getCleaningList();

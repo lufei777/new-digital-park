@@ -15,12 +15,15 @@
 </template>
 
 <script>
+import { useAwait } from 'utils/util';
 export default {
   name: "App",
   data() {
     return {};
   },
-  created() { }
+  created() {
+    window.top.useAwait = useAwait;
+  }
 };
 </script>
 <style lang="less">

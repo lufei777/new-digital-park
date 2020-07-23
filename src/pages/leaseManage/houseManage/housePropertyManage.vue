@@ -58,14 +58,14 @@ export default {
         ref: "Form",
         menuPosition: "right",
         menuBtn: false,
+        itemSpan: 6,
         forms: [
           {
             type: "input",
             label: "房产编号",
             prop: "houseNumber",
             placeholder: "请输入",
-            clearable: true,
-            span: 4
+            clearable: true
           },
           {
             type: "input",
@@ -73,7 +73,6 @@ export default {
             prop: "houseName",
             placeholder: "请输入",
             clearable: true,
-            span: 4
           },
           {
             type: "number",
@@ -81,7 +80,6 @@ export default {
             prop: "housePrice",
             placeholder: "请输入",
             clearable: true,
-            span: 4,
             minRows: 0
           },
           {
@@ -90,7 +88,6 @@ export default {
             prop: "houseStatus",
             placeholder: "请输入",
             clearable: true,
-            span: 4,
             dicData: Object.values(LeaseManageDic.HouseStatus)
           },
           {
@@ -99,14 +96,12 @@ export default {
             prop: "houseArea",
             placeholder: "请输入",
             clearable: true,
-            span: 4,
             minRows: 0
           },
           {
+            label: false,
             prop: "btn",
-            span: 4,
-            formslot: true,
-            width: 55
+            formslot: true
           }
         ]
       },
