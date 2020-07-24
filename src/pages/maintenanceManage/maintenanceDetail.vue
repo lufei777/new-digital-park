@@ -4,8 +4,8 @@
       <div class="left-content panel">
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <z-form :ref="formConfig.ref" :options="formConfig" v-model="model">
-            <template slot="menuBtn">
-              <el-button>返回</el-button>
+            <template slot="btn">
+              <el-button @click="backClick">返回</el-button>
             </template>
           </z-form>
         </el-scrollbar>
@@ -130,7 +130,14 @@ export default {
               },
               {
                 type: "input",
-                label: "预约时间",
+                label: "创建人",
+                prop: "createBy",
+                span: 8,
+                disabled: true
+              },
+              {
+                type: "input",
+                label: "创建时间",
                 prop: "repairTime",
                 span: 8,
                 disabled: true
@@ -139,7 +146,7 @@ export default {
                 type: "textarea",
                 label: "详情描述",
                 prop: "task.description",
-                span: 12,
+                span: 24,
                 disabled: true
               },
               {
@@ -229,6 +236,11 @@ export default {
                 prop: "createTime3",
                 span: 8,
                 disabled: true
+              },
+              {
+                prop: "btn",
+                span: 22,
+                formslot: true
               }
             ]
           },
@@ -236,7 +248,7 @@ export default {
             icon: "iconfont iconbiaoqian",
             label: "维修信息",
             prop: "group3",
-            display: true,
+            display: false,
             arrow: true,
             forms: [
               // {
@@ -316,6 +328,9 @@ export default {
           }
         });
       }
+    },
+    backClick() {
+      this.$router.push("maintenanceManage");
     }
   },
   mounted() {
