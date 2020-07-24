@@ -407,6 +407,7 @@
         CommonFun.confirmTip(this.deleteId, '至少选择一条数据！', '确定要删除吗？',this.sureDelete)
       },
       async sureDelete() {
+        
         await this.delConfig.api({
           [this.delConfig.paramKey]: this.deleteId,
         })
