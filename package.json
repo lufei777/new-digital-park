@@ -17,7 +17,7 @@
     "element-ui": "latest",
     "js-cookie": "^2.2.0",
     "lodash": "^4.17.15",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "sortablejs": "^1.10.1",
     "v-charts": "^1.19.0",
     "vconsole": "^3.3.4",
